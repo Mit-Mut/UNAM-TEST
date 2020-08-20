@@ -142,7 +142,7 @@ class ControlAssignedAmounts(models.Model):
             failed_row = ""
             failed_line_ids = []
             success_line_ids = []
-
+            self.env['expenditure.budget'].check_year_exist(self.line_ids[0])
             # Objects
             program_code_model = self.env['program.code'].sudo()
             program_obj = self.env['program'].search_read([], fields=['id', 'key_unam'])

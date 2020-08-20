@@ -229,6 +229,17 @@ class ExpenditureBudget(models.Model):
                             email_from=base_user.partner_id.email, author_id=base_user.partner_id.id)
         return True
 
+    def check_year_exist(self, line):
+
+        if len(str(line.year)) > 3:
+            year_str = str(line.year)[:4]
+            if year_str.isnumeric():
+                year_obj = self.env['year.configuration'].search_read([], fields=['id', 'name'])
+                if not list(filter(lambda yr: yr['name']==year_str, year_obj)):
+                    self.env['year.configuration'].create({'name': year_str}).id
+        else:
+            raise ValidationError('Invalid Year Format Of line one!')
+        
     def validate_and_add_budget_line(self, record_id=False, cron_id=False):
         if record_id:
             self = self.env['expenditure.budget'].browse(int(record_id))
@@ -238,9 +249,9 @@ class ExpenditureBudget(models.Model):
             failed_row = ""
             failed_line_ids = []
             success_line_ids = []
-
+            self.check_year_exist(self.line_ids[0])
             # Objects
-
+            
             program_code_model = self.env['program.code'].sudo()
             program_obj = self.env['program'].search_read([], fields=['id', 'key_unam'])
             subprogram_obj = self.env['sub.program'].search_read([], fields=['id', 'unam_key_id', 'sub_program'])

@@ -59,8 +59,22 @@ odoo.define('jt_budget_mgmt.widget_financial_report', function (require) {
          * @override
          * @returns {Promise}
          */
+
+		/**
         _confirmChange: function () {
             var self = this;
+            var result = StandaloneFieldManagerMixin._confirmChange.apply(this, arguments);
+            var data = {};
+            _.each(this.fields, function (filter, fieldName) {
+                data[fieldName] = self.widgets[fieldName].value.res_ids;
+            });
+			console.log("====",this)
+            this.trigger_up('value_changed', data);
+            return result;
+        },
+		*/
+        _confirmChange_custom: function () {
+       		var self = this;
             var result = StandaloneFieldManagerMixin._confirmChange.apply(this, arguments);
             var data = {};
             _.each(this.fields, function (filter, fieldName) {
@@ -69,6 +83,7 @@ odoo.define('jt_budget_mgmt.widget_financial_report', function (require) {
             this.trigger_up('value_changed', data);
             return result;
         },
+
         /**
          * This method will create a record and initialize M2M widget.
          *
@@ -77,6 +92,7 @@ odoo.define('jt_budget_mgmt.widget_financial_report', function (require) {
          * @param {string} fieldName
          * @returns {Promise}
          */
+
         _makeM2MWidget: function (fieldInfo, fieldName) {
             var self = this;
             var options = {};
@@ -144,9 +160,21 @@ odoo.define('jt_budget_mgmt.widget_financial_report', function (require) {
              },
         },
 
+        _confirmChange_coustom: function () {
+     //       var self = this;
+        //    var result = StandaloneFieldManagerMixin._confirmChange.apply(this, arguments);
+            var data = {};
+            _.each(this.fields, function (filter, fieldName) {
+                data[fieldName] = self.widgets[fieldName].value.res_ids;
+            });
+			alert("calll=== my call")
+            this.trigger_up('value_changed', data);
+         //   return result;
+        },
+
         render_searchview_buttons: function() {
             this._super.apply(this, arguments);
-
+			
             // program_code_section filter
             if (this.report_options.code_sections) {
                 if (!this.M2MFilters) {
@@ -282,9 +310,13 @@ odoo.define('jt_budget_mgmt.widget_financial_report', function (require) {
                     if (!_.isEmpty(fields)) {
                         this.M2MFilters = new M2MFilters(this, fields);
                         this.M2MFilters.appendTo(this.$searchview_buttons.find('.js_program_code_section_m2m'));
+				    	this.$searchview_buttons.find('.o_budget_filter_search').on('click', this.M2MFilters._confirmChange_custom.bind(this.M2MFilters));
+
                     }
                 } else {
                     this.$searchview_buttons.find('.js_program_code_section_m2m').append(this.M2MFilters.$el);
+				    this.$searchview_buttons.find('.o_budget_filter_search').on('click', this.M2MFilters._confirmChange_custom.bind(this.M2MFilters));
+
                 }
             }
         },

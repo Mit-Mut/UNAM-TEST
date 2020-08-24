@@ -75,6 +75,7 @@
             <span class="fa fa-folder-open"/> Programmatic Code Section
         </a>
         <ul class="dropdown-menu o_filters_menu" role="menu">
+        	<button class="btn btn-primary o_budget_filter_search">Apply</button>
             <li class="o_account_report_search js_program_code_section_m2m"/>
         </ul>
     </template>

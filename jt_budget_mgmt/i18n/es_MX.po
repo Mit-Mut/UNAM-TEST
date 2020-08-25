@@ -1962,10 +1962,12 @@ msgid "Journal Item"
 msgstr "Asientos Contables"
 
 #. module: jt_budget_mgmt
+#: model:ir.model.fields,field_description:jt_budget_mgmt.field_account_move__conac_line_ids
 #: model:ir.model.fields,field_description:jt_budget_mgmt.field_adequacies__move_line_ids
 #: model:ir.model.fields,field_description:jt_budget_mgmt.field_expenditure_budget__move_line_ids
 #: model_terms:ir.ui.view,arch_db:jt_budget_mgmt.adequacies_form_view
 #: model_terms:ir.ui.view,arch_db:jt_budget_mgmt.expenditure_budget_form_view
+#: model_terms:ir.ui.view,arch_db:jt_budget_mgmt.supplier_payment_req_form_inherit
 msgid "Journal Items"
 msgstr "Asientos Contables"
 

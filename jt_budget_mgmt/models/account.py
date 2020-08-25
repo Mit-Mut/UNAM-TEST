@@ -27,11 +27,20 @@ class AccountMove(models.Model):
 
     _inherit = 'account.move'
 
+    def show_conac_move(self):
+        for record in self:
+            print ("calll=====",record.conac_line_ids)
+            record.conac_line_ids = record.line_ids.filtered(lambda x:x.conac_move)
+             
     budget_id = fields.Many2one('expenditure.budget')
     adequacy_id = fields.Many2one('adequacies')
     dependancy_id = fields.Many2one('dependency', string='Dependency')
     sub_dependancy_id = fields.Many2one('sub.dependency', 'Sub Dependency')
 
+    conac_line_ids = fields.One2many('account.move.line', 'move_id', string='Journal Items',
+                                     compute="show_conac_move")
+
+        
     def action_register(self):
         for move in self:
             invoice_lines = move.invoice_line_ids.filtered(lambda x:not x.program_code_id)

@@ -153,15 +153,13 @@ class AccountMove(models.Model):
     is_zone_res = fields.Boolean('Show Zone Res',default=False)
     is_show_resposible_group = fields.Boolean('Resposible Group',default=False)
 
+
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
-        print ("default====",default) 
         default = dict(default or {})
-        print ("default after====",default)
         res = super(AccountMove, self).copy(default)
         if res and res.is_payment_request:
             res.line_ids = False
-        print ("Res=====",res)
         return res
                     
     @api.onchange('operation_type_id')

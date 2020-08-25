@@ -48,6 +48,7 @@
             </t>
         </a>
         <div class="dropdown-menu o_filters_menu" role="menu">
+        	<button role="menuitem" class="btn btn-primary js_account_report_choice_filter">Apply</button>
             <t t-foreach="options['budget_control']" t-as="j">
                 <t t-if="j.get('id') == 'divider'">
                     <div role="separator" class="dropdown-divider"/>
@@ -56,12 +57,13 @@
                 </t>
                 <t t-if="j.get('id') != 'divider'">
                     <t t-if="j.get('id') == 'group'">
-                        <a role="menuitem" class="dropdown-item js_account_report_group_choice_filter" data-filter="budget_control" t-att-data-id="j.get('id')" t-att-data-member-ids="j.get('ids')">
+                         <a role="menuitem" class="dropdown-item js_account_report_group_choice_filter" data-filter="budget_control" t-att-data-id="j.get('id')" t-att-data-member-ids="j.get('ids')">
                             <t t-esc="j.get('name')"/>
                         </a>
+                        
                     </t>
                     <t t-else="">
-                        <a role="menuitem" class="dropdown-item js_account_report_choice_filter" t-att-title="j.get('name')+ '-' + j.get('code')" t-att-data-id="j.get('id')" data-filter="budget_control">
+                       <a role="menuitem" class="dropdown-item js_budget_control_choice_filter" t-att-title="j.get('name')+ '-' + j.get('code')" t-att-data-id="j.get('id')" data-filter="budget_control">
                             <t t-esc="j.get('name')"/>
                         </a>
                     </t>

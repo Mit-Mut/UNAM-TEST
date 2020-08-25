@@ -274,6 +274,12 @@ msgid "Approve"
 msgstr "Aprobar"
 
 #. module: jt_budget_mgmt
+#: model_terms:ir.ui.view,arch_db:jt_budget_mgmt.search_template_budget_control
+#: model_terms:ir.ui.view,arch_db:jt_budget_mgmt.search_template_program_code_section
+msgid "Apply"
+msgstr "Consultar"
+
+#. module: jt_budget_mgmt
 #: model_terms:ir.ui.view,arch_db:jt_budget_mgmt.reject_form_view
 msgid "Are you sure you want to delete this record?"
 msgstr "¿Seguro que quieres eliminar este registro?"

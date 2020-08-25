@@ -161,20 +161,41 @@ odoo.define('jt_budget_mgmt.widget_financial_report', function (require) {
         },
 
         _confirmChange_coustom: function () {
-     //       var self = this;
-        //    var result = StandaloneFieldManagerMixin._confirmChange.apply(this, arguments);
             var data = {};
             _.each(this.fields, function (filter, fieldName) {
                 data[fieldName] = self.widgets[fieldName].value.res_ids;
             });
-			alert("calll=== my call")
             this.trigger_up('value_changed', data);
-         //   return result;
         },
 
         render_searchview_buttons: function() {
             this._super.apply(this, arguments);
-			
+			var self = this;
+
+
+		    _.each(this.$searchview_buttons.find('.js_budget_control_choice_filter'), function(k) {
+		        $(k).toggleClass('selected', (_.filter(self.report_options[$(k).data('filter')], function(el){return ''+el.id == ''+$(k).data('id') 			&& el.selected === true;})).length > 0);
+		    });
+
+		    this.$searchview_buttons.find('.js_budget_control_choice_filter').click(function (event) {
+		        var option_value = $(this).data('filter');
+		        var option_id = $(this).data('id');
+		        _.filter(self.report_options[option_value], function(el) {
+		            if (''+el.id == ''+option_id){
+		                if (el.selected === undefined || el.selected === null){el.selected = false;}
+		                el.selected = !el.selected;
+		            } else if (option_value === 'ir_filters') {
+		                el.selected = false;
+		            }
+		            return el;
+		        });
+		    _.each(self.$searchview_buttons.find('.js_budget_control_choice_filter'), function(k) {
+		        $(k).toggleClass('selected', (_.filter(self.report_options[$(k).data('filter')], function(el){return ''+el.id == ''+$(k).data('id') 			&& el.selected === true;})).length > 0);
+		    });
+				 
+		    });
+
+		
             // program_code_section filter
             if (this.report_options.code_sections) {
                 if (!this.M2MFilters) {

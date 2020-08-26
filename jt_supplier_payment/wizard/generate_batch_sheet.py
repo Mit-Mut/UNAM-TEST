@@ -36,13 +36,24 @@ class GenerateBatchSheet(models.TransientModel):
             return ''
 
         line_data = []
+        seq_ids = self.env['ir.sequence'].search([('code', '=', 'batch.sheet.folio')], order='company_id')
+        number_next = 0
+        if seq_ids:
+            number_next = seq_ids[0].number_next_actual 
+        
         for rec in active_ids:
+            
             move_id = self.env['account.move'].browse(rec)
+            line_batch_folio = move_id.batch_folio
             if move_id.invoice_sequence_number_next_prefix and  move_id.invoice_sequence_number_next:
                 name = move_id.invoice_sequence_number_next_prefix + move_id.invoice_sequence_number_next
             else:
                 name = move_id.name
-            line_data.append((0,0,{'account_move_id':move_id.id,'check_batch_folio':move_id.batch_folio,'batch_folio':move_id.batch_folio,'name':name}))
+            if not line_batch_folio:
+                line_batch_folio = number_next
+                
+            line_data.append((0,0,{'account_move_id':move_id.id,'check_batch_folio':move_id.batch_folio,'batch_folio':line_batch_folio,'name':name}))
+            
         return {
             'name': _('Generate Batch Sheet'),
             'res_model': 'generate.batch.sheet',
@@ -55,6 +66,7 @@ class GenerateBatchSheet(models.TransientModel):
         
     def update_batch_folio(self):        
         line_recs = self.batch_line_ids.filtered(lambda x:x.batch_folio != x.check_batch_folio)
+        folio = self.env['ir.sequence'].next_by_code('batch.sheet.folio')
         for line in line_recs:
             line.account_move_id.batch_folio = line.batch_folio
             

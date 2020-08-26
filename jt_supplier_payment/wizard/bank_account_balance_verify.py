@@ -8,6 +8,7 @@ class BankBalanceCheck(models.TransientModel):
     
     journal_id = fields.Many2one('account.journal','Bank Of Payment Issue')
     account_id = fields.Many2one('account.account','Bank Account')
+    bank_account_id = fields.Many2one(related="journal_id.bank_account_id",string="Bank Account")
     total_amount = fields.Float('Total Amount')
     total_request = fields.Float('Total Request')
     is_balance = fields.Boolean('Balance')
@@ -99,6 +100,7 @@ class BankBalanceCheck(models.TransientModel):
         
         
     def schedule_payment(self):
+        all_payments = self.env['account.payment']
         for rec in self.invoice_ids:
             self.create_journal_line_for_payment_procedure(rec)
             payment_record = self.env['account.payment.register'].with_context(active_ids=rec.ids).create({'journal_id':self.journal_id.id,'invoice_ids':[(6, 0, rec.ids)]})
@@ -107,7 +109,11 @@ class BankBalanceCheck(models.TransientModel):
             for data in datas:
                 new_dict = self.get_payment_data(rec, data)
                 payments = Payment.create(new_dict)
+                all_payments += payments 
             rec.write({'payment_state': 'for_payment_procedure'})
+        for payment in all_payments:
+            payment.action_validate_payment_procedure()
+
         
         
         

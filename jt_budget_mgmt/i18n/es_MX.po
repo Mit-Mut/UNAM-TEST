@@ -3174,7 +3174,6 @@ msgstr "Identificador de Etapa"
 msgid "Stage"
 msgstr "Etapa"
 
-
 #. module: jt_budget_mgmt
 #: model:ir.model.fields,field_description:jt_budget_mgmt.field_standardization_line__standardization_id
 msgid "Standardization"

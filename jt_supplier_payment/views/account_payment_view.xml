@@ -30,7 +30,9 @@
             	<xpath expr="//header/button[@name='action_draft']" position="after">
             		<button name="action_reschedule_payment_procedure" string="Reschedule" type="object" class="oe_highlight" attrs="{'invisible': [('payment_state', '!=', 'rejected')]}"/>
             	</xpath>
-            	
+            	<xpath expr="//div[@class='oe_title']" position="attributes">
+            		<attribute name='attrs'>{'invisible': [('payment_state', '=', 'draft')]}</attribute>
+            	</xpath>
             	<xpath expr="//header/button[@name='post']" position="attributes">
             		<attribute name="attrs">{'invisible':[('payment_state','!=','for_payment_procedure')]}</attribute>
             		<attribute name="states"></attribute>

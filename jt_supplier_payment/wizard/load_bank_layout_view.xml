@@ -11,7 +11,7 @@
                     	<field name="journal_id" required="1" domain="[('type','=','bank')]" options="{'no_open': True, 'no_create': True}"/>
                     	<field name="payment_ids" invisible="1"/>
                     	<field name="file_name" invisible="1"/>
-                    	<field name="file_data" filename="file_name" invisible="1"/>
+                    	<field name="file_data" filename="file_name" required="1"/>
                     </group>
                     <footer>
                         <button string="Generate" name="load_bank_layout" type="object" class="oe_highlight"/>

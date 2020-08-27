@@ -98,6 +98,7 @@
 	            		<page string="JP Morgan" name="jp_morgan">
 	            			<group>
 	            				<group>
+	            					<field name="jp_payment_concept"/>
 	            					<field name="jp_method"/>
 	            					<field name="jp_bank_transfer"/>
 	            					<field name="jp_id_type"/>

@@ -21,11 +21,13 @@
 #
 ##############################################################################
 from odoo import models, fields,_
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError,Warning
 import base64
 from datetime import datetime, timedelta
 from odoo.tools.misc import formatLang, format_date, get_lang
 from babel.dates import format_datetime, format_date
+import csv
+import io
 
 class loadBankLayoutSupplierPayment(models.TransientModel):
 
@@ -56,8 +58,139 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
             'type': 'ir.actions.act_window',
         }
     
+    def get_banamex_file(self):
+        try:
+            file_data = base64.b64decode(self.file_data)
+            data = io.StringIO(file_data.decode("utf-8"))
+            data.seek(0)
+            file_reader = []
+            csv_reader = csv.reader(data, delimiter=',')
+            file_reader.extend(csv_reader)
+            count = 0
+            for line in file_reader:
+                if count==0:
+                    count += 1
+                    continue
+                account_no = line[8]
+                amount = line[16]
+                if amount and account_no:
+                    first_amount = amount[:-2]
+                    last_amount = amount[-2:]
+
+                    act_amount = first_amount+"."+last_amount
+                    act_amount = float(act_amount)
+                    match_payment =  self.payment_ids.filtered(lambda x:x.amount==act_amount and x.payment_bank_account_id.acc_number==account_no)
+                    if match_payment:
+                        match_payment[0].post()
+        except:
+            raise Warning(_("File Format not Valid!"))        
+
+    def get_hsbc_file(self):
+        try:
+            file_data = base64.b64decode(self.file_data)
+            data = io.StringIO(file_data.decode("utf-8"))
+            data.seek(0)
+            file_reader = []
+            csv_reader = csv.reader(data, delimiter=',')
+            file_reader.extend(csv_reader)
+            count = 0
+            for line in file_reader:
+                if count==0:
+                    count += 1
+                    continue
+                account_no = line[1]
+                cutomer_ref = line[3]
+                amount = line[6]
+                if amount and account_no and cutomer_ref:
+                    act_amount = float(amount)
+                    match_payment =  self.payment_ids.filtered(lambda x:x.amount==act_amount and x.hsbc_reference==cutomer_ref and x.payment_bank_account_id.acc_number==account_no)
+                    if match_payment:
+                        match_payment[0].post()
+        except:
+            raise Warning(_("File Format not Valid!"))        
+    def get_santander_file(self):
+        try:
+            file_data = base64.b64decode(self.file_data)
+            data = io.StringIO(file_data.decode("utf-8")).readlines()
+            for line in data:
+                sing = line[76]
+                amount = line[77:91]
+                concept = line[113:152]
+                if sing and amount and concept and sing=='-':
+                    first_amount = amount[:-2]
+                    last_amount = amount[-2:]
+                    concept = concept.rstrip()    
+                    act_amount = first_amount+"."+last_amount
+                    act_amount = float(act_amount)
+                    match_payment =  self.payment_ids.filtered(lambda x:x.amount==act_amount and x.santander_payment_concept==concept)
+                    if match_payment:
+                        match_payment[0].post()
+        except:
+            raise Warning(_("File Format not Valid!"))        
+
+    def get_jp_morgan_file(self):
+        try:
+            file_data = base64.b64decode(self.file_data)
+            data = io.StringIO(file_data.decode("utf-8"))
+            data.seek(0)
+            file_reader = []
+            csv_reader = csv.reader(data, delimiter=',')
+            file_reader.extend(csv_reader)
+            count = 0
+            for line in file_reader:
+                if count==0:
+                    count += 1
+                    continue
+                jp_payment_concept = line[8]
+                amount = line[10]
+                if amount and jp_payment_concept:
+                    act_amount = float(amount)
+                    match_payment =  self.payment_ids.filtered(lambda x:x.amount==act_amount and x.jp_payment_concept==jp_payment_concept)
+                    if match_payment:
+                        match_payment[0].post()
+        except:
+            raise Warning(_("File Format not Valid!"))        
+
+    def get_bbva_file(self):
+        try:
+            file_data = base64.b64decode(self.file_data)
+            data = io.StringIO(file_data.decode("utf-8"))
+            data.seek(0)
+            file_reader = []
+            csv_reader = csv.reader(data, delimiter=',')
+            file_reader.extend(csv_reader)
+            account_no = ''
+            for line in file_reader:
+                if line[0]=='11':
+                    account_no = line[3]
+                    continue
+                if line[0]!='22':
+                    continue
+                payment_charge = line[7]
+                amount = line[8]
+                data_line = line[0]
+                
+                if data_line and data_line=='22' and amount and payment_charge and account_no and payment_charge=='1':
+                    act_amount = float(amount)
+                    match_payment =  self.payment_ids.filtered(lambda x:x.amount==act_amount and x.payment_bank_account_id.acc_number==account_no)
+                    if match_payment:
+                        match_payment[0].post()
+        except:
+            raise Warning(_("File Format not Valid!"))        
+          
     def load_bank_layout(self):
         for payment in self.payment_ids:
             if payment.journal_id.id != self.journal_id.id:
                 raise UserError(_("The selected layout does NOT match the bank of the selected payments"))
-            payment.post()
+
+        if self.journal_id.bank_format == 'banamex':         
+            self.get_banamex_file()
+        if self.journal_id.bank_format == 'hsbc':         
+            self.get_hsbc_file()
+        if self.journal_id.bank_format == 'santander':         
+            self.get_santander_file()
+        if self.journal_id.bank_format == 'jpmw' or self.journal_id.bank_format == 'jpmu' or self.journal_id.bank_format == 'jpma':
+            self.get_jp_morgan_file()
+        if self.journal_id.bank_format == 'bbva_tnn_ptc' or self.journal_id.bank_format == 'bbva_tsc_pcs' or self.journal_id.bank_format == 'bbva_sit':
+            self.get_bbva_file()
+            

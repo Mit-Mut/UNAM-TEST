@@ -57,6 +57,8 @@ class AccountPayment(models.Model):
     jp_drawdown_type = fields.Selection([('WIRE','WIRE'),
                                     ('BOOK','BOOK'),('Drawdown','Drawdown')],string="Drawdown Type")
     
+    jp_payment_concept = fields.Char('Payment Concept')
+    
     payment_request_id = fields.Many2one('account.move','circular')
     
     @api.constrains('banamex_reference')

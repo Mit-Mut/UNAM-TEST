@@ -29,7 +29,6 @@ class AccountMove(models.Model):
 
     def show_conac_move(self):
         for record in self:
-            print ("calll=====",record.conac_line_ids)
             record.conac_line_ids = record.line_ids.filtered(lambda x:x.conac_move)
              
     budget_id = fields.Many2one('expenditure.budget')

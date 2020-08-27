@@ -37,10 +37,10 @@
         <menuitem id="policy_keys_menu" name="Policy Keys" parent="menu_payroll_payment_config"
                   sequence="8" action="policy_keys_action"/>
 
-        <!-- menu for UPA Catalog -->
+        <!-- menu for UPA Catalog 
         <menuitem id="upa_catalog_menu" name="UPA Catalog" parent="menu_payroll_payment_config"
                   sequence="9" action="upa_catalog_action"/>
-
+		-->
         <!-- menu for UPA Catalog -->
         <menuitem id="upa_document_type_menu" name="Document Type" parent="menu_payroll_payment_config"
                   sequence="10" action="upa_document_type_action"/>

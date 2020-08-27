@@ -33,7 +33,16 @@ class OperationType(models.Model):
     op_number = fields.Char('Operation Number', size=2)
     currency_type = fields.Selection([('national', 'National Currency'), (
         'foreign', 'Foreign Currency')], string='Currency type of the transaction')
-    upa_catalog_id = fields.Many2one('upa.catalog','UPA Catalog')
+    upa_catalog_policy_id = fields.Many2one('policy.keys','UPA Catalog')
+
+    def name_get(self):
+        result = []
+        for rec in self:
+            name = rec.name or ''
+            if rec.op_number and self.env.context and self.env.context.get('show_for_supplier_payment',False): 
+                name = rec.op_number
+            result.append((rec.id, name))
+        return result
     
     def fill_zero(self, number):
         return str(number).zfill(2)

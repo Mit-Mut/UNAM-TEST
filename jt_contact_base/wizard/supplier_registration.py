@@ -403,7 +403,7 @@ class SupplierRegistration(models.TransientModel):
                     else:
                         lst.append(' ')
                     lst.append('L')
-                    f_str= "21".zfill(3)
+                    f_str= '021'
                     lst.append(f_str)
                     lst.append('BID')
                     lst.append(' ')

@@ -84,7 +84,7 @@ class GenerateBankLayout(models.TransientModel):
                 file_data +=temp.zfill(20)
             #==== Receipt Bank DATA ===========
             if payment.payment_bank_account_id:
-                if payment.payment_bank_account_id.account_type=='check':
+                if payment.payment_bank_account_id.account_type=='checks':
                     file_data += '01'
                     if payment.payment_bank_account_id.branch_number:
                         file_data += payment.payment_bank_account_id.branch_number.zfill(4)
@@ -141,11 +141,11 @@ class GenerateBankLayout(models.TransientModel):
             #====== Current Dat time=========
             currect_time = datetime.today()
             
-            file_data +=str(currect_time.day)
+            file_data +=str(currect_time.day).zfill(2)
             file_data +=str(currect_time.month).zfill(2)
             file_data +=str(currect_time.year)[:2]
-            file_data +=str(currect_time.hour)
-            file_data +=str(currect_time.minute)
+            file_data +=str(currect_time.hour).zfill(2)
+            file_data +=str(currect_time.minute).zfill(2)
             file_data +="\n"
             
         gentextfile = base64.b64encode(bytes(file_data,'utf-8'))
@@ -256,13 +256,23 @@ class GenerateBankLayout(models.TransientModel):
                 beneficiary_name = payment.partner_id.name
             file_data += beneficiary_name.ljust(30, " ")   
             #======= Type of Account ========#
-            if payment.payment_bank_account_id:
-                if payment.payment_bank_account_id.account_type=='card':
-                    file_data += '03'
-                elif payment.payment_bank_account_id.account_type=='clabe_acc':
-                    file_data += '40'
-                else:
-                    file_data += '00'
+            bank_account_code = '00'
+            print ("=====",payment.partner_id.bank_ids)
+            if payment.partner_id and payment.partner_id.bank_ids:
+                if payment.partner_id.bank_ids[0].account_type=='card':
+                    bank_account_code = '03'
+                elif payment.partner_id.bank_ids[0].account_type=='clabe_acc':
+                    print ("=====",payment.partner_id.bank_ids[0].account_type)
+                    bank_account_code = '40'
+            file_data +=  bank_account_code
+              
+#             if payment.payment_bank_account_id:
+#                 if payment.payment_bank_account_id.account_type=='card':
+#                     file_data += '03'
+#                 elif payment.payment_bank_account_id.account_type=='clabe_acc':
+#                     file_data += '40'
+#                 else:
+#                     file_data += '00'
             #======= Bank Code / Key bank ========#
             if payment.payment_bank_id:
                 bank_code = ''

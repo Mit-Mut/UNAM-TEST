@@ -19,10 +19,13 @@ class BankBalanceCheck(models.TransientModel):
         if self.journal_id:
             self.account_id = self.journal_id.default_debit_account_id and self.journal_id.default_debit_account_id.id or False
         else:
-            self.journal_id = False
+            self.account_id = False
     
     def verify_balance(self):
         account_balance = 0
+        if not self.account_id:
+            raise ValidationError("Please Configure default debit account into Bank Journal")
+        
         if self.account_id:
             values= self.env['account.move.line'].search([('account_id', '=', self.account_id.id),('move_id.state', '=', 'posted')])
             account_balance = sum(x.debit-x.credit for x in values)
@@ -67,6 +70,12 @@ class BankBalanceCheck(models.TransientModel):
 
     def create_journal_line_for_payment_procedure(self,invoice):
         #===== for the accounting impact of the "Accrued" Budget====#
+        if invoice.journal_id and not invoice.journal_id.accured_credit_account_id \
+            or not invoice.journal_id.conac_accured_credit_account_id \
+            or not invoice.journal_id.accured_debit_account_id \
+            or not invoice.journal_id.conac_accured_debit_account_id :
+            raise ValidationError("Please configure UNAM and CONAC Accrued account in payment request journal!")
+        
         invoice.line_ids = [(0, 0, {
                                      'account_id': invoice.journal_id.accured_credit_account_id and invoice.journal_id.accured_credit_account_id.id or False,
                                      'coa_conac_id': invoice.journal_id.conac_accured_credit_account_id and invoice.journal_id.conac_accured_credit_account_id.id or False,
@@ -82,6 +91,10 @@ class BankBalanceCheck(models.TransientModel):
                                      'conac_move' : True
                                  })]
         #====== the Bank Journal, for the accounting impact of the "Exercised" Budget ======#
+        if not self.journal_id.execercise_credit_account_id or not self.journal_id.conac_exe_credit_account_id \
+            or not self.journal_id.execercise_debit_account_id or not self.journal_id.conac_exe_debit_account_id :
+            raise ValidationError("Please configure UNAM and CONAC Exercised account in Bank journal!")
+        
         invoice.line_ids = [(0, 0, {
                                      'account_id': self.journal_id.execercise_credit_account_id and self.journal_id.execercise_credit_account_id.id or False,
                                      'coa_conac_id': self.journal_id.conac_exe_credit_account_id and self.journal_id.conac_exe_credit_account_id.id or False,

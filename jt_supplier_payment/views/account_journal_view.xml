@@ -16,5 +16,16 @@
                 </xpath>
             </field>
         </record>
+        <record id="inherited_account_journal_form_view_bank_layout" model="ir.ui.view">
+            <field name="name">Inherited account journal form view bank layout</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="jt_contact_base.account_journal_supplier_layout_inherit_view"/>
+            <field name="arch" type="xml">
+            	<xpath expr="//group[@name='bank_layout']" position="inside">
+            		<field name="bank_format"/>
+            		<field name="load_bank_format"/> 
+            	</xpath>
+			</field>
+		</record>        
     </data>
 </odoo>

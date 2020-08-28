@@ -27,7 +27,7 @@ class PolicyKeys(models.Model):
 
     _name = 'policy.keys'
     _description = 'Policy Keys'
-    _rec_name = 'origin'
+    _rec_name = 'organization'
 
     origin = fields.Char('Origination of the movement')
     organization = fields.Char('Organization and Control', size=3)

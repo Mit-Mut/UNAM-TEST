@@ -19,7 +19,7 @@ class AccountPayment(models.Model):
                               ('rejected','Rejected'),
                               ('cancelled', 'Cancelled')], 
                               readonly=True, default='draft', copy=False, string="Status")
- 
+     
     banamex_description = fields.Char('Description',size=24)
     banamex_concept = fields.Char('Concept',size=34)
     banamex_reference = fields.Char('Reference',size=10)
@@ -60,6 +60,45 @@ class AccountPayment(models.Model):
     jp_payment_concept = fields.Char('Payment Concept')
     
     payment_request_id = fields.Many2one('account.move','circular')
+    
+    @api.depends('journal_id','journal_id.bank_format','journal_id.load_bank_format')
+    def check_bank_format_type(self):
+        for record in self:
+            is_hide_banamex = True
+            is_hide_bbva_sit = True
+            is_hide_bbva_net = True
+            is_hide_hsbc = True
+            is_hide_santander = True  
+            is_hide_jp_morgan = True
+            
+            if record.journal_id.bank_format=='banamex' or record.journal_id.load_bank_format == 'banamex':
+                is_hide_banamex = False
+            if record.journal_id.bank_format=='hsbc' or record.journal_id.load_bank_format == 'hsbc':
+                is_hide_hsbc = False
+            if record.journal_id.bank_format=='santander' or record.journal_id.load_bank_format == 'santander':
+                is_hide_santander = False
+            if record.journal_id.bank_format == 'bbva_sit' or record.journal_id.load_bank_format == 'bbva_bancomer':
+                is_hide_bbva_sit = False
+            if record.journal_id.bank_format in ('bbva_tnn_ptc','bbva_tsc_pcs') or record.journal_id.load_bank_format == 'bbva_bancomer':
+                is_hide_bbva_net = False
+                
+            if record.journal_id.bank_format in ('jpmw','jpmu','jpma') or record.journal_id.load_bank_format == 'jp_morgan':
+                is_hide_jp_morgan = False
+
+            record.is_hide_banamex = is_hide_banamex
+            record.is_hide_bbva_sit = is_hide_bbva_sit
+            record.is_hide_hsbc = is_hide_hsbc
+            record.is_hide_santander = is_hide_santander  
+            record.is_hide_jp_morgan = is_hide_jp_morgan
+            record.is_hide_bbva_net = is_hide_bbva_net
+            
+    is_hide_banamex = fields.Boolean(compute='check_bank_format_type',default=True)
+    is_hide_bbva_sit = fields.Boolean(compute='check_bank_format_type',default=True)
+    is_hide_bbva_net = fields.Boolean(compute='check_bank_format_type',default=True)
+    is_hide_hsbc = fields.Boolean(compute='check_bank_format_type',default=True)
+    is_hide_santander = fields.Boolean(compute='check_bank_format_type',default=True)
+    is_hide_jp_morgan = fields.Boolean(compute='check_bank_format_type',default=True)
+    
     
     @api.constrains('banamex_reference')
     def _check_banamex_reference(self):
@@ -121,7 +160,7 @@ class AccountPayment(models.Model):
         result = super(AccountPayment,self).post()
         self.write({'payment_state': 'posted'})
         for payment in self:
-            for inv in payment.invoice_ids:
+            for inv in payment.invoice_ids.filtered(lambda x:x.is_payment_request):
                 if inv.invoice_payment_state == 'paid':
                     inv.payment_state = 'paid'
                     payment.create_journal_for_paid(inv)

@@ -153,7 +153,17 @@ class AccountMove(models.Model):
     is_zone_res = fields.Boolean('Show Zone Res',default=False)
     is_show_resposible_group = fields.Boolean('Resposible Group',default=False)
 
-
+    def show_payment_line_ids(self):
+        for rec in self:
+            payments = self.env['account.payment'].search([('payment_request_id','=',rec.id),('state','not in',('draft','cancelled'))])
+            for payment in payments:
+                rec.payment_move_line_ids +=  payment.move_line_ids
+            if not payments:
+                rec.payment_move_line_ids = []
+                
+    payment_move_line_ids = fields.Many2many('account.move.line', 'rel_account_move_payment_line','payment_req_id','line_id',string='Payment Journal Items',
+                                     compute="show_payment_line_ids")
+    
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {})

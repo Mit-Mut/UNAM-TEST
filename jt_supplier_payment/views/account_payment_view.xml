@@ -60,23 +60,29 @@
             		<field name="folio"/>
             		<field name="reason_for_rejection" readonly="1" attrs="{'invisible':[('payment_state','!=','rejected')]}"/>
             		<field name="reason_for_cancel" readonly="1" attrs="{'invisible':[('payment_state','!=','cancelled')]}"/>
+            		<field name="is_hide_banamex" invisible="1"/>
+            		<field name="is_hide_bbva_sit" invisible="1"/>
+            		<field name="is_hide_bbva_net" invisible="1"/>
+            		<field name="is_hide_hsbc" invisible="1"/>
+            		<field name="is_hide_santander" invisible="1"/>
+            		<field name="is_hide_jp_morgan" invisible="1"/>
             	</field>
 	            <xpath expr="//sheet/group[1]" position="after">
 	            	<notebook>
-	            		<page string="Banamex" name="banamex">
+	            		<page string="Banamex" name="banamex" attrs="{'invisible':[('is_hide_banamex','=',True)]}">
 	            			<group>
 	            				<field name="banamex_description"/>
 	            				<field name="banamex_concept"/>
 	            				<field name="banamex_reference"/>
 	            			</group>
 	            		</page>
-	            		<page string="BBVA Bancomer Net Cash" name="bbva_net_cash">
+	            		<page string="BBVA Bancomer Net Cash" name="bbva_net_cash" attrs="{'invisible':[('is_hide_bbva_net','=',True)]}">
 	            			<group>
 	            				<field name="net_cash_reference"/>
 	            				<field name="net_cash_availability"/>
 	            			</group>
 	            		</page>
-	            		<page string="BBVA Bancomer SIT" name="bbva_sit">
+	            		<page string="BBVA Bancomer SIT" name="bbva_sit" attrs="{'invisible':[('is_hide_bbva_sit','=',True)]}">
 	            			<group>
 	            				<field name="sit_file_key"/>
 	            				<field name="sit_operation_code"/>
@@ -85,17 +91,17 @@
 	            				<field name="sit_additional_data"/>
 	            			</group>
 	            		</page>
-	            		<page string="HSBC" name="hsbc">
+	            		<page string="HSBC" name="hsbc" attrs="{'invisible':[('is_hide_hsbc','=',True)]}">
 	            			<group>
 	            				<field name="hsbc_reference"/>
 	            			</group>
 	            		</page>
-	            		<page string="Santander" name="santander">
+	            		<page string="Santander" name="santander" attrs="{'invisible':[('is_hide_santander','=',True)]}">
 	            			<group>
 	            				<field name="santander_payment_concept"/>
 	            			</group>
 	            		</page>
-	            		<page string="JP Morgan" name="jp_morgan">
+	            		<page string="JP Morgan" name="jp_morgan" attrs="{'invisible':[('is_hide_jp_morgan','=',True)]}">
 	            			<group>
 	            				<group>
 	            					<field name="jp_payment_concept"/>

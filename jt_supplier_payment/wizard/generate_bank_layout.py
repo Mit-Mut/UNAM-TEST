@@ -257,12 +257,10 @@ class GenerateBankLayout(models.TransientModel):
             file_data += beneficiary_name.ljust(30, " ")   
             #======= Type of Account ========#
             bank_account_code = '00'
-            print ("=====",payment.partner_id.bank_ids)
             if payment.partner_id and payment.partner_id.bank_ids:
                 if payment.partner_id.bank_ids[0].account_type=='card':
                     bank_account_code = '03'
                 elif payment.partner_id.bank_ids[0].account_type=='clabe_acc':
-                    print ("=====",payment.partner_id.bank_ids[0].account_type)
                     bank_account_code = '40'
             file_data +=  bank_account_code
               
@@ -284,6 +282,31 @@ class GenerateBankLayout(models.TransientModel):
             if payment.payment_date:
                 payment_year = str(payment.payment_date.year)[:2]
                 month_name = format_datetime(payment.payment_date, 'MMMM', locale=get_lang(self.env).code)
+                if payment.payment_date.month==1:
+                    month_name = 'Enero'
+                elif payment.payment_date.month==2:
+                    month_name = 'Febrero'
+                elif payment.payment_date.month==3:
+                    month_name = 'Marzo'
+                elif payment.payment_date.month==4:
+                    month_name = 'Abril'
+                elif payment.payment_date.month==5:
+                    month_name = 'Mayo'
+                elif payment.payment_date.month==6:
+                    month_name = 'Junio'
+                elif payment.payment_date.month==7:
+                    month_name = 'Julio'
+                elif payment.payment_date.month==8:
+                    month_name = 'Agosto'
+                elif payment.payment_date.month==9:
+                    month_name = 'Septiembre'
+                elif payment.payment_date.month==10:
+                    month_name = 'Octubre'
+                elif payment.payment_date.month==11:
+                    month_name = 'Noviembre'
+                elif payment.payment_date.month==12:
+                    month_name = 'Diciembre'
+                                
                 reason_payment += " "+month_name+" "+payment_year
             file_data += reason_payment.ljust(30, " ")     
             #====== net_cash_reference =======#
@@ -548,14 +571,20 @@ class GenerateBankLayout(models.TransientModel):
             #======= Payment concept ==========#
             santander_payment_concept = ''
             if payment.santander_payment_concept:
-                santander_payment_concept = payment.santander_payment_concept
+                if len(payment.santander_payment_concept) > 40:
+                    santander_payment_concept = payment.santander_payment_concept[:40]
+                else:
+                    santander_payment_concept = payment.santander_payment_concept
             file_data += santander_payment_concept.ljust(40)
             
             #==== Payment Date ======
             if payment.payment_date:
-                file_data +=str(payment.payment_date.day)
+                file_data +=str(payment.payment_date.day).zfill(2)
                 file_data +=str(payment.payment_date.month).zfill(2)
                 file_data +=str(payment.payment_date.year)[:2]
+                file_data += '     '
+            else:
+                file_data += '           '
             file_data +="\n"
         gentextfile = base64.b64encode(bytes(file_data,'utf-8'))
         self.file_data = gentextfile

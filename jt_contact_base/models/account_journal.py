@@ -20,27 +20,12 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Account Base',
-    'summary': 'Account Base',
-    'version': '13.0.0.1.0',
-    'category': 'Invoicing',
-    'author': 'Jupical Technologies Pvt. Ltd.',
-    'maintainer': 'Jupical Technologies Pvt. Ltd.',
-    'website': 'http://www.jupical.com',
-    'license': 'AGPL-3',
-    'depends': ['contacts', 'l10n_mx', 'account'],
-    'data': [
-        'security/ir.model.access.csv',
-        'views/scholarship_type_view.xml',
-        'views/res_partner_view.xml',
-        'views/res_partner_bank_view.xml',
-        'views/account_journal_view.xml',
-        'data/data.xml',
-        'wizard/supplier_registration_view.xml'
-    ],
+from odoo import models, fields, api, _
 
-    'application': False,
-    'installable': True,
-    'auto_install': False,
-}
+
+class AccountJournal(models.Model):
+    _inherit = 'account.journal'
+    
+    supplier_registration_layout = fields.Selection([('banamex', 'Banamex'),
+                               ('bbva', 'BBVA Bancomer SIT'), ('hsbc', 'HSBC'),
+                               ('santander', 'Santander')], string='Supplier Registration')

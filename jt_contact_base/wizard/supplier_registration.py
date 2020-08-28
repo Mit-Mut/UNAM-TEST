@@ -31,16 +31,16 @@ class SupplierRegistration(models.TransientModel):
     _name = 'supplier.registration'
     _description = 'Supplier Registration'
 
-    layout = fields.Selection([('banamex', 'Banamex'),
-                               ('bbva', 'BBVA Bancomer SIT'), ('hsbc', 'HSBC'),
-                               ('santander', 'Santander')], string='Layout')
+    
+    journal_id = fields.Many2one('account.journal',string='Layout')
+    
     fec_data = fields.Binary('FEC File', readonly=True, attachment=False)
     filename = fields.Char(string='Filename', size=256, readonly=True)
 
     def generate(self):
         partners = self.env['res.partner'].search(
             [('id', 'in', self._context.get('active_ids'))])
-        if self.layout == 'banamex':
+        if self.journal_id.supplier_registration_layout == 'banamex':
             filename = 'Banamex.txt'
             name = 'Banamex'
             contents = "1"
@@ -61,9 +61,9 @@ class SupplierRegistration(models.TransientModel):
                     contents += partner.bank_ids[:1].acc_number.zfill(29)
                 if partner.person_type:
                     if partner.person_type == 'physics':
-                        contents += 'Physic'
+                        contents += 'Fisica'
                     elif partner.person_type == 'moral':
-                        contents += 'moral '
+                        contents += 'Moral '
                 else:
                     contents += '      '
                 partner_name = ''
@@ -109,7 +109,7 @@ class SupplierRegistration(models.TransientModel):
 #                 contents += datetime.now().time().strftime('%H%M')
 #                 contents += '\n\n'
 
-        if self.layout == 'bbva':
+        if self.journal_id.supplier_registration_layout == 'bbva':
             filename = 'BBVA Bancomer SIT.txt'
             name = 'BBVA Bancomer SIT'
             contents = 'H'
@@ -291,7 +291,7 @@ class SupplierRegistration(models.TransientModel):
             #== Number of Records rejected Changes ====#
             contents += '0000000000'
             #=== Filler =====#
-            contents += ''.zfill(575)
+            contents += ''.ljust(575)
 #                 contents += "H000747289"
 #                 contents += datetime.now().date().strftime('%Y-%m-%d')
 #                 contents += "01"
@@ -360,7 +360,7 @@ class SupplierRegistration(models.TransientModel):
 #                 contents += "                              0001-01-01"
 #                 contents += '\n\n'
 
-        if self.layout == 'hsbc':
+        if self.journal_id.supplier_registration_layout == 'hsbc':
             name = 'HSBC'
             with open('HSBC.csv', mode='w') as file:
                 writer = csv.writer(file, delimiter=',',
@@ -429,7 +429,7 @@ class SupplierRegistration(models.TransientModel):
                 'filename': 'HSBC.csv',
             })
 
-        if self.layout == 'santander':
+        if self.journal_id.supplier_registration_layout == 'santander':
             filename = 'Santander.txt'
             name = 'Santander'
             contents = ""
@@ -445,7 +445,7 @@ class SupplierRegistration(models.TransientModel):
                 contents += partner_name.ljust(40) 
                 contents += '\n'
 
-        if self.layout != 'hsbc':
+        if self.journal_id.supplier_registration_layout != 'hsbc':
             file_data = base64.b64decode(open(os.path.dirname(
                 os.path.abspath(__file__)) + "/newfile.txt", "rb").read())
             content = io.StringIO(file_data.decode("utf-8")).read()

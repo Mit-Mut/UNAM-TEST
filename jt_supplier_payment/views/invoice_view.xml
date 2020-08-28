@@ -445,6 +445,7 @@
                                       </group>
                                     </form>
                                 </field>
+                                <field name="payment_move_line_ids"></field>
                             </page>
                  
                             <page id="other_tab" string="Other Info" name="other_info"

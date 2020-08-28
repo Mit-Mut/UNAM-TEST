@@ -179,18 +179,18 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
             raise Warning(_("File Format not Valid!"))        
           
     def load_bank_layout(self):
-        for payment in self.payment_ids:
-            if payment.journal_id.id != self.journal_id.id:
-                raise UserError(_("The selected layout does NOT match the bank of the selected payments"))
+        diff_payment = self.payment_ids.filtered(lambda x:x.journal_id.load_bank_format != self.journal_id.load_bank_format)
+        if diff_payment: 
+            raise UserError(_("The selected layout does NOT match the bank of the selected payments"))
 
-        if self.journal_id.bank_format == 'banamex':         
+        if self.journal_id.load_bank_format == 'banamex':         
             self.get_banamex_file()
-        if self.journal_id.bank_format == 'hsbc':         
+        if self.journal_id.load_bank_format == 'hsbc':         
             self.get_hsbc_file()
-        if self.journal_id.bank_format == 'santander':         
+        if self.journal_id.load_bank_format == 'santander':         
             self.get_santander_file()
-        if self.journal_id.bank_format == 'jpmw' or self.journal_id.bank_format == 'jpmu' or self.journal_id.bank_format == 'jpma':
+        if self.journal_id.load_bank_format == 'jp_morgan':
             self.get_jp_morgan_file()
-        if self.journal_id.bank_format == 'bbva_tnn_ptc' or self.journal_id.bank_format == 'bbva_tsc_pcs' or self.journal_id.bank_format == 'bbva_sit':
+        if self.journal_id.load_bank_format == 'bbva_bancomer':
             self.get_bbva_file()
             

@@ -18,7 +18,14 @@ class AccountJournal(models.Model):
                                     ('jpmw','JP Morgan WIRES / BOOKTX'),
                                     ('jpmu','JP Morgan US Drawdowns'),
                                     ('jpma','JP Morgan Advice to Receive'),
-                                    ])
+                                    ],string="Generate Bank Layout")
+    
+    load_bank_format = fields.Selection([('banamex','BANAMEX'),
+                                         ('bbva_bancomer','BBVA BANCOMER'),
+                                         ('hsbc','HSBC'),
+                                         ('santander','SANTANDER'),
+                                         ('jp_morgan','JP MORGAN')
+                                         ],string="Load Bank Layout")
 
     @api.onchange('accured_credit_account_id', 'accured_debit_account_id')
     def onchange_accured_account(self):

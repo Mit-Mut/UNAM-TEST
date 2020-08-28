@@ -132,6 +132,9 @@ class AccountMove(models.Model):
         self.ensure_one()
         self.payment_state = 'draft'
         self.button_draft()
+        conac_move = self.line_ids.filtered(lambda x:x.conac_move)
+        conac_move.sudo().unlink()
+        
     
     def action_cancel_budget(self):
         self.ensure_one()

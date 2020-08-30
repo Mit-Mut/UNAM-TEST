@@ -94,6 +94,7 @@
         </record>
 
          <menuitem id="menu_payment_finance" name="Finance"
+         		  web_icon="jt_payroll_payment,static/description/finance.png"
                   sequence="5"/>
 
         <menuitem id="menu_payment_finance_setting" name="Setting"

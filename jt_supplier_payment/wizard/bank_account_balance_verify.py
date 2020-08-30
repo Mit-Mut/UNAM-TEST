@@ -115,6 +115,7 @@ class BankBalanceCheck(models.TransientModel):
     def schedule_payment(self):
         all_payments = self.env['account.payment']
         for rec in self.invoice_ids:
+            rec.payment_issuing_bank_id = self.journal_id.id
             self.create_journal_line_for_payment_procedure(rec)
             payment_record = self.env['account.payment.register'].with_context(active_ids=rec.ids).create({'journal_id':self.journal_id.id,'invoice_ids':[(6, 0, rec.ids)]})
             Payment = self.env['account.payment']

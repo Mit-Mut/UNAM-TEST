@@ -192,9 +192,9 @@ class AccountPayment(models.Model):
         
         record_ids = record_ids.filtered(lambda x:x.is_payment_request and x.is_invoice(include_receipts=True))
         if record_ids:
-            payment_issuing_bank_id = record_ids.mapped('payment_issuing_bank_id')
-            if len(payment_issuing_bank_id) != 1 :
-                raise UserError(_("You can not register payment for multiple Payment issuing Bank"))
+#             payment_issuing_bank_id = record_ids.mapped('payment_issuing_bank_id')
+#             if len(payment_issuing_bank_id) != 1 :
+#                 raise UserError(_("You can not register payment for multiple Payment issuing Bank"))
             
             amount = self._compute_payment_amount(record_ids, record_ids[0].currency_id, record_ids[0].journal_id,fields.Date.today())
             return {
@@ -202,7 +202,7 @@ class AccountPayment(models.Model):
                 'res_model':'bank.balance.check',
                 'view_mode': 'form',
                 'view_id': self.env.ref('jt_supplier_payment.view_bank_balance_check').id,
-                'context': {'default_journal_id':payment_issuing_bank_id.id,'default_total_amount': abs(amount),'default_total_request':len(record_ids),'default_invoice_ids': [(6, 0, record_ids.ids)]},
+                'context': {'default_total_amount': abs(amount),'default_total_request':len(record_ids),'default_invoice_ids': [(6, 0, record_ids.ids)]},
                 'target': 'new',
                 'type': 'ir.actions.act_window',
             }

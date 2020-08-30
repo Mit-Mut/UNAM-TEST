@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-    
+
+    	<record id="inherited_view_account_payment_l10n_mx_bank" model="ir.ui.view">
+            <field name="name">Inherited view account payment form</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="l10n_mx_edi.view_account_payment_form_inh_l10n_mx"/>
+            <field name="arch" type="xml">
+            	<field name="l10n_mx_edi_partner_bank_id" position="attributes">
+            		<attribute name="invisible">1</attribute>
+            	</field>
+			</field>
+		</record>
+		    
     	<record id="inherited_view_account_payment_tree" model="ir.ui.view">
             <field name="name">Inherited view account payment tree</field>
             <field name="model">account.payment</field>

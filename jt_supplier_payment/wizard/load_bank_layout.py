@@ -98,12 +98,12 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                 if count==0:
                     count += 1
                     continue
-                account_no = line[1]
+                # account_no = line[1]
                 cutomer_ref = line[3]
                 amount = line[6]
-                if amount and account_no and cutomer_ref:
+                if amount and cutomer_ref:
                     act_amount = float(amount)
-                    match_payment =  self.payment_ids.filtered(lambda x:x.amount==act_amount and x.hsbc_reference==cutomer_ref and x.payment_bank_account_id.acc_number==account_no)
+                    match_payment =  self.payment_ids.filtered(lambda x:x.amount==act_amount and x.hsbc_reference==cutomer_ref)
                     if match_payment:
                         match_payment[0].post()
         except:
@@ -159,20 +159,21 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
             file_reader = []
             csv_reader = csv.reader(data, delimiter=',')
             file_reader.extend(csv_reader)
-            account_no = ''
+            #account_no = ''
             for line in file_reader:
-                if line[0]=='11':
-                    account_no = line[3]
-                    continue
+                #if line[0]=='11':
+                    #account_no = line[3]
+                #    continue
                 if line[0]!='22':
                     continue
                 payment_charge = line[7]
                 amount = line[8]
                 data_line = line[0]
                 
-                if data_line and data_line=='22' and amount and payment_charge and account_no and payment_charge=='1':
+                if data_line and data_line=='22' and amount and payment_charge and payment_charge=='1':
                     act_amount = float(amount)
-                    match_payment =  self.payment_ids.filtered(lambda x:x.amount==act_amount and x.payment_bank_account_id.acc_number==account_no)
+                    
+                    match_payment =  self.payment_ids.filtered(lambda x:x.amount==act_amount)
                     if match_payment:
                         match_payment[0].post()
         except:

@@ -8,9 +8,9 @@
                 <form string="Schedule payment">
                     <group>
                     	<group>
-                    		<field name="journal_id" required="1" readonly="1" domain="[('type','=','bank')]"/>
+                    		<field name="journal_id" required="1"  domain="[('type','=','bank')]"/>
                     		<field name="account_id" invisible="1"/>
-                    		<field name="bank_account_id" readonly="1"/>
+                    		<field name="bank_account_id"/>
                     	</group>
                     	<group>
                     		<field name="total_amount" readonly="1"/>

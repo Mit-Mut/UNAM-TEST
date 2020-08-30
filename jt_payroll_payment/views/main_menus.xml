@@ -3,6 +3,7 @@
     <data>
 
         <menuitem id="menu_payroll_payment" name="Payment"
+        		  web_icon="jt_payroll_payment,static/description/payment icon.png"	
                   sequence="5"/>
 
          <menuitem id="menu_payroll_admin_process_unit" name="Administrative Process Unit"
@@ -12,6 +13,7 @@
                   sequence="5"/>
 
         <menuitem id="menu_payment_of_payroll" name="Payment of Payroll"
+        		  web_icon="jt_payroll_payment,static/description/icon.png"	
                   sequence="5"/>
 
         <menuitem id="menu_setting_payment_of_payroll" name="Setting"

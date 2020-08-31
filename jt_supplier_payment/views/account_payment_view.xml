@@ -97,8 +97,8 @@
 	            			<group>
 	            				<field name="sit_file_key"/>
 	            				<field name="sit_operation_code"/>
-	            				<field name="sit_reference" attrs="{'invisible':[('sit_operation_code','!=','payment_interbank')],'required':[('sit_operation_code','=','payment_interbank')]}"/>
-	            				<field name="sit_reason_for_payment" attrs="{'invisible':[('sit_operation_code','!=','payment_interbank')],'required':[('sit_operation_code','=','payment_interbank')]}"/>
+	            				<field name="sit_reference" />
+	            				<field name="sit_reason_for_payment" />
 	            				<field name="sit_additional_data"/>
 	            			</group>
 	            		</page>

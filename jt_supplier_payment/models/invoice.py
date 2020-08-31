@@ -171,7 +171,16 @@ class AccountMove(models.Model):
         if res and res.is_payment_request:
             res.line_ids = False
         return res
-                    
+
+    @api.onchange('partner_id') 
+    def onchange_partner_bak_account(self):
+        if self.partner_id and self.partner_id.bank_ids:
+            self.payment_bank_account_id = self.partner_id.bank_ids[0].id
+            self.payment_bank_id = self.partner_id.bank_ids[0].bank_id and self.partner_id.bank_ids[0].bank_id.id or False
+        else:
+            self.payment_bank_account_id = False
+            self.payment_bank_id = False 
+                               
     @api.onchange('operation_type_id')
     def onchange_operation_type_id(self):
         if self.operation_type_id and self.operation_type_id.name:

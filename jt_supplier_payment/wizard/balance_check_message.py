@@ -47,24 +47,45 @@ class BalanceCheckWizard(models.TransientModel):
         col = 0
         row = 0
         worksheet.row(0).height = 200 * 2
-        worksheet.write(row, col, 'Batch Sheet',style_header_right)
+        if self.env.user.lang == 'es_MX':
+            worksheet.write(row, col, 'Folio de lote',style_header_right)
+        else:
+            worksheet.write(row, col, 'Batch Sheet',style_header_right)
         col += 1
-        worksheet.write(row, col, 'Bank',style_header_right)
+        if self.env.user.lang == 'es_MX':
+            worksheet.write(row, col, 'Banco de emisión de pago',style_header_right)
+        else:
+            worksheet.write(row, col, 'Bank',style_header_right)
         col += 1
         worksheet.col(col).width = 256 * 15
-        worksheet.write(row, col, 'Bank Account',style_header_right)
+        if self.env.user.lang == 'es_MX':
+            worksheet.write(row, col, 'Cuenta bancaria de emisión de pago',style_header_right)
+        else:
+            worksheet.write(row, col, 'Bank Account',style_header_right)
         col += 1
         worksheet.col(col).width = 256 * 15
-        worksheet.write(row, col, 'Account Balance',style_header_right)
+        if self.env.user.lang == 'es_MX':
+            worksheet.write(row, col, 'Saido de la cuenta',style_header_right)
+        else:
+            worksheet.write(row, col, 'Account Balance',style_header_right)
         col += 1
         worksheet.col(col).width = 256 * 15
-        worksheet.write(row, col, 'Minimum Balance',style_header_right)
+        if self.env.user.lang == 'es_MX':
+            worksheet.write(row, col, 'Saido minimo',style_header_right)
+        else:
+            worksheet.write(row, col, 'Minimum Balance',style_header_right)
         col += 1
         worksheet.col(col).width = 256 * 23
-        worksheet.write(row, col, 'Account balance required',style_header_right)
+        if self.env.user.lang == 'es_MX':
+            worksheet.write(row, col, 'Saido requerido en la cuenta',style_header_right)
+        else:
+            worksheet.write(row, col, 'Account balance required',style_header_right)
         col += 1
         worksheet.col(col).width = 256 * 43
-        worksheet.write(row, col, 'Difference Between current and required balance',style_header_right)
+        if self.env.user.lang == 'es_MX':
+            worksheet.write(row, col, 'Diferencia entre el saido actual y el requerido',style_header_right)
+        else:
+            worksheet.write(row, col, 'Difference Between current and required balance',style_header_right)
         col += 1
         row += 1
         col = 0

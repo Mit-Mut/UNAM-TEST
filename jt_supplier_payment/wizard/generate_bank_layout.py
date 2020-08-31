@@ -616,7 +616,7 @@ class GenerateBankLayout(models.TransientModel):
             amount = "%.2f" % payment.amount
             amount = str(amount).split('.')
             #print ('Amount=====',x)
-            file_data +=","+str(amount[0])
+            file_data +=","+str(amount[0]).zfill(13)
             file_data +='.'
             file_data +=str(amount[1])
             
@@ -1042,7 +1042,7 @@ class GenerateBankLayout(models.TransientModel):
             if payment.payment_date:
                 file_data +=str(payment.payment_date.year)
                 file_data +=str(payment.payment_date.month).zfill(2)
-                file_data +=str(payment.payment_date.day)
+                file_data +=str(payment.payment_date.day).zfill(2)
             file_data += ','
             #======= N/A ==========#
             file_data += ',,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,'

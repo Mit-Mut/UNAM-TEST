@@ -99,6 +99,13 @@ class AccountPayment(models.Model):
     is_hide_santander = fields.Boolean(compute='check_bank_format_type',default=True)
     is_hide_jp_morgan = fields.Boolean(compute='check_bank_format_type',default=True)
     
+    @api.model
+    def create(self,vals):
+        res = super(AccountPayment,self).create(vals)   
+        if res.folio and not res.sit_reason_for_payment:
+            sit_res = res.folio.replace("/",'')
+            res.sit_reason_for_payment = sit_res
+        return res
     
     @api.constrains('banamex_reference')
     def _check_banamex_reference(self):
@@ -132,6 +139,7 @@ class AccountPayment(models.Model):
                     rec.name = self.env['ir.sequence'].next_by_code(sequence_code, sequence_date=rec.payment_date)
                     if not rec.name and rec.payment_type != 'transfer':
                         raise UserError(_("You have to define a sequence for %s in your company.") % (sequence_code,))
+            rec.banamex_concept = rec.name
             rec.payment_state = 'for_payment_procedure'            
 
     def action_reschedule_payment_procedure(self):

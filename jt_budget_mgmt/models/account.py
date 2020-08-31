@@ -35,11 +35,21 @@ class AccountMove(models.Model):
     adequacy_id = fields.Many2one('adequacies')
     dependancy_id = fields.Many2one('dependency', string='Dependency')
     sub_dependancy_id = fields.Many2one('sub.dependency', 'Sub Dependency')
-
+    payment_place_id = fields.Many2one('payment.place', 'Name')
     conac_line_ids = fields.One2many('account.move.line', 'move_id', string='Journal Items',
                                      compute="show_conac_move")
 
-        
+
+    @api.onchange('dependancy_id','sub_dependancy_id')        
+    def onchange_dep_sub_dep(self):
+        if self.dependancy_id and self.sub_dependancy_id:
+            payment_place_id = self.env['payment.place'].search([('dependancy_id','=',self.dependancy_id.id),('sub_dependancy_id','=',self.sub_dependancy_id.id)])
+            if payment_place_id:
+                self.payment_place_id = payment_place_id.id
+            else:
+                self.payment_place_id = False
+        else:
+            self.payment_place_id = False
     def action_register(self):
         for move in self:
             invoice_lines = move.invoice_line_ids.filtered(lambda x:not x.program_code_id)

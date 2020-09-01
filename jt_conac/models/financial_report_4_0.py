@@ -246,6 +246,77 @@ class StatementOfFinancialPosition(models.AbstractModel):
                 'unfoldable': False,
                 'unfolded': True,
             })
+         
+        budget_user_type = self.env.ref('jt_supplier_payment.data_account_type_budget_accounts')
+        budget_accounts = self.env['account.account'].search([('user_type_id','=',budget_user_type.id)])
+        lines.append({
+            'id': 'hierarchy_' + 'budget_accounts',
+            'name': 'BUDGET ACCOUNTS',
+            'columns': [{'name': ''}] * len(periods),
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+            
+        })
+        main_balance_dict = {}
+        for b_account in budget_accounts:
+            amt_columns = []
+            period_dict = {}
+
+            for period in periods:
+                balance = 0
+                date_start = datetime.strptime(str(period.get('date_from')), DEFAULT_SERVER_DATE_FORMAT).date()
+                date_end = datetime.strptime(str(period.get('date_to')), DEFAULT_SERVER_DATE_FORMAT).date()
+
+                move_lines = move_line_obj.sudo().search(
+                    [('account_id', '=', b_account.id),
+                     ('move_id.state', '=', posted),
+                     ('date', '>=', date_start), ('date', '<=', date_end)])
+                if move_lines:
+                    balance += (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+                    if period.get('string') in period_dict:
+                        period_dict.update({period.get('string'): period_dict.get(period.get('string')) + balance})
+                    else:
+                        period_dict.update({period.get('string'): balance})
+
+            for pd, bal in period_dict.items():
+                if pd in main_balance_dict.keys():
+                    main_balance_dict.update({pd: main_balance_dict.get(pd) + bal})
+                else:
+                    main_balance_dict.update({pd: bal})
+
+            for pe in periods:
+                if pe.get('string') in period_dict.keys():
+                    amt_columns.append(self._format({'name': period_dict.get(pe.get('string'))},figure_type='float'))
+                else:
+                    
+                    amt_columns.append(self._format({'name': 0.0},figure_type='float'))
+            lines.append({
+                'id': 'budget_accounts_%s' % b_account.id,
+                'name': b_account.display_name,
+                'columns': amt_columns,
+                'level': 3,
+                'parent_id': 'hierarchy_' + 'budget_accounts',
+            })
+
+        total_col = []
+        for pe in periods:
+            if pe.get('string') in main_balance_dict.keys():
+                total_col.append(self._format({'name': main_balance_dict.get(pe.get('string'))},figure_type='float'))
+            else:
+                total_col.append(self._format({'name': 0.00},figure_type='float'))
+
+        lines.append({
+            'id': 'budget_total_amount' ,
+            'name': 'Total BUDGET ACCOUNTS',
+            'columns': total_col,
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+            #'parent_id': 'hierarchy_' + 'budget_accounts',
+            
+        })
+
         return lines
 
     def _get_report_name(self):

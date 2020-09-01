@@ -27,7 +27,7 @@ class AccountPayment(models.Model):
     net_cash_reference = fields.Char('Reference',size=7)
     net_cash_availability = fields.Selection([('SPEI','SPEI'),('CECOBAN','CECOBAN')],string='Availability')
     
-    sit_file_key = fields.Char('File Key')
+    sit_file_key = fields.Char('File Key',size=30)
     sit_operation_code = fields.Selection([('payment_on_account_bancomer','Payment on account bancomer'),
                                            ('payment_interbank','Payment interbank account next day')],string="Operation Code")
     sit_reference =fields.Char(size=25,string="SIT Reference")

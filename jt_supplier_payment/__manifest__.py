@@ -34,6 +34,8 @@
         'data/data.xml',
         'data/ir_sequence_data.xml',
         'data/paper_format.xml',
+        'data/data_account_type.xml',
+        'data/account_financial_report_data.xml',
         'security/ir.model.access.csv',
         'views/invoice_view.xml',
         'views/report_receipt_template.xml',

@@ -85,7 +85,7 @@
                                 <field name="is_show_holder_of_dependency" invisible="1"/>
                                 <field name="holder_of_dependency_id" attrs="{'invisible':[('is_show_holder_of_dependency','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 <field name="is_from_reschedule_payment" invisible="1"/>
-                                <field name="payment_method" attrs="{'readonly': [('payment_state', '!=', 'draft'),('is_from_reschedule_payment','=',False)]}"/>
+                                <field name="l10n_mx_edi_payment_method_id" attrs="{'readonly': [('payment_state', '!=', 'draft'),('is_from_reschedule_payment','=',False)]}"/>
                             </group>
                             <group>
                             	<field name="is_show_commitment_date" invisible="1"/>
@@ -100,7 +100,7 @@
                                 <field name="document_type" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 <field name="upa_key" context="{'show_for_supplier_payment':True}" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 <field name="upa_document_type" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
-                                <field name="payment_issuing_bank_id" readonly="1" /> <!-- attrs="{'readonly': [('payment_state', '!=', 'draft'),('is_from_reschedule_payment','=',False)]}" -->
+                                <field name="payment_issuing_bank_id" attrs="{'readonly': [('is_from_reschedule_payment','=',False)]}"/> <!-- attrs="{'readonly': [('payment_state', '!=', 'draft'),('is_from_reschedule_payment','=',False)]}" -->
                                 <field name="payment_issuing_bank_acc_id"/>
                                 <field name="is_show_responsible" invisible="1"/>
                                 <field name="responsible_id" attrs="{'invisible':[('is_show_responsible','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>

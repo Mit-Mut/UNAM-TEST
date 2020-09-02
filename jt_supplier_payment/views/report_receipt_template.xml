@@ -100,7 +100,7 @@
                         </h6>
                         <h6>
                             <b><span>Request for:</span></b>
-                            <span t-field="o.payment_method"/>
+                            <span t-field="o.l10n_mx_edi_payment_method_id.name"/>
                         </h6>
                         <h6>
                             <b><span>Amount:</span></b>

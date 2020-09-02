@@ -98,6 +98,12 @@ class AccountMove(models.Model):
     no_of_document = fields.Integer("Number of Documents")
     sheets = fields.Integer("Sheets")
     payment_method = fields.Selection([('check', 'Check'), ('electronic_transfer', 'Electronic Transfer'),('cash','Cash')])
+    l10n_mx_edi_payment_method_id = fields.Many2one(
+        'l10n_mx_edi.payment.method',
+        string='Payment Method',
+        help='Indicates the way the payment was/will be received, where the '
+        'options could be: Cash, Nominal Check, Credit Card, etc.')
+    
     document_type = fields.Selection([('national', 'National Currency'), ('foreign', 'Foreign Currency')])
     upa_key = fields.Many2one('policy.keys','UPA Key')
     upa_document_type = fields.Many2one('upa.document.type',string="Document Type UPA")
@@ -347,6 +353,19 @@ class AccountMove(models.Model):
             move.payment_issuing_bank_id = False
             move.payment_state = 'registered'        
 
+    def get_non_business_day(self,invoice_date,next_date):
+        non_business_day = self.env['calendar.payment.regis'].search([('type_pay','=','Non Business Day'),('date','>=',invoice_date),('date','<=',next_date)])
+        return non_business_day
+     
+    def get_patment_date(self,total_days,invoice_date):
+        
+        next_date =  invoice_date + timedelta(days=total_days)
+        non_business_day_ids = self.get_non_business_day(invoice_date,next_date)
+        if non_business_day_ids:
+            next_date = next_date + timedelta(days=1)
+            return self.get_patment_date(len(non_business_day_ids) - 1,next_date)   
+        return next_date
+     
     # def check_operation_name(self):
     #     if self.operation_type_id and self.operation_type_id.name:
     #         my_str = "Payment to supplier"

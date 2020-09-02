@@ -55,8 +55,12 @@ class BankBalanceCheck(models.TransientModel):
                 'target': 'new',
                 'context':{'default_account_balance':account_balance,'default_is_balance':False,'default_wizard_id':self.id},
                 }
-            
+     
     def get_payment_data(self,rec,data):
+        payment_date = False
+        if rec.invoice_date:
+            payment_date = rec.get_patment_date(30,rec.invoice_date)
+        
         data.update({'payment_bank_id':rec.payment_bank_id and rec.payment_bank_id.id or False,
                      'payment_bank_account_id' : rec.payment_bank_account_id and rec.payment_bank_account_id.id or False,
                      'payment_issuing_bank_acc_id' : rec.payment_issuing_bank_acc_id and rec.payment_issuing_bank_acc_id.id or False,
@@ -64,8 +68,10 @@ class BankBalanceCheck(models.TransientModel):
                      'folio' : rec.folio,
                      'payment_state': 'for_payment_procedure',
                      'payment_request_id':rec.id,
+                     'l10n_mx_edi_payment_method_id':rec.l10n_mx_edi_payment_method_id and rec.l10n_mx_edi_payment_method_id.id or False,
                      }) 
-        
+        if payment_date:
+            data.update({'payment_date':payment_date})
         return data
 
     def create_journal_line_for_payment_procedure(self,invoice):

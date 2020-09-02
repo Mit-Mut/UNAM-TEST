@@ -881,7 +881,7 @@ class GenerateBankLayout(models.TransientModel):
             #=====Country======#
             file_data += ' ,'            
             #=====N/A======#
-            file_data += ' , , , , , , , , , , , , , , , , ,'
+            file_data += ' , , , , , , , , , , , , , , , , , ,'
             #======== Reference Sent with Payment ======#
             file_data += ' ,'
             #======== Interanal Reference  ======#
@@ -889,7 +889,7 @@ class GenerateBankLayout(models.TransientModel):
             #======== N/A  ======#
             file_data += ' ,'
             #======== Detail 1  ======#
-            file_data += ','
+            file_data += ' ,'
             #======== Detail 2  ======#
             file_data += ' ,'
             #======== Detail 3  ======#
@@ -897,7 +897,7 @@ class GenerateBankLayout(models.TransientModel):
             #======== Detail 4  ======#
             file_data += ' ,'
             #======== N/A  ======#
-            file_data += ' ,'
+            file_data += ' , , , , , , , ,'
             #======== Code  ======#
             file_data += ' ,'
             #======== Country  ======#
@@ -1000,18 +1000,18 @@ class GenerateBankLayout(models.TransientModel):
             file_data += "DRWDWN"
             file_data += ','
             # ======== BIC /SWIFT ======
-            if payment.payment_bank_id:
+            if payment.journal_id and payment.journal_id.bank_id:
                 bank_code = ''
-                if payment.payment_bank_id.bic:
-                    bank_code = payment.payment_bank_id.bic
+                if payment.journal_id.bank_id.bic:
+                    bank_code = payment.journal_id.bank_id.bic
                 file_data += bank_code            
             file_data += ','
             #==========Bank Account ========#
-            if self.journal_id.bank_account_id:
-                file_data +=self.journal_id.bank_account_id.acc_number
+            if payment.journal_id.bank_account_id and payment.journal_id.bank_account_id.acc_number:
+                file_data +=payment.journal_id.bank_account_id.acc_number
             file_data += ','
             #======= N/A ==========#
-            file_data += ','
+            file_data += ' ,'
             #======== Currency =========#
             file_data += "USD"
             file_data += ','
@@ -1025,7 +1025,7 @@ class GenerateBankLayout(models.TransientModel):
             file_data +=str(amount[1])
             file_data += ','
             #======= N/A ==========#
-            file_data += ','
+            file_data += ' ,'
 
             # ===== Drawdown Type ========#
             if payment.jp_drawdown_type:
@@ -1035,15 +1035,15 @@ class GenerateBankLayout(models.TransientModel):
                     file_data += 'BOOK'
             file_data += ','
             #======= N/A ==========#
-            file_data += ',,,'
+            file_data += ' , , ,'
             #======== Payment Date =========
             if payment.payment_date:
                 file_data +=str(payment.payment_date.year)
                 file_data +=str(payment.payment_date.month).zfill(2)
                 file_data +=str(payment.payment_date.day).zfill(2)
             file_data += ','
-            #======= N/A ==========#
-            file_data += ',,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,'
+            #======= N/A ========== 14 to 60#
+            file_data += ' , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,'
             #==========Bank Account ========#
             if payment.payment_bank_account_id:
                 file_data +=payment.payment_bank_account_id.acc_number
@@ -1055,31 +1055,33 @@ class GenerateBankLayout(models.TransientModel):
             file_data +=partner_name
             file_data += ','  
             #====== Address 1 ======# 
-            file_data += ','
+            file_data += ' ,'
             #======== N/A =======#
-            file_data += ','
+            file_data += ' ,'
             #====== City ======#
-            file_data += ','
+            file_data += ' ,'
             #===== Country ======#
             file_data += 'MX'
             file_data += ','
             #===== ID Type =======#
             if payment.jp_drawdown_type and payment.jp_drawdown_type=='Drawdown':
-                if payment.payment_bank_id:
+                if payment.journal_id and payment.journal_id.bank_id:
                     bank_code = ''
-                    if payment.payment_bank_id.bic:
-                        bank_code = payment.payment_bank_id.bic
+                    if payment.journal_id.bank_id.bic:
+                        bank_code = payment.journal_id.bank_id.bic
                     file_data += bank_code            
-                file_data += ','
+                    file_data += ','
+                else:
+                    file_data += ' ,'
             else:
-                file_data += ','
+                file_data += ' ,'
             #======== Journal Account =======#
             if payment.jp_drawdown_type and payment.jp_drawdown_type=='Drawdown':
-                if self.journal_id.bank_account_id:
-                    file_data +=self.journal_id.bank_account_id.acc_number
+                if payment.journal_id.bank_account_id:
+                    file_data +=payment.journal_id.bank_account_id.acc_number
                 file_data += ','
             else:
-                file_data += ','
+                file_data += ' ,'
 
             #======== Bank of receipt of payment =======#
             if payment.jp_drawdown_type and payment.jp_drawdown_type=='Drawdown':
@@ -1087,7 +1089,7 @@ class GenerateBankLayout(models.TransientModel):
                     file_data += payment.payment_bank_id.name
                 file_data += ','
             else:
-                file_data += ','
+                file_data += ' ,'
 
             #======== Bank Address 1 =======#
             if payment.jp_drawdown_type and payment.jp_drawdown_type=='Drawdown':
@@ -1095,33 +1097,33 @@ class GenerateBankLayout(models.TransientModel):
                     file_data += payment.payment_bank_id.street
                 file_data += ','
             else:
-                file_data += ','
+                file_data += ' ,'
             #===== N/A=======#
-            file_data += ','
+            file_data += ' ,'
             #===== City=======#
-            file_data += ','
+            file_data += ' ,'
             #=====Country=======#
-            file_data += ','
+            file_data += ' ,'
             #===== N/A=======#
-            file_data += ','
+            file_data += ' ,'
             #===== Internal Reference=======#
-            file_data += ','
+            file_data += ' ,'
             #===== N/A=======#
-            file_data += ','
+            file_data += ' ,'
             #===== Details1=======#
-            file_data += ','
+            file_data += ' ,'
             #===== Details2=======#
-            file_data += ','
+            file_data += ' ,'
             #===== Details3=======#
-            file_data += ','
+            file_data += ' ,'
             #===== Details4=======#
-            file_data += ','
-            #===== N/A=======#
-            file_data += ',,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,'
+            file_data += ' ,'
+            #===== N/A======= 81 to 116#
+            file_data += ' , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,'
             #===== Note=======#
-            file_data += ','
+            file_data += ' ,'
             #===== N/A=======#
-            file_data += ','
+            file_data += ' ,'
             file_data += '\n'            
         gentextfile = base64.b64encode(bytes(file_data,'utf-8'))
         self.file_data = gentextfile
@@ -1141,22 +1143,25 @@ class GenerateBankLayout(models.TransientModel):
             file_data += 'ATR'
             file_data += ','
             # ======== BIC /SWIFT ======
-            if payment.payment_bank_id:
+            if payment.journal_id and payment.journal_id.bank_id:
                 bank_code = ''
-                if payment.payment_bank_id.bic:
-                    bank_code = payment.payment_bank_id.bic
+                if payment.journal_id.bank_id.bic:
+                    bank_code = payment.journal_id.bank_id.bic
                 file_data += bank_code            
             file_data += ','
+
             #==========Bank Account ========#
-            if self.journal_id.bank_account_id:
-                file_data +=self.journal_id.bank_account_id.acc_number
+            if payment.journal_id.bank_account_id and payment.journal_id.bank_account_id.acc_number:
+                file_data +=payment.journal_id.bank_account_id.acc_number
             file_data += ','
             #======= N/A=========#
-            file_data += ','
+            file_data += ' ,'
             #====== Currency Data =========
             if payment.currency_id:
                 file_data += payment.currency_id.name
-            file_data += ','
+                file_data += ','
+            else:
+                file_data += ' ,'
             #====== Amount Data =========#
             amount = "%.2f" % payment.amount
             amount = str(amount).split('.')
@@ -1164,71 +1169,71 @@ class GenerateBankLayout(models.TransientModel):
             file_data +='.'
             file_data +=str(amount[1])
             file_data += ','
-            #====== N/A =========#
-            file_data += ',,,,,'
+            #====== N/A ========= 8 to 12#
+            file_data += ' , , , , ,'
             #======== Payment Date =========
             if payment.payment_date:
                 file_data +=str(payment.payment_date.year)
                 file_data +=str(payment.payment_date.month).zfill(2)
-                file_data +=str(payment.payment_date.day)
+                file_data +=str(payment.payment_date.day).zfill(2)
             file_data += ','
-            #======= N/A=========#
-            file_data += ',,,,,,,,,,,,,,,,,,,,,,,,,,'
+            #======= N/A========= 14 to 39#
+            file_data += ' , , , , , , , , , , , , , , , , , , , , , , , , , ,'
             #===== ID Type =======#
             if payment.jp_drawdown_type and payment.jp_drawdown_type=='Drawdown':
-                if payment.payment_bank_id:
+                if payment.journal_id and payment.journal_id.bank_id:
                     bank_code = ''
-                    if payment.payment_bank_id.bic:
-                        bank_code = payment.payment_bank_id.bic
+                    if payment.journal_id.bank_id.bic:
+                        bank_code = payment.journal_id.bank_id.bic
                     file_data += bank_code            
                 file_data += ','
             else:
-                file_data += ','
+                file_data += ' ,'
             #====== ID Value =======#
-            file_data += ','
+            file_data += ' ,'
             #======== Bank of receipt of payment =======#
             if payment.payment_bank_id:
                 file_data += payment.payment_bank_id.name
                 file_data += ','
             else:
-                file_data += ','
+                file_data += ' ,'
             #===== Address 1 ========#
-            file_data += ','
+            file_data += ' ,'
             #===== Address 2 ========#
-            file_data += ','
+            file_data += ' ,'
             #===== Address 3 ========#
-            file_data += ','
+            file_data += ' ,'
             # ==== Country Name =======
             country_code = ''
             if payment.payment_bank_id and payment.payment_bank_id.country:
                 country_code = payment.payment_bank_id.country.code or ''
             file_data +=country_code   
             file_data += ','
-            #========== N/A=========
-            file_data += ',,,,,,,,,'
+            #========== N/A========= 47 to 55 ====#
+            file_data += ' , , , , , , , , ,'
             #========= Name========3
             file_data += 'UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO'
             file_data += ','
             #====== Address 1 =======#
-            file_data += ','
+            file_data += ' ,'
             #====== Address 2 =======#
-            file_data += ','
+            file_data += ' ,'
             #====== City =======#
-            file_data += ','
+            file_data += ' ,'
             #====== Country =======#
-            file_data += ','
+            file_data += ' ,'
+            #====== N/A ======= 61 to 73#
+            file_data += ' , , , , , , , , , , , , ,'
             #====== N/A =======#
-            file_data += ',,,,,,,,,,,,,'
-            #====== N/A =======#
-            file_data += ','
+            file_data += ' ,'
             #======Internal Reference =======#
-            file_data += ','
-            #======N/A =======#
-            file_data += ',,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,'
+            file_data += ' ,'
+            #======N/A ======= 76 to 116#
+            file_data += ' , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,'
             #======= Note ========#
-            file_data += ','
+            file_data += ' ,'
             #======== N/A =======#
-            file_data += ','
+            file_data += ' ,'
             file_data += '\n'   
             
         gentextfile = base64.b64encode(bytes(file_data,'utf-8'))

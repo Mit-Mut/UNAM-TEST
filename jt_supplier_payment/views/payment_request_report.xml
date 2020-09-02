@@ -94,7 +94,7 @@
                     <div id="informations2" class="row mt32 mb32">
                         <div class="col-3" name="payment_method">
                             <strong>Payment method:</strong>
-                            <p class="m-0" t-field="o.payment_method"/>
+                            <p class="m-0" t-field="o.l10n_mx_edi_payment_method_id.name"/>
                         </div>
                         <div class="col-3" name="folio_dependency">
                             <strong>Currency:</strong>
@@ -113,7 +113,7 @@
                     <h4 align="center">Beneficiary Data</h4>
                     
                     <div id="informations3" class="row mt32 mb32">
-                        <div class="col-3" name="payment_method">
+                        <div class="col-3" name="partner_name">
                             <strong>Name:</strong>
                             <p class="m-0" t-if="o.partner_id" t-field="o.partner_id.name"/>
                         </div>

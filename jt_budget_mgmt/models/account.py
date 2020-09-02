@@ -50,11 +50,14 @@ class AccountMove(models.Model):
                 self.payment_place_id = False
         else:
             self.payment_place_id = False
+            
     def action_register(self):
         for move in self:
             invoice_lines = move.invoice_line_ids.filtered(lambda x:not x.program_code_id)
             if invoice_lines:
                 raise ValidationError("Please add program code into invoice lines")
+            for line in move.line_ids:
+                line.coa_conac_id = line.account_id and line.account_id.coa_conac_id and line.account_id.coa_conac_id.id or False 
         return super(AccountMove,self).action_register()
 
         
@@ -167,7 +170,8 @@ class AccountMove(models.Model):
                                      'conac_move' : True
                                  })]
           
-        #self.conac_move = True
+        self.conac_move = True
+        
 class AccountMoveLine(models.Model):
 
     _inherit = 'account.move.line'

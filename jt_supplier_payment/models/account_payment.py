@@ -98,7 +98,13 @@ class AccountPayment(models.Model):
     is_hide_hsbc = fields.Boolean(compute='check_bank_format_type',default=True)
     is_hide_santander = fields.Boolean(compute='check_bank_format_type',default=True)
     is_hide_jp_morgan = fields.Boolean(compute='check_bank_format_type',default=True)
-    
+
+    @api.constrains('payment_date')
+    def check_payment_date(self):
+        non_business_day = self.env['calendar.payment.regis'].search([('type_pay','=','Non Business Day'),('date','=',self.payment_date)])
+        if non_business_day:
+            raise UserError(_('Not allow to schedule payment for non-working days.'))
+                
     @api.model
     def create(self,vals):
         res = super(AccountPayment,self).create(vals)   

@@ -39,7 +39,7 @@
             <field name="inherit_id" ref="account.view_account_move_filter"/>
             <field name="arch" type="xml">
             	<xpath expr="//group" position="inside">
-                        <filter string="Payment method" name="Payment_method" domain="[]" context="{'group_by': 'payment_method'}"/>
+                        <filter string="Payment method" name="Payment_method" domain="[]" context="{'group_by': 'l10n_mx_edi_payment_method_id'}"/>
                         <filter string="Type of operatio" name="Type_of_operatio" domain="[]" context="{'group_by': 'operation_type_id'}"/>
             	</xpath>
             </field>

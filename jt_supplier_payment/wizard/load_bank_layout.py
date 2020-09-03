@@ -256,7 +256,6 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
             #account_no = ''
             count = 0
             for line in file_reader:
-                print ("File===",line)
                 count += 1
                 #if line[0]=='11':
                     #account_no = line[3]

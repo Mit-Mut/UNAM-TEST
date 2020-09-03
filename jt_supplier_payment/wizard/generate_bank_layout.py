@@ -802,11 +802,12 @@ class GenerateBankLayout(models.TransientModel):
                 elif payment.jp_id_type_beneficiary_bank == 'SWIFT':
                     file_data += 'SWIFT'
             file_data += ','
-            #===== Bank Key =======
-            if payment.payment_bank_account_id:
+            #===== ID Value 25 no =======
+            if payment.payment_bank_id:
                 bank_code = ''
                 if payment.payment_bank_id.l10n_mx_edi_code:
-                    bank_code = payment.payment_bank_id.l10n_mx_edi_code
+                    bank_code = payment.payment_bank_id.l10n_mx_edi_code[:3]
+                print ("Bank Code====",bank_code)
                 file_data += bank_code
             file_data += ','
             #==== Bank Name=========#
@@ -889,7 +890,9 @@ class GenerateBankLayout(models.TransientModel):
             #======== N/A  ======#
             file_data += ' ,'
             #======== Detail 1  ======#
-            file_data += ' ,'
+            if payment.jp_payment_concept:
+                file_data += payment.jp_payment_concept 
+            file_data += ','
             #======== Detail 2  ======#
             file_data += ' ,'
             #======== Detail 3  ======#

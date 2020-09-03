@@ -685,13 +685,13 @@ class ProformaBudgetSummaryReport(models.AbstractModel):
                 col_query += ',0.00 as accrued'
             elif column in ('Exercised', 'Ejercido'):
                 need_columns_with_format.append('exercised')
-                col_query += ',(select coalesce(sum(line.price_total),0) from account_move_line line,account_move amove where pc.id=line.program_code_id and amove.id=line.move_id and amove.payment_state=%s and amove.invoice_date >= %s and amove.invoice_date <= %s) as exercised'
-                tuple_where_data.append('for_payment_procedure')
+                col_query += ',(select coalesce(sum(line.price_total),0) from account_move_line line,account_move amove where pc.id=line.program_code_id and amove.id=line.move_id and amove.payment_state in %s and amove.invoice_date >= %s and amove.invoice_date <= %s) as exercised'
+                tuple_where_data.append(('for_payment_procedure','payment_not_applied'))
                 tuple_where_data.append(start)
                 tuple_where_data.append(end)
 
                 #=== Grand Total ======#
-                self.env.cr.execute("select coalesce(sum(line.price_total),0) from account_move_line line,account_move amove where line.program_code_id in %s and amove.id=line.move_id and amove.payment_state=%s and amove.invoice_date >= %s and amove.invoice_date <= %s", (tuple(program_code_list),'for_payment_procedure',start,end))
+                self.env.cr.execute("select coalesce(sum(line.price_total),0) from account_move_line line,account_move amove where line.program_code_id in %s and amove.id=line.move_id and amove.payment_state in %s and amove.invoice_date >= %s and amove.invoice_date <= %s", (tuple(program_code_list),('for_payment_procedure','payment_not_applied'),start,end))
                 my_datas = self.env.cr.fetchone()
                 if my_datas:
                     grand_total_dict.update({'exercised':my_datas[0]})

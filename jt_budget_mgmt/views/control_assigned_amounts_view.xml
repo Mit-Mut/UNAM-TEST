@@ -40,7 +40,7 @@
 
                                 <field name="name" required="1"/>
                                 <field name="folio" required="1"/>
-                                <field name="budget_id" required="1" domain="[('state','=','validate')]"/>
+                                <field name="budget_id" required="1"/>
                                 <button name="import_lines" type="object" string="Import lines" class="oe_highlight" attrs="{'invisible': ['|', ('import_status', '!=', 'draft'), ('state', '!=', 'draft')]}"/>
                                 <button name="import_lines" type="object" string="Re-Import Lines" class="oe_highlight" attrs="{'invisible': ['|', '|', ('import_status', '=', 'draft'), ('state', 'not in', ('draft', 'progress')), ('cron_running', '=', True)]}" context="{'reimport': True}"/>
                                 <field name="user_id" readonly="1"/>

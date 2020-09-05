@@ -140,21 +140,40 @@ class AccountMove(models.Model):
                         'target': 'new',
                         'context':{'default_msg':budget_msg,'default_move_id':self.id,'default_is_budget_suf':True}
                     }
-            
+
+    def add_budget_available_amount(self): 
+        for line in self.invoice_line_ids:
+            if line.budget_line_link_ids:
+                for b_line in line.budget_line_link_ids:
+                    if b_line.budget_line_id:
+                        b_line.budget_line_id.available += b_line.amount
+                line.budget_line_link_ids.unlink()
+                   
     def action_draft_budget(self):
         self.ensure_one()
         self.payment_state = 'draft'
         self.button_draft()
         conac_move = self.line_ids.filtered(lambda x:x.conac_move)
         conac_move.sudo().unlink()
-        
+        self.add_budget_available_amount()
     
     def action_cancel_budget(self):
         self.ensure_one()
         self.payment_state = 'cancel'
         self.button_cancel()
-
+        self.add_budget_available_amount()
+        
+    def action_reschedule(self):
+        res = super(AccountMove,self).action_reschedule()
+        for move in self:
+            move.add_budget_available_amount()
+        return res
+              
     def create_journal_line_for_approved_payment(self):
+        if self.journal_id and (not self.journal_id.default_credit_account_id or not \
+            self.journal_id.default_debit_account_id):
+            raise ValidationError(_("Configure Default Debit and Credit Account in %s!" % \
+                                    self.journal_id.name))
         self.line_ids = [(0, 0, {
                                      'account_id': self.journal_id.default_credit_account_id.id,
                                      'coa_conac_id': self.journal_id.conac_credit_account_id.id,
@@ -179,6 +198,7 @@ class AccountMoveLine(models.Model):
     budget_id = fields.Many2one('expenditure.budget')
     adequacy_id = fields.Many2one('adequacies')
     program_code_id = fields.Many2one('program.code')
+    budget_line_link_ids = fields.One2many('budget.line.move.line.links','account_move_line_id')
     
     @api.onchange('program_code_id')
     def onchange_program_code(self):
@@ -192,4 +212,14 @@ class AccountMoveLine(models.Model):
         if self.program_code_id and self.program_code_id.item_id and self.program_code_id.item_id.unam_account_id:
             return self.program_code_id.item_id.unam_account_id
         return account
-            
+
+class BudgetLineMoveLinelinks(models.Model):
+    
+    _name = 'budget.line.move.line.links'
+    
+    budget_line_id = fields.Many2one('expenditure.budget.line','Budget Line')
+    account_move_line_id = fields.Many2one('account.move.line','Budget Line')
+    amount = fields.Float('Amount')
+       
+    
+           

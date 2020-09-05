@@ -39,7 +39,7 @@
             		<button name="action_validate_payment_procedure" string="Validate" type="object" class="oe_highlight" attrs="{'invisible': [('payment_state', '!=', 'draft')]}"/>
             	</xpath>
             	<xpath expr="//header/button[@name='action_draft']" position="after">
-            		<button name="action_reschedule_payment_procedure" string="Reschedule" type="object" class="oe_highlight" attrs="{'invisible': [('payment_state', '!=', 'rejected')]}"/>
+            		<button name="action_reschedule_payment_procedure" string="Reschedule" type="object" class="oe_highlight" invisible="1"/>
             	</xpath>
             	<xpath expr="//div[@class='oe_title']" position="attributes">
             		<attribute name='attrs'>{'invisible': [('payment_state', '=', 'draft')]}</attribute>

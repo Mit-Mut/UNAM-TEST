@@ -38,7 +38,9 @@ class BudegtInsufficiencWiz(models.TransientModel):
         
     def decrease_available_amount(self):
         for line in self.move_id.invoice_line_ids:
+            budget_line_links = []
             if line.program_code_id and line.price_total != 0:
+                
                 amount = line.price_total
                 budget_lines = self.env['expenditure.budget.line'].sudo().search(
                 [('program_code_id', '=', line.program_code_id.id),
@@ -53,34 +55,41 @@ class BudegtInsufficiencWiz(models.TransientModel):
                             if b_month in (1, 2, 3) and b_s_month in (1, 2, 3):
                                 if b_line.available >= amount:
                                     b_line.available -= amount
+                                    budget_line_links.append((0,0,{'budget_line_id':b_line.id,'account_move_line_id':line.id,'amount':amount}))
                                     break
                                 else:
                                     b_line.available = 0
-                                    amount -= b_line.available                                     
+                                    amount -= b_line.available
+                                    budget_line_links.append((0,0,{'budget_line_id':b_line.id,'account_move_line_id':line.id,'amount':b_line.available}))                                     
                             elif b_month in (4, 5, 6) and b_s_month in (4, 5, 6):
                                 if b_line.available >= amount:
                                     b_line.available -= amount
+                                    budget_line_links.append((0,0,{'budget_line_id':b_line.id,'account_move_line_id':line.id,'amount':amount}))
                                     break
                                 else:
                                     b_line.available = 0
                                     amount -= b_line.available 
-                                
+                                    budget_line_links.append((0,0,{'budget_line_id':b_line.id,'account_move_line_id':line.id,'amount':b_line.available}))
                             elif b_month in (7, 8, 9) and b_s_month in (7, 8, 8):
                                 if b_line.available >= amount:
                                     b_line.available -= amount
+                                    budget_line_links.append((0,0,{'budget_line_id':b_line.id,'account_move_line_id':line.id,'amount':amount}))
                                     break
                                 else:
                                     b_line.available = 0
                                     amount -= b_line.available 
-
+                                    budget_line_links.append((0,0,{'budget_line_id':b_line.id,'account_move_line_id':line.id,'amount':b_line.available}))
                             elif b_month in (10, 11, 12) and b_s_month in (10, 11, 12):
                                 if b_line.available >= amount:
                                     b_line.available -= amount
+                                    budget_line_links.append((0,0,{'budget_line_id':b_line.id,'account_move_line_id':line.id,'amount':amount}))
                                     break
                                 else:
                                     b_line.available = 0
                                     amount -= b_line.available 
-                  
+                                    budget_line_links.append((0,0,{'budget_line_id':b_line.id,'account_move_line_id':line.id,'amount':b_line.available}))
+            line.budget_line_link_ids = budget_line_links
+            
     def action_budget_allocation(self):
         self.move_id.payment_state = 'approved_payment'
         self.move_id.is_from_reschedule_payment = False

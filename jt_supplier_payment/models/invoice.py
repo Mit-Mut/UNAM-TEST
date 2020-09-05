@@ -351,6 +351,8 @@ class AccountMove(models.Model):
         for move in self:
             move.is_from_reschedule_payment = True
             move.payment_issuing_bank_id = False
+            conac_move = self.line_ids.filtered(lambda x:x.conac_move)
+            conac_move.sudo().unlink()
             move.payment_state = 'registered'        
 
     def get_non_business_day(self,invoice_date,next_date):

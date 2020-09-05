@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+         <menuitem id="menu_invoice_income" name="Invoices" sequence="1"
+            parent="submenu_menu_income" action="account.action_move_out_invoice_type"/>
+
+        <menuitem id="menu_invoice_payment_income" name="Payments" sequence="2"
+            parent="submenu_menu_income" action="account.action_account_payments"/>
+
+    </data>
+</odoo>

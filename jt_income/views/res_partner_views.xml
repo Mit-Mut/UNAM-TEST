@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="partner_inherit_view_for_income" model="ir.ui.view">
+            <field name="name">partner.inherit.view.for.income</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='function']" position="before">
+                    <field name="contact_type"/>
+                </xpath>
+            </field>
+        </record>
+
+         <menuitem id="menu_partner_income" name="Clients" sequence="1"
+            parent="main_menu_income" action="account.res_partner_action_customer"/>
+
+         <menuitem id="menu_partner_bank_account_income" name="Bank Accounts" sequence="4"
+            parent="submenu_menu_income_config" action="account.action_account_bank_journal_form"/>
+
+    </data>
+</odoo>

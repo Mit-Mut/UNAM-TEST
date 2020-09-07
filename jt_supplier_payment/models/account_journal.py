@@ -13,11 +13,15 @@ class AccountJournal(models.Model):
                                     ('bbva_tnn_ptc','BBVA Bancomer Net Cash (TNN or PTC)'),
                                     ('bbva_tsc_pcs','BBVA Bancomer Net Cash (TSC or PCS)'),
                                     ('bbva_sit','BBVA Bancomer SIT'),
+                                    ('bbva_nomina','BBVA BANCOMER NOMINA'),
+                                    ('bbva_232','BBVA BANCOMER DISPERSION 232'),
                                     ('hsbc','HSBC'),
                                     ('santander','Santander'),
                                     ('jpmw','JP Morgan WIRES / BOOKTX'),
                                     ('jpmu','JP Morgan US Drawdowns'),
                                     ('jpma','JP Morgan Advice to Receive'),
+                                    ('scotiabank','SCOTIABANK'),
+                                    ('banorte','BANORTE'),
                                     ],string="Generate Bank Layout")
     
     load_bank_format = fields.Selection([('banamex','BANAMEX'),

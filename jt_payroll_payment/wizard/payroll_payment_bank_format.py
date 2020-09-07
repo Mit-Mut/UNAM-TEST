@@ -18,7 +18,7 @@ class GenerateBankPayrollPayment(models.TransientModel):
                                     ('SCOTIABANK','SCOTIABANK'),
                                     ('BANORTE','BANORTE'),
                                     ],string="Layout")
-    employee_ids = fields.Many2many('hr.employee','hr_employee_bank_payroll_payment_rel','bank_layout_id','emp_id','Employee')
+    payment_ids = fields.Many2many('account.payment','account_payment_payroll_bank_layout_rel','bank_layout_id','payment_id','Payments')
     file_name = fields.Char('Filename')
     file_data = fields.Binary('Download')
 
@@ -32,7 +32,7 @@ class GenerateBankPayrollPayment(models.TransientModel):
             'res_model': 'generate.bank.layout.payroll.payment',
             'view_mode': 'form',
             'view_id': self.env.ref('jt_payroll_payment.view_generate_bank_layout_payroll_payment').id,
-            'context': {'default_employee_ids':[(6,0,active_ids)]},
+            'context': {'default_payment_ids':[(6,0,active_ids)]},
             'target': 'new',
             'type': 'ir.actions.act_window',
         }    
@@ -49,20 +49,20 @@ class GenerateBankPayrollPayment(models.TransientModel):
         #====== Generation Date =========#
         currect_time = datetime.today()
         file_data +=str(currect_time.month).zfill(2)
-        file_data +=str(currect_time.day)
+        file_data +=str(currect_time.day).zfill(2)
         file_data +=str(currect_time.year)
         #======= Account ========= TODO#
         file_data += "".ljust(16)
         #===== Application Date ======= TODO#
         currect_time = datetime.today()
         file_data +=str(currect_time.month).zfill(2)
-        file_data +=str(currect_time.day)
+        file_data +=str(currect_time.day).zfill(2)
         file_data +=str(currect_time.year)
         file_data += "\n"
         next_no = 2
-        total_record = len(self.employee_ids) 
+        total_record = len(self.payment_ids) 
         
-        for emp in self.employee_ids:
+        for payment in self.payment_ids:
             #===== Type Of Records ======#
             file_data += "2"
             #======= Sequence Number ======#
@@ -78,7 +78,10 @@ class GenerateBankPayrollPayment(models.TransientModel):
             #===== Name =======#
             file_data += "".ljust(30)
             #===== Bank account ======= TODO#
-            file_data += "".ljust(16)
+            if payment.payment_bank_account_id:
+                file_data += payment.payment_bank_account_id.acc_number.ljust(16)
+            else:
+                file_data += "".ljust(16)
             #========= Amount =======TODO#
             file_data += "".ljust(18)
             
@@ -117,7 +120,7 @@ class GenerateBankPayrollPayment(models.TransientModel):
         #===== Batch Reference =====#
         file_data += ''.ljust(34)
         file_data += "\n"
-        for emp in self.employee_ids:
+        for emp in self.payment_ids:
             #===== Beneficiary Account TODO=======#
             file_data += ''.ljust(10) 
             #===== Amount ====== TODO#
@@ -160,7 +163,7 @@ class GenerateBankPayrollPayment(models.TransientModel):
         file_data +=str(currect_time.day)
         file_data += "\n"
         
-        for emp in self.employee_ids:
+        for emp in self.payment_ids:
             #====== Record identifier ======#
             file_data += "3"
             #====== Sequential ===== TODO ====#
@@ -220,7 +223,7 @@ class GenerateBankPayrollPayment(models.TransientModel):
         file_data += ''.ljust(142)
         file_data += '\n'
         
-        for emp in self.employee_ids:
+        for emp in self.payment_ids:
             #======== Identifier ====#
             file_data += '3'
             #=== Type Of Request for payment of payroll TODO =====#
@@ -308,7 +311,7 @@ class GenerateBankPayrollPayment(models.TransientModel):
         
         file_data += "\n"
         row_count = 1
-        for emp in self.employee_ids:
+        for emp in self.payment_ids:
             #==== Record Type ======#
             file_data += '3'
             #==== Operation Key ======#
@@ -402,7 +405,7 @@ class GenerateBankPayrollPayment(models.TransientModel):
         
         file_data += '\n'
         sequence_no = 1
-        for emp in self.employee_ids:
+        for emp in self.payment_ids:
             #===== File Type ========#
             file_data += 'EE'
             #===== Record Type ========#
@@ -549,7 +552,7 @@ class GenerateBankPayrollPayment(models.TransientModel):
         file_data += ''.ljust(77)
         file_data += "\n"
 
-        for emp in self.employee_ids:
+        for emp in self.payment_ids:
             #====== Type of record ========#
             file_data += 'D'
             #====== Application date  TODO========#

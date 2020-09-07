@@ -36,8 +36,9 @@ class GenerateBankLayout(models.TransientModel):
     payment_ids = fields.Many2many('account.payment','account_payment_bank_layout_rel','bank_layout_id','payment_id','Payments')
     file_name = fields.Char('Filename')
     file_data = fields.Binary('Download')
-
+    
     def action_generate_bank_layout(self):
+        
         active_ids = self.env.context.get('active_ids')
         for payment in self.env['account.payment'].browse(active_ids):
             if payment.payment_state != 'for_payment_procedure':
@@ -45,17 +46,28 @@ class GenerateBankLayout(models.TransientModel):
                 "'For Payment Procedure'!"))
         if not active_ids:
             return ''
-        
-        return {
-            'name': _('Generate Bank Layout'),
-            'res_model': 'generate.bank.layout',
-            'view_mode': 'form',
-            'view_id': self.env.ref('jt_supplier_payment.view_generate_bank_layout').id,
-            'context': {'default_payment_ids':[(6,0,active_ids)]},
-            'target': 'new',
-            'type': 'ir.actions.act_window',
-        }
-
+        active_rec = self.env['account.payment'].browse(active_ids)
+        if any(active_rec.filtered(lambda x:x.payment_request_type=='supplier_payment')):
+            return {
+                'name': _('Generate Bank Layout'),
+                'res_model': 'generate.bank.layout',
+                'view_mode': 'form',
+                'view_id': self.env.ref('jt_supplier_payment.view_generate_bank_layout').id,
+                'context': {'default_payment_ids':[(6,0,active_ids)]},
+                'target': 'new',
+                'type': 'ir.actions.act_window',
+            }
+        else:
+            return {
+                'name': _('Generate Bank Layout'),
+                'res_model': 'generate.bank.layout',
+                'view_mode': 'form',
+                'view_id': self.env.ref('jt_supplier_payment.view_generate_payroll_payment_bank_layout').id,
+                'context': {'default_payment_ids':[(6,0,active_ids)]},
+                'target': 'new',
+                'type': 'ir.actions.act_window',
+            }
+            
     def banamex_file_format(self):
         file_data = ''
         file_name = 'banamex.txt'
@@ -1275,9 +1287,881 @@ class GenerateBankLayout(models.TransientModel):
             'res_id' : self.id,
             'view_mode': 'form',
             'target': 'new',
+            'view_id': self.env.ref('jt_supplier_payment.view_generate_bank_layout').id,
             'type': 'ir.actions.act_window',
         }    
+    #====== Payroll Payment Format ========#
+
+    def payroll_payment_santander_file_format(self):
+
+        file_data = ''
+        file_name = 'SANTANDER.txt'
+        #===== Type Of Registation ======#
+        file_data += '1'
+        #===== Sequence Number =======#
+        file_data += '00001'
+        #====== Sense =========#
+        file_data += 'E'
+        #====== Generation Date =========#
+        currect_time = datetime.today()
+        file_data +=str(currect_time.month).zfill(2)
+        file_data +=str(currect_time.day).zfill(2)
+        file_data +=str(currect_time.year)
+        #======= Account ========= #
+        if self.journal_id and self.journal_id.bank_account_id:
+            file_data += self.journal_id and self.journal_id.bank_account_id.acc_number.ljust(16)
+        else:
+            file_data += "".ljust(16)
+        #===== Application Date ======= #
+        currect_time = datetime.today()
+        if self.payment_ids and self.payment_ids[0].payment_date:
+            currect_time = self.payment_ids[0].payment_date
+        
+        file_data +=str(currect_time.month).zfill(2)
+        file_data +=str(currect_time.day).zfill(2)
+        file_data +=str(currect_time.year)
+        file_data += "\n"
+        next_no = 2
+        total_record = len(self.payment_ids) 
+        total_amount = 0
+        for payment in self.payment_ids:
+            #===== Type Of Records ======#
+            file_data += "2"
+            #======= Sequence Number ======#
+            file_data += "00000"
+            file_data += str(next_no)
+            next_no += 1
+            #===== Employee Number =======#
+            file_data += "".ljust(7)
+            #===== Patemal Surname =======#
+            file_data += "".ljust(30)
+            #===== Matemal Surname =======#
+            file_data += "".ljust(20)
+            #===== Name =======#
+            file_data += "".ljust(30)
+            #===== Bank account ======= #
+            if payment.payment_bank_account_id:
+                file_data += payment.payment_bank_account_id.acc_number.ljust(16)
+            else:
+                file_data += "".ljust(16)
+            #========= Amount =======#
+            total_amount += payment.amount
+            amount = round(payment.amount, 2)
+            amount = "%.2f" % payment.amount
+            amount = str(amount).split('.')
+            file_data +=str(amount[0]).zfill(16)
+            file_data +=str(amount[1])
+            
+            file_data += "\n"
+        #===== Type Of Reg=========#
+        file_data += "3"
+        #===== Sequence Number =======#
+        file_data += "00000"
+        file_data += str(next_no)
+        #====== total_record =======#
+        file_data += str(total_record).zfill(5)
+        #====== Total Amount ======== #
+        amount = round(total_amount, 2)
+        amount = "%.2f" % total_amount
+        amount = str(amount).split('.')
+        file_data +=str(amount[0]).zfill(16)
+        file_data +=str(amount[1])
+                
+        gentextfile = base64.b64encode(bytes(file_data,'utf-8'))
+        self.file_data = gentextfile
+        self.file_name = file_name
+
+    def payroll_payment_hsbc_file_format(self):
+        file_data = ''
+        file_name = 'HSBC.txt'
+        #======= File Format Indication =======#
+        file_data += 'MXPRLF'
+        #====== Authorization Level ======#
+        file_data += 'F'
+        #====== Charge Account ==== ====#
+        if self.journal_id and self.journal_id.bank_account_id:
+            file_data += self.journal_id and self.journal_id.bank_account_id.acc_number.ljust(10)
+        else:
+            file_data += "".ljust(10)
+        #===== Total Amount ===== TODO#
+        total_amount = sum(x.amount for x in self.payment_ids)
+        amount = "%.2f" % total_amount
+        amount = str(amount).split('.')
+        file_data +=str(amount[0]).zfill(12)
+        file_data +=str(amount[1])
+        #===== Total Operation =====#
+        total_record = len(self.payment_ids)
+        file_data += str(total_record).zfill(7)
+        #===== Value Date ===== #
+        currect_time = datetime.today()
+        if self.payment_ids and self.payment_ids[0].payment_date:
+            currect_time = self.payment_ids[0].payment_date
+        
+        file_data +=str(currect_time.day).zfill(2)
+        file_data +=str(currect_time.month).zfill(2)
+        file_data +=str(currect_time.year)
+        #===== Application Time =======#
+        file_data += '17:00'
+        #===== Batch Reference =====#
+        file_data += ''.ljust(34)
+        file_data += "\n"
+        for payment in self.payment_ids:
+            #===== Beneficiary Account =======#
+            if payment.payment_bank_account_id:
+                file_data += payment.payment_bank_account_id.acc_number.zfill(10)
+            else:
+                file_data += "".zfill(10)
+ 
+            #===== Amount ====== #
+            amount = round(payment.amount, 2)
+            amount = "%.2f" % payment.amount
+            amount = str(amount).split('.')
+            file_data +=str(amount[0]).zfill(12)
+            file_data +=str(amount[1])
+            
+            #===== Reference for the account ref ===#
+            payment_ref = 'PAYMENT OF PAYROLL QNA '
+            fornight = '00 '
+            if payment.fornight:
+                fornight = payment.fornight+" "
+            payment_ref += fornight
+            currect_time = datetime.today()
+            payment_ref += str(currect_time.year)
+            
+            file_data += payment_ref.ljust(34)
+            #===== Name of the Benefiaciry =====#
+            file_data += payment.partner_id.name.ljust(35)
+            file_data += "\n"
+            
+        gentextfile = base64.b64encode(bytes(file_data,'utf-8'))
+        self.file_data = gentextfile
+        self.file_name = file_name
+
+
+    def payroll_paymentbbva_bancomer_bbva_nomina_file_format(self):
+        file_data = ''
+        file_name = 'BBVA_BANCOMER_PAYROLL.txt'
+        #====== Identifier ========#
+        file_data += '1'
+        #====== Total Line ==== #
+        total_record = len(self.payment_ids)
+        file_data += str(total_record).zfill(7)
+        #===== Total Amount =====  #
+        total_amount = sum(x.amount for x in self.payment_ids)
+        amount = "%.2f" % total_amount
+        amount = str(amount).split('.')
+        file_data +=str(amount[0]).zfill(13)
+        file_data +=str(amount[1])
+        
+        #===== Constant Records ======#
+        file_data += ''.zfill(7)
+        #===== Constant Amount ======#
+        file_data += ''.zfill(15)
+        #===== Contract ======#
+        file_data += '001800001316'
+        #===== Contract ======#
+        file_data += '4200106119R23'
+        #===== Type Of Service ======#
+        file_data += '101'
+        #===== Constant ======#
+        file_data += '0'
+        #==== Issue Date ======#
+        currect_time = datetime.today()
+        file_data +=str(currect_time.year)[:2]
+        file_data +=str(currect_time.month).zfill(2)
+        file_data +=str(currect_time.day).zfill(2)
+        file_data += "\n"
+        next_number = 1
+        for payment in self.payment_ids:
+            #====== Record identifier ======#
+            file_data += "3"
+            #====== Sequential =========#
+            file_data += str(next_number).zfill(2)
+            next_number += 1
+            #=== Main reference / Employee Beneficiary ====  #
+            file_data += payment.partner_id.name.ljust(20)
+            #==== Movement Amount ==========#
+            amount = round(payment.amount, 2)
+            amount = "%.2f" % payment.amount
+            amount = str(amount).split('.')
+            file_data +=str(amount[0]).zfill(13)
+            file_data +=str(amount[1])
+            
+            #==== PaymentDate Date ==========#
+            if payment.payment_date:
+                file_data +=str(payment.payment_date.year)[:2]
+                file_data +=str(payment.payment_date.month).zfill(2)
+                file_data +=str(payment.payment_date.day).zfill(2)
+            else:
+                file_data += '      '
+            #==== Ban account payment receiving  ===#
+            if payment.payment_bank_account_id:
+                file_data += payment.payment_bank_account_id.acc_number.zfill(16)
+            else:
+                file_data += "".zfill(16)
+            
+            #===== Payroll payment request type / Fortnight TODO====#
+            request_type = ''
+            if payment.payroll_request_type == 'university':
+                request_type = 'SALARY QN'
+            elif payment.payroll_request_type == 'add_benifit':
+                request_type = 'PRESTA QN'
+            elif payment.payroll_request_type == 'alimony':
+                request_type = 'PENSION Q'
+            fornight = '00 '
+            if payment.fornight:
+                fornight = payment.fornight+" "
+            request_type += fornight
+            currect_time = datetime.today()
+            request_type += str(currect_time.year)[:2]
+             
+            file_data += request_type.ljust(14)
+            #==== Status ======#
+            file_data += '00'
+            #==== Filler =====#
+            file_data += ''.ljust(4)
+            
+            file_data += "\n"
+            
+        gentextfile = base64.b64encode(bytes(file_data,'utf-8'))
+        self.file_data = gentextfile
+        self.file_name = file_name
+
+    def bbva_bancomer_payroll_232_file_format(self):
+        file_data = ''
+        file_name = 'BBVA_BANCOMER_DISPERSION_PAYROLL_232.txt'
+        #====== Identification No =======#
+        file_data += '1'
+        #====== Total Line ==== #
+        total_record = len(self.payment_ids)
+        file_data += str(total_record).zfill(7)
+        #===== Total Amount =====  #
+        total_amount = sum(x.amount for x in self.payment_ids)
+        amount = "%.2f" % total_amount
+        amount = str(amount).split('.')
+        file_data +=str(amount[0]).zfill(13)
+        file_data +=str(amount[1])
+        #==== Number of NOK Records ====#
+        file_data += ''.zfill(7)
+        #==== Total amount NOK Records ====#
+        file_data += ''.zfill(15)
+        #========= Contract Page ===========#
+        file_data += ''.zfill(12)
+        #========= Number ===========#
+        file_data += '4200106119'
+        #========= Legend Code ===========#
+        file_data += 'R23'
+        #========= Type Of Service ===========#
+        file_data += '101'
+        #========= Entry Key ===========#
+        file_data += 'H'
+        #========= File Creation Date ===========#
+        currect_time = datetime.today()
+        file_data +=str(currect_time.year)
+        file_data +=str(currect_time.month).zfill(2)
+        file_data +=str(currect_time.day)
+        #==== Date OF Payment TODO =======#
+        currect_time = datetime.today()
+        if self.payment_ids and self.payment_ids[0].payment_date:
+            currect_time = self.payment_ids[0].payment_date
+        file_data +=str(currect_time.year)
+        file_data +=str(currect_time.month).zfill(2)
+        file_data +=str(currect_time.day).zfill(2)
+        
+        #===== Filler ========#
+        file_data += ''.ljust(142)
+        file_data += '\n'
+        
+        for payment in self.payment_ids:
+            #======== Identifier ====#
+            file_data += '3'
+            #=== Type Of Request for payment of payroll TODO =====#
+            req_payroll = '0000000' 
+            if payment.payroll_request_type == 'university':
+                req_payroll = '0000001'
+            if payment.payroll_request_type == 'add_benifit':
+                req_payroll = '0000002'
+                 
+            file_data += req_payroll
+             
+            #==== CURP / RFC TODO ======#
+            vat = ''
+            if payment.partner_id.vat:
+                vat = payment.partner_id.vat
+            file_data += vat.ljust(18)
+            #==== Type Of account TODO=======#
+            bank_account_code = '00'
+            if payment.partner_id and payment.partner_id.bank_ids:
+                if payment.partner_id.bank_ids[0].account_type=='card':
+                    bank_account_code = '03'
+                elif payment.partner_id.bank_ids[0].account_type=='clabe_acc':
+                    bank_account_code = '40'
+                elif payment.partner_id.bank_ids[0].account_type=='checks':
+                    bank_account_code = '01'
+                elif payment.partner_id.bank_ids[0].account_type=='payment_card':
+                    bank_account_code = '98'
+                    
+            file_data +=  bank_account_code
+            
+            #===== Target Bank ========#
+            file_data += '012'
+            #==== Destination Sequence ======#
+            file_data += '000'
+            #===== Beneficiary Account =======#
+            if payment.payment_bank_account_id:
+                file_data += payment.payment_bank_account_id.acc_number.zfill(16)
+            else:
+                file_data += "".zfill(16)
+ 
+            #===== Amount ====== #
+            amount = round(payment.amount, 2)
+            amount = "%.2f" % payment.amount
+            amount = str(amount).split('.')
+            file_data +=str(amount[0]).zfill(13)
+            file_data +=str(amount[1])
+            #======= Payment Status Code =====#
+            file_data += ''.zfill(7)
+            #====== Payment status Description =====#
+            file_data += ''.ljust(80)
+            #====== Deposite account holder TODO=====#
+            file_data += payment.partner_id.name.ljust(40)
+            #==== Reason for payment ======= #
+            file_data += ''.ljust(40)
+            
+            file_data += '\n'
+        gentextfile = base64.b64encode(bytes(file_data,'utf-8'))
+        self.file_data = gentextfile
+        self.file_name = file_name
+
+    def payroll_payment_banamex_file_format(self):
+
+        file_data = ''
+        file_name = 'BANAMEX.txt'
+        #===== Type Of Records =======#
+        file_data += '1'
+        #===== Customer Identification Number =======#
+        file_data += '000008505585'
+        #===== Payment Date =======#
+        currect_time = datetime.today()
+        if self.payment_ids and self.payment_ids[0].payment_date:
+            currect_time = self.payment_ids[0].payment_date
+        
+        file_data +=str(currect_time.day).zfill(2)
+        file_data +=str(currect_time.month).zfill(2)
+        file_data +=str(currect_time.year)[:2]
+        
+        #====== Sequence of the file TODO =====#
+        file_data += '0001'
+        #===== Company Name ======#
+        file_data += 'UNIVERSIDAD NACIONAL AUTONOMA MEXICO'
+        #====Description the file of   ====#
+        file_data += 'DEPOSITO NOMINA '
+        currect_time = datetime.today()
+        file_data += str(currect_time.year)
+        #===== Nature of the file =======#
+        file_data += '05'
+        #===== Instructions for payment orders ===#
+        file_data += ''.ljust(40)
+        #===== Layout Version =======#
+        file_data += 'C'
+        #===== Volume =======#
+        file_data += '0'
+        #===== File characteristics =======#
+        file_data += '1'
+        #===== File Status =======#
+        file_data += '  '
+        #===== File authorization number =======#
+        file_data += ''.ljust(12)
+        
+        file_data += '\n'
+        #======== Second  Heading ========#
+        #==== Records Type ====#
+        file_data += "2"
+        #==== Operation Type ====#
+        file_data += "1"
+        #==== Currency Key ====#
+        file_data += "001"
+        #==== Total amount  TODO====#
+        total_amount = sum(x.amount for x in self.payment_ids)
+        amount = "%.2f" % total_amount
+        amount = str(amount).split('.')
+        file_data +=str(amount[0]).zfill(16)
+        file_data +=str(amount[1])
+        
+        #==== Account Type ====#
+        file_data += "01"
+        
+        #==== Branch Number TODO====#
+        branch_no = ''
+        if self.journal_id.branch_number:
+            branch_no = self.journal_id.branch_number
+        file_data += branch_no.zfill(4)
+        #==== Account Number ====#
+        bank_account_no = ''
+        if self.journal_id.bank_account_id:
+            bank_account_no = self.journal_id.bank_account_id.acc_number
+            
+        file_data += bank_account_no.zfill(20)
+        #==== Blank Space====#
+        file_data += "".ljust(20)
+        #==== Return Amount====#
+        file_data += "".ljust(18)
+        
+        file_data += "\n"
+        row_count = 1
+        for payment in self.payment_ids:
+            #==== Record Type ======#
+            file_data += '3'
+            #==== Operation Key ======#
+            file_data += '0'
+            #==== Currency Key ======#
+            file_data += '001'
+            #===== Amount ========#
+            amount = round(payment.amount, 2)
+            amount = "%.2f" % payment.amount
+            amount = str(amount).split('.')
+            file_data +=str(amount[0]).zfill(16)
+            file_data +=str(amount[1])
+            
+            #===== Account Type ======#
+            bank_account_code = '00'
+            if payment.partner_id and payment.partner_id.bank_ids:
+                if payment.partner_id.bank_ids[0].account_type=='card':
+                    bank_account_code = '03'
+                elif payment.partner_id.bank_ids[0].account_type=='clabe_acc':
+                    bank_account_code = '40'
+                elif payment.partner_id.bank_ids[0].account_type=='checks':
+                    bank_account_code = '01'
+                elif payment.partner_id.bank_ids[0].account_type=='payment_order':
+                    bank_account_code = '04'
+                elif payment.partner_id.bank_ids[0].account_type=='con_acc':
+                    bank_account_code = '15'
+            
+            file_data += bank_account_code
+            #======== Account Number =====#
+            account_no = ''
+            if payment.partner_id and payment.partner_id.bank_ids:
+                if payment.partner_id.bank_ids[0].branch_number:
+                    account_no += payment.partner_id.bank_ids[0].branch_number
+
+                if payment.partner_id.bank_ids[0].acc_number:
+                    account_no += payment.partner_id.bank_ids[0].acc_number
+                    
+            file_data += account_no.zfill(20)
+            #======= Operation Reference ======#
+            file_data += '0000000010'
+            file_data += ''.zfill(30)
+            #====== Beneficiary  ====#
+            file_data += payment.partner_id.name.ljust(55)
+            #====== Instructions ====#
+            file_data += ''.ljust(40)
+            #====== Description TODO====#
+            request_type = ''
+            if payment.payroll_request_type:
+                if payment.payroll_request_type == 'university':
+                    request_type = 'PAYMENT OF PAYROLL QNA'
+                elif payment.payroll_request_type == 'add_benifit':
+                    request_type = 'PRESTA QN'
+                elif payment.payroll_request_type == 'alimony':
+                    request_type = 'PAYMENT PENSION To QNA'
+                fornight = '00 '
+                if payment.fornight:
+                    fornight = payment.fornight
+                request_type += fornight
+                currect_time = datetime.today()
+                request_type += str(currect_time.year)[:2]
+                 
+                file_data += request_type.ljust(14)
+            else:
+                file_data += ''.ljust(24)
+            #====== Bank code ====#
+            file_data += '0000'
+            #====== Reference Low Value ====#
+            file_data += str(row_count).zfill(7)
+            row_count += 1
+            
+            #======= Term =======#
+            file_data += '00'
+            file_data += "\n"
+        
+        #====== Total Records Data========#
+        #===== Record Type =======#
+        file_data += '4'
+        #===== Currency Key =======#
+        file_data += '001'
+        #===== Number of subscriptions=======#
+        total_rec= len(self.payment_ids)
+        file_data += str(total_rec).zfill(6)
+        #===== Total Amount TODO=======#
+        total_amount = sum(x.amount for x in self.payment_ids)
+        amount = "%.2f" % total_amount
+        amount = str(amount).split('.')
+        file_data +=str(amount[0]).zfill(16)
+        file_data +=str(amount[1])
+        
+        #===== Number of charges=======#
+        file_data += '000001'
+        #===== Total Amount of charges TODO=======#
+        total_amount = sum(x.amount for x in self.payment_ids)
+        amount = "%.2f" % total_amount
+        amount = str(amount).split('.')
+        file_data +=str(amount[0]).zfill(16)
+        file_data +=str(amount[1])
+        
+        
+        gentextfile = base64.b64encode(bytes(file_data,'utf-8'))
+        self.file_data = gentextfile
+        self.file_name = file_name
+
+    def scotiabank_file_format(self):
+        file_data = ''
+        file_name = 'SCOTIABANK.txt'
+        #====== Header First Line =====#
+        #==== File Type ======#
+        file_data += 'EE'
+        #==== Type Of Registration ======#
+        file_data += 'HA'
+        #==== Contract Number ======#
+        file_data += '06852'
+        #==== Sequence ======#
+        file_data += '01'
+        #==== File Generation Date ======#
+        file_data += ''.zfill(8)
+        #==== Initial Date ======#
+        file_data += ''.zfill(8)
+        #==== End Date ======#
+        file_data += ''.zfill(8)
+        #==== Code-status-registration ======#
+        file_data += ''.zfill(3)
+        #==== Filler ======#
+        file_data += ''.ljust(332)
+        
+        file_data += '\n'
+        #======= Block ​ header (second header, second row of the file) ====#
+        #=== File Type =======#
+        file_data += 'EE'
+        #=== File Type =======#
+        file_data += 'HB'
+        #=== Charge Currency =======#
+        file_data += '00'
+        #=== Fature Type =======#
+        file_data += '0000'
+        #=== Charge Account =======#
+        if self.journal_id and self.journal_id.bank_account_id:
+            file_data += self.journal_id and self.journal_id.bank_account_id.acc_number.ljust(11)
+        else:
+            file_data += "".ljust(11)
+        
+        #=== Company Reference =======#
+        file_data += '0000000000'
+        #=== Code status registration =======#
+        file_data += '000'
+        #==== Filler =======#
+        file_data += ''.ljust(336)
+        
+        file_data += '\n'
+        sequence_no = 1
+        for payment in self.payment_ids:
+            #===== File Type ========#
+            file_data += 'EE'
+            #===== Record Type ========#
+            file_data += 'DA'
+            #===== Movement Type ========#
+            file_data += '04'
+            #===== Cve currency payment ========#
+            file_data += '00'
+            #===== Amount TODO ========#
+            amount = round(payment.amount, 2)
+            amount = "%.2f" % payment.amount
+            amount = str(amount).split('.')
+            file_data +=str(amount[0]).zfill(13)
+            file_data +=str(amount[1])
+            
+            #===== Application Date========#
+            if payment.payment_date:
+                file_data +=str(payment.payment_date.year)
+                file_data +=str(payment.payment_date.month).zfill(2)
+                file_data +=str(payment.payment_date.day).zfill(2)
+            else:
+                file_data += '00000000'
+            
+            #===== Service Concept========#
+            file_data += '01'
+            #===== Cve-beneficiary ========#
+            file_data += str(sequence_no).zfill(20)
+            sequence_no += sequence_no
+            #===== RFC TODO========#
+            vat = ''
+            if payment.partner_id.vat:
+                vat = payment.partner_id.vat
+                
+            file_data += vat.ljust(13)
+            #===== Employee/Beneficiary========#
+            file_data += payment.partner_id.name.ljust(40)
+            #===== Payment Date TODO========#
+            if payment.payment_date:
+                
+                file_data +=str(payment.payment_date.month).zfill(2)
+                file_data +=str(payment.payment_date.day).zfill(2)
+                file_data +=str(payment.payment_date.year)
+            else:
+                file_data += '00000000'
+            file_data += ''.zfill(8)
+            #===== SBI Payment Place========#
+            file_data += '00000'
+            #===== Payment Branch========#
+            file_data += '00000'
+            #===== Bank account receiving payment========#
+            if payment.payment_bank_account_id:
+                file_data += payment.payment_bank_account_id.acc_number.zfill(20)
+            else:
+                temp =''
+                file_data +=temp.zfill(20)
+            
+            #===== Country========#
+            file_data += '00000'
+            #===== City / State========#
+            file_data += ''.ljust(40)
+            #===== Account Type========#
+            file_data += '1'
+            #===== Digit Exchange========#
+            file_data += ' '
+            #===== Plaza-cuenta-banco========#
+            file_data += ''.zfill(5)
+            #===== Issuer-bank-number========#
+            file_data += '044'
+            #===== Num-banktransceiver========#
+            file_data += '044'
+            #===== Days-Valid========#
+            file_data += '001'
+            #===== Concept-Payment========#
+            file_data += 'QUARTERLY SALARY'.ljust(50)
+            #===== Field-use-company-1========#
+            file_data += ''.ljust(20)
+            #===== Field-use-company-2========#
+            file_data += ''.ljust(20)
+            #===== Field-use-company-3========#
+            file_data += ''.ljust(20)
+            #===== Code-status-registration========#
+            file_data += ''.zfill(3)
+            #===== Cve-change-inst========#
+            file_data += ''.zfill(1)
+            #===== Code-status-change-inst========#
+            file_data += ''.zfill(3)
+            #===== Payment date========#
+            file_data += ''.zfill(8)
+            #===== Payment place========#
+            file_data += ''.zfill(5)
+            #===== Branch OF Payment========#
+            file_data += ''.zfill(5)
+            #===== Filler ========#
+            file_data += ''.ljust(22)
+            file_data += '\n'
+            
+        #====== Block trailer does ​ (penultimate row of the file) =====#
+        
+        #==== File Type =====#
+        file_data += 'EE' 
+        #==== Record type =====#
+        file_data += 'TB' 
+        #===== Amount of high movements TODO =====#
+        total_rec = len(self.payment_ids)
+        file_data += str(total_rec).zfill(7)
+        #==== Total Amount TODO =====#
+        total_amount = sum(x.amount for x in self.payment_ids)
+        amount = "%.2f" % total_amount
+        amount = str(amount).split('.')
+        file_data +=str(amount[0]).zfill(17)
+        file_data +=str(amount[1])
+        
+        #==== Number of low movements=====#
+        file_data += ''.zfill(7)
+        #==== Amount of low movements=====#
+        file_data += ''.zfill(17)
+        #==== Data filled in by the bank=====#
+        file_data += ''.zfill(195)
+        #==== Filler=====#
+        file_data += ''.ljust(123)
+        file_data += "\n"
+        #======= Trailer file does ​ (last row of the file) =======#
+        
+        #==== File Type =====#
+        file_data += 'EE' 
+        #==== Record type =====#
+        file_data += 'TA' 
+        #===== Amount of high movements TODO =====#
+        total_rec = len(self.payment_ids)
+        file_data += str(total_rec).zfill(7)
+        #==== Total Amount TODO =====#
+        total_amount = sum(x.amount for x in self.payment_ids)
+        amount = "%.2f" % total_amount
+        amount = str(amount).split('.')
+        file_data +=str(amount[0]).zfill(17)
+        file_data +=str(amount[1])
+        #==== Number of low movements=====#
+        file_data += ''.zfill(7)
+        #==== Amount of low movements=====#
+        file_data += ''.zfill(17)
+        #==== Data filled in by the bank=====#
+        file_data += ''.zfill(198)
+        #==== Filler=====#
+        file_data += ''.ljust(120)
+         
+        gentextfile = base64.b64encode(bytes(file_data,'utf-8'))
+        self.file_data = gentextfile
+        self.file_name = file_name
+
+    def banorte_file_format(self):
+        file_data = ''
+        file_name = 'NI2005201.txt'  # TODO for file name base on Type of request for payment of payroll
+
+        #==== Record type =====#
+        file_data += 'H'
+        #====== Service code ========#
+        file_data += 'NE'
+        #====== Issuer ========#
+        file_data += '20052'
+        #====== Process Date TODO========#
+        currect_time = datetime.today()
+        if self.payment_ids and self.payment_ids[0].payment_date:
+            currect_time = self.payment_ids[0].payment_date
+        
+        file_data +=str(currect_time.year)
+        file_data +=str(currect_time.month).zfill(2)
+        file_data +=str(currect_time.day).zfill(2)
+        
+        #====== Consecutive Number TODO========#
+        file_data += '01'
+        #====== Total No of records ========#
+        total_rec = len(self.payment_ids)
+        file_data += str(total_rec).zfill(6)
+        #====== Total Amount of Records ========#
+        total_amount = sum(x.amount for x in self.payment_ids)
+        amount = "%.2f" % total_amount
+        amount = str(amount).split('.')
+        file_data +=str(amount[0]).zfill(13)
+        file_data +=str(amount[1])
+        
+        file_data += ''.zfill(15)
+        #====== Total Number of HIGH Sent ========#
+        file_data += ''.zfill(6)
+        #====== Total Amount of HIGH Sent========#
+        file_data += ''.zfill(15)
+        #====== Total number of DEPARTURES Sent========#
+        file_data += ''.zfill(6)
+        #====== Total Amount of DEPARTURES Sent========#
+        file_data += ''.zfill(15)
+        #====== Total number of account verify Sent========#
+        file_data += ''.zfill(6)
+        #====== Action========#
+        file_data += ''.zfill(1)
+        #====== Filler========#
+        file_data += ''.ljust(77)
+        file_data += "\n"
+
+        for payment in self.payment_ids:
+            #====== Type of record ========#
+            file_data += 'D'
+            #====== Application date=======#
+            if payment.payment_date:
+                file_data +=str(payment.payment_date.year)
+                file_data +=str(payment.payment_date.month).zfill(2)
+                file_data +=str(payment.payment_date.day).zfill(2)
+                
+            else:
+                file_data += '00000000'
+            
+            #====== Employee number ========#
+            benific = ''
+            if payment.partner_id.password_beneficiary:
+                benific = payment.partner_id.password_beneficiary
+            file_data += benific.zfill(10)
+            
+            #====== Service reference========#
+            file_data += ''.ljust(40)
+            #====== Fortnight ========#
+            fortnight_msg = 'PAYMENT NOMINE QNA '
+            fornight = '00'
+            if payment.fornight:
+                fornight = payment.fornight
+            fortnight_msg += fornight
+            currect_time = datetime.today()
+            fortnight_msg += str(currect_time.year)[:2]
+            fortnight_msg += " OF THE ISSUER 20052"
+            
+            file_data += fortnight_msg.ljust(40)
+            #====== Amount========#
+            amount = round(payment.amount, 2)
+            amount = "%.2f" % payment.amount
+            amount = str(amount).split('.')
+            file_data +=str(amount[0]).zfill(13)
+            file_data +=str(amount[1])
+            
+            #====== Receiving bank number========#
+            file_data += '072'
+            #====== Type of account ========#
+            bank_account_code = '00'
+            if payment.partner_id and payment.partner_id.bank_ids:
+                if payment.partner_id.bank_ids[0].account_type=='card':
+                    bank_account_code = '03'
+                elif payment.partner_id.bank_ids[0].account_type=='clabe_acc':
+                    bank_account_code = '40'
+                elif payment.partner_id.bank_ids[0].account_type=='checks':
+                    bank_account_code = '01'
+                    
+            file_data +=  bank_account_code
+            
+            #====== Payment receipt bank account   TODO========#
+            if payment.payment_bank_account_id:
+                file_data += payment.payment_bank_account_id.acc_number.zfill(18)
+            else:
+                temp =''
+                file_data +=temp.zfill(18)
+            
+            #====== Movement type========#
+            file_data += ''.zfill(1)
+            #====== Action========#
+            file_data += ''.ljust(1)
+            #====== VAT amount of the transaction========#
+            file_data += ''.zfill(8)
+            #===== Filler =====#
+            file_data += ''.ljust(18)
+            file_data += '\n'
     
+        gentextfile = base64.b64encode(bytes(file_data,'utf-8'))
+        self.file_data = gentextfile
+        self.file_name = file_name
+
+    def generate_payroll_payment_bank_layout(self):
+        for payment in self.payment_ids:
+            if payment.journal_id.id != self.journal_id.id:
+                raise UserError(_("The selected layout does NOT match the bank of the selected payments"))
+
+        if self.journal_id.bank_format == 'santander':
+            self.payroll_payment_santander_file_format()
+        elif self.journal_id.bank_format == 'hsbc':
+            self.payroll_payment_hsbc_file_format()
+        elif self.journal_id.bank_format == 'bbva_nomina':
+            self.payroll_paymentbbva_bancomer_bbva_nomina_file_format()
+        elif self.journal_id.bank_format == 'bbva_232':
+            self.bbva_bancomer_payroll_232_file_format()
+        elif self.journal_id.bank_format == 'banamex':
+            self.payroll_payment_banamex_file_format()
+        elif self.journal_id.bank_format == 'scotiabank':
+            self.scotiabank_file_format()
+        elif self.journal_id.bank_format == 'banorte':
+            self.banorte_file_format()
+        
+            
+        return {
+            'name': _('Generate Bank Layout'),
+            'res_model': 'generate.bank.layout',
+            'res_id' : self.id,
+            'view_mode': 'form',
+            'target': 'new',
+            'view_id': self.env.ref('jt_supplier_payment.view_generate_payroll_payment_bank_layout').id,
+            'type': 'ir.actions.act_window',
+        }    
     
     
     

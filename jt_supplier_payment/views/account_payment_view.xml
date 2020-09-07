@@ -69,6 +69,9 @@
             		<field name="payment_issuing_bank_acc_id"/>
             		<field name="batch_folio"/>
             		<field name="folio"/>
+            		<field name="payment_request_type" invisible="1"/>
+            		<field name="fornight" attrs="{'invisible':[('payment_request_type','!=','payroll_payment')]}"/>
+            		<field name="payroll_request_type" attrs="{'invisible':[('payment_request_type','!=','payroll_payment')]}"/>
             		<field name="reason_for_rejection" readonly="1" attrs="{'invisible':[('payment_state','!=','rejected')]}"/>
             		<field name="reason_for_cancel" readonly="1" attrs="{'invisible':[('payment_state','!=','cancelled')]}"/>
             		<field name="is_hide_banamex" invisible="1"/>
@@ -177,10 +180,11 @@
             <field name="res_model">account.payment</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="inherited_view_account_payment_search"/>
-            <field name="context">{'default_payment_type': 'outbound','default_partner_type': 
+            <field name="context">{'default_payment_request_type':'supplier_payment','default_payment_type': 'outbound','default_partner_type': 
             	'supplier','search_default_outbound_filter': 1,
             	'res_partner_search_mode': 'supplier','search_default_journal': 1}
             </field>
+            <field name="domain">[('payment_request_type','=','supplier_payment')]</field>
         </record>
 
 		<record id="payment_req_tree_action_suppliers_finance" model="ir.actions.act_window.view">

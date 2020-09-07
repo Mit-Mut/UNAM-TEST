@@ -9,7 +9,7 @@
                 <form string="Generate Bank Layout">
                     <group>
                     	<field name="bank_layout" required="1"/>
-                    	<field name="employee_ids" invisible="1"/>
+                    	<field name="payment_ids" invisible="1"/>
                     	<field name="file_name" invisible="1"/>
                     	<field name="file_data" readonly="1" filename="file_name" attrs="{'invisible':[('file_data','=',False)]}"/>
                     </group>
@@ -21,15 +21,17 @@
             </field>
         </record>
             
+            <!-- 
        <record id="action_generate_bank_layout_payroll_payment" model="ir.actions.server">
             <field name="name">Payroll Payment Bank Layout</field>
             <field name="model_id" ref="jt_payroll_payment.model_generate_bank_layout_payroll_payment"/>
-            <field name="binding_model_id" ref="hr.model_hr_employee"/>
+            <field name="binding_model_id" ref="account.model_account_payment"/>
             <field name="binding_view_types">list</field>
             <field name="state">code</field>
             <field name="code">
                 action = model.action_generate_bank_layout()
             </field>
         </record>
+         -->
 	</data>
 </odoo>

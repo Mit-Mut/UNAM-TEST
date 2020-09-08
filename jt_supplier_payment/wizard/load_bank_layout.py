@@ -28,6 +28,7 @@ from odoo.tools.misc import formatLang, format_date, get_lang
 from babel.dates import format_datetime, format_date
 import csv
 import io
+from odoo.tools.misc import ustr
 
 class loadBankLayoutSupplierPayment(models.TransientModel):
 
@@ -54,17 +55,28 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                 "'For Payment Procedure'!"))
         if not active_ids:
             return ''
-        
-        return {
-            'name': _('Load Bank Layout'),
-            'res_model': 'load.bank.layout.supplier.payment',
-            'view_mode': 'form',
-            'view_id': self.env.ref('jt_supplier_payment.view_load_bank_layout_supplier_payment_form').id,
-            'context': {'default_payment_ids':[(6,0,active_ids)]},
-            'target': 'new',
-            'type': 'ir.actions.act_window',
-        }
-    
+        active_rec = self.env['account.payment'].browse(active_ids)
+        if any(active_rec.filtered(lambda x:x.payment_request_type=='supplier_payment')):
+            return {
+                'name': _('Load Bank Layout'),
+                'res_model': 'load.bank.layout.supplier.payment',
+                'view_mode': 'form',
+                'view_id': self.env.ref('jt_supplier_payment.view_load_bank_layout_supplier_payment_form').id,
+                'context': {'default_payment_ids':[(6,0,active_ids)]},
+                'target': 'new',
+                'type': 'ir.actions.act_window',
+            }
+        else:
+            return {
+                'name': _('Load Bank Layout'),
+                'res_model': 'load.bank.layout.supplier.payment',
+                'view_mode': 'form',
+                'view_id': self.env.ref('jt_supplier_payment.view_load_bank_layout_payroll_payment_form').id,
+                'context': {'default_payment_ids':[(6,0,active_ids)]},
+                'target': 'new',
+                'type': 'ir.actions.act_window',
+            }
+            
     def get_banamex_file(self):
         try:
             failed_content = ''
@@ -315,6 +327,380 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
             'res_id' : self.id,
             'view_mode': 'form',
             'view_id': self.env.ref('jt_supplier_payment.view_load_bank_layout_supplier_payment_form').id,
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+        }
+    #========= Payroll Payment verification ========#
+
+    def payroll_payment_get_santander_file(self):
+        try:
+            failed_content = ''
+            success_content = ''
+            
+            file_data = base64.b64decode(self.file_data)
+            data = io.StringIO(file_data.decode("utf-8"))
+            data.seek(0)
+            file_reader = []
+            csv_reader = csv.reader(data, delimiter=',')
+            file_reader.extend(csv_reader)
+            count = 0
+            for line in file_reader:
+                if count==0:
+                    count += 1
+                    continue
+                account_no = line[3]
+                amount = line[5]
+                result_file = line[6]
+                if account_no and amount and result_file and result_file=='Procesado':
+                    amount = amount.replace(',','')
+                    act_amount = float(amount)
+                    match_payment =  self.payment_ids.filtered(lambda x:x.amount==act_amount and x.payment_bank_account_id.acc_number==account_no)
+                    if match_payment:
+                        success_content += str(count)+' : '+ str(line) + "\n"                        
+                        match_payment[0].post()
+                    else:
+                        failed_content += str(count)+' : '+ str(line) + "\n"
+                else:
+                    failed_content += str(count)+' : '+ str(line) + "\n"
+                count += 1
+                                                            
+            if failed_content:
+                failed_data = base64.b64encode(failed_content.encode('utf-8'))
+                self.failed_file_data = failed_data
+                self.is_hide_failed = False
+                
+            if success_content:
+                success_data = base64.b64encode(success_content.encode('utf-8'))
+                self.success_file_data = success_data
+                self.is_hide_success = False
+                
+        except ValueError as e:
+            raise ValidationError(_("Column  contains incorrect values. Error: %s")% (ustr(e)))
+        except ValidationError as e:
+            raise ValidationError(_("Column  contains incorrect values. Error: %s")% (ustr(e)))
+        except UserError as e:
+            raise ValidationError(_("Column  contains incorrect values. Error: %s")% (ustr(e)))            
+    
+    def payroll_payment_get_hsbc_file(self):
+        try:
+            failed_content = ''
+            success_content = ''
+            
+            file_data = base64.b64decode(self.file_data)
+            data = io.StringIO(file_data.decode("utf-8"))
+            data.seek(0)
+            file_reader = []
+            csv_reader = csv.reader(data, delimiter=',')
+            file_reader.extend(csv_reader)
+            count = 0
+            for line in file_reader:
+                if not line:
+                    continue
+                count += 1
+                if count <= 13:
+                    continue
+                account_no = line[1]
+                amount = line[4]
+                result_file = line[6]
+                
+                if account_no and amount and result_file and result_file=='Processed':
+                    amount = amount.replace(',','')
+                    act_amount = float(amount)
+                    match_payment =  self.payment_ids.filtered(lambda x:x.amount==act_amount and x.payment_bank_account_id.acc_number==account_no)
+                    if match_payment:
+                        success_content += str(count)+' : '+ str(line) + "\n"                        
+                        match_payment[0].post()
+                    else:
+                        failed_content += str(count)+' : '+ str(line) + "\n"
+                else:
+                    failed_content += str(count)+' : '+ str(line) + "\n"
+                count += 1
+                                                            
+            if failed_content:
+                failed_data = base64.b64encode(failed_content.encode('utf-8'))
+                self.failed_file_data = failed_data
+                self.is_hide_failed = False
+                
+            if success_content:
+                success_data = base64.b64encode(success_content.encode('utf-8'))
+                self.success_file_data = success_data
+                self.is_hide_success = False
+                
+        except ValueError as e:
+            raise ValidationError(_("Column  contains incorrect values. Error: %s")% (ustr(e)))
+        except ValidationError as e:
+            raise ValidationError(_("Column  contains incorrect values. Error: %s")% (ustr(e)))
+        except UserError as e:
+            raise ValidationError(_("Column  contains incorrect values. Error: %s")% (ustr(e)))            
+        
+    def payroll_payment_get_bbva_nomina_file(self):
+        try:
+            failed_content = ''
+            success_content = ''
+            
+            file_data = base64.b64decode(self.file_data)
+            data = io.StringIO(file_data.decode("utf-8")).readlines()
+            count = 0
+            for line in data:
+                count+=1
+                if count <= 2:
+                    continue
+                account_no = line[44:60]
+                amount = line[23:38]
+                status = line[74:76]
+                if account_no and amount and status and status=='00':
+                    first_amount = amount[:-2]
+                    last_amount = amount[-2:]
+                        
+                    act_amount = first_amount+"."+last_amount
+                    act_amount = float(act_amount)
+                    account_no= account_no.lstrip('0')
+                    match_payment =  self.payment_ids.filtered(lambda x:x.amount==act_amount and x.payment_bank_account_id.acc_number==account_no)
+                    if match_payment:
+                        success_content += str(count)+' : '+ str(line) + "\n"                        
+                        match_payment[0].post()
+                    else:
+                        failed_content += str(count)+' : '+ str(line) + "\n"
+                else:
+                    failed_content += str(count)+' : '+ str(line) + "\n"
+            if failed_content:
+                failed_data = base64.b64encode(failed_content.encode('utf-8'))
+                self.failed_file_data = failed_data
+                self.is_hide_failed = False
+                
+            if success_content:
+                success_data = base64.b64encode(success_content.encode('utf-8'))
+                self.success_file_data = success_data
+                self.is_hide_success = False
+                                                                
+        except ValueError as e:
+            raise ValidationError(_("Column  contains incorrect values. Error: %s")% (ustr(e)))
+        except ValidationError as e:
+            raise ValidationError(_("Column  contains incorrect values. Error: %s")% (ustr(e)))
+        except UserError as e:
+            raise ValidationError(_("Column  contains incorrect values. Error: %s")% (ustr(e)))            
+        
+    def payroll_payment_get_bbva_232_file(self):
+        try:
+            failed_content = ''
+            success_content = ''
+            
+            file_data = base64.b64decode(self.file_data)
+            data = io.StringIO(file_data.decode("utf-8")).readlines()
+            count = 0
+            for line in data:
+                count+=1
+                if count <= 3:
+                    continue
+                account_no = line[34:50]
+                amount = line[50:65]
+                status = line[65:72]
+                
+                if account_no and amount and status and status=='0000000':
+                    first_amount = amount[:-2]
+                    last_amount = amount[-2:]
+                        
+                    act_amount = first_amount+"."+last_amount
+                    act_amount = float(act_amount)
+                    account_no= account_no.lstrip('0')
+                    match_payment =  self.payment_ids.filtered(lambda x:x.amount==act_amount and x.payment_bank_account_id.acc_number==account_no)
+                    if match_payment:
+                        success_content += str(count)+' : '+ str(line) + "\n"                        
+                        match_payment[0].post()
+                    else:
+                        failed_content += str(count)+' : '+ str(line) + "\n"
+                else:
+                    failed_content += str(count)+' : '+ str(line) + "\n"
+            if failed_content:
+                failed_data = base64.b64encode(failed_content.encode('utf-8'))
+                self.failed_file_data = failed_data
+                self.is_hide_failed = False
+                
+            if success_content:
+                success_data = base64.b64encode(success_content.encode('utf-8'))
+                self.success_file_data = success_data
+                self.is_hide_success = False
+                                                                
+        except ValueError as e:
+            raise ValidationError(_("Column  contains incorrect values. Error: %s")% (ustr(e)))
+        except ValidationError as e:
+            raise ValidationError(_("Column  contains incorrect values. Error: %s")% (ustr(e)))
+        except UserError as e:
+            raise ValidationError(_("Column  contains incorrect values. Error: %s")% (ustr(e)))            
+
+    def payroll_payment_get_banamex_file(self):
+        try:
+            failed_content = ''
+            success_content = ''
+            
+            file_data = base64.b64decode(self.file_data)
+            data = io.StringIO(file_data.decode("utf-8")).readlines()
+            count = 0
+            for line in data:
+                count+=1
+                if count <= 2:
+                    continue
+                account_no = line[25:45]
+                amount = line[5:23]
+                status = line[229]
+                
+                if account_no and amount and status and status=='3':
+                    first_amount = amount[:-2]
+                    last_amount = amount[-2:]
+                    act_amount = first_amount+"."+last_amount
+                    act_amount = float(act_amount)
+                    account_no= account_no[-7:]
+                    
+                    match_payment =  self.payment_ids.filtered(lambda x:x.amount==act_amount and x.payment_bank_account_id.acc_number==account_no)
+                    if match_payment:
+                        success_content += str(count)+' : '+ str(line) + "\n"                        
+                        match_payment[0].post()
+                    else:
+                        failed_content += str(count)+' : '+ str(line) + "\n"
+                else:
+                    failed_content += str(count)+' : '+ str(line) + "\n"
+            if failed_content:
+                failed_data = base64.b64encode(failed_content.encode('utf-8'))
+                self.failed_file_data = failed_data
+                self.is_hide_failed = False
+                
+            if success_content:
+                success_data = base64.b64encode(success_content.encode('utf-8'))
+                self.success_file_data = success_data
+                self.is_hide_success = False
+                                                                
+        except ValueError as e:
+            raise ValidationError(_("Column  contains incorrect values. Error: %s")% (ustr(e)))
+        except ValidationError as e:
+            raise ValidationError(_("Column  contains incorrect values. Error: %s")% (ustr(e)))
+        except UserError as e:
+            raise ValidationError(_("Column  contains incorrect values. Error: %s")% (ustr(e)))            
+
+    def payroll_payment_get_scotiabank_file(self):
+        try:
+            failed_content = ''
+            success_content = ''
+            
+            file_data = base64.b64decode(self.file_data)
+            data = io.StringIO(file_data.decode("utf-8")).readlines()
+            count = 0
+            for line in data:
+                count+=1
+                if count <= 2:
+                    continue
+                account_no = line[132:152]
+                amount = line[8:23]
+                status = line[323:326]
+                
+                if account_no and amount and status and status=='000':
+                    first_amount = amount[:-2]
+                    last_amount = amount[-2:]
+                    act_amount = first_amount+"."+last_amount
+                    act_amount = float(act_amount)
+                    account_no= account_no.lstrip('0')
+                    
+                    match_payment =  self.payment_ids.filtered(lambda x:x.amount==act_amount and x.payment_bank_account_id.acc_number==account_no)
+                    if match_payment:
+                        success_content += str(count)+' : '+ str(line) + "\n"                        
+                        match_payment[0].post()
+                    else:
+                        failed_content += str(count)+' : '+ str(line) + "\n"
+                else:
+                    failed_content += str(count)+' : '+ str(line) + "\n"
+            if failed_content:
+                failed_data = base64.b64encode(failed_content.encode('utf-8'))
+                self.failed_file_data = failed_data
+                self.is_hide_failed = False
+                
+            if success_content:
+                success_data = base64.b64encode(success_content.encode('utf-8'))
+                self.success_file_data = success_data
+                self.is_hide_success = False
+                                                                
+        except ValueError as e:
+            raise ValidationError(_("Column  contains incorrect values. Error: %s")% (ustr(e)))
+        except ValidationError as e:
+            raise ValidationError(_("Column  contains incorrect values. Error: %s")% (ustr(e)))
+        except UserError as e:
+            raise ValidationError(_("Column  contains incorrect values. Error: %s")% (ustr(e)))      
+
+    #====== TODO FILE ========#              
+    def payroll_payment_get_banorte_file(self):
+        try:
+            failed_content = ''
+            success_content = ''
+            
+            file_data = base64.b64decode(self.file_data)
+            data = io.StringIO(file_data.decode("utf-8")).readlines()
+            count = 0
+            for line in data:
+                count+=1
+                if count <= 1:
+                    continue
+                account_no = line[132:150]
+                amount = line[99:114]
+                status = line[165:167]
+                
+                if account_no and amount and status and status=='000':
+                    first_amount = amount[:-2]
+                    last_amount = amount[-2:]
+                    act_amount = first_amount+"."+last_amount
+                    act_amount = float(act_amount)
+                    account_no= account_no.lstrip('0')
+                    
+                    match_payment =  self.payment_ids.filtered(lambda x:x.amount==act_amount and x.payment_bank_account_id.acc_number==account_no)
+                    if match_payment:
+                        success_content += str(count)+' : '+ str(line) + "\n"                        
+                        match_payment[0].post()
+                    else:
+                        failed_content += str(count)+' : '+ str(line) + "\n"
+                else:
+                    failed_content += str(count)+' : '+ str(line) + "\n"
+            if failed_content:
+                failed_data = base64.b64encode(failed_content.encode('utf-8'))
+                self.failed_file_data = failed_data
+                self.is_hide_failed = False
+                
+            if success_content:
+                success_data = base64.b64encode(success_content.encode('utf-8'))
+                self.success_file_data = success_data
+                self.is_hide_success = False
+                                                                
+        except ValueError as e:
+            raise ValidationError(_("Column  contains incorrect values. Error: %s")% (ustr(e)))
+        except ValidationError as e:
+            raise ValidationError(_("Column  contains incorrect values. Error: %s")% (ustr(e)))
+        except UserError as e:
+            raise ValidationError(_("Column  contains incorrect values. Error: %s")% (ustr(e)))      
+        
+    def load_payroll_payment_bank_layout(self):
+        diff_payment = self.payment_ids.filtered(lambda x:x.journal_id.load_bank_format != self.journal_id.load_bank_format)
+        if diff_payment: 
+            raise UserError(_("The selected layout does NOT match the bank of the selected payments"))
+
+        if self.journal_id.load_bank_format == 'santander':         
+            self.payroll_payment_get_santander_file()
+        elif self.journal_id.load_bank_format == 'hsbc':         
+            self.payroll_payment_get_hsbc_file()
+        elif self.journal_id.load_bank_format == 'bbva_nomina':
+            self.payroll_payment_get_bbva_nomina_file()
+        elif self.journal_id.load_bank_format == 'bbva_232':
+            self.payroll_payment_get_bbva_232_file()
+        elif self.journal_id.load_bank_format == 'banamex':         
+            self.payroll_payment_get_banamex_file()
+        elif self.journal_id.load_bank_format == 'scotiabank':
+            self.payroll_payment_get_scotiabank_file()
+        elif self.journal_id.load_bank_format == 'banorte':
+            self.payroll_payment_get_banorte_file()
+            
+        self.is_hide_file_upload = True
+        
+        return {
+            'name': _('Load Bank Layout'),
+            'res_model': 'load.bank.layout.supplier.payment',
+            'res_id' : self.id,
+            'view_mode': 'form',
+            'view_id': self.env.ref('jt_supplier_payment.view_load_bank_layout_payroll_payment_form').id,
             'target': 'new',
             'type': 'ir.actions.act_window',
         }

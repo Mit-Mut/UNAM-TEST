@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="invoice_format_5">
+            <t t-call="web.html_container">
+                <t t-call="jt_income.external_layout_5">
+                </t>
+                <br/><br/><br/><br/><br/>
+                <div class="page">
+                    <style>
+                        .main_box{
+                        position: relative;
+                        width: 400px;
+                        height: 70px;
+                        border: 2px solid black;
+
+                        }
+
+                        .box{
+
+                        position: absolute;
+                        left:15px;
+                        right:15px;
+                        width: 360px;
+                        height: 30px;
+                        top:10px;
+                        bottom:10px;
+                        border: 1px solid gray;
+                        padding-top:10px;
+                        color:red;
+                        font-size:20px;
+                        
+                        }
+
+                        .tab1 { 
+                                tab-size: 2; 
+                                text-indent: 5.0em; font-size:20px;
+                            } 
+                        </style>
+
+                        <table style="width:100%">
+                        <tr>
+                            <td style="width:50%;"><br/>
+                                <div class="main_box">
+                                    <div class="box"><b>FORMATO DE CONDONACIÓN 20 %</b></div>
+                                </div>
+                            </td>
+
+                            <td style="width:50%;"><br/><br/>
+                                <div style="text-align:right;font-size:20px;">
+                                    <b>Dirección de Ingresos y Op. Financiera<br/> Departamento de Ingresos<br/><br/>Of. No. DIOF/347/2019<br/><br/>Asunto: No Aplicación del 20% por Indemnización</b>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <br/><br/><br/>
+                            <td style="text-align:left;font-size:15px;">
+                                <h2><b>MTRA. Y C.P.C. JULIA ELENA SANTIAGO VELASCO
+                                <br/>CONTADORA GENERAL DE LA  U.N.A.M.<br/>
+                                P r e s e n t e</b>
+                                </h2>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table style="width:100%">
+                        <tr>
+
+                        <p style="font-size:20px;">Por instrucciones del Lic. Alejandro Macias Ortega, Director de la Dirección General de Finanzas,  en  relación al oficio <b>328.01/0902/19/C.P.,</b> referente al cheque devuelto <b>No. 118 </b>del banco<b> Santander;</b> le  informo  que <b> no se aplicara el  20% de  indemnización</b> por un importe de  ------------------------- <b>  $ 2,000.00 (DOS MIL  PESOS  00/100 M.N.)</b>
+                        </p><br/>
+
+                        <p style="font-size:20px;">Procede la condonación con base a la circular número TESO/006/2017 en virtud de que el cheque es de la UNIVERSIDAD  AUTÓNOMA DEL ESTADO MORELOS.</p><br/>
+
+                        <p style="font-size:20px;">Sin más por el momento, quedo de usted enviándole un cordial saludo. </p><br/>
+
+                        <p style="font-size:20px;"><b>A t e n t a m e n t e <br/>"POR MI RAZA HABLARÁ EL ESPÍRITU"</b><br/>Ciudad Universitaria,  Cd. Mx., 12 de Septiembre del 2019.</p>
+                        <br/>
+                        </tr>
+
+                        <div class="row" style="float:right;">
+                            <div class="col-6">
+                                <div>
+                                    <img t-attf-src="data:image/png;base64,{{res_company.sign}}" style="width:120px;height:100px;"/>
+                                </div>
+                            </div>
+                        </div>
+
+                    </table>
+                </div>
+            </t>
+        </template>
+
+            <record id="paperformat_invoice_format_5" model="report.paperformat">
+                <field name="name">Format 5</field>
+                <field name="default" eval="True"/>
+                <field name="format">A4</field>
+                <field name="orientation">Portrait</field>
+                <field name="margin_top">10</field>
+                <field name="margin_bottom">60</field>
+                <field name="margin_left">10</field>
+                <field name="margin_right">10</field>
+                <field name="header_line" eval="False"/>
+                <field name="dpi">100</field>
+            </record>
+
+            <report 
+                id="invoice_pdf_format5"
+                model="account.move"
+                string="Invoice Format 5"
+                report_type="qweb-pdf"
+                name="jt_income.invoice_format_5"
+                file="jt_income.invoice_format_5"
+                print_report_name="object.name"
+                paperformat="jt_income.paperformat_invoice_format_5"
+            />
+
+    </data>
+</odoo>

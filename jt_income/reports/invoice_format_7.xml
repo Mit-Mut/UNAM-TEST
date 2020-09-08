@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="invoice_format_7">
+            <t t-call="web.html_container">
+                <t t-call="jt_income.external_layout_7">
+                </t>
+                <br/>
+
+                <div class="page">
+                    <style>
+                    
+                        .tab1 { 
+                                tab-size: 2; 
+                                text-indent: 5.0em;
+                                font-size:22px;
+                                } 
+                    </style>
+
+                    <table style="width:100%">
+                        <tr>
+                            <td style="text-align:right;font-size:15px;">
+                                <h2><b>
+                                Dirección de Ingresos y Op. Financiera<br/>
+                                Departamento de Ingresos<br/><br/>
+                                Of. No. DDI/176/2019<br/><br/>
+                                Asunto: Notificación de Cheque Devuelto
+                                </b></h2>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <br/><br/><br/><br/><br/>
+                            <td style="text-align:left;font-size:15px;">
+                               
+                                <h2> <b> DEPENDENCIA:&#160;&#160;&#160;&#160;&#160;&#160;INSTITUTO DE FÍSICA&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;314.01<br/><br/><br/>
+
+                                ATENCIÓN A:&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; SECRETARIO ADMINISTRATIVO y/o<br/>
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;JEFE DE UNIDAD ADMINISTRATIVA </b>
+                                </h2>
+
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table style="width:100%">
+                        <tr class="style1">
+
+                            <p class="tab1">Se  anexa  al  presente  el  cheque  devuelto  <b><u>No.  116</u></b>   del  banco<b>  HSBC, (CHEQUERA  CONACYT) </b>como  se  indica  en  el estado  de  cuenta  <b>SANTANDER; </b> por  un  importe de  <b><u>$ 43,945.49</u></b>
+                            </p>
+                            <br/><br/>
+                        
+                            <p style="font-size:20px;"><u>Ya  que  el  trámite  inicial  fue  cancelado  por  el   sistema,  se  realizara   nuevamente  la  Solicitud  de  Certificado de  Depósito.</u></p>
+                            <br/><br/>
+
+                            <p style="font-size:20px;">Sin otro particular por el momento, le envió un cordial saludo.</p>
+                            <br/><br/>
+
+                            <p style="font-size:20px;">Atentamente<br/>“POR MI RAZA HABLARA EL ESPIRITU”<br/>Cd. Universitaria, Cd. Mx., 4 de Noviembre del 2019.</p>
+
+                            <div class="row" style="float:right;">
+                                <div class="col-6">
+                                    <div>
+                                        <img t-attf-src="data:image/png;base64,{{res_company.sign}}" style="width:120px;height:100px;"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </template>
+
+        <record id="paperformat_invoice_format_7" model="report.paperformat">
+            <field name="name">Format 7</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">20</field>
+            <field name="margin_bottom">50</field>
+            <field name="margin_left">10</field>
+            <field name="margin_right">10</field>
+            <field name="header_line" eval="False"/>
+            <field name="dpi">100</field>
+        </record>
+
+        <report 
+            id="invoice_pdf_format7"
+            model="account.move"
+            string="Invoice Format 7"
+            report_type="qweb-pdf"
+            name="jt_income.invoice_format_7"
+            file="jt_income.invoice_format_7"
+        />
+
+        <record id="jt_income.invoice_pdf_format7" model="ir.actions.report">
+            <field name="paperformat_id" ref="jt_income.paperformat_invoice_format_7"></field>
+        </record>
+
+    </data>
+</odoo>

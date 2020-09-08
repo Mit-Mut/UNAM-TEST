@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="external_layout_1" name="layout 1">
+            <!--header -->
+            <!-- <div class="header" style="border:1px solid #D3D3D3;">
+                <div class="row" style="float:right;">
+                    <div class="col-6">
+                        <div>
+                            <img t-attf-src="data:image/png;base64,{{res_company.logo}}" style="width:120px;height:100px;margin-top:20px;margin-right:20px;margin-bottom:20px;"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: left"><img t-attf-src="data:image/png;base64,{{res_company.header_logo}}" style="width:120px;height:100px;margin-top:20px;margin-left:20px;margin-bottom:20px;"/>
+                </div>
+
+            </div> -->
+
+            <div class="header" style="border:1px solid #D3D3D3;">
+                <div class="row">
+                    <div class="col-6">
+                        <img t-attf-src="data:image/png;base64,{{res_company.header_logo}}" style="width:1000px;height:150px;"/>
+                    </div>
+                </div>
+            </div>
+            
+             <!-- Footer -->
+
+            <div class="footer">
+                <p style="font-size:22px;text-align:left;"><b>C.P. NIDIA BUSTOS GARCÍA<br/>DIRECTORA DE INGRESOS Y OPERACIÓN FINANCIERA</b></p><br/>
+                <p style="font-size:18px;text-align:left;">c.c.p.&#160;&#160;&#160;&#160;<b>LIC. MANOLA GIRAL DE LOZANO.-</b>Directora General de Incorporación y Revalidación de Estudios.<br/><b>MTRO. LORENZO SÁNCHEZ IBARRA.- </b>Jefe de la Unidad Administrativa de la DGIRE.<br/><b>C.P. ROLANDO J. DUARTE SÁNCHEZ.-</b> Jefe del Departamento de Ingresos.</p><br/>
+            </div>
+            
+        </template>
+
+        <template id="external_layout_2" name="layout 1">
+            <!--header -->
+
+            <div class="header" style="border:1px solid #D3D3D3;">
+                <div class="row">
+                    <div class="col-6">
+                        <img t-attf-src="data:image/png;base64,{{res_company.header_logo}}" style="width:1000px;height:150px;"/>
+                    </div>
+                </div>
+            </div>
+             <!-- Footer -->
+
+            <div class="footer">
+                <p style="font-size:22px;text-align:left;"><b>LIC. ALEJANDRO MACÍAS ORTEGA<br/>DIRECTOR GENERAL DE FINANZAS</b></p><br/><br/><br/>
+
+                <p style="font-size:18px;text-align:left;"><b>C.c.p.&#160;&#160;&#160;&#160;LIC. GUADALUPE MATEOS ORTIZ.</b>TESORERA DE LA  U.N.A.M<br/><b>MTRA Y C.PC. JULIA ELENA SANTIAGO VELASCO.</b>  CONTADORA GENERAL DE LA U.N.A.M.<br/><b>C.P. NIDIA BUSTOS GARCÍA.</b> DIRECTORA DE INGRESOS Y OPERACIÓN FINANCIERA.<br/><b>C.P. ROLANDO DUARTE SÁNCHEZ.- </b>JEFE DEL DEPARTAMENTO DE INGRESOS.</p><br/>
+                <p style="font-size:20px;text-align:right;">Dirección General de Finanzas</p>
+            
+                <div style="font-size:12px;text-align:right;margin-right:15px;">
+                    <h2><b>Dirección General de Finanzas</b></h2>
+                </div>
+            </div>
+            
+        </template>   
+
+        <template id="external_layout_4" name="layout 1">
+            <!--header -->
+            
+            <div class="header" style="border:1px solid #D3D3D3;">
+                <div class="row">
+                    <div class="col-6">
+                        <img t-attf-src="data:image/png;base64,{{res_company.header_logo}}" style="width:1000px;height:150px;"/>
+                    </div>
+                </div>
+            </div>
+            
+             <!-- Footer -->
+            <div class="footer">
+                <p style="font-size:22px;text-align:left;"><b>C.P. NIDIA BUSTOS GARCÍA<br/>DIRECTORA DE INGRESOS Y OPERACIÓN FINANCIERA</b></p><br/><br/><br/>
+
+                <p style="font-size:18px;text-align:left;"><b>C.c.p.&#160;&#160;&#160;&#160; LIC. ALEJANDRO MACIAS ORTEGA.</b> DIRECTOR GENERAL DE FINANZAS.<br/><b>DR. GERMAN ALVAREZ DÍAZ DE LEON.</b>DIRECTOR GENERAL  DE LA  DIRECCIÓN GENERAL DE ORIENTACIÓN YATENCION EDUCATIVA<br/> <b>C.P. ROLANDO DUARTE SÁNCHEZ.-</b> JEFE DEL DEPARTAMENTO DE INGRESOS.</p><br/>
+                <p style="font-size:20px;text-align:right;">Dirección General de Finanzas</p>
+            
+                <div style="font-size:12px;text-align:right;margin-right:15px;">
+                    <h2><b>Dirección General de Finanzas</b></h2>
+                </div>
+            </div>
+            
+        </template>
+
+
+        <template id="external_layout_5" name="layout 1">
+            <!--header -->
+            
+            <div class="header" style="border:1px solid #D3D3D3;">
+                <div class="row">
+                    <div class="col-6">
+                        <img t-attf-src="data:image/png;base64,{{res_company.header_logo}}" style="width:1000px;height:150px;"/>
+                    </div>
+                </div>
+            </div>
+            
+             <!-- Footer -->
+
+            <div class="footer">
+                <p style="font-size:22px;text-align:left;"><b>C.P. NIDIA BUSTOS GARCÍA<br/>DIRECTORA DE INGRESOS Y OPERACIÓN FINANCIERA</b></p><br/>
+                <p style="font-size:18px;text-align:left;"><b>C.c.p.&#160;&#160;&#160;LIC. ALEJANDRO MACIAS ORTEGA. </b>DIRECTOR GENERAL DE FINANZAS.<br/><b>C.P.FRANCISCO ARCOS MILLAN. </b> SECRETARIO ADMINISTRATIVO DEL INSTITUTO DE BIOTECNOLOGÍA.<br/> <b>C.P. ROLANDO DUARTE SÁNCHEZ.-</b> JEFE DEL DEPARTAMENTO DE INGRESOS.</p><br/>
+            
+
+                <div style="font-size:12px;text-align:right;margin-right:15px;">
+                    <h2><b>Dirección General de Finanzas</b><br/>
+                        Dirección de Ingresos y Op. Financiera</h2>
+                </div>
+            </div>
+
+        </template>
+
+        <template id="external_layout_6" name="layout 1">
+            <!--header -->
+            
+            <div class="header" style="border:1px solid #D3D3D3;">
+                <div class="row">
+                    <div class="col-6">
+                        <img t-attf-src="data:image/png;base64,{{res_company.header_logo}}" style="width:1000px;height:150px;"/>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+
+            <div class="footer">
+                <div style="font-size:22px;text-align:left;">
+                    C.P. ROLANDO DUARTE SÁNCHEZ <br/>JEFE DEL DEPARTAMENTO DE INGRESOS<br/>
+                </div>
+        
+                <div style="font-size:12px;text-align:right;margin-right:15px;">
+                    <h2><b>Dirección General de Finanzas<br/>
+                        Dirección de Ingresos y Op. Financiera
+                    </b></h2>
+                </div>
+            </div>
+
+        </template>
+
+        <template id="external_layout_7" name="layout 1">
+            <!--header -->
+            
+            <div class="header" style="border:1px solid #D3D3D3;">
+                <div class="row">
+                    <div class="col-6">
+                        <img t-attf-src="data:image/png;base64,{{res_company.header_logo}}" style="width:1000px;height:150px;"/>
+                    </div>
+                </div>
+            </div>
+            
+
+             <!-- Footer -->
+            <div class="footer">
+                <p style="font-size:22px;text-align:left;">C.P. ROLANDO DUARTE SÁNCHEZ <br/>JEFE DEL DEPARTAMENTO DE INGRESOS</p><br/>
+            </div>
+
+        </template>
+
+    </data>
+</odoo>

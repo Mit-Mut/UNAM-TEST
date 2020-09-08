@@ -22,6 +22,7 @@
 ##############################################################################
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
+from odoo.exceptions import ValidationError
 
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
@@ -65,6 +66,7 @@ class HrEmployee(models.Model):
     zip_code = fields.Char('Zip')
     country_id = fields.Many2one('res.country', string='Country')
     rfc = fields.Char('RFC')
+    curp = fields.Char('CURP')
     housing = fields.Selection([('house', 'House'), ('building', 'Building'),
                                 ('department', 'Department'),
                                 ('housing_unit', 'Housing Unit'),
@@ -115,7 +117,7 @@ class HrEmployee(models.Model):
     # HR Settings Page Fields
     worker_number = fields.Char('Worker Number')
     place_number = fields.Integer('Number of Place')
-
+    number_of_square = fields.Char('Number Of Square')
     # Accounting Page Fields
     beneficiary_ids = fields.Many2many('res.partner', string='Beneficiary')
     bank_ids = fields.One2many("res.partner.bank", 'employee_id', string="Bank Accounts")
@@ -123,6 +125,11 @@ class HrEmployee(models.Model):
         'account.account', string='Account receivable')
     account_payable_id = fields.Many2one(
         'account.account', string='Account payable')
+
+    @api.constrains('number_of_square')
+    def _check_key_unam(self):
+        if not str(self.number_of_square).isnumeric():
+            raise ValidationError(_('The Number of square must be numeric value'))
 
     @api.onchange('branch_number')
     def onchange_branch_number(self):

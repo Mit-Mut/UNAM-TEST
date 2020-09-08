@@ -26,9 +26,14 @@ class AccountJournal(models.Model):
     
     load_bank_format = fields.Selection([('banamex','BANAMEX'),
                                          ('bbva_bancomer','BBVA BANCOMER'),
+                                         ('bbva_nomina','BBVA BANCOMER NOMINA'),
+                                         ('bbva_232','BBVA BANCOMER DISPERSIÓN 232'),
                                          ('hsbc','HSBC'),
                                          ('santander','SANTANDER'),
-                                         ('jp_morgan','JP MORGAN')
+                                         ('jp_morgan','JP MORGAN'),
+                                         ('scotiabank','SCOTIABANK'),
+                                         ('banorte','BANORTE'),
+                                         
                                          ],string="Load Bank Layout")
 
     @api.onchange('accured_credit_account_id', 'accured_debit_account_id')

@@ -50,7 +50,7 @@
         </record>
 
         <!-- menu for Income -->
-        <menuitem id="main_menu_income" name="Income" sequence="10"/>
+        <menuitem id="main_menu_income" name="Income" sequence="10" web_icon="jt_income,static/description/icon.png"/>
 
         <menuitem id="submenu_menu_income" name="Income" sequence="2" parent="main_menu_income"/>
 

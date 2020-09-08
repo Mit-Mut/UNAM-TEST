@@ -135,13 +135,13 @@
             <field name="view_mode">tree,form,search</field>
         </record>
 
-
+		<!-- 
         <menuitem id="menu_preception" name="Preception" parent="menu_payroll_admin_process_unit"
                   sequence="1" action="preception_action"/>
 
         <menuitem id="menu_deduction" name="Deduction" parent="menu_payroll_admin_process_unit"
                   sequence="2" action="deduction_action"/>
-
+		 -->
         <menuitem id="menu_preception_payment_of_payroll" name="Preception" parent="menu_setting_payment_of_payroll"
                   sequence="1" action="preception_action"/>
 

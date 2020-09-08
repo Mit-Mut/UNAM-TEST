@@ -2,7 +2,7 @@
 <odoo>
     <data>
        <menuitem id="payroll_payment_management_menu" name="Payroll Payment Management"
-                parent="jt_payroll_payment.menu_payment_of_payroll" sequence="0"/>
+                parent="jt_payroll_payment.menu_payment_finance" sequence="0"/>
 
 	<!-- Payroll Payment Schedule -->
 	  <record id="payroll_payment_schedule_programming_action" model="ir.actions.act_window">

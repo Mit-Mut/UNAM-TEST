@@ -23,7 +23,7 @@
 
 	 <!--  View for payroll payment bank layout -->
       <record id="view_generate_payroll_payment_bank_layout" model="ir.ui.view">
-            <field name="name">generate.bank.layout.view</field>
+            <field name="name">generate.payroll.bank.layout.view</field>
             <field name="model">generate.bank.layout</field>
             <field name="arch" type="xml">
                 <form string="Generate Bank Layout">

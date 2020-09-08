@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="invoice_format_6">
+            <t t-call="web.html_container">
+                <t t-call="jt_income.external_layout_6">
+                </t><br/><br/><br/><br/><br/><br/><br/><br/>
+
+                <div class="page">
+                    <style>
+                        .main_box{
+                        position: relative;
+                        width: 400px;
+                        height: 100px;
+                        border: 2px solid black;
+                        }
+
+                        .box{
+
+                        position: absolute;
+                        left:15px;
+                        right:15px;
+                        width: 360px;
+                        height: 70px;
+                        top:10px;
+                        bottom:10px;
+                        border: 1px solid gray;
+                        padding-top:10px;
+                        color:red;
+                        font-size:20px;
+                        
+                        }
+
+                        .tab1 { 
+                                tab-size: 2; 
+                                text-indent: 5.0em; font-size:22px;
+                            } 
+
+                    </style>
+                    
+                    <table style="width:100%">
+                        <tr>
+                            <td style="width:50%;"> <br/><br/>
+                                <div class="main_box">
+                                    <div class="box"><b>FORMATO DE NOTIFICACIÓN DE<br/>CHEQUE DEVUELTO</b></div>
+                                </div>
+                            </td>
+
+                            <td style="width:50%;">
+                                <div style="text-align:right;font-size:20px;"><b>Dirección de Ingresos y Op. Financiera<br/>Departamento de Ingresos<br/><br/>Of. No. DDI/175/2019<br/><br/>Asunto: Notificación de Cheque Devuelto</b></div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table  style="width:100%">
+                        <tr>
+                            <br/><br/><br/>
+                            <td style="text-align:left;font-size:15px;">
+                                <h2>DEPENDENCIA:&#160;&#160;&#160;&#160;&#160;&#160;FACULTAD  DE  ECONOMÍA 423.01<br/><br/><br/>
+                                ATENCIÓN A:&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; SECRETARIO ADMINISTRATIVO y/o<br/>
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;JEFE DE UNIDAD ADMINISTRATIVA
+                                </h2>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table style="width:100%">
+
+                        <tr>
+                            <p class="tab1">
+                                Se anexa al presente el cheque devuelto <b><u>No. 242</u></b> del banco <b>HSBC,(CHEQUERA CONACYT)</b> como se indica en el estado de cuenta <b>SANTANDER;</b> por un importe de <b> $ 1,907.69</b>
+                            </p>
+
+                            <br/><br/>
+
+                            <p style="font-size:20px;">
+                                <u>Ya que el trámite inicial fue cancelado por el sistema,  se realizara nuevamente la Solicitud de Certificado de Depósito. </u>
+                            </p>
+                            <br/><br/>
+
+                            <p style="font-size:20px;">
+                                Sin otro particular por el momento, le envió un cordial saludo.
+                            </p>
+                            <br/><br/>
+
+                            <p style="font-size:20px;">
+                                Atentamente<br/>“POR MI RAZA HABLARA EL ESPIRITU”<br/>Cd. Universitaria, Cd. Mx., 4 de Noviembre del 2019. 
+                            </p>
+
+                            <div class="row" style="float:right;">
+                                <div class="col-6">
+                                    <div>
+                                        <img t-attf-src="data:image/png;base64,{{res_company.sign}}" style="width:120px;height:100px;"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </tr>
+
+                    </table>
+                </div>
+
+            </t>
+        </template>
+
+            <record id="paperformat_invoice_format_6" model="report.paperformat">
+                <field name="name">Format 6</field>
+                <field name="default" eval="True"/>
+                <field name="format">A4</field>
+                <field name="orientation">Portrait</field>
+                <field name="margin_top">10</field>
+                <field name="margin_bottom">60</field>
+                <field name="margin_left">10</field>
+                <field name="margin_right">10</field>
+                <field name="header_line" eval="False"/>
+                <field name="dpi">100</field>
+            </record>
+
+            <report 
+                id="invoice_pdf_format6"
+                model="account.move"
+                string="Invoice Format 6"
+                report_type="qweb-pdf"
+                name="jt_income.invoice_format_6"
+                file="jt_income.invoice_format_6"
+                print_report_name="object.name"
+                paperformat="jt_income.paperformat_invoice_format_6"
+            />
+
+    </data>
+</odoo>

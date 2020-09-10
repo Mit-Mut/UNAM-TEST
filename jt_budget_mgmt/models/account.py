@@ -56,8 +56,6 @@ class AccountMove(models.Model):
             invoice_lines = move.invoice_line_ids.filtered(lambda x:not x.program_code_id)
             if invoice_lines:
                 raise ValidationError("Please add program code into invoice lines")
-            for line in move.line_ids:
-                line.coa_conac_id = line.account_id and line.account_id.coa_conac_id and line.account_id.coa_conac_id.id or False 
         return super(AccountMove,self).action_register()
 
         
@@ -155,6 +153,9 @@ class AccountMove(models.Model):
         self.button_draft()
         conac_move = self.line_ids.filtered(lambda x:x.conac_move)
         conac_move.sudo().unlink()
+        for line in self.line_ids:
+            line.coa_conac_id = False 
+        
         self.add_budget_available_amount()
     
     def action_cancel_budget(self):

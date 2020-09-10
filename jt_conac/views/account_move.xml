@@ -208,7 +208,7 @@
                                        attrs="{'readonly': [('name', '!=', '/')]}"/>
 
                                 <field name="company_id" groups="base.group_multi_company"/>
-
+								<field name="show_conac_line_views" invisible="1"/>	
                                 <field name="currency_id"
                                        groups="base.group_multi_currency"
                                        attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"/>
@@ -410,7 +410,7 @@
                                 <!-- Internal note -->
                                 <field name="narration" placeholder="Add an internal note..." nolabel="1" height="50"/>
                             </page>
-                            <page id="aml_tab" string="Journal Items" groups="account.group_account_user">
+                            <page id="aml_tab" string="Journal Items" groups="account.group_account_user" attrs="{'invisible':[('show_conac_line_views','=',True)]}">
                                 <field name="line_ids"
                                        context="{'default_type': context.get('default_type'), 'line_ids': line_ids, 'journal_id': journal_id, 'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id != company_currency_id and currency_id or False}">
                                     <tree editable="bottom" string="Journal Items" decoration-muted="display_type in ('line_section', 'line_note')" default_order="sequence, date desc, move_name desc, id">

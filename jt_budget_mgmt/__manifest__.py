@@ -97,7 +97,7 @@
         'views/hr_employee_view.xml',
         'views/employee_payroll_file_view.xml',
         'views/supplier_payment_req_views.xml',
-
+        'views/conac_move_view.xml',
         # Main Menu File
         'views/budget_menus.xml',
     ],

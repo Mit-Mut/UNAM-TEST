@@ -159,6 +159,16 @@ class AccountMove(models.Model):
     is_zone_res = fields.Boolean('Show Zone Res',default=False)
     is_show_resposible_group = fields.Boolean('Resposible Group',default=False)
 
+    @api.depends('payment_state','is_payroll_payment_request','is_payment_request','state')
+    def get_conac_line_display(self):
+        for rec in self:
+            if rec.is_payroll_payment_request or rec.is_payment_request and rec.payment_state in ('draft','registered','approved_payment'):
+                rec.show_conac_line_views = True
+            else:
+                rec.show_conac_line_views = False
+                
+    show_conac_line_views = fields.Boolean(string='Show Conac Line',compute="get_conac_line_display",store=True)
+    
     def show_payment_line_ids(self):
         for rec in self:
             payments = self.env['account.payment'].search([('payment_request_id','=',rec.id),('state','not in',('draft','cancelled'))])
@@ -351,8 +361,11 @@ class AccountMove(models.Model):
         for move in self:
             move.is_from_reschedule_payment = True
             move.payment_issuing_bank_id = False
-            conac_move = self.line_ids.filtered(lambda x:x.conac_move)
+            conac_move = self.line_ids.filtered(lambda x:x.conac_move)            
             conac_move.sudo().unlink()
+            for line in self.line_ids:
+                line.coa_conac_id = False 
+            
             move.payment_state = 'registered'        
 
     def get_non_business_day(self,invoice_date,next_date):

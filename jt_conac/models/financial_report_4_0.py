@@ -162,7 +162,7 @@ class StatementOfFinancialPosition(models.AbstractModel):
                                 balance = 0
                                 date_start = datetime.strptime(str(period.get('date_from')), DEFAULT_SERVER_DATE_FORMAT).date()
                                 date_end = datetime.strptime(str(period.get('date_to')), DEFAULT_SERVER_DATE_FORMAT).date()
-
+                                
                                 move_lines = move_line_obj.sudo().search([('coa_conac_id', '=', level_3_line.id),
                                                         ('move_id.state', '=', posted),
                                                         ('date', '>=', date_start), ('date', '<=', date_end)])
@@ -291,9 +291,13 @@ class StatementOfFinancialPosition(models.AbstractModel):
                 else:
                     
                     amt_columns.append(self._format({'name': 0.0},figure_type='float'))
+            
+            account_name = b_account.display_name
+            if b_account.coa_conac_id:
+                account_name = b_account.coa_conac_id.display_name 
             lines.append({
                 'id': 'budget_accounts_%s' % b_account.id,
-                'name': b_account.display_name,
+                'name': account_name,
                 'columns': amt_columns,
                 'level': 3,
                 'parent_id': 'hierarchy_' + 'budget_accounts',

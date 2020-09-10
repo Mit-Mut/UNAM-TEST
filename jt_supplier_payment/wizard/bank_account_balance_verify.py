@@ -137,6 +137,9 @@ class BankBalanceCheck(models.TransientModel):
                 payments = Payment.create(new_dict)
                 all_payments += payments 
             rec.write({'payment_state': 'for_payment_procedure'})
+            for line in rec.line_ids:
+                line.coa_conac_id = line.account_id and line.account_id.coa_conac_id and line.account_id.coa_conac_id.id or False 
+            
         for payment in all_payments:
             payment.action_validate_payment_procedure()
 

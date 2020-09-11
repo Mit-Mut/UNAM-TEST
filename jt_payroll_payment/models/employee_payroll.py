@@ -27,6 +27,7 @@ from datetime import datetime
 class EmployeePayroll(models.Model):
 
     _name = 'employee.payroll.file'
+    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
     _description = "Upload Files"
 
     name = fields.Char("Name")
@@ -43,11 +44,9 @@ class EmployeePayroll(models.Model):
     reference = fields.Char("Reference")
     bank_receiving_payment_id = fields.Many2one('res.bank', string="Bank Receiving Payment")
     payment_issuing_bank_id = fields.Many2one("account.journal", string="Payment Issuing Bank")
-    receiving_bank_acc_pay_id = fields.Many2one('account.journal', string="Receiving bank account for payment")
-    bank_acc_payment_insur_id = fields.Many2one('account.journal', string="Bank account of payment issuance")
-    amount_payable = fields.Float("Amount Payable")
-    payment_method = fields.Selection([('check', 'Check'), ('cash', 'Cash'),
-                                       ('elec_trans', 'Electronic Transfer')])
+    receiving_bank_acc_pay_id = fields.Many2one('res.partner.bank', string="Receiving bank account for payment")
+    bank_acc_payment_insur_id = fields.Many2one('res.partner.bank', string="Bank account of payment issuance")
+    amount_payable = fields.Float("Amount Payable",tracking=True)
     batch_folio = fields.Integer("Batch Folio")
     request_type = fields.Selection([('university', 'Payment to University Worker'),
                                      ('add_benifit', 'Additional Benifit'),
@@ -65,10 +64,8 @@ class EmployeePayroll(models.Model):
     beneficiary_id = fields.Many2one('res.partner', "Beneficiary")
     state = fields.Selection([('draft', 'Draft'), ('revised', 'Revised'), ('done', 'Done')], string="State",
                              default='draft')
-
-    def revised_emp_payroll_files(self):
-        for record in self:
-            record.state = 'revised'
+    payment_request_type = fields.Selection([('direct_employee','Direct Employee'),('payment_provider','Payment Provider')],string="Payment Request Type")
+    
 
     def request_for_payment(self):
         today_date = datetime.today()

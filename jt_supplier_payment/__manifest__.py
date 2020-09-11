@@ -55,6 +55,7 @@
         # Payroll Payment
         'views/payroll_payment_request_view.xml',
         'views/payroll_payment_management_view.xml',
+        'views/upload_payroll_file_view.xml',
 
         
     ],

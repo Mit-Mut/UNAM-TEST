@@ -31,6 +31,17 @@ class EmployeePayroll(models.Model):
     sub_dependancy_id = fields.Many2one('sub.dependency', 'Sub Dependency')
     program_code_id = fields.Many2one("program.code", string="Program Code")
 
+    def get_payroll_payment_vals(self):
+        vals = super(EmployeePayroll,self).get_payroll_payment_vals()
+        vals.update({'dependancy_id':self.dependancy_id and self.dependancy_id.id or False,
+                     'sub_dependancy_id' : self.sub_dependancy_id and self.sub_dependancy_id.id or False,
+                     'invoice_line_ids':[(0,0,{'program_code_id':self.program_code_id and self.program_code_id.id or False,
+                                               'quantity' : 1,
+                                               'price_unit' : self.amount_payable,
+                                               })]
+                     })
+        return vals
+    
 class PaymentRequest(models.Model):
 
     _inherit = 'payment.request'

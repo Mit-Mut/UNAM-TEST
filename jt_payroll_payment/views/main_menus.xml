@@ -20,6 +20,10 @@
                   parent="menu_payment_of_payroll"
                   sequence="5"/>
 
+        <!-- menu for payment place -->
+        <menuitem id="payment_place_menu_payroll_setting" name="Place of Payment" parent="menu_setting_payment_of_payroll" sequence="12" action="jt_hr_base.payment_place_action"/>
+        <menuitem id="hr_job_menu_payroll_setting" name="Job Positions" parent="menu_setting_payment_of_payroll" sequence="15" action="hr.action_hr_job"/>
+
         <menuitem id="menu_emp_payroll_payment_of_payroll" name="Employee Payroll"
                   parent="menu_payment_of_payroll"
                   sequence="2"/>

@@ -45,5 +45,6 @@
         <menuitem id="upa_document_type_menu" name="Document Type" parent="menu_payroll_payment_config"
                   sequence="10" action="upa_document_type_action"/>
                   
+                  
     </data>
 </odoo>

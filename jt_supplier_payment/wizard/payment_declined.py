@@ -74,8 +74,8 @@ class PaymentDeclined(models.TransientModel):
                 raise UserError(_("You can not reject Cancelled or Reconciled payment"))
             if payment.invoice_ids:
                 payment.invoice_ids.button_draft()
-                payment.invoice_ids.button_cancel()
                 payment.invoice_ids.write({'payment_state': 'payment_not_applied','reason_rejection':self.reason_for_rejection})
+                payment.invoice_ids.button_cancel()
                 
             if payment.state == 'posted':
                 payment.action_draft()
@@ -88,12 +88,14 @@ class PaymentDeclined(models.TransientModel):
         for payment in self.payment_ids:
             if payment.state in ('cancelled','reconciled'):
                 raise UserError(_("You can not reject Cancelled or Reconciled payment"))
+            if payment.invoice_ids:
+                payment.invoice_ids.button_draft()
+                payment.invoice_ids.write({'payment_state': 'cancel','reason_cancellation':self.reason_for_cancel})
+                payment.invoice_ids.button_cancel()
+                
             if payment.state == 'posted':
                 payment.action_draft()
                 
-            payment.invoice_ids.button_draft()
-            payment.invoice_ids.button_cancel()
-            payment.invoice_ids.write({'payment_state': 'cancel','reason_cancellation':self.reason_for_cancel})
             payment.reason_for_cancel = self.reason_for_cancel
             payment.cancel()
     

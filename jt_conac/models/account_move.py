@@ -34,3 +34,22 @@ class AccountMoveLine(models.Model):
 
     conac_move = fields.Boolean(string="CONAC")
     coa_conac_id = fields.Many2one('coa.conac', string="CODE CONAC")
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('account_id',False) and not vals.get('coa_conac_id'):
+                account_rec = self.env['account.account'].browse(vals.get('account_id',[]))
+                vals.update({'coa_conac_id':account_rec.coa_conac_id and account_rec.coa_conac_id.id or False})
+        lines = super(AccountMoveLine, self).create(vals_list)
+        return lines
+            
+    def write(self,vals):
+        result = super(AccountMoveLine,self).write(vals)
+        if vals.get('account_id'):
+            for res in self:
+                if res.account_id and res.account_id.coa_conac_id and not res.coa_conac_id:
+                    res.coa_conac_id = res.account_id.coa_conac_id.id
+        return result
+        
+    

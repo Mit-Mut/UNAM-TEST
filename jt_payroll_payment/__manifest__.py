@@ -47,6 +47,7 @@
         'wizard/payroll_payment_bank_format_view.xml',
         'security/ir.model.access.csv',
         'data/data.xml',
+        'data/ir_sequence.xml',
         'views/assets.xml',
     ],
     'application': False,

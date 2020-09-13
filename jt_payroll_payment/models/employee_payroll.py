@@ -24,6 +24,25 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 from datetime import datetime
 
+class Employee(models.Model):
+    
+    _inherit = 'hr.employee'
+
+    def action_create_portal_users(self):
+        group_portal = self.env.ref('base.group_portal')
+        company_id = self.env.company.id
+        for emp in self.filtered(lambda x: not x.user_id):            
+            vals = {'name' : emp.name,
+                    'login' : emp.name,
+                    'active': True, 
+                    'groups_id': [(4, group_portal.id)],
+                    'company_id': company_id,
+                    'company_ids': [(6, 0, [company_id])],
+                    
+                    }
+            user_id = self.env['res.users'].with_context(no_reset_password=True)._create_user_from_template(vals)
+            emp.user_id = user_id.id
+             
 class EmployeePayroll(models.Model):
 
     _name = 'employee.payroll.file'
@@ -65,24 +84,24 @@ class EmployeePayroll(models.Model):
     state = fields.Selection([('draft', 'Draft'), ('revised', 'Revised'), ('done', 'Done')], string="State",
                              default='draft')
     payment_request_type = fields.Selection([('direct_employee','Direct Employee'),('payment_provider','Payment Provider')],string="Payment Request Type")
-    
+    move_id = fields.Many2one('account.move','Payroll Payments')
 
-    def request_for_payment(self):
-        today_date = datetime.today()
-        payment_req_obj = self.env['payment.request']
-        for record in self:
-            vals = {
-                'employee_id': record.employee_id,
-                'amount': record.amount_payable,
-                'request_type': record.request_type,
-                'bank_receiving_payment_id': record.bank_receiving_payment_id,
-                'payment_receipt_bank_id': record.payment_issuing_bank_id,
-                'receipt_date': today_date,
-                'payment_method': record.payment_method,
-                'payroll_origin_id': record.payroll_origin_id,
-                'bank_acc_payment_insur_id': bank_acc_payment_insur_id,
-                'payment_issuing_bank_id': record.payment_issuing_bank_id,
-                'fornight': record.fornight
-            }
-            payment_req_obj.create(vals)
-            record.state = 'done'
+    @api.onchange('employee_id') 
+    def onchange_partner_bak_account(self):
+        if self.employee_id and self.employee_id.bank_ids:
+            self.receiving_bank_acc_pay_id = self.employee_id.bank_ids[0].id
+            self.bank_receiving_payment_id= self.employee_id.bank_ids[0].bank_id and self.employee_id.bank_ids[0].bank_id.id or False
+        else:
+            self.receiving_bank_acc_pay_id = False
+            self.bank_receiving_payment_id = False 
+    
+    @api.model
+    def create(self,vals):
+        res  = super(EmployeePayroll,self).create(vals)
+        if res.employee_id and res.employee_id.bank_ids:
+            if not res.receiving_bank_acc_pay_id:
+                res.receiving_bank_acc_pay_id = res.employee_id.bank_ids[0].id
+            if not res.bank_receiving_payment_id:
+                res.bank_receiving_payment_id= res.employee_id.bank_ids[0].bank_id and res.employee_id.bank_ids[0].bank_id.id or False
+        
+        return res

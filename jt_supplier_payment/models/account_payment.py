@@ -199,12 +199,12 @@ class AccountPayment(models.Model):
             return ''
         
         record_ids = self.env['account.move'].browse(active_ids)
-        if not record_ids or any(invoice.payment_state != 'approved_payment' and invoice.is_payment_request for invoice in record_ids):
+        if not record_ids or any(invoice.payment_state != 'approved_payment' and (invoice.is_payment_request or invoice.is_payroll_payment_request)  for invoice in record_ids):
             raise UserError(_("You can only register payment for  Approved for payment request"))
 #         if not record_ids or any(invoice.state != 'posted' for invoice in record_ids):
 #             raise UserError(_("You can only register payments for open invoices"))
         
-        record_ids = record_ids.filtered(lambda x:x.is_payment_request and x.is_invoice(include_receipts=True))
+        record_ids = record_ids.filtered(lambda x:(x.is_payment_request or x.is_payroll_payment_request) and x.is_invoice(include_receipts=True))
         if record_ids:
 #             payment_issuing_bank_id = record_ids.mapped('payment_issuing_bank_id')
 #             if len(payment_issuing_bank_id) != 1 :

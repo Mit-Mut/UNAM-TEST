@@ -1,22 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
-        <record id="action_revised_emp_payroll_files" model="ir.actions.server">
-            <field name="name">Revised</field>
-            <field name="model_id" ref="model_employee_payroll_file"/>
+ 
+         <record id="action_server_employee_portal_user" model="ir.actions.server">
+            <field name="name">Portal Users</field>
+            <field name="model_id" ref="hr.model_hr_employee"/>
+            <field name="binding_model_id" ref="hr.model_hr_employee"/>
+            <field name="binding_view_types">list</field>
             <field name="state">code</field>
-            <field name="type">ir.actions.server</field>
-            <field name="code">action = records.revised_emp_payroll_files()</field>
+            <field name="code">action = records.action_create_portal_users()</field>
         </record>
-
-         <record id="action_create_payment_request" model="ir.actions.server">
-            <field name="name">Request for payment</field>
-            <field name="model_id" ref="model_employee_payroll_file"/>
-            <field name="state">code</field>
-            <field name="type">ir.actions.server</field>
-            <field name="code">action = records.request_for_payment()</field>
-        </record>
-
+ 
     </data>
 </odoo>

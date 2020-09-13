@@ -5,7 +5,7 @@
         <field name="name">Payment Request Journal</field>
         <field name="code">PAR</field>
         <field name="currency_id" ref="base.MXN"/>
-        <field name="type">sale</field>
+        <field name="type">purchase</field>
     </record>
 
    <record id="banamex_jour" model="account.journal">

@@ -95,4 +95,4 @@ class BudegtInsufficiencWiz(models.TransientModel):
         self.move_id.is_from_reschedule_payment = False
         self.decrease_available_amount()
         self.move_id.create_journal_line_for_approved_payment()
-        self.move_id.action_post()
+        #self.move_id.action_post()

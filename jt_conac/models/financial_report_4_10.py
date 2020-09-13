@@ -115,6 +115,7 @@ class StatesAndProgramReports(models.AbstractModel):
 
         period_shcp_auth_dict = {}
         main_period_total = {}
+        budget_lines = self.env['expenditure.budget.line']
         for period in periods:
             period_name = period.get('string')
             date_start = datetime.strptime(str(period.get('date_from')), DEFAULT_SERVER_DATE_FORMAT).date()
@@ -126,6 +127,7 @@ class StatesAndProgramReports(models.AbstractModel):
                 budget_lines = bud_line_obj.search([('expenditure_budget_id.state', '=', 'validate'),
                                                     ('start_date', '>=', date_start), ('state', '=', 'success'),
                                                     ('end_date', '<=', date_end)])
+            
             for line in budget_lines:
                 if period.get('period_type') == 'month':
                     if date_start >= line.start_date and date_end <= line.end_date:
@@ -257,6 +259,7 @@ class StatesAndProgramReports(models.AbstractModel):
                     concept_dict = {}
                     shcp_list = []
                     period_total = {}
+                    
                     for period in periods:
                         period_name = period.get('string')
                         if period_name in period_shcp_auth_dict.keys():
@@ -278,8 +281,23 @@ class StatesAndProgramReports(models.AbstractModel):
                             period_name = period.get('string')
                             if period_name in concept_dict:
                                 if shcp in concept_dict.get(period_name).keys():
+                                    paid_amt = 0
                                     amt = concept_dict.get(period_name).get(shcp)
                                     ade_amt = 0
+                                    period_date_from = datetime.strptime(str(period.get('date_from')), DEFAULT_SERVER_DATE_FORMAT).date()
+                                    period_date_to = datetime.strptime(str(period.get('date_to')), DEFAULT_SERVER_DATE_FORMAT).date()
+                                    period_budget_lines = bud_line_obj.search([('expenditure_budget_id.state', '=', 'validate'),
+                                                    ('start_date', '>=', period_date_from), ('state', '=', 'success'),
+                                                    ('end_date', '<=', period_date_to)])
+                                    
+                                    shcp_budget_line = period_budget_lines.filtered(lambda x:x.program_code_id.budget_program_conversion_id.shcp.id==shcp.id)
+                                    program_code_ids = shcp_budget_line.mapped('program_code_id')
+                                    if program_code_ids:
+                                        self.env.cr.execute("select coalesce(sum(line.price_total),0) as committed from account_move_line line,account_move amove where line.program_code_id in %s and amove.id=line.move_id and amove.payment_state=%s and amove.invoice_date >= %s and amove.invoice_date <= %s", (tuple(program_code_ids.ids),'paid',period_date_from,period_date_to))
+                                        my_datas = self.env.cr.fetchone()
+                                        if my_datas:
+                                            paid_amt = my_datas[0]                                                
+                                    
                                     if period_name in period_prog_dict_ade.keys():
                                         per_dict = period_prog_dict_ade.get(period_name)
                                         if line_concept in per_dict.keys():
@@ -291,10 +309,12 @@ class StatesAndProgramReports(models.AbstractModel):
                                         period_total.update({period_name: {'auth': pe_dict.get('auth') + amt,
                                                                        'ade': pe_dict.get('ade') + ade_amt,
                                                                        'modi': pe_dict.get('modi') + (amt + ade_amt),
-                                                                       'sub': pe_dict.get('modi') + (amt + ade_amt)}})
+                                                                       'paid_amt' : pe_dict.get('paid_amt') + paid_amt,
+                                                                       'sub': pe_dict.get('sub') + (amt + ade_amt)}})
                                     else:
                                         period_total.update({period_name: {'auth': amt, 'ade': ade_amt,
                                                                        'modi': amt + ade_amt,
+                                                                       'paid_amt' : paid_amt,
                                                                        'sub': amt + ade_amt}})
                                     if period_name in main_period_total:
                                         pe_dict = main_period_total.get(period_name)
@@ -302,15 +322,18 @@ class StatesAndProgramReports(models.AbstractModel):
                                             {period_name: {'auth': pe_dict.get('auth') + amt,
                                                            'ade': pe_dict.get('ade') + ade_amt,
                                                            'modi': pe_dict.get('modi') + (amt + ade_amt),
-                                                           'sub': pe_dict.get('modi') + (amt + ade_amt)}})
+                                                           'paid_amt' : pe_dict.get('paid_amt') + paid_amt,
+                                                           'sub': pe_dict.get('sub') + (amt + ade_amt)}})
                                     else:
                                         main_period_total.update({period_name: {'auth': amt, 'ade': ade_amt,
                                                                        'modi': amt + ade_amt,
+                                                                       'paid_amt' : paid_amt,
                                                                        'sub': amt + ade_amt}})
                                     line_cols += [self._format({'name': amt},figure_type='float'),
                                               self._format({'name': ade_amt},figure_type='float'),
                                               self._format({'name': amt + ade_amt},figure_type='float'),
-                                              {'name': ''}, {'name': ''},
+                                              {'name': ''}, 
+                                              self._format({'name': paid_amt},figure_type='float'),
                                               self._format({'name': amt + ade_amt},figure_type='float')]                                              
                                 else:
                                     line_cols += [{'name': ''}] * 6
@@ -339,8 +362,9 @@ class StatesAndProgramReports(models.AbstractModel):
                             total_cols += [self._format({'name': pe_dict.get('auth')},figure_type='float'),
                                     self._format({'name': pe_dict.get('ade')},figure_type='float'),
                                     self._format({'name': pe_dict.get('modi')},figure_type='float'),
-                                    {'name': ''},{'name': ''},
-                                    self._format({'name': pe_dict.get('modi')},figure_type='float')]
+                                    {'name': ''},
+                                    self._format({'name': pe_dict.get('paid_amt')},figure_type='float'),
+                                    self._format({'name': pe_dict.get('sub')},figure_type='float')]
                             if not need_to_add:
                                 need_to_add = True
                         else:
@@ -365,8 +389,9 @@ class StatesAndProgramReports(models.AbstractModel):
                 main_total_cols += [self._format({'name': pe_dict.get('auth')},figure_type='float'),
                                     self._format({'name': pe_dict.get('ade')},figure_type='float'),
                                     self._format({'name': pe_dict.get('modi')},figure_type='float'),
-                                    {'name': ''},{'name': ''},
-                                    self._format({'name': pe_dict.get('modi')},figure_type='float')]                                    
+                                    {'name': ''},
+                                    self._format({'name': pe_dict.get('paid_amt')},figure_type='float'),
+                                    self._format({'name': pe_dict.get('sub')},figure_type='float')]                                    
                 if not need_to_add:
                     need_to_add = True
             else:

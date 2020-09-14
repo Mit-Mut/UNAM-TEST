@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <template id="invoice_format_2">
-            <t t-call="web.html_container">
-                <t t-call="jt_income.external_layout_2">
-                </t>
+        <template id="invoice_format_2_document">
+            <t t-call="jt_income.external_layout_2"></t>
+                <t t-set="o" t-value="o.with_context(lang=lang)" />
                 <br/><br/><br/><br/><br/><br/><br/><br/>
                 <div class="page">
                     <style>
                         .main_box{
                         position: relative;
-                        width: 400px;
-                        height: 70px;
+                        width: 350px;
+                        height: 50px;
                         border: 2px solid black;
 
                         }
@@ -20,10 +19,10 @@
                         position: absolute;
                         left:15px;
                         right:15px;
-                        width: 360px;
-                        height: 30px;
-                        top:10px;
-                        bottom:10px;
+                        width: 320px;
+                        height: 20px;
+                        top:5px;
+                        bottom:5px;
                         border: 1px solid gray;
                         padding-top:10px;
                         color:red;
@@ -45,8 +44,8 @@
                                 </td>
 
                                 <td style="width:50%">
-                                    <div style="text-align:right;font-size:20px;">
-                                        <b>Dirección General de Finanzas<br/> Dirección de Ingresos y Op. Financiera<br/>Departamento de Ingresos<br/><br/>Of. No. DGFI/321/2019<br/><br/>Asunto: 20% de Indemnización</b>
+                                    <div style="text-align:left;font-size:20px;">
+                                        <b>Dirección General de Finanzas<br/> Dirección de Ingresos y Op. Financiera<br/>Departamento de Ingresos<br/><br/>Of. No. <span t-field="o.legal_number"/><br/><br/>Asunto: 20% de Indemnización</b>
                                     </div>
                                 </td>
                             </tr>
@@ -54,45 +53,53 @@
                             <tr>
                                 <br/><br/><br/>
                                 <td style="text-align:left;font-size:15px;">
-                                    <h2>LIC. ALEJANDRA REYES MANCILLA<br/>
-                                    SECRETARIA ADMINISTRATIVA<br/>
-                                    INSTITUTO DE CIENCIAS NUCLEARES<br/>
+                                    <h2><span t-field="o.addressee"/>
+                                    <br/>
                                     P r e s e n t e<br/>
                                     </h2>
-
                                 </td>
                             </tr>
                     </table>
 
                     <table style="width:100%;">
                         <p class="tab1">
-                            Con relación al oficio No. ICN/S.A./0355/2019., referente al cheque devuelto <b>No. 1626</b> del banco <b>SCOTIABANK;</b> le informo que  <b>se  condona  el  20% de  indemnización</b> por un importe de  <b>$ 3,600.00.</b>
-                        </p><br/><br/>
+                            Con relación al oficio No. <span t-field="o.legal_compensation"/>., referente al cheque devuelto <b><span t-field="o.number_of_returned_check"/></b> del banco <b><span t-field="o.income_bank_journal_id.name"/>
+                            </b> le informo que  <b>se  condona  el  20% de  indemnización</b> por un importe de  
+                            <b><span t-field="o.amount_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></b>
+                        </p><br/>
 
                         <p style="font-size:20px;">
-                            Procede la <b>condonación</b> con base a la circular número TESO/006/2017 en virtud de que el importe del cheque devueltos fue cubierto dentro de los 5 primeros días
-                        </p><br/><br/>
+                            Procede la <b>condonación</b> con base a la circular número <span t-field="o.circular_number"/> en virtud de que el importe del cheque devueltos fue cubierto dentro de los 5 primeros días
+                        </p><br/>
 
                         <p style="font-size:20px;">
                             Sin más por el momento, quedo de usted enviándole un cordial saludo.
-                        </p><br/><br/>
+                        </p><br/>
 
                         <p style="font-size:20px;">
                             A t e n t a m e n t e <br/>
                             "POR MI RAZA HABLARÁ EL ESPÍRITU"<br/>
-                            Ciudad Universitaria,  Cd. Mx., 10 de Junio del 2019.<br/>
+                            Ciudad Universitaria,  Cd. Mx., <span t-field="o.invoice_date" t-options='{"format": "MMMM ,d y"}'/><br/>
                         </p>
 
-                        <!-- <div class="row" style="float:right;">
+                        <div class="row" style="float:right;">
                             <div class="col-6">
                                 <div>
                                     <img t-attf-src="data:image/png;base64,{{res_company.sign}}" style="width:120px;height:100px;"/>
                                 </div>
                             </div>
                         </div>
- -->
+
                     </table>
                 </div>
+        </template>
+
+        <template id="invoice_format_2">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-set="lang" t-value="o.invoice_user_id.sudo().lang if o.type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
+                    <t t-call="jt_income.invoice_format_2_document" t-lang="lang"/>
+                </t>
             </t>
         </template>
 
@@ -101,18 +108,19 @@
                 <field name="default" eval="True"/>
                 <field name="format">A4</field>
                 <field name="orientation">Portrait</field>
-                <field name="margin_top">20</field>
+                <field name="margin_top">15</field>
                 <field name="margin_bottom">60</field>
                 <field name="margin_left">10</field>
                 <field name="margin_right">10</field>
                 <field name="header_line" eval="False"/>
+                <field name="header_spacing">5</field>
                 <field name="dpi">100</field>
             </record>
 
             <report 
                 id="invoice_pdf_format2"
                 model="account.move"
-                string="Invoice Format 2"
+                string="FORMATO DE CONDONACIÓN"
                 report_type="qweb-pdf"
                 name="jt_income.invoice_format_2"
                 file="jt_income.invoice_format_2"

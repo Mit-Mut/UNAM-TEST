@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <template id="invoice_format_3">
-            <t t-call="web.html_container">
-                <t t-call="jt_income.external_layout_2">
-                </t><br/><br/><br/><br/><br/><br/><br/><br/>
+        <template id="invoice_format_3_document">
+            <t t-call="jt_income.external_layout_2">
+                </t>
+                <t t-set="o" t-value="o.with_context(lang=lang)" />
+                <br/><br/><br/><br/><br/><br/><br/>
                 <div class="page">
                     <style>
                         .main_box{
                         position: relative;
-                        width: 480px;
-                        height: 100px;
+                        width: 410px;
+                        height: 70px;
                         border: 2px solid black;
                         }
 
@@ -19,10 +20,10 @@
                         position: absolute;
                         left:15px;
                         right:15px;
-                        width: 430px;
-                        height: 70px;
-                        top:10px;
-                        bottom:10px;
+                        width: 380px;
+                        height: 50px;
+                        top:5px;
+                        bottom:5px;
                         border: 1px solid gray;
                         padding-top:10px;
                         color:red;
@@ -44,9 +45,9 @@
                             </td>
 
                             <td style="width:50%;">
-                                <div style="text-align:right;font-size:20px;">
+                                <div style="text-align:left;font-size:20px;">
                                     <b>Dirección General de Finanzas<br/>
-                                    Dirección de Ingresos y Op. Financiera<br/>Departamento de Ingresos<br/><br/>Of. No. DGFI/322/2019<br/><br/>Asunto: 20% de Indemnización</b>
+                                    Dirección de Ingresos y Op. Financiera<br/>Departamento de Ingresos<br/>Of. No. <span t-field="o.legal_number"/><br/>Asunto: 20% de Indemnización</b>
                                 </div>
                             </td>
                         </tr>
@@ -54,20 +55,17 @@
 
                     <table style="width:100%;">
                         <p style="font-size:20px;">
-                        <b>MTRO. LORENZO DANIEL SÁNCHEZ IBARRA<br/>
-                        JEFE DE LA UNIDAD ADMINISTRATIVA<br/>
-                        DIRECCIÓN GENERAL DE INCORPORACIÓN Y<br/>
-                        REVALIDACIÓN DE ESTUDIOS<br/>
+                        <b><span t-field="o.addressee"/><br/>
                         P r e s e n t e</b>
                         </p>
 
                         <p class="tab1">
-                            En respuesta a su Oficio No. DGIR/UA/314/19, le informo que su solicitud de condonación de indemnización del 20% establecida en la Circular TESO/006/2017 por cheque devuelto, por la Escuela de Medicina Intermedica S.C., por la cantidad de $ 53,363.20, excede las facultades de esta Dirección General de Finanzas.
-                        </p><br/><br/>
+                            En respuesta a su Oficio No. <span t-field="o.legal_compensation"/>, le informo que su solicitud de condonación de indemnización del 20% establecida en la Circular <span t-field="o.circular_number"/> por cheque devuelto, por la <span t-field="o.dependancy_id.description"/>., por la cantidad de <span t-field="o.amount_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>, excede las facultades de esta Dirección General de Finanzas.
+                        </p><br/>
 
                         <p style="font-size:20px;">
                             Con el objetivo de evitar en lo sucesivo las circunstancias que dieron origen a una eventual condonación, me permito sugerir que los pagos se realicen mediante transferencia bancaria a las cuentas señaladas en la circular en comento.
-                        </p><br/><br/>
+                        </p><br/>
 
                         <p style="font-size:20px;">
                             Sin más por el momento, quedo de usted enviándole un cordial saludo.
@@ -76,7 +74,7 @@
                         <p style="font-size:20px;">
                             <b>A t e n t a m e n t e<br/>
                             “POR MI RAZA HABLARÁ EL ESPÍRITU”</b><br/>
-                            Ciudad Universitaria, Cd. Mex., 10 de Junio de  2019.
+                            Ciudad Universitaria, Cd. Mex., <span t-field="o.invoice_date" t-options='{"format": "MMMM ,d y"}'/>.
                         </p>
 
                         <div class="row" style="float:right;">
@@ -89,6 +87,14 @@
 
                     </table>
                 </div>
+        </template>
+
+        <template id="invoice_format_3">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-set="lang" t-value="o.invoice_user_id.sudo().lang if o.type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
+                    <t t-call="jt_income.invoice_format_3_document" t-lang="lang"/>
+                </t>
             </t>
         </template>
 
@@ -97,8 +103,8 @@
                 <field name="default" eval="True"/>
                 <field name="format">A4</field>
                 <field name="orientation">Portrait</field>
-                <field name="margin_top">10</field>
-                <field name="margin_bottom">60</field>
+                <field name="margin_top">20</field>
+                <field name="margin_bottom">80</field>
                 <field name="margin_left">10</field>
                 <field name="margin_right">10</field>
                 <field name="header_line" eval="False"/>
@@ -109,7 +115,7 @@
             <report 
                 id="invoice_pdf_format3"
                 model="account.move"
-                string="Invoice Format 3"
+                string="FORMATO DE AVISO CAMBIO FORMA DE COBRO A TRANSFERENCIA"
                 report_type="qweb-pdf"
                 name="jt_income.invoice_format_3"
                 file="jt_income.invoice_format_3"

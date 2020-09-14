@@ -71,6 +71,7 @@ class Invoice(models.Model):
     circular_number = fields.Char('Circular number')
     addressee = fields.Char('Addressee')
     bank_status_account = fields.Char('Bank status account')
+    bank_account_statement = fields.Char('Bank account statement')
     number_receipts = fields.Char('Number receipts')
     movement_date = fields.Date('Movement date')
     description_of_the_movement = fields.Char('Description of the movement')
@@ -91,10 +92,26 @@ class Invoice(models.Model):
             raise ValidationError(_('The Branch must be numeric value'))
     
     
+class AccountMoveLine(models.Model):
     
+    _inherit = 'account.move.line'
     
-    
-    
+    @api.depends('product_id')
+    def count_sub_produts(self):
+        for record in self:
+            if record.product_id:
+                record.subproduct_count = self.env['product.product'].search_count([('parent_product_id','=',record.product_id.id)])
+            else:
+                record.subproduct_count = 0
+        
+    subproduct_count = fields.Integer('Subproduct',compute="count_sub_produts",store=True)
+    unidentified_product = fields.Integer('Unidentified product')
+    income_sub_account = fields.Char("Income Sub-account")
+    income_sub_subaccount = fields.Char("Income Sub-subaccount")
+    ddi_office_accounting = fields.Char("DDI Office to general accounting the")
+    amount_of_check = fields.Float("Amount of the check")
+    deposit_for_check_recovery = fields.Char("Deposit for check recovery")
+    cfdi_20 = fields.Char("CFDI 20%")
     
     
 

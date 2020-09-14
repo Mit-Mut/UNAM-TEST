@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <template id="invoice_format_6">
-            <t t-call="web.html_container">
-                <t t-call="jt_income.external_layout_6">
-                </t><br/><br/><br/><br/><br/><br/><br/><br/>
-
+        <template id="invoice_format_6_document">
+            <t t-call="jt_income.external_layout_6"/>
+            	<t t-set="o" t-value="o.with_context(lang=lang)" />
+                <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+                
                 <div class="page">
                     <style>
                         .main_box{
                         position: relative;
-                        width: 400px;
-                        height: 100px;
+                        width: 370px;
+                        height: 80px;
                         border: 2px solid black;
                         }
 
@@ -20,12 +20,13 @@
                         position: absolute;
                         left:15px;
                         right:15px;
-                        width: 360px;
-                        height: 70px;
+                        width: 340px;
+                        height: 40px;
                         top:10px;
                         bottom:10px;
                         border: 1px solid gray;
                         padding-top:10px;
+                        padding-bottom:5px;
                         color:red;
                         font-size:20px;
                         
@@ -47,16 +48,16 @@
                             </td>
 
                             <td style="width:50%;">
-                                <div style="text-align:right;font-size:20px;"><b>Dirección de Ingresos y Op. Financiera<br/>Departamento de Ingresos<br/><br/>Of. No. DDI/175/2019<br/><br/>Asunto: Notificación de Cheque Devuelto</b></div>
+                                <div style="text-align:left;font-size:20px;"><b>Dirección de Ingresos y Op. Financiera<br/>Departamento de Ingresos<br/>Of. No. <span t-field="o.legal_number"/><br/><br/>Asunto: Notificación de Cheque Devuelto</b></div>
                             </td>
                         </tr>
                     </table>
 
                     <table  style="width:100%">
                         <tr>
-                            <br/><br/><br/>
+                            <br/><br/>
                             <td style="text-align:left;font-size:15px;">
-                                <h2>DEPENDENCIA:&#160;&#160;&#160;&#160;&#160;&#160;FACULTAD  DE  ECONOMÍA 423.01<br/><br/><br/>
+                                <h2>DEPENDENCIA:&#160;&#160;&#160;&#160;&#160;&#160;FACULTAD  DE  ECONOMÍA <span t-field="o.dependancy_id.dependency"/>.<span t-field="o.sub_dependancy_id.sub_dependency"/><br/><br/><br/>
                                 ATENCIÓN A:&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; SECRETARIO ADMINISTRATIVO y/o<br/>
                                 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;JEFE DE UNIDAD ADMINISTRATIVA
                                 </h2>
@@ -68,23 +69,23 @@
 
                         <tr>
                             <p class="tab1">
-                                Se anexa al presente el cheque devuelto <b><u>No. 242</u></b> del banco <b>HSBC,(CHEQUERA CONACYT)</b> como se indica en el estado de cuenta <b>SANTANDER;</b> por un importe de <b> $ 1,907.69</b>
+                                Se anexa al presente el cheque devuelto <b><u>No. <span t-field="o.number_of_returned_check"/></u></b> del banco <b><span t-field="o.bank_account_statement"/>,(CHEQUERA CONACYT)</b> como se indica en el estado de cuenta <b><span t-field="o.income_bank_journal_id.name"/>;</b> por un importe de <b> <span t-field="o.amount_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></b>
                             </p>
 
-                            <br/><br/>
+                            <br/>
 
                             <p style="font-size:20px;">
                                 <u>Ya que el trámite inicial fue cancelado por el sistema,  se realizara nuevamente la Solicitud de Certificado de Depósito. </u>
                             </p>
-                            <br/><br/>
+                            <br/>
 
                             <p style="font-size:20px;">
                                 Sin otro particular por el momento, le envió un cordial saludo.
                             </p>
-                            <br/><br/>
+                            <br/>
 
                             <p style="font-size:20px;">
-                                Atentamente<br/>“POR MI RAZA HABLARA EL ESPIRITU”<br/>Cd. Universitaria, Cd. Mx., 4 de Noviembre del 2019. 
+                                Atentamente<br/>“POR MI RAZA HABLARA EL ESPIRITU”<br/>Cd. Universitaria, Cd. Mx., <span t-field="o.invoice_date" t-options='{"format": "MMMM ,d y"}'/>. 
                             </p>
 
                             <div class="row" style="float:right;">
@@ -94,12 +95,17 @@
                                     </div>
                                 </div>
                             </div>
-
                         </tr>
-
                     </table>
                 </div>
+        </template>
 
+        <template id="invoice_format_6">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-set="lang" t-value="o.invoice_user_id.sudo().lang if o.type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
+                    <t t-call="jt_income.invoice_format_6_document" t-lang="lang"/>
+                </t>
             </t>
         </template>
 
@@ -108,18 +114,19 @@
                 <field name="default" eval="True"/>
                 <field name="format">A4</field>
                 <field name="orientation">Portrait</field>
-                <field name="margin_top">10</field>
-                <field name="margin_bottom">60</field>
+                <field name="margin_top">15</field>
+                <field name="margin_bottom">40</field>
                 <field name="margin_left">10</field>
                 <field name="margin_right">10</field>
                 <field name="header_line" eval="False"/>
+                <field name="header_spacing">5</field>
                 <field name="dpi">100</field>
             </record>
 
             <report 
                 id="invoice_pdf_format6"
                 model="account.move"
-                string="Invoice Format 6"
+                string="2° FORMATO DE AVISO CAMBIO FORMA DE COBRO A TRANSFERENCIA"
                 report_type="qweb-pdf"
                 name="jt_income.invoice_format_6"
                 file="jt_income.invoice_format_6"

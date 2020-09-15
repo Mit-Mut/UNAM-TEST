@@ -78,10 +78,15 @@ class ProformaBudgetSummaryReport(models.AbstractModel):
     @api.model
     def _init_filter_line_pages(self, options, previous_options=None):
         options['line_pages'] = []
+        start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+                    
         budget_lines = self.env['expenditure.budget.line'].search(
-            [('expenditure_budget_id.state', '=', 'validate')])
-
-        pages = round(len(budget_lines) / 500)
+            [('expenditure_budget_id.state', '=', 'validate'),('start_date', '>=', start), ('end_date', '<=', end)])
+        program_codes = budget_lines.mapped('program_code_id')
+        pages = round(len(program_codes) / 500)
         line_list = []
         for page in range(1, pages + 1):
             line_list.append(page)

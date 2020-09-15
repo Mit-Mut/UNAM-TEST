@@ -177,7 +177,9 @@ class ExpenditureBudget(models.Model):
         string='Success Rows', compute="_compute_total_rows")
     total_rows = fields.Integer(
         string="Total Rows", compute="_compute_total_rows")
-
+    
+    is_validation_process_start = fields.Boolean(default=False)
+    
     @api.constrains('from_date', 'to_date')
     def _check_dates(self):
         if self.from_date and self.to_date:
@@ -789,6 +791,12 @@ class ExpenditureBudget(models.Model):
 
     def previous_budget(self):
         # Total CRON to create
+        if self.state == 'previous':
+            raise ValidationError("Budget already validated.Please reload the page!")
+        if self.is_validation_process_start:
+            raise ValidationError("Budget Validation Process Is Started By Other Users!")
+        self.is_validation_process_start = True
+        self.env.cr.commit()
         msg = (_("Budget Validation Process Started at %s" % datetime.strftime(
             datetime.now(), DEFAULT_SERVER_DATETIME_FORMAT)))
         self.env['mail.message'].create({'model': 'expenditure.budget', 'res_id': self.id,
@@ -811,7 +819,9 @@ class ExpenditureBudget(models.Model):
                 self.state = 'previous'
                 msg = (_("Budget Validation Process Ended at %s" % datetime.strftime(
                       datetime.now(), DEFAULT_SERVER_DATETIME_FORMAT)))
-
+                
+        self.is_validation_process_start = False
+        
     def confirm(self):
         self.verify_data()
         self.write({'state': 'confirm'})

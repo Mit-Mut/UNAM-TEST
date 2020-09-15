@@ -7,6 +7,8 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//sheet/group/group[2]/field[@name='department_id']" position="before">
+                	<field name="emp_title"/>
+                	<field name="bank_journal_id"/>
                     <field name="worker_payment_key"/>
                     <field name="payment_place_id"/>
 <!--                    <field name="journal_id"/>-->
@@ -56,7 +58,12 @@
                     <field name="housing"/>
                     <field name="road"/>
                 </xpath>
-                
+                <field name="user_id" position="after">
+                      <field name="worker_number"/>
+                      <field name="number_of_square"/>
+                      <field name="place_number"/>
+                </field>
+                <!-- 
                  <xpath expr="//notebook/page[@name='hr_settings']" position="after">
                      <page string="Configuration RRHH">
                          <group>
@@ -70,10 +77,23 @@
                          </group>
                      </page>
                  </xpath>
-                
+                 -->
+                 
                 <!-- Accounting Page Fields -->
                 <xpath expr="//notebook/page[@name='hr_settings']" position="after">
                     <page string='Accounting'>
+                        <group string='Accounting Entries'>
+                            <group>
+                                <field name="account_receivable_id"/>
+                                <field name="account_payable_id"/>
+                            </group>
+                            <group>
+                                <field name="beneficiary_ids" widget="many2many_tags"
+                                    domain="[('beneficiary_type', '=', 'alimony')]"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page string='Bank Accounts'>
                         <group string='Bank Accounts' colspan="4">
                             <field name="bank_ids" nolabel="1">
                                 <tree editable="bottom">
@@ -89,16 +109,6 @@
                                  <field name="key_bank"/>
                              </tree>
                             </field>
-                        </group>
-                        <group string='Accounting Entries'>
-                            <group>
-                                <field name="account_receivable_id"/>
-                                <field name="account_payable_id"/>
-                            </group>
-                            <group>
-                                <field name="beneficiary_ids" widget="many2many_tags"
-                                    domain="[('beneficiary_type', '=', 'alimony')]"/>
-                            </group>
                         </group>
                     </page>
                 </xpath>

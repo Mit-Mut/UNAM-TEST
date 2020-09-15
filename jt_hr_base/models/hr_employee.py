@@ -125,7 +125,10 @@ class HrEmployee(models.Model):
         'account.account', string='Account receivable')
     account_payable_id = fields.Many2one(
         'account.account', string='Account payable')
-
+    
+    emp_title = fields.Char("Title")
+    bank_journal_id = fields.Many2one("account.journal",'Key bank dispersion')
+    
     @api.constrains('number_of_square')
     def _check_key_unam(self):
         if not str(self.number_of_square).isnumeric():

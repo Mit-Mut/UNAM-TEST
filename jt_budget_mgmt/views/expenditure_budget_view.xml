@@ -40,7 +40,7 @@
                         Data validation is running in background, Page will be auto refreshed and <b>Data Validation Status</b> will be auto turned off when the process will get finished!
                     </div></center>
                     <header>
-                        <button name="previous_budget" type="object" string="Previous budget" class="oe_highlight" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('cron_running', '=', True)]}"/>
+                        <button name="previous_budget" type="object" string="Previous budget" class="oe_highlight" attrs="{'invisible': ['|', '|',('state', '!=', 'draft'),('is_validation_process_start', '=', True) ,('cron_running', '=', True)]}"/>
                         <button name="confirm" type="object" string="Confirm" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'previous')]}"/>
                         <button name="approve" type="object" string="Approve" class="oe_highlight" states='confirm'/>
                         <button name="reject" type="object" string="Reject" class="oe_highlight" states='confirm'/>
@@ -72,6 +72,7 @@
                                 <field name="total_quarter_budget"/>
                                 <field name="record_number"/>
                                 <field name="import_record_number"/>
+                                <field name="is_validation_process_start" invisible="1"/>
                             </group>        
                             <group>
                                 <label for="from_date"/>

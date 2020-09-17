@@ -3,3 +3,4 @@ access_activity_catalog,activity.catalog.access,model_activity_catalog,base.grou
 access_deposit_certificate_type,deposit.certificate.type.access,model_deposit_certificate_type,base.group_user,1,1,1,1
 access_sub_origin_resource,sub.origin.resource.access,model_sub_origin_resource,base.group_user,1,1,1,1
 access_income_cash_cut,income.cash.cut.access,model_income_cash_cut,base.group_user,1,1,1,1
+access_income_annual_report,income.annual.report.access,model_income_annual_report,base.group_user,1,1,1,1

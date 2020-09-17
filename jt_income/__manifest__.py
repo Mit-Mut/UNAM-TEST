@@ -31,6 +31,7 @@
     'license': 'AGPL-3',
     'depends': ['jt_supplier_payment', 'jt_budget_mgmt'],
     'data': [
+        'data/ir_sequence.xml',
         'views/activity_catalog_views.xml',
         'views/deposit_certificate_views.xml',
         'views/product_views.xml',
@@ -38,6 +39,7 @@
         'views/sub_origin_resource_views.xml',
         'views/invoice_views.xml',
         'views/income_cash_cut_view.xml',
+        'views/account_payment_view.xml',
         'security/ir.model.access.csv',
         'reports/template_1.xml',
         'reports/invoice_format_1.xml',
@@ -48,6 +50,9 @@
         'reports/invoice_format_6.xml',
         'reports/invoice_format_7.xml', 
         'views/res_company.xml',
+        'wizard/liquid_adjstments_manual_deposite_view.xml',
+        
+        'reports/income_annual_report_view.xml',
 
     ],
     'application': True,

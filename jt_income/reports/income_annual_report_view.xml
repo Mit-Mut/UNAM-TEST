@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+  
+       <record id="income_annual_report_search_view" model="ir.ui.view">
+            <field name="name">income.annual.report.search.view</field>
+            <field name="model">income.annual.report</field>
+            <field name="arch" type="xml">
+                <search string="Reports">
+                	<!-- 
+                    <group expand="1" string="Group By">
+                        <filter string="Grouping by Object of Expenditure" name='item_first' context="{'group_by':'item_first'}"/>
+                    </group>
+                     -->
+                </search>
+            </field>
+        </record>
+  
+          <record id="income_annual_report_tree_view" model="ir.ui.view">
+            <field name="name">income.annual.report.tree.view</field>
+            <field name="model">income.annual.report</field>
+            <field name="arch" type="xml">
+                <tree>
+                	<field name="id" invisible="1"/>    
+                	<field name="sub_origin_resource_id"/>                
+  				</tree>
+  			</field>
+  		</record>
+  		
+        <record id="action_income_annual_report" model="ir.actions.act_window">
+            <field name="name">Income Annual Report</field>
+            <field name="res_model">income.annual.report</field>
+            <field name="view_mode">tree</field>
+            <!-- <field name="context">{'search_default_item_first':1}</field>  -->
+        </record>
+  
+
+    <!-- menu Income Annual Report -->
+    <menuitem
+        id="menu_income_report"
+        name="Report"
+        parent="main_menu_income"
+        sequence="7"
+    />
+
+    
+    <menuitem
+        id="menu_income_annual_report"
+        name="Income Annual Report"
+        parent="menu_income_report"
+        sequence="1"
+        action="action_income_annual_report"
+    />
+
+	</data>
+</odoo>

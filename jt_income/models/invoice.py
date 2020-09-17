@@ -1,4 +1,4 @@
-from odoo import models, fields, api
+from odoo import models, fields, api,_
 from odoo.exceptions import ValidationError
 
 class Invoice(models.Model):
@@ -80,6 +80,19 @@ class Invoice(models.Model):
     income_branch = fields.Char('Branch')
     reference_plugin = fields.Char('Reference Plugin')
     income_status = fields.Selection([('approved','Approved'),('rejected','Rejected')],string="Income Status")
+    adequacies_ids = fields.One2many("adequacies",'invoice_move_id')
+    
+    @api.depends('adequacies_ids','record_type','type_of_revenue_collection')
+    def get_hide_budget_refund(self):
+        for record in self:
+            is_hide_budget_refund = False
+            if record.adequacies_ids:
+                is_hide_budget_refund = True
+            elif record.record_type != 'manual' or record.type_of_revenue_collection != 'deposit_cer':
+                is_hide_budget_refund = True
+            record.is_hide_budget_refund = is_hide_budget_refund
+            
+    is_hide_budget_refund = fields.Boolean('Hide Budget Refund',compute='get_hide_budget_refund',store=True)
     
     @api.constrains('income_id')
     def _check_income_id(self):
@@ -91,7 +104,27 @@ class Invoice(models.Model):
         if self.income_branch and not str(self.income_branch).isnumeric():
             raise ValidationError(_('The Branch must be numeric value'))
     
-    
+ 
+    def action_budget_refund(self):
+        liq_adequacy_jour = self.env.ref('jt_conac.liq_adequacy_jour')
+        journal_id = False
+        if liq_adequacy_jour:
+            journal_id = liq_adequacy_jour.id
+
+        seq_ids = self.env['ir.sequence'].search([('code', '=', 'invoice.adequacies.folio')], order='company_id')
+        number_next = 0
+        if seq_ids:
+            number_next = seq_ids[0].number_next_actual 
+
+        return {
+            'name': _('Liquid Adjustments'),
+            'res_model': 'liquid.adjustments.manual.deposite',
+            'view_mode': 'form',
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+            'context' : {'default_journal_id' : journal_id,'default_folio':number_next,'default_move_id':self.id}
+        }
+        
 class AccountMoveLine(models.Model):
     
     _inherit = 'account.move.line'

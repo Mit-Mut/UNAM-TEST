@@ -57,7 +57,8 @@
         'views/payroll_payment_management_view.xml',
         'views/upload_payroll_file_view.xml',
         'wizard/payroll_payment_provider_view.xml',
-
+        # Payroll Reports
+        'reports/payroll_bank_deposite_slip.xml',
         
     ],
     'application': False,

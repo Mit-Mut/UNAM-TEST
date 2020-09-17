@@ -37,6 +37,7 @@
         'views/res_partner_views.xml',
         'views/sub_origin_resource_views.xml',
         'views/invoice_views.xml',
+        'views/income_cash_cut_view.xml',
         'security/ir.model.access.csv',
         'reports/template_1.xml',
         'reports/invoice_format_1.xml',

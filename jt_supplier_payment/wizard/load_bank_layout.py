@@ -537,9 +537,14 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
             data = io.StringIO(file_data.decode("utf-8")).readlines()
             count = 0
             for line in data:
+                if not line:
+                    continue
                 count+=1
                 if count <= 2:
                     continue
+                if line and line[0]=='4':
+                    continue
+                
                 account_no = line[25:45]
                 amount = line[5:23]
                 status = line[229]

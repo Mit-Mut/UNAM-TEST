@@ -29,7 +29,7 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
 
     is_payroll_payment_request = fields.Boolean("Payroll Payment Request",default=False,copy=False)
-
+    
 class AccountPayment(models.Model):
     
     _inherit = 'account.payment'

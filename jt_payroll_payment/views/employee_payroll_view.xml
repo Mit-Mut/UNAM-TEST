@@ -52,19 +52,21 @@
                                 </div>
                                 <field name="fornight"/>
                                 <field name="bank_receiving_payment_id"/>
-                                <field name="payment_issuing_bank_id"/>
+                                <field name="payment_issuing_bank_id" invisible="1" readonly="1"/>
                                 <field name="receiving_bank_acc_pay_id"/>
-                                <field name="bank_acc_payment_insur_id"/>
+                                <field name="bank_acc_payment_insur_id" invisible="1" readonly="1"/>
                                 <field name="payment_request_type" required="1"/>
                                 <field name="amount_payable"/>
                             </group>
                             <group>
                                 <field name="reference" readonly="1"/>
                                 <field name="name" readonly="1"/>
+                                <field name="payment_place_id"/>
                                 <field name="employee_number"/>
-                                <field name="batch_folio"/>
+                                <field name="batch_folio" invisible="1"/>
                                 <field name="request_type"/>
                                 <field name="payroll_adjustment"/>
+                                <field name="due_to_inappropriate"/>
                                 <field name="substate"/>
                                 <field name="beneficiary_id" domain="[('beneficiary_type', '=', 'alimony')]"/>
                             </group>

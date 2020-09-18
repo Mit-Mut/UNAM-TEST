@@ -35,7 +35,7 @@ class AccountMove(models.Model):
     adequacy_id = fields.Many2one('adequacies')
     dependancy_id = fields.Many2one('dependency', string='Dependency')
     sub_dependancy_id = fields.Many2one('sub.dependency', 'Sub Dependency')
-    payment_place_id = fields.Many2one('payment.place', 'Name')
+    payment_place_id = fields.Many2one('payment.place', 'Payment Place')
     conac_line_ids = fields.One2many('account.move.line', 'move_id', string='Journal Items',
                                      compute="show_conac_move")
 
@@ -145,6 +145,16 @@ class AccountMove(models.Model):
                 for b_line in line.budget_line_link_ids:
                     if b_line.budget_line_id:
                         b_line.budget_line_id.available += b_line.amount
+                        control_assing_line = self.env['control.assigned.amounts.lines'].search([
+                            ('program_code_id','=',b_line.budget_line_id.program_code_id.id),
+                            ('assigned_amount_id.budget_id','=',b_line.budget_line_id.expenditure_budget_id.id),
+                            ('assigned_amount_id.state','=','validated'),
+                            ('start_date','=',b_line.budget_line_id.start_date),
+                            ('end_date','=',b_line.budget_line_id.end_date)
+                            ])
+                        if control_assing_line:
+                            control_assing_line[0].available += b_line.amount
+                            
                 line.budget_line_link_ids.unlink()
                    
     def action_draft_budget(self):

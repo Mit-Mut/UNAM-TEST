@@ -27,5 +27,31 @@ class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
     dependancy_id = fields.Many2one('dependency', string='Dependency')
+    dependancy_description = fields.Text(related="dependancy_id.description",string="Dependency Description")
     sub_dependancy_id = fields.Many2one('sub.dependency', 'Sub Dependency')
+    sub_dependancy_id_description = fields.Text(related="sub_dependancy_id.description",string="Sub dependency     Description")
 
+    @api.onchange('payment_place_id')
+    def onchange_payment_place_id_dep(self):
+        if self.payment_place_id:
+            self.dependancy_id = self.payment_place_id.dependancy_id and self.payment_place_id.dependancy_id.id or False
+            self.sub_dependancy_id = self.payment_place_id.sub_dependancy_id and self.payment_place_id.sub_dependancy_id.id or False 
+    
+    @api.model
+    def create(self,vals):
+        res = super(HrEmployee,self).create(vals)
+        if res.payment_place_id and not res.dependancy_id:
+            res.dependancy_id = res.payment_place_id.dependancy_id and res.payment_place_id.dependancy_id.id or False
+        if res.payment_place_id and not res.sub_dependancy_id:
+            res.sub_dependancy_id = res.payment_place_id.sub_dependancy_id and res.payment_place_id.sub_dependancy_id.id or False
+        return res
+    
+    def write(self,vals):
+        result = super(HrEmployee,self).write(vals)
+        if vals.get('payment_place_id',False):
+            for res in self:
+                if res.payment_place_id and not res.dependancy_id:
+                    res.dependancy_id = res.payment_place_id.dependancy_id and res.payment_place_id.dependancy_id.id or False
+                if res.payment_place_id and not res.sub_dependancy_id:
+                    res.sub_dependancy_id = res.payment_place_id.sub_dependancy_id and res.payment_place_id.sub_dependancy_id.id or False
+        return result

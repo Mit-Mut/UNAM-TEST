@@ -7,8 +7,10 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                  <xpath expr="//sheet/group/group[2]/field[@name='department_id']" position="before">
-                    <field name="dependancy_id"/>
-                    <field name="sub_dependancy_id"/>
+                    <field name="dependancy_id" context="{'show_for_supplier_payment':True}"/>
+                    <field name="dependancy_description" readonly="1"/>
+                    <field name="sub_dependancy_id" context="{'show_for_supplier_payment':True}"/>
+                    <field name="sub_dependancy_id_description" readonly="1"/>
                 </xpath>
             </field>
         </record>

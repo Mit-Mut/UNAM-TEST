@@ -42,7 +42,7 @@
                         </div>
 
 						<field name="company_id" invisible="1"/>
-						
+						<field name="is_payment_request" invisible="1"/>
 						<field name="type" invisible="1"/>
 						<field name="state" invisible="1"/>
 						<field name="invoice_filter_type_domain" invisible="1"/>
@@ -60,54 +60,58 @@
                         <group>
                             <group>
                                 <field name="partner_id"  required="1" string="Beneficiary of the payment" attrs="{'readonly': [('payment_state', '!=', 'draft')]}" domain="[('beneficiary_type', 'in', ('national_provider','foreign_supplier'))]"/>
-                                <field name="folio" readonly="1" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
-                                <field name="operation_type_id"  domain="[('upa_catalog_policy_id','=',upa_key)]" context="{'show_for_supplier_payment':True}" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                <field name="folio" readonly="1" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                <field name="operation_type_id"  domain="[('upa_catalog_policy_id','=',upa_key)]" context="{'show_for_supplier_payment':True}" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 <field name="is_show_beneficiary_key" invisible="1"/>
-                                <field name="baneficiary_key" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
-                                <field name="rfc" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                <field name="baneficiary_key" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                <field name="rfc" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 <field name="is_show_student_account" invisible="1"/>
-                                <field name="student_account" attrs="{'invisible':[('is_show_student_account','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
-                                <field name="transfer_key" attrs="{'invisible':[('is_show_student_account','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                <field name="student_account" attrs="{'invisible':['|',('is_payment_request','=',False),('is_show_student_account','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                <field name="transfer_key" attrs="{'invisible':['|',('is_payment_request','=',False),('is_show_student_account','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 <field name="is_show_category_key" invisible="1"/>
-                                <field name="category_key"  attrs="{'invisible':[('is_show_category_key','=',False)]}"/>
+                                <field name="category_key"  attrs="{'invisible':['|',('is_payment_request','=',False),('is_show_category_key','=',False)]}"/>
                                 <field name="is_show_appointment" invisible="1"/>
-                                <field name="workstation_id"  attrs="{'invisible':[('is_show_appointment','=',False)]}"/>
-                                <field name="user_registering_id" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
-                                <field name="currency_id" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                <field name="workstation_id"  attrs="{'invisible':['|',('is_payment_request','=',False),('is_show_appointment','=',False)]}"/>
+                                <field name="user_registering_id" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                <field name="currency_id" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 <field name="payment_bank_id" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 <field name="payment_bank_account_id" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 <field name="batch_folio" readonly="1"/>
                                 <field name="journal_id" readonly="1" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
-                                <field name="invoice_uuid" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
-                                <field name="invoice_series" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
-                                <field name="folio_invoice" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
-                                <field name="administrative_secretary_id" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                <field name="invoice_uuid" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                <field name="invoice_series" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                <field name="folio_invoice" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                <field name="administrative_secretary_id" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 <field name="is_show_holder_of_dependency" invisible="1"/>
-                                <field name="holder_of_dependency_id" attrs="{'invisible':[('is_show_holder_of_dependency','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                <field name="holder_of_dependency_id" attrs="{'invisible':['|',('is_payment_request','=',False),('is_show_holder_of_dependency','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 <field name="is_from_reschedule_payment" invisible="1"/>
                                 <field name="l10n_mx_edi_payment_method_id" attrs="{'readonly': [('payment_state', '!=', 'draft'),('is_from_reschedule_payment','=',False)]}"/>
                             </group>
                             <group>
                             	<field name="is_show_commitment_date" invisible="1"/>
-                                <field name="commitment_date" attrs="{'invisible':[('is_show_commitment_date','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
-                                <field name="folio_dependency" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
-                                <field name="date_receipt" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
-                                <field name="date_approval_request" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                <field name="commitment_date" attrs="{'invisible':['|',('is_payment_request','=',False),('is_show_commitment_date','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                <field name="folio_dependency" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                <field name="date_receipt" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                <field name="date_approval_request" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 <field name="invoice_date" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
-                                <field name="administrative_forms" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
-                                <field name="no_of_document" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
-                                <field name="sheets" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
-                                <field name="document_type" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
-                                <field name="upa_key" context="{'show_for_supplier_payment':True}" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
-                                <field name="upa_document_type" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                <field name="administrative_forms" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                <field name="no_of_document" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                <field name="sheets" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                <field name="document_type" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                <field name="upa_key" context="{'show_for_supplier_payment':True}" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                <field name="upa_document_type" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 <field name="payment_issuing_bank_id" attrs="{'readonly': [('is_from_reschedule_payment','=',False)]}"/> <!-- attrs="{'readonly': [('payment_state', '!=', 'draft'),('is_from_reschedule_payment','=',False)]}" -->
                                 <field name="payment_issuing_bank_acc_id"/>
                                 <field name="is_show_responsible" invisible="1"/>
-                                <field name="responsible_id" attrs="{'invisible':[('is_show_responsible','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
-
+                                <field name="responsible_id" attrs="{'invisible':['|',('is_payment_request','=',False),('is_show_responsible','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
+								<field name="is_payroll_payment_request" reaonly="1" attrs="{'invisible':[('is_payroll_payment_request','=',False)]}"/>
+								<field name="fornight" attrs="{'invisible':[('is_payroll_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
+								<field name="payroll_request_type" attrs="{'invisible':[('is_payroll_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
+								<field name="payroll_register_user_id" attrs="{'invisible':[('is_payroll_payment_request','=',False)]}" readonly="1"/>
+								<field name="payroll_send_user_id" attrs="{'invisible':[('is_payroll_payment_request','=',False)]}" readonly="1"/>
                                 <label for="invoice_payment_term_id"
-                                       attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
-                                <div class="d-flex" attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">
+                                       attrs="{'invisible': ['|',('is_payment_request','=',False),('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+                                <div class="d-flex" attrs="{'invisible': ['|',('is_payment_request','=',False),('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">
                                     <field name="invoice_payment_term_id"
                                            placeholder="Terms"
                                            attrs="{'readonly': [('payment_state', '!=', 'draft')],'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
@@ -117,7 +121,7 @@
                                            placeholder="Date"
                                            attrs="{'readonly': [('payment_state', '!=', 'draft')],'invisible': ['|', ('invoice_payment_term_id', '!=', False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
                                 </div>
-
+							
                                 <field name="reason_rejection_req" readonly="1" attrs="{'invisible':[('payment_state', '!=', 'rejected')],'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 
                                 <field name="reason_cancellation" readonly="1" attrs="{'invisible':[('payment_state', '!=', 'cancel')],'readonly': [('payment_state', '!=', 'draft')]}"/>

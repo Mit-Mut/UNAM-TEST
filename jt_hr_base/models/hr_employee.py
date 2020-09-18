@@ -27,7 +27,7 @@ from odoo.exceptions import ValidationError
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
-    worker_payment_key = fields.Integer('Worker Payment Key')
+    worker_payment_key = fields.Char('Worker Payment Key')
     # journal_id = fields.Many2one('account.journal', string='Bank Key Scatter')
     payment_place_id = fields.Many2one('payment.place', 'Payment Place')
 
@@ -127,12 +127,18 @@ class HrEmployee(models.Model):
         'account.account', string='Account payable')
     
     emp_title = fields.Char("Title")
+    emp_job_title = fields.Char("Job Title")
     bank_journal_id = fields.Many2one("account.journal",'Key bank dispersion')
     
     @api.constrains('number_of_square')
     def _check_key_unam(self):
-        if not str(self.number_of_square).isnumeric():
+        if self.number_of_square and  not str(self.number_of_square).isnumeric():
             raise ValidationError(_('The Number of square must be numeric value'))
+
+    @api.constrains('worker_payment_key')
+    def _check_worker_payment_key(self):
+        if self.worker_payment_key and not str(self.worker_payment_key).isnumeric():
+            raise ValidationError(_('The Worker Payment Key must be numeric value'))
 
     @api.onchange('branch_number')
     def onchange_branch_number(self):

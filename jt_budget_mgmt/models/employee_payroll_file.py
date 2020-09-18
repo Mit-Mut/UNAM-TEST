@@ -27,8 +27,8 @@ class EmployeePayroll(models.Model):
 
     _inherit = 'employee.payroll.file'
 
-    dependancy_id = fields.Many2one('dependency', string='Dependency')
-    sub_dependancy_id = fields.Many2one('sub.dependency', 'Sub Dependency')
+    dependancy_id = fields.Many2one(related="employee_id.dependancy_id", string='Dependency')
+    sub_dependancy_id = fields.Many2one(related="employee_id.sub_dependancy_id", string='Sub Dependency')
     program_code_id = fields.Many2one("program.code", string="Program Code")
 
     def get_invoice_line_vals(self):

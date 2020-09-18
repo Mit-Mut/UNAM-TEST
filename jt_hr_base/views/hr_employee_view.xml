@@ -8,7 +8,8 @@
             <field name="arch" type="xml">
                 <xpath expr="//sheet/group/group[2]/field[@name='department_id']" position="before">
                 	<field name="emp_title"/>
-                	<field name="bank_journal_id"/>
+                	<field name="emp_job_title"/>
+                	<field name="bank_journal_id" invisible="1"/>
                     <field name="worker_payment_key"/>
                     <field name="payment_place_id"/>
 <!--                    <field name="journal_id"/>-->

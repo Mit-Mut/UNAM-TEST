@@ -21,7 +21,7 @@
                 <field name="workstation_id" position="after">
                     <field name="dependancy_id" context="{'show_for_supplier_payment':True}" attrs="{'readonly':[('payment_state', '!=', 'draft')]}"/>
                     <field name="sub_dependancy_id" context="{'show_for_supplier_payment':True}" attrs="{'readonly':[('payment_state', '!=', 'draft')]}"/>
-                    <field name="payment_place_id" domain="[('dependancy_id','=',dependancy_id),('sub_dependancy_id','=',sub_dependancy_id)]" attrs="{'readonly':[('payment_state', '!=', 'draft')]}"/>
+                    <field name="payment_place_id" domain="[('dependancy_id','=',dependancy_id),('sub_dependancy_id','=',sub_dependancy_id)]" attrs="{'invisible':[('is_payroll_payment_request','=',False)],'readonly':[('payment_state', '!=', 'draft')]}"/>
                 </field>
                 <field name="administrative_secretary_id" position="attributes">
                 	<attribute name="domain">[('dependancy_id','=',dependancy_id)]</attribute>

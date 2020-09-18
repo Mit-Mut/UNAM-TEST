@@ -100,4 +100,4 @@ class AccountJournal(models.Model):
         if self.paid_debit_account_id and self.paid_debit_account_id.coa_conac_id:
             self.conac_paid_debit_account_id = self.paid_debit_account_id.coa_conac_id
         else:
-            self.conac_exe_debit_account_id = False
+            self.conac_paid_debit_account_id = False

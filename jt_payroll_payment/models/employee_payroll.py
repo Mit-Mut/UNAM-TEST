@@ -79,13 +79,23 @@ class EmployeePayroll(models.Model):
                                            ('salary_mod_dec', 'Salary modification: Decreases'),
                                            ('salary_mod_don', 'Salary modification: Donation')],
                                           string="Payroll Adjustment")
+    due_to_inappropriate = fields.Selection([('no_check_collected','No Check Collected'),
+                                             ('withdrawal','Withdrawal'),
+                                             ('leave_without_pay','Leave without pay'),
+                                             ('special_cases','Special cases'),
+                                             ('due_to_partial','Due to partial or intermediate'),
+                                             ('due_to_having_been_processed','Due to having been processed Some payment that corresponds to the worker'),
+                                             ('due_to_change_date','Due to change in the date of withdrawal or because it is not applicable'),
+                                             ],string="Due to inappropriate")
     substate = fields.Char("SubState")
     beneficiary_id = fields.Many2one('res.partner', "Beneficiary")
     state = fields.Selection([('draft', 'Draft'), ('revised', 'Revised'), ('done', 'Done')], string="State",
                              default='draft')
     payment_request_type = fields.Selection([('direct_employee','Direct Employee'),('payment_provider','Payment Provider')],string="Payment Request Type")
     move_id = fields.Many2one('account.move','Payroll Payments')
-
+    payment_place_id = fields.Many2one(related="employee_id.payment_place_id",string="Place of payment")
+    payroll_register_user_id = fields.Many2one('res.users',default=lambda self: self.env.user,copy=False,string="User who registers")
+    
     @api.onchange('employee_id') 
     def onchange_partner_bak_account(self):
         if self.employee_id and self.employee_id.bank_ids:

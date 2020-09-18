@@ -28,7 +28,21 @@ class AccountMove(models.Model):
 
     _inherit = 'account.move'
 
-    is_payroll_payment_request = fields.Boolean("Payroll Payment Request",default=False,copy=False)
+    is_payroll_payment_request = fields.Boolean("Payroll",default=False,copy=False)
+    fornight = fields.Selection([('01', '01'), ('02', '02'), ('03', '03'), ('04', '04'), ('05', '05'),
+                                 ('06', '06'), ('07', '07'), ('08', '08'), ('09', '09'), ('10', '10'),
+                                 ('11', '11'), ('12', '12'), ('13', '13'), ('14', '14'), ('15', '15'),
+                                 ('16', '16'), ('17', '17'), ('18', '18'), ('19', '19'), ('20', '20'),
+                                 ('21', '21'), ('22', '22'), ('23', '23'), ('24', '24')],
+                                string="Fornight")
+
+    payroll_request_type = fields.Selection([('university', 'Payment to University Worker'),
+                                     ('add_benifit', 'Additional Benifit'),
+                                     ('alimony', 'Payment Special payroll'),
+                                     ('payment', 'Payment')], "Type of request for payroll payment")
+    
+    payroll_register_user_id = fields.Many2one('res.users',default=lambda self: self.env.user,copy=False,string="User who registers")
+    payroll_send_user_id = fields.Many2one('res.users',default=lambda self: self.env.user,copy=False,string="User who sends")
     
 class AccountPayment(models.Model):
     

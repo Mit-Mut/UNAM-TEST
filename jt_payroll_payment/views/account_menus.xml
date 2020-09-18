@@ -45,6 +45,16 @@
         <menuitem id="upa_document_type_menu" name="Document Type" parent="menu_payroll_payment_config"
                   sequence="10" action="upa_document_type_action"/>
                   
+        <!--  Account Type Menu -->
+
+       <record id="action_account_type_menu" model="ir.actions.act_window">
+            <field name="name">Account Type</field>
+            <field name="res_model">account.account.type</field>
+            <field name="view_mode">tree,form,search</field>
+        </record>
+        <menuitem id="menu_account_type_base" name="Account Type" parent="account.account_account_menu" 
+        			groups="base.group_system" sequence="2"
+                    action="action_account_type_menu"/>
                   
     </data>
 </odoo>

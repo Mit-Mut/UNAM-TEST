@@ -144,7 +144,7 @@
                                        domain="[('type', '=?', invoice_filter_type_domain)]"
                                        attrs="{'readonly': [('name', '!=', '/')]}"/>
 							
-								<field name="income_bank_journal_id"/>
+								<field name="income_bank_journal_id" domain="{'type','=','bank'}"/>
 								<field name="income_bank_account"/>
                                 <field name="currency_id"
                                        groups="base.group_multi_currency"
@@ -200,7 +200,7 @@
                             	<field name="amount_cfdi_conacyt_income"/>
                             	<field name="conacyt_project_key"/>
                             	<field name="conacyt_project_name"/>
-                            	<field name="uuid_cfdi_ps"/>
+                            	<field name="invoice_uuid" string="UUID"/>
                             	<field name="income_vat"/>                            	                            	
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="income_isr"/>

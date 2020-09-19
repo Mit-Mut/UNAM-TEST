@@ -61,7 +61,7 @@
                             <group>
                                 <field name="partner_id"  required="1" string="Beneficiary of the payment" attrs="{'readonly': [('payment_state', '!=', 'draft')]}" domain="[('beneficiary_type', 'in', ('national_provider','foreign_supplier'))]"/>
                                 <field name="folio" readonly="1" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
-                                <field name="operation_type_id"  domain="[('upa_catalog_policy_id','=',upa_key)]" context="{'show_for_supplier_payment':True}" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                <field name="operation_type_id"  domain="[('currency_type','=',document_type),('upa_catalog_policy_id','=',upa_key)]" context="{'show_for_supplier_payment':True}" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 <field name="is_show_beneficiary_key" invisible="1"/>
                                 <field name="baneficiary_key" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 <field name="rfc" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>

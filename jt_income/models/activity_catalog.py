@@ -6,5 +6,5 @@ class ActivityCatalog(models.Model):
     _description = "Activity Catalog"
     _rec_name = 'activity_id'
 
-    activity_id = fields.Integer("ID")
+    activity_id = fields.Char("ID")
     description = fields.Text("Description")

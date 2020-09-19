@@ -43,6 +43,7 @@ class AccountMove(models.Model):
     
     payroll_register_user_id = fields.Many2one('res.users',default=lambda self: self.env.user,copy=False,string="User who registers")
     payroll_send_user_id = fields.Many2one('res.users',default=lambda self: self.env.user,copy=False,string="User who sends")
+    employee_paryoll_ids = fields.One2many('employee.payroll.file','move_id')
     
 class AccountPayment(models.Model):
     

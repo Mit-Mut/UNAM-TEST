@@ -13,7 +13,7 @@ class Invoice(models.Model):
                                                    ('dgae_ref', 'Reference of DGAE'),
                                                    ('dgoae_trades', 'Trades DGOAE')], "Type of Revenue Collection")
     income_bank_journal_id = fields.Many2one('account.journal', "Bank")
-    income_bank_account = fields.Many2one('account.journal', "Bank Account")
+    income_bank_account = fields.Many2one(related="income_bank_journal_id.bank_account_id", string="Bank Account")
     reception_date = fields.Date("Reception Date")
     deposit_date = fields.Date("Deposit Date")
     cfdi_folio = fields.Char("Folio CFDI")
@@ -124,7 +124,24 @@ class Invoice(models.Model):
             'type': 'ir.actions.act_window',
             'context' : {'default_journal_id' : journal_id,'default_folio':number_next,'default_move_id':self.id}
         }
+    def get_related_journal(self,journal_id,type_of_revenue_collection):
+        if type_of_revenue_collection == 'billing':
+            journal_id = self.env.ref('jt_income.income_billing')
+        elif type_of_revenue_collection == 'deposit_cer':
+            journal_id = self.env.ref('jt_income.income_certificate_of_deposit') 
+        elif type_of_revenue_collection == 'dgae_ref':
+            journal_id = self.env.ref('jt_income.income_reference_DGAE') 
+        elif type_of_revenue_collection == 'dgoae_trades':
+            journal_id = self.env.ref('jt_income.income_trades_DGOAE') 
         
+        journal_id = journal_id and journal_id.id or False
+        return journal_id
+    
+    @api.onchange('type_of_revenue_collection')
+    def onchange_type_of_revenue_collection(self):
+        if self.type_of_revenue_collection:
+            self.journal_id = self.get_related_journal(self.journal_id, self.type_of_revenue_collection)
+            
 class AccountMoveLine(models.Model):
     
     _inherit = 'account.move.line'

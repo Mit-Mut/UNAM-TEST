@@ -4,3 +4,6 @@ access_deposit_certificate_type,deposit.certificate.type.access,model_deposit_ce
 access_sub_origin_resource,sub.origin.resource.access,model_sub_origin_resource,base.group_user,1,1,1,1
 access_income_cash_cut,income.cash.cut.access,model_income_cash_cut,base.group_user,1,1,1,1
 access_income_annual_report,income.annual.report.access,model_income_annual_report,base.group_user,1,1,1,1
+access_association_distribution_ie_accounts,association.distribution.ie.accounts.access,model_association_distribution_ie_accounts,base.group_user,1,1,1,1
+access_association_distribution_ie_accounts_line,association.distribution.ie.accounts.access.line,model_association_distribution_ie_accounts_line,base.group_user,1,1,1,1
+access_sender_recipient_trades,sender.recipient.trades.access,model_sender_recipient_trades,base.group_user,1,1,1,1

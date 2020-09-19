@@ -404,6 +404,15 @@ class AccountMove(models.Model):
         else:
             return res
 
+    def write(self,vals):
+        res = super(AccountMove,self).write(vals)
+        if vals.get('payment_issuing_bank_id'):
+            for rec in self:
+                rec.employee_paryoll_ids.write({'payment_issuing_bank_id':rec.payment_issuing_bank_id and rec.payment_issuing_bank_id.id or False,
+                                                'bank_acc_payment_insur_id' : rec.payment_issuing_bank_acc_id and rec.payment_issuing_bank_acc_id.id or False
+                                                })
+        return res
+    
 #     def remove_journal_line(self):
 #         if self.
 
@@ -431,24 +440,6 @@ class AccountMoveLine(models.Model):
     turn_type = fields.Char("Turn type")
 
 
-
-#     @api.model
-#     def create(self, vals):
-#         result = super(AccountMoveLine, self).create(vals)
-#         if result.move_id and result.move_id.is_payment_request:
-#             result.coa_conac_id = result.account_id and result.account_id.coa_conac_id and result.account_id.coa_conac_id.id or False
-#             result.conac_move = True  
-#         return result
-#     
-#     
-#     def write(self, vals):
-#         result = super(AccountMoveLine, self).write(vals)
-#         if vals.get('account_id',False):
-#             for rec in self:
-#                 if rec.move_id and rec.move_id.is_payment_request:
-#                     rec.coa_conac_id = rec.account_id and rec.account_id.coa_conac_id and rec.account_id.coa_conac_id.id or False
-#                     rec.conac_move = True  
-#         return result
 
 
 

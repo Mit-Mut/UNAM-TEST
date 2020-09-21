@@ -11,3 +11,4 @@ from . import adequacies
 from . import association_distribution_ie_accounts
 from . import sender_recipient_trades
 from . import res_partner_bank
+from . import account_journal

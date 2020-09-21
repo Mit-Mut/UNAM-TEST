@@ -44,6 +44,7 @@
         'views/income_cash_cut_view.xml',
         'views/account_payment_view.xml',
         'views/res_partner_bank_view.xml',
+        'views/account_journal.xml',
         'security/ir.model.access.csv',
         'reports/template_1.xml',
         'reports/invoice_format_1.xml',

@@ -50,10 +50,10 @@ class Invoice(models.Model):
     exercise_reference = fields.Char("Exercise of the reference")
     email = fields.Char("Mail")
     certificate_seal = fields.Char("Certificate Seal")
-    charge_id = fields.Many2one('hr.job', "Charge")
     base_salary = fields.Monetary("Base Salary")
     emitter = fields.Char("Emitter")
-    registry = fields.Char("Registry")
+    registry = fields.Many2one("res.users",string="Registry",default=lambda self: self.env.user)
+    charge_id = fields.Many2one(related='registry.partner_id.workstation_id', string="Charge")
     issuer_dependency_id = fields.Many2one('dependency', "Issuer Dependency")
     cfdi_conacyt_enter = fields.Char("CFDI CONACYT Enter")
     cfdi_conacyt_exercise = fields.Char("CFDI Exercise CONACYT entry")
@@ -81,14 +81,35 @@ class Invoice(models.Model):
     reference_plugin = fields.Char('Reference Plugin')
     income_status = fields.Selection([('approved','Approved'),('rejected','Rejected')],string="Income Status")
     adequacies_ids = fields.One2many("adequacies",'invoice_move_id')
+    hide_base_on_account = fields.Boolean('Hide Base Accounts',compute='get_hide_base_on_account')
+    payment_method_name = fields.Char(related='l10n_mx_edi_payment_method_id.name')
+    sub_origin_ids = fields.Many2many('sub.origin.resource',compute="get_sub_origin_ids",store=True)
     
-    @api.depends('adequacies_ids','record_type','type_of_revenue_collection')
+    @api.depends('income_type','state')
+    def get_sub_origin_ids(self):
+        for rec in self:
+            if rec.income_type and rec.income_type == 'own':
+                rec.sub_origin_ids = [(6,0,self.env['sub.origin.resource'].search([('resource_id.desc','=','income')]).ids)]
+            else:
+                rec.sub_origin_ids = [(6,0,self.env['sub.origin.resource'].search([('resource_id.desc','!=','income')]).ids)]
+    
+    @api.depends('income_bank_journal_id','income_bank_account')
+    def get_hide_base_on_account(self):
+        for rec in self:
+            hide_base_on_account = True
+            if rec.income_bank_account and rec.income_bank_account.acc_number == '444101001':
+                hide_base_on_account = False
+            rec.hide_base_on_account = hide_base_on_account
+                
+    @api.depends('adequacies_ids','record_type','type_of_revenue_collection','state')
     def get_hide_budget_refund(self):
         for record in self:
             is_hide_budget_refund = False
             if record.adequacies_ids:
                 is_hide_budget_refund = True
-            elif record.record_type != 'manual' or record.type_of_revenue_collection != 'deposit_cer':
+            elif record.state != 'posted':
+                is_hide_budget_refund = True
+            elif record.record_type != 'automatic' or record.type_of_revenue_collection != 'deposit_cer':
                 is_hide_budget_refund = True
             record.is_hide_budget_refund = is_hide_budget_refund
             

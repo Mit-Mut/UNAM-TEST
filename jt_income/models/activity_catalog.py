@@ -8,3 +8,12 @@ class ActivityCatalog(models.Model):
 
     activity_id = fields.Char("ID")
     description = fields.Text("Description")
+    
+    def name_get(self):
+        result = []
+        for rec in self:
+            name = rec.activity_id or ''
+            if rec.description: 
+                name += ' ' + rec.description
+            result.append((rec.id, name))
+        return result

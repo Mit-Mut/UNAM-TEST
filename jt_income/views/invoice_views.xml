@@ -134,7 +134,7 @@
 								<field name="ref" string="Bank Reference" />
 								<field name="income_type" />
 								<field name="sub_origin_ids" invisible="1"/>
-								<field name="sub_origin_resource_id" domain="[('id','in',sub_origin_ids)]" attrs="{'invisible':[('type_of_revenue_collection','=','deposit_cer')]}"/>
+								<field name="sub_origin_resource_id" domain="[('income_type','=',income_type)]" attrs="{'invisible':[('type_of_revenue_collection','=','deposit_cer')]}"/>
 								
 								<field name="dependancy_id" context="{'show_for_supplier_payment':True}" />
 								<field name="sub_dependancy_id" context="{'show_for_supplier_payment':True}" />
@@ -146,13 +146,13 @@
                                        domain="[('type', '=?', invoice_filter_type_domain)]"
                                        attrs="{'readonly': [('name', '!=', '/')]}"/>
 							
-								<field name="income_bank_journal_id" domain="[('type','=','bank')]" attrs="{'invisible':[('type_of_revenue_collection','!=','billing')]}"/>
-								<field name="income_bank_account" attrs="{'invisible':[('type_of_revenue_collection','!=','billing')]}"/>
+								<field name="income_bank_journal_id" domain="[('type','=','bank')]" />
+								<field name="income_bank_account" />
                                 <field name="currency_id"
                                        groups="base.group_multi_currency"
                                        attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"/>
 								
-                            	<field name="invoice_date"/>                            	
+                            	<field name="invoice_date" attrs="{'invisible':['|',('record_type','=','automatic'),('type_of_revenue_collection','=','dgoae_trades')]}"/>                            	
 								<field name="cfdi_folio" context="{'show_for_supplier_payment':True}" attrs="{'invisible':[('type_of_revenue_collection','!=','billing')]}"/>
 								<field name="range_sheet_used" attrs="{'invisible':[('type_of_revenue_collection','!=','billing')]}"/>
 								<field name="income_activity" attrs="{'invisible':[('type_of_revenue_collection','!=','billing')]}"/>
@@ -160,13 +160,13 @@
 								<field name="currency_type" attrs="{'invisible':[('type_of_revenue_collection','!=','billing')]}"/>
 								<fielf name="exchange_rate" attrs="{'invisible':[('type_of_revenue_collection','!=','billing')]}"/>
 								<field name="income_payment_type" attrs="{'invisible':[('type_of_revenue_collection','!=','billing')]}"/>
-      							<label for="invoice_payment_term_id" attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
-                                <div class="d-flex" attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">
+      							<label for="invoice_payment_term_id" attrs="{'invisible': ['|','|',('record_type','=','automatic'),('type_of_revenue_collection','=','dgoae_trades'),('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+                                <div class="d-flex" attrs="{'invisible': ['|','|',('record_type','=','automatic'),('type_of_revenue_collection','=','dgoae_trades'),('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">
                                     <field name="invoice_payment_term_id" placeholder="Terms" attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
                                     <span class="o_form_label mx-3 oe_edit_only" attrs="{'invisible': [ '|', '|', '|', ('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"> or </span>
                                     <field name="invoice_date_due" force_save="1" placeholder="Date" attrs="{'invisible': ['|', ('invoice_payment_term_id', '!=', False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
                                 </div>
-                                <field name="l10n_mx_edi_payment_method_id" attrs="{'invisible':[('type_of_revenue_collection','!=','deposit_cer')]}"/>
+                                <field name="l10n_mx_edi_payment_method_id"/>
                                 <field name="payment_method_name" invisible="1"/>
                                 <field name="reception_date" attrs="{'invisible':[('payment_method_name','!=','Nominative check')]}"/>
                                 <field name="deposit_date" attrs="{'invisible':[('payment_method_name','!=','Nominative check')]}"/>
@@ -176,27 +176,27 @@
 								<field name="ieps" attrs="{'invisible':[('type_of_revenue_collection','!=','billing')]}"/>
 								<field name="ieps_amount" attrs="{'invisible':[('type_of_revenue_collection','!=','billing')]}"/>
 								
-								<field name="record_type"/>
+								<field name="record_type" attrs="{'invisible':[('type_of_revenue_collection','!=','deposit_cer')]}"/>
 								<field name="exercise" attrs="{'invisible':[('type_of_revenue_collection','!=','deposit_cer')]}"/>
-								<field name="folio" attrs="{'invisible':[('type_of_revenue_collection','!=','deposit_cer')]}"/>
+								<field name="folio" attrs="{'invisible':[('record_type','!=','manual')]}"/>
 								<field name="operation_key_id" attrs="{'invisible':[('type_of_revenue_collection','!=','deposit_cer')]}"/>
-								<field name="concept" attrs="{'invisible':[('type_of_revenue_collection','!=','deposit_cer')]}"/>
-								<field name="folio_upa" attrs="{'invisible':[('type_of_revenue_collection','!=','deposit_cer')]}"/>
+								<field name="concept" attrs="{'invisible':['|',('record_type','=','automatic'),('type_of_revenue_collection','!=','deposit_cer')]}"/>
+								<field name="folio_upa" attrs="{'invisible':['|',('record_type','=','automatic'),('type_of_revenue_collection','!=','deposit_cer')]}"/>
 								<field name="exercise_upa" attrs="{'invisible':['|',('type_of_revenue_collection','!=','deposit_cer'),('record_type','!=','manual')]}"/>
 								<field name="observations" attrs="{'invisible':[('type_of_revenue_collection','!=','deposit_cer')]}"/>
 								<field name="status_certificate" attrs="{'invisible':[('type_of_revenue_collection','!=','deposit_cer')]}"/>
-								<field name="cancellation_date" attrs="{'invisible':[('type_of_revenue_collection','!=','deposit_cer')]}"/>
-								<field name="date_reference" attrs="{'invisible':[('type_of_revenue_collection','!=','deposit_cer')]}"/>
+								<field name="cancellation_date" attrs="{'invisible':['|',('record_type','=','automatic'),('type_of_revenue_collection','!=','deposit_cer')]}"/>
+								<field name="date_reference" attrs="{'invisible':['|',('record_type','=','automatic'),('type_of_revenue_collection','!=','deposit_cer')]}"/>
                             </group>
                             <group id="header_right_group">
-                            	<field name="exercise_reference" attrs="{'invisible':[('type_of_revenue_collection','!=','deposit_cer')]}"/>
-                            	<field name="email" attrs="{'invisible':[('type_of_revenue_collection','!=','deposit_cer')]}"/>
+                            	<field name="exercise_reference" attrs="{'invisible':['|',('record_type','=','automatic'),('type_of_revenue_collection','!=','deposit_cer')]}"/>
+                            	<field name="email" attrs="{'invisible':['|',('record_type','=','automatic'),('type_of_revenue_collection','!=','deposit_cer')]}"/>
                             	<field name="certificate_seal" attrs="{'invisible':[('type_of_revenue_collection','!=','deposit_cer')]}"/>
                             	<field name="charge_id" attrs="{'invisible':['|',('type_of_revenue_collection','!=','deposit_cer'),('record_type','!=','manual')]}"/>
                             	<field name="base_salary" attrs="{'invisible':['|',('type_of_revenue_collection','!=','deposit_cer'),('record_type','!=','manual')]}"/>
                             	<field name="emitter" attrs="{'invisible':['|',('type_of_revenue_collection','!=','deposit_cer'),('record_type','!=','manual')]}"/>
                             	<field name="registry" attrs="{'invisible':['|',('type_of_revenue_collection','!=','deposit_cer'),('record_type','!=','manual')]}"/>
-                            	<field name="issuer_dependency_id" attrs="{'invisible':['|',('type_of_revenue_collection','!=','deposit_cer'),('record_type','!=','automatic')]}"/>
+                            	<field name="issuer_dependency_id" attrs="{'invisible':['|',('type_of_revenue_collection','!=','deposit_cer'),('record_type','!=','manual')]}"/>
                             	<field name="cfdi_conacyt_enter" attrs="{'invisible':['|',('type_of_revenue_collection','!=','deposit_cer'),('record_type','!=','automatic')]}"/>
                             	<field name="cfdi_conacyt_exercise" attrs="{'invisible':['|',('type_of_revenue_collection','!=','deposit_cer'),('record_type','!=','automatic')]}"/>
                             	<field name="cfdi_conacyt_date" attrs="{'invisible':['|',('type_of_revenue_collection','!=','deposit_cer'),('record_type','!=','automatic')]}"/>
@@ -204,23 +204,24 @@
                             	<field name="conacyt_project_key" attrs="{'invisible':['|',('type_of_revenue_collection','!=','deposit_cer'),('record_type','!=','automatic')]}"/>
                             	<field name="conacyt_project_name" attrs="{'invisible':['|',('type_of_revenue_collection','!=','deposit_cer'),('record_type','!=','automatic')]}"/>
                             	<field name="invoice_uuid" string="UUID" attrs="{'invisible':[('type_of_revenue_collection','!=','billing')]}"/>
-                            	<field name="income_vat" attrs="{'invisible':[('type_of_revenue_collection','!=','deposit_cer')]}"/>                            	                            	
+                            	<field name="income_vat" attrs="{'invisible':['|',('record_type','!=','manual'),('type_of_revenue_collection','!=','deposit_cer')]}"/>                            	                            	
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="income_isr" attrs="{'invisible':[('record_type','!=','automatic')]}"/>
-                                <field name="surcharges_ps" attrs="{'invisible':[('record_type','!=','automatic')]}"/>
-                                <field name="hide_base_on_account" invisible="1"/>       
-                            	<field name="legal_number" attrs="{'invisible':[('hide_base_on_account','=',True)]}"/>
-								<field name="legal_compensation" attrs="{'invisible':[('hide_base_on_account','=',True)]}"/>
-								<field name="number_of_returned_check" attrs="{'invisible':[('hide_base_on_account','=',True)]}"/>
-								<field name="circular_number" attrs="{'invisible':[('hide_base_on_account','=',True)]}"/>
-								<field name="addressee" attrs="{'invisible':[('hide_base_on_account','=',True)]}"/>
-								<field name="bank_status_account" attrs="{'invisible':[('hide_base_on_account','=',True)]}"/>
+                                <field name="surcharges_ps" attrs="{'invisible':[('record_type','!=','manual')]}"/>
+                                <field name="returned_check"/>       
+                            	<field name="legal_number" attrs="{'invisible':[('returned_check','=',False)]}"/>
+								<field name="legal_compensation" attrs="{'invisible':[('returned_check','=',False)]}"/>
+								<field name="number_of_returned_check" attrs="{'invisible':[('returned_check','=',False)]}"/>
+								<field name="circular_number" attrs="{'invisible':[('returned_check','=',False)]}"/>
+								<field name="addressee" attrs="{'invisible':[('returned_check','=',False)]}"/>
+								<field name="bank_status_account" attrs="{'invisible':[('returned_check','=',False)]}"/>
 								<field name="number_receipts" attrs="{'invisible':[('type_of_revenue_collection','!=','dgoae_trades')]}"/>
 								<field name="movement_date" attrs="{'invisible':[('type_of_revenue_collection','not in',('dgae_ref','dgoae_trades'))]}"/>
 								<field name="description_of_the_movement" attrs="{'invisible':[('type_of_revenue_collection','not in',('dgae_ref','dgoae_trades'))]}"/>
 								<field name="settlement_date" attrs="{'invisible':[('type_of_revenue_collection','!=','dgae_ref')]}"/>
 								<field name="income_id" attrs="{'invisible':[('type_of_revenue_collection','!=','dgae_ref')]}"/>
 								<field name="income_branch" attrs="{'invisible':[('type_of_revenue_collection','!=','dgae_ref')]}"/>
+								<field name="customer_ref" attrs="{'invisible':[('type_of_revenue_collection','!=','dgae_ref')]}"/>
 								<field name="reference_plugin" attrs="{'invisible':[('type_of_revenue_collection','!=','dgae_ref')]}"/>
 								<field name="income_status" attrs="{'invisible':[('type_of_revenue_collection','!=','dgae_ref')]}"/>
 								<field name="bank_account_statement" invisible="1"/>
@@ -264,6 +265,8 @@
                                                optional="show"
                                                widget="many2many_tags"/>
                                         <field name="program_code_id" domain="[('budget_id.state','=','validate')]"/>
+                                        <field name="account_ie_id"/>
+                                        
                                         <field name="income_sub_account"/>
                                         <field name="income_sub_subaccount"/>
                                                
@@ -442,6 +445,7 @@
                                         <field name="subproduct_count" invisible="1"/>
                                         <field name="unidentified_product" invisible="1"/>
                                         <field name="program_code_id" invisible="1"/>
+                                        <field name="account_ie_id"/>
                                         <field name="income_sub_account" invisible="1"/>
                                         <field name="income_sub_subaccount" invisible="1"/>
                                         <field name="amount_of_check" invisible="1"/>

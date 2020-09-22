@@ -6,7 +6,7 @@ class account_payment(models.Model):
     _inherit = "account.payment"
 
     sub_origin_resource_id = fields.Many2one('sub.origin.resource', "Extraordinary / Own income")
-    
+        
     def action_register_payment(self):
         res = super(account_payment,self).action_register_payment()
         if res:
@@ -20,10 +20,11 @@ class account_payment(models.Model):
                                                   'default_l10n_mx_edi_payment_method_id' : move_id.l10n_mx_edi_payment_method_id and move_id.l10n_mx_edi_payment_method_id.id or False,
                                                   'default_sub_origin_resource_id' : move_id.sub_origin_resource_id and move_id.sub_origin_resource_id.id or False, 
                                                   })
+                if move_id.income_bank_journal_id:
+                    context.update({'default_journal_id':move_id.income_bank_journal_id.id})
                 res.update({'context':context})    
         return res
     
-
 class payment_register(models.TransientModel):
     
     _inherit = 'account.payment.register'

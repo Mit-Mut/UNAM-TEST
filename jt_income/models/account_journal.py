@@ -24,3 +24,6 @@ class AccountJournal(models.Model):
     conac_recover_income_credit_account_id = fields.Many2one(related='recover_income_credit_account_id.coa_conac_id', string="CONAC Credit Account")
     recover_income_debit_account_id = fields.Many2one('account.account', "Default Debit Account")
     conac_recover_income_debit_account_id = fields.Many2one(related='recover_income_debit_account_id.coa_conac_id', string="CONAC Debit Account")
+
+    for_income = fields.Boolean(related="bank_account_id.for_income",string="Income")
+    

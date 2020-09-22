@@ -5,6 +5,18 @@ class Invoice(models.Model):
 
     _inherit = 'account.move'
 
+    @api.depends('registry')
+    def get_charge_data(self):
+        for rec in self:
+            if rec.registry:
+                emp = self.env['hr.employee'].search([('user_id','=',rec.registry.id)],limit=1)
+                if emp.job_id:
+                    rec.charge_id = emp.job_id.id
+                else:
+                    rec.charge_id = False
+            else:
+                rec.charge_id = False
+                
     income_type = fields.Selection([('extra', 'Extraordinary'),
                                     ('own', 'Own')], string="Income Type")
     sub_origin_resource_id = fields.Many2one('sub.origin.resource', "Extraordinary / Own income")
@@ -53,7 +65,7 @@ class Invoice(models.Model):
     base_salary = fields.Monetary("Base Salary")
     emitter = fields.Char("Emitter")
     registry = fields.Many2one("res.users",string="Registry",default=lambda self: self.env.user)
-    charge_id = fields.Many2one(related='registry.partner_id.workstation_id', string="Charge")
+    charge_id = fields.Many2one('hr.job',string="Charge",compute="get_charge_data",store=True)
     issuer_dependency_id = fields.Many2one('dependency', "Issuer Dependency")
     cfdi_conacyt_enter = fields.Char("CFDI CONACYT Enter")
     cfdi_conacyt_exercise = fields.Char("CFDI Exercise CONACYT entry")
@@ -84,6 +96,8 @@ class Invoice(models.Model):
     hide_base_on_account = fields.Boolean('Hide Base Accounts',compute='get_hide_base_on_account')
     payment_method_name = fields.Char(related='l10n_mx_edi_payment_method_id.name')
     sub_origin_ids = fields.Many2many('sub.origin.resource',compute="get_sub_origin_ids",store=True)
+    customer_ref = fields.Char("Customer Reference")
+    returned_check = fields.Boolean("Returned check",default=False)
     
     @api.depends('income_type','state')
     def get_sub_origin_ids(self):
@@ -109,7 +123,7 @@ class Invoice(models.Model):
                 is_hide_budget_refund = True
             elif record.state != 'posted':
                 is_hide_budget_refund = True
-            elif record.record_type != 'automatic' or record.type_of_revenue_collection != 'deposit_cer':
+            elif record.record_type != 'manual' or record.type_of_revenue_collection != 'deposit_cer':
                 is_hide_budget_refund = True
             record.is_hide_budget_refund = is_hide_budget_refund
             
@@ -183,6 +197,7 @@ class AccountMoveLine(models.Model):
     amount_of_check = fields.Float("Amount of the check")
     deposit_for_check_recovery = fields.Char("Deposit for check recovery")
     cfdi_20 = fields.Char("CFDI 20%")
+    account_ie_id = fields.Many2one('association.distribution.ie.accounts','Account I.E.')
     
     
 

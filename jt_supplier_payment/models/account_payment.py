@@ -7,7 +7,7 @@ class AccountPayment(models.Model):
 
     payment_bank_id = fields.Many2one('res.bank', "Bank of receipt of payment")
     payment_bank_account_id = fields.Many2one('res.partner.bank', "Payment Receipt bank account")
-    payment_issuing_bank_acc_id = fields.Many2one('res.partner.bank', "Payment issuing bank Account")
+    payment_issuing_bank_acc_id = fields.Many2one(related="journal_id.bank_account_id", string="Payment issuing bank Account")
     batch_folio = fields.Integer("Batch Folio")
     folio = fields.Char("Folio against Receipt")
     reason_for_rejection = fields.Text('Reason For Rejection')

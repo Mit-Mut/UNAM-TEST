@@ -84,8 +84,42 @@
          <menuitem id="menu_partner_income" name="Clients" sequence="1"
             parent="main_menu_income" action="res_partner_action_customer_income_menu"/>
 
-         <menuitem id="menu_partner_bank_account_income" name="Bank Accounts" sequence="4"
-            parent="submenu_menu_income_config" action="account.action_account_bank_journal_form"/>
+		<!-- Bank Accouns Menu -->
+         <record id="account_bank_journal_form_view_income" model="ir.ui.view">
+            <field name="name">account.bank.journal.form.view.inh</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="jt_account_base.account_bank_journal_form_view"/>
+            <field name="mode">primary</field>
+            <field name="priority">100</field>            
+            <field name="arch" type="xml">
+            	<field name="bank_account_id" position="after">
+            		<field name="for_income" invisible="1"/>
+            	</field>
+            	<field name="bank_account_id" position="attributes">
+            		<attribute name="context">{'hide_other_group':True,'default_for_income':True}</attribute>
+            	</field>
+			</field>
+		</record>
+		
+       <record id="action_account_bank_journal_income" model="ir.actions.act_window">
+            <field name="name">Bank Accounts</field>
+            <field name="res_model">account.journal</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('account.view_account_bank_journal_tree')}),
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('account.account_bank_journal_view_kanban')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('jt_income.account_bank_journal_form_view_income')})]"/>
+            <field name="domain">[('type', '=', 'bank'),('for_income','=',True)]</field>
+            <field name="context">{'default_type': 'bank','default_for_income':True}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a bank account
+              </p>
+            </field>
+        </record>
+        
+         <menuitem id="menu_partner_bank_account_income_set" name="Bank Accounts" sequence="4"
+            parent="submenu_menu_income_config" action="action_account_bank_journal_income"/>
 
     </data>
 </odoo>

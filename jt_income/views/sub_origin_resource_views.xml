@@ -25,6 +25,7 @@
                                  <field name="name"/>
                                 <field name="resource_id" context="{'show_desc_name':True}"/>
                                 <field name="key"/>
+                                <field name="income_type"/>
                                 <field name="is_it_enabled_for_agreement"/>
                             </group>
                         </group>

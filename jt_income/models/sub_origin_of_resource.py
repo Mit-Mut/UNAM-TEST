@@ -9,7 +9,9 @@ class SubOriginResource(models.Model):
     resource_id = fields.Many2one('resource.origin', "Source of Resource")
     key = fields.Selection(related="resource_id.key_origin",string='Key origin of the resource')
     is_it_enabled_for_agreement = fields.Boolean("Is it enabled for agreement?")
-
+    income_type = fields.Selection([('extra', 'Extraordinary'),
+                                    ('own', 'Own')], string="Income Type")
+    
 
 class ResourceOrigin(models.Model):
     

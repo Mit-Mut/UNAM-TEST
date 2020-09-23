@@ -33,6 +33,7 @@ class EmployeePayroll(models.Model):
         string='Payment Method',
         help='Indicates the way the payment was/will be received, where the '
         'options could be: Cash, Nominal Check, Credit Card, etc.')
+    substate = fields.Selection(related="move_id.payment_state",string="SubState")
     
     def action_reviewed(self):
         if any(self.filtered(lambda x:x.state not in ('draft','revised'))):

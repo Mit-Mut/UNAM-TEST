@@ -25,8 +25,12 @@
             <field name="inherit_id" ref="account.product_template_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//page[@name='invoicing']/group[@name='accounting']" position="inside">
-                	<field name="ie_account_id"/>
                     <field name="do_you_require_password"/>
+                    <field name="ie_account_id">
+                    	<tree>
+                    		<field name="ie_key"/>
+                    	</tree>
+                    </field>
                 </xpath>
                 <field name="property_account_income_id" position="attributes">
                     <attribute name="attrs">{'invisible': [('do_you_require_password', '=', True)]}</attribute>

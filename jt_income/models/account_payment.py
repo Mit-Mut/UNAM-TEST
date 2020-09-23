@@ -24,6 +24,15 @@ class account_payment(models.Model):
                     context.update({'default_journal_id':move_id.income_bank_journal_id.id})
                 res.update({'context':context})    
         return res
+
+    def l10n_mx_edi_is_required(self):
+        self.ensure_one()
+        if self.invoice_ids:
+            income_invoices= self.invoice_ids.filtered(lambda x:x.type_of_revenue_collection)
+            if len(income_invoices) == len(self.invoice_ids):
+                return False
+        return super(account_payment,self).l10n_mx_edi_is_required()
+    
     
 class payment_register(models.TransientModel):
     

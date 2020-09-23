@@ -68,8 +68,10 @@ class AccountMove(models.Model):
                     error_msg = _('Please define an accounting purchase journal in your company')
                 raise UserError(error_msg)
 
-        if 'default_is_payment_request' in self._context or 'default_is_payroll_payment_request' in self._context:
+        if 'default_is_payment_request' in self._context:
             journal = self.env.ref('jt_supplier_payment.payment_request_jour')
+        if 'default_is_payroll_payment_request' in self._context:
+            journal = self.env.ref('jt_payroll_payment.payroll_payment_request_jour')
 
         return journal
     

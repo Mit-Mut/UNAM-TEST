@@ -9,7 +9,7 @@
                 <form string="Load Bank Layout">
                     <group attrs="{'invisible':[('is_hide_file_upload','=',True)]}">
                     	<field name="is_hide_file_upload" invisible="1"/>
-                    	<field name="journal_id" required="1" domain="[('load_bank_format','in',('banamex','bbva_bancomer','hsbc','santander','jp_morgan'))]" options="{'no_open': True, 'no_create': True}"/>
+                    	<field name="journal_id" required="1" domain="[('load_bank_format','!=',False)]" options="{'no_open': True, 'no_create': True}"/>
                     	<field name="payment_ids" invisible="1"/>
                     	<field name="file_name" invisible="1"/>
                     	<field name="file_data" filename="file_name" required="1"/>
@@ -38,7 +38,7 @@
                 <form string="Load Bank Layout">
                     <group attrs="{'invisible':[('is_hide_file_upload','=',True)]}">
                     	<field name="is_hide_file_upload" invisible="1"/>
-                    	<field name="journal_id" required="1" domain="[('load_bank_format','in',('hsbc','bbva_nomina','bbva_232','banamex','scotiabank','banorte','santander'))]" options="{'no_open': True, 'no_create': True}"/>
+                    	<field name="journal_id" required="1" domain="[('payroll_load_bank_format','!=',False)]" options="{'no_open': True, 'no_create': True}"/>
                     	<field name="payment_ids" invisible="1"/>
                     	<field name="file_name" invisible="1"/>
                     	<field name="file_data" filename="file_name" required="1"/>

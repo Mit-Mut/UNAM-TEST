@@ -104,7 +104,7 @@
                                 <field name="payment_issuing_bank_acc_id"/>
                                 <field name="is_show_responsible" invisible="1"/>
                                 <field name="responsible_id" attrs="{'invisible':['|',('is_payment_request','=',False),('is_show_responsible','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
-								<field name="is_payroll_payment_request" reaonly="1" attrs="{'invisible':[('is_payroll_payment_request','=',False)]}"/>
+								<field name="is_payroll_payment_request" readonly="1" attrs="{'invisible':[('is_payroll_payment_request','=',False)]}"/>
 								<field name="fornight" attrs="{'invisible':[('is_payroll_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
 								<field name="payroll_request_type" attrs="{'invisible':[('is_payroll_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
 								<field name="payroll_register_user_id" attrs="{'invisible':[('is_payroll_payment_request','=',False)]}" readonly="1"/>

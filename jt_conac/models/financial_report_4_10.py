@@ -217,7 +217,43 @@ class StatesAndProgramReports(models.AbstractModel):
                                     prog_dict_ade.update({prog_name: [{shcp: -line.amount}]})
             period_prog_dict_ade.update({period_name: prog_dict_ade})
 
+        period_paid_amount_dict = {}
+        for period in periods:
+            period_name = period.get('string')
+            prog_dict_paid = {}
+             
+            period_date_from = datetime.strptime(str(period.get('date_from')), DEFAULT_SERVER_DATE_FORMAT).date()
+            period_date_to = datetime.strptime(str(period.get('date_to')), DEFAULT_SERVER_DATE_FORMAT).date()
+            period_budget_lines = bud_line_obj.search([('expenditure_budget_id.state', '=', 'validate'),
+                            ('start_date', '>=', period_date_from), ('state', '=', 'success'),
+                            ('end_date', '<=', period_date_to)])
+            
+            #shcp_budget_line = period_budget_lines.filtered(lambda x:x.program_code_id.budget_program_conversion_id.shcp.id==shcp.id)
+            program_code_ids = period_budget_lines.mapped('program_code_id')
+            for program in program_code_ids: 
+                prog_name = program.budget_program_conversion_id.desc.upper()
+                prog_name = self.strip_accents(prog_name)
+                shcp = program.budget_program_conversion_id.shcp.name
+                self.env.cr.execute("select coalesce(sum(line.price_total),0) as committed from account_move_line line,account_move amove where line.program_code_id in %s and amove.id=line.move_id and amove.payment_state=%s and amove.invoice_date >= %s and amove.invoice_date <= %s", (tuple(program.ids),'paid',period_date_from,period_date_to))
+                my_datas = self.env.cr.fetchone()
+                paid_amt = 0
+                if my_datas:
+                    paid_amt = my_datas[0]              
+                
+                if prog_name in prog_dict_paid.keys():
+                    shcp_dict = prog_dict_paid.get(prog_name)[0]
+                    
+                    if shcp in shcp_dict.keys():
+                        shcp_dict.update({shcp: shcp_dict.get(shcp) + paid_amt})
+                    else:
+                        shcp_dict.update({shcp: paid_amt})
+                else:
+                    prog_dict_paid.update({prog_name: [{shcp: paid_amt}]})
+                    
+            period_paid_amount_dict.update({period_name: prog_dict_paid})
+            
         lines = []
+        
         hierarchy_lines = states_obj.sudo().search([('parent_id', '=', False)], order='code')
         for line in hierarchy_lines:
             lines.append({
@@ -284,19 +320,6 @@ class StatesAndProgramReports(models.AbstractModel):
                                     paid_amt = 0
                                     amt = concept_dict.get(period_name).get(shcp)
                                     ade_amt = 0
-                                    period_date_from = datetime.strptime(str(period.get('date_from')), DEFAULT_SERVER_DATE_FORMAT).date()
-                                    period_date_to = datetime.strptime(str(period.get('date_to')), DEFAULT_SERVER_DATE_FORMAT).date()
-                                    period_budget_lines = bud_line_obj.search([('expenditure_budget_id.state', '=', 'validate'),
-                                                    ('start_date', '>=', period_date_from), ('state', '=', 'success'),
-                                                    ('end_date', '<=', period_date_to)])
-                                    
-                                    shcp_budget_line = period_budget_lines.filtered(lambda x:x.program_code_id.budget_program_conversion_id.shcp.id==shcp.id)
-                                    program_code_ids = shcp_budget_line.mapped('program_code_id')
-                                    if program_code_ids:
-                                        self.env.cr.execute("select coalesce(sum(line.price_total),0) as committed from account_move_line line,account_move amove where line.program_code_id in %s and amove.id=line.move_id and amove.payment_state=%s and amove.invoice_date >= %s and amove.invoice_date <= %s", (tuple(program_code_ids.ids),'paid',period_date_from,period_date_to))
-                                        my_datas = self.env.cr.fetchone()
-                                        if my_datas:
-                                            paid_amt = my_datas[0]                                                
                                     
                                     if period_name in period_prog_dict_ade.keys():
                                         per_dict = period_prog_dict_ade.get(period_name)
@@ -304,6 +327,14 @@ class StatesAndProgramReports(models.AbstractModel):
                                             shcp_dict = per_dict.get(line_concept)[0]
                                             if shcp.name in shcp_dict.keys():
                                                 ade_amt = shcp_dict.get(shcp.name)
+                                    if period_name in period_paid_amount_dict.keys():
+                                        per_dict = period_paid_amount_dict.get(period_name)
+                                        if line_concept in per_dict.keys():
+                                            shcp_dict = per_dict.get(line_concept)[0]
+                                            if shcp.name in shcp_dict.keys():
+                                                paid_amt = shcp_dict.get(shcp.name)
+                                    
+                                    
                                     if period_name in period_total:
                                         pe_dict = period_total.get(period_name)
                                         period_total.update({period_name: {'auth': pe_dict.get('auth') + amt,

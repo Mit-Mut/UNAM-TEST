@@ -15,7 +15,7 @@
                     <notebook>
                         <page string="Accounting" name="accounting">
                             <group>
-                                <field name="program_code_id"/>
+                                <field name="program_code_id" attrs="{'readonly':[('state','=','done')]}"/>
                             </group>
                         </page>
                     </notebook>

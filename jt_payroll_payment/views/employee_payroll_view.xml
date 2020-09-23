@@ -40,23 +40,23 @@
                         <div class="oe_title">
                             <label for="employee_id" class="oe_edit_only"/>
                             <h1>
-                                <field name="employee_id" required="1"/>
+                                <field name="employee_id" required="1" attrs="{'readonly':[('state','=','done')]}"/>
                             </h1>
                         </div>
                         <group>
                             <group>
                                  <label for="period_start"/>
                                 <div>
-                                    <field name="period_start" class="oe_inline"/> -
-                                    <field name="period_end" class="oe_inline"/>
+                                    <field name="period_start" class="oe_inline" attrs="{'readonly':[('state','=','done')]}"/> -
+                                    <field name="period_end" class="oe_inline" attrs="{'readonly':[('state','=','done')]}"/>
                                 </div>
-                                <field name="fornight"/>
-                                <field name="bank_receiving_payment_id"/>
-                                <field name="receiving_bank_acc_pay_id"/>
-                                <field name="payment_issuing_bank_id" readonly="1"/>
-                                <field name="bank_acc_payment_insur_id" readonly="1"/>
-                                <field name="payment_request_type" required="1"/>
-                                <field name="amount_payable"/>
+                                <field name="fornight" attrs="{'readonly':[('state','=','done')]}"/>
+                                <field name="bank_receiving_payment_id" attrs="{'readonly':[('state','=','done')]}"/>
+                                <field name="receiving_bank_acc_pay_id" attrs="{'readonly':[('state','=','done')]}"/>
+                                <field name="payment_issuing_bank_id" readonly="1" attrs="{'readonly':[('state','=','done')]}"/>
+                                <field name="bank_acc_payment_insur_id" readonly="1" attrs="{'readonly':[('state','=','done')]}"/>
+                                <field name="payment_request_type" required="1" attrs="{'readonly':[('state','=','done')]}"/>
+                                <field name="amount_payable" attrs="{'readonly':[('state','=','done')]}"/>
                             </group>
                             <group>
                                 <field name="reference" readonly="1"/>
@@ -64,13 +64,11 @@
                                 <field name="payment_place_id"/>
                                 <field name="employee_number"/>
                                 <field name="batch_folio" readonly="1"/>
-                                <field name="request_type"/>
-                                <field name="payroll_adjustment"/>
-                                <field name="due_to_inappropriate"/>
-                                <field name="substate"/>
-                                <field name="beneficiary_id" domain="[('beneficiary_type', '=', 'alimony')]"/>
+                                <field name="request_type" attrs="{'readonly':[('state','=','done')]}"/>
+                                <field name="payroll_adjustment" attrs="{'readonly':[('state','=','done')]}"/>
+                                <field name="due_to_inappropriate" attrs="{'readonly':[('state','=','done')]}"/>
+                                <field name="beneficiary_id" domain="[('beneficiary_type', '=', 'alimony')]" attrs="{'readonly':[('state','=','done')]}"/>
                             </group>
-
                         </group>
                     </sheet>
                     <div class="oe_chatter">

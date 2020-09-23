@@ -24,6 +24,9 @@
             	<xpath expr="//group[@name='bank_layout']" position="inside">
             		<field name="bank_format"/>
             		<field name="load_bank_format"/> 
+            		<field name="payroll_beneficiaries_bank_format"/>
+            		<field name="payroll_bank_format"/>
+            		<field name="payroll_load_bank_format"/>
             	</xpath>
 			</field>
 		</record>        

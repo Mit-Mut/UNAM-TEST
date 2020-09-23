@@ -98,6 +98,33 @@ class Invoice(models.Model):
     sub_origin_ids = fields.Many2many('sub.origin.resource',compute="get_sub_origin_ids",store=True)
     customer_ref = fields.Char("Customer Reference")
     returned_check = fields.Boolean("Returned check",default=False)
+    manual_rfc = fields.Char("RFC")
+    full_name = fields.Char("Full Name")
+    type_of_changes = fields.Float("Type Of Changes")
+    trade_no = fields.Char("Trade No")
+    
+    @api.depends('type_of_revenue_collection','returned_check')
+    def show_trade_no(self):
+        for rec in self:
+            is_show_trade_no = False
+            if rec.returned_check:
+                is_show_trade_no = True
+            elif rec.type_of_revenue_collection and rec.type_of_revenue_collection == 'dgoae_trades':
+                is_show_trade_no = True
+            rec.is_show_trade_no = is_show_trade_no 
+            
+    is_show_trade_no = fields.Boolean(string="Show Trade NO",compute="show_trade_no",store=True)
+    #===== Notice of compensation Tab fields=========#
+
+    recipient_emp_id = fields.Many2one('hr.employee','Employee')
+    recipient_title = fields.Char(related="recipient_emp_id.emp_title",string='Title')
+    recipient_professional_title = fields.Char(related="recipient_emp_id.emp_job_title",string='Professional Title')
+
+    sender_emp_id = fields.Many2one('hr.employee','Employee')
+    sender_title = fields.Char(related="sender_emp_id.emp_title",string='Title')
+    sender_professional_title = fields.Char(related="sender_emp_id.emp_job_title",string='Professional Title')
+    
+    employee_ids = fields.Many2many('hr.employee','rel_employee_income_invoice','sender_id','emp_id','EMPLOYEES COPIED')
     
     @api.depends('income_type','state')
     def get_sub_origin_ids(self):
@@ -198,7 +225,19 @@ class AccountMoveLine(models.Model):
     deposit_for_check_recovery = fields.Char("Deposit for check recovery")
     cfdi_20 = fields.Char("CFDI 20%")
     account_ie_id = fields.Many2one('association.distribution.ie.accounts','Account I.E.')
-    
-    
 
+
+#     @api.depends('product_id')
+#     def get_ie_accounts_ids(self):
+#         for rec in self:
+#             if rec.product_id:
+#                 rec.account_ie_ids = [(6,0,rec.product_id.ie_account_id.ids)]
+    
+    account_ie_ids = fields.Many2many('association.distribution.ie.accounts','ie_account_move_line','line_id','ie_id')
+    
+    @api.onchange('product_id')
+    def get_ie_accounts_ids(self):
+        if self.product_id:
+            self.account_ie_ids = [(6,0,self.product_id.ie_account_id.ids)]
+    
 

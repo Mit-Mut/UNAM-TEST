@@ -46,6 +46,11 @@
                     <attribute name="string">Schooling</attribute>
                 </xpath>
                 <xpath expr="//notebook/page[@name='personal_information']/group/group/field[@name='address_home_id']" position="after">
+                    <field name="emp_partner_id" widget="res_partner_many2one"
+                           context="{'show_address': 1, 'default_is_company': True}"
+                           options='{"always_reload": True, "no_quick_create": True}'
+                           />
+                	<!-- 
                     <label for="" string="Address"/>
                     <div class="o_address_format">
                         <field name="street" placeholder="Street..." class="o_address_street"/>
@@ -58,6 +63,7 @@
                     </div>
                     <field name="housing"/>
                     <field name="road"/>
+                     -->
                 </xpath>
                 <field name="user_id" position="after">
                       <field name="worker_number"/>

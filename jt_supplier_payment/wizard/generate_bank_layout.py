@@ -2137,19 +2137,19 @@ class GenerateBankLayout(models.TransientModel):
             if payment.journal_id.id != self.journal_id.id:
                 raise UserError(_("The selected layout does NOT match the bank of the selected payments"))
 
-        if self.journal_id.bank_format == 'santander':
+        if self.journal_id.payroll_bank_format == 'santander':
             self.payroll_payment_santander_file_format()
-        elif self.journal_id.bank_format == 'hsbc':
+        elif self.journal_id.payroll_bank_format == 'hsbc':
             self.payroll_payment_hsbc_file_format()
-        elif self.journal_id.bank_format == 'bbva_nomina':
+        elif self.journal_id.payroll_bank_format == 'bbva_nomina':
             self.payroll_paymentbbva_bancomer_bbva_nomina_file_format()
-        elif self.journal_id.bank_format == 'bbva_232':
+        elif self.journal_id.payroll_bank_format == 'bbva_232':
             self.bbva_bancomer_payroll_232_file_format()
-        elif self.journal_id.bank_format == 'banamex':
+        elif self.journal_id.payroll_bank_format == 'banamex':
             self.payroll_payment_banamex_file_format()
-        elif self.journal_id.bank_format == 'scotiabank':
+        elif self.journal_id.payroll_bank_format == 'scotiabank':
             self.scotiabank_file_format()
-        elif self.journal_id.bank_format == 'banorte':
+        elif self.journal_id.payroll_bank_format == 'banorte':
             self.banorte_file_format()
         
             
@@ -2162,6 +2162,4 @@ class GenerateBankLayout(models.TransientModel):
             'view_id': self.env.ref('jt_supplier_payment.view_generate_payroll_payment_bank_layout').id,
             'type': 'ir.actions.act_window',
         }    
-    
-    
     

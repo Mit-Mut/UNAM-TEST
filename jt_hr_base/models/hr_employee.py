@@ -58,6 +58,7 @@ class HrEmployee(models.Model):
         'rejected', 'Rejected')], string='Registration in Financial Institution')
 
     # Private Information Page Fields
+    emp_partner_id = fields.Many2one('res.partner','Address')
     street = fields.Char('Street')
     street2 = fields.Char('Street 2')
     colonia = fields.Char('Colonia')
@@ -151,7 +152,13 @@ class HrEmployee(models.Model):
                     _('The Branch Number should be of 4 digits only.'))
             if len(self.branch_number) < 4:
                 self.branch_number = self.branch_number.zfill(4)
-
+    @api.onchange('user_id')
+    def onchange_user_partner(self):
+        if self.user_id and self.user_id.partner_id:
+            self.emp_partner_id =  self.user_id.partner_id.id
+        else:
+            self.emp_partner_id = False
+            
     _sql_constraints = [
         ('worker_number_uniq', 'unique (worker_number)', 'The Worker Number must be unique.')]
 

@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <form string="Generate Bank Layout">
                     <group>
-                    	<field name="bank_layout" required="1"/>
+                    	<field name="journal_id" required="1" domain="[('payroll_beneficiaries_bank_format','!=',False)]" options="{'no_open': True, 'no_create': True}"/>
                     	<field name="employee_ids" invisible="1"/>
                     	<field name="file_name" invisible="1"/>
                     	<field name="file_data" readonly="1" filename="file_name" attrs="{'invisible':[('file_data','=',False)]}"/>

@@ -679,23 +679,23 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
             raise ValidationError(_("Column  contains incorrect values. Error: %s")% (ustr(e)))      
         
     def load_payroll_payment_bank_layout(self):
-        diff_payment = self.payment_ids.filtered(lambda x:x.journal_id.load_bank_format != self.journal_id.load_bank_format)
+        diff_payment = self.payment_ids.filtered(lambda x:x.journal_id.payroll_load_bank_format != self.journal_id.payroll_load_bank_format)
         if diff_payment: 
             raise UserError(_("The selected layout does NOT match the bank of the selected payments"))
 
-        if self.journal_id.load_bank_format == 'santander':         
+        if self.journal_id.payroll_load_bank_format == 'santander':         
             self.payroll_payment_get_santander_file()
-        elif self.journal_id.load_bank_format == 'hsbc':         
+        elif self.journal_id.payroll_load_bank_format == 'hsbc':         
             self.payroll_payment_get_hsbc_file()
-        elif self.journal_id.load_bank_format == 'bbva_nomina':
+        elif self.journal_id.payroll_load_bank_format == 'bbva_nomina':
             self.payroll_payment_get_bbva_nomina_file()
-        elif self.journal_id.load_bank_format == 'bbva_232':
+        elif self.journal_id.payroll_load_bank_format == 'bbva_232':
             self.payroll_payment_get_bbva_232_file()
-        elif self.journal_id.load_bank_format == 'banamex':         
+        elif self.journal_id.payroll_load_bank_format == 'banamex':         
             self.payroll_payment_get_banamex_file()
-        elif self.journal_id.load_bank_format == 'scotiabank':
+        elif self.journal_id.payroll_load_bank_format == 'scotiabank':
             self.payroll_payment_get_scotiabank_file()
-        elif self.journal_id.load_bank_format == 'banorte':
+        elif self.journal_id.payroll_load_bank_format == 'banorte':
             self.payroll_payment_get_banorte_file()
             
         self.is_hide_file_upload = True

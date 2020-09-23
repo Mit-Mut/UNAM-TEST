@@ -19,7 +19,8 @@
             <field name="inherit_id" ref="jt_payroll_payment.employee_payroll_file_form"/>
             <field name="arch" type="xml">
             	<field name="batch_folio" position="before">
-            		<field name="l10n_mx_edi_payment_method_id"/>
+            		<field name="l10n_mx_edi_payment_method_id" attrs="{'readonly':[('state','=','done')]}"/>
+            		<field name="substate"/>
             	</field>
 			</field>
 		</record>

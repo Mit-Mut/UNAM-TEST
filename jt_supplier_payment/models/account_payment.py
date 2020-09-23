@@ -19,7 +19,8 @@ class AccountPayment(models.Model):
                               ('rejected','Rejected'),
                               ('cancelled', 'Cancelled')], 
                               readonly=True, default='draft', copy=False, string="Status")
-     
+    baneficiary_key = fields.Char('Baneficiary Key', related='partner_id.password_beneficiary', store=True)
+         
     banamex_description = fields.Char('Description',size=24)
     banamex_concept = fields.Char('Concept',size=34)
     banamex_reference = fields.Char('Reference',size=10)

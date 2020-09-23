@@ -10,7 +10,7 @@ class Product(models.Model):
     parent_product_id = fields.Many2one('product.product', string="Parent Product")
     sub_product = fields.Boolean("Subproduct")
     do_you_require_password = fields.Boolean("Do you require password?")
-    ie_account_id = fields.Many2one('association.distribution.ie.accounts','IE Account')
+    ie_account_id = fields.Many2many('association.distribution.ie.accounts','ie_accounts_product','product_id','ie_account','IE Account')
     
     @api.onchange('parent_product_id')
     def onchange_parent_product(self):

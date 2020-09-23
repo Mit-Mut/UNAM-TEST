@@ -32,7 +32,7 @@ class GenerateBankLayoutEmployee(models.TransientModel):
     _name = 'generate.bank.layout.employee'
     _description = 'Generate Bank Layout Employee'
 
-    bank_layout = fields.Selection([('BANORTE','BANORTE')],string="Layout")
+    journal_id = fields.Many2one('account.journal','Select the file to generate')
     employee_ids = fields.Many2many('hr.employee','hr_employee_bank_layout_rel','bank_layout_id','emp_id','Employee')
     file_name = fields.Char('Filename')
     file_data = fields.Binary('Download')
@@ -471,7 +471,7 @@ class GenerateBankLayoutEmployee(models.TransientModel):
         self.file_name = file_name
         
     def generate_bank_layout(self):
-        if self.bank_layout == 'BANORTE':
+        if self.journal_id.payroll_beneficiaries_bank_format == 'BANORTE':
             self.banorte_file_format()
 
         return {

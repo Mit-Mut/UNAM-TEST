@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="investment_bonds_tree" model="ir.ui.view">
+            <field name="name">investment.bonds.tree.view</field>
+            <field name="model">investment.bonds</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+       				<field name="kind_of_product"/>
+       				<field name="key"/>
+       				<field name="issue_date"/>
+       				<field name="due_date"/>
+       				<field name="nominal_value"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="investment_bonds_form" model="ir.ui.view">
+            <field name="name">investment.bonds.form.view</field>
+            <field name="model">investment.bonds</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" required="1"/>
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                        <notebook>
+                        	<page string="General Information">
+                        		<group string="Annual">
+                        			<group>
+                        				<field name="kind_of_product"/>
+                        				<field name="key"/>
+                        				<field name="issue_date"/>
+                        				<field name="due_date"/>
+                        			</group>
+                        			<group>
+                        				<field name="nominal_value"/>
+                        				<field name="interest_rate"/>
+                        				<field name="time_for_each_cash_flow"/>
+                        				<field name="time_to_expiration_date"/>
+                        				<field name="coupon"/>
+                        			</group>
+                        		</group>
+                        		<group string="Monthly">
+                        			<group>
+                        				<field name="month_key"/>
+                        				<field name="month_issue_date"/>
+                        				<field name="month_due_date"/>
+                        				<field name="number_of_title"/>
+                        			</group>
+                        			<group>
+                        				<field name="udi_value"/>
+                        				<field name="udi_value_multiplied"/>
+                        				<field name="coupon_rate"/>
+                        				<field name="period_days"/>
+                        				<field name="coupon"/>
+                        			</group>
+                        		</group>
+                        		
+                        	</page>
+                        	<page string="Returns">
+                        		<group string="Annual">
+                        			<group>
+                        				<field name="present_value_bond"/>
+                        				<field name="estimated_interest"/>
+                        			</group>
+                        			<group>
+                        				<field name="real_interest"/>
+                        				<field name="profit_variation"/>
+                        			</group>
+                        		</group>
+                        		<group string="Monthly">
+                        			<group>
+                        				<field name="monthly_nominal_value"/>
+                        				<field name="monthly_estimated_interest"/>
+                        			</group>
+                        			<group>
+                        				<field name="monthly_real_interest"/>
+                        				<field name="monthly_profit_variation"/>
+                        			</group>
+                        		</group>
+                        	</page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+          <record id="investment_bonds_search" model="ir.ui.view">
+            <field name="name">investment.bonds.search.view</field>
+            <field name="model">investment.bonds</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+         <record id="action_investment_bonds" model="ir.actions.act_window">
+            <field name="name">Bonds</field>
+            <field name="res_model">investment.bonds</field>
+        </record>
+
+        <menuitem id="menu_investment_bonds" name="Bonds" sequence="6"
+            parent="submenu_menu_investment_money_market" action="action_investment_bonds"/>
+    </data>
+</odoo>

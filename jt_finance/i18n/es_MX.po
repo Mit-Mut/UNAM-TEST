@@ -1,0 +1,1003 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* jt_finance
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-08-08 15:42+0000\n"
+"PO-Revision-Date: 2020-08-08 10:43-0500\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: es\n"
+"X-Generator: Poedit 2.3\n"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__amount_pending
+msgid "Amount Pending"
+msgstr "Monto Pendiente"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__amount_assigned
+msgid "Amount assigned"
+msgstr "Monto Asignado"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__amount_deposited
+msgid "Amount deposited"
+msgstr "Monto Depositado"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__amount_pending
+msgid "Amount pending"
+msgstr "Monto Pendiente"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__amount_received
+msgid "Amount received"
+msgstr "Monto Recibido"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__amount_to_receive
+msgid "Amount to receive"
+msgstr "Monto a Recibir"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__april
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__april
+#: model:ir.model.fields.selection,name:jt_finance.selection__calendar_assigned_amounts_lines__month__april
+#: model:ir.model.fields.selection,name:jt_finance.selection__control_amounts_received_line__month__april
+msgid "April"
+msgstr "Abril"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__august
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__august
+#: model:ir.model.fields.selection,name:jt_finance.selection__calendar_assigned_amounts_lines__month__august
+#: model:ir.model.fields.selection,name:jt_finance.selection__control_amounts_received_line__month__august
+msgid "August"
+msgstr "Agosto"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__bank_id
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__bank_id
+msgid "Bank"
+msgstr "Banco"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__bank_account_id
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__bank_account
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__bank_account_id
+msgid "Bank account"
+msgstr "Cuenta Bancaria"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__budget_id
+#: model_terms:ir.ui.view,arch_db:jt_finance.calendar_assigned_amounts_search_view
+msgid "Budget"
+msgstr "Presupuesto de Egresos"
+
+#. module: jt_finance
+#: code:addons/jt_finance/wizard/import_assigned_amount_line.py:0
+#, python-format
+msgid "Budget does not match."
+msgstr "Presupuesto no coincide."
+
+#. module: jt_finance
+#: code:addons/jt_finance/wizard/import_line.py:0
+#, python-format
+msgid "Budget name does not match."
+msgstr "El Nombre del Presupuesto no coincide."
+
+#. module: jt_finance
+#: code:addons/jt_finance/wizard/import_standardization_line.py:0
+#, python-format
+msgid "Budget name not found."
+msgstr "Nombre del Presupuesto no encontrado."
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__calendar_assigned_amount_id
+msgid "Calendar of assigned amount"
+msgstr "Calendario de Montos Asignados"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__line_ids
+msgid "Calendar of assigned amount lines"
+msgstr "Líneas de Calendario de Montos Asignados"
+
+#. module: jt_finance
+#: model:ir.actions.act_window,name:jt_finance.action_calendar_assigned_amounts
+#: model:ir.model,name:jt_finance.model_calendar_assigned_amounts
+#: model:ir.ui.menu,name:jt_finance.menu_calendar_assigned_amounts
+#: model_terms:ir.ui.view,arch_db:jt_finance.calendar_assigned_amounts_search_view
+msgid "Calendar of assigned amounts"
+msgstr "Calendario de Montos Asignados"
+
+#. module: jt_finance
+#: model:ir.model,name:jt_finance.model_calendar_assigned_amounts_lines
+#: model_terms:ir.ui.view,arch_db:jt_finance.calendar_assigned_amounts_form_view
+msgid "Calendar of assigned amounts lines"
+msgstr "Líneas de Calendario de Montos Asignados"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_account_move__calender_id
+#: model:ir.model.fields,field_description:jt_finance.field_account_move_line__calender_id
+msgid "Calender"
+msgstr "Calendario"
+
+#. module: jt_finance
+#: model_terms:ir.ui.view,arch_db:jt_finance.import_control_amount_line_form_view
+msgid "Cancel"
+msgstr "Cancelado"
+
+#. module: jt_finance
+#: model:ir.actions.act_window,name:jt_finance.action_control_amounts_received
+msgid "Control Of Amount Received"
+msgstr "Control de Montos Recibidos"
+
+#. module: jt_finance
+#: model:ir.ui.menu,name:jt_finance.menu_control_amounts_received
+msgid "Control of amounts received"
+msgstr "Control de Montos Recibidos"
+
+#. module: jt_finance
+#: model_terms:ir.ui.view,arch_db:jt_finance.control_amounts_received_form_view
+msgid "Control of amounts received lines"
+msgstr "Líneas de Control de Montos Recibidos"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__create_uid
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__create_uid
+#: model:ir.model.fields,field_description:jt_finance.field_import_control_amount_lines__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__create_date
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__create_date
+#: model:ir.model.fields,field_description:jt_finance.field_import_control_amount_lines__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__date
+msgid "Date"
+msgstr "Fecha"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__december
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__december
+#: model:ir.model.fields.selection,name:jt_finance.selection__calendar_assigned_amounts_lines__month__december
+#: model:ir.model.fields.selection,name:jt_finance.selection__control_amounts_received_line__month__december
+msgid "December"
+msgstr "Diciembre"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__date
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received__date
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__deposit_date
+msgid "Deposit date"
+msgstr "Fecha de Depósito"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__diff
+msgid "Difference"
+msgstr "Diferencia"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__display_name
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__display_name
+#: model:ir.model.fields,field_description:jt_finance.field_import_control_amount_lines__display_name
+msgid "Display Name"
+msgstr "Nombre para mostrar"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_import_control_amount_lines__dwnld_file
+msgid "Download File"
+msgstr "Descargar Archivo"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_import_control_amount_lines__dwnld_filename
+msgid "Download File name"
+msgstr "Descargar nombre de archivo"
+
+#. module: jt_finance
+#: model_terms:ir.ui.view,arch_db:jt_finance.import_control_amount_line_form_view
+msgid "Download Sample Format"
+msgstr "Descargar formato de muestra"
+
+#. module: jt_finance
+#: model:ir.model.fields.selection,name:jt_finance.selection__calendar_assigned_amounts__import_status__draft
+#: model:ir.model.fields.selection,name:jt_finance.selection__calendar_assigned_amounts__state__draft
+#: model:ir.model.fields.selection,name:jt_finance.selection__calendar_assigned_amounts_lines__state__draft
+#: model:ir.model.fields.selection,name:jt_finance.selection__control_amounts_received__import_status__draft
+#: model:ir.model.fields.selection,name:jt_finance.selection__control_amounts_received__state__draft
+#: model:ir.model.fields.selection,name:jt_finance.selection__control_amounts_received_line__state__draft
+msgid "Draft"
+msgstr "Borrador"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_import_control_amount_lines__error_status
+msgid "Error Status"
+msgstr "Estado de error"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_import_control_amount_lines__error_string
+msgid "Error String"
+msgstr "Cadena de error"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__february
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__february
+#: model:ir.model.fields.selection,name:jt_finance.selection__calendar_assigned_amounts_lines__month__february
+#: model:ir.model.fields.selection,name:jt_finance.selection__control_amounts_received_line__month__february
+msgid "February"
+msgstr "Febrero"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_import_control_amount_lines__file
+msgid "File"
+msgstr "Archivo"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__filename
+msgid "File Name"
+msgstr "Nombre del Archivo"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_import_control_amount_lines__filename
+msgid "File name"
+msgstr "Nombre del Archivo"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__folio
+#: model:ir.model.fields,field_description:jt_finance.field_import_control_amount_lines__folio
+msgid "Folio"
+msgstr "Folio"
+
+#. module: jt_finance
+#: code:addons/jt_finance/wizard/import_adequacies_line.py:0
+#: code:addons/jt_finance/wizard/import_assigned_amount_line.py:0
+#: code:addons/jt_finance/wizard/import_control_amount_lines.py:0
+#: code:addons/jt_finance/wizard/import_standardization_line.py:0
+#, python-format
+msgid "Folio does not match."
+msgstr "El Folio no coincide."
+
+#. module: jt_finance
+#: model_terms:ir.ui.view,arch_db:jt_finance.calendar_assigned_amounts_search_view
+msgid "Group By"
+msgstr "Agrupar por"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__id
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__id
+#: model:ir.model.fields,field_description:jt_finance.field_import_control_amount_lines__id
+msgid "ID"
+msgstr "ID"
+
+#. module: jt_finance
+#: model_terms:ir.ui.view,arch_db:jt_finance.import_control_amount_line_form_view
+msgid "Import"
+msgstr "Importar"
+
+#. module: jt_finance
+#: model:ir.model,name:jt_finance.model_import_control_amount_lines
+msgid "Import Control Amount Lines"
+msgstr "Importar líneas de monto de control"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__import_date
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received__import_date
+msgid "Import Date"
+msgstr "Fecha de Importación"
+
+#. module: jt_finance
+#: model:ir.actions.act_window,name:jt_finance.action_import_control_amount_line
+msgid "Import control amount line"
+msgstr "Importar líneas de monto de control"
+
+#. module: jt_finance
+#: model_terms:ir.ui.view,arch_db:jt_finance.calendar_assigned_amounts_form_view
+#: model_terms:ir.ui.view,arch_db:jt_finance.control_amounts_received_form_view
+msgid "Import lines"
+msgstr "Registros Importados"
+
+#. module: jt_finance
+#: model:ir.model,name:jt_finance.model_account_journal
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__journal_id
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received__journal_id
+msgid "Journal"
+msgstr "Diario"
+
+#. module: jt_finance
+#: model:ir.model,name:jt_finance.model_account_move
+msgid "Journal Entries"
+msgstr "Asientos contables"
+
+#. module: jt_finance
+#: model:ir.model,name:jt_finance.model_account_move_line
+msgid "Journal Item"
+msgstr "Apunte contable"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__move_line_ids
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received__move_line_ids
+#: model_terms:ir.ui.view,arch_db:jt_finance.calendar_assigned_amounts_form_view
+#: model_terms:ir.ui.view,arch_db:jt_finance.control_amounts_received_form_view
+msgid "Journal Items"
+msgstr "Asientos contables"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__july
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__july
+#: model:ir.model.fields.selection,name:jt_finance.selection__calendar_assigned_amounts_lines__month__july
+#: model:ir.model.fields.selection,name:jt_finance.selection__control_amounts_received_line__month__july
+msgid "July"
+msgstr "Julio"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__june
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__june
+#: model:ir.model.fields.selection,name:jt_finance.selection__calendar_assigned_amounts_lines__month__june
+#: model:ir.model.fields.selection,name:jt_finance.selection__control_amounts_received_line__month__june
+msgid "June"
+msgstr "Junio"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts____last_update
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines____last_update
+#: model:ir.model.fields,field_description:jt_finance.field_import_control_amount_lines____last_update
+msgid "Last Modified on"
+msgstr "Última modificación en"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__write_uid
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__write_uid
+#: model:ir.model.fields,field_description:jt_finance.field_import_control_amount_lines__write_uid
+msgid "Last Updated by"
+msgstr "Ultima actualización por"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__write_date
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__write_date
+#: model:ir.model.fields,field_description:jt_finance.field_import_control_amount_lines__write_date
+msgid "Last Updated on"
+msgstr "Ultima actualización en"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__user_id
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received__user_id
+#: model_terms:ir.ui.view,arch_db:jt_finance.calendar_assigned_amounts_search_view
+#: model_terms:ir.ui.view,arch_db:jt_finance.control_amounts_received_search_view
+msgid "Responsible"
+msgstr "Responsable"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__march
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__march
+#: model:ir.model.fields.selection,name:jt_finance.selection__calendar_assigned_amounts_lines__month__march
+#: model:ir.model.fields.selection,name:jt_finance.selection__control_amounts_received_line__month__march
+msgid "March"
+msgstr "Marzo"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__may
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__may
+#: model:ir.model.fields.selection,name:jt_finance.selection__calendar_assigned_amounts_lines__month__may
+#: model:ir.model.fields.selection,name:jt_finance.selection__control_amounts_received_line__month__may
+msgid "May"
+msgstr "Mayo"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__month_int
+msgid "Month Integer"
+msgstr "Mes entero"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__month
+msgid "Month of the amount"
+msgstr "Mes del Monto"
+
+#. module: jt_finance
+#: code:addons/jt_finance/models/calendar_assigned_amounts.py:0
+#, python-format
+msgid "New"
+msgstr "Nuevo"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__november
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__november
+#: model:ir.model.fields.selection,name:jt_finance.selection__calendar_assigned_amounts_lines__month__november
+#: model:ir.model.fields.selection,name:jt_finance.selection__control_amounts_received_line__month__november
+msgid "November"
+msgstr "Noviembre"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_import_control_amount_lines__record_number
+msgid "Number of records"
+msgstr "Número de Registros"
+
+#. module: jt_finance
+#: code:addons/jt_finance/wizard/import_adequacies_line.py:0
+#: code:addons/jt_finance/wizard/import_line.py:0
+#: code:addons/jt_finance/wizard/import_standardization_line.py:0
+#, python-format
+msgid "Number of records do not match with file"
+msgstr "Número de registros no coinciden con archivo"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__obs_calender_amount
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__obs_cont_amount
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__observations
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received__obs_calender_amount
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received__obs_cont_amount
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received__observations
+msgid "Observations"
+msgstr "Observaciones"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__october
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__october
+#: model:ir.model.fields.selection,name:jt_finance.selection__calendar_assigned_amounts_lines__month__october
+#: model:ir.model.fields.selection,name:jt_finance.selection__control_amounts_received_line__month__october
+msgid "October"
+msgstr "Octubre"
+
+#. module: jt_finance
+#: code:addons/jt_finance/wizard/import_standardization_line.py:0
+#, python-format
+msgid "Origin key not found."
+msgstr "No se encontró la clave de origen."
+
+#. module: jt_finance
+#: code:addons/jt_finance/models/calendar_assigned_amounts.py:0
+#, python-format
+msgid "Please configure UNAM and CONAC account in journal!"
+msgstr "Por favor configure la cuenta UNAM y CONAC en diario!"
+
+#. module: jt_finance
+#: code:addons/jt_finance/wizard/import_standardization_line.py:0
+#, python-format
+msgid "Program code not found."
+msgstr "No se encontró el código programático."
+
+#. module: jt_finance
+#: code:addons/jt_finance/wizard/import_assigned_amount_line.py:0
+#, python-format
+msgid "Program code record not found."
+msgstr "No se encontró el registro del código programático."
+
+#. module: jt_finance
+#: model:ir.ui.menu,name:jt_finance.menu_revenue_budget_control
+msgid "Revenue budget control"
+msgstr "Control de Presupuesto de Ingresos"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__file
+msgid "Seasonal File"
+msgstr "Archivo CLC"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__september
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__september
+#: model:ir.model.fields.selection,name:jt_finance.selection__calendar_assigned_amounts_lines__month__september
+#: model:ir.model.fields.selection,name:jt_finance.selection__control_amounts_received_line__month__september
+msgid "September"
+msgstr "Septiembre"
+
+#. module: jt_finance
+#: model:ir.ui.menu,name:jt_finance.menu_finance_settings
+msgid "Settings"
+msgstr "Configuración"
+
+#. module: jt_finance
+#: code:addons/jt_finance/wizard/import_standardization_line.py:0
+#, python-format
+msgid "State name not found."
+msgstr "Nombre de Estado no encontrado."
+
+#. module: jt_finance
+#: code:addons/jt_finance/wizard/import_control_amount_lines.py:0
+#, python-format
+msgid "The number of imported lines is not equal to the number of records"
+msgstr "El número de líneas a importar no es igual al número de registros ingresado"
+
+#. module: jt_finance
+#: code:addons/jt_finance/wizard/import_line.py:0
+#, python-format
+msgid "Total Budget not match with assigned amount in file"
+msgstr "El Presupuesto total no coincide con el monto asignado en el archivo"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__total_rows
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received__total_rows
+msgid "Total Rows"
+msgstr "Total de Registros"
+
+#. module: jt_finance
+#: model:ir.ui.menu,name:jt_finance.menu_finance
+msgid "UNAM Finance"
+msgstr "Registro del Subsidio Federal"
+
+#. module: jt_finance
+#: model_terms:ir.ui.view,arch_db:jt_finance.calendar_assigned_amounts_form_view
+#: model_terms:ir.ui.view,arch_db:jt_finance.control_amounts_received_form_view
+msgid "Validate"
+msgstr "Validar"
+
+#. module: jt_finance
+#: model:ir.model.fields.selection,name:jt_finance.selection__calendar_assigned_amounts__state__validate
+#: model:ir.model.fields.selection,name:jt_finance.selection__control_amounts_received__state__validate
+msgid "Validated"
+msgstr "Validado"
+
+#. module: jt_finance
+#: model_terms:ir.ui.view,arch_db:jt_finance.import_control_amount_line_form_view
+msgid "We find the following differences"
+msgstr "Encontramos las siguientes diferencias"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__import_line_ids
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received__import_line_ids
+#: model_terms:ir.ui.view,arch_db:jt_finance.calendar_assigned_amounts_form_view
+#: model_terms:ir.ui.view,arch_db:jt_finance.control_amounts_received_form_view
+msgid "Imported Lines"
+msgstr "Líneas importadas"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__import_status
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received__import_status
+#: model_terms:ir.ui.view,arch_db:jt_finance.calendar_assigned_amounts_form_view
+#: model_terms:ir.ui.view,arch_db:jt_finance.control_amounts_received_form_view
+msgid "Import Status"
+msgstr "Estado de Importación"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__year
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__year
+msgid "Year"
+msgstr "Año"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__branch
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__branch
+msgid "Branch"
+msgstr "Ramo"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__unit
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__unit
+msgid "Unit"
+msgstr "Unidad"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__purpose
+msgid "Purpose"
+msgstr "Finalidad"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__function
+msgid "Function"
+msgstr "Función"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__sub_function
+msgid "Subfunction"
+msgstr "Subfunción"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__program
+msgid "Program"
+msgstr "Programa"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__institution_activity
+msgid "Institution Activity"
+msgstr "Actividad Institucional"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__project_identification
+msgid "Project Identification"
+msgstr "Identificador de proyecto"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__project
+msgid "Project"
+msgstr "Proyecto"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__budgetary_program
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__shcp_id
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__shcp_id
+msgid "Budgetary Program"
+msgstr "Programa Presupuestario"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__item_char
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__item_id
+msgid "Expense Item"
+msgstr "Partida de Gasto"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__expense_type
+msgid "Expense Type"
+msgstr "Tipo de Gasto"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__funding_source
+msgid "Funding Source"
+msgstr "Fuente de Financiamiento"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__federal
+msgid "Federal"
+msgstr "Entidad Federativa"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__key_wallet
+msgid "Key Wallet"
+msgstr "Clave Cartera"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__january
+#: model:ir.model.fields.selection,name:jt_finance.selection__calendar_assigned_amounts_lines__month__january
+#: model:ir.model.fields.selection,name:jt_finance.selection__control_amounts_received_line__month__january
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__january
+msgid "January"
+msgstr "Enero"
+
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__amount_deposite_april
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__amount_deposite_april
+msgid "Amount deposited April"
+msgstr "Monto depositado del mes de Abril"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__amount_deposite_august
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__amount_deposite_august
+msgid "Amount deposited August"
+msgstr "Monto depositado del mes de Agosto"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__amount_deposite_december
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__amount_deposite_december
+msgid "Amount deposited December"
+msgstr "Monto depositado del mes de Diciembre"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__amount_deposite_february
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__amount_deposite_february
+msgid "Amount deposited February"
+msgstr "Monto depositado del mes de Febrero"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__amount_deposite_january
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__amount_deposite_january
+msgid "Amount deposited January"
+msgstr "Monto depositado del mes de enero"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__amount_deposite_july
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__amount_deposite_july
+msgid "Amount deposited July"
+msgstr "Monto depositado del mes de Julio"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__amount_deposite_june
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__amount_deposite_june
+msgid "Amount deposited June"
+msgstr "Monto depositado del mes de junio"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__amount_deposite_march
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__amount_deposite_march
+msgid "Amount deposited March"
+msgstr "Monto depositado del mes de Marzo"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__amount_deposite_may
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__amount_deposite_may
+msgid "Amount deposited May"
+msgstr "Monto depositado del mes de Mayo"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__amount_deposite_november
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__amount_deposite_november
+msgid "Amount deposited November"
+msgstr "Monto depositado del mes de Noviembre"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__amount_deposite_october
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__amount_deposite_october
+msgid "Amount deposited October"
+msgstr "Monto depositado del mes de Octubre"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__amount_deposite_september
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__amount_deposite_september
+msgid "Amount deposited September"
+msgstr "Monto depositado del mes de Septiembre"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__annual_amount
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__annual_amount
+msgid "Annual Amount"
+msgstr "Monto Anual"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__annual_amount_received
+msgid "Annual Amount Received"
+msgstr "Monto recibido Anual"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received__made_by_id
+msgid "Made by"
+msgstr "Creado por"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__branch_cr
+msgid "Branch CR"
+msgstr "Ramo CR"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__unit_cr
+msgid "Unit CR"
+msgstr "Unidad CR"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__folio_clc
+msgid "Folio CLC"
+msgstr "Folio CLC"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__clc_status
+msgid "CLC Status"
+msgstr "Estatus CLC"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__application_date
+msgid "Application date"
+msgstr "Fecha Aplicación"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__currency_id
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__currency_name
+msgid "Currency"
+msgstr "Divisa"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__month_no
+msgid "Month"
+msgstr "Mes"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__ef
+msgid "EF"
+msgstr "EF Entidad Federativa"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__proposed_date
+msgid "Proposed date"
+msgstr "Fecha Propuesta"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__conpa_id
+msgid "OGTO"
+msgstr "Partida de Gasto"
+
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__success_rows
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received__success_rows
+msgid "Success Rows"
+msgstr "Líneas Exitosas"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__failed_rows
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received__failed_rows
+msgid "Failed Rows"
+msgstr "Filas Erróneas"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__failed_row_file
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received__failed_row_file
+msgid "Failed Rows File"
+msgstr "Archivo de Filas Erróneas"
+
+#. module: jt_finance
+#: model:ir.model,name:jt_finance.model_control_amounts_received_line
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received__line_ids
+msgid "Control of amounts received lines"
+msgstr "Líneas de Control de Montos Recibidos"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__state
+#: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received__state
+msgid "Status"
+msgstr "Estado"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__item_second
+#: model_terms:ir.ui.view,arch_db:jt_finance.report_calendar_amount_assign_line_search_view
+msgid "Grouping by Object of Expenditure"
+msgstr "Agrupación por Objeto del Gasto"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__clc_april
+msgid "CLC April"
+msgstr "CLC Abril"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__clc_august
+msgid "CLC August"
+msgstr "CLC Agosto"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__clc_december
+msgid "CLC December"
+msgstr "CLC Diciembre"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__clc_february
+msgid "CLC February"
+msgstr "CLC Febrero"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__clc_january
+msgid "CLC January"
+msgstr "CLC enero"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__clc_july
+msgid "CLC July"
+msgstr "CLC Julio"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__clc_june
+msgid "CLC June"
+msgstr "CLC junio"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__clc_march
+msgid "CLC March"
+msgstr "CLC Marzo"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__clc_may
+msgid "CLC May"
+msgstr "CLC Mayo"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__clc_november
+msgid "CLC November"
+msgstr "CLC Noviembre"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__clc_october
+msgid "CLC October"
+msgstr "CLC Octubre"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__clc_september
+msgid "CLC September"
+msgstr "CLC Septiembre"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__pending_april
+msgid "Receivable April"
+msgstr "POR COBRAR Abril"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__pending_august
+msgid "Receivable August"
+msgstr "POR COBRAR Agosto"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__pending_december
+msgid "Receivable December"
+msgstr "POR COBRAR Diciembre"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__pending_february
+msgid "Receivable February"
+msgstr "POR COBRAR Febrero"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__pending_january
+msgid "Receivable January"
+msgstr "POR COBRAR enero"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__pending_july
+msgid "Receivable July"
+msgstr "POR COBRAR Julio"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__pending_june
+msgid "Receivable June"
+msgstr "POR COBRAR junio"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__pending_march
+msgid "Receivable March"
+msgstr "POR COBRAR Marzo"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__pending_may
+msgid "Receivable May"
+msgstr "POR COBRAR Mayo"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__pending_november
+msgid "Receivable November"
+msgstr "POR COBRAR Noviembre"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__pending_october
+msgid "Receivable October"
+msgstr "POR COBRAR Octubre"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__pending_september
+msgid "Receivable September"
+msgstr "POR COBRAR Septiembre"
+
+#. module: jt_finance
+#: model:ir.ui.menu,name:jt_finance.menu_jt_finance_report
+#: model_terms:ir.ui.view,arch_db:jt_finance.report_calendar_amount_assign_line_search_view
+msgid "Reports"
+msgstr "Reportes"
+
+#. module: jt_finance
+#: model:ir.actions.act_window,name:jt_finance.action_report_calendar_amount_assign
+msgid "Report Calendar of assigned amounts"
+msgstr "Reporte de Control de Montos Asignados"
+
+#. module: jt_finance
+#: model:ir.ui.menu,name:jt_finance.menu_assigned_amount_control_report
+msgid "Assigned Amount Control Report"
+msgstr "Reporte de Control de Montos Asignados"
+
+#. module: jt_finance
+#: model_terms:ir.ui.view,arch_db:jt_finance.inherited_account_journal_form_view_calendar
+msgid "Estimated"
+msgstr "Estimado"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_account_journal__conac_estimated_credit_account_id
+#: model:ir.model.fields,field_description:jt_finance.field_account_journal__conac_collected_credit_account_id
+msgid "CONAC Credit Account"
+msgstr "Cuenta de crédito CONAC"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_account_journal__conac_estimated_debit_account_id
+#: model:ir.model.fields,field_description:jt_finance.field_account_journal__conac_collected_debit_account_id
+msgid "CONAC Debit Account"
+msgstr "Cuenta de débito CONAC"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_account_journal__estimated_credit_account_id
+#: model:ir.model.fields,field_description:jt_finance.field_account_journal__collected_credit_account_id
+msgid "Default Credit Account"
+msgstr "Cuenta acreedora por defecto"
+
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_account_journal__estimated_debit_account_id
+#: model:ir.model.fields,field_description:jt_finance.field_account_journal__collected_debit_account_id
+msgid "Default Debit Account"
+msgstr "Cuenta deudora por defecto"
+
+#. module: jt_finance
+#: model_terms:ir.ui.view,arch_db:jt_finance.inherited_account_journal_form_view_calendar
+msgid "Collected"
+msgstr "Recaudado"
+
+
+

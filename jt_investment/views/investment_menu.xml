@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- menu for Investment -->
+        <menuitem id="main_menu_investment" name="Investment" sequence="12"/>
+
+       <menuitem id="submenu_menu_investment_money" name="Money" sequence="2" parent="main_menu_investment"/>
+       <menuitem id="submenu_menu_investment_titles" name="Titles" sequence="4" parent="main_menu_investment"/>
+       <menuitem id="submenu_menu_investment_money_market" name="Money Market" sequence="6" parent="main_menu_investment"/>
+       <menuitem id="submenu_menu_investment_productive_accounts" name="Productive Accounts" sequence="8" parent="main_menu_investment"/>
+       <menuitem id="submenu_menu_investment_request_for_transfers" name="Request for Transfers" sequence="10" parent="main_menu_investment"/>
+       <menuitem id="submenu_menu_investment_reports" name="Reports" sequence="12" parent="main_menu_investment"/>
+       <menuitem id="submenu_menu_investment_config" name="Configuration" sequence="14" parent="main_menu_investment"/>
+	</data>
+</odoo>

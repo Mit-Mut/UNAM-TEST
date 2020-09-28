@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_investment_cetes,investment.cetes.access,model_investment_cetes,base.group_user,1,1,1,1
+access_investment_udibonos,investment.udibonos.access,model_investment_udibonos,base.group_user,1,1,1,1
+access_investment_bonds,investment.bonds.access,model_investment_bonds,base.group_user,1,1,1,1

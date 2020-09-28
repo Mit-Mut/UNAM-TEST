@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- QWeb Reports -->
+        <report
+            id="report_agains_receipt"
+            model="account.move"
+            string="Report Agains Receipt"
+            report_type="qweb-pdf"
+            name="jt_supplier_payment.report_again_receipt_template"
+            file="jt_supplier_payment.report_again_receipt_template"
+            paperformat="jt_supplier_payment.report_receipt_paperformat"
+        />
+        <!-- QWeb Reports -->
+        <report
+            id="payment_request_report"
+            model="account.move"
+            string="Payment Request Report"
+            report_type="qweb-pdf"
+            name="jt_supplier_payment.payment_request_report_template"
+            file="jt_supplier_payment.payment_request_report_template"
+        />
+	</data>
+</odoo>

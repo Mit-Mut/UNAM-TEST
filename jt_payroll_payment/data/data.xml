@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+	     <record id="payroll_payment_request_jour" model="account.journal">
+	        <field name="name">Payroll Payment Request Journal</field>
+	        <field name="code">PPAR</field>
+	        <field name="currency_id" ref="base.MXN"/>
+	        <field name="type">purchase</field>
+	    </record>
+ 
+         <record id="action_server_employee_portal_user" model="ir.actions.server">
+            <field name="name">Portal Users</field>
+            <field name="model_id" ref="hr.model_hr_employee"/>
+            <field name="binding_model_id" ref="hr.model_hr_employee"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">action = records.action_create_portal_users()</field>
+        </record>
+ 
+    </data>
+</odoo>

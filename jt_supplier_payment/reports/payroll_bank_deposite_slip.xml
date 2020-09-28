@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="payroll_bank_deposite_slip_template">
+            <t t-call="web.basic_layout">
+            <t t-foreach="docs" t-as="o">
+                <t>
+                    <div class="page">
+                        <div class="oe_structure"/>
+                        <div class="row" name="payment_place_name">
+                            <div class="col-8 text-left">
+                                  <span>
+                                      <h4>TELEFO NO ________________________</h4>
+                                  </span>
+                            </div>
+                            <div class="col-4 text-left">
+                                  <span>
+                                      <h4>CLAVE <u><span t-field="o.payment_place_id.name"/></u></h4>
+                                  </span>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row" name="dependancy_name">
+                             <div class="col-12 text-left">
+                                  <span>
+                                      <h4>DEPENDENCIA <u><span t-field="o.dependancy_id.description"/></u></h4>
+                                  </span>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row" name="details_name">
+                             <div class="col-12 text-left">
+                                  <span>
+                                      <h4>RECIBI DEL DEPARTAMENTO DE PAGO DE NOMIMA Y PRESTACIONES DE LA DIRECCION GENERAL DE FINANZAS</h4>
+                                  </span>
+                            </div>
+                        </div>
+                        <div class="row" name="bank_name">
+                             <div class="col-12 text-left">
+                                  <span>
+                                      <h4><span t-field="o.payment_issuing_bank_id.name"/></h4>
+                                  </span>
+                            </div>
+                        </div>
+                        
+                        <br/>
+                        <div class="row" name="folio_name">
+                        	
+                             <div class="col-8 text-left">
+                                  <span>
+                                      <h4>FOLIOS DE DEPOSITOS DEL ________________________</h4>
+                                  </span>
+                            </div>
+                             <div class="col-4 text-left">
+                                  <span>
+                                      <h4>AL ___________________</h4>
+                                  </span>
+                            </div>
+						</div>
+						<div class="row" name="folio_vales_name">
+                             <div class="col-8 text-left">
+                                  <span>
+                                      <h4>VALES DE DESPENSA DEL FOLIO ___________________</h4>
+                                  </span>
+                            </div>
+                             <div class="col-4 text-left">
+                                  <span>
+                                      <h4>AL ___________________</h4>
+                                  </span>
+                            </div>   
+                        </div>
+                        <div class="row" name="folio_hojas_name">
+                             <div class="col-8 text-left">
+                                  <span>
+                                      <h4>HOJAS NOMINA FOLIO _____________________________</h4>
+                                  </span>
+                            </div>
+                             <div class="col-4 text-left">
+                                  <span>
+                                      <h4>AL ___________________</h4>
+                                  </span>
+                            </div>                            
+                        </div>
+                        <br/>
+						<div class="row" name="document_name">
+                             <div class="col-12 text-left">
+                                  <span>
+                                      <h4>CORRESPONDIENTES A LA QUINCENA ________________________</h4>
+                                  </span>
+                            </div>
+						</div>
+						<br/>
+						<div class="row" name="date_name">
+                             <div class="col-7 text-left">
+                                  <span>
+                                      <h4>REVISO  ________________________</h4><br/>
+                                      <h4>PAGADOR HABILITADO</h4>
+                                  </span>
+                            </div>
+                             <div class="col-5 text-left">
+                                  <span>
+                                      <h4>FECHA ___________________</h4>
+                                  </span>
+                            </div>
+						</div>
+						<br/>
+						<div class="row" name="sing_line">
+                             <div class="col-8 text-left">
+                                  <span>
+                                      <h4>_________________________</h4>
+                                  </span>
+                            </div>
+                             <div class="col-4 text-left">
+                                  <span>
+                                      <h4>_________________________</h4>
+                                  </span>
+                            </div>
+						</div>
+						
+						<div class="row" name="sing_data">
+                             <div class="col-8 text-left">
+                                  <span>
+                                      <h4>NOMBRE COMPLETO</h4>
+                                  </span>
+                            </div>
+                             <div class="col-4 text-center">
+                                  <span>
+                                      <h4>FIRMA</h4>
+                                  </span>
+                            </div>
+						</div>
+						
+						
+                    </div>
+                </t>
+            </t>
+            </t>
+        </template>
+
+        <report
+            id="report_payroll_bank_deposite_slip"
+            model="account.move"
+            string="Bank deposit Slip"
+            report_type="qweb-pdf"
+            name="jt_supplier_payment.payroll_bank_deposite_slip_template"
+            file="jt_supplier_payment.payroll_bank_deposite_slip_template"
+        />
+
+      
+    </data>
+</odoo>

@@ -482,12 +482,12 @@ class DetailsBudgetSummaryReport(models.TransientModel):
                 ws1 = wb1.add_sheet('Details Budget Report')
             fp = BytesIO()
             header_style = xlwt.easyxf('font: bold 1')
-            float_sytle = xlwt.easyxf(num_format_str = '0.00')
+            float_sytle = xlwt.easyxf(num_format_str = '$#,##0.00')
             #total_style = xlwt.easyxf('num_format_str :0.00;' 'font: bold 1;' )
 
             ezxf = xlwt.easyxf
             total_style = ezxf(
-                'font: italic true; pattern: pattern solid, fore_colour grey25',num_format_str='0.00')
+                'font: italic true; pattern: pattern solid, fore_colour grey25',num_format_str='$#,##0.00')
 #             ws1.set_panes_frozen(True)
 #             ws1.set_horz_split_pos(1) 
 #             ws1.set_vert_split_pos(18) 

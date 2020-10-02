@@ -999,5 +999,20 @@ msgstr "Cuenta deudora por defecto"
 msgid "Collected"
 msgstr "Recaudado"
 
+#. module: jt_finance
+#: model:ir.model.fields,field_description:jt_finance.field_excel_export_assign_report__fec_data
+msgid "Download"
+msgstr "Descargar"
 
+#. module: jt_finance
+#: code:addons/jt_finance/reports/report_calendar_amount_assign.py:0
+#: model:ir.actions.server,name:jt_finance.action_export_excel_assigned_amount
+#, python-format
+msgid "Export Summary"
+msgstr "Exportar Resumen"
+
+#. module: jt_finance
+#: model_terms:ir.ui.view,arch_db:jt_finance.excel_export_assign_report_form_view
+msgid "Close"
+msgstr "Cerca"
 

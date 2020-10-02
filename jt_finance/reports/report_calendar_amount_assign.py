@@ -21,6 +21,12 @@
 #
 ##############################################################################
 from odoo import models, fields, api, _,tools
+from xlrd import *
+import xlwt
+import base64
+from io import BytesIO
+import math
+
 
 class ReportCalendarAmountAssign(models.Model):
     
@@ -164,8 +170,77 @@ class ReportCalendarAmountAssign(models.Model):
     
     
     
-    
-    
+    def action_get_excel_report(self):
+        
+        wb1 = xlwt.Workbook(encoding='utf-8')
+        if self.env.user.lang == 'es_MX':
+            ws1 = wb1.add_sheet('Reporte Detallado de Presupuesto')
+        else:         
+            ws1 = wb1.add_sheet('Details Budget Report')
+        fp = BytesIO()
+        header_style = xlwt.easyxf('font: bold 1')
+        float_sytle = xlwt.easyxf(num_format_str = '$#,##0.00')
+        row = 0
+        col = 0
+        col_width = 256 * 25
+        ws1.col(col).width = col_width
+        
+        if self.env.user.lang == 'es_MX':
+            ws1.write(row, col, 'Esperado Orginal', header_style)
+            row+=1
+            ws1.write(row, col, 'Total Recibido', header_style)
+            row+=1
+            ws1.write(row, col, 'Total Diferencia', header_style)
+            row+=1
+        else:
+            ws1.write(row, col, 'Expected Original', header_style)
+            row+=1
+            ws1.write(row, col, 'Total Received', header_style)
+            row+=1
+            ws1.write(row, col, 'Total Difference', header_style)
+            row+=1
+            
+        col+=1
+        row = 0
+        ws1.col(col).width = col_width
+        if self.env.context and self.env.context.get('active_ids'):
+            line_records = self.env['report.calendar.amount.assign.line'].browse(self.env.context.get('active_ids'))
+            total_annual = sum(x.annual_amount for x in line_records) 
+            total_deposite = sum(x.amount_deposite_january+x.amount_deposite_february
+                                 + x.amount_deposite_march +x.amount_deposite_april+x.amount_deposite_may
+                                 + x.amount_deposite_june + x.amount_deposite_july +x.amount_deposite_august
+                                 + x.amount_deposite_september + x.amount_deposite_october 
+                                 + x.amount_deposite_november + x.amount_deposite_december for x in line_records)
+            
+            diff = total_annual - total_deposite
+             
+            ws1.write(row, col, total_annual, float_sytle)
+            row+=1
+            ws1.write(row, col, total_deposite, float_sytle)
+            row+=1
+            ws1.write(row, col, diff, float_sytle)
+            row+=1
+            
+        wb1.save(fp)
+        out = base64.encodestring(fp.getvalue())
+        report_file = out
+        if self.env.user.lang == 'es_MX':
+            name = 'exportar_resumen.xls'
+        else:
+            name = 'export_summary.xls'
+            
+        rec = self.env['excel.export.assign.report'].create({'fec_data':report_file,'filename':name})
+        return {
+            'name': _('Export Summary'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': False,
+            'res_model': 'excel.export.assign.report',
+            'domain': [],
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'res_id': rec.id,
+        }    
     
     
     

@@ -8,6 +8,7 @@
             <field name="arch" type="xml">
                 <form string="Generate Batch Sheet">
                     <group>
+                    	<field name="payment_type" invisible="1"/>
                     </group>
                     <notebook>
                     	<page string="Batch Sheet">

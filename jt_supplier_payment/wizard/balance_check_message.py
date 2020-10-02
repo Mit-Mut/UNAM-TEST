@@ -103,7 +103,7 @@ class BalanceCheckWizard(models.TransientModel):
         worksheet.write(row, col, self.account_balance,style_header_data)
         col += 1
         worksheet.col(col).width = 256 * 15
-        minimum_balance = self.wizard_id.journal_id and self.wizard_id.journal_id.bank_account_id and self.wizard_id.journal_id.bank_account_id.minimum_balance or 0
+        minimum_balance = self.wizard_id.journal_id and self.wizard_id.journal_id.min_balance or 0
         worksheet.write(row, col,minimum_balance,style_header_data)
         col += 1
         worksheet.col(col).width = 256 * 23

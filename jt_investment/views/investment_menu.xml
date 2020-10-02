@@ -3,7 +3,7 @@
     <data>
 
         <!-- menu for Investment -->
-        <menuitem id="main_menu_investment" name="Investment" sequence="12"/>
+        <menuitem id="main_menu_investment" name="Investment" sequence="12" web_icon="jt_investment,static/description/icon.png"/>
 
        <menuitem id="submenu_menu_investment_money" name="Money" sequence="2" parent="main_menu_investment"/>
        <menuitem id="submenu_menu_investment_titles" name="Titles" sequence="4" parent="main_menu_investment"/>

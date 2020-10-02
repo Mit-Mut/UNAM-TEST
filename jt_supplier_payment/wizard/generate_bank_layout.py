@@ -1328,8 +1328,7 @@ class GenerateBankLayout(models.TransientModel):
             #===== Type Of Records ======#
             file_data += "2"
             #======= Sequence Number ======#
-            file_data += "00000"
-            file_data += str(next_no)
+            file_data += str(next_no).zfill(5)
             next_no += 1
             #===== Employee Number =======#
             file_data += "".ljust(7)
@@ -1356,8 +1355,8 @@ class GenerateBankLayout(models.TransientModel):
         #===== Type Of Reg=========#
         file_data += "3"
         #===== Sequence Number =======#
-        file_data += "00000"
-        file_data += str(next_no)
+        #file_data += "00000"
+        file_data += str(next_no).zfill(5)
         #====== total_record =======#
         file_data += str(total_record).zfill(5)
         #====== Total Amount ======== #
@@ -1420,7 +1419,7 @@ class GenerateBankLayout(models.TransientModel):
             file_data +=str(amount[1])
             
             #===== Reference for the account ref ===#
-            payment_ref = 'PAYMENT OF PAYROLL QNA '
+            payment_ref = 'PAGO DE NOMINA QNA '
             fornight = '00 '
             if payment.fornight:
                 fornight = payment.fornight+" "
@@ -1503,7 +1502,7 @@ class GenerateBankLayout(models.TransientModel):
             #===== Payroll payment request type / Fortnight TODO====#
             request_type = ''
             if payment.payroll_request_type == 'university':
-                request_type = 'SALARY QN'
+                request_type = 'SUELDO QN'
             elif payment.payroll_request_type == 'add_benifit':
                 request_type = 'PRESTA QN'
             elif payment.payroll_request_type == 'alimony':
@@ -1586,8 +1585,12 @@ class GenerateBankLayout(models.TransientModel):
              
             #==== CURP / RFC TODO ======#
             vat = ''
-            if payment.partner_id.vat:
+            emp_id = self.env['hr.employee'].search([('emp_partner_id','=',payment.partner_id.id)],limit=1)
+            if emp_id:
+                vat = emp_id.rfc
+            elif payment.partner_id.vat:
                 vat = payment.partner_id.vat
+                
             file_data += vat.ljust(18)
             #==== Type Of account TODO=======#
             bank_account_code = '00'
@@ -1750,7 +1753,7 @@ class GenerateBankLayout(models.TransientModel):
             file_data += account_no.zfill(20)
             #======= Operation Reference ======#
             file_data += '0000000010'
-            file_data += ''.zfill(30)
+            file_data += ''.ljust(30)
             #====== Beneficiary  ====#
             file_data += payment.partner_id.name.ljust(55)
             #====== Instructions ====#
@@ -1759,17 +1762,17 @@ class GenerateBankLayout(models.TransientModel):
             request_type = ''
             if payment.payroll_request_type:
                 if payment.payroll_request_type == 'university':
-                    request_type = 'PAYMENT OF PAYROLL QNA'
+                    request_type = 'PAGO DE NOMINA QNA'
                 elif payment.payroll_request_type == 'add_benifit':
                     request_type = 'PRESTA QN'
                 elif payment.payroll_request_type == 'alimony':
-                    request_type = 'PAYMENT PENSION To QNA'
-                fornight = '00 '
+                    request_type = 'PAGO PENSION A QNA'
+                fornight = '00'
                 if payment.fornight:
                     fornight = payment.fornight
                 request_type += fornight
                 currect_time = datetime.today()
-                request_type += str(currect_time.year)[:2]
+                request_type += str(currect_time.year)
                  
                 file_data += request_type.ljust(14)
             else:
@@ -1848,9 +1851,9 @@ class GenerateBankLayout(models.TransientModel):
         file_data += '0000'
         #=== Charge Account =======#
         if self.journal_id and self.journal_id.bank_account_id:
-            file_data += self.journal_id and self.journal_id.bank_account_id.acc_number.ljust(11)
+            file_data += self.journal_id and self.journal_id.bank_account_id.acc_number.zfill(11)
         else:
-            file_data += "".ljust(11)
+            file_data += "".zfill(11)
         
         #=== Company Reference =======#
         file_data += '0000000000'
@@ -1892,18 +1895,20 @@ class GenerateBankLayout(models.TransientModel):
             sequence_no += sequence_no
             #===== RFC TODO========#
             vat = ''
-            if payment.partner_id.vat:
+            emp_id = self.env['hr.employee'].search([('emp_partner_id','=',payment.partner_id.id)],limit=1)
+            if emp_id:
+                vat = emp_id.rfc
+            elif payment.partner_id.vat:
                 vat = payment.partner_id.vat
-                
             file_data += vat.ljust(13)
             #===== Employee/Beneficiary========#
             file_data += payment.partner_id.name.ljust(40)
-            #===== Payment Date TODO========#
+            #===== Payment Date ========#
             if payment.payment_date:
-                
+                file_data +=str(payment.payment_date.year)
                 file_data +=str(payment.payment_date.month).zfill(2)
                 file_data +=str(payment.payment_date.day).zfill(2)
-                file_data +=str(payment.payment_date.year)
+                
             else:
                 file_data += '00000000'
             file_data += ''.zfill(8)
@@ -1935,7 +1940,7 @@ class GenerateBankLayout(models.TransientModel):
             #===== Days-Valid========#
             file_data += '001'
             #===== Concept-Payment========#
-            file_data += 'QUARTERLY SALARY'.ljust(50)
+            file_data += 'SUELDO QUINCENAL'.ljust(50)
             #===== Field-use-company-1========#
             file_data += ''.ljust(20)
             #===== Field-use-company-2========#
@@ -1971,9 +1976,8 @@ class GenerateBankLayout(models.TransientModel):
         total_amount = sum(x.amount for x in self.payment_ids)
         amount = "%.2f" % total_amount
         amount = str(amount).split('.')
-        file_data +=str(amount[0]).zfill(17)
+        file_data +=str(amount[0]).zfill(15)
         file_data +=str(amount[1])
-        
         #==== Number of low movements=====#
         file_data += ''.zfill(7)
         #==== Amount of low movements=====#
@@ -1996,7 +2000,7 @@ class GenerateBankLayout(models.TransientModel):
         total_amount = sum(x.amount for x in self.payment_ids)
         amount = "%.2f" % total_amount
         amount = str(amount).split('.')
-        file_data +=str(amount[0]).zfill(17)
+        file_data +=str(amount[0]).zfill(15)
         file_data +=str(amount[1])
         #==== Number of low movements=====#
         file_data += ''.zfill(7)
@@ -2042,11 +2046,10 @@ class GenerateBankLayout(models.TransientModel):
         file_data +=str(amount[0]).zfill(13)
         file_data +=str(amount[1])
         
-        file_data += ''.zfill(15)
         #====== Total Number of HIGH Sent ========#
         file_data += ''.zfill(6)
         #====== Total Amount of HIGH Sent========#
-        file_data += ''.zfill(15)
+        file_data += ''.rjust(15)
         #====== Total number of DEPARTURES Sent========#
         file_data += ''.zfill(6)
         #====== Total Amount of DEPARTURES Sent========#
@@ -2056,7 +2059,7 @@ class GenerateBankLayout(models.TransientModel):
         #====== Action========#
         file_data += ''.zfill(1)
         #====== Filler========#
-        file_data += ''.ljust(77)
+        file_data += ''.rjust(77)
         file_data += "\n"
 
         for payment in self.payment_ids:
@@ -2073,21 +2076,24 @@ class GenerateBankLayout(models.TransientModel):
             
             #====== Employee number ========#
             benific = ''
-            if payment.partner_id.password_beneficiary:
-                benific = payment.partner_id.password_beneficiary
+            emp_id = self.env['hr.employee'].search([('emp_partner_id','=',payment.partner_id.id)],limit=1)
+            if emp_id:
+                benific = emp_id.worker_number
+#             if payment.partner_id.password_beneficiary:
+#                 benific = payment.partner_id.password_beneficiary
             file_data += benific.zfill(10)
             
             #====== Service reference========#
             file_data += ''.ljust(40)
             #====== Fortnight ========#
-            fortnight_msg = 'PAYMENT NOMINE QNA '
+            fortnight_msg = 'PAGO NOMINA QNA '
             fornight = '00'
             if payment.fornight:
                 fornight = payment.fornight
             fortnight_msg += fornight
             currect_time = datetime.today()
             fortnight_msg += str(currect_time.year)[:2]
-            fortnight_msg += " OF THE ISSUER 20052"
+            fortnight_msg += " DE LA EMISORA 20052"
             
             file_data += fortnight_msg.ljust(40)
             #====== Amount========#

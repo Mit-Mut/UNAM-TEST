@@ -50,14 +50,13 @@
                             </td>
 
                             <td style="width:50%;">
-                                <div style="text-align:left;font-size:20px;"><b>Dirección de Ingresos y Op. Financiera<br/>Departamento de Ingresos<br/></b></div>
+                                <div style="text-align:left;font-size:20px;"><b>Dirección General de Finanzas<br/> Dirección de Ingresos y Op. Financiera<br/>Departamento de Ingresos</b></div>
                             </td>
                         </tr>
 							<tr>
 								<td style="width:50%;">
-									<span t-set="sender_template" t-value="o.get_all_employee('reporting_format_returned_check')"/>
-									<br/><b><span t-field="sender_template.recipient_title"/>&#160;<span t-if="sender_template.recipient_emp_id" t-field="sender_template.recipient_emp_id.name"/>
-										<br/><span t-field="sender_template.recipient_professional_title"/>
+									<br/><b><span t-field="o.template6_recipient_title"/>&#160;<span t-if="o.template6_recipient_emp_id" t-field="o.template6_recipient_emp_id.name"/>
+										<br/><span t-field="o.template6_recipient_professional_title"/>
 									</b>
 								</td>
 								<td style="width:50%;">

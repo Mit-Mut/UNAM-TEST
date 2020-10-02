@@ -619,6 +619,38 @@ msgstr "Cancelar Asiento"
 msgid "Register Payment"
 msgstr "Registrar Pago"
 
+#. module: jt_income
+#: model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__name
+msgid "Label"
+msgstr "Descripción"
+
+#. module: jt_income
+#: model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__account_id
+msgid "Account"
+msgstr "Cuenta"
+
+#. module: jt_income
+#: model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__program_code_id
+msgid "Program Code"
+msgstr "Código Programático"
+
+#. module: jt_income
+#: model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__quantity
+msgid "Quantity"
+msgstr "Cantidad"
+
+#. module: jt_income
+#: model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__tax_ids
+msgid "Taxes"
+msgstr "Impuestos"
+
+#. module: jt_income
+#: model:ir.model.fields,field_description:jt_income.field_account_move__income_invoice_line_ids
+msgid "Income Invoice Lines"
+msgstr "Líneas de facturación de ingresos"
+
+
+
 
 
 

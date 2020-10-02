@@ -50,15 +50,14 @@
 
                             <td style="width:50%;"><br/><br/>
                                 <div style="text-align:left;font-size:20px;">
-                                    <b>Dirección General de Finanzas<br/></b>
+                                    <b>Dirección General de Finanzas<br/> Dirección de Ingresos y Op. Financiera<br/>Departamento de Ingresos</b>
                                 </div>
                             </td>
                         </tr>
 							<tr>
 								<td style="width:50%;">
-									<span t-set="sender_template" t-value="o.get_all_employee('format_remission_20')"/>
-									<br/><b><span t-field="sender_template.recipient_title"/>&#160;<span t-if="sender_template.recipient_emp_id" t-field="sender_template.recipient_emp_id.name"/>
-										<br/><span t-field="sender_template.recipient_professional_title"/>
+									<br/><b><span t-field="o.template5_recipient_title"/>&#160;<span t-if="o.template5_recipient_emp_id" t-field="o.template5_recipient_emp_id.name"/>
+										<br/><span t-field="o.template5_recipient_professional_title"/>
 									</b>
 								</td>
 								<td style="width:50%;">
@@ -83,7 +82,8 @@
                     <table style="width:100%">
                         <tr>
 						<t t-set="number_of_return_check" t-value="o.number_of_return_check_char()"/>
-                        <p style="font-size:20px;">Por instrucciones del Lic. Alejandro Macias Ortega, Director de la Dirección General de Finanzas,  en  relación al oficio <b><span t-field="o.legal_compensation"/>.,</b> referente al cheque devuelto <b>No. <span t-esc="number_of_return_check"/> </b>del banco<b> <span t-field="o.income_bank_journal_id.name"/>;</b> le  informo  que <b> no se aplicará el  20% de  indemnización</b> por un importe de  ------------------------- <b>  <span t-field="o.amount_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/> (DOS MIL  PESOS  00/100 M.N.)</b>
+						<t t-set="amount_in_text" t-value="o.get_my_amount_to_text(o.amount_total)"/>
+                        <p style="font-size:20px;">Por instrucciones del Lic. Alejandro Macias Ortega, Director de la Dirección General de Finanzas,  en  relación al oficio <b><span t-field="o.legal_compensation"/>.,</b> referente al cheque devuelto <b>No. <span t-esc="number_of_return_check"/> </b>del banco<b> <span t-field="o.income_bank_journal_id.name"/>;</b> le  informo  que <b> no se aplicará el  20% de  indemnización</b> por un importe de  ------------------------- <b>  <span t-field="o.amount_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/> (<span t-esc="amount_in_text"/>)</b>
                         </p><br/>
 
                         <p style="font-size:20px;">Procede la condonación con base a la circular número <span t-field="o.circular_number"/> en virtud de que el cheque es de <span t-field="o.partner_id.name"/>.</p><br/>

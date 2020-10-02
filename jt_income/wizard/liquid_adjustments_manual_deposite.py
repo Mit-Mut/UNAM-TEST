@@ -40,10 +40,10 @@ class LiquidAdjustmentsManualDeposite(models.TransientModel):
             program = line.program_code_id 
             line_list.append((0,0,{'program':program.id,'line_type':'increase','creation_type':'manual','amount':line.price_total}))
                              
-        vals = {'folio':self.folio,'budget_id':self.budget_id.id,'adaptation_type':self.adaptation_type,
+        vals = {'budget_id':self.budget_id.id,'adaptation_type':self.adaptation_type,
                 'journal_id' : self.journal_id.id,'date_of_liquid_adu' : self.date_of_liquid_adu,
                 'invoice_move_id' : self.move_id.id,
                 'adequacies_lines_ids' : line_list 
                 }
         self.env['adequacies'].create(vals)
-        folio = self.env['ir.sequence'].next_by_code('invoice.adequacies.folio') 
+         

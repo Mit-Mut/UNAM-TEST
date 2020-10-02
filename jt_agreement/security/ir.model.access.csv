@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_fund_type,fund_type,model_fund_type,base.group_user,1,1,1,1
+access_agreement_agreement_type,agreement_agreement_type,model_agreement_agreement_type,base.group_user,1,1,1,1
+access_recurring_payment_template,recurring_payment_template,model_recurring_payment_template,base.group_user,1,1,1,1
+access_bases_collaboration,bases_collaboration,model_bases_collaboration,base.group_user,1,1,1,1
+access_committee,committee,model_committee,base.group_user,1,1,1,1
+access_request_open_balance,request.open.balance,model_request_open_balance,base.group_user,1,1,1,1

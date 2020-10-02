@@ -11,6 +11,13 @@ class CETES(models.Model):
     start_date = fields.Date('Start Date')
     due_date = fields.Date('Due Date')
     nominal_value = fields.Float("Nominal Value")
+    yield_rate = fields.Float("Yield Rate")
+    term= fields.Selection([('28','28 Days'),
+                                  ('91','91 Days'),
+                                  ('182','182 Days'),
+                                  ('364','364 Days')
+                                  ],string="Term")
+    
     
     cetes_price = fields.Float("CETES Price")
     cetes_quantity = fields.Float("CETES Quantity")

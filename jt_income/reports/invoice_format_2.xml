@@ -54,9 +54,8 @@
                             </tr>
 							<tr>
 								<td style="width:50%;">
-									<span t-set="sender_template" t-value="o.get_all_employee('format_forgiveness')"/>
-									<br/><b><span t-field="sender_template.recipient_title"/>&#160;<span t-if="sender_template.recipient_emp_id" t-field="sender_template.recipient_emp_id.name"/>
-										<br/><span t-field="sender_template.recipient_professional_title"/>
+									<br/><b><span t-field="o.template2_recipient_title"/>&#160;<span t-if="o.template2_recipient_emp_id" t-field="o.template2_recipient_emp_id.name"/>
+										<br/><span t-field="o.template2_recipient_professional_title"/>
 									</b>
 								</td>
 								<td style="width:50%;">

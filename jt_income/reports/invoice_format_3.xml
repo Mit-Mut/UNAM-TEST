@@ -35,13 +35,15 @@
                                 text-indent: 5.0em; font-size:22px;
                             } 
                     </style>
-
+					<br/><br/>
                     <table style="width:100%;">
                         <tr>
                             <td style="width:50%;">
+                            	<!-- 
                                 <div class="main_box">
                                     <div class="box"><b>FORMATO DE AVISO CAMBIO FORMA<br/>DE COBRO A TRANSFERENCIA</b></div>
                                 </div>
+                                 -->
                             </td>
 
                             <td style="width:50%;">
@@ -53,9 +55,8 @@
                         </tr>
 							<tr>
 								<td style="width:50%;">
-									<span t-set="sender_template" t-value="o.get_all_employee('format_notice_change')"/>
-									<br/><b><span t-field="sender_template.recipient_title"/>&#160;<span t-if="sender_template.recipient_emp_id" t-field="sender_template.recipient_emp_id.name"/>
-										<br/><span t-field="sender_template.recipient_professional_title"/>
+									<br/><b><span t-field="o.template3_recipient_title"/>&#160;<span t-if="o.template3_recipient_emp_id" t-field="o.template3_recipient_emp_id.name"/>
+										<br/><span t-field="o.template3_recipient_professional_title"/>
 									</b>
 								</td>
 								<td style="width:50%;">
@@ -115,12 +116,12 @@
                 <field name="default" eval="True"/>
                 <field name="format">A4</field>
                 <field name="orientation">Portrait</field>
-                <field name="margin_top">20</field>
-                <field name="margin_bottom">80</field>
+                <field name="margin_top">15</field>
+                <field name="margin_bottom">60</field>
                 <field name="margin_left">10</field>
                 <field name="margin_right">10</field>
                 <field name="header_line" eval="False"/>
-                <field name="header_spacing">10</field>
+                <field name="header_spacing">5</field>
                 <field name="dpi">100</field>
             </record>
 

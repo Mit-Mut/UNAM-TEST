@@ -41,6 +41,8 @@
                         			</group>
                         			<group>
                         				<field name="nominal_value"/>
+                        				<field name="yield_rate"/>
+                        				<field name="term"/>
                         			</group>
                         		</group>
                         	</page>

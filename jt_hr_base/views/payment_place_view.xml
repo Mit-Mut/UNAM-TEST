@@ -21,6 +21,7 @@
                 <form>
                     <sheet>
                         <group>
+                        	<field name="place" required="1"/>
                             <field name="name" required="1"/>
                             <field name="description"/>
                         </group>

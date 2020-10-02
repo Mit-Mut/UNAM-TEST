@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Main Menu -->
+         <menuitem id="menu_agreements" name="Agreements"
+                 sequence="5"/>
+
+        <!-- Sub Menus -->
+         <menuitem id="menu_collaboration_contracts" name="Collaboration contracts" parent="menu_agreements"
+                 sequence="1"/>
+
+        <menuitem id="menu_heritage_resources" name="Heritage Resources" parent="menu_agreements"
+                 sequence="2"/>
+
+        <menuitem id="menu_recurring_payments" name="Recurring Payments" parent="menu_agreements"
+                 sequence="3"/>
+
+        <menuitem id="menu_setting_agreement" name="Settings" parent="menu_agreements"
+                 sequence="4"/>
+
+        <!-- Sub menus for sub menus-->
+        <menuitem id="menu_collaboration_basic" name="Basis of collaboration" parent="menu_collaboration_contracts"
+                action="action_bases_collabration" sequence="1"/>
+
+        <menuitem id="menu_trusts" name="Trusts" parent="menu_collaboration_contracts"
+                 sequence="2"/>
+
+        <menuitem id="submenu_heritage_resources" name="Heritage Resources" parent="menu_heritage_resources"
+                 sequence="1"/>
+
+        <menuitem id="menu_fund_type" name="Fund Type" parent="menu_setting_agreement" action="action_view_fund_type"
+                 sequence="1"/>
+
+        <menuitem id="menu_type_agreement" name="Type Of Agreement" parent="menu_setting_agreement"
+                 action="action_view_agreement_type" sequence="2"/>
+
+        <menuitem id="menu_recurring_payment_temp" name="Recurring Payment Template" parent="menu_setting_agreement"
+                 action="action_view_recurring_payment_tmpl" sequence="3"/>
+
+
+        <!-- Sub Menus Investments-->
+         <menuitem id="menu_money" name="Money" parent="jt_investment.main_menu_investment"
+                 sequence="1"/>
+
+        <menuitem id="menu_titles" name="Titles" parent="jt_investment.main_menu_investment"
+                 sequence="2"/>
+
+        <menuitem id="menu_productive_account" name="Productive Accounts" parent="jt_investment.main_menu_investment"
+                 sequence="4"/>
+
+        <menuitem id="menu_transfer_request" name="Transfer Request" parent="jt_investment.main_menu_investment"
+                 sequence="5"/>
+
+        <menuitem id="menu_reports" name="Reports" parent="jt_investment.main_menu_investment"
+                 sequence="6"/>
+
+        <!-- Sub Menus of Sub menus Investments-->
+        <menuitem id="menu_increments_withdrawals" name="Increments/Withdrawals" parent="menu_money"
+                 action="action_req_open_balance_investment" sequence="1"/>
+
+
+         <menuitem id="menu_bank_transfer_req_agreement" name="Bank Transfer Requests" parent="jt_payroll_payment.menu_payment_finance"
+                 sequence="3"/>
+
+        <menuitem id="menu_transfer_req_agreement" name="Transfer Requests" parent="menu_bank_transfer_req_agreement"
+                 sequence="1" action="action_req_open_balance_finance"/>
+
+
+
+
+
+    </data>
+</odoo>

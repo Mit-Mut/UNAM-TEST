@@ -210,7 +210,6 @@ class AccountPayment(models.Model):
                
     def action_register_payment(self):
         res =super(AccountPayment,self).action_register_payment()
-        
         active_ids = self.env.context.get('active_ids')
         if not active_ids:
             return ''
@@ -228,6 +227,9 @@ class AccountPayment(models.Model):
 #                 raise UserError(_("You can not register payment for multiple Payment issuing Bank"))
             
             amount = self._compute_payment_amount(record_ids, record_ids[0].currency_id, record_ids[0].journal_id,fields.Date.today())
+            if abs(amount) == 0 :
+                raise UserError(_("You can not register payment with 0 amount"))
+            
             return {
                 'name': _('Schedule Payment'),
                 'res_model':'bank.balance.check',

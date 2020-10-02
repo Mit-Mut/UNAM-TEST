@@ -29,14 +29,24 @@ class GenerateBatchSheet(models.TransientModel):
     _description = 'Generate Batch Sheet'
     
     batch_line_ids = fields.One2many('generate.batch.sheet.line','batch_sheet_id','Folio')
-
+    payment_type = fields.Selection([('supplier','Suppier'),('payroll','Payroll')],string="Payent Type") 
+    
     def action_generate_batch(self):
         active_ids = self.env.context.get('active_ids')
         if not active_ids:
             return ''
 
         line_data = []
-        seq_ids = self.env['ir.sequence'].search([('code', '=', 'batch.sheet.folio')], order='company_id')
+        active_records = self.env['account.move'].browse(active_ids)
+        seq_ids = self.env['ir.sequence']
+        payment_type = False
+        if active_records.filtered(lambda x:x.is_payment_request):
+            seq_ids = self.env['ir.sequence'].search([('code', '=', 'batch.sheet.folio')], order='company_id')
+            payment_type = 'supplier'
+        elif active_records.filtered(lambda x:x.is_payroll_payment_request):
+            seq_ids = self.env['ir.sequence'].search([('code', '=', 'payroll.payment.batch.sheet.folio')], order='company_id')
+            payment_type = 'payroll'
+            
         number_next = 0
         if seq_ids:
             number_next = seq_ids[0].number_next_actual 
@@ -59,14 +69,17 @@ class GenerateBatchSheet(models.TransientModel):
             'res_model': 'generate.batch.sheet',
             'view_mode': 'form',
             'view_id': self.env.ref('jt_supplier_payment.view_generate_batch_sheet').id,
-            'context': {'default_batch_line_ids':line_data},
+            'context': {'default_batch_line_ids':line_data,'default_payment_type':payment_type},
             'target': 'new',
             'type': 'ir.actions.act_window',
         }
         
     def update_batch_folio(self):        
         line_recs = self.batch_line_ids.filtered(lambda x:x.batch_folio != x.check_batch_folio)
-        folio = self.env['ir.sequence'].next_by_code('batch.sheet.folio')
+        if self.payment_type == 'supplier':
+            folio = self.env['ir.sequence'].next_by_code('batch.sheet.folio')
+        elif self.payment_type == 'payroll':
+            folio = self.env['ir.sequence'].next_by_code('payroll.payment.batch.sheet.folio')
         for line in line_recs:
             line.account_move_id.batch_folio = line.batch_folio
             

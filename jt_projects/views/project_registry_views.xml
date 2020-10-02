@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+         <record id="project_registry_tree_view" model="ir.ui.view">
+            <field name="name">Project Registry List view</field>
+            <field name="model">project.project</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+         </record>
+
+         <record id="project_registry_form_view" model="ir.ui.view">
+            <field name="name">Project Registry Form view</field>
+            <field name="model">project.project</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="close_project" string="Close" class="oe_highlight"
+                                type="object" attrs="{'invisible': [('status', '=', 'closed')]}"/>
+                        <field name="status" widget="statusbar" />
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only" string="Project Name"/>
+                            <h1><field name="name"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="project_type"/>
+                                <field name="stage_identifier"/>
+                                <field name="desc_stage"/>
+                                <field name="project_type_identifier"/>
+                                <field name="number"/>
+                                <field name="user_id" string="Responsible name"/>
+                                <field name="rfc"/>
+                            </group>
+                            <group>
+                                <field name="proj_start_date"/>
+                                <field name="proj_end_date"/>
+                                <field name="allocated_amount"/>
+                                <field name="approved_amount"/>
+                                <field name="bank_account_id" domain="[('type', '=', 'bank')]"/>
+                                <field name="bank_acc_number_id"/>
+                                <field name="branch_office"/>
+                                <field name="trade_number"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="ministrations" string="Ministrations">
+                                <group>
+                                    <field name="ministrations"/>
+                                    <field name="ministering_amount"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+         </record>
+
+          <record id="project_registry_action_conacyt" model="ir.actions.act_window">
+            <field name="name">Projects</field>
+            <field name="res_model">project.project</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+         <record id="project.open_view_project_all_config" model="ir.actions.act_window">
+            <field name="name">Projects</field>
+            <field name="res_model">project.project</field>
+            <field name="domain">[]</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('project.view_project'), 'sequence': '0'}),
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('project.project_view_kanban'), 'sequence': '2'})]"/>
+            <field name="search_view_id" ref="project.view_project_project_filter"/>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_empty_folder">
+                    Create a new project
+                </p><p>
+                    Organize your activities (plan tasks, track issues, invoice timesheets) for internal, personal or customer projects.
+                </p>
+            </field>
+        </record>
+
+        <record id="project_main_action_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="project.edit_project"/>
+            <field name="act_window_id" ref="project.open_view_project_all_config"/>
+        </record>
+
+        <record id="project_registry_conacyt_action_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="project_registry_tree_view"/>
+            <field name="act_window_id" ref="project_registry_action_conacyt"/>
+        </record>
+
+         <record id="project_registry_conacyt_action_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="project_registry_form_view"/>
+            <field name="act_window_id" ref="project_registry_action_conacyt"/>
+        </record>
+
+        <menuitem id="menu_conacyt" name="CONACYT"
+                  parent="project.menu_main_pm" sequence="5"/>
+
+        <menuitem id="menu_project_registry" name="Projects" action="project_registry_action_conacyt"
+                  parent="menu_conacyt" sequence="1"/>
+
+
+    </data>
+</odoo>

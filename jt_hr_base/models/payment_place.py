@@ -30,10 +30,16 @@ class PaymentPlace(models.Model):
 
     name = fields.Char('Name', size=8)
     description = fields.Text('Description')
-
+    place = fields.Char('Place', size=3)
+    
     @api.constrains('name')
     def _check_name(self):
         if not str(self.name).isnumeric():
             raise UserError(_('The name must be numeric value'))
 
+    @api.constrains('place')
+    def _check_place(self):
+        if self.place and not str(self.place).isnumeric():
+            raise UserError(_('The place must be numeric value'))
+    
     _sql_constraints = [('name_unique', 'unique(name)', 'Name must be unique.')]

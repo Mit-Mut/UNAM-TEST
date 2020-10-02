@@ -101,7 +101,7 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
 
                     act_amount = first_amount+"."+last_amount
                     act_amount = float(act_amount)
-                    match_payment =  self.payment_ids.filtered(lambda x:x.amount==act_amount and x.payment_bank_account_id.acc_number==account_no)
+                    match_payment =  self.payment_ids.filtered(lambda x:x.state=='draft' and x.amount==act_amount and x.payment_bank_account_id.acc_number==account_no)
                     if match_payment:
                         success_content += str(count)+' : '+ str(line) + "\n"
                         match_payment[0].post()
@@ -145,7 +145,7 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                 amount = line[6]
                 if amount and cutomer_ref:
                     act_amount = float(amount)
-                    match_payment =  self.payment_ids.filtered(lambda x:x.amount==act_amount and x.hsbc_reference==cutomer_ref)
+                    match_payment =  self.payment_ids.filtered(lambda x:x.state=='draft' and x.amount==act_amount and x.hsbc_reference==cutomer_ref)
                     if match_payment:
                         success_content += str(count)+' : '+ str(line) + "\n"                        
                         match_payment[0].post()
@@ -188,7 +188,7 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                     concept = concept.rstrip()    
                     act_amount = first_amount+"."+last_amount
                     act_amount = float(act_amount)
-                    match_payment =  self.payment_ids.filtered(lambda x:x.amount==act_amount and x.santander_payment_concept==concept)
+                    match_payment =  self.payment_ids.filtered(lambda x:x.state=='draft' and x.amount==act_amount and x.santander_payment_concept==concept)
                     if match_payment:
                         success_content += str(count)+' : '+ str(line) + "\n"                        
                         match_payment[0].post()
@@ -231,7 +231,7 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                 amount = line[10]
                 if amount and jp_payment_concept:
                     act_amount = float(amount)
-                    match_payment =  self.payment_ids.filtered(lambda x:x.amount==act_amount and x.jp_payment_concept==jp_payment_concept)
+                    match_payment =  self.payment_ids.filtered(lambda x:x.state=='draft' and x.amount==act_amount and x.jp_payment_concept==jp_payment_concept)
                     if match_payment:
                         success_content += str(count)+' : '+ str(line) + "\n"                        
                         match_payment[0].post()
@@ -281,7 +281,7 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                 if data_line and data_line=='22' and amount and payment_charge and payment_charge=='1':
                     act_amount = float(amount)
                     
-                    match_payment =  self.payment_ids.filtered(lambda x:x.amount==act_amount)
+                    match_payment =  self.payment_ids.filtered(lambda x:x.state=='draft' and x.amount==act_amount)
                     if match_payment:
                         success_content += str(count)+' : '+ str(line) + "\n"                        
                         match_payment[0].post()
@@ -354,7 +354,7 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                 if account_no and amount and result_file and result_file=='Procesado':
                     amount = amount.replace(',','')
                     act_amount = float(amount)
-                    match_payment =  self.payment_ids.filtered(lambda x:x.amount==act_amount and x.payment_bank_account_id.acc_number==account_no)
+                    match_payment =  self.payment_ids.filtered(lambda x:x.state=='draft' and x.amount==act_amount and x.payment_bank_account_id.acc_number==account_no)
                     if match_payment:
                         success_content += str(count)+' : '+ str(line) + "\n"                        
                         match_payment[0].post()
@@ -406,7 +406,7 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                 if account_no and amount and result_file and result_file=='Processed':
                     amount = amount.replace(',','')
                     act_amount = float(amount)
-                    match_payment =  self.payment_ids.filtered(lambda x:x.amount==act_amount and x.payment_bank_account_id.acc_number==account_no)
+                    match_payment =  self.payment_ids.filtered(lambda x:x.state=='draft' and x.amount==act_amount and x.payment_bank_account_id.acc_number==account_no)
                     if match_payment:
                         success_content += str(count)+' : '+ str(line) + "\n"                        
                         match_payment[0].post()
@@ -455,7 +455,8 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                     act_amount = first_amount+"."+last_amount
                     act_amount = float(act_amount)
                     account_no= account_no.lstrip('0')
-                    match_payment =  self.payment_ids.filtered(lambda x:x.amount==act_amount and x.payment_bank_account_id.acc_number==account_no)
+                    
+                    match_payment =  self.payment_ids.filtered(lambda x:x.state=='draft' and x.amount==act_amount and x.payment_bank_account_id.acc_number==account_no)
                     if match_payment:
                         success_content += str(count)+' : '+ str(line) + "\n"                        
                         match_payment[0].post()
@@ -502,8 +503,8 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                         
                     act_amount = first_amount+"."+last_amount
                     act_amount = float(act_amount)
-                    account_no= account_no.lstrip('0')
-                    match_payment =  self.payment_ids.filtered(lambda x:x.amount==act_amount and x.payment_bank_account_id.acc_number==account_no)
+                    account_no= account_no.lstrip('0') 
+                    match_payment =  self.payment_ids.filtered(lambda x:x.state=='draft' and x.amount==act_amount and x.payment_bank_account_id.acc_number==account_no)
                     if match_payment:
                         success_content += str(count)+' : '+ str(line) + "\n"                        
                         match_payment[0].post()
@@ -545,8 +546,8 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                 if line and line[0]=='4':
                     continue
                 
-                account_no = line[25:45]
                 amount = line[5:23]
+                account_no = line[25:45]
                 status = line[229]
                 
                 if account_no and amount and status and status=='3':
@@ -555,8 +556,8 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                     act_amount = first_amount+"."+last_amount
                     act_amount = float(act_amount)
                     account_no= account_no[-7:]
-                    
-                    match_payment =  self.payment_ids.filtered(lambda x:x.amount==act_amount and x.payment_bank_account_id.acc_number==account_no)
+                    account_no = account_no.lstrip("0")
+                    match_payment =  self.payment_ids.filtered(lambda x:x.state=='draft' and x.amount==act_amount and x.payment_bank_account_id.acc_number==account_no)
                     if match_payment:
                         success_content += str(count)+' : '+ str(line) + "\n"                        
                         match_payment[0].post()
@@ -604,7 +605,7 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                     act_amount = float(act_amount)
                     account_no= account_no.lstrip('0')
                     
-                    match_payment =  self.payment_ids.filtered(lambda x:x.amount==act_amount and x.payment_bank_account_id.acc_number==account_no)
+                    match_payment =  self.payment_ids.filtered(lambda x:x.state=='draft' and x.amount==act_amount and x.payment_bank_account_id.acc_number==account_no)
                     if match_payment:
                         success_content += str(count)+' : '+ str(line) + "\n"                        
                         match_payment[0].post()
@@ -653,7 +654,7 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                     act_amount = float(act_amount)
                     account_no= account_no.lstrip('0')
                     
-                    match_payment =  self.payment_ids.filtered(lambda x:x.amount==act_amount and x.payment_bank_account_id.acc_number==account_no)
+                    match_payment =  self.payment_ids.filtered(lambda x:x.state=='draft' and x.amount==act_amount and x.payment_bank_account_id.acc_number==account_no)
                     if match_payment:
                         success_content += str(count)+' : '+ str(line) + "\n"                        
                         match_payment[0].post()

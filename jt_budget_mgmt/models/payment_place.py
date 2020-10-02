@@ -32,28 +32,39 @@ class PaymentPlace(models.Model):
     des_dependency = fields.Text("Dependency Description")
     des_sub_dependency = fields.Text("Sub Dependency Description")
 
-    @api.onchange('dependancy_id', 'sub_dependancy_id')
+    @api.onchange('dependancy_id', 'sub_dependancy_id','place')
     def onchange_dep_sub_dep(self):
-        if self.dependancy_id and self.sub_dependancy_id:
-            self.name = self.dependancy_id.dependency + self.sub_dependancy_id.sub_dependency
+        name = ''        
         if self.dependancy_id:
+            name += self.dependancy_id.dependency
             self.des_dependency = self.dependancy_id.description
         else:
             self.des_dependency = ''
         if self.sub_dependancy_id:
+            name += self.sub_dependancy_id.sub_dependency
             self.des_sub_dependency = self.sub_dependancy_id.description
         else:
             self.des_sub_dependency = ''
-
+        if self.place:
+            name += self.place 
+        self.name = name
+        
     @api.model
     def create(self, vals):
         res = super(PaymentPlace, self).create(vals)
-        if not vals.get('name') and vals.get('dependancy_id') and vals.get('sub_dependancy_id'):
-            dependency = self.env['dependency'].browse(vals.get('dependancy_id'))
-            sub_dependency = self.env['sub.dependency'].browse(vals.get('sub_dependancy_id'))
-            res.name = dependency.dependency + sub_dependency.sub_dependency
-            if dependency.description:
-                res.des_dependency = dependency.description
-            if sub_dependency.description:
-                res.des_sub_dependency = sub_dependency.description
+        if not vals.get('name'):
+            name = ''
+            if vals.get('dependancy_id'):
+                dependency = self.env['dependency'].browse(vals.get('dependancy_id'))
+                name += dependency.dependency
+                if dependency.description:
+                    res.des_dependency = dependency.description
+            if vals.get('sub_dependancy_id'):
+                sub_dependency = self.env['sub.dependency'].browse(vals.get('sub_dependancy_id'))
+                name += sub_dependency.sub_dependency
+                if sub_dependency.description:
+                    res.des_sub_dependency = sub_dependency.description
+            if vals.get('place'):
+                name += vals.get('place')
+            res.name = name
         return res

@@ -17,3 +17,11 @@ class WillPay(models.Model):
     term_days = fields.Integer("Term Days")
     simple_interest = fields.Boolean(string="Simple Interest",default=False)
     compound_interest = fields.Boolean(string="Compound Interest",default=False)
+    
+    simple_interest_capital = fields.Float("Capital")
+    simple_interest_future_value = fields.Float("Future Value")
+    simple_interest_estimated_yield = fields.Float("Estimated Yield")
+    simple_interest_real_performance = fields.Float("Real Performance")
+    
+    compound_interest_total = fields.Float("Total")
+    

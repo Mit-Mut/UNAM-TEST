@@ -36,9 +36,10 @@ class LiquidAdjustmentsManualDeposite(models.TransientModel):
                 str_msg += program_name+" Budget Name is "+ budget_name +"\n\n"
                 raise ValidationError(str_msg)
         line_list = []
-        for line in self.move_id.invoice_line_ids:
-            program = line.program_code_id 
-            line_list.append((0,0,{'program':program.id,'line_type':'increase','creation_type':'manual','amount':line.price_total}))
+        for program in program_codes:
+            total_lines = self.move_id.invoice_line_ids.filtered(lambda x:x.program_code_id.id==program.id)
+            total_amount = sum(x.balance for x in total_lines)
+            line_list.append((0,0,{'program':program.id,'line_type':'increase','creation_type':'manual','amount':abs(total_amount)}))
                              
         vals = {'budget_id':self.budget_id.id,'adaptation_type':self.adaptation_type,
                 'journal_id' : self.journal_id.id,'date_of_liquid_adu' : self.date_of_liquid_adu,

@@ -604,7 +604,6 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                     act_amount = first_amount+"."+last_amount
                     act_amount = float(act_amount)
                     account_no= account_no.lstrip('0')
-                    
                     match_payment =  self.payment_ids.filtered(lambda x:x.state=='draft' and x.amount==act_amount and x.payment_bank_account_id.acc_number==account_no)
                     if match_payment:
                         success_content += str(count)+' : '+ str(line) + "\n"                        

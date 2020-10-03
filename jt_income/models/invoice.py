@@ -254,7 +254,8 @@ class Invoice(models.Model):
                                     'amount_of_check' : line.amount_of_check,
                                     'deposit_for_check_recovery' : line.deposit_for_check_recovery,
                                     'cfdi_20' : line.cfdi_20,
-                                    'program_code_id' : line.program_code_id and line.program_code_id.id or False
+                                    'program_code_id' : line.program_code_id and line.program_code_id.id or False,
+                                    'fixed_discount' : line.fixed_discount,
                                 } 
                     invoice_line.append((0,0,line_vals))
                                         
@@ -280,12 +281,12 @@ class Invoice(models.Model):
                                 'amount_of_check' : line.amount_of_check,
                                 'deposit_for_check_recovery' : line.deposit_for_check_recovery,
                                 'cfdi_20' : line.cfdi_20,
-                                'program_code_id' : line.program_code_id and line.program_code_id.id or False
+                                'program_code_id' : line.program_code_id and line.program_code_id.id or False,
+                                'fixed_discount' : line.fixed_discount,
                             } 
                 
                 invoice_line.append((0,0,line_vals))
         self.invoice_line_ids = False
-        print ("invoice_line_ids",invoice_line)
         self.invoice_line_ids = invoice_line
         self.invoice_line_ids._onchange_price_subtotal()
         self._onchange_invoice_line_ids()
@@ -406,7 +407,19 @@ class Invoice(models.Model):
             return ''
         
     def get_my_amount_to_text(self,amount):
-        return self.currency_id.amount_to_text(amount)
+        split_num = str(amount).split('.')
+        int_part = int(split_num[0])         
+        amount_to_words = self.currency_id.amount_to_text(int_part)
+        return amount_to_words.upper()
+
+    def get_my_amount_to_text_decimal(self,amount):
+        split_num = str(amount).split('.')
+        print ("Decimal===",split_num[1])
+        decimal_part = split_num[1]
+        if len(decimal_part)==1:
+            decimal_part +="0"
+        decimal_part = decimal_part+"/100 M.N" 
+        return decimal_part
         
     def get_invoice_date_in_pdf(self):
         invoice_date = ''
@@ -493,6 +506,22 @@ class Invoice(models.Model):
     def create(self, vals_list):
         result = super(Invoice, self).create(vals_list)
         self.set_pdf_remplate_data(result)
+#         for rec in result:
+#             if rec.type_of_revenue_collection and rec.journal_id:
+#                 if not rec.journal_id.default_debit_account_id:
+#                     if self.env.user.lang == 'es_MX':
+#                         raise ValidationError(_("Configure la cuenta de débito predeterminada del diario %s")%(rec.journal_id.name))
+#                     else:
+#                         raise ValidationError(_("Please Configure Default Debit Account of Journal %s")%(rec.journal_id.name))                
+#                 elif rec.journal_id.default_debit_account_id and rec.journal_id.default_debit_account_id.user_type_id.type != 'receivable':
+#                     if self.env.user.lang == 'es_MX':
+#                         raise ValidationError(_("Configure el tipo de cuenta por cobrar en la cuenta de débito predeterminada del diario %s")%(rec.journal_id.name))
+#                     else:
+#                         raise ValidationError(_("Please Configure The Receivable Type Account On Default Debit Account of Journal %s")%(rec.journal_id.name))
+#                 else:                    
+#                     for line in rec.line_ids.filtered(lambda x:x.account_id and line.debit != 0):
+#                         if line.account_id.user_type_id.type == 'receivable' and line.debit != 0:
+#                             line.account_id = rec.journal_id.default_debit_account_id.id
         return result
     
     def write(self,vals):
@@ -523,7 +552,10 @@ class AccountMoveLine(models.Model):
     cfdi_20 = fields.Char("CFDI 20%")
     account_ie_id = fields.Many2one('association.distribution.ie.accounts','Account I.E.')
     income_line_id = fields.Many2one("income.invoice.move.line",'Income Line')
-
+    l10n_mx_edi_product_code_sat_id = fields.Many2one(related="product_id.l10n_mx_edi_code_sat_id",string="Key Product SAT")
+    l10n_mx_edi_uom_code_sat_id = fields.Many2one(related="product_uom_id.l10n_mx_edi_code_sat_id",string="SAT Key Unit")
+    fixed_discount = fields.Float('Discount')
+    
     def get_account_list(self):
         for rec in self:
             if rec.product_id:
@@ -536,6 +568,54 @@ class AccountMoveLine(models.Model):
     @api.onchange('product_id')
     def get_ie_accounts_ids(self):
         self.get_account_list()
+
+    @api.onchange('quantity','fixed_discount' ,'discount', 'price_unit', 'tax_ids')
+    def _onchange_price_subtotal(self):
+        for line in self:
+            if not line.move_id.is_invoice(include_receipts=True):
+                continue
+
+            line.update(line._get_price_total_and_subtotal())
+            line.update(line._get_fields_onchange_subtotal())
+
+
+
+    @api.model
+    def _get_price_total_and_subtotal_model(self, price_unit, quantity, discount, currency, product, partner, taxes, move_type):
+        ''' This method is used to compute 'price_total' & 'price_subtotal'.
+
+        :param price_unit:  The current price unit.
+        :param quantity:    The current quantity.
+        :param discount:    The current discount.
+        :param currency:    The line's currency.
+        :param product:     The line's product.
+        :param partner:     The line's partner.
+        :param taxes:       The applied taxes.
+        :param move_type:   The type of the move.
+        :return:            A dictionary containing 'price_subtotal' & 'price_total'.
+        '''
+        res = {}
+        
+        # Compute 'price_subtotal'.
+        
+        price_unit_wo_discount = price_unit * (1 - (discount / 100.0))
+        if self and self[0].fixed_discount:
+            price_unit_wo_discount = price_unit - self[0].fixed_discount 
+            
+        subtotal = quantity * price_unit_wo_discount
+
+        # Compute 'price_total'.
+        if taxes:
+            taxes_res = taxes._origin.compute_all(price_unit_wo_discount,
+                quantity=quantity, currency=currency, product=product, partner=partner, is_refund=move_type in ('out_refund', 'in_refund'))
+            res['price_subtotal'] = taxes_res['total_excluded']
+            res['price_total'] = taxes_res['total_included']
+        else:
+            res['price_total'] = res['price_subtotal'] = subtotal
+        #In case of multi currency, round before it's use for computing debit credit
+        if currency:
+            res = {k: currency.round(v) for k, v in res.items()}
+        return res
     
 
 class IncomeIncomeMoveLine(models.Model):
@@ -785,6 +865,9 @@ class IncomeIncomeMoveLine(models.Model):
     account_ie_id = fields.Many2one('association.distribution.ie.accounts','Account I.E.')
     program_code_id = fields.Many2one('program.code')
     move_line_ids = fields.One2many("account.move.line","income_line_id")
+    l10n_mx_edi_product_code_sat_id = fields.Many2one(related="product_id.l10n_mx_edi_code_sat_id",string="Key Product SAT")
+    l10n_mx_edi_uom_code_sat_id = fields.Many2one(related="product_uom_id.l10n_mx_edi_code_sat_id",string="SAT Key Unit")
+    fixed_discount = fields.Float('Discount')
     
     @api.onchange('account_ie_id')
     def onchange_account_ie_id_name_set(self):
@@ -838,6 +921,8 @@ class IncomeIncomeMoveLine(models.Model):
             ))
         
         res = super(IncomeIncomeMoveLine,self).create(vals)
+        res._onchange_price_subtotal()
+        res._get_fields_onchange_balance()
 #         for line in self:
 #             line.price_subtotal = line._get_price_total_and_subtotal().get('price_subtotal', 0.0)
         return res
@@ -1084,7 +1169,7 @@ class IncomeIncomeMoveLine(models.Model):
             return self.product_id.uom_id
         return False
 
-    @api.onchange('quantity', 'discount', 'price_unit', 'tax_ids')
+    @api.onchange('quantity','fixed_discount' ,'discount', 'price_unit', 'tax_ids')
     def _onchange_price_subtotal(self):
         for line in self:
             if not line.move_id.is_invoice(include_receipts=True):
@@ -1122,9 +1207,12 @@ class IncomeIncomeMoveLine(models.Model):
         :return:            A dictionary containing 'price_subtotal' & 'price_total'.
         '''
         res = {}
-
+        
         # Compute 'price_subtotal'.
         price_unit_wo_discount = price_unit * (1 - (discount / 100.0))
+        if self.fixed_discount:
+            price_unit_wo_discount = price_unit - self.fixed_discount 
+            
         subtotal = quantity * price_unit_wo_discount
 
         # Compute 'price_total'.

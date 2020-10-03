@@ -82,10 +82,11 @@
                     	<span t-set="account_name" t-value="o.get_line_accounts_for_report()"/>
                     	<t t-set="number_of_return_check" t-value="o.number_of_return_check_char()"/>
                     	<t t-set="amount_in_text" t-value="o.get_my_amount_to_text(o.amount_total)"/>
+                    	<t t-set="amount_in_text_decimal" t-value="o.get_my_amount_to_text_decimal(o.amount_total)"/>
                     	
                         <p style="font-size:20px;">
                             Con relación al oficio <b><span t-field="o.legal_compensation"/>.,</b> referente al cheque devuelto No. <span t-esc="number_of_return_check"/> por un importe de <t t-if="o.currency_id"><span t-field="o.currency_id.symbol"/> </t><span t-esc="total_5_times" t-options='{"widget": "float", "precision": 2}'/> del banco <span t-field="o.income_bank_journal_id.name"/>; le  informo  que  la dependencia <b><span t-field="o.dependancy_id.description"/> </b>con clave <b><span t-field="o.dependancy_id.dependency"/>.<span t-field="o.sub_dependancy_id.sub_dependency"/>;</b> absorberá el importe del 20% de indemnización por un importe de  -------  <b><span t-field="o.amount_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                            <span t-esc="amount_in_text"/>;</b> los cuales se hará el cargo a la cuenta de Ingresos Extraordinarios número <b> <span t-esc="account_name"/></b>
+                            (<span t-esc="amount_in_text"/> <span t-esc="amount_in_text_decimal"/>);</b> los cuales se hará el cargo a la cuenta de Ingresos Extraordinarios número <b> <span t-esc="account_name"/></b>
                         </p><br/>
 
                         <p style="font-size:20px;">

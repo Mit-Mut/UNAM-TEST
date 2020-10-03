@@ -512,7 +512,10 @@ class ControlAmountsReceivedLine(models.Model):
     deposit_date = fields.Date(string='Deposit date')
     application_date = fields.Date(string='Application date')
     proposed_date = fields.Date(string='Proposed date')
-    currency_name = fields.Char('Currency')
+    #currency_name = fields.Char('Currency')
+    currency_name = fields.Many2one(
+        'res.currency', default=lambda self: self.env.company.currency_id,string="Currency")
+
     bank_id = fields.Many2one('res.bank', string='Bank')
     bank_account_id = fields.Many2one(
         'res.partner.bank', string='Bank account', domain="['|', ('bank_id', '=', False), ('bank_id', '=', bank_id)]")

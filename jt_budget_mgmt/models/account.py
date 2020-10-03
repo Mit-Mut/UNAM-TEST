@@ -108,8 +108,13 @@ class AccountMove(models.Model):
 #                     total_assign_budget = sum(x.price_total for x in invoice_lines)
 #                     total_available_budget = total_available_budget - total_assign_budget
                     
-                                    
-            if total_available_budget < line.price_total:
+            line_amount =  0
+            if line.debit:
+                line_amount = line.debit
+            else: 
+                line_amount = line.credit
+                
+            if total_available_budget < line_amount:
                 is_check = True
                 program_name = ''
                 if line.program_code_id:
@@ -208,19 +213,33 @@ class AccountMove(models.Model):
             self.journal_id.default_debit_account_id):
             raise ValidationError(_("Configure Default Debit and Credit Account in %s!" % \
                                     self.journal_id.name))
+
+        if self.currency_id != self.company_id.currency_id:
+            amount_currency = abs(self.amount_total)
+            balance = self.currency_id._convert(amount_currency, self.company_currency_id, self.company_id, self.date)
+            currency_id = self.currency_id and self.currency_id.id or False
+        else:
+            balance = abs(self.amount_total)
+            amount_currency = 0.0
+            currency_id = False
+            
         self.line_ids = [(0, 0, {
                                      'account_id': self.journal_id.default_credit_account_id.id,
                                      'coa_conac_id': self.journal_id.conac_credit_account_id.id,
-                                     'credit': self.amount_total, 
+                                     'credit': balance, 
+                                     'amount_currency' : -amount_currency,
                                      'exclude_from_invoice_tab': True,
-                                     'conac_move' : True
+                                     'conac_move' : True,
+                                     'currency_id' : currency_id,
                                  }), 
                         (0, 0, {
                                      'account_id': self.journal_id.default_debit_account_id.id,
                                      'coa_conac_id': self.journal_id.conac_debit_account_id.id,
-                                     'debit': self.amount_total,
+                                     'debit': balance,
+                                     'amount_currency' : amount_currency,
                                      'exclude_from_invoice_tab': True,
-                                     'conac_move' : True
+                                     'conac_move' : True,
+                                     'currency_id' : currency_id,
                                  })]
           
         self.conac_move = True

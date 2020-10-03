@@ -256,6 +256,7 @@
                                         <field name="sequence" widget="handle"/>
                                         <field name="move_name" invisible="1"/>
                                         <field name="product_id" string="Payment of"  optional="show" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
+                                        <field name="l10n_mx_edi_product_code_sat_id"/>
                                         <field name="name" widget="section_and_note_text" />
                                         <field name="subproduct_count"/>
                                         <field name="unidentified_product"/>
@@ -286,15 +287,18 @@
                                                
                                         <field name="quantity"/>
                                         <field name="product_uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
+                                        <field name="l10n_mx_edi_uom_code_sat_id" groups="uom.group_uom"/>
                                         <field name="price_unit" string="Price"/>
-                                        <field name="discount" string="Disc.%" groups="base.group_no_one" optional="show"/>
-                                        <!-- 
+                                        
+                                        <field name="discount" string="Disc.%" groups="base.group_no_one" optional="show" invisible="1"/>
+                                        <field name="fixed_discount"/>
+                                        
                                         <field name="tax_ids" widget="many2many_tags"
                                                domain="[('type_tax_use', '=?', parent.invoice_filter_type_domain), ('company_id', '=', parent.company_id)]"
                                                context="{'append_type_to_tax_name': not parent.invoice_filter_type_domain}"
                                                options="{'no_create': True}"
-                                               optional="show" invisible="1"/>
-                                         -->
+                                               optional="show"/>
+                                        
                                         <field name="ddi_office_accounting" invisible="1"/>
                                         <field name="amount_of_check" invisible="1"/>
                                         <field name="deposit_for_check_recovery" invisible="1"/>
@@ -423,7 +427,8 @@
                                                 <field name="quantity"/>
                                                 <field name="product_uom_id" groups="uom.group_uom"/>
                                                 <field name="price_unit"/>
-                                                <field name="discount" groups="base.group_no_one"/>
+                                                <field name="discount" groups="base.group_no_one" invisible="1"/>
+                                                <field name="fixed_discount"/>
                                                 <field name="currency_id" invisible="1"/>
                                             </group>
                                             <group>
@@ -479,6 +484,7 @@
                                         <field name="sequence" widget="handle"/>
                                         <field name="move_name" invisible="1"/>
                                         <field name="product_id" string="Payment of"  optional="show" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
+                                        <field name="l10n_mx_edi_product_code_sat_id"/>
                                         <field name="name" widget="section_and_note_text" />
                                         <field name="subproduct_count"/>
                                         <field name="unidentified_product"/>
@@ -509,15 +515,16 @@
                                                
                                         <field name="quantity"/>
                                         <field name="product_uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
+                                        <field name="l10n_mx_edi_uom_code_sat_id" groups="uom.group_uom"/>
                                         <field name="price_unit" string="Price"/>
-                                        <field name="discount" string="Disc.%" groups="base.group_no_one" optional="show"/>
-                                        <!-- 
+                                        <field name="discount" string="Disc.%" groups="base.group_no_one" optional="show" invisible="1"/>
+                                        <field name="fixed_discount"/> 
                                         <field name="tax_ids" widget="many2many_tags"
                                                domain="[('type_tax_use', '=?', parent.invoice_filter_type_domain), ('company_id', '=', parent.company_id)]"
                                                context="{'append_type_to_tax_name': not parent.invoice_filter_type_domain}"
                                                options="{'no_create': True}"
-                                               optional="show" invisible="1"/>
-                                         -->
+                                               optional="show"/>
+                                        
                                         <field name="ddi_office_accounting"/>
                                         <field name="amount_of_check" />
                                         <field name="deposit_for_check_recovery" />
@@ -646,7 +653,8 @@
                                                 <field name="quantity"/>
                                                 <field name="product_uom_id" groups="uom.group_uom"/>
                                                 <field name="price_unit"/>
-                                                <field name="discount" groups="base.group_no_one"/>
+                                                <field name="discount" groups="base.group_no_one" invisible="1"/>
+                                                <field name="fixed_discount"/>
                                                 <field name="currency_id" invisible="1"/>
                                             </group>
                                             <group>
@@ -1584,6 +1592,7 @@
                                         <field name="sequence" widget="handle"/>
                                         <field name="move_name" invisible="1"/>
                                         <field name="product_id" string="Payment of" attrs="{'invisible': [('parent.type_of_revenue_collection', '!=', 'billing')]}" optional="show" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
+                                        <field name="l10n_mx_edi_product_code_sat_id"/>
                                         <field name="name" widget="section_and_note_text" attrs="{'invisible': ['|',('parent.type_of_revenue_collection', 'not in', ('billing','deposit_cer')),('parent.record_type','=','automatic')]}"/>
                                         <field name="subproduct_count"/>
                                         <field name="unidentified_product" attrs="{'invisible':[('parent.type_of_revenue_collection','!=','billing')]}"/>
@@ -1610,8 +1619,10 @@
                                                
                                         <field name="quantity" attrs="{'invisible':[('parent.type_of_revenue_collection','!=','billing')]}"/>
                                         <field name="product_uom_id" string="UoM" groups="uom.group_uom" optional="show" attrs="{'invisible':[('parent.type_of_revenue_collection','!=','billing')]}"/>
+                                        <field name="l10n_mx_edi_uom_code_sat_id" groups="uom.group_uom"/>
                                         <field name="price_unit" string="Price"/>
-                                        <field name="discount" string="Disc.%" groups="base.group_no_one" optional="show" attrs="{'invisible':[('parent.type_of_revenue_collection','!=','billing')]}"/>
+                                        <field name="discount" string="Disc.%" groups="base.group_no_one" optional="show" invisible="1"/>
+                                        <field name="fixed_discount" attrs="{'invisible':[('parent.type_of_revenue_collection','!=','billing')]}"/>
                                         <field name="tax_ids" widget="many2many_tags"
                                                domain="[('type_tax_use', '=?', parent.invoice_filter_type_domain), ('company_id', '=', parent.company_id)]"
                                                context="{'append_type_to_tax_name': not parent.invoice_filter_type_domain}"
@@ -1796,6 +1807,9 @@
                                         <field name="deposit_for_check_recovery" invisible="1"/>
                                         <field name="cfdi_20" invisible="1"/>
                                         <field name="ddi_office_accounting" invisible="1"/>
+                                        <field name="l10n_mx_edi_uom_code_sat_id" invisible="1"/>
+                                        <field name="l10n_mx_edi_product_code_sat_id" invisible="1"/>
+                                        <field name="fixed_discount" invisible="1"/>
                                         <field name="account_id"
                                                attrs="{
                                                     'required': [('display_type', 'not in', ('line_section', 'line_note'))],

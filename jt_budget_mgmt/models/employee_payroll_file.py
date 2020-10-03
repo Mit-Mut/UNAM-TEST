@@ -44,6 +44,7 @@ class EmployeePayroll(models.Model):
         invoice_line_vals = self.get_invoice_line_vals() 
         vals.update({'dependancy_id':self.dependancy_id and self.dependancy_id.id or False,
                      'sub_dependancy_id' : self.sub_dependancy_id and self.sub_dependancy_id.id or False,
+                     'payment_place_id' : self.payment_place_id and self.payment_place_id.id or False,
                      'invoice_line_ids':[(0,0,invoice_line_vals)]
                      })
         

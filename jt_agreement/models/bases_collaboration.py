@@ -22,6 +22,7 @@
 ##############################################################################
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
+from datetime import datetime
 
 class BasesCollabration(models.Model):
 
@@ -220,14 +221,13 @@ class RequestOpenBalance(models.Model):
 
     _name = 'request.open.balance'
     _description = "Request to Open Balance"
-    _rec_name = 'bases_collaboration_id'
 
     name = fields.Char("Name")
-    bases_collaboration_id = fields.Many2one('bases.collaboration', "Bases Collaboration")
     operation_number = fields.Integer("Operation Number")
-    opening_bal = fields.Boolean('Opening Balance')
-    increase = fields.Boolean('Increase')
-    retirement = fields.Boolean('Retirement')
+    agreement_number_id = fields.Many2one('project.project', "Agreement Number")
+    type_of_operation = fields.Selection([('open_bal', 'Opening Balance'),
+                                          ('increase', 'Increase'),
+                                          ('retirement', 'Retirement')], string="Type of Operation")
     apply_to_basis_collaboration = fields.Boolean("Apply to Basis of Collaboration")
     origin_resource_id = fields.Many2one('sub.origin.resource', "Origin of the resource")
     state = fields.Selection([('draft', 'Draft'),
@@ -255,7 +255,6 @@ class RequestOpenBalance(models.Model):
     availability_account_id = fields.Many2one('account.account', "Availability Accounting Account")
 
     reason_rejection = fields.Text("Reason for Rejection")
-    passed_from_investment = fields.Boolean("Passed From Investment")
 
     def reject_request(self):
         return {
@@ -272,8 +271,83 @@ class RequestOpenBalance(models.Model):
         self.state = 'requested'
 
     def approve_investment(self):
-        self.state = 'confirmed'
-        self.passed_from_investment = True
+        today = datetime.today().date()
+        user = self.env.user
+        employee = self.env['hr.employee'].search([('user_id', '=', user.id)], limit=1)
+        collaboration = self.env['bases.collaboration'].search([('name', '=', self.name)], limit=1)
+        fund_type = False
+        if collaboration and collaboration.fund_type_id:
+            fund_type = collaboration.fund_type_id.id
+        return {
+            'name': 'Approve Request',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': False,
+            'res_model': 'approve.investment.bal.req',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+                'default_operation_number': self.operation_number,
+                'default_agreement_number_id': self.agreement_number_id and self.agreement_number_id.id or False,
+                'default_amount': self.opening_balance,
+                'default_date': today,
+                'default_employee_id': employee.id if employee else False,
+                'default_fund_type': fund_type
+            }
+        }
 
-    def approve_finance(self):
-        self.state = 'approved'
+
+class Project(models.Model):
+    _inherit = 'project.project'
+
+    def name_get(self):
+        result = []
+        for rec in self:
+            name = rec.name
+            if rec.number_agreement and self.env.context and self.env.context.get('from_agreement', True):
+                name = rec.number_agreement
+            result.append((rec.id, name))
+        return result
+
+class RequestOpenBalanceFinance(models.Model):
+
+    _name = 'request.open.balance.finance'
+    _description = "Request to Open Balance For Finanace"
+    _rec_name = 'invoice'
+
+    request_id = fields.Many2one('request.open.balance', "Request")
+    invoice = fields.Char("Invoice")
+    operation_number = fields.Integer("Operation Number")
+    agreement_number_id = fields.Many2one('project.project', "Agreement Number")
+    bank_account_id = fields.Many2one('account.journal', "Bank and Origin Account")
+    desti_bank_account_id = fields.Many2one('account.journal', "Destination Bank and Account")
+    currency_id = fields.Many2one(
+        'res.currency', default=lambda self: self.env.user.company_id.currency_id)
+    amount = fields.Monetary("Amount")
+    dependency_id = fields.Many2one('dependency', "Dependency")
+    date = fields.Date("Application date")
+    concept = fields.Text("Application Concept")
+    user_id = fields.Many2one('res.users', default=lambda self: self.env.user.id, string="Applicant")
+    employee_id = fields.Many2one('hr.employee', string="Unit requesting the transfer")
+    date_required = fields.Date("Date Required")
+    fund_type = fields.Many2one('fund.type', "Background")
+    reason_rejection = fields.Text("Reason Rejection")
+    state = fields.Selection([('draft', 'Draft'),
+                              ('requested', 'Requested'),
+                              ('rejected', 'Rejected'),
+                              ('confirmed', 'Confirmed'),
+                              ('approved', 'Approved'),
+                              ('done', 'Done'),
+                              ('canceled', 'Canceled')], string="Status", default="draft")
+
+
+    def reject_request(self):
+        return {
+            'name': 'Reason for Rejection',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': False,
+            'res_model': 'reason.rejection.open.bal',
+            'type': 'ir.actions.act_window',
+            'target': 'new'
+        }

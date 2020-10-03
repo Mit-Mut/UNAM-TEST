@@ -5,3 +5,4 @@ access_recurring_payment_template,recurring_payment_template,model_recurring_pay
 access_bases_collaboration,bases_collaboration,model_bases_collaboration,base.group_user,1,1,1,1
 access_committee,committee,model_committee,base.group_user,1,1,1,1
 access_request_open_balance,request.open.balance,model_request_open_balance,base.group_user,1,1,1,1
+access_request_open_balance_finance,request.open.balance.finance,model_request_open_balance_finance,base.group_user,1,1,1,1

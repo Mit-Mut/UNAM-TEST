@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="approve_open_balance_req_operation" model="ir.ui.view">
+            <field name="name">rapprove.open.balance.req.operation.form.view</field>
+            <field name="model">approve.investment.bal.req</field>
+            <field name="arch" type="xml">
+                <form>
+                	<group>
+                            <group>
+                                <field name="invoice"/>
+                                <field name="operation_number"/>
+                                <field name="agreement_number_id" context="{'from_agreement':1}"
+                                       options="{'no_create': True, 'no_edit': True, 'no_create_edit': True,
+                                       'no_open': True}"/>
+                                <field name="bank_account_id" domain="[('type', '=', 'bank')]"/>
+                                <field name="desti_bank_account_id" domain="[('type', '=', 'bank')]"/>
+                                <field name="amount"/>
+                                <field name="dependency_id"/>
+                            </group>
+                            <group>
+                                <field name="date"/>
+                                <field name="concept"/>
+                                <field name="user_id"/>
+                                <field name="employee_id"/>
+                                <field name="date_required"/>
+                                <field name="fund_type"/>
+                            </group>
+                        </group>
+                	<footer>
+                        <button string="Approve" name="approve" type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="btn btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

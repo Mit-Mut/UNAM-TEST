@@ -36,6 +36,7 @@
         'views/recurring_payment_temp.xml',
         'views/bases_collaboration.xml',
         'wizard/reason_rejected_open_bal.xml',
+        'wizard/approve_inv_bal_req_view.xml',
         'views/menus.xml',
         'security/ir.model.access.csv'
     ],

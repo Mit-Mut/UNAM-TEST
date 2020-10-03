@@ -4,7 +4,9 @@
 
         <!-- Main Menu -->
          <menuitem id="menu_agreements" name="Agreements"
-                 sequence="5"/>
+                 sequence="5"
+                 web_icon="jt_agreement,static/description/icon.png"
+         />
 
         <!-- Sub Menus -->
          <menuitem id="menu_collaboration_contracts" name="Collaboration contracts" parent="menu_agreements"

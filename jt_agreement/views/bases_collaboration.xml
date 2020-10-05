@@ -365,13 +365,20 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-<!--                        <button name="approve_finance" type="object" string="Approve" class="oe_highlight"-->
-<!--                             attrs="{'invisible': [('state', '!=', 'confirmed')]}"/>-->
+                        <button name="approve_finance" type="object" string="Approve" class="oe_highlight"
+                             attrs="{'invisible': [('state', '!=', 'requested')]}"/>
                         <button name="reject_request" type="object" string="Reject" class="oe_highlight"
                              attrs="{'invisible': [('state', '!=', 'requested')]}"/>
+
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="open_payments" type="object" class="oe_stat_button"
+                                    icon="fa-random">
+                                <field name="payment_count" widget="statinfo"/>
+                            </button>
+                        </div>
                         <group>
                             <group>
                                 <field name="invoice"/>
@@ -456,6 +463,15 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_req_open_balance_form_finance"/>
             <field name="act_window_id" ref="action_req_open_balance_finance"/>
+        </record>
+
+         <record id="action_schedule_transfers" model="ir.actions.server">
+            <field name="name">Schedule Transfers</field>
+            <field name="model_id" ref="jt_agreement.model_request_open_balance_finance"/>
+            <field name="binding_model_id" ref="jt_agreement.model_request_open_balance_finance"/>
+            <field name="state">code</field>
+            <field name="binding_view_types">list</field>
+            <field name="code">action = records.action_schedule_transfers()</field>
         </record>
 
     </data>

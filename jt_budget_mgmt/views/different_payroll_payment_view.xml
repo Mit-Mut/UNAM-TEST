@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+	<!-- Different Payroll Payment View -->
 
-        <record id="supplier_payment_req_form_inherit" model="ir.ui.view">
-            <field name="name">supplier.payment.request.inherit.view</field>
+        <record id="different_payment_req_form_inherit" model="ir.ui.view">
+            <field name="name">different.payment.request.inherit.view</field>
             <field name="model">account.move</field>
-            <field name="inherit_id" ref="jt_supplier_payment.payment_req_form_view"/>
+            <field name="inherit_id" ref="jt_supplier_payment.different_payroll_payment_req_form_view"/>
             <field name="priority">20</field>
             <field name="arch" type="xml">
             	<xpath expr="//header/button[@name='action_register']" position="after">
@@ -18,20 +19,13 @@
                             type="object" attrs="{'invisible':[('payment_state', 'in', ('paid','cancel'))]}"/>
             	</xpath>
             
-                <field name="workstation_id" position="after">
+                <field name="folio" position="after">
                     <field name="dependancy_id" context="{'show_for_supplier_payment':True}" attrs="{'readonly':[('payment_state', '!=', 'draft')]}"/>
                     <field name="sub_dependancy_id" context="{'show_for_supplier_payment':True}" attrs="{'readonly':[('payment_state', '!=', 'draft')]}"/>
-                    <field name="payment_place_id" domain="[('dependancy_id','=',dependancy_id),('sub_dependancy_id','=',sub_dependancy_id)]" attrs="{'invisible':[('is_payroll_payment_request','=',False)],'readonly':[('payment_state', '!=', 'draft')]}"/>
-                </field>
-                <field name="administrative_secretary_id" position="attributes">
-                	<attribute name="domain">[('dependancy_id','=',dependancy_id)]</attribute>
-                </field>
-                <field name="holder_of_dependency_id" position="attributes">
-                	<attribute name="domain">[('dependancy_id','=',dependancy_id)]</attribute>
                 </field>
                 
-                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='type_of_bussiness_line']"
-                       position="before">
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_id']"
+                       position="after">
                     <field name="program_code_id" domain="[('budget_id.state','=','validate')]"/>
                 </xpath>
 
@@ -40,8 +34,8 @@
                     <field name="program_code_id" domain="[('budget_id.state','=','validate')]"/>
                 </xpath>
 
-                <xpath expr="//field[@name='line_ids']/tree/field[@name='type_of_bussiness_line']"
-                       position="before">
+                <xpath expr="//field[@name='line_ids']/tree/field[@name='account_id']"
+                       position="after">
                     <field name="program_code_id" invisible="1"/>
                 </xpath>
 
@@ -166,16 +160,15 @@
                                     </form>
                                 </field>
                             </page>
-                	
                 </xpath>
             </field>
         </record>
-
-        <record id="jt_supplier_payment.payment_req_form_view_payment" model="ir.ui.view">
+        <!-- Different for Schedule payroll payment  -->
+        <record id="different_schedule_payroll_payment_req_form_view" model="ir.ui.view">
             <field name="name">payment.req.form.view.for.management</field>
             <field name="model">account.move</field>
             <field name="mode">primary</field>
-            <field name="inherit_id" ref="jt_supplier_payment.payment_req_form_view"/>
+            <field name="inherit_id" ref="jt_supplier_payment.different_payroll_payment_req_form_view"/>
             <field name="arch" type="xml">
             	<xpath expr="//form" position="attributes">
             		<attribute name="create">0</attribute>
@@ -198,8 +191,34 @@
                 </xpath>
             </field>
         </record>
+        
+	  <record id="different_payroll_payment_schedule_programming_action" model="ir.actions.act_window">
+            <field name="name">Payment Schedule</field>
+            <field name="res_model">account.move</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="jt_supplier_payment.view_account_move_filter_inherit_payment"/>
+            <field name="context">{'default_type': 'in_invoice', 'default_is_different_payroll_request': 1,
+                'from_move': 1,'search_default_Payment_method': 1,'search_default_Type_of_operatio': 1}</field>
+            <field name="domain">[('payment_state','not in',('draft','registered')),('type', '=', 'in_invoice'), ('is_different_payroll_request', '=', True)]</field>
+        </record>
+		<record id="different_payroll_payment_schedule_link_tree_action" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="jt_supplier_payment.payment_req_tree_view_for_management"/>
+            <field name="act_window_id" ref="different_payroll_payment_schedule_programming_action"/>
+        </record>
 
-
+        <record id="different_payroll_payment_schedule_link_form_action" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="different_schedule_payroll_payment_req_form_view"/>
+            <field name="act_window_id" ref="different_payroll_payment_schedule_programming_action"/>
+        </record>
 	
+        <menuitem id="different_payroll_payment_schedule_menu_programm" name="Payment Schedule"
+                  action="different_payroll_payment_schedule_programming_action"
+                  parent="jt_supplier_payment.different_payroll_payment_management_menu" sequence="3"/>
+        
+        
     </data>
-</odoo>
+</odoo>       

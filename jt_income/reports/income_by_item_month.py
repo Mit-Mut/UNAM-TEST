@@ -53,6 +53,13 @@ class IncomeBYItemReportWizard(models.TransientModel):
         currency_list = []
         year_list_tuple = range(self.start_date.year, self.end_date.year+1)
         year_list = []
+        
+        start_year = str(self.start_date.year)
+        end_year = str(self.end_date.year)
+
+        start_year_month = self.start_date.month
+        end_year_month = self.end_date.month
+        
         for y in year_list_tuple:
             year_list.append(str(y))
             
@@ -76,7 +83,7 @@ class IncomeBYItemReportWizard(models.TransientModel):
                 sum(case when am.is_payment_request = True and am.payment_state='for_payment_procedure' then abs(am.amount_total_signed) else 0 end) suppliers,
                 0 as major_maintenance_fund,
                 0 as fif_funds,
-                0 as other_benefits
+                sum(case when am.is_different_payroll_request = True and am.payment_state='for_payment_procedure' then abs(am.amount_total_signed) else 0 end) as other_benefits
                 from account_move am
                 where am.state='posted' and am.currency_id in %s 
                 and date >= %s and date <= %s 
@@ -151,6 +158,11 @@ class IncomeBYItemReportWizard(models.TransientModel):
                 sec = 2
                 for i in range(12):
                     j = i+1
+                    if data[0] == start_year and j < start_year_month:
+                        continue
+                    if data[0] == end_year and j > end_year_month:
+                        continue
+                    
                     mont_dict = year_dict.get(j,{})
                     if mont_dict:
                         mont_dict.update({'year':data[0],'month':j,'subsidy_2020':data[first],'subsidy_receivable':data[sec]})
@@ -159,22 +171,23 @@ class IncomeBYItemReportWizard(models.TransientModel):
                     first +=2
                     sec += 2
             else:
-                print ("====",data)
-                data_dict.update({data[0]:{
-                    1:{'year':data[0],'month':1,'subsidy_2020':data[1],'subsidy_receivable':data[2]},
-                    2:{'year':data[0],'month':2,'subsidy_2020':data[3],'subsidy_receivable':data[4]},
-                    3:{'year':data[0],'month':3,'subsidy_2020':data[5],'subsidy_receivable':data[6]},
-                    4:{'year':data[0],'month':4,'subsidy_2020':data[7],'subsidy_receivable':data[8]},
-                    5:{'year':data[0],'month':5,'subsidy_2020':data[9],'subsidy_receivable':data[10]},
-                    6:{'year':data[0],'month':6,'subsidy_2020':data[11],'subsidy_receivable':data[12]},
-                    7:{'year':data[0],'month':7,'subsidy_2020':data[13],'subsidy_receivable':data[14]},
-                    8:{'year':data[0],'month':8,'subsidy_2020':data[15],'subsidy_receivable':data[16]},
-                    9:{'year':data[0],'month':9,'subsidy_2020':data[17],'subsidy_receivable':data[18]},
-                    10:{'year':data[0],'month':10,'subsidy_2020':data[19],'subsidy_receivable':data[20]},
-                    11:{'year':data[0],'month':11,'subsidy_2020':data[21],'subsidy_receivable':data[22]},
-                    12:{'year':data[0],'month':12,'subsidy_2020':data[23],'subsidy_receivable':data[24]}
+                first = 1
+                sec = 2
+                data_dict_subsydy = {}
+                for i in range(12):
+                    j = i+1
+                    if data[0] == start_year and j < start_year_month:
+                        continue
+                    if data[0] == end_year and j > end_year_month:
+                        continue
+                
+                    data_dict_subsydy.update({j:{'year':data[0],'month':j,'subsidy_2020':data[first],'subsidy_receivable':data[sec]}})
+                    first +=2
+                    sec += 2
+                    
+                data_dict.update({data[0]:data_dict_subsydy})
+                                                        
 
-                    }})                                    
                     
         for year in data_dict:
             mont_dict = data_dict.get(year) 
@@ -247,29 +260,29 @@ class IncomeBYItemReportData(models.TransientModel):
                         month_name = 'Diciembre'
                 else:
                     if rec.month==1:
-                        month_name = 'Enero'
+                        month_name = 'January'
                     elif rec.month==2:
-                        month_name = 'Febrero'
+                        month_name = 'February'
                     elif rec.month==3:
-                        month_name = 'Marzo'
+                        month_name = 'March'
                     elif rec.month==4:
-                        month_name = 'Abril'
+                        month_name = 'April'
                     elif rec.month==5:
-                        month_name = 'Mayo'
+                        month_name = 'May'
                     elif rec.month==6:
-                        month_name = 'Junio'
+                        month_name = 'June'
                     elif rec.month==7:
-                        month_name = 'Julio'
+                        month_name = 'July'
                     elif rec.month==8:
-                        month_name = 'Agosto'
+                        month_name = 'August'
                     elif rec.month==9:
-                        month_name = 'Septiembre'
+                        month_name = 'September'
                     elif rec.month==10:
-                        month_name = 'Octubre'
+                        month_name = 'October'
                     elif rec.month==11:
-                        month_name = 'Noviembre'
+                        month_name = 'November'
                     elif rec.month==12:
-                        month_name = 'Diciembre'
+                        month_name = 'December'
                         
             rec.month_name = month_name
                     

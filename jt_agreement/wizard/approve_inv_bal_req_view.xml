@@ -14,8 +14,10 @@
                                 <field name="agreement_number_id" context="{'from_agreement':1}"
                                        options="{'no_create': True, 'no_edit': True, 'no_create_edit': True,
                                        'no_open': True}"/>
-                                <field name="bank_account_id" domain="[('type', '=', 'bank')]"/>
-                                <field name="desti_bank_account_id" domain="[('type', '=', 'bank')]"/>
+                                <field name="bank_account_id" domain="[('type', '=', 'bank')]"
+                                    required="1"/>
+                                <field name="desti_bank_account_id" domain="[('type', '=', 'bank')]"
+                                    required="1"/>
                                 <field name="amount"/>
                                 <field name="dependency_id"/>
                             </group>

@@ -47,7 +47,7 @@ class GenerateBankLayout(models.TransientModel):
         if not active_ids:
             return ''
         active_rec = self.env['account.payment'].browse(active_ids)
-        if any(active_rec.filtered(lambda x:x.payment_request_type=='supplier_payment')):
+        if any(active_rec.filtered(lambda x:x.payment_request_type in ('supplier_payment','different_to_payroll'))):
             return {
                 'name': _('Generate Bank Layout'),
                 'res_model': 'generate.bank.layout',

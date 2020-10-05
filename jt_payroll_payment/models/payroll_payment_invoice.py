@@ -29,6 +29,7 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
 
     is_payroll_payment_request = fields.Boolean("Payroll",default=False,copy=False)
+    is_different_payroll_request = fields.Boolean("Different To Payroll",default=False,copy=False)
     fornight = fields.Selection([('01', '01'), ('02', '02'), ('03', '03'), ('04', '04'), ('05', '05'),
                                  ('06', '06'), ('07', '07'), ('08', '08'), ('09', '09'), ('10', '10'),
                                  ('11', '11'), ('12', '12'), ('13', '13'), ('14', '14'), ('15', '15'),
@@ -44,6 +45,8 @@ class AccountMove(models.Model):
     payroll_register_user_id = fields.Many2one('res.users',default=lambda self: self.env.user,copy=False,string="User who registers")
     payroll_send_user_id = fields.Many2one('res.users',default=lambda self: self.env.user,copy=False,string="User who sends")
     employee_paryoll_ids = fields.One2many('employee.payroll.file','move_id')
+    
+    observations = fields.Text(string='Observations')
     
     @api.model_create_multi
     def create(self, vals_list):
@@ -81,7 +84,10 @@ class AccountPayment(models.Model):
     
     _inherit = 'account.payment'
     
-    payment_request_type = fields.Selection([('supplier_payment','Supplier Payment'),('payroll_payment','Payroll Payment')],default="supplier_payment",copy=False)
+    payment_request_type = fields.Selection([('supplier_payment','Supplier Payment'),
+                                             ('payroll_payment','Payroll Payment'),
+                                             ('different_to_payroll','Different To Payroll'),
+                                             ],copy=False)
     fornight = fields.Selection([('01', '01'), ('02', '02'), ('03', '03'), ('04', '04'), ('05', '05'),
                                  ('06', '06'), ('07', '07'), ('08', '08'), ('09', '09'), ('10', '10'),
                                  ('11', '11'), ('12', '12'), ('13', '13'), ('14', '14'), ('15', '15'),

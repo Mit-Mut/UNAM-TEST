@@ -7,6 +7,13 @@
 	        <field name="currency_id" ref="base.MXN"/>
 	        <field name="type">purchase</field>
 	    </record>
+
+	     <record id="different_payroll_payment_request_jour" model="account.journal">
+	        <field name="name">Different Payroll Payment Request Journal</field>
+	        <field name="code">DPPAR</field>
+	        <field name="currency_id" ref="base.MXN"/>
+	        <field name="type">purchase</field>
+	    </record>
  
          <record id="action_server_employee_portal_user" model="ir.actions.server">
             <field name="name">Portal Users</field>

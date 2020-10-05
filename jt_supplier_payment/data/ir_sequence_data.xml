@@ -20,6 +20,12 @@
             <field name="code">payroll.payment.batch.sheet.folio</field>
             <field name="company_id" eval="False"/>
         </record>
+
+        <record id="seq_different_payroll_payment_batch_sheet_folio" model="ir.sequence">
+            <field name="name">Different Payroll Payment Batch Sheet Folio</field>
+            <field name="code">different.payroll.payment.batch.sheet.folio</field>
+            <field name="company_id" eval="False"/>
+        </record>
         
         <record id="seq_bank_transfer_request" model="ir.sequence">
             <field name="name">Bank Transfer Request</field>

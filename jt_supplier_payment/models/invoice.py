@@ -72,6 +72,9 @@ class AccountMove(models.Model):
             journal = self.env.ref('jt_supplier_payment.payment_request_jour')
         if 'default_is_payroll_payment_request' in self._context:
             journal = self.env.ref('jt_payroll_payment.payroll_payment_request_jour')
+        if 'default_is_different_payroll_request' in self._context:
+            journal = self.env.ref('jt_payroll_payment.different_payroll_payment_request_jour')
+
 
         return journal
     

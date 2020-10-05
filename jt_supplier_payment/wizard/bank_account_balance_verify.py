@@ -65,6 +65,8 @@ class BankBalanceCheck(models.TransientModel):
             payment_request_type = 'payroll_payment'
         elif rec.is_payment_request:
             payment_request_type = 'supplier_payment'
+        elif rec.is_different_payroll_request:
+            payment_request_type = 'different_to_payroll'
             
         data.update({'payment_bank_id':rec.payment_bank_id and rec.payment_bank_id.id or False,
                      'payment_bank_account_id' : rec.payment_bank_account_id and rec.payment_bank_account_id.id or False,

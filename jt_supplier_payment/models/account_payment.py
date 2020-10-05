@@ -191,11 +191,11 @@ class AccountPayment(models.Model):
         result = super(AccountPayment,self).post()
         self.write({'payment_state': 'posted'})
         for payment in self:
-            for inv in payment.invoice_ids.filtered(lambda x:x.is_payment_request or x.is_payroll_payment_request):
+            for inv in payment.invoice_ids.filtered(lambda x:x.is_payment_request or x.is_payroll_payment_request or x.is_different_payroll_request):
                 if inv.invoice_payment_state == 'paid':
                     inv.payment_state = 'paid'
                     payment.create_journal_for_paid(inv)
-            is_supplier_payment = payment.invoice_ids.filtered(lambda x:x.is_payment_request or x.is_payroll_payment_request)
+            is_supplier_payment = payment.invoice_ids.filtered(lambda x:x.is_payment_request or x.is_payroll_payment_request or x.is_different_payroll_request)
             if is_supplier_payment:
                 for line in payment.move_line_ids:
                     line.coa_conac_id = line.account_id and line.account_id.coa_conac_id and line.account_id.coa_conac_id.id or False
@@ -215,12 +215,12 @@ class AccountPayment(models.Model):
             return ''
         
         record_ids = self.env['account.move'].browse(active_ids)
-        if not record_ids or any(invoice.payment_state != 'approved_payment' and (invoice.is_payment_request or invoice.is_payroll_payment_request)  for invoice in record_ids):
+        if not record_ids or any(invoice.payment_state != 'approved_payment' and (invoice.is_payment_request or invoice.is_payroll_payment_request or invoice.is_different_payroll_request)  for invoice in record_ids):
             raise UserError(_("You can only register payment for  Approved for payment request"))
 #         if not record_ids or any(invoice.state != 'posted' for invoice in record_ids):
 #             raise UserError(_("You can only register payments for open invoices"))
         
-        record_ids = record_ids.filtered(lambda x:(x.is_payment_request or x.is_payroll_payment_request) and x.is_invoice(include_receipts=True))
+        record_ids = record_ids.filtered(lambda x:(x.is_payment_request or x.is_payroll_payment_request or x.is_different_payroll_request) and x.is_invoice(include_receipts=True))
         if record_ids:
 #             payment_issuing_bank_id = record_ids.mapped('payment_issuing_bank_id')
 #             if len(payment_issuing_bank_id) != 1 :

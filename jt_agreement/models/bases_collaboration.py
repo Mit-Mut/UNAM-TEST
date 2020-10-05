@@ -335,11 +335,25 @@ class RequestOpenBalanceFinance(models.Model):
     state = fields.Selection([('draft', 'Draft'),
                               ('requested', 'Requested'),
                               ('rejected', 'Rejected'),
-                              ('confirmed', 'Confirmed'),
                               ('approved', 'Approved'),
+                              ('sent', 'Sent'),
+                              ('confirmed', 'Confirmed'),
                               ('done', 'Done'),
                               ('canceled', 'Canceled')], string="Status", default="draft")
+    payment_ids = fields.Many2many('account.payment', 'rel_req_payment', 'payment_id', 'payment_request_rel_id',
+                                  "Payments")
+    payment_count = fields.Integer(compute="count_payment", string="Payments")
 
+    def open_payments(self):
+        action = self.env.ref('account.action_account_payments').read()[0]
+        action['context'] = {}
+        if self.payment_ids:
+            action['domain'] = [('id', 'in', self.payment_ids.ids)]
+        return action
+
+    def count_payment(self):
+        for rec in self:
+            rec.payment_count = len(self.payment_ids)
 
     def reject_request(self):
         return {
@@ -351,3 +365,51 @@ class RequestOpenBalanceFinance(models.Model):
             'type': 'ir.actions.act_window',
             'target': 'new'
         }
+
+    def approve_finance(self):
+        self.state = 'approved'
+
+    def action_schedule_transfers(self):
+        payment_obj = self.env['account.payment']
+        today = datetime.today().date()
+        data = {}
+        for rec in self:
+            if rec.state == 'approved' and rec.bank_account_id:
+                bank_acc = rec.bank_account_id
+                if bank_acc not in data.keys():
+                    data.update({
+                        bank_acc: [rec]
+                    })
+                else:
+                    data.update({
+                        bank_acc: data.get(bank_acc) + [rec]
+                    })
+        for acc, rec_list in data.items():
+            dest_acc = {}
+            for rec in rec_list:
+                if rec.desti_bank_account_id:
+                    dest_bank_acc = rec.desti_bank_account_id
+                    if dest_bank_acc not in dest_acc.keys():
+                        dest_acc.update({
+                            dest_bank_acc: [rec]
+                        })
+                    else:
+                        dest_acc.update({
+                            dest_bank_acc: dest_acc.get(dest_bank_acc) + [rec]
+                        })
+            for dest_acc, rec_list in dest_acc.items():
+                amt = 0
+                for rec in rec_list:
+                    amt += rec.amount
+                payment = payment_obj.create({
+                    'payment_type': 'transfer',
+                    'amount': amt,
+                    'journal_id': acc.id,
+                    'destination_journal_id': dest_acc.id,
+                    'payment_date': today,
+                    'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id
+                })
+                if payment:
+                    for rec in rec_list:
+                        rec.payment_ids = [(4, payment.id)]
+                        rec.state = 'sent'

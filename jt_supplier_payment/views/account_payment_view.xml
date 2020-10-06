@@ -85,6 +85,7 @@
             		<field name="batch_folio"/>
             		<field name="folio"/>
             		<field name="payment_request_type" invisible="1"/>
+            		<field name="is_different_payroll_request" attrs="{'invisible':[('payment_request_type','!=','different_to_payroll')]}"/>
             		<field name="fornight" attrs="{'invisible':[('payment_request_type','!=','payroll_payment')]}"/>
             		<field name="payroll_request_type" attrs="{'invisible':[('payment_request_type','!=','payroll_payment')]}"/>
             		<field name="reason_for_rejection" readonly="1" attrs="{'invisible':[('payment_state','!=','rejected')]}"/>

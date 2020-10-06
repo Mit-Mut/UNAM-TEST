@@ -72,82 +72,66 @@ class BasesCollabration(models.Model):
         operation_obj = self.env['request.open.balance']
         for rec in self:
             if rec.name:
-                operations = operation_obj.search([('name', '=', self.name)])
+                operations = operation_obj.search([('bases_collaboration_id', '=', rec.id)])
                 rec.total_operations = len(operations)
 
-    # def action_operations(self):
-    #     operation_obj = self.env['request.open.balance']
-    #     operations = operation_obj.search([('bases_collaboration_id', '=', self.id)])
-        # print ("dfdsfsdfsd", self.env.ref('jt_agreement.action_req_open_balance').read()[0])
-        # context = {'default_bases_collaboration_id': self.id,
-        #             'default_apply_to_basis_collaboration': True,
-        #             'default_opening_balance': self.opening_bal,
-        #             'default_cbc_format': self.cbc_format,
-        #             'default_cbc_shipping_office': self.cbc_shipping_office,
-        #             'default_name': self.name,
-        #             'default_liability_account_id': self.liability_account_id.id if self.liability_account_id
-        #             else False,
-        #             'default_interest_account_id': self.interest_account_id.id if self.interest_account_id
-        #             else False,
-        #             'default_investment_account_id': self.investment_account_id.id if self.investment_account_id
-        #             else False,
-        #             'default_availability_account_id': self.availability_account_id.id if self.availability_account_id
-        #             else False
-        #             }
-        # return self.env.ref('jt_agreement.action_req_open_balance').read()[0]
-        # if operations:
-        #     return {
-        #         'name': 'Operations',
-        #         # 'view_type': 'form',
-        #         # 'view_id': self.env.ref('jt_agreement.view_req_open_balance_tree').id,
-        #         'view_mode': 'tree,form',
-        #         'view_ids': [self.env.ref("jt_agreement.view_req_open_balance_tree").id,
-        #                       self.env.ref("jt_agreement.view_req_open_balance_form").id],
-        #         'res_model': 'request.open.balance',
-        #         'domain': [('bases_collaboration_id', '=', self.id)],
-        #         'type': 'ir.actions.act_window',
-        #         'context': {'default_bases_collaboration_id': self.id,
-        #                     'default_apply_to_basis_collaboration': True,
-        #                     'default_opening_balance': self.opening_bal,
-        #                     'default_cbc_format': self.cbc_format,
-        #                     'default_cbc_shipping_office': self.cbc_shipping_office,
-        #                     'default_name': self.name,
-        #                     'default_liability_account_id': self.liability_account_id.id if self.liability_account_id
-        #                             else False,
-        #                     'default_interest_account_id': self.interest_account_id.id if self.interest_account_id
-        #                             else False,
-        #                     'default_investment_account_id': self.investment_account_id.id if self.investment_account_id
-        #                     else False,
-        #                     'default_availability_account_id': self.availability_account_id.id if self.availability_account_id
-        #                     else False
-        #                     }
-        #     }
-        # else:
-        #     return {
-        #         'name': 'Operations',
-        #         # 'view_type': 'form',
-        #         'view_mode': 'form',
-        #         'view_id': self.env.ref('jt_agreement.view_req_open_balance_form').id,
-        #         'view_ids': [self.env.ref("jt_agreement.view_req_open_balance_form").id],
-        #         'res_model': 'request.open.balance',
-        #         'domain': [('bases_collaboration_id', '=', self.id)],
-        #         'type': 'ir.actions.act_window',
-        #         'context': {'default_bases_collaboration_id': self.id,
-        #                     'default_apply_to_basis_collaboration': True,
-        #                     'default_opening_balance': self.opening_bal,
-        #                     'default_name': self.name,
-        #                     'default_cbc_format': self.cbc_format,
-        #                     'default_cbc_shipping_office': self.cbc_shipping_office,
-        #                     'default_liability_account_id': self.liability_account_id.id if self.liability_account_id
-        #                     else False,
-        #                     'default_interest_account_id': self.interest_account_id.id if self.interest_account_id
-        #                     else False,
-        #                     'default_investment_account_id': self.investment_account_id.id if self.investment_account_id
-        #                     else False,
-        #                     'default_availability_account_id': self.availability_account_id.id if self.availability_account_id
-        #                     else False
-        #                     }
-        #     }
+    def action_operations(self):
+        operation_obj = self.env['request.open.balance']
+        operations = operation_obj.search([('bases_collaboration_id', '=', self.id)])
+        if operations:
+            return {
+                'name': 'Operations',
+                'view_type': 'form',
+                # 'view_id': self.env.ref('jt_agreement.view_req_open_balance_tree').id,
+                'view_mode': 'tree,form',
+                'view_ids': [(5, 0, 0),
+                             (0, 0, {self.env.ref("jt_agreement.view_req_open_balance_tree").id}),
+                             (0, 0, {self.env.ref("jt_agreement.view_req_open_balance_form").id})],
+                'res_model': 'request.open.balance',
+                'domain': [('bases_collaboration_id', '=', self.id)],
+                'type': 'ir.actions.act_window',
+                'context': {'default_bases_collaboration_id': self.id,
+                            'default_apply_to_basis_collaboration': True,
+                            'default_opening_balance': self.opening_bal,
+                            'default_cbc_format': self.cbc_format,
+                            'default_cbc_shipping_office': self.cbc_shipping_office,
+                            'default_name': self.name,
+                            'default_liability_account_id': self.liability_account_id.id if self.liability_account_id
+                                    else False,
+                            'default_interest_account_id': self.interest_account_id.id if self.interest_account_id
+                                    else False,
+                            'default_investment_account_id': self.investment_account_id.id if self.investment_account_id
+                            else False,
+                            'default_availability_account_id': self.availability_account_id.id if self.availability_account_id
+                            else False
+                            }
+            }
+        else:
+            return {
+                'name': 'Operations',
+                # 'view_type': 'form',
+                'view_mode': 'form',
+                'view_id': self.env.ref('jt_agreement.view_req_open_balance_form').id,
+                'view_ids': [self.env.ref("jt_agreement.view_req_open_balance_form").id],
+                'res_model': 'request.open.balance',
+                'domain': [('bases_collaboration_id', '=', self.id)],
+                'type': 'ir.actions.act_window',
+                'context': {'default_bases_collaboration_id': self.id,
+                            'default_apply_to_basis_collaboration': True,
+                            'default_opening_balance': self.opening_bal,
+                            'default_name': self.name,
+                            'default_cbc_format': self.cbc_format,
+                            'default_cbc_shipping_office': self.cbc_shipping_office,
+                            'default_liability_account_id': self.liability_account_id.id if self.liability_account_id
+                            else False,
+                            'default_interest_account_id': self.interest_account_id.id if self.interest_account_id
+                            else False,
+                            'default_investment_account_id': self.investment_account_id.id if self.investment_account_id
+                            else False,
+                            'default_availability_account_id': self.availability_account_id.id if self.availability_account_id
+                            else False
+                            }
+            }
 
     def confirm(self):
         self.state = 'valid'
@@ -223,6 +207,71 @@ class RequestOpenBalance(models.Model):
     _description = "Request to Open Balance"
 
     name = fields.Char("Name")
+    bases_collaboration_id = fields.Many2one('bases.collaboration')
+    operation_number = fields.Integer("Operation Number")
+    agreement_number_id = fields.Many2one('project.project', "Agreement Number")
+    type_of_operation = fields.Selection([('open_bal', 'Opening Balance'),
+                                          ('increase', 'Increase'),
+                                          ('retirement', 'Retirement')], string="Type of Operation")
+    apply_to_basis_collaboration = fields.Boolean("Apply to Basis of Collaboration")
+    origin_resource_id = fields.Many2one('sub.origin.resource', "Origin of the resource")
+    state = fields.Selection([('draft', 'Draft'),
+                               ('requested', 'Requested'),
+                              ('approved', 'Approved'),
+                               ('rejected', 'Rejected'),
+                               ('confirmed', 'Confirmed'),
+                               ('canceled', 'Canceled')], string="Status", default="draft")
+
+    request_date = fields.Date("Request Date")
+    trade_number = fields.Char("Trade Number")
+    currency_id = fields.Many2one(
+        'res.currency', default=lambda self: self.env.user.company_id.currency_id)
+    opening_balance = fields.Monetary("Opening Amount")
+    observations = fields.Text("Observations")
+    user_id = fields.Many2one('res.users', default=lambda self: self.env.user.id,
+                              string="Requesting User")
+
+    cbc_format = fields.Binary("CBC Format")
+    cbc_shipping_office = fields.Binary("CBC Shipping Office")
+    liability_account_id = fields.Many2one('account.account', "Liability Accounting Account")
+    investment_account_id = fields.Many2one('account.account', "Investment Accounting Account")
+    interest_account_id = fields.Many2one('account.account', "Interest Accounting Account")
+    availability_account_id = fields.Many2one('account.account', "Availability Accounting Account")
+    reason_rejection = fields.Text("Reason for Rejection")
+
+    def request(self):
+        self.env['request.open.balance.invest'].create({
+            'name': self.name,
+            'operation_number': self.operation_number,
+            'agreement_number_id': self.agreement_number_id and self.agreement_number_id.id or False,
+            'type_of_operation': self.type_of_operation,
+            'apply_to_basis_collaboration': self.apply_to_basis_collaboration,
+            'origin_resource_id': self.origin_resource_id and self.origin_resource_id.id or False,
+            'state': 'requested',
+            'request_date': self.request_date,
+            'trade_number': self.trade_number,
+            'currency_id': self.currency_id and self.currency_id.id or False,
+            'opening_balance': self.opening_balance,
+            'observations': self.observations,
+            'user_id': self.user_id and self.user_id.id or False,
+            'cbc_format': self.cbc_format,
+            'cbc_shipping_office': self.cbc_shipping_office,
+            'liability_account_id': self.liability_account_id and self.liability_account_id.id or False,
+            'investment_account_id': self.investment_account_id and self.investment_account_id.id or False,
+            'interest_account_id': self.interest_account_id and self.interest_account_id.id or False,
+            'availability_account_id': self.availability_account_id and self.availability_account_id.id or False,
+            'balance_req_id': self.id
+
+        })
+        self.state = 'requested'
+
+class RequestOpenBalanceInvestment(models.Model):
+
+    _name = 'request.open.balance.invest'
+    _description = "Request to Open Balance Investment"
+
+    name = fields.Char("Name")
+    balance_req_id = fields.Many2one('request.open.balance', "Opening Balance Request")
     operation_number = fields.Integer("Operation Number")
     agreement_number_id = fields.Many2one('project.project', "Agreement Number")
     type_of_operation = fields.Selection([('open_bal', 'Opening Balance'),
@@ -266,9 +315,6 @@ class RequestOpenBalance(models.Model):
             'type': 'ir.actions.act_window',
             'target': 'new'
         }
-
-    def request(self):
-        self.state = 'requested'
 
     def approve_investment(self):
         today = datetime.today().date()
@@ -315,7 +361,7 @@ class RequestOpenBalanceFinance(models.Model):
     _description = "Request to Open Balance For Finanace"
     _rec_name = 'invoice'
 
-    request_id = fields.Many2one('request.open.balance', "Request")
+    request_id = fields.Many2one('request.open.balance.invest', "Request")
     invoice = fields.Char("Invoice")
     operation_number = fields.Integer("Operation Number")
     agreement_number_id = fields.Many2one('project.project', "Agreement Number")
@@ -413,3 +459,23 @@ class RequestOpenBalanceFinance(models.Model):
                     for rec in rec_list:
                         rec.payment_ids = [(4, payment.id)]
                         rec.state = 'sent'
+
+class AccountPayment(models.Model):
+    _inherit = 'account.payment'
+
+    def post(self):
+        res = super(AccountPayment, self).post()
+        finance_req_obj = self.env['request.open.balance.finance']
+        for payment in self:
+            finance_reqs = finance_req_obj.search([('payment_ids', 'in', payment.id)])
+            for fin_req in finance_reqs:
+                fin_req.state = 'confirmed'
+                if fin_req.request_id:
+                    fin_req.request_id.state = 'done'
+                    if fin_req.request_id.balance_req_id:
+                        fin_req.request_id.balance_req_id.state = 'confirmed'
+                        if fin_req.request_id.balance_req_id.bases_collaboration_id:
+                            fin_req.request_id.balance_req_id.bases_collaboration_id.available_bal += fin_req.amount
+        return res
+
+

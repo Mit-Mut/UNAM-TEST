@@ -24,6 +24,9 @@
                 	<field name="id" invisible="1"/>    
                 	<field name="year"/>
                 	<field name="sub_origin_resource_id"/>
+                	<field name="bank_account_id"/>
+                	<field name="account_code"/>
+                	<field name="journal_id"/>
 					<field name="january"/>
 					<field name="february"/>
 					<field name="march"/>

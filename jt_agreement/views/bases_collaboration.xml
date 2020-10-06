@@ -41,6 +41,9 @@
                                 <field name="origin_resource_id"/>
                             </group>
                         </group>
+                        <group>
+                            <field name="reason_rejection" attrs="{'invisible': [('state', '!=', 'rejected')]}"/>
+                        </group>
                         <notebook>
                             <page string="Operation" name="operation">
                                 <group>
@@ -90,19 +93,19 @@
             <field name="domain">[('name', '=', context.get('name'))]</field>
         </record>
 
-        <record id="action_req_open_balance_tree" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_req_open_balance_tree"/>
-            <field name="act_window_id" ref="action_req_open_balance"/>
-        </record>
+<!--        <record id="action_req_open_balance_tree" model="ir.actions.act_window.view">-->
+<!--            <field eval="1" name="sequence"/>-->
+<!--            <field name="view_mode">tree</field>-->
+<!--            <field name="view_id" ref="view_req_open_balance_tree"/>-->
+<!--            <field name="act_window_id" ref="action_req_open_balance"/>-->
+<!--        </record>-->
 
-        <record id="action_req_open_balance_form" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_req_open_balance_form"/>
-            <field name="act_window_id" ref="action_req_open_balance"/>
-        </record>
+<!--        <record id="action_req_open_balance_form" model="ir.actions.act_window.view">-->
+<!--            <field eval="2" name="sequence"/>-->
+<!--            <field name="view_mode">form</field>-->
+<!--            <field name="view_id" ref="view_req_open_balance_form"/>-->
+<!--            <field name="act_window_id" ref="action_req_open_balance"/>-->
+<!--        </record>-->
 
 
         <record id="view_bases_collabration_tree" model="ir.ui.view">
@@ -127,16 +130,8 @@
                     </header>
                     <sheet>
                          <div class="oe_button_box" name="button_box">
-                            <button name="%(action_req_open_balance)d" type="action" class="oe_stat_button"
-                                    icon="fa-random" context="{
-                            'default_apply_to_basis_collaboration': True,
-                            'default_opening_balance': opening_bal,
-                            'default_name': name,
-                            'default_liability_account_id': liability_account_id,
-                            'default_interest_account_id': interest_account_id,
-                            'default_investment_account_id': investment_account_id,
-                            'default_availability_account_id': availability_account_id,
-                            'name': name}">
+                            <button name="action_operations" type="object" class="oe_stat_button"
+                                    icon="fa-random">
                                 <field name="total_operations" widget="statinfo"/>
                             </button>
 
@@ -234,12 +229,9 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-
-
-
           <record id="view_req_open_balance_tree_invest" model="ir.ui.view">
             <field name="name">Increments and Withdrawals List view</field>
-            <field name="model">request.open.balance</field>
+            <field name="model">request.open.balance.invest</field>
             <field name="arch" type="xml">
                 <tree>
                     <field name="name"/>
@@ -253,7 +245,7 @@
 
         <record id="view_req_open_balance_form_investment" model="ir.ui.view">
             <field name="name">Increments and Withdrawals Form View</field>
-            <field name="model">request.open.balance</field>
+            <field name="model">request.open.balance.invest</field>
             <field name="arch" type="xml">
                 <form>
                     <header>
@@ -325,25 +317,24 @@
 
         <record id="action_req_open_balance_investment" model="ir.actions.act_window">
             <field name="name">Increases and Withdrawals</field>
-            <field name="res_model">request.open.balance</field>
+            <field name="res_model">request.open.balance.invest</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state', '!=', 'draft')]</field>
-            <field name="context">{'from_investment':1}</field>
         </record>
 
-          <record id="action_req_open_balance_inv_tree" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_req_open_balance_tree_invest"/>
-            <field name="act_window_id" ref="action_req_open_balance_investment"/>
-        </record>
-
-          <record id="action_req_open_balance_inv_form" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_req_open_balance_form_investment"/>
-            <field name="act_window_id" ref="action_req_open_balance_investment"/>
-        </record>
+<!--          <record id="action_req_open_balance_inv_tree" model="ir.actions.act_window.view">-->
+<!--            <field eval="1" name="sequence"/>-->
+<!--            <field name="view_mode">tree</field>-->
+<!--            <field name="view_id" ref="view_req_open_balance_tree_invest"/>-->
+<!--            <field name="act_window_id" ref="action_req_open_balance_investment"/>-->
+<!--        </record>-->
+<!---->
+<!--          <record id="action_req_open_balance_inv_form" model="ir.actions.act_window.view">-->
+<!--            <field eval="2" name="sequence"/>-->
+<!--            <field name="view_mode">form</field>-->
+<!--            <field name="view_id" ref="view_req_open_balance_form_investment"/>-->
+<!--            <field name="act_window_id" ref="action_req_open_balance_investment"/>-->
+<!--        </record>-->
 
           <record id="view_req_open_balance_tree_finance" model="ir.ui.view">
             <field name="name">Trasfer Request List view</field>
@@ -451,19 +442,19 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-          <record id="action_req_open_balance_finan_tree" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_req_open_balance_tree_finance"/>
-            <field name="act_window_id" ref="action_req_open_balance_finance"/>
-        </record>
-
-          <record id="action_req_open_balance_finan_form" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_req_open_balance_form_finance"/>
-            <field name="act_window_id" ref="action_req_open_balance_finance"/>
-        </record>
+<!--          <record id="action_req_open_balance_finan_tree" model="ir.actions.act_window.view">-->
+<!--            <field eval="1" name="sequence"/>-->
+<!--            <field name="view_mode">tree</field>-->
+<!--            <field name="view_id" ref="view_req_open_balance_tree_finance"/>-->
+<!--            <field name="act_window_id" ref="action_req_open_balance_finance"/>-->
+<!--        </record>-->
+<!---->
+<!--          <record id="action_req_open_balance_finan_form" model="ir.actions.act_window.view">-->
+<!--            <field eval="2" name="sequence"/>-->
+<!--            <field name="view_mode">form</field>-->
+<!--            <field name="view_id" ref="view_req_open_balance_form_finance"/>-->
+<!--            <field name="act_window_id" ref="action_req_open_balance_finance"/>-->
+<!--        </record>-->
 
          <record id="action_schedule_transfers" model="ir.actions.server">
             <field name="name">Schedule Transfers</field>

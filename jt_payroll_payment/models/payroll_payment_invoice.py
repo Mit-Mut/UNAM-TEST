@@ -100,3 +100,14 @@ class AccountPayment(models.Model):
                                      ('alimony', 'Payment Special payroll'),
                                      ('payment', 'Payment')], "Type of request for payroll payment")
     
+    is_different_payroll_request = fields.Boolean(compute="get_different_payroll_check",string="Different To Payroll",default=False,copy=False)
+    
+    @api.depends('payment_request_type')
+    def get_different_payroll_check(self):
+        for rec in self:
+            if rec.payment_request_type == 'different_to_payroll':
+                rec.is_different_payroll_request = True
+            else:
+                rec.is_different_payroll_request = False
+                
+            

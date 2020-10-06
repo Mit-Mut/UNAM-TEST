@@ -32,12 +32,25 @@ class Contacts(models.Model):
     category_key = fields.Char("Category Key", related='workstation_id.category_key', store=True)
     
     @api.model
+    def default_get(self, fields):
+        res = super(Contacts, self).default_get(fields)
+        account_id = self.env['account.account'].sudo().search([('code','=','120.001.001'),('internal_type','=','receivable'),('deprecated','=',False)],limit=1)
+        if account_id:
+            res.update({'property_account_receivable_id': account_id.id})
+        return res
+
+    @api.model
     def create(self, vals):
         res = super(Contacts, self).create(vals)
         if vals.get('supplier_of_payment_payroll'):
             is_sup = self.search([('supplier_of_payment_payroll', '=', True)])
             if is_sup:
                 raise UserError(_("There must be only one Supplier of payment of payroll!"))
+        if not res.property_account_receivable_id:
+            account_id = self.env['account.account'].sudo().search([('code','=','120.001.001'),('internal_type','=','receivable'),('deprecated','=',False)],limit=1)
+            if account_id:
+                res.property_account_receivable_id = account_id.id
+            
         return res
 
 

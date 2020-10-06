@@ -62,31 +62,32 @@ class IncomeBYItemReportWizard(models.TransientModel):
         
         for y in year_list_tuple:
             year_list.append(str(y))
-            
+        currency_name = ''    
         if self.currency_id:
             currency_list.append(self.currency_id.id)
+            currency_name = self.currency_id.name
         else:
             currency_ids = self.env['res.currency'].search([])
             currency_list = currency_ids.ids
         
         self.env.cr.execute('''
                 select max(am.id) as id,
-                Cast((extract(year from am.date)) as Text) as year,
-                Cast((extract(month from am.date)) as Integer) as month,
-                sum(case when am.type_of_revenue_collection = 'dgoae_trades' then abs(am.amount_total_signed) else 0 end) enrollment_and_tuition,
-                sum(case when am.type_of_revenue_collection = 'dgae_ref' and am.sub_origin_resource_name in ('Applicants','Aspirantes') then abs(am.amount_total_signed) else 0 end) selection_contest,
-                sum(case when am.income_type = 'own' and am.sub_origin_resource_name in ('Incorporation and revalidation of studies','Incorporación y revalidación de estudios') then abs(am.amount_total_signed) else 0 end) incorporation_and_revalidation,
-                sum(case when am.type_of_revenue_collection = 'deposit_cer' and am.income_type = 'extra' and am.sub_origin_resource_name not in ('Financial Products','Productos financieros') then abs(am.amount_total_signed) else 0 end) extraordinary_income,
-                sum(case when am.income_type = 'own' and am.sub_origin_resource_name in ('Patrimonial income','Ingresos patrimoniales') then abs(am.amount_total_signed) else 0 end) patrimonial_income,
-                sum(case when am.income_type = 'extra' and am.sub_origin_resource_name  in ('Financial Products','Productos financieros') then abs(am.amount_total_signed) else 0 end) financial_products,
-                sum(case when am.is_payroll_payment_request = True and am.payment_state='for_payment_procedure' then abs(am.amount_total_signed) else 0 end) nomina,
-                sum(case when am.is_payment_request = True and am.payment_state='for_payment_procedure' then abs(am.amount_total_signed) else 0 end) suppliers,
+                Cast((extract(year from am.invoice_date)) as Text) as year,
+                Cast((extract(month from am.invoice_date)) as Integer) as month,
+                sum(case when am.type_of_revenue_collection = 'dgoae_trades' then abs(am.amount_untaxed_signed) else 0 end) enrollment_and_tuition,
+                sum(case when am.type_of_revenue_collection = 'dgae_ref' and am.sub_origin_resource_name in ('Applicants','Aspirantes') then abs(am.amount_untaxed_signed) else 0 end) selection_contest,
+                sum(case when am.income_type = 'own' and am.sub_origin_resource_name in ('Incorporation and revalidation of studies','Incorporación y revalidación de estudios') then abs(am.amount_untaxed_signed) else 0 end) incorporation_and_revalidation,
+                sum(case when am.type_of_revenue_collection = 'deposit_cer' and am.income_type = 'extra' and am.sub_origin_resource_name not in ('Financial Products','Productos financieros') then abs(am.amount_untaxed_signed) else 0 end) extraordinary_income,
+                sum(case when am.income_type = 'own' and am.sub_origin_resource_name in ('Patrimonial income','Ingresos patrimoniales') then abs(am.amount_untaxed_signed) else 0 end) patrimonial_income,
+                sum(case when am.income_type = 'extra' and am.sub_origin_resource_name  in ('Financial Products','Productos financieros') then abs(am.amount_untaxed_signed) else 0 end) financial_products,
+                sum(case when am.is_payroll_payment_request = True and am.payment_state='for_payment_procedure' then abs(am.amount_untaxed_signed) else 0 end) nomina,
+                sum(case when am.is_payment_request = True and am.payment_state='for_payment_procedure' then abs(am.amount_untaxed_signed) else 0 end) suppliers,
                 0 as major_maintenance_fund,
                 0 as fif_funds,
-                sum(case when am.is_different_payroll_request = True and am.payment_state='for_payment_procedure' then abs(am.amount_total_signed) else 0 end) as other_benefits
+                sum(case when am.is_different_payroll_request = True and am.payment_state='for_payment_procedure' then abs(am.amount_untaxed_signed) else 0 end) as other_benefits
                 from account_move am
                 where am.state='posted' and am.currency_id in %s 
-                and date >= %s and date <= %s 
+                and am.invoice_date >= %s and am.invoice_date <= %s and am.invoice_date IS NOT NULL
                 group by year,month
                 ''' ,(tuple(currency_list),self.start_date,self.end_date))
         
@@ -209,6 +210,7 @@ class IncomeBYItemReportWizard(models.TransientModel):
                     'other_benefits' : month_dict.get('other_benefits',0.0),
                     'subsidy_2020' : month_dict.get('subsidy_2020',0.0),
                     'subsidy_receivable' : month_dict.get('subsidy_receivable',0.0),
+                    'currency_name':currency_name,
                     }             
                 rec = self.env['income.by.item.report.data'].create(vals)
                 list_ids.append(rec.id)
@@ -289,6 +291,7 @@ class IncomeBYItemReportData(models.TransientModel):
     year = fields.Char('Year')
     month = fields.Integer('Month No')
     month_name = fields.Char(compute="get_month_name",string='Month')
+    currency_name = fields.Char("Currency")
     subsidy_2020 = fields.Float('Subsidy 2020')
     subsidy_receivable = fields.Float('Subsidy Receivable')
     enrollment_and_tuition = fields.Float('Enrollment And Tuition')
@@ -354,16 +357,16 @@ class IncomeByItemMonthReport(models.Model):
         self.env.cr.execute('''
             CREATE OR REPLACE VIEW %s AS (
                 select max(am.id) as id,
-                Cast((extract(year from am.date)) as Text) as year,
-                (extract(month from am.date)) as month,
-                sum(case when am.type_of_revenue_collection = 'dgoae_trades' then abs(am.amount_total_signed) else 0 end) enrollment_and_tuition,
-                sum(case when am.type_of_revenue_collection = 'dgae_ref' and am.sub_origin_resource_name in ('Applicants','Aspirantes') then abs(am.amount_total_signed) else 0 end) selection_contest,
-                sum(case when am.income_type = 'own' and am.sub_origin_resource_name in ('Incorporation and revalidation of studies','Incorporación y revalidación de estudios') then abs(am.amount_total_signed) else 0 end) incorporation_and_revalidation,
-                sum(case when am.type_of_revenue_collection = 'deposit_cer' and am.income_type = 'extra' and am.sub_origin_resource_name not in ('Financial Products','Productos financieros') then abs(am.amount_total_signed) else 0 end) extraordinary_income,
-                sum(case when am.income_type = 'own' and am.sub_origin_resource_name in ('Patrimonial income','Ingresos patrimoniales') then abs(am.amount_total_signed) else 0 end) patrimonial_income,
-                sum(case when am.income_type = 'extra' and am.sub_origin_resource_name  in ('Financial Products','Productos financieros') then abs(am.amount_total_signed) else 0 end) financial_products,
-                sum(case when am.is_payroll_payment_request = True and am.payment_state='for_payment_procedure' then abs(am.amount_total_signed) else 0 end) nomina,
-                sum(case when am.is_payment_request = True and am.payment_state='for_payment_procedure' then abs(am.amount_total_signed) else 0 end) suppliers,
+                Cast((extract(year from am.invoice_date)) as Text) as year,
+                (extract(month from am.invoice_date)) as month,
+                sum(case when am.type_of_revenue_collection = 'dgoae_trades' then abs(am.amount_untaxed_signed) else 0 end) enrollment_and_tuition,
+                sum(case when am.type_of_revenue_collection = 'dgae_ref' and am.sub_origin_resource_name in ('Applicants','Aspirantes') then abs(am.amount_untaxed_signed) else 0 end) selection_contest,
+                sum(case when am.income_type = 'own' and am.sub_origin_resource_name in ('Incorporation and revalidation of studies','Incorporación y revalidación de estudios') then abs(am.amount_untaxed_signed) else 0 end) incorporation_and_revalidation,
+                sum(case when am.type_of_revenue_collection = 'deposit_cer' and am.income_type = 'extra' and am.sub_origin_resource_name not in ('Financial Products','Productos financieros') then abs(am.amount_untaxed_signed) else 0 end) extraordinary_income,
+                sum(case when am.income_type = 'own' and am.sub_origin_resource_name in ('Patrimonial income','Ingresos patrimoniales') then abs(am.amount_untaxed_signed) else 0 end) patrimonial_income,
+                sum(case when am.income_type = 'extra' and am.sub_origin_resource_name  in ('Financial Products','Productos financieros') then abs(am.amount_untaxed_signed) else 0 end) financial_products,
+                sum(case when am.is_payroll_payment_request = True and am.payment_state='for_payment_procedure' then abs(am.amount_untaxed_signed) else 0 end) nomina,
+                sum(case when am.is_payment_request = True and am.payment_state='for_payment_procedure' then abs(am.amount_untaxed_signed) else 0 end) suppliers,
                 0 as major_maintenance_fund,
                 0 as fif_funds,
                 0 as other_benefits

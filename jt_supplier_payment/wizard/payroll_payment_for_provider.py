@@ -57,6 +57,6 @@ class PayrollPaymentProviderwizard(models.TransientModel):
                 
             }
         move_id = self.env['account.move'].create(vals)
-        self.emp_payroll_ids.write({'move_id':move_id.id})
+        self.emp_payroll_ids.write({'move_id':move_id.id,'state':'done'})
         
         

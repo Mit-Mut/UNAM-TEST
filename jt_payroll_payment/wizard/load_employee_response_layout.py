@@ -73,19 +73,22 @@ class LoadBankLayoutEmployee(models.TransientModel):
             count = 0
             for line in data:
                 count+=1
-                sing = line[76]
-                amount = line[77:90]
-                concept = line[113:152]
-                if sing and amount and concept and sing=='-':
-                    first_amount = amount[:-2]
-                    last_amount = amount[-2:]
-                    concept = concept.rstrip()    
-                    act_amount = first_amount+"."+last_amount
-                    act_amount = float(act_amount)
-                    match_payment =  self.payment_ids.filtered(lambda x:x.amount==act_amount and x.santander_payment_concept==concept)
-                    if match_payment:
-                        success_content += str(count)+' : '+ str(line) + "\n"                        
-                        match_payment[0].post()
+                emp_number = line[1:11]
+                state = line[139:149]
+                if emp_number and state:
+                    
+                    emp_number = emp_number.lstrip('0')
+                    state = state.strip() 
+                    match_emp =  self.employee_ids.filtered(lambda x:x.worker_number==emp_number)
+                    if match_emp:
+                        if state=='Confirmed' or state=='Rejected': 
+                            success_content += str(count)+' : '+ str(line) + "\n"    
+                            registration = False
+                            if state=='Confirmed':
+                                registration = 'confirmed'
+                            if state=='Rejected':
+                                registration = 'rejected'
+                            match_emp[0].registration = registration
                     else:
                         failed_content += str(count)+' : '+ str(line) + "\n"
                 else:
@@ -106,9 +109,8 @@ class LoadBankLayoutEmployee(models.TransientModel):
 
     def load_bank_layout(self):
 
-        if self.journal_id.bank_layout == 'BANORTE':
-            print ("callll")
-            #self.get_banorte_file()
+        if self.bank_layout == 'BANORTE':
+            self.get_banorte_file()
             
         self.is_hide_file_upload = True        
         return {

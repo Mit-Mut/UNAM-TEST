@@ -44,7 +44,7 @@ class ApproveInvestmentBalReq(models.TransientModel):
     fund_type = fields.Many2one('fund.type', "Background")
 
     def approve(self):
-        request = self.env['request.open.balance'].browse(self.env.context.get('active_id'))
+        request = self.env['request.open.balance.invest'].browse(self.env.context.get('active_id'))
         if request:
             request.state = 'confirmed'
             self.env['request.open.balance.finance'].create(

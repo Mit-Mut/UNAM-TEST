@@ -95,7 +95,7 @@
 						<span t-set="account_name" t-value="o.get_line_accounts_for_report()"/>
                         <p class="tab1">
                             En relación a los siguientes oficios de Cheques Devueltos de la <b> 
-                            <span t-field="o.dependancy_id.description"/> con clave no. <span t-field="o.dependancy_id.dependency"/>.<span t-field="o.sub_dependancy_id.sub_dependency"/> </b> le informo que <b>el 20% de indemnización </b>fue liquidada, por lo cual la dependencia solicita su reintegro a la cuenta de Ingresos Extraordinarios <b><span t-esc="account_name"/></b>
+                            <span t-field="o.dependancy_id.description"/> con clave no. <span t-field="o.dependancy_id.dependency"/>.<span t-field="o.sub_dependancy_id.sub_dependency"/> </b> le informo que <b>el 20% de indemnización </b>fue liquidada, por lo cual la dependencia solicita su reintegro a la cuenta de Ingresos Extraordinarios <b>202.<span t-field="o.dependancy_id.dependency"/>.0<span t-field="o.sub_dependancy_id.sub_dependency"/></b>
                         </p>
                     </table>
 

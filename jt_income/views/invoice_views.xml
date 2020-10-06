@@ -1174,7 +1174,7 @@
                                           -->
                                         <field name="program_code_id" domain="[('budget_id.state','=','validate')]" invisible="1"/>
                                         <field name="account_ie_ids" invisible="1"/>
-                                        <field name="account_ie_id" invisible="1"/>
+                                        <field name="account_ie_id"/>
                                         
                                         <field name="income_sub_account" invisible="1"/>
                                         <field name="income_sub_subaccount" invisible="1"/>

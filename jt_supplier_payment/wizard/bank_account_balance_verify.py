@@ -14,6 +14,11 @@ class BankBalanceCheck(models.TransientModel):
     is_balance = fields.Boolean('Balance')
     invoice_ids = fields.Many2many('account.move', 'account_invoice_payment_rel_bank_balance', 'payment_id', 'invoice_id', string="Invoices", copy=False, readonly=True)
     
+    account_balance = fields.Float("Account Balance")
+    minimum_balance = fields.Float("Minimum Balance")
+    required_balance = fields.Float("Account balance required")
+    different_balance = fields.Float("Difference Between current and required balance")
+    
     @api.onchange('journal_id')
     def onchange_jounal(self):
         if self.journal_id:
@@ -31,6 +36,11 @@ class BankBalanceCheck(models.TransientModel):
             account_balance = sum(x.debit-x.credit for x in values)
             if account_balance >= self.total_amount:
                 self.is_balance = True
+                self.account_balance = account_balance 
+                self.minimum_balance = self.journal_id and self.journal_id.min_balance or 0
+                self.required_balance = self.total_amount
+                self.different_balance = account_balance - self.total_amount
+                 
                 return {
                 'name': 'Balance',
                 'view_type': 'form',

@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <form string="Payment Provider">
                     <group >
-                    	<field name="partner_id" required="1" />
+                    	<field name="partner_id" required="1" domain="[('supplier_of_payment_payroll','=',True)]"/>
                     	<field name="emp_payroll_ids" invisible="1"/>
                     </group>
                     <footer>

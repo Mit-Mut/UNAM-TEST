@@ -90,7 +90,9 @@ class EmployeePayroll(models.Model):
                                            ('add_payment', 'Additional Payments'),
                                            ('salary_mod_inc', 'Salary modification: Increases'),
                                            ('salary_mod_dec', 'Salary modification: Decreases'),
-                                           ('salary_mod_don', 'Salary modification: Donation')],
+                                           ('salary_mod_don', 'Salary modification: Donation'),
+                                           ('inappropriate','Inappropriate')
+                                           ],
                                           string="Payroll Adjustment")
     due_to_inappropriate = fields.Selection([('no_check_collected','No Check Collected'),
                                              ('withdrawal','Withdrawal'),

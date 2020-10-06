@@ -65,7 +65,7 @@
                                 <field name="employee_number"/>
                                 <field name="request_type" attrs="{'readonly':[('state','=','done')]}"/>
                                 <field name="payroll_adjustment" attrs="{'readonly':[('state','=','done')]}"/>
-                                <field name="due_to_inappropriate" attrs="{'readonly':[('state','=','done')]}"/>
+                                <field name="due_to_inappropriate" attrs="{'invisible':[('payroll_adjustment','!=','inappropriate')],'readonly':[('state','=','done')]}"/>
                                 <field name="beneficiary_id" domain="[('beneficiary_type', '=', 'alimony')]" attrs="{'readonly':[('state','=','done')]}"/>
                             </group>
                         </group>

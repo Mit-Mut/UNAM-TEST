@@ -272,6 +272,7 @@ msgstr "Aceptar"
 
 #. module: jt_supplier_payment
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_balance_check_wizard__account_balance
+#: model:ir.model.fields,field_description:jt_supplier_payment.field_bank_balance_check__account_balance
 msgid "Account Balance"
 msgstr "Saldo de la cuenta"
 
@@ -974,6 +975,7 @@ msgstr "Método"
 
 #. module: jt_supplier_payment
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_account_setup_bank_manual_config__minimum_balance
+#: model:ir.model.fields,field_description:jt_supplier_payment.field_bank_balance_check__minimum_balance
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_res_partner_bank__minimum_balance
 msgid "Minimum Balance"
 msgstr "Saldo Mínimo"
@@ -1673,3 +1675,16 @@ msgstr "la cuenta bancaria seleccionada no tiene saldo suficiente para ejecutar 
 #: model_terms:ir.ui.view,arch_db:jt_supplier_payment.view_balance_check_wizard
 msgid "the selected bank account has sufficient balance to execute"
 msgstr "la cuenta bancaria seleccionada tiene saldo suficiente para ejecutar"
+
+#. module: jt_supplier_payment
+#: model:ir.model.fields,field_description:jt_supplier_payment.field_bank_balance_check__required_balance
+msgid "Account balance required"
+msgstr "Saido requerido en la cuenta"
+
+#. module: jt_supplier_payment
+#: model:ir.model.fields,field_description:jt_supplier_payment.field_bank_balance_check__different_balance
+msgid "Difference Between current and required balance"
+msgstr "Diferencia entre el saido actual y el requerido"
+
+
+

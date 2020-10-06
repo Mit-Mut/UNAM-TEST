@@ -84,12 +84,17 @@ class EmployeePayroll(models.Model):
             raise UserError(_("You can not Request for payment for both Payment Provider and Direct Employee"))
         
         if payment_providers:
+            partner_id = self.env['res.partner'].search([('supplier_of_payment_payroll','=',True)])
+            partner = False
+            if partner_id:
+                partner = partner_id[0].id 
+                 
             return {
                 'name': _('Payment Provider'),
                 'res_model':'payroll.payment.provider.wizard',
                 'view_mode': 'form',
                 'view_id': self.env.ref('jt_supplier_payment.payroll_payment_provider_form_view').id,
-                'context': {'default_emp_payroll_ids': [(6, 0, payment_providers.ids)]},
+                'context': {'default_partner_id':partner,'default_emp_payroll_ids': [(6, 0, payment_providers.ids)]},
                 'target': 'new',
                 'type': 'ir.actions.act_window',
             }

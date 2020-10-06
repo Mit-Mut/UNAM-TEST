@@ -30,6 +30,9 @@ class IncomeAnnualReport(models.Model):
     _auto = False
 
     sub_origin_resource_id = fields.Many2one('sub.origin.resource', "Name")
+    journal_id = fields.Many2one("account.journal","Accounting Account Description")
+    bank_account_id = fields.Many2one(related="journal_id.bank_account_id",string="Bank Account")
+    account_code = fields.Char(related="journal_id.default_debit_account_id.code",string="Account")
     year = fields.Char('Year')
     january = fields.Float('January')
     february = fields.Float('February')
@@ -50,6 +53,7 @@ class IncomeAnnualReport(models.Model):
         self.env.cr.execute('''
             CREATE OR REPLACE VIEW %s AS (
                 select max(ap.id) as id,ap.sub_origin_resource_id as sub_origin_resource_id,
+                ap.journal_id as journal_id, 
                 Cast((extract(year from payment_date)) as Text) as year,
                 sum(case when extract(month from payment_date) = 1 then amount else 0 end) january,
                 sum(case when extract(month from payment_date) = 2 then amount else 0 end) february,
@@ -67,7 +71,7 @@ class IncomeAnnualReport(models.Model):
                 from account_payment ap
                 where ap.sub_origin_resource_id IS NOT NULL and ap.state in ('posted','reconciled') 
                 and ap.partner_type='customer' and ap.payment_type = 'inbound'
-                group by sub_origin_resource_id,year
+                group by year,sub_origin_resource_id,journal_id
                             )'''% (self._table,) 
         )    
 

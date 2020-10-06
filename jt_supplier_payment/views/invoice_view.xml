@@ -529,6 +529,16 @@
                                 </group>
 
                             </page>
+                            <page string="Employee Payroll" attrs="{'invisible':[('employee_paryoll_ids','=',False)]}">
+                            	<field name="employee_paryoll_ids" readonly="1">
+                            		<tree>
+	                            		<field name="employee_id"/>
+	                            		<field name="name"/>
+	                            		<field name="reference"/>
+	                            		<field name="amount_payble"/>
+                            		</tree>
+                            	</field>
+                            </page>
                             <!-- Attachment preview -->
                             <div class="o_attachment_preview"
                                  attrs="{'invisible': ['|', '|',

@@ -285,12 +285,12 @@ class ExpenditureBudget(models.Model):
             year_obj = self.env['year.configuration'].search_read([], fields=['id', 'name'])
 
             lines_to_execute = self.line_ids
-            # cron = False
-            # if cron_id:
-            #     cron = self.env['ir.cron'].sudo().browse(int(cron_id))
-            #     if cron:
-            #         lines_to_execute = self.env['expenditure.budget.line'].search(
-            #             [('cron_id', '=', cron.id)])
+            cron = False
+            if cron_id:
+                cron = self.env['ir.cron'].sudo().browse(int(cron_id))
+                if cron:
+                    lines_to_execute = self.env['expenditure.budget.line'].search(
+                        [('cron_id', '=', cron.id)])
 
             for line in lines_to_execute:
                 counter += 1
@@ -761,8 +761,8 @@ class ExpenditureBudget(models.Model):
                 if self.failed_row_file:
                     file_data = base64.b64decode(self.failed_row_file)
                     content += io.StringIO(file_data.decode("utf-8")).read()
-                # if cron:
-                #     content = ''
+                if cron:
+                    content = ''
                 content += "\n"
                 content += "...................Failed Rows " + \
                            str(datetime.today()) + "...............\n"
@@ -770,35 +770,35 @@ class ExpenditureBudget(models.Model):
                 failed_data = base64.b64encode(content.encode('utf-8'))
                 vals['failed_row_file'] = failed_data
 
-            # if cron:
-            #     lines_to_execute.write({'cron_id': False})
-            #     model_id = self.env.ref(
-            #         'jt_budget_mgmt.model_expenditure_budget').id
-            #     next_cron = self.env['ir.cron'].sudo().search([('prev_cron_id', '=', cron.id),
-            #                                                    ('active', '=', False),
-            #                                                    ('model_id', '=', model_id)], limit=1)
-            #     if next_cron:
-            #         nextcall = datetime.now()
-            #         nextcall = nextcall + timedelta(seconds=10)
-            #         next_cron.write({'nextcall': nextcall, 'active': True})
-            #     else:
-            #         failed_count = sucess_count = 0
-            #         if self.line_ids:
-            #             failed_count = len(self.line_ids.ids)
-            #         if self.success_line_ids:
-            #             sucess_count = len(self.success_line_ids)
-            #         self.send_notification_msg(self.user_id, failed_count, sucess_count)
-            #         self.user_id.notify_info(
-            #             message='Budget - ' + str(self.name) + ' Lines validation process completed. \
-            #                                                    Please verify and correct lines, if any failed!',
-            #             title="Budget Line Validation", sticky=True)
-            #         self.write({'cron_running': False})
-            if len(self.line_ids.ids) == 0:
-                self.write({'state': 'previous'})
-            msg = (_("Budget Validation Process Ended at %s" % datetime.strftime(
-                datetime.now(), DEFAULT_SERVER_DATETIME_FORMAT)))
-            self.env['mail.message'].create({'model': 'expenditure.budget', 'res_id': self.id,
-                                             'body': msg})
+            if cron:
+                lines_to_execute.write({'cron_id': False})
+                model_id = self.env.ref(
+                    'jt_budget_mgmt.model_expenditure_budget').id
+                next_cron = self.env['ir.cron'].sudo().search([('prev_cron_id', '=', cron.id),
+                                                               ('active', '=', False),
+                                                               ('model_id', '=', model_id)], limit=1)
+                if next_cron:
+                    nextcall = datetime.now()
+                    nextcall = nextcall + timedelta(seconds=10)
+                    next_cron.write({'nextcall': nextcall, 'active': True})
+                else:
+                    failed_count = sucess_count = 0
+                    if self.line_ids:
+                        failed_count = len(self.line_ids.ids)
+                    if self.success_line_ids:
+                        sucess_count = len(self.success_line_ids)
+                    self.send_notification_msg(self.user_id, failed_count, sucess_count)
+                    self.user_id.notify_info(
+                        message='Budget - ' + str(self.name) + ' Lines validation process completed. \
+                                                               Please verify and correct lines, if any failed!',
+                        title="Budget Line Validation", sticky=True)
+                    self.write({'cron_running': False})
+                    if len(self.line_ids.ids) == 0:
+                        self.write({'state': 'previous'})
+                    msg = (_("Budget Validation Process Ended at %s" % datetime.strftime(
+                        datetime.now(), DEFAULT_SERVER_DATETIME_FORMAT)))
+                    self.env['mail.message'].create({'model': 'expenditure.budget', 'res_id': self.id,
+                                                     'body': msg})
 
             if vals.get('failed_row_file'):
                 self.write(vals)
@@ -836,16 +836,61 @@ class ExpenditureBudget(models.Model):
         self.env['mail.message'].create({'model': 'expenditure.budget', 'res_id': self.id,
                                          'body': msg})
 
-        if self.success_rows != self.total_rows:
-            self.validate_and_add_budget_line()
-            total_lines = len(self.success_line_ids.filtered(
-                lambda l: l.state == 'success'))
+        total_cron = math.ceil(len(self.line_ids.ids) / 10000)
+        line_ids = []
+        if self.line_ids:
+            total_cron = math.ceil(len(self.line_ids.ids) / 10000)
+            line_ids = self.line_ids.ids
+        else:
+            total_cron = math.ceil(len(self.success_line_ids.ids) / 10000)
+            line_ids = self.success_line_ids.ids
 
-            if total_lines == self.total_rows:
-                self.state = 'previous'
-                msg = (_("Budget Validation Process Ended at %s" % datetime.strftime(
-                    datetime.now(), DEFAULT_SERVER_DATETIME_FORMAT)))
+        #         total_lines = len(self.success_line_ids.filtered(
+        #         lambda l: l.state == 'success'))
 
+        if total_cron == 1:
+            if self.success_rows != self.total_rows:
+                self.validate_and_add_budget_line()
+                total_lines = len(self.success_line_ids.filtered(
+                    lambda l: l.state == 'success'))
+
+                if total_lines == self.total_rows:
+                    self.state = 'previous'
+                    msg = (_("Budget Validation Process Ended at %s" % datetime.strftime(
+                        datetime.now(), DEFAULT_SERVER_DATETIME_FORMAT)))
+        else:
+            self.write({'cron_running': True})
+            prev_cron_id = False
+            for seq in range(1, total_cron + 1):
+                # Create CRON JOB
+                cron_name = str(self.name).replace(' ', '') + "_" + str(datetime.now()).replace(' ', '')
+                nextcall = datetime.now()
+                nextcall = nextcall + timedelta(seconds=10)
+                lines = line_ids[:10000]
+                cron_vals = {
+                    'name': cron_name,
+                    'state': 'code',
+                    'nextcall': nextcall,
+                    'nextcall_copy': nextcall,
+                    'numbercall': -1,
+                    'code': "model.validate_and_add_budget_line()",
+                    'model_id': self.env.ref('jt_budget_mgmt.model_expenditure_budget').id,
+                    'user_id': self.env.user.id,
+                    'budget_id': self.id,
+                    'doall': True,
+                }
+
+                # Final process
+                cron = self.env['ir.cron'].sudo().create(cron_vals)
+                cron.write({'code': "model.validate_and_add_budget_line(" + str(self.id) + "," + str(cron.id) + ")"})
+                if prev_cron_id:
+                    cron.write({'prev_cron_id': prev_cron_id, 'active': False})
+                line_records = self.env['expenditure.budget.line'].browse(lines)
+                line_records.write({'cron_id': cron.id})
+                del line_ids[:10000]
+                prev_cron_id = cron.id
+
+        self.is_validation_process_start = False
 
     def confirm(self):
         self.verify_data()

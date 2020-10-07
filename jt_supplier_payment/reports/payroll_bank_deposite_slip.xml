@@ -32,7 +32,7 @@
                         <div class="row" name="details_name">
                              <div class="col-12 text-left">
                                   <span>
-                                      <h4>RECIBI DEL DEPARTAMENTO DE PAGO DE NOMIMA Y PRESTACIONES DE LA DIRECCION GENERAL DE FINANZAS</h4>
+                                      <h4>RECIBÍ DEL DEPARTAMENTO DE PAGO DE NÓMINA Y PRESTACIONES DE LA DIRECCIÓN GENERAL DE FINANZAS LOS SIGUIENTES DOCUMENTOS PARA EL PAGO DE NÓMINA</h4>
                                   </span>
                             </div>
                         </div>
@@ -86,7 +86,7 @@
 						<div class="row" name="document_name">
                              <div class="col-12 text-left">
                                   <span>
-                                      <h4>CORRESPONDIENTES A LA QUINCENA ________________________</h4>
+                                      <h4>CORRESPONDIENTES A LA QUINCENA <t t-if="o.fornight"><span t-field="o.fornight"/></t><span t-field="o.invoice_date" t-options='{"format": "yyyy"}'/></h4>
                                   </span>
                             </div>
 						</div>

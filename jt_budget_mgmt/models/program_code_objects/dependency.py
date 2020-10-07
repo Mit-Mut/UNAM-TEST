@@ -39,8 +39,11 @@ class Dependency(models.Model):
         result = []
         for rec in self:
             name = rec.dependency or ''
-            if rec.description and self.env.context and self.env.context.get('show_for_supplier_payment',False): 
-                name += ' ' + rec.description
+            if self.env.context:
+                if rec.description and self.env.context.get('show_for_supplier_payment',False):
+                    name += ' ' + rec.description
+                if rec.description and self.env.context.get('from_modification',False):
+                    name = rec.description
             result.append((rec.id, name))
         return result
     

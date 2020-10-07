@@ -7,3 +7,4 @@ access_committee,committee,model_committee,base.group_user,1,1,1,1
 access_request_open_balance,request.open.balance,model_request_open_balance,base.group_user,1,1,1,1
 access_request_open_balance_invest,request.open.balance.invest,model_request_open_balance_invest,base.group_user,1,1,1,1
 access_request_open_balance_finance,request.open.balance.finance,model_request_open_balance_finance,base.group_user,1,1,1,1
+access_collaboration_modification,collaboration.modification,model_bases_collaboration_modification,base.group_user,1,1,1,1

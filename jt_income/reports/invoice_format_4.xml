@@ -86,7 +86,7 @@
                     	
                         <p style="font-size:20px;">
                             Con relación al oficio <b><span t-field="o.legal_compensation"/>.,</b> referente al cheque devuelto No. <span t-esc="number_of_return_check"/> por un importe de <t t-if="o.currency_id"><span t-field="o.currency_id.symbol"/> </t><span t-esc="total_5_times" t-options='{"widget": "float", "precision": 2}'/> del banco <span t-field="o.income_bank_journal_id.name"/>; le  informo  que  la dependencia <b><span t-field="o.dependancy_id.description"/> </b>con clave <b><span t-field="o.dependancy_id.dependency"/>.<span t-field="o.sub_dependancy_id.sub_dependency"/>;</b> absorberá el importe del 20% de indemnización por un importe de  -------  <b><span t-field="o.amount_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                            (<span t-esc="amount_in_text"/> <span t-esc="amount_in_text_decimal"/>);</b> los cuales se hará el cargo a la cuenta de Ingresos Extraordinarios número <b> 202.<span t-field="o.dependancy_id.dependency"/>.0<span t-field="o.sub_dependancy_id.sub_dependency"/></b>
+                            (<span t-esc="amount_in_text"/> <span t-esc="amount_in_text_decimal"/>);</b> los cuales se hará el cargo a la cuenta de Ingresos Extraordinarios número <b> 202.<span t-field="o.dependancy_id.dependency"/><t t-if="o.sub_dependancy_id">.<span t-field="o.sub_dependancy_id.sub_dependency"/>0</t></b>
                         </p><br/>
 
                         <p style="font-size:20px;">

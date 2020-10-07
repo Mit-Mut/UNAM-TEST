@@ -77,7 +77,7 @@ class IncomeBYItemReportWizard(models.TransientModel):
                 sum(case when am.type_of_revenue_collection = 'dgoae_trades' then abs(am.amount_untaxed_signed) else 0 end) enrollment_and_tuition,
                 sum(case when am.type_of_revenue_collection = 'dgae_ref' and am.sub_origin_resource_name in ('Applicants','Aspirantes') then abs(am.amount_untaxed_signed) else 0 end) selection_contest,
                 sum(case when am.income_type = 'own' and am.sub_origin_resource_name in ('Incorporation and revalidation of studies','Incorporación y revalidación de estudios') then abs(am.amount_untaxed_signed) else 0 end) incorporation_and_revalidation,
-                sum(case when am.type_of_revenue_collection = 'deposit_cer' and am.income_type = 'extra' and am.sub_origin_resource_name not in ('Financial Products','Productos financieros') then abs(am.amount_untaxed_signed) else 0 end) extraordinary_income,
+                sum(case when am.type_of_revenue_collection = 'billing' and am.income_type = 'extra' and am.sub_origin_resource_name not in ('Financial Products','Productos financieros') then abs(am.amount_untaxed_signed) else 0 end) extraordinary_income,
                 sum(case when am.income_type = 'own' and am.sub_origin_resource_name in ('Patrimonial income','Ingresos patrimoniales') then abs(am.amount_untaxed_signed) else 0 end) patrimonial_income,
                 sum(case when am.income_type = 'extra' and am.sub_origin_resource_name  in ('Financial Products','Productos financieros') then abs(am.amount_untaxed_signed) else 0 end) financial_products,
                 sum(case when am.is_payroll_payment_request = True and am.payment_state='for_payment_procedure' then abs(am.amount_untaxed_signed) else 0 end) nomina,

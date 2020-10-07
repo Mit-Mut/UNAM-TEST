@@ -535,7 +535,7 @@
 	                            		<field name="employee_id"/>
 	                            		<field name="name"/>
 	                            		<field name="reference"/>
-	                            		<field name="amount_payble"/>
+	                            		<field name="amount_payable"/>
                             		</tree>
                             	</field>
                             </page>

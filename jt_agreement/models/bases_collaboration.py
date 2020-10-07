@@ -51,8 +51,11 @@ class BasesCollabration(models.Model):
     interest_account_id = fields.Many2one('account.account', "Interest Accounting Account")
     availability_account_id = fields.Many2one('account.account', "Availability Accounting Account")
     state = fields.Selection([('draft', 'Draft'),
-                               ('valid', 'Valid')], "Status", default='draft')
+                               ('valid', 'Valid'),
+                              ('to_be_cancelled', 'To Be Cancelled'),
+                              ('cancelled', 'Cancelled')], "Status", default='draft')
     total_operations = fields.Integer("Operations", compute="compute_operations")
+    total_modifications = fields.Integer("Modifications", compute="compute_modifications")
 
     employee_id = fields.Many2one('hr.employee', 'Holder of the unit')
     job_id = fields.Many2one('hr.job', "Market Stall")
@@ -74,6 +77,13 @@ class BasesCollabration(models.Model):
             if rec.name:
                 operations = operation_obj.search([('bases_collaboration_id', '=', rec.id)])
                 rec.total_operations = len(operations)
+
+    def compute_modifications(self):
+        modification_obj = self.env['bases.collaboration.modification']
+        for rec in self:
+            if rec.name:
+                modifications = modification_obj.search([('bases_collaboration_id', '=', rec.id)])
+                rec.total_modifications = len(modifications)
 
     def action_operations(self):
         operation_obj = self.env['request.open.balance']
@@ -132,6 +142,38 @@ class BasesCollabration(models.Model):
                             else False
                             }
             }
+
+    def action_modifications(self):
+        modification_obj = self.env['bases.collaboration.modification']
+        modifications = modification_obj.search([('bases_collaboration_id', '=', self.id)])
+        if modifications:
+            return {
+                'name': 'Modifications',
+                'view_type': 'form',
+                'view_mode': 'tree,form',
+                'res_model': 'bases.collaboration.modification',
+                'domain': [('bases_collaboration_id', '=', self.id)],
+                'type': 'ir.actions.act_window',
+                'context': {'default_dependency_id': self.dependency_id and self.dependency_id.id or False,
+                            'default_bases_collaboration_id': self.id,
+                            'default_current_target': self.goals,
+                            'from_modification': True
+                            }
+            }
+        else:
+            return {
+                'name': 'Modifications',
+                'view_mode': 'form',
+                'res_model': 'bases.collaboration.modification',
+                'domain': [('bases_collaboration_id', '=', self.id)],
+                'type': 'ir.actions.act_window',
+                'context': {'default_dependency_id': self.dependency_id and self.dependency_id.id or False,
+                            'default_bases_collaboration_id': self.id,
+                            'default_current_target': self.goals,
+                            'from_modification': True
+                            }
+            }
+
 
     def confirm(self):
         self.state = 'valid'
@@ -196,6 +238,7 @@ class Committe(models.Model):
     column_position_id = fields.Many2one('hr.job', "Position / Appointment column")
     collaboration_id = fields.Many2one('bases.collaboration')
 
+
     @api.onchange('column_id')
     def onchange_column_id(self):
         if self.column_id and self.column_id.job_id:
@@ -212,7 +255,8 @@ class RequestOpenBalance(models.Model):
     agreement_number_id = fields.Many2one('project.project', "Agreement Number")
     type_of_operation = fields.Selection([('open_bal', 'Opening Balance'),
                                           ('increase', 'Increase'),
-                                          ('retirement', 'Retirement')], string="Type of Operation")
+                                          ('retirement', 'Retirement'),
+                                          ('withdrawal', 'Withdrawal for settlement')], string="Type of Operation")
     apply_to_basis_collaboration = fields.Boolean("Apply to Basis of Collaboration")
     origin_resource_id = fields.Many2one('sub.origin.resource', "Origin of the resource")
     state = fields.Selection([('draft', 'Draft'),
@@ -238,6 +282,7 @@ class RequestOpenBalance(models.Model):
     interest_account_id = fields.Many2one('account.account', "Interest Accounting Account")
     availability_account_id = fields.Many2one('account.account', "Availability Accounting Account")
     reason_rejection = fields.Text("Reason for Rejection")
+    supporting_documentation = fields.Binary("Supporting Documentation")
 
     def request(self):
         self.env['request.open.balance.invest'].create({
@@ -276,7 +321,8 @@ class RequestOpenBalanceInvestment(models.Model):
     agreement_number_id = fields.Many2one('project.project', "Agreement Number")
     type_of_operation = fields.Selection([('open_bal', 'Opening Balance'),
                                           ('increase', 'Increase'),
-                                          ('retirement', 'Retirement')], string="Type of Operation")
+                                          ('retirement', 'Retirement'),
+                                          ('withdrawal', 'Withdrawal for settlement')], string="Type of Operation")
     apply_to_basis_collaboration = fields.Boolean("Apply to Basis of Collaboration")
     origin_resource_id = fields.Many2one('sub.origin.resource', "Origin of the resource")
     state = fields.Selection([('draft', 'Draft'),
@@ -302,6 +348,7 @@ class RequestOpenBalanceInvestment(models.Model):
     investment_account_id = fields.Many2one('account.account', "Investment Accounting Account")
     interest_account_id = fields.Many2one('account.account', "Interest Accounting Account")
     availability_account_id = fields.Many2one('account.account', "Availability Accounting Account")
+    supporting_documentation = fields.Binary("Supporting Documentation")
 
     reason_rejection = fields.Text("Reason for Rejection")
 
@@ -390,6 +437,7 @@ class RequestOpenBalanceFinance(models.Model):
                                   "Payments")
     payment_count = fields.Integer(compute="count_payment", string="Payments")
 
+
     def open_payments(self):
         action = self.env.ref('account.action_account_payments').read()[0]
         action['context'] = {}
@@ -473,9 +521,15 @@ class AccountPayment(models.Model):
                 if fin_req.request_id:
                     fin_req.request_id.state = 'done'
                     if fin_req.request_id.balance_req_id:
-                        fin_req.request_id.balance_req_id.state = 'confirmed'
-                        if fin_req.request_id.balance_req_id.bases_collaboration_id:
-                            fin_req.request_id.balance_req_id.bases_collaboration_id.available_bal += fin_req.amount
+                        balance_req = fin_req.request_id.balance_req_id
+                        balance_req.state = 'confirmed'
+
+                        if balance_req.bases_collaboration_id:
+                            if balance_req.type_of_operation == 'withdrawal':
+                                balance_req.bases_collaboration_id.available_bal = 0
+                                balance_req.bases_collaboration_id.state = 'cancelled'
+                            else:
+                                balance_req.bases_collaboration_id.available_bal += fin_req.amount
         return res
 
 

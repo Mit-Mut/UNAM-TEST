@@ -60,6 +60,7 @@
         'reports/income_annual_report_view.xml',
         'reports/income_by_item_month.xml',
         'reports/pdf_income_by_item_report.xml',
+        'reports/pdf_income_annual_report.xml',
 
     ],
     'application': True,

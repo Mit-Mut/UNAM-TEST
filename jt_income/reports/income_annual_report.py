@@ -30,6 +30,8 @@ class IncomeAnnualReport(models.Model):
     _auto = False
 
     sub_origin_resource_id = fields.Many2one('sub.origin.resource', "Name")
+    sub_origin_name = fields.Char("Name")
+    sub_origin_name_group_by = fields.Char("Name Group")
     journal_id = fields.Many2one("account.journal","Accounting Account Description")
     bank_account_id = fields.Many2one(related="journal_id.bank_account_id",string="Bank Account")
     account_code = fields.Char(related="journal_id.default_debit_account_id.code",string="Account")
@@ -54,24 +56,135 @@ class IncomeAnnualReport(models.Model):
             CREATE OR REPLACE VIEW %s AS (
                 select max(ap.id) as id,ap.sub_origin_resource_id as sub_origin_resource_id,
                 ap.journal_id as journal_id, 
+                s0.report_name as sub_origin_name,s0.name as sub_origin_name_group_by,    
                 Cast((extract(year from payment_date)) as Text) as year,
-                sum(case when extract(month from payment_date) = 1 then amount else 0 end) january,
-                sum(case when extract(month from payment_date) = 2 then amount else 0 end) february,
-                sum(case when extract(month from payment_date) = 3 then amount else 0 end) march,
-                sum(case when extract(month from payment_date) = 4 then amount else 0 end) april,
-                sum(case when extract(month from payment_date) = 5 then amount else 0 end) may,
-                sum(case when extract(month from payment_date) = 6 then amount else 0 end) june,
-                sum(case when extract(month from payment_date) = 7 then amount else 0 end) july,
-                sum(case when extract(month from payment_date) = 8 then amount else 0 end) august,
-                sum(case when extract(month from payment_date) = 9 then amount else 0 end) september,
-                sum(case when extract(month from payment_date) = 10 then amount else 0 end) october,
-                sum(case when extract(month from payment_date) = 11 then amount else 0 end) november,
-                sum(case when extract(month from payment_date) = 12 then amount else 0 end) december,
-                sum(amount) as total
-                from account_payment ap
-                where ap.sub_origin_resource_id IS NOT NULL and ap.state in ('posted','reconciled') 
+                sum(case when extract(month from payment_date) = 1 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) january,
+                sum(case when extract(month from payment_date) = 2 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) february,
+                sum(case when extract(month from payment_date) = 3 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) march,
+                sum(case when extract(month from payment_date) = 4 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) april,
+                sum(case when extract(month from payment_date) = 5 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) may,
+                sum(case when extract(month from payment_date) = 6 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) june,
+                sum(case when extract(month from payment_date) = 7 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) july,
+                sum(case when extract(month from payment_date) = 8 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) august,
+                sum(case when extract(month from payment_date) = 9 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) september,
+                sum(case when extract(month from payment_date) = 10 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) october,
+                sum(case when extract(month from payment_date) = 11 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) november,
+                sum(case when extract(month from payment_date) = 12 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) december,
+                sum((select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id))) as total
+                from account_payment ap,sub_origin_resource s0
+                where s0.id=ap.sub_origin_resource_id and ap.sub_origin_resource_id IS NOT NULL and ap.state in ('posted','reconciled') 
                 and ap.partner_type='customer' and ap.payment_type = 'inbound'
-                group by year,sub_origin_resource_id,journal_id
+                group by year,sub_origin_resource_id,sub_origin_name,sub_origin_name_group_by,journal_id
+                
+                UNION ALL
+                select -1 as id,NULL as sub_origin_resource_id,NULL as journal_id,
+                '1) INGRESOS POR SERVICIOS DE EDUCACIÓN' as sub_origin_name,
+                'Resumen' as sub_origin_name_group_by,
+                'Resumen' as year,
+                sum(case when extract(month from payment_date) = 1 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) january,
+                sum(case when extract(month from payment_date) = 2 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) february,
+                sum(case when extract(month from payment_date) = 3 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) march,
+                sum(case when extract(month from payment_date) = 4 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) april,
+                sum(case when extract(month from payment_date) = 5 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) may,
+                sum(case when extract(month from payment_date) = 6 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) june,
+                sum(case when extract(month from payment_date) = 7 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) july,
+                sum(case when extract(month from payment_date) = 8 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) august,
+                sum(case when extract(month from payment_date) = 9 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) september,
+                sum(case when extract(month from payment_date) = 10 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) october,
+                sum(case when extract(month from payment_date) = 11 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) november,
+                sum(case when extract(month from payment_date) = 12 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) december,
+                sum((select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id))) as total
+                from sub_origin_resource s1,account_payment ap 
+                where ap.sub_origin_resource_id = s1.id and ap.state in ('posted','reconciled')
+                and s1.name in ('Servicios de educación Bancos (INS-RINS)','Servicios de educación Caja Gral.')
+
+                UNION ALL
+                select -2 as id,NULL as sub_origin_resource_id,NULL as journal_id,
+                '2) ASPIRANTES' as sub_origin_name,
+                'Resumen' as sub_origin_name_group_by,
+                'Resumen' as year,
+                sum(case when extract(month from payment_date) = 1 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) january,
+                sum(case when extract(month from payment_date) = 2 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) february,
+                sum(case when extract(month from payment_date) = 3 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) march,
+                sum(case when extract(month from payment_date) = 4 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) april,
+                sum(case when extract(month from payment_date) = 5 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) may,
+                sum(case when extract(month from payment_date) = 6 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) june,
+                sum(case when extract(month from payment_date) = 7 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) july,
+                sum(case when extract(month from payment_date) = 8 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) august,
+                sum(case when extract(month from payment_date) = 9 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) september,
+                sum(case when extract(month from payment_date) = 10 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) october,
+                sum(case when extract(month from payment_date) = 11 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) november,
+                sum(case when extract(month from payment_date) = 12 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) december,
+                sum((select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id))) as total
+                from sub_origin_resource s1,account_payment ap 
+                where ap.sub_origin_resource_id = s1.id and ap.state in ('posted','reconciled')
+                and s1.name in ('Aspirantes')   
+
+                UNION ALL
+                select -3 as id,NULL as sub_origin_resource_id,NULL as journal_id,
+                '   SUBTOTAL 1) +2)' as sub_origin_name,
+                'Resumen' as sub_origin_name_group_by,
+                'Resumen' as year,
+                sum(case when extract(month from payment_date) = 1 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) january,
+                sum(case when extract(month from payment_date) = 2 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) february,
+                sum(case when extract(month from payment_date) = 3 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) march,
+                sum(case when extract(month from payment_date) = 4 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) april,
+                sum(case when extract(month from payment_date) = 5 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) may,
+                sum(case when extract(month from payment_date) = 6 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) june,
+                sum(case when extract(month from payment_date) = 7 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) july,
+                sum(case when extract(month from payment_date) = 8 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) august,
+                sum(case when extract(month from payment_date) = 9 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) september,
+                sum(case when extract(month from payment_date) = 10 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) october,
+                sum(case when extract(month from payment_date) = 11 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) november,
+                sum(case when extract(month from payment_date) = 12 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) december,
+                sum((select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id))) as total
+                from sub_origin_resource s1,account_payment ap 
+                where ap.sub_origin_resource_id = s1.id and ap.state in ('posted','reconciled')
+                and s1.name in ('Aspirantes','Servicios de educación Bancos (INS-RINS)','Servicios de educación Caja Gral.')   
+
+                UNION ALL
+                select -4 as id,NULL as sub_origin_resource_id,NULL as journal_id,
+                '3) DGIRE' as sub_origin_name,
+                'Resumen' as sub_origin_name_group_by,
+                'Resumen' as year,
+                sum(case when extract(month from payment_date) = 1 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) january,
+                sum(case when extract(month from payment_date) = 2 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) february,
+                sum(case when extract(month from payment_date) = 3 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) march,
+                sum(case when extract(month from payment_date) = 4 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) april,
+                sum(case when extract(month from payment_date) = 5 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) may,
+                sum(case when extract(month from payment_date) = 6 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) june,
+                sum(case when extract(month from payment_date) = 7 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) july,
+                sum(case when extract(month from payment_date) = 8 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) august,
+                sum(case when extract(month from payment_date) = 9 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) september,
+                sum(case when extract(month from payment_date) = 10 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) october,
+                sum(case when extract(month from payment_date) = 11 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) november,
+                sum(case when extract(month from payment_date) = 12 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) december,
+                sum((select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id))) as total
+                from sub_origin_resource s1,account_payment ap 
+                where ap.sub_origin_resource_id = s1.id and ap.state in ('posted','reconciled')
+                and s1.name in ('DGIRE-bancos','DGIRE-caja')   
+
+                UNION ALL
+                select -5 as id,NULL as sub_origin_resource_id,NULL as journal_id,
+                '4) PATRIMONIALES' as sub_origin_name,
+                'Resumen' as sub_origin_name_group_by,
+                'Resumen' as year,
+                sum(case when extract(month from payment_date) = 1 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) january,
+                sum(case when extract(month from payment_date) = 2 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) february,
+                sum(case when extract(month from payment_date) = 3 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) march,
+                sum(case when extract(month from payment_date) = 4 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) april,
+                sum(case when extract(month from payment_date) = 5 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) may,
+                sum(case when extract(month from payment_date) = 6 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) june,
+                sum(case when extract(month from payment_date) = 7 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) july,
+                sum(case when extract(month from payment_date) = 8 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) august,
+                sum(case when extract(month from payment_date) = 9 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) september,
+                sum(case when extract(month from payment_date) = 10 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) october,
+                sum(case when extract(month from payment_date) = 11 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) november,
+                sum(case when extract(month from payment_date) = 12 then (select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id)) else 0 end) december,
+                sum((select sum(amount_untaxed_signed) as amount from account_move where id in(select invoice_id from account_invoice_payment_rel where payment_id=ap.id))) as total
+                from sub_origin_resource s1,account_payment ap 
+                where ap.sub_origin_resource_id = s1.id and ap.state in ('posted','reconciled')
+                and s1.name in ('D.B.I.N.','D.P.Y.D.','Venta almacén','Licenciatarios','DEP en garantia')                   
                             )'''% (self._table,) 
         )    
 

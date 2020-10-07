@@ -615,7 +615,8 @@ class Adequacies(models.Model):
                         'code': "model.validate_and_add_budget_line()",
                         'model_id': self.env.ref('jt_budget_mgmt.model_adequacies').id,
                         'user_id': self.env.user.id,
-                        'adequacies_id': self.id
+                        'adequacies_id': self.id,
+                        'doall':True,
                     }
 
                     # Final process

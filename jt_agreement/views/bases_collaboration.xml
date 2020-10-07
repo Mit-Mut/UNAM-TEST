@@ -59,12 +59,17 @@
                                 </group>
                             </page>
                              <page string="Supporting Documentaion" name="supporting_documentation">
-                                <group>
+                                <group attrs="{'invisible': [('type_of_operation', '=', 'withdrawal')]}">
                                     <group>
                                         <field name="cbc_format"/>
                                     </group>
                                     <group>
                                         <field name="cbc_shipping_office"/>
+                                    </group>
+                                </group>
+                                 <group attrs="{'invisible': [('type_of_operation', '!=', 'withdrawal')]}">
+                                    <group>
+                                        <field name="supporting_documentation"/>
                                     </group>
                                 </group>
                             </page>
@@ -131,8 +136,12 @@
                     <sheet>
                          <div class="oe_button_box" name="button_box">
                             <button name="action_operations" type="object" class="oe_stat_button"
-                                    icon="fa-random">
+                                    icon="fa-random" attrs="{'invisible': [('state', '=', 'draft')]}">
                                 <field name="total_operations" widget="statinfo"/>
+                            </button>
+                             <button name="action_modifications" type="object" class="oe_stat_button"
+                                    icon="fa-random" attrs="{'invisible': [('state', '=', 'draft')]}">
+                                <field name="total_modifications" widget="statinfo"/>
                             </button>
 
                         </div>
@@ -288,12 +297,17 @@
                                 </group>
                             </page>
                              <page string="Supporting Documentaion" name="supporting_documentation">
-                                <group>
+                                <group attrs="{'invisible': [('type_of_operation', '=', 'withdrawal')]}">
                                     <group>
                                         <field name="cbc_format"/>
                                     </group>
                                     <group>
                                         <field name="cbc_shipping_office"/>
+                                    </group>
+                                </group>
+                                  <group attrs="{'invisible': [('type_of_operation', '!=', 'withdrawal')]}">
+                                    <group>
+                                        <field name="supporting_documentation"/>
                                     </group>
                                 </group>
                             </page>

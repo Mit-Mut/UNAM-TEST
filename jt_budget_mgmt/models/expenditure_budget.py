@@ -856,7 +856,8 @@ class ExpenditureBudget(models.Model):
                     'code': "model.validate_and_add_budget_line()",
                     'model_id': self.env.ref('jt_budget_mgmt.model_expenditure_budget').id,
                     'user_id': self.env.user.id,
-                    'budget_id': self.id
+                    'budget_id': self.id,
+                    'doall':True,
                 }
                 
                 # Final process

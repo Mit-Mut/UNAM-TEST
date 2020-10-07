@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="pdf_external_layout_income_annual_report" name="pdf_income_annual_report_layout">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+
+        <div class="header">
+            <div class="row">
+                <div class="col-12 text-center">
+                   	<div style="font-size:14px;">DIRECCIÓN GENERAL DE FINANZAS</div><br/>
+                   	<div style="font-size:12px;">DIRECCIÓN DE INGRESOS Y OPERACIÓN FINANCIERA</div><br/>
+                   	<div style="font-size:10px;">DEPARTAMENTO DE INGRESOS</div><br/>
+                   	<div style="font-size:10px;">INFORME ANUAL INGRESOS</div><br/>
+                   	<div style="font-size:10px;">INGRESOS POR SERVICIOS DE EDUCACIÓN Y PATRIMONIALES</div><br/>
+                   	<div style="font-size:10px;">REAL</div><br/>
+                </div>
+            </div>
+        </div>
+        <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+          <t t-raw="0"/>
+        </div>
+         
+        </template>
+
+        <template id="pdf_income_annual_report">
+        	<t t-call="web.html_container">
+        	<t t-call="jt_income.pdf_external_layout_income_annual_report">
+                <div class="page">
+                	<br/><br/><br/><br/><br/><br/><br/><br/><br/>
+                	<table class="table table-bordered">
+                        <thead style="display: table-row-group">
+                            <tr>
+                                <th class="text-center">NOMBRE</th>
+                                <th class="text-center">CUENTA BANCARIA</th>
+                                <th class="text-center">CUENTA</th>
+                                <th class="text-center">DESCRIPTION CUENTA CONTABLE</th>
+                                <th class="text-center">ENERO</th>
+                                <th class="text-center">FEBRERO</th>
+                                <th class="text-center">MARZO</th>
+                                <th class="text-center">ABRIL</th>
+                                <th class="text-center">MAYO</th>
+                                <th class="text-center">JUNIO</th>
+                                <th class="text-center">JULIO</th>
+                                <th class="text-center">AGOSTO</th>
+                                <th class="text-center">SEPTIEMBRE</th>
+                                <th class="text-center">OCTUBRE</th>
+                                <th class="text-center">NOVIEMBRE</th>
+                                <th class="text-center">DICIEMBRE</th>
+                                <th class="text-center">TOTAL</th>
+                            </tr>
+                        </thead>
+                		<tbody>
+                			<t t-set="total_month_1" t-value="0"/>
+                			<t t-set="total_month_2" t-value="0"/>
+                			<t t-set="total_month_3" t-value="0"/>
+                			<t t-set="total_month_4" t-value="0"/>
+                			<t t-set="total_month_5" t-value="0"/>
+                			<t t-set="total_month_6" t-value="0"/>
+                			<t t-set="total_month_7" t-value="0"/>
+                			<t t-set="total_month_8" t-value="0"/>
+                			<t t-set="total_month_9" t-value="0"/>
+                			<t t-set="total_month_10" t-value="0"/>
+                			<t t-set="total_month_11" t-value="0"/>
+                			<t t-set="total_month_12" t-value="0"/>
+                			<t t-set="total_month_total" t-value="0"/>
+                			<t t-foreach="docs" t-as="o">
+                				 <t t-if="o.year!='Resumen'">	
+                                  <tr>
+                                      <th class="text-left"><span t-field="o.sub_origin_name"/></th>
+                                      <td class="text-left"><span t-field="o.bank_account_id.acc_number"/></td>
+                                      <td class="text-left"><span t-field="o.account_code" /></td>
+                                      <td class="text-left"><span t-field="o.journal_id.name" /></td>
+                                      <td class="text-right"><span t-field="o.january" t-options='{"widget": "float", "precision": 2}'/></td>
+                                      <td class="text-right"><span t-field="o.february" t-options='{"widget": "float", "precision": 2}'/></td>
+                                      <td class="text-right"><span t-field="o.march" t-options='{"widget": "float", "precision": 2}'/></td>
+                                      <td class="text-right"><span t-field="o.april" t-options='{"widget": "float", "precision": 2}'/></td>
+                                      <td class="text-right"><span t-field="o.may" t-options='{"widget": "float", "precision": 2}'/></td>
+                                      <td class="text-right"><span t-field="o.june" t-options='{"widget": "float", "precision": 2}'/></td>
+                                      <td class="text-right"><span t-field="o.july" t-options='{"widget": "float", "precision": 2}'/></td>
+                                      <td class="text-right"><span t-field="o.august" t-options='{"widget": "float", "precision": 2}'/></td>
+                                      <td class="text-right"><span t-field="o.september" t-options='{"widget": "float", "precision": 2}'/></td>
+                                      <td class="text-right"><span t-field="o.october" t-options='{"widget": "float", "precision": 2}'/></td>
+                                      <td class="text-right"><span t-field="o.november" t-options='{"widget": "float", "precision": 2}'/></td>
+                                      <td class="text-right"><span t-field="o.december" t-options='{"widget": "float", "precision": 2}'/></td>
+                                      <td class="text-right"><span t-field="o.total" t-options='{"widget": "float", "precision": 2}'/></td>
+                                      
+                                      <!-- Total -->
+			                			<t t-set="total_month_1" t-value="total_month_1+o.january"/>
+			                			<t t-set="total_month_2" t-value="total_month_2+o.february"/>
+			                			<t t-set="total_month_3" t-value="total_month_3+o.march"/>
+			                			<t t-set="total_month_4" t-value="total_month_4+o.april"/>
+			                			<t t-set="total_month_5" t-value="total_month_5+o.may"/>
+			                			<t t-set="total_month_6" t-value="total_month_6+o.june"/>
+			                			<t t-set="total_month_7" t-value="total_month_7+o.july"/>
+			                			<t t-set="total_month_8" t-value="total_month_8+o.august"/>
+			                			<t t-set="total_month_9" t-value="total_month_9+o.september"/>
+			                			<t t-set="total_month_10" t-value="total_month_10+o.october"/>
+			                			<t t-set="total_month_11" t-value="total_month_11+o.november"/>
+			                			<t t-set="total_month_12" t-value="total_month_12+o.december"/>
+			                			<t t-set="total_month_total" t-value="total_month_total+o.total"/>
+                                  </tr>                		
+                                  </t>		
+                			</t>
+                			<tr>
+                				<th>SUMAS</th>
+                				<th></th>
+                				<th></th>
+                				<th></th>
+                				<th class="text-right"><span t-esc="total_month_1" t-options='{"widget": "float", "precision": 2}'/></th>
+                				<th class="text-right"><span t-esc="total_month_2" t-options='{"widget": "float", "precision": 2}'/></th>
+                				<th class="text-right"><span t-esc="total_month_3" t-options='{"widget": "float", "precision": 2}'/></th>
+                				<th class="text-right"><span t-esc="total_month_4" t-options='{"widget": "float", "precision": 2}'/></th>
+                				<th class="text-right"><span t-esc="total_month_5" t-options='{"widget": "float", "precision": 2}'/></th>                				
+                				<th class="text-right"><span t-esc="total_month_6" t-options='{"widget": "float", "precision": 2}'/></th>
+                				<th class="text-right"><span t-esc="total_month_7" t-options='{"widget": "float", "precision": 2}'/></th>
+                				<th class="text-right"><span t-esc="total_month_8" t-options='{"widget": "float", "precision": 2}'/></th>
+                				<th class="text-right"><span t-esc="total_month_9" t-options='{"widget": "float", "precision": 2}'/></th>
+                				<th class="text-right"><span t-esc="total_month_10" t-options='{"widget": "float", "precision": 2}'/></th>
+                				<th class="text-right"><span t-esc="total_month_11" t-options='{"widget": "float", "precision": 2}'/></th>
+                				<th class="text-right"><span t-esc="total_month_12" t-options='{"widget": "float", "precision": 2}'/></th>
+                				<th class="text-right"><span t-esc="total_month_total" t-options='{"widget": "float", "precision": 2}'/></th>
+                			</tr>
+                		</tbody>	
+                	</table>
+
+                	<table class="table table-bordered">
+                        <thead style="display: table-row-group">
+                            <tr>
+                                <th class="text-center">RESUMEN</th>
+                            </tr>
+                        </thead>
+                		<tbody>
+                			<t t-set="total_month_1" t-value="0"/>
+                			<t t-set="total_month_2" t-value="0"/>
+                			<t t-set="total_month_3" t-value="0"/>
+                			<t t-set="total_month_4" t-value="0"/>
+                			<t t-set="total_month_5" t-value="0"/>
+                			<t t-set="total_month_6" t-value="0"/>
+                			<t t-set="total_month_7" t-value="0"/>
+                			<t t-set="total_month_8" t-value="0"/>
+                			<t t-set="total_month_9" t-value="0"/>
+                			<t t-set="total_month_10" t-value="0"/>
+                			<t t-set="total_month_11" t-value="0"/>
+                			<t t-set="total_month_12" t-value="0"/>
+                			<t t-set="total_month_total" t-value="0"/>
+                			<t t-foreach="docs" t-as="o">
+                				 <t t-if="o.year='Resumen'">	
+                                  <tr>
+                                      <th class="text-left"><span t-field="o.sub_origin_name"/></th>
+                                      <th class="text-right"><span t-field="o.january" t-options='{"widget": "float", "precision": 2}'/></th>
+                                      <th class="text-right"><span t-field="o.february" t-options='{"widget": "float", "precision": 2}'/></th>
+                                      <th class="text-right"><span t-field="o.march" t-options='{"widget": "float", "precision": 2}'/></th>
+                                      <th class="text-right"><span t-field="o.april" t-options='{"widget": "float", "precision": 2}'/></th>
+                                      <th class="text-right"><span t-field="o.may" t-options='{"widget": "float", "precision": 2}'/></th>
+                                      <th class="text-right"><span t-field="o.june" t-options='{"widget": "float", "precision": 2}'/></th>
+                                      <th class="text-right"><span t-field="o.july" t-options='{"widget": "float", "precision": 2}'/></th>
+                                      <th class="text-right"><span t-field="o.august" t-options='{"widget": "float", "precision": 2}'/></th>
+                                      <th class="text-right"><span t-field="o.september" t-options='{"widget": "float", "precision": 2}'/></th>
+                                      <th class="text-right"><span t-field="o.october" t-options='{"widget": "float", "precision": 2}'/></th>
+                                      <th class="text-right"><span t-field="o.november" t-options='{"widget": "float", "precision": 2}'/></th>
+                                      <th class="text-right"><span t-field="o.december" t-options='{"widget": "float", "precision": 2}'/></th>
+                                      <th class="text-right"><span t-field="o.total" t-options='{"widget": "float", "precision": 2}'/></th>
+                                      
+                                      <!-- Total -->
+			                			<t t-set="total_month_1" t-value="total_month_1+o.january"/>
+			                			<t t-set="total_month_2" t-value="total_month_2+o.february"/>
+			                			<t t-set="total_month_3" t-value="total_month_3+o.march"/>
+			                			<t t-set="total_month_4" t-value="total_month_4+o.april"/>
+			                			<t t-set="total_month_5" t-value="total_month_5+o.may"/>
+			                			<t t-set="total_month_6" t-value="total_month_6+o.june"/>
+			                			<t t-set="total_month_7" t-value="total_month_7+o.july"/>
+			                			<t t-set="total_month_8" t-value="total_month_8+o.august"/>
+			                			<t t-set="total_month_9" t-value="total_month_9+o.september"/>
+			                			<t t-set="total_month_10" t-value="total_month_10+o.october"/>
+			                			<t t-set="total_month_11" t-value="total_month_11+o.november"/>
+			                			<t t-set="total_month_12" t-value="total_month_12+o.december"/>
+			                			<t t-set="total_month_total" t-value="total_month_total+o.total"/>
+                                  </tr>                		
+                                  </t>		
+                			</t>
+                			<tr>
+                				<th>SUMAS</th>
+                				<th class="text-right"><span t-esc="total_month_1" t-options='{"widget": "float", "precision": 2}'/></th>
+                				<th class="text-right"><span t-esc="total_month_2" t-options='{"widget": "float", "precision": 2}'/></th>
+                				<th class="text-right"><span t-esc="total_month_3" t-options='{"widget": "float", "precision": 2}'/></th>
+                				<th class="text-right"><span t-esc="total_month_4" t-options='{"widget": "float", "precision": 2}'/></th>
+                				<th class="text-right"><span t-esc="total_month_5" t-options='{"widget": "float", "precision": 2}'/></th>                				
+                				<th class="text-right"><span t-esc="total_month_6" t-options='{"widget": "float", "precision": 2}'/></th>
+                				<th class="text-right"><span t-esc="total_month_7" t-options='{"widget": "float", "precision": 2}'/></th>
+                				<th class="text-right"><span t-esc="total_month_8" t-options='{"widget": "float", "precision": 2}'/></th>
+                				<th class="text-right"><span t-esc="total_month_9" t-options='{"widget": "float", "precision": 2}'/></th>
+                				<th class="text-right"><span t-esc="total_month_10" t-options='{"widget": "float", "precision": 2}'/></th>
+                				<th class="text-right"><span t-esc="total_month_11" t-options='{"widget": "float", "precision": 2}'/></th>
+                				<th class="text-right"><span t-esc="total_month_12" t-options='{"widget": "float", "precision": 2}'/></th>
+                				<th class="text-right"><span t-esc="total_month_total" t-options='{"widget": "float", "precision": 2}'/></th>
+                			</tr>
+                		</tbody>	
+                	</table>
+                	
+				</div>
+				</t>
+				</t>
+		</template>
+		
+           <record id="pdf_paperformat_annual_income_report" model="report.paperformat">
+               <field name="name">Income Annual Report</field>
+               <field name="default" eval="True"/>
+               <field name="format">A4</field>
+               <field name="orientation">Landscape</field>
+               <field name="margin_top">10</field>
+               <field name="margin_bottom">0</field>
+               <field name="margin_left">10</field>
+               <field name="margin_right">10</field>
+               <field name="header_line" eval="False"/>
+               <field name="header_spacing">0</field>
+               <field name="dpi">100</field>
+           </record>
+
+		
+        <report 
+            id="pdf_income_annual_report"
+            model="income.annual.report"
+            string="Income Annual Report"
+            report_type="qweb-pdf"
+            name="jt_income.pdf_income_annual_report"
+            file="jt_income.pdf_income_annual_report"
+            paperformat="jt_income.pdf_paperformat_annual_income_report"
+        />
+
+
+    </data>
+</odoo>

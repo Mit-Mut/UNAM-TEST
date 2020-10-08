@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+		<!-- Payment / Expense Calendar -->
+        <record id="action_payment_expense_calendar" model="ir.actions.client">
+            <field name="name">Payment / Expense Calendar</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'jt_finance.payment.expense.calendar'}" />
+        </record>
+
+        <menuitem
+            id="menu_payment_expense_calendar"
+            name="Payment / Expense Calendar"
+            parent="jt_payroll_payment.menu_finance_reports"
+            sequence="1"
+            action="action_payment_expense_calendar"
+        />
+
+		<!-- Minimum Account Balances -->
+        <record id="action_minimum_account_balances" model="ir.actions.client">
+            <field name="name">Minimum Account Balances</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'jt_finance.minimum.account.balance'}" />
+        </record>
+
+        <menuitem
+            id="menu_minimum_account_balances"
+            name="Minimum Account Balances"
+            parent="jt_payroll_payment.menu_finance_reports"
+            sequence="3"
+            action="action_minimum_account_balances"
+        />
+
+		<!-- Type of Operation -->
+        <record id="action_type_of_operation_report1" model="ir.actions.client">
+            <field name="name">Type of Operation</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'jt_finance.type.of.operation'}" />
+        </record>
+
+        <menuitem
+            id="menu_type_of_operation_report1"
+            name="Type of Operation"
+            parent="jt_payroll_payment.menu_finance_reports"
+            sequence="7"
+            action="action_type_of_operation_report1"
+        />
+
+		<!-- Summary Query Type -->
+        <record id="action_summary_query_type_report1" model="ir.actions.client">
+            <field name="name">Summary Query Type</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'jt_finance.summary.query.type'}" />
+        </record>
+
+        <menuitem
+            id="menu_summary_query_type_report1"
+            name="Summary Query Type"
+            parent="jt_payroll_payment.menu_finance_reports"
+            sequence="9"
+            action="action_summary_query_type_report1"
+        />
+
+    </data>
+</odoo>

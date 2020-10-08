@@ -926,3 +926,9 @@ msgstr "Usuario que envía"
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__payroll_adjustment__withdrawal
 msgid "Withdrawal from the university worker"
 msgstr "Retiro del trabajador universitario"
+
+#. module: jt_payroll_payment
+#: model:ir.ui.menu,name:jt_payroll_payment.menu_finance_reports
+msgid "Reports"
+msgstr "Reportes"
+

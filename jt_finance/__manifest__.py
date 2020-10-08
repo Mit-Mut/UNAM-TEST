@@ -42,6 +42,9 @@
 		'reports/assign_amount_control_report_views.xml',
         'views/assest.xml',
         'wizard/excel_export_assign_view.xml',
+        
+        #Reports 
+        'reports/menu_reports.xml',
     ],
     'application': False,
     'installable': True,

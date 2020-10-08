@@ -21,12 +21,12 @@
         <div class="header">
             <div class="row">
                 <div class="col-12 text-center">
-                   	<div style="font-size:14px;">DIRECCIÓN GENERAL DE FINANZAS</div><br/>
-                   	<div style="font-size:12px;">DIRECCIÓN DE INGRESOS Y OPERACIÓN FINANCIERA</div><br/>
-                   	<div style="font-size:10px;">DEPARTAMENTO DE INGRESOS</div><br/>
-                   	<div style="font-size:10px;">INFORME ANUAL INGRESOS</div><br/>
-                   	<div style="font-size:10px;">INGRESOS POR SERVICIOS DE EDUCACIÓN Y PATRIMONIALES</div><br/>
-                   	<div style="font-size:10px;">REAL</div><br/>
+                   	<span style="font-size:16px;">DIRECCIÓN GENERAL DE FINANZAS</span><br/>
+                   	<span style="font-size:14px;">DIRECCIÓN DE INGRESOS Y OPERACIÓN FINANCIERA</span><br/>
+                   	<span style="font-size:12px;">DEPARTAMENTO DE INGRESOS</span><br/>
+                   	<span style="font-size:12px;">INFORME ANUAL INGRESOS</span><br/>
+                   	<span style="font-size:12px;">INGRESOS POR SERVICIOS DE EDUCACIÓN Y PATRIMONIALES</span><br/>
+                   	<span style="font-size:12px;">REAL</span><br/>
                 </div>
             </div>
         </div>
@@ -77,41 +77,43 @@
                 			<t t-set="total_month_11" t-value="0"/>
                 			<t t-set="total_month_12" t-value="0"/>
                 			<t t-set="total_month_total" t-value="0"/>
-                			<t t-foreach="docs" t-as="o">
-                				 <t t-if="o.year!='Resumen'">	
+                			<span t-set="origin_records" t-value="docs.get_origin_records(docs)"/>
+                			<t t-foreach="origin_records" t-as="record">
+                				<span t-set="origin_datas" t-value="docs.get_origin_records_data(record,docs)"/>
+                				<t t-foreach="origin_datas" t-as="data">
                                   <tr>
-                                      <th class="text-left"><span t-field="o.sub_origin_name"/></th>
-                                      <td class="text-left"><span t-field="o.bank_account_id.acc_number"/></td>
-                                      <td class="text-left"><span t-field="o.account_code" /></td>
-                                      <td class="text-left"><span t-field="o.journal_id.name" /></td>
-                                      <td class="text-right"><span t-field="o.january" t-options='{"widget": "float", "precision": 2}'/></td>
-                                      <td class="text-right"><span t-field="o.february" t-options='{"widget": "float", "precision": 2}'/></td>
-                                      <td class="text-right"><span t-field="o.march" t-options='{"widget": "float", "precision": 2}'/></td>
-                                      <td class="text-right"><span t-field="o.april" t-options='{"widget": "float", "precision": 2}'/></td>
-                                      <td class="text-right"><span t-field="o.may" t-options='{"widget": "float", "precision": 2}'/></td>
-                                      <td class="text-right"><span t-field="o.june" t-options='{"widget": "float", "precision": 2}'/></td>
-                                      <td class="text-right"><span t-field="o.july" t-options='{"widget": "float", "precision": 2}'/></td>
-                                      <td class="text-right"><span t-field="o.august" t-options='{"widget": "float", "precision": 2}'/></td>
-                                      <td class="text-right"><span t-field="o.september" t-options='{"widget": "float", "precision": 2}'/></td>
-                                      <td class="text-right"><span t-field="o.october" t-options='{"widget": "float", "precision": 2}'/></td>
-                                      <td class="text-right"><span t-field="o.november" t-options='{"widget": "float", "precision": 2}'/></td>
-                                      <td class="text-right"><span t-field="o.december" t-options='{"widget": "float", "precision": 2}'/></td>
-                                      <td class="text-right"><span t-field="o.total" t-options='{"widget": "float", "precision": 2}'/></td>
+                                      <th class="text-left"><span t-esc="data[0]"/></th>
+                                      <td class="text-left"><span t-esc="data[1]"/></td>
+                                      <td class="text-left"><span t-esc="data[2]" /></td>
+                                      <td class="text-left"><span t-esc="data[3]" /></td>
+                                      <td class="text-right"><span t-esc="data[4]" t-options='{"widget": "float", "precision": 2}'/></td>
+                                      <td class="text-right"><span t-esc="data[5]" t-options='{"widget": "float", "precision": 2}'/></td>
+                                      <td class="text-right"><span t-esc="data[6]" t-options='{"widget": "float", "precision": 2}'/></td>
+                                      <td class="text-right"><span t-esc="data[7]" t-options='{"widget": "float", "precision": 2}'/></td>
+                                      <td class="text-right"><span t-esc="data[8]" t-options='{"widget": "float", "precision": 2}'/></td>
+                                      <td class="text-right"><span t-esc="data[9]" t-options='{"widget": "float", "precision": 2}'/></td>
+                                      <td class="text-right"><span t-esc="data[10]" t-options='{"widget": "float", "precision": 2}'/></td>
+                                      <td class="text-right"><span t-esc="data[11]" t-options='{"widget": "float", "precision": 2}'/></td>
+                                      <td class="text-right"><span t-esc="data[12]" t-options='{"widget": "float", "precision": 2}'/></td>
+                                      <td class="text-right"><span t-esc="data[13]" t-options='{"widget": "float", "precision": 2}'/></td>
+                                      <td class="text-right"><span t-esc="data[14]" t-options='{"widget": "float", "precision": 2}'/></td>
+                                      <td class="text-right"><span t-esc="data[15]" t-options='{"widget": "float", "precision": 2}'/></td>
+                                      <td class="text-right"><span t-esc="data[16]" t-options='{"widget": "float", "precision": 2}'/></td>
                                       
                                       <!-- Total -->
-			                			<t t-set="total_month_1" t-value="total_month_1+o.january"/>
-			                			<t t-set="total_month_2" t-value="total_month_2+o.february"/>
-			                			<t t-set="total_month_3" t-value="total_month_3+o.march"/>
-			                			<t t-set="total_month_4" t-value="total_month_4+o.april"/>
-			                			<t t-set="total_month_5" t-value="total_month_5+o.may"/>
-			                			<t t-set="total_month_6" t-value="total_month_6+o.june"/>
-			                			<t t-set="total_month_7" t-value="total_month_7+o.july"/>
-			                			<t t-set="total_month_8" t-value="total_month_8+o.august"/>
-			                			<t t-set="total_month_9" t-value="total_month_9+o.september"/>
-			                			<t t-set="total_month_10" t-value="total_month_10+o.october"/>
-			                			<t t-set="total_month_11" t-value="total_month_11+o.november"/>
-			                			<t t-set="total_month_12" t-value="total_month_12+o.december"/>
-			                			<t t-set="total_month_total" t-value="total_month_total+o.total"/>
+			                			<t t-set="total_month_1" t-value="total_month_1+data[4]"/>
+			                			<t t-set="total_month_2" t-value="total_month_2+data[5]"/>
+			                			<t t-set="total_month_3" t-value="total_month_3+data[6]"/>
+			                			<t t-set="total_month_4" t-value="total_month_4+data[7]"/>
+			                			<t t-set="total_month_5" t-value="total_month_5+data[8]"/>
+			                			<t t-set="total_month_6" t-value="total_month_6+data[9]"/>
+			                			<t t-set="total_month_7" t-value="total_month_7+data[10]"/>
+			                			<t t-set="total_month_8" t-value="total_month_8+data[11]"/>
+			                			<t t-set="total_month_9" t-value="total_month_9+data[12]"/>
+			                			<t t-set="total_month_10" t-value="total_month_10+data[13]"/>
+			                			<t t-set="total_month_11" t-value="total_month_11+data[14]"/>
+			                			<t t-set="total_month_12" t-value="total_month_12+data[15]"/>
+			                			<t t-set="total_month_total" t-value="total_month_total+data[16]"/>
                                   </tr>                		
                                   </t>		
                 			</t>
@@ -140,7 +142,7 @@
                 	<table class="table table-bordered">
                         <thead style="display: table-row-group">
                             <tr>
-                                <th class="text-center">RESUMEN</th>
+                                <th colspan="14" class="text-center">RESUMEN</th>
                             </tr>
                         </thead>
                 		<tbody>
@@ -158,7 +160,7 @@
                 			<t t-set="total_month_12" t-value="0"/>
                 			<t t-set="total_month_total" t-value="0"/>
                 			<t t-foreach="docs" t-as="o">
-                				 <t t-if="o.year='Resumen'">	
+                				 <t t-if="o.year=='Resumen'">	
                                   <tr>
                                       <th class="text-left"><span t-field="o.sub_origin_name"/></th>
                                       <th class="text-right"><span t-field="o.january" t-options='{"widget": "float", "precision": 2}'/></th>
@@ -176,6 +178,7 @@
                                       <th class="text-right"><span t-field="o.total" t-options='{"widget": "float", "precision": 2}'/></th>
                                       
                                       <!-- Total -->
+                                      	<t t-if="o.sub_origin_name != '   SUBTOTAL 1) +2)'">
 			                			<t t-set="total_month_1" t-value="total_month_1+o.january"/>
 			                			<t t-set="total_month_2" t-value="total_month_2+o.february"/>
 			                			<t t-set="total_month_3" t-value="total_month_3+o.march"/>
@@ -189,6 +192,7 @@
 			                			<t t-set="total_month_11" t-value="total_month_11+o.november"/>
 			                			<t t-set="total_month_12" t-value="total_month_12+o.december"/>
 			                			<t t-set="total_month_total" t-value="total_month_total+o.total"/>
+			                			</t>
                                   </tr>                		
                                   </t>		
                 			</t>

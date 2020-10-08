@@ -47,5 +47,9 @@ class ReasonRejection(models.TransientModel):
             rec.state = 'rejected'
             rec.reason_rejection = self.name
             if rec.balance_req_id:
-                rec.balance_req_id.state = 'rejected'
-                rec.balance_req_id.reason_rejection = self.name
+                if rec.balance_req_id.type_of_operation in ('increase', 'retirement'):
+                    rec.balance_req_id.state = 'canceled'
+                    rec.balance_req_id.reason_rejection = self.name
+                else:
+                    rec.balance_req_id.state = 'rejected'
+                    rec.balance_req_id.reason_rejection = self.name

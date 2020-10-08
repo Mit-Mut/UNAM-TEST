@@ -102,8 +102,10 @@ class BasesCollabration(models.Model):
                 'type': 'ir.actions.act_window',
                 'context': {'default_bases_collaboration_id': self.id,
                             'default_apply_to_basis_collaboration': True,
+                            'default_agreement_number': self.convention_no,
                             'default_opening_balance': self.opening_bal,
                             'default_cbc_format': self.cbc_format,
+                            'default_supporting_documentation': self.cbc_format,
                             'default_cbc_shipping_office': self.cbc_shipping_office,
                             'default_name': self.name,
                             'default_liability_account_id': self.liability_account_id.id if self.liability_account_id
@@ -129,8 +131,10 @@ class BasesCollabration(models.Model):
                 'context': {'default_bases_collaboration_id': self.id,
                             'default_apply_to_basis_collaboration': True,
                             'default_opening_balance': self.opening_bal,
+                            'default_agreement_number': self.convention_no,
                             'default_name': self.name,
                             'default_cbc_format': self.cbc_format,
+                            'default_supporting_documentation': self.cbc_format,
                             'default_cbc_shipping_office': self.cbc_shipping_office,
                             'default_liability_account_id': self.liability_account_id.id if self.liability_account_id
                             else False,
@@ -251,8 +255,8 @@ class RequestOpenBalance(models.Model):
 
     name = fields.Char("Name")
     bases_collaboration_id = fields.Many2one('bases.collaboration')
-    operation_number = fields.Integer("Operation Number")
-    agreement_number_id = fields.Many2one('project.project', "Agreement Number")
+    operation_number = fields.Char("Operation Number")
+    agreement_number = fields.Char("Agreement Number")
     type_of_operation = fields.Selection([('open_bal', 'Opening Balance'),
                                           ('increase', 'Increase'),
                                           ('retirement', 'Retirement'),
@@ -283,12 +287,52 @@ class RequestOpenBalance(models.Model):
     availability_account_id = fields.Many2one('account.account', "Availability Accounting Account")
     reason_rejection = fields.Text("Reason for Rejection")
     supporting_documentation = fields.Binary("Supporting Documentation")
+    create_payment_request = fields.Boolean("Create Payment Request")
+    # beneficiary_id = fields.
+
+    def action_create_payment_req(self):
+        payment_req_obj = self.env['payment.request']
+        payment_reqs = payment_req_obj.search([('balance_req_id', '=', self.id)])
+        if payment_reqs:
+            return {
+                'name': 'Payment Requests',
+                'view_type': 'form',
+                'view_mode': 'tree,form',
+                'res_model': 'payment.request',
+                'domain': [('balance_req_id', '=', self.id)],
+                'type': 'ir.actions.act_window',
+                 'context': {'default_balance_req_id': self.id,
+                            'default_name': self.name,
+                            'default_type_of_operation': 'retirement',
+                            'default_operation_number': self.operation_number,
+                            'amount': self.opening_balance
+                            }
+            }
+        else:
+            return {
+                'name': 'Payment Request',
+                'view_mode': 'form',
+                'res_model': 'payment.request',
+                'domain': [('balance_req_id', '=', self.id)],
+                'type': 'ir.actions.act_window',
+                'context': {'default_balance_req_id': self.id,
+                            'default_name': self.name,
+                            'default_type_of_operation': 'retirement',
+                            'default_operation_number': self.operation_number,
+                            'amount': self.opening_balance
+                            }
+            }
+
+    @api.constrains('operation_number')
+    def _check_operation_number(self):
+        if self.operation_number and not self.operation_number.isnumeric():
+            raise ValidationError(_('Operation Number must be Numeric.'))
 
     def request(self):
         self.env['request.open.balance.invest'].create({
             'name': self.name,
             'operation_number': self.operation_number,
-            'agreement_number_id': self.agreement_number_id and self.agreement_number_id.id or False,
+            'agreement_number': self.agreement_number,
             'type_of_operation': self.type_of_operation,
             'apply_to_basis_collaboration': self.apply_to_basis_collaboration,
             'origin_resource_id': self.origin_resource_id and self.origin_resource_id.id or False,
@@ -317,8 +361,8 @@ class RequestOpenBalanceInvestment(models.Model):
 
     name = fields.Char("Name")
     balance_req_id = fields.Many2one('request.open.balance', "Opening Balance Request")
-    operation_number = fields.Integer("Operation Number")
-    agreement_number_id = fields.Many2one('project.project', "Agreement Number")
+    operation_number = fields.Char("Operation Number")
+    agreement_number = fields.Char("Agreement Number")
     type_of_operation = fields.Selection([('open_bal', 'Opening Balance'),
                                           ('increase', 'Increase'),
                                           ('retirement', 'Retirement'),
@@ -352,6 +396,11 @@ class RequestOpenBalanceInvestment(models.Model):
 
     reason_rejection = fields.Text("Reason for Rejection")
 
+    @api.constrains('operation_number')
+    def _check_operation_number(self):
+        if self.operation_number and not self.operation_number.isnumeric():
+            raise ValidationError(_('Operation Number must be Numeric.'))
+
     def reject_request(self):
         return {
             'name': 'Reason for Rejection',
@@ -367,7 +416,9 @@ class RequestOpenBalanceInvestment(models.Model):
         today = datetime.today().date()
         user = self.env.user
         employee = self.env['hr.employee'].search([('user_id', '=', user.id)], limit=1)
-        collaboration = self.env['bases.collaboration'].search([('name', '=', self.name)], limit=1)
+        collaboration = False
+        if self.balance_req_id and self.balance_req_id.bases_collaboration_id:
+            collaboration = self.balance_req_id.bases_collaboration_id
         fund_type = False
         if collaboration and collaboration.fund_type_id:
             fund_type = collaboration.fund_type_id.id
@@ -381,7 +432,7 @@ class RequestOpenBalanceInvestment(models.Model):
             'target': 'new',
             'context': {
                 'default_operation_number': self.operation_number,
-                'default_agreement_number_id': self.agreement_number_id and self.agreement_number_id.id or False,
+                'default_agreement_number': self.agreement_number,
                 'default_amount': self.opening_balance,
                 'default_date': today,
                 'default_employee_id': employee.id if employee else False,
@@ -410,8 +461,8 @@ class RequestOpenBalanceFinance(models.Model):
 
     request_id = fields.Many2one('request.open.balance.invest', "Request")
     invoice = fields.Char("Invoice")
-    operation_number = fields.Integer("Operation Number")
-    agreement_number_id = fields.Many2one('project.project', "Agreement Number")
+    operation_number = fields.Char("Operation Number")
+    agreement_number = fields.Char("Agreement Number")
     bank_account_id = fields.Many2one('account.journal', "Bank and Origin Account")
     desti_bank_account_id = fields.Many2one('account.journal', "Destination Bank and Account")
     currency_id = fields.Many2one(
@@ -437,6 +488,10 @@ class RequestOpenBalanceFinance(models.Model):
                                   "Payments")
     payment_count = fields.Integer(compute="count_payment", string="Payments")
 
+    @api.constrains('operation_number')
+    def _check_operation_number(self):
+        if self.operation_number and not self.operation_number.isnumeric():
+            raise ValidationError(_('Operation Number must be Numeric.'))
 
     def open_payments(self):
         action = self.env.ref('account.action_account_payments').read()[0]
@@ -523,11 +578,12 @@ class AccountPayment(models.Model):
                     if fin_req.request_id.balance_req_id:
                         balance_req = fin_req.request_id.balance_req_id
                         balance_req.state = 'confirmed'
-
                         if balance_req.bases_collaboration_id:
                             if balance_req.type_of_operation == 'withdrawal':
                                 balance_req.bases_collaboration_id.available_bal = 0
                                 balance_req.bases_collaboration_id.state = 'cancelled'
+                            elif balance_req.type_of_operation == 'retirement':
+                                balance_req.create_payment_request = True
                             else:
                                 balance_req.bases_collaboration_id.available_bal += fin_req.amount
         return res

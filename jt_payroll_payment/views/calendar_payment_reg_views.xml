@@ -97,6 +97,10 @@
          		  web_icon="jt_payroll_payment,static/description/finance.png"
                   sequence="5"/>
 
+
+        <menuitem id="menu_finance_reports" name="Reports"
+                  sequence="5" parent="menu_payment_finance"/>
+
         <menuitem id="menu_payment_finance_setting" name="Setting"
                   sequence="5" parent="menu_payment_finance"/>
 

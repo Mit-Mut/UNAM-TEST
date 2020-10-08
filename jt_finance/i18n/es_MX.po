@@ -1016,3 +1016,41 @@ msgstr "Exportar Resumen"
 msgid "Close"
 msgstr "Cerca"
 
+#. module: jt_finance
+#: code:addons/jt_finance/reports/payment_expense_calendar.py:0
+#: model:ir.actions.client,name:jt_finance.action_payment_expense_calendar
+#: model:ir.ui.menu,name:jt_finance.menu_payment_expense_calendar
+#, python-format
+msgid "Payment / Expense Calendar"
+msgstr "Calendario de pagos / gastos"
+
+#. module: jt_finance
+#: code:addons/jt_finance/reports/mimimum_balance_account.py:0
+#: model:ir.actions.client,name:jt_finance.action_minimum_account_balances
+#: model:ir.ui.menu,name:jt_finance.menu_minimum_account_balances
+#, python-format
+msgid "Minimum Account Balances"
+msgstr "Saldos mínimos de las cuentas"
+
+#. module: jt_finance
+#: code:addons/jt_finance/reports/type_of_operation.py:0
+#: model:ir.actions.client,name:jt_finance.action_type_of_operation_report1
+#: model:ir.model,name:jt_finance.model_jt_finance_type_of_operation
+#: model:ir.ui.menu,name:jt_finance.menu_type_of_operation_report1
+#, python-format
+msgid "Type of Operation"
+msgstr "Tipo de Consulta Operación"
+
+#. module: jt_finance
+#: code:addons/jt_finance/reports/summary_query_type.py:0
+#: model:ir.actions.client,name:jt_finance.action_summary_query_type_report1
+#: model:ir.model,name:jt_finance.model_jt_finance_summary_query_type
+#: model:ir.ui.menu,name:jt_finance.menu_summary_query_type_report1
+#, python-format
+msgid "Summary Query Type"
+msgstr "Tipo de Consulta Resumen"
+
+
+
+
+

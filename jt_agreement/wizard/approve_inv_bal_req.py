@@ -29,7 +29,7 @@ class ApproveInvestmentBalReq(models.TransientModel):
 
     invoice = fields.Char("Invoice")
     operation_number = fields.Integer("Operation Number")
-    agreement_number_id = fields.Many2one('project.project', "Agreement Number")
+    agreement_number = fields.Char("Agreement Number")
     bank_account_id = fields.Many2one('account.journal', "Bank and Origin Account")
     desti_bank_account_id = fields.Many2one('account.journal', "Destination Bank and Account")
     currency_id = fields.Many2one(
@@ -51,7 +51,7 @@ class ApproveInvestmentBalReq(models.TransientModel):
                 {
                     'invoice': self.invoice,
                     'operation_number': self.operation_number,
-                    'agreement_number_id': self.agreement_number_id.id if self.agreement_number_id else False,
+                    'agreement_number': self.agreement_number,
                     'bank_account_id': self.bank_account_id.id if self.bank_account_id else False,
                     'desti_bank_account_id': self.desti_bank_account_id.id if self.desti_bank_account_id else False,
                     'amount': self.amount,
@@ -64,6 +64,8 @@ class ApproveInvestmentBalReq(models.TransientModel):
                     'state': 'requested'
                 }
             )
+            if request.balance_req_id:
+                request.balance_req_id.state = 'approved'
 
 
 

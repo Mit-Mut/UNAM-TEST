@@ -86,7 +86,7 @@
 						<div class="row" name="document_name">
                              <div class="col-12 text-left">
                                   <span>
-                                      <h4>CORRESPONDIENTES A LA QUINCENA <t t-if="o.fornight"><span t-field="o.fornight"/></t><span t-field="o.invoice_date" t-options='{"format": "yyyy"}'/></h4>
+                                      <h4>CORRESPONDIENTES A LA QUINCENA <t t-if="o.fornight"><span t-field="o.fornight"/></t> <span t-field="o.invoice_date" t-options='{"format": "yyyy"}'/></h4>
                                   </span>
                             </div>
 						</div>

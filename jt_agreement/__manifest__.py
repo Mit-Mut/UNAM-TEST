@@ -38,6 +38,7 @@
         'wizard/reason_rejected_open_bal.xml',
         'wizard/approve_inv_bal_req_view.xml',
         'views/collaboration_modification.xml',
+        'views/create_payment_request.xml',
         'views/ir_sequence.xml',
         'views/menus.xml',
         'security/ir.model.access.csv'

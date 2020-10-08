@@ -50,6 +50,42 @@ class IncomeAnnualReport(models.Model):
     december = fields.Float('December')
     total = fields.Float('Total')
     
+    def get_origin_records(self,records):
+        return records.mapped('sub_origin_resource_id')
+    
+    def get_origin_records_data(self,origin_id,docs):
+        records = docs.filtered(lambda x:x.sub_origin_resource_id.id==origin_id.id)
+        journal_ids = records.mapped('journal_id')
+        data_list = []
+        for journal in journal_ids:
+            inner_list = []
+            if not data_list:
+                inner_list.append(origin_id.report_name)
+            else:
+                inner_list.append('')
+                
+            inner_list.append(journal.bank_account_id.acc_number)
+            inner_list.append(journal.default_debit_account_id.code)
+            inner_list.append(journal.name)
+            
+             
+            inner_list.append(sum(x.january for x in records.filtered(lambda a:a.journal_id.id==journal.id)))
+            inner_list.append(sum(x.february for x in records.filtered(lambda a:a.journal_id.id==journal.id)))
+            inner_list.append(sum(x.march for x in records.filtered(lambda a:a.journal_id.id==journal.id)))
+            inner_list.append(sum(x.april for x in records.filtered(lambda a:a.journal_id.id==journal.id)))
+            inner_list.append(sum(x.may for x in records.filtered(lambda a:a.journal_id.id==journal.id)))
+            inner_list.append(sum(x.june for x in records.filtered(lambda a:a.journal_id.id==journal.id)))
+            inner_list.append(sum(x.july for x in records.filtered(lambda a:a.journal_id.id==journal.id)))
+            inner_list.append(sum(x.august for x in records.filtered(lambda a:a.journal_id.id==journal.id)))
+            inner_list.append(sum(x.september for x in records.filtered(lambda a:a.journal_id.id==journal.id)))
+            inner_list.append(sum(x.october for x in records.filtered(lambda a:a.journal_id.id==journal.id)))
+            inner_list.append(sum(x.november for x in records.filtered(lambda a:a.journal_id.id==journal.id)))
+            inner_list.append(sum(x.december for x in records.filtered(lambda a:a.journal_id.id==journal.id)))
+            inner_list.append(sum(x.total for x in records.filtered(lambda a:a.journal_id.id==journal.id)))
+            data_list.append(inner_list)
+            
+        return data_list
+        
     def init(self):
         tools.drop_view_if_exists(self.env.cr,self._table)
         self.env.cr.execute('''
@@ -74,6 +110,9 @@ class IncomeAnnualReport(models.Model):
                 from account_payment ap,sub_origin_resource s0
                 where s0.id=ap.sub_origin_resource_id and ap.sub_origin_resource_id IS NOT NULL and ap.state in ('posted','reconciled') 
                 and ap.partner_type='customer' and ap.payment_type = 'inbound'
+                and s0.name in ('Servicios de educación Bancos (INS-RINS)','Servicios de educación Caja Gral.','Aspirantes',
+                                'D.B.I.N.','D.P.Y.D.','Venta almacén','Licenciatarios','DEP en garantia',
+                                'DGIRE-bancos','DGIRE-caja')
                 group by year,sub_origin_resource_id,sub_origin_name,sub_origin_name_group_by,journal_id
                 
                 UNION ALL

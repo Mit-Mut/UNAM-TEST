@@ -11,9 +11,7 @@
                             <group>
                                 <field name="invoice"/>
                                 <field name="operation_number"/>
-                                <field name="agreement_number_id" context="{'from_agreement':1}"
-                                       options="{'no_create': True, 'no_edit': True, 'no_create_edit': True,
-                                       'no_open': True}"/>
+                                <field name="agreement_number"/>
                                 <field name="bank_account_id" domain="[('type', '=', 'bank')]"
                                     required="1"/>
                                 <field name="desti_bank_account_id" domain="[('type', '=', 'bank')]"

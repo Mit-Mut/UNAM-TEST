@@ -27,22 +27,31 @@
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
+                        <field name="create_payment_request" invisible="1"/>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_create_payment_req" type="object" class="oe_stat_button"
+                                    widget="statinfo" string="Payment Requests"
+                                    icon="fa-random" attrs="{'invisible': [('create_payment_request', '=', False)]}">
+<!--&lt;!&ndash;                                <field name="total_operations" widget="statinfo"/>&ndash;&gt;-->
+                            </button>
+                        </div>
                         <group>
                             <group>
                                 <field name="name" readonly="1"/>
-                                <field name="operation_number"/>
-                                <field name="agreement_number_id" context="{'from_agreement':1}"
-                                    options="{'no_create': True, 'no_edit': True, 'no_create_edit': True,
-                                    'no_open': True}"/>
-                                <field name="type_of_operation" attrs="{'readonly': [('state', '=', 'requested')]}"/>
+                                <field name="operation_number" required="1"
+                                       attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="agreement_number" readonly="1"/>
+                                <field name="type_of_operation" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
                             <group>
                                 <field name="apply_to_basis_collaboration" readonly="1"/>
-                                <field name="origin_resource_id"/>
+                                <field name="origin_resource_id" domain="[('is_it_enabled_for_agreement', '=',  True)]"
+                                attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
                         </group>
                         <group>
-                            <field name="reason_rejection" attrs="{'invisible': [('state', '!=', 'rejected')]}"/>
+                            <field name="reason_rejection" attrs="{'invisible': [('state', '!=', 'rejected')]}"
+                             readonly="1"/>
                         </group>
                         <notebook>
                             <page string="Operation" name="operation">
@@ -59,7 +68,7 @@
                                 </group>
                             </page>
                              <page string="Supporting Documentaion" name="supporting_documentation">
-                                <group attrs="{'invisible': [('type_of_operation', '=', 'withdrawal')]}">
+                                <group attrs="{'invisible': [('type_of_operation', 'in', ('withdrawal', 'increase', 'retirement'))]}">
                                     <group>
                                         <field name="cbc_format"/>
                                     </group>
@@ -67,7 +76,7 @@
                                         <field name="cbc_shipping_office"/>
                                     </group>
                                 </group>
-                                 <group attrs="{'invisible': [('type_of_operation', '!=', 'withdrawal')]}">
+                                 <group attrs="{'invisible': [('type_of_operation', 'not in', ('withdrawal', 'increase', 'retirement'))]}">
                                     <group>
                                         <field name="supporting_documentation"/>
                                     </group>
@@ -267,59 +276,64 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="name"/>
-                                <field name="operation_number"/>
-                                <field name="agreement_number_id" context="{'from_agreement':1}"
-                                options="{'no_create': True, 'no_edit': True, 'no_create_edit': True,
-                                'no_open': True}"/>
-                                <field name="type_of_operation"/>
+                                <field name="name" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="operation_number" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="agreement_number" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="type_of_operation" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
                             <group>
-                                <field name="apply_to_basis_collaboration"/>
-                                <field name="origin_resource_id"/>
+                                <field name="apply_to_basis_collaboration" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="origin_resource_id" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                                       domain="[('is_it_enabled_for_agreement', '=',  True)]"/>
                             </group>
                         </group>
                         <group>
-                            <field name="reason_rejection"/>
+                            <field name="reason_rejection" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         </group>
                         <notebook>
                             <page string="Operation" name="operation">
                                 <group>
                                     <group>
-                                        <field name="request_date"/>
-                                        <field name="trade_number"/>
-                                        <field name="opening_balance"/>
+                                        <field name="request_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        <field name="trade_number" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        <field name="opening_balance" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     </group>
                                     <group>
-                                        <field name="observations"/>
-                                        <field name="user_id"/>
+                                        <field name="observations" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        <field name="user_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     </group>
                                 </group>
                             </page>
                              <page string="Supporting Documentaion" name="supporting_documentation">
-                                <group attrs="{'invisible': [('type_of_operation', '=', 'withdrawal')]}">
+                                <group attrs="{'invisible': [('type_of_operation', 'in', ('withdrawal', 'increase', 'retirement'))]}">
                                     <group>
-                                        <field name="cbc_format"/>
+                                        <field name="cbc_format" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     </group>
                                     <group>
-                                        <field name="cbc_shipping_office"/>
+                                        <field name="cbc_shipping_office"
+                                               attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     </group>
                                 </group>
-                                  <group attrs="{'invisible': [('type_of_operation', '!=', 'withdrawal')]}">
+                                  <group attrs="{'invisible': [('type_of_operation', 'not in', ('withdrawal', 'increase', 'retirement'))]}">
                                     <group>
-                                        <field name="supporting_documentation"/>
+                                        <field name="supporting_documentation"
+                                               attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     </group>
                                 </group>
                             </page>
                              <page string="Accounts" name="accounts">
                                 <group>
                                     <group>
-                                        <field name="liability_account_id"/>
-                                        <field name="investment_account_id"/>
+                                        <field name="liability_account_id"
+                                               attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        <field name="investment_account_id"
+                                               attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     </group>
                                     <group>
-                                        <field name="interest_account_id"/>
-                                        <field name="availability_account_id"/>
+                                        <field name="interest_account_id"
+                                               attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        <field name="availability_account_id"
+                                               attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     </group>
                                 </group>
                             </page>
@@ -387,10 +401,8 @@
                         <group>
                             <group>
                                 <field name="invoice"/>
-                                <field name="operation_number"/>
-                                <field name="agreement_number_id" context="{'from_agreement':1}"
-                                       options="{'no_create': True, 'no_edit': True, 'no_create_edit': True,
-                                       'no_open': True}"/>
+                                <field name="operation_number" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="agreement_number"/>
                                 <field name="bank_account_id"/>
                                 <field name="desti_bank_account_id"/>
                                 <field name="amount"/>

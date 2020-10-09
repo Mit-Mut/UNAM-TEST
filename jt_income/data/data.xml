@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
+	<data noupdate="1">
     <record id="income_billing" model="account.journal">
         <field name="name">Billing</field>
         <field name="code">BILL</field>
@@ -28,5 +28,5 @@
         <field name="currency_id" ref="base.MXN"/>
         <field name="type">sale</field>
     </record>
-    
+    </data>
 </odoo>

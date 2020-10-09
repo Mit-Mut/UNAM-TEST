@@ -47,6 +47,10 @@
                                 <field name="apply_to_basis_collaboration" readonly="1"/>
                                 <field name="origin_resource_id" domain="[('is_it_enabled_for_agreement', '=',  True)]"
                                 attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="beneficiary_id"/>
+                                <field name="bases_collaboration_id" invisible="1"/>
+                                <field name="provider_id" context="{'from_retier_operation':1,
+                                 'collaboration_id': bases_collaboration_id}"/>
                             </group>
                         </group>
                         <group>
@@ -156,72 +160,87 @@
                         </div>
                         <group>
                             <group>
-                                <field name="name"/>
-                                <field name="convention_no"/>
-                                <field name="opening_bal"/>
+                                <field name="name" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="convention_no" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="opening_bal" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="available_bal" readonly="1"/>
-                                <field name="agreement_type_id"/>
+                                <field name="agreement_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="fund_type_id" readonly="1" force_save="1"/>
-                                <field name="dependency_obs"/>
+                                <field name="dependency_obs" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
                             <group>
-                                <field name="dependency_id"/>
-                                <field name="desc_dependency"/>
-                                <field name="subdependency_id" domain="[('dependency_id', '=', dependency_id)]"/>
-                                <field name="desc_subdependency"/>
-                                <field name="origin_resource_id" domain="[('is_it_enabled_for_agreement', '=',  True)]"/>
-                                <field name="goals"/>
-                                <field name="registration_date"/>
+                                <field name="dependency_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="desc_dependency" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="subdependency_id" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                                       domain="[('dependency_id', '=', dependency_id)]"/>
+                                <field name="desc_subdependency" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="origin_resource_id" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                                       domain="[('is_it_enabled_for_agreement', '=',  True)]"/>
+                                <field name="goals" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="registration_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
                         </group>
                         <notebook>
                             <page string="Accounts" name="accounts">
                                 <group>
                                     <group>
-                                        <field name="liability_account_id"/>
-                                        <field name="investment_account_id"/>
+                                        <field name="liability_account_id"
+                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        <field name="investment_account_id"
+                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     </group>
                                     <group>
-                                        <field name="interest_account_id"/>
-                                        <field name="availability_account_id"/>
+                                        <field name="interest_account_id"
+                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        <field name="availability_account_id"
+                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     </group>
                                 </group>
                             </page>
                             <page string="Collaboration Base Contacts" name="collaboration_base_contacts">
                                 <group>
                                     <group string="Owner of Dependency">
-                                        <field name="employee_id"/>
-                                        <field name="job_id"/>
-                                        <field name="phone"/>
+                                        <field name="employee_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        <field name="job_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        <field name="phone" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     </group>
                                     <group string="Administrative Secretary">
-                                        <field name="administrative_secretary_id"/>
-                                        <field name="administrative_secretary_phone"/>
+                                        <field name="administrative_secretary_id"
+                                               attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        <field name="administrative_secretary_phone"
+                                            attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     </group>
                                     <group string="Responsible Directer of CBC">
-                                        <field name="direct_manager_cbc_id"/>
-                                        <field name="cbc_responsible_phone"/>
-                                        <field name="email"/>
+                                        <field name="direct_manager_cbc_id"
+                                               attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        <field name="cbc_responsible_phone"
+                                            attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        <field name="email"
+                                            attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     </group>
                                     <group string="Address of Dependency">
-                                        <field name="unit_address"/>
-                                        <field name="additional_observation"/>
+                                        <field name="unit_address"
+                                            attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        <field name="additional_observation"
+                                            attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     </group>
                                 </group>
                             </page>
                             <page string="Registration Documentation" name="registration_documentation">
                                 <group>
                                     <group>
-                                        <field name="cbc_format" required="1"/>
+                                        <field name="cbc_format" required="1"
+                                         attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     </group>
                                     <group>
-                                        <field name="cbc_shipping_office" required="1"/>
+                                        <field name="cbc_shipping_office" required="1"
+                                            attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     </group>
                                 </group>
                             </page>
                             <page string="Committee" name="committee">
                                 <group string="Committe">
-                                    <field name="committe_ids">
+                                    <field name="committe_ids" attrs="{'readonly': [('state', '!=', 'draft')]}">
                                         <tree editable="top">
                                             <field name="column_id"/>
                                             <field name="column_position_id"/>
@@ -234,6 +253,61 @@
                                         </form>
                                     </field>
                                 </group>
+                            </page>
+                             <page string="Beneficiaries Management" name="beneficiaries">
+                                <group string="Beneficiaries Sectional">
+                                    <group>
+                                        <field name="no_beneficiary_allowed"
+                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="beneficiary_ids" nolabel="1"
+                                               attrs="{'readonly': [('state', '!=', 'draft')]}">
+                                            <tree>
+                                                <field name="partner_id" required="1"/>
+                                                <field name="bank_id"/>
+                                                <field name="account_number"/>
+                                                <field name="amount"/>
+                                                <field name="validity_start"/>
+                                                <field name="validity_final_beneficiary"/>
+                                                <field name="withdrawal_sch_date"/>
+                                            </tree>
+                                            <form>
+                                                <group>
+                                                    <group>
+                                                        <field name="partner_id" required="1"/>
+                                                        <field name="bank_id"/>
+                                                        <field name="account_number"/>
+                                                        <field name="payment_rule_id"/>
+                                                    </group>
+                                                     <group>
+                                                         <field name="amount"/>
+                                                        <field name="validity_start"/>
+                                                        <field name="validity_final_beneficiary"/>
+                                                        <field name="withdrawal_sch_date"/>
+                                                    </group>
+                                                </group>
+                                            </form>
+                                        </field>
+                                    </group>
+                                </group>
+                                 <group string="Providers" name="providers">
+                                     <field name="provider_ids" nolabel="1"
+                                            attrs="{'readonly': [('state', '!=', 'draft')]}">
+                                         <tree editable="top">
+                                             <field name="partner_id" required="1"/>
+                                                <field name="bank_id"/>
+                                                <field name="account_number"/>
+                                         </tree>
+                                         <form>
+                                             <group>
+                                                 <field name="partner_id" required="1"/>
+                                                <field name="bank_id"/>
+                                                <field name="account_number"/>
+                                             </group>
+                                         </form>
+                                     </field>
+                                 </group>
                             </page>
                         </notebook>
                     </sheet>
@@ -489,6 +563,15 @@
             <field name="state">code</field>
             <field name="binding_view_types">list</field>
             <field name="code">action = records.action_schedule_transfers()</field>
+        </record>
+
+          <record id="action_schedule_withdrawal" model="ir.actions.server">
+            <field name="name">Withdrawal Schedule</field>
+            <field name="model_id" ref="jt_agreement.model_bases_collaboration"/>
+            <field name="binding_model_id" ref="jt_agreement.model_bases_collaboration"/>
+            <field name="state">code</field>
+            <field name="binding_view_types">list</field>
+            <field name="code">action = records.action_schedule_withdrawal()</field>
         </record>
 
     </data>

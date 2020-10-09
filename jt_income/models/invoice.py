@@ -733,6 +733,14 @@ class IncomeIncomeMoveLine(models.Model):
             record.tax_audit = audit_str
 
     
+    @api.model
+    def _get_default_account(self):
+        account_id = self.env['account.account'].sudo().search([('code','=','120.001.001'),('internal_type','=','receivable'),('deprecated','=',False)],limit=1)
+        if account_id:
+            return account_id
+        else:
+            return False
+        
     move_id = fields.Many2one('account.move', string='Journal Entry',
         index=True, required=True, readonly=True, auto_join=True, ondelete="cascade",
         help="The move of this entry line.")
@@ -749,7 +757,7 @@ class IncomeIncomeMoveLine(models.Model):
     country_id = fields.Many2one(comodel_name='res.country', related='move_id.company_id.country_id')
     account_id = fields.Many2one('account.account', string='Account',
         index=True, ondelete="restrict", check_company=True,
-        domain=[('deprecated', '=', False)])
+        domain=[('deprecated', '=', False)],default=_get_default_account)
     account_internal_type = fields.Selection(related='account_id.user_type_id.type', string="Internal Type", store=True, readonly=True)
     account_root_id = fields.Many2one(related='account_id.root_id', string="Account Root", store=True, readonly=True)
     sequence = fields.Integer(default=10)

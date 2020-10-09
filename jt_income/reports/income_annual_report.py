@@ -34,7 +34,8 @@ class IncomeAnnualReport(models.Model):
     sub_origin_name_group_by = fields.Char("Name Group")
     journal_id = fields.Many2one("account.journal","Accounting Account Description")
     bank_account_id = fields.Many2one(related="journal_id.bank_account_id",string="Bank Account")
-    account_code = fields.Char(related="journal_id.default_debit_account_id.code",string="Account")
+    bank_account_name = fields.Char(related="sub_origin_resource_id.report_account_name",string="Bank Account")
+    account_code = fields.Char(related="sub_origin_resource_id.report_account_code",string="Account")
     year = fields.Char('Year')
     january = fields.Float('January')
     february = fields.Float('February')
@@ -50,6 +51,18 @@ class IncomeAnnualReport(models.Model):
     december = fields.Float('December')
     total = fields.Float('Total')
     
+    def get_header_year_list(self,docs):
+        year_list = self.env['income.annual.report'].search([('id','>',0)]).mapped('year')
+        max_year = max(year_list)
+        min_year = min(year_list)
+        str1 = ''
+        if max_year == min_year:
+            str1 = "ENERO-DICIEMBRE "+str(min_year)
+        else:
+            str1 = "ENERO "+str(min_year)+ " A " +"DICIEMBRE "+str(max_year)
+            
+        return str1
+     
     def get_origin_records(self,records):
         return records.mapped('sub_origin_resource_id')
     
@@ -65,8 +78,8 @@ class IncomeAnnualReport(models.Model):
                 inner_list.append('')
                 
             inner_list.append(journal.bank_account_id.acc_number)
-            inner_list.append(journal.default_debit_account_id.code)
-            inner_list.append(journal.name)
+            inner_list.append(origin_id.report_account_code)
+            inner_list.append(origin_id.report_account_name)
             
              
             inner_list.append(sum(x.january for x in records.filtered(lambda a:a.journal_id.id==journal.id)))

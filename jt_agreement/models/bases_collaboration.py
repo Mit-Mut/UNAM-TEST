@@ -71,6 +71,13 @@ class BasesCollabration(models.Model):
     cbc_shipping_office = fields.Binary("CBC Shipping Office")
     committe_ids = fields.One2many('committee', 'collaboration_id', string="Committees")
 
+    no_beneficiary_allowed = fields.Integer("Number of allowed beneficiaries")
+    beneficiary_ids = fields.One2many('collaboration.beneficiary', 'collaboration_id')
+    provider_ids = fields.One2many('collaboration.providers', 'collaboration_id')
+
+    _sql_constraints = [
+        ('folio_convention_no', 'unique(convention_no)', 'The Convention No. must be unique.')]
+
     def compute_operations(self):
         operation_obj = self.env['request.open.balance']
         for rec in self:
@@ -182,6 +189,29 @@ class BasesCollabration(models.Model):
     def confirm(self):
         self.state = 'valid'
 
+    def action_schedule_withdrawal(self):
+        req_obj = self.env['request.open.balance']
+        for collaboration in self:
+            for beneficiary in collaboration.beneficiary_ids:
+                req_obj.create({
+                    'bases_collaboration_id': collaboration.id,
+                    'apply_to_basis_collaboration': True,
+                    'agreement_number': collaboration.convention_no,
+                    'opening_balance': collaboration.available_bal,
+                    'supporting_documentation': collaboration.cbc_format,
+                    'type_of_operation': 'retirement',
+                    'beneficiary_id': beneficiary.partner_id.id,
+                    'name': self.name,
+                    'liability_account_id': collaboration.liability_account_id.id if collaboration.liability_account_id
+                    else False,
+                    'interest_account_id': collaboration.interest_account_id.id if collaboration.interest_account_id
+                    else False,
+                    'investment_account_id': collaboration.investment_account_id.id if collaboration.investment_account_id
+                    else False,
+                    'availability_account_id': collaboration.availability_account_id.id if collaboration.availability_account_id
+                    else False
+                })
+
     @api.onchange('direct_manager_cbc_id')
     def onchange_direct_manager_cbc(self):
         if self.direct_manager_cbc_id:
@@ -248,6 +278,48 @@ class Committe(models.Model):
         if self.column_id and self.column_id.job_id:
             self.column_position_id = self.column_id.job_id.id
 
+class Providers(models.Model):
+    _name = 'collaboration.providers'
+    _description = "Collaboration Providers"
+
+    collaboration_id = fields.Many2one('bases.collaboration')
+    partner_id = fields.Many2one('res.partner', "Name")
+    bank_id = fields.Many2one('res.partner.bank', "Bank")
+    account_number = fields.Char("Account Number")
+
+class Beneficiary(models.Model):
+    _name = 'collaboration.beneficiary'
+    _description = "Collaboration Beneficiary"
+
+    collaboration_id = fields.Many2one('bases.collaboration')
+    partner_id = fields.Many2one('res.partner', "Name")
+    bank_id = fields.Many2one('res.partner.bank', "Bank")
+    account_number = fields.Char("Account Number")
+    currency_id = fields.Many2one(
+        'res.currency', default=lambda self: self.env.user.company_id.currency_id)
+    amount = fields.Monetary("Payment Amount")
+    payment_rule_id = fields.Many2one('recurring.payment.template', "Payment Rule")
+    validity_start = fields.Date("Validity of the beneficiary start")
+    validity_final_beneficiary = fields.Date("Validity of the Final Beneficiary")
+    withdrawal_sch_date = fields.Date("Withdrawal scheduling date")
+
+class ResPartner(models.Model):
+
+    _inherit = 'res.partner'
+
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        args = args or []
+        if 'from_retier_operation' in self._context and 'collaboration_id' in self._context:
+            collaboration = self.env['bases.collaboration'].browse(self._context.get('collaboration_id'))
+            partner_ids = []
+            if collaboration and collaboration.provider_ids:
+                for provider in collaboration.provider_ids:
+                    partner_ids.append(provider.partner_id.id)
+            args = [['id', 'in', partner_ids]]
+        res = super(ResPartner, self).name_search(name, args=args, operator=operator, limit=limit)
+        return res
+
 class RequestOpenBalance(models.Model):
 
     _name = 'request.open.balance'
@@ -288,11 +360,16 @@ class RequestOpenBalance(models.Model):
     reason_rejection = fields.Text("Reason for Rejection")
     supporting_documentation = fields.Binary("Supporting Documentation")
     create_payment_request = fields.Boolean("Create Payment Request")
-    # beneficiary_id = fields.
+    beneficiary_id = fields.Many2one('res.partner', "Beneficiary")
+    provider_id = fields.Many2one('res.partner', "Provider")
 
     def action_create_payment_req(self):
         payment_req_obj = self.env['payment.request']
         payment_reqs = payment_req_obj.search([('balance_req_id', '=', self.id)])
+        beneficiary = False
+        if self.beneficiary_id:
+            beneficiary = self.env['collaboration.beneficiary'].search([
+            ('collaboration_id', '=', self.bases_collaboration_id.id), ('partner_id', '=', self.beneficiary_id.id)])
         if payment_reqs:
             return {
                 'name': 'Payment Requests',
@@ -305,7 +382,10 @@ class RequestOpenBalance(models.Model):
                             'default_name': self.name,
                             'default_type_of_operation': 'retirement',
                             'default_operation_number': self.operation_number,
-                            'amount': self.opening_balance
+                            'default_amount': self.opening_balance,
+                             'default_beneficiary_id': self.beneficiary_id and self.beneficiary_id.id or False,
+                             'default_bank_id': beneficiary.bank_id.id if beneficiary and beneficiary.bank_id else False,
+                             'default_account_number': beneficiary.account_number if beneficiary else ''
                             }
             }
         else:
@@ -319,7 +399,10 @@ class RequestOpenBalance(models.Model):
                             'default_name': self.name,
                             'default_type_of_operation': 'retirement',
                             'default_operation_number': self.operation_number,
-                            'amount': self.opening_balance
+                            'default_amount': self.opening_balance,
+                            'default_beneficiary_id': self.beneficiary_id and self.beneficiary_id.id or False,
+                            'default_bank_id': beneficiary.bank_id.id if beneficiary and beneficiary.bank_id else False,
+                            'default_account_number': beneficiary.account_number if beneficiary else ''
                             }
             }
 

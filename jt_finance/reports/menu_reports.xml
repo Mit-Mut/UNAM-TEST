@@ -61,5 +61,50 @@
             action="action_summary_query_type_report1"
         />
 
+		<!-- Diary of Bank Movements in dollars -->
+        <record id="action_diary_bank_movements_dollars" model="ir.actions.client">
+            <field name="name">Diary of Bank Movements in dollars</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'jt_finance.diary.bank.movements.dollars'}" />
+        </record>
+
+        <menuitem
+            id="menu_diary_bank_movements_dollars"
+            name="Diary of Bank Movements in dollars"
+            parent="jt_payroll_payment.menu_finance_reports"
+            sequence="11"
+            action="action_diary_bank_movements_dollars"
+        />
+
+		<!-- Summary of Operation - Recovery of Expenditures USD -->
+        <record id="action_bank_diary_recovery_expenditures_dollars" model="ir.actions.client">
+            <field name="name">Summary of Operation - Recovery of Expenditures USD</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'jt_finance.bank.diary.recovery.expenditures.dollars'}" />
+        </record>
+
+        <menuitem
+            id="menu_bank_diary_recovery_expenditures_dollars"
+            name="Summary of Operation - Recovery of Expenditures USD"
+            parent="jt_payroll_payment.menu_finance_reports"
+            sequence="13"
+            action="action_bank_diary_recovery_expenditures_dollars"
+        />
+
+		<!-- Summary of Operation USD Expenditures -->
+        <record id="action_summaryof_operation_usd_expenditures" model="ir.actions.client">
+            <field name="name">Summary of Operation-USD Expenditures</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'jt_finance.summaryof.operation.usd.expenditures'}" />
+        </record>
+
+        <menuitem
+            id="menu_summaryof_operation_usd_expenditures"
+            name="Summary of Operation-USD Expenditures"
+            parent="jt_payroll_payment.menu_finance_reports"
+            sequence="15"
+            action="action_summaryof_operation_usd_expenditures"
+        />
+
     </data>
 </odoo>

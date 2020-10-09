@@ -28,9 +28,10 @@
                 	<field name="sub_origin_resource_id" invisible="1"/>
                 	<field name="sub_origin_name"/>
                 	<field name="sub_origin_name_group_by" invisible="1"/>
-                	<field name="bank_account_id"/>
+                	<field name="bank_account_id" />
                 	<field name="account_code"/>
-                	<field name="journal_id"/>
+                	<field name="bank_account_name"/>
+                	<field name="journal_id" invisible="1"/>
 					<field name="january"/>
 					<field name="february"/>
 					<field name="march"/>

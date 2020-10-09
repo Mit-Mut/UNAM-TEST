@@ -7,10 +7,15 @@
             <field name="model">payment.request</field>
             <field name="arch" type="xml">
                 <form>
+                    <header>
+                            <button name="request" type="object" string="Request" class="oe_highlight"
+                                 attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                        <field name="state" widget="statusbar"/>
+                        </header>
                     <sheet>
                         <group>
                                 <group>
-                                    <field name="name"/>
+                                    <field name="name" />
                                     <field name="operation_number"/>
                                     <field name="type_of_operation"/>
                                     <field name="amount"/>
@@ -23,7 +28,7 @@
                                     <field name="counter_receipt_sheet"/>
                                     <field name="beneficiary_id"/>
                                     <field name="bank_id"/>
-                                    <field name="account_number_id"/>
+                                    <field name="account_number"/>
                                 </group>
                             </group>
                     </sheet>

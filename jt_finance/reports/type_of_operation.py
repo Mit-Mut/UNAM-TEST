@@ -98,11 +98,16 @@ class TypeofOperation(models.AbstractModel):
         master_total_amount_supplier = 0
         master_total_amount_payroll = 0
         master_total_amount_different_payroll = 0
+        master_total_amount_ISSSTE = 0
+        master_total_amount_FOVISSSTE = 0
 
         for journal in account_payment.mapped("journal_id"):
             total_amount_supplier = 0
             total_amount_payroll = 0
             total_amount_different_payroll = 0
+            total_amount_ISSSTE = 0
+            total_amount_FOVISSSTE = 0
+            
             lines.append({
                 'id': 'hierarchy1_' + str(journal.id),
                 'name': journal.name,
@@ -116,7 +121,12 @@ class TypeofOperation(models.AbstractModel):
                 payment_type_records = account_payment.filtered(lambda x:x.journal_id.id==journal.id and x.payment_issuing_bank_acc_id.id==payment_account.id)
                 supplier = sum(x.amount for x in payment_type_records.filtered(lambda x:x.payment_request_type == 'supplier_payment'))
                 payroll = sum(x.amount for x in payment_type_records.filtered(lambda x:x.payment_request_type == 'payroll_payment'))
-                payroll_diff = sum(x.amount for x in payment_type_records.filtered(lambda x:x.payment_request_type == 'different_to_payroll'))
+                payroll_diff = sum(x.amount for x in payment_type_records.filtered(lambda x:x.payment_request_type == 'different_to_payroll' and x.partner_id.name not in ('ISSSTE','FOVISSSTE')))
+                
+                ISSSTE_supplier = sum(x.amount for x in payment_type_records.filtered(lambda x:x.payment_request_type == 'supplier_payment' and x.partner_id.name=="ISSSTE"))
+                FOVISSSTE_supplier = sum(x.amount for x in payment_type_records.filtered(lambda x:x.payment_request_type == 'supplier_payment' and x.partner_id.name=="FOVISSSTE"))
+                ISSSTE_payroll = sum(x.amount for x in payment_type_records.filtered(lambda x:x.payment_request_type == 'payroll_payment' and x.partner_id.name=="ISSSTE"))
+                FOVISSSTE_payroll = sum(x.amount for x in payment_type_records.filtered(lambda x:x.payment_request_type == 'payroll_payment' and x.partner_id.name=="FOVISSSTE"))
                 
                 payment_type_name= ''
                 total_amount_supplier += supplier
@@ -128,6 +138,12 @@ class TypeofOperation(models.AbstractModel):
                 total_amount_different_payroll += payroll_diff
                 master_total_amount_different_payroll += payroll_diff
                 
+                total_amount_ISSSTE += ISSSTE_supplier + ISSSTE_payroll
+                total_amount_FOVISSSTE += FOVISSSTE_supplier + FOVISSSTE_payroll
+
+                master_total_amount_ISSSTE += ISSSTE_supplier + ISSSTE_payroll
+                master_total_amount_FOVISSSTE += FOVISSSTE_supplier + FOVISSSTE_payroll
+                
                 if payroll:
                     payment_type_name = 'Nómina'
                     lines.append({
@@ -137,8 +153,8 @@ class TypeofOperation(models.AbstractModel):
                                     self._format({'name': payroll},figure_type='float'), 
                                     self._format({'name': 0.0},figure_type='float'),
                                     self._format({'name': 0.0},figure_type='float'),
-                                    self._format({'name': 0.0},figure_type='float'),
-                                    self._format({'name': 0.0},figure_type='float'), 
+                                    self._format({'name': ISSSTE_payroll},figure_type='float'),
+                                    self._format({'name': FOVISSSTE_payroll},figure_type='float'), 
                                     ],
                         'level': 3,
                         'parent_id': 'hierarchy1_' + str(journal.id),
@@ -153,8 +169,8 @@ class TypeofOperation(models.AbstractModel):
                                     self._format({'name': 0.0},figure_type='float'), 
                                     self._format({'name': supplier},figure_type='float'),
                                     self._format({'name': 0.0},figure_type='float'),
-                                    self._format({'name': 0.0},figure_type='float'),
-                                    self._format({'name': 0.0},figure_type='float'), 
+                                    self._format({'name': ISSSTE_supplier},figure_type='float'),
+                                    self._format({'name': FOVISSSTE_supplier},figure_type='float'), 
                                     ],
                         'level': 3,
                         'parent_id': 'hierarchy1_' + str(journal.id),
@@ -183,8 +199,8 @@ class TypeofOperation(models.AbstractModel):
                             self._format({'name': total_amount_payroll},figure_type='float'),
                             self._format({'name': total_amount_supplier},figure_type='float'),
                             self._format({'name': total_amount_different_payroll},figure_type='float'),
-                            self._format({'name': 0.0},figure_type='float'),
-                            self._format({'name': 0.0},figure_type='float'), 
+                            self._format({'name': total_amount_ISSSTE},figure_type='float'),
+                            self._format({'name': total_amount_FOVISSSTE},figure_type='float'), 
                             ],
                 'level': 2,
                 'parent_id': 'hierarchy1_' + str(journal.id),
@@ -197,8 +213,8 @@ class TypeofOperation(models.AbstractModel):
                         self._format({'name': master_total_amount_payroll},figure_type='float'),
                         self._format({'name': master_total_amount_supplier},figure_type='float'),
                         self._format({'name': master_total_amount_different_payroll},figure_type='float'),
-                        self._format({'name': 0.0},figure_type='float'),
-                        self._format({'name': 0.0},figure_type='float'), 
+                        self._format({'name': master_total_amount_ISSSTE},figure_type='float'),
+                        self._format({'name': master_total_amount_FOVISSSTE},figure_type='float'), 
  
                         ],
             'level': 2,

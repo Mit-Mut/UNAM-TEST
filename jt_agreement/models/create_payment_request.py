@@ -19,7 +19,12 @@ class PaymentRequest(models.Model):
     date = fields.Date("Operation Number")
     reference = fields.Char("Reference")
     counter_receipt_sheet = fields.Char("Counter Receipt Sheet")
-    beneficiary_id = fields.Many2one('hr.employee', "Beneficiary's name")
-    bank_id = fields.Many2one("account.journal", "Bank")
-    account_number_id = fields.Many2one("res.partner.bank", "Beneficiary account number")
+    beneficiary_id = fields.Many2one('res.partner', "Beneficiary's name")
+    bank_id = fields.Many2one("res.partner.bank", "Bank")
+    account_number = fields.Char("Beneficiary account number")
     payment_request_number = fields.Char("Payment Request Number")
+    state = fields.Selection([('draft', 'Draft'),
+                              ('requested', 'Requested')], 'State', default='draft')
+
+    def request(self):
+        self.state = 'requested'

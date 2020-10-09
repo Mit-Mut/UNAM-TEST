@@ -8,3 +8,5 @@ access_request_open_balance,request.open.balance,model_request_open_balance,base
 access_request_open_balance_invest,request.open.balance.invest,model_request_open_balance_invest,base.group_user,1,1,1,1
 access_request_open_balance_finance,request.open.balance.finance,model_request_open_balance_finance,base.group_user,1,1,1,1
 access_collaboration_modification,collaboration.modification,model_bases_collaboration_modification,base.group_user,1,1,1,1
+access_collaboration_beneficiary,collaboration.beneficiary,model_collaboration_beneficiary,base.group_user,1,1,1,1
+access_collaboration_providers,collaboration.providers,model_collaboration_providers,base.group_user,1,1,1,1

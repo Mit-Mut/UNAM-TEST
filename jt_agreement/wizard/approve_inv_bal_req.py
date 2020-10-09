@@ -28,7 +28,7 @@ class ApproveInvestmentBalReq(models.TransientModel):
     _description = "Approve Investment Balance request"
 
     invoice = fields.Char("Invoice")
-    operation_number = fields.Integer("Operation Number")
+    operation_number = fields.Char("Operation Number")
     agreement_number = fields.Char("Agreement Number")
     bank_account_id = fields.Many2one('account.journal', "Bank and Origin Account")
     desti_bank_account_id = fields.Many2one('account.journal', "Destination Bank and Account")

@@ -31,6 +31,21 @@
             action="action_minimum_account_balances"
         />
 
+		<!-- Summary of Operation - Recovery of Expenses -->
+        <record id="action_summary_of_operations_recovery_of_expenses" model="ir.actions.client">
+            <field name="name">Summary of Operation - Recovery of Expenses</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'jt_finance.summaryof.operation.recovery.of.expenses'}"/>
+        </record>
+
+        <menuitem
+            id="menu_summary_of_operations_recovery_of_expenses"
+            name="Summary of Operation - Recovery of Expenses"
+            parent="jt_payroll_payment.menu_finance_reports"
+            sequence="5"
+            action="action_summary_of_operations_recovery_of_expenses"
+        />
+
 		<!-- Type of Operation -->
         <record id="action_type_of_operation_report1" model="ir.actions.client">
             <field name="name">Type of Operation</field>
@@ -105,6 +120,22 @@
             sequence="15"
             action="action_summaryof_operation_usd_expenditures"
         />
+
+		<!-- Summary of Operation USD Expenditures -->
+        <record id="action_summary_of_operations_bank_transactions" model="ir.actions.client">
+            <field name="name">Summary of Operations - Bank Transactions</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'jt_finance.summary.of.operations.bank.transactions'}"/>
+        </record>
+
+        <menuitem
+            id="menu_summary_of_operations_bank_transactions"
+            name="Summary of Operations - Bank Transactions"
+            parent="jt_payroll_payment.menu_finance_reports"
+            sequence="15"
+            action="action_summary_of_operations_bank_transactions"
+        />
+
 
     </data>
 </odoo>

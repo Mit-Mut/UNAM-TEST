@@ -61,3 +61,13 @@ class Contacts(models.Model):
                 raise UserError(_("There must be only one Supplier of payment of payroll!"))
         res = super(Contacts, self).write(vals)
         return res
+    
+    @api.constrains('name')
+    def check_min_balance(self):
+        if self.name:
+            if self.name=="ISSSTE":
+                if self.env['res.partner'].search([('name','=','ISSSTE')]):
+                    raise UserError(_('Contact ISSSTE already exists.'))
+            if self.name=="FOVISSSTE":
+                if self.env['res.partner'].search([('name','=','FOVISSSTE')]):
+                    raise UserError(_('Contact FOVISSSTE already exists.'))

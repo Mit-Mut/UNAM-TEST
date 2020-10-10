@@ -20,6 +20,7 @@ class BankTransferRequest(models.Model):
     origin_bank_id = fields.Many2one('res.bank','Origin Bank')
     origin_bank_account_id = fields.Many2one('res.partner.bank','Origin Bank Account')
     state = fields.Selection([('draft','Draft'),('request','Request'),('approved','Approved'),('rejected','Rejected')],string='Status',default='draft')
+    concept = fields.Char("Concept")
     
     @api.model
     def create(self,vals):

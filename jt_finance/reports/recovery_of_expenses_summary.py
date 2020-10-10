@@ -24,14 +24,14 @@ from odoo import models, api, _
 from datetime import datetime,timedelta
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tools.misc import formatLang
-from odoo.tools.misc import xlsxwriter
 import io
 import base64
+from odoo.tools.misc import xlsxwriter
 
-class DiaryOfBankMovementsInDollars(models.AbstractModel):
-    _name = "jt_finance.bank.diary.recovery.expenditures.dollars"
+class SummaryofOperationRecoveryofExpenses(models.AbstractModel):
+    _name = "jt_finance.summaryof.operation.recovery.of.expenses"
     _inherit = "account.coa.report"
-    _description = "Summary of Operation - Recovery of Expenditures USD"
+    _description = "Summary of Operation - Recovery of Expenses"
 
     filter_date = {'mode': 'range', 'filter': 'this_month'}
     filter_comparison = None
@@ -52,7 +52,7 @@ class DiaryOfBankMovementsInDollars(models.AbstractModel):
 
     def _get_templates(self):
         templates = super(
-            DiaryOfBankMovementsInDollars, self)._get_templates()
+            SummaryofOperationRecoveryofExpenses, self)._get_templates()
         templates[
             'main_table_header_template'] = 'account_reports.main_table_header'
         templates['main_template'] = 'account_reports.main_template'
@@ -92,9 +92,8 @@ class DiaryOfBankMovementsInDollars(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
-        previous_end_date = end - timedelta(days=1)
         
-        account_payment = self.env['account.payment'].search([('currency_id.name','=','USD'),('payment_date', '>=', start), ('payment_date', '<=', end),('payment_request_type','!=',False),('payment_state','=','for_payment_procedure')])
+        account_payment = self.env['account.payment'].search([('payment_date', '>=', start), ('payment_date', '<=', end),('payment_request_type','!=',False),('payment_state','=','for_payment_procedure')])
         for journal in account_payment.mapped("journal_id"):
             total_amount_current = 0
             total_amount_expense = 0
@@ -102,14 +101,14 @@ class DiaryOfBankMovementsInDollars(models.AbstractModel):
             lines.append({
                 'id': 'hierarchy1_' + str(journal.id),
                 'name': journal.name,
-                'columns': [{'name': ''}, {'name': ''}],
+                'columns': [{'name': ''},{'name': ''}],
                 'level': 1,
                 'unfoldable': False,
                 'unfolded': True,
             })
             account_id = journal.default_debit_account_id and journal.default_debit_account_id.id or False
             if account_id:
-                values= self.env['account.move.line'].search([('currency_id.name','=','USD'),('account_id', '=', account_id),('move_id.state', '=', 'posted'),('date','<=',previous_end_date)])
+                values= self.env['account.move.line'].search([('account_id', '=', account_id),('move_id.state', '=', 'posted')])
                 total_amount_current = sum(x.debit-x.credit for x in values)
 
             payment_accounts = account_payment.filtered(lambda x:x.journal_id.id==journal.id).mapped('payment_issuing_bank_acc_id')
@@ -117,11 +116,10 @@ class DiaryOfBankMovementsInDollars(models.AbstractModel):
                 expense_amount = sum(x.amount for x in account_payment.filtered(lambda x:x.journal_id.id==journal.id and x.payment_issuing_bank_acc_id.id == account.id))
                 total_amount_expense += expense_amount
 
-
                 lines.append({
                     'id': 'hierarchy2_' +str(journal.id) +str(account.id),
                     'name': account.acc_number,
-                    'columns': [self._format({'name': total_amount_current},figure_type='float'), 
+                    'columns': [self._format({'name': total_amount_current},figure_type='float'),
                                 self._format({'name': expense_amount},figure_type='float'), 
                                 ],
                     'level': 3,
@@ -131,8 +129,8 @@ class DiaryOfBankMovementsInDollars(models.AbstractModel):
             lines.append({
                 'id': 'hierarchy1total_' + str(journal.id),
                 'name': "Suma Total",
-                'columns': [ 
-                                self._format({'name': total_amount_current},figure_type='float'), 
+                'columns': [
+                                self._format({'name': total_amount_current},figure_type='float'),
                                 self._format({'name': total_amount_expense},figure_type='float'),
                             ],
                 'level': 2,
@@ -142,7 +140,7 @@ class DiaryOfBankMovementsInDollars(models.AbstractModel):
         return lines
 
     def _get_report_name(self):
-        return _("Summary of Operation - Recovery of Expenditures USD")
+        return _("Summary of Operation - Recovery of Expenses")
     
     @api.model
     def _get_super_columns(self, options):
@@ -174,16 +172,14 @@ class DiaryOfBankMovementsInDollars(models.AbstractModel):
         currect_date_style.set_border(0)
         super_col_style.set_border(0)
         #Set the first column width to 50
-        sheet.set_column(0, 0,25)
-        sheet.set_column(0, 1,25)
-        sheet.set_column(0,2,25)
+        sheet.set_column(0, 0,40)
+        sheet.set_column(0, 1,20)
+        sheet.set_column(0, 2,20)
         super_columns = self._get_super_columns(options)
-        #y_offset = bool(super_columns.get('columns')) and 1 or 0
-        #sheet.write(y_offset, 0,'', title_style)
         y_offset = 0
         col = 0
         
-        sheet.merge_range(y_offset, col, 5, col, '',super_col_style)
+        sheet.merge_range(y_offset, col, 6, col, '',super_col_style)
 #         if self.env.user and self.env.user.company_id and self.env.user.company_id.header_logo:
 #          
 #             image_data = io.BytesIO(base64.standard_b64decode(self.env.user.company_id.header_logo))
@@ -200,17 +196,6 @@ class DiaryOfBankMovementsInDollars(models.AbstractModel):
         sheet.merge_range(y_offset, col, y_offset, col+1, currect_time_msg,currect_date_style)
         y_offset += 1
         
-        # Todo in master: Try to put this logic elsewhere
-#         x = super_columns.get('x_offset', 0)
-#         for super_col in super_columns.get('columns', []):
-#             cell_content = super_col.get('string', '').replace('<br/>', ' ').replace('&nbsp;', ' ')
-#             x_merge = super_columns.get('merge')
-#             if x_merge and x_merge > 1:
-#                 sheet.merge_range(0, x, 0, x + (x_merge - 1), cell_content, super_col_style)
-#                 x += x_merge
-#             else:
-#                 sheet.write(0, x, cell_content, super_col_style)
-#                 x += 1
         for row in self.get_header(options):
             x = 0
             for column in row:

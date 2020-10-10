@@ -58,6 +58,7 @@
 	                			<field name="req_transfer"/>
 	                			<field name="operation_type"/>
 	                			<field name="observation"/>
+	                			<field name="concept"/>
 	                		</group>
 	                	</group>
 	                </sheet>

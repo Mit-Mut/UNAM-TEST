@@ -646,7 +646,7 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                 amount = line[99:114]
                 status = line[165:167]
                 
-                if account_no and amount and status and status=='000':
+                if account_no and amount and status and status=='00':
                     first_amount = amount[:-2]
                     last_amount = amount[-2:]
                     act_amount = first_amount+"."+last_amount

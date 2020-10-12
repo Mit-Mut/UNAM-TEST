@@ -12,5 +12,18 @@
        <menuitem id="submenu_menu_investment_request_for_transfers" name="Request for Transfers" sequence="10" parent="main_menu_investment"/>
        <menuitem id="submenu_menu_investment_reports" name="Reports" sequence="12" parent="main_menu_investment"/>
        <menuitem id="submenu_menu_investment_config" name="Configuration" sequence="14" parent="main_menu_investment"/>
+       
+               <!-- Sub Menus of Sub menus Investments-->
+
+        <record id="action_req_open_balance_investment_with_new" model="ir.actions.act_window">
+            <field name="name">Increases and Withdrawals</field>
+            <field name="res_model">request.open.balance.invest</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+               
+        <menuitem id="menu_increments_withdrawals_inv" name="Increments/Withdrawals"
+                  parent="submenu_menu_investment_money"
+                 action="action_req_open_balance_investment_with_new" sequence="1"/>
+       
 	</data>
 </odoo>

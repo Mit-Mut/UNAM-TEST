@@ -17,6 +17,13 @@
             <field name="model">investment.will.pay</field>
             <field name="arch" type="xml">
                 <form>
+                	<header>
+                		<button name="action_confirm" states="draft" string="Confirm" class="oe_highlight" type="object" />
+                		<button name="action_calculation" states="draft" string="Calculation" class="oe_highlight" type="object" />
+                		<button name="action_reinvestment" states="draft" string="Reinvestment" class="oe_highlight" type="object" />                		
+                		<field name="state" widget="statusbar"/>
+                	</header>
+                
                     <sheet>
                         <group>
                             <group>
@@ -46,6 +53,28 @@
                         	</group>
                         	</page>
                         	<page string="Returns">
+                        		<group string="Simple Interest">
+                        			<group>
+                        				<field name="simple_interest_capital"/>
+                        				<field name="simple_interest_future_value"/>
+                        			</group>
+                        			<group>
+                        				<field name="simple_interest_estimated_yield"/>
+                        				<field name="simple_interest_real_performance"/>
+                        				<field name="simple_estimated_real_variation"/>
+                        			</group>
+                        		</group>
+                        		<group string="Compound Interest">
+                        			<group>
+                        				<field name="compound_interest_total"/>
+                        			</group>
+                        			<group>
+                        				<field name="compound_interest_estimated_yield"/>
+                        				<field name="compound_interest_real_performance"/>
+                        				<field name="compound_estimated_real_variation"/>
+                        			</group>
+                        		</group>
+                        		
                         	</page>
                         </notebook>
                     </sheet>

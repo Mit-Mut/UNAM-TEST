@@ -43,8 +43,10 @@
         'views/assest.xml',
         'wizard/excel_export_assign_view.xml',
         
-        #Reports 
+        #Reports
+        'reports/search_template.xml', 
         'reports/menu_reports.xml',
+        'reports/pdf_report_header_layout.xml',
     ],
     'application': False,
     'installable': True,

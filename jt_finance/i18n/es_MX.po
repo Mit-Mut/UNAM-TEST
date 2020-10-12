@@ -1050,6 +1050,64 @@ msgstr "Tipo de Consulta Operación"
 msgid "Summary Query Type"
 msgstr "Tipo de Consulta Resumen"
 
+#. module: jt_finance
+#: code:addons/jt_finance/reports/recovery_of_expenses_summary.py:0
+#: model:ir.actions.client,name:jt_finance.action_summary_of_operations_recovery_of_expenses
+#: model:ir.model,name:jt_finance.model_jt_finance_summaryof_operation_recovery_of_expenses
+#: model:ir.ui.menu,name:jt_finance.menu_summary_of_operations_recovery_of_expenses
+#, python-format
+msgid "Summary of Operation - Recovery of Expenses"
+msgstr "Resumen de la operación- recuperación de egresos"
+
+#. module: jt_finance
+#: code:addons/jt_finance/reports/diary_of_bank_movements_in_dollars.py:0
+#, python-format
+msgid "Diary Of Bank Movements In Dollars"
+msgstr "Diario de movimientos bancarios en dólares"
+
+#. module: jt_finance
+#: model:ir.actions.client,name:jt_finance.action_diary_bank_movements_dollars
+#: model:ir.model,name:jt_finance.model_jt_finance_diary_bank_movements_dollars
+#: model:ir.ui.menu,name:jt_finance.menu_diary_bank_movements_dollars
+msgid "Diary of Bank Movements in dollars"
+msgstr "Diario de movimientos bancarios en dólares"
+
+#. module: jt_finance
+#: code:addons/jt_finance/reports/bank_diary_summary_operation_usd.py:0
+#: model:ir.actions.client,name:jt_finance.action_bank_diary_recovery_expenditures_dollars
+#: model:ir.model,name:jt_finance.model_jt_finance_bank_diary_recovery_expenditures_dollars
+#: model:ir.ui.menu,name:jt_finance.menu_bank_diary_recovery_expenditures_dollars
+#, python-format
+msgid "Summary of Operation - Recovery of Expenditures USD"
+msgstr "Resumen de la operación - Recuperación de gastos USD"
+
+#. module: jt_finance
+#: code:addons/jt_finance/reports/summary_of_operation_usd_expenditures.py:0
+#: model:ir.actions.client,name:jt_finance.action_summaryof_operation_usd_expenditures
+#: model:ir.ui.menu,name:jt_finance.menu_summaryof_operation_usd_expenditures
+#, python-format
+msgid "Summary of Operation-USD Expenditures"
+msgstr "Resumen de gastos de operación-USD"
+
+#. module: jt_finance
+#: model:ir.actions.client,name:jt_finance.action_summary_of_operations_bank_transactions
+#: model:ir.model,name:jt_finance.model_jt_finance_summary_of_operations_bank_transactions
+#: model:ir.ui.menu,name:jt_finance.menu_summary_of_operations_bank_transactions
+msgid "Summary of Operations - Bank Transactions"
+msgstr "Resumen de operaciones- transacciones bancarias"
+
+#. module: jt_finance
+#: model_terms:ir.ui.view,arch_db:jt_finance.search_template_currency
+msgid ""
+"<span class=\"fa fa-book\"/>\n"
+"            Currency:"
+msgstr ""
+"<span class=\"fa fa-book\"/>\n"
+"            Moneda:"
+
+
+
+
 
 
 

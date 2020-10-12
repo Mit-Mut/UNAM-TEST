@@ -22,6 +22,13 @@
             <field name="model">investment.cetes</field>
             <field name="arch" type="xml">
                 <form>
+                	<header>
+                		<button name="action_confirm" states="draft" string="Confirm" class="oe_highlight" type="object" />
+                		<button name="action_calculation" states="draft" string="Calculation" class="oe_highlight" type="object" />
+                		<button name="action_reinvestment" states="draft" string="Reinvestment" class="oe_highlight" type="object" />
+                		
+                		<field name="state" widget="statusbar"/>
+                	</header>
                     <sheet>
                         <group>
                             <group>

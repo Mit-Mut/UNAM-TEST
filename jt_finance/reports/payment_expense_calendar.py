@@ -27,6 +27,8 @@ from odoo.tools.misc import formatLang
 from odoo.tools.misc import xlsxwriter
 import io
 import base64
+from odoo.tools import config, date_utils, get_lang
+import lxml.html
 
 class PaymentExpenseCalendar(models.AbstractModel):
     _name = "jt_finance.payment.expense.calendar"
@@ -174,8 +176,7 @@ class PaymentExpenseCalendar(models.AbstractModel):
         level_3_col1_total_style = workbook.add_format({'font_name': 'Arial', 'bold': True, 'font_size': 12, 'font_color': '#666666', 'indent': 1})
         level_3_style = workbook.add_format({'font_name': 'Arial', 'font_size': 12, 'font_color': '#666666'})
         currect_date_style = workbook.add_format({'font_name': 'Arial', 'bold': True, 'align': 'right'})
-        currect_date_style.set_border(0)
-        super_col_style.set_border(0)
+        
         #Set the first column width to 50
         sheet.set_column(0, 0,15)
         sheet.set_column(0, 1,20)
@@ -190,12 +191,11 @@ class PaymentExpenseCalendar(models.AbstractModel):
         y_offset = 0
         col = 0
         
-        sheet.merge_range(y_offset, col, 6, col, '',super_col_style)
-#         if self.env.user and self.env.user.company_id and self.env.user.company_id.header_logo:
-#          
-#             image_data = io.BytesIO(base64.standard_b64decode(self.env.user.company_id.header_logo))
-#             print ("image_data===",image_data)
-#             sheet.insert_image('A0', 'logo.png', {'image_data': image_data})
+        sheet.merge_range(y_offset, col, 6, col, '')
+        if self.env.user and self.env.user.company_id and self.env.user.company_id.header_logo:
+            filename = 'logo.png'
+            image_data = io.BytesIO(base64.standard_b64decode(self.env.user.company_id.header_logo))
+            sheet.insert_image(0,0, filename, {'image_data': image_data,'x_offset':8,'y_offset':3,'x_scale':0.6,'y_scale':0.6})
         
         col += 1
         header_title = '''UNIVRSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nPATRONATO UNIVERSITARIO\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nDepartamento de Control Financiero\n%s'''%self._get_report_name()
@@ -283,3 +283,76 @@ class PaymentExpenseCalendar(models.AbstractModel):
         output.close()
         return generated_file    
         
+
+    def get_pdf(self, options, minimal_layout=True):
+        # As the assets are generated during the same transaction as the rendering of the
+        # templates calling them, there is a scenario where the assets are unreachable: when
+        # you make a request to read the assets while the transaction creating them is not done.
+        # Indeed, when you make an asset request, the controller has to read the `ir.attachment`
+        # table.
+        # This scenario happens when you want to print a PDF report for the first time, as the
+        # assets are not in cache and must be generated. To workaround this issue, we manually
+        # commit the writes in the `ir.attachment` table. It is done thanks to a key in the context.
+        minimal_layout = False
+        if not config['test_enable']:
+            self = self.with_context(commit_assetsbundle=True)
+
+        base_url = self.env['ir.config_parameter'].sudo().get_param('report.url') or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        rcontext = {
+            'mode': 'print',
+            'base_url': base_url,
+            'company': self.env.company,
+        }
+
+        body = self.env['ir.ui.view'].render_template(
+            "account_reports.print_template",
+            values=dict(rcontext),
+        )
+        body_html = self.with_context(print_mode=True).get_html(options)
+
+        body = body.replace(b'<body class="o_account_reports_body_print">', b'<body class="o_account_reports_body_print">' + body_html)
+        if minimal_layout:
+            header = ''
+            footer = self.env['ir.actions.report'].render_template("web.internal_layout", values=rcontext)
+            spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 10}
+            footer = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
+        else:
+            rcontext.update({
+                    'css': '',
+                    'o': self.env.user,
+                    'res_company': self.env.company,
+                })
+            header = self.env['ir.actions.report'].render_template("jt_finance.external_layout_payment_expense", values=rcontext)
+            header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
+            spec_paperformat_args = {}
+            # Default header and footer in case the user customized web.external_layout and removed the header/footer
+            headers = header.encode()
+            footer = b''
+            # parse header as new header contains header, body and footer
+            try:
+                root = lxml.html.fromstring(header)
+                match_klass = "//div[contains(concat(' ', normalize-space(@class), ' '), ' {} ')]"
+
+                for node in root.xpath(match_klass.format('header')):
+                    headers = lxml.html.tostring(node)
+                    headers = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=headers))
+
+                for node in root.xpath(match_klass.format('footer')):
+                    footer = lxml.html.tostring(node)
+                    footer = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
+
+            except lxml.etree.XMLSyntaxError:
+                headers = header.encode()
+                footer = b''
+            header = headers
+
+        landscape = False
+        if len(self.with_context(print_mode=True).get_header(options)[-1]) > 5:
+            landscape = True
+
+        return self.env['ir.actions.report']._run_wkhtmltopdf(
+            [body],
+            header=header, footer=footer,
+            landscape=landscape,
+            specific_paperformat_args=spec_paperformat_args
+        )

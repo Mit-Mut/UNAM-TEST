@@ -52,6 +52,7 @@ class BasesCollabration(models.Model):
     availability_account_id = fields.Many2one('account.account', "Availability Accounting Account")
     state = fields.Selection([('draft', 'Draft'),
                                ('valid', 'Valid'),
+                               ('in_force', 'In Force'),
                               ('to_be_cancelled', 'To Be Cancelled'),
                               ('cancelled', 'Cancelled')], "Status", default='draft')
     total_operations = fields.Integer("Operations", compute="compute_operations")
@@ -75,6 +76,10 @@ class BasesCollabration(models.Model):
     beneficiary_ids = fields.One2many('collaboration.beneficiary', 'collaboration_id')
     provider_ids = fields.One2many('collaboration.providers', 'collaboration_id')
 
+    cancel_date = fields.Date("Cancellation date")
+    supporing_doc = fields.Binary("Supporting Documentation")
+    reason_cancel = fields.Text("Reason for Cancellations")
+
     _sql_constraints = [
         ('folio_convention_no', 'unique(convention_no)', 'The Convention No. must be unique.')]
 
@@ -91,6 +96,16 @@ class BasesCollabration(models.Model):
             if rec.name:
                 modifications = modification_obj.search([('bases_collaboration_id', '=', rec.id)])
                 rec.total_modifications = len(modifications)
+
+    def cancel(self):
+        return {
+            'name': 'Cancel Collaboration',
+            'view_mode': 'form',
+            'view_id': self.env.ref('jt_agreement.cancel_collaboration_form_view').id,
+            'res_model': 'cancel.collaboration',
+            'type': 'ir.actions.act_window',
+            'target': 'new'
+        }
 
     def action_operations(self):
         operation_obj = self.env['request.open.balance']
@@ -332,7 +347,9 @@ class RequestOpenBalance(models.Model):
     type_of_operation = fields.Selection([('open_bal', 'Opening Balance'),
                                           ('increase', 'Increase'),
                                           ('retirement', 'Retirement'),
-                                          ('withdrawal', 'Withdrawal for settlement')], string="Type of Operation")
+                                          ('withdrawal', 'Withdrawal for settlement'),
+                                          ('withdrawal_cancellation', 'Withdrawal Due to Cancellation')],
+                                         string="Type of Operation")
     apply_to_basis_collaboration = fields.Boolean("Apply to Basis of Collaboration")
     origin_resource_id = fields.Many2one('sub.origin.resource', "Origin of the resource")
     state = fields.Selection([('draft', 'Draft'),
@@ -362,6 +379,27 @@ class RequestOpenBalance(models.Model):
     create_payment_request = fields.Boolean("Create Payment Request")
     beneficiary_id = fields.Many2one('res.partner', "Beneficiary")
     provider_id = fields.Many2one('res.partner', "Provider")
+    is_cancel_collaboration = fields.Boolean("Operation of cancel collaboration", default=False)
+
+    @api.model
+    def create(self, vals):
+        res = super(RequestOpenBalance, self).create(vals)
+        if res and res.is_cancel_collaboration and res.type_of_operation != 'withdrawal_cancellation':
+            raise ValidationError(_("Type of Operation must be 'Withdrawal Due to Cancellation' for this operation!"))
+        if res and not res.is_cancel_collaboration and res.type_of_operation == 'withdrawal_cancellation':
+            raise ValidationError(_("Can't create Operation with 'Withdrawal Due to Cancellation' Type of Operation manually!"))
+        return res
+
+    def write(self, vals):
+        res = super(RequestOpenBalance, self).write(vals)
+        for rec in self:
+            if rec.is_cancel_collaboration and rec.type_of_operation != 'withdrawal_cancellation':
+                raise ValidationError(
+                    _("Type of Operation must be 'Withdrawal Due to Cancellation' for this operation!"))
+            if not rec.is_cancel_collaboration and rec.type_of_operation == 'withdrawal_cancellation':
+                raise ValidationError(
+                        _("Can't create Operation with 'Withdrawal Due to Cancellation' Type of Operation manually!"))
+        return res
 
     def action_create_payment_req(self):
         payment_req_obj = self.env['payment.request']
@@ -416,6 +454,7 @@ class RequestOpenBalance(models.Model):
             'name': self.name,
             'operation_number': self.operation_number,
             'agreement_number': self.agreement_number,
+            'is_cancel_collaboration': True if self.type_of_operation == 'withdrawal_cancellation' else False,
             'type_of_operation': self.type_of_operation,
             'apply_to_basis_collaboration': self.apply_to_basis_collaboration,
             'origin_resource_id': self.origin_resource_id and self.origin_resource_id.id or False,
@@ -436,6 +475,8 @@ class RequestOpenBalance(models.Model):
 
         })
         self.state = 'requested'
+        if self.type_of_operation == 'withdrawal_cancellation' and self.bases_collaboration_id:
+            self.bases_collaboration_id.state = 'to_be_cancelled'
 
 class RequestOpenBalanceInvestment(models.Model):
 
@@ -449,7 +490,9 @@ class RequestOpenBalanceInvestment(models.Model):
     type_of_operation = fields.Selection([('open_bal', 'Opening Balance'),
                                           ('increase', 'Increase'),
                                           ('retirement', 'Retirement'),
-                                          ('withdrawal', 'Withdrawal for settlement')], string="Type of Operation")
+                                          ('withdrawal', 'Withdrawal for settlement'),
+                                          ('withdrawal_cancellation', 'Withdrawal Due to Cancellation')],
+                                            string="Type of Operation")
     apply_to_basis_collaboration = fields.Boolean("Apply to Basis of Collaboration")
     origin_resource_id = fields.Many2one('sub.origin.resource', "Origin of the resource")
     state = fields.Selection([('draft', 'Draft'),
@@ -478,6 +521,28 @@ class RequestOpenBalanceInvestment(models.Model):
     supporting_documentation = fields.Binary("Supporting Documentation")
 
     reason_rejection = fields.Text("Reason for Rejection")
+    is_cancel_collaboration = fields.Boolean("Operation of cancel collaboration", default=False)
+
+    @api.model
+    def create(self, vals):
+        res = super(RequestOpenBalanceInvestment, self).create(vals)
+        if res and res.is_cancel_collaboration and res.type_of_operation != 'withdrawal_cancellation':
+            raise ValidationError(_("Type of Operation must be 'Withdrawal Due to Cancellation' for this operation!"))
+        if res and not res.is_cancel_collaboration and res.type_of_operation == 'withdrawal_cancellation':
+            raise ValidationError(
+                _("Can't create Operation with 'Withdrawal Due to Cancellation' Type of Operation manually!"))
+        return res
+
+    def write(self, vals):
+        res = super(RequestOpenBalanceInvestment, self).write(vals)
+        for rec in self:
+            if rec.is_cancel_collaboration and rec.type_of_operation != 'withdrawal_cancellation':
+                raise ValidationError(
+                    _("Type of Operation must be 'Withdrawal Due to Cancellation' for this operation!"))
+            if not rec.is_cancel_collaboration and rec.type_of_operation == 'withdrawal_cancellation':
+                raise ValidationError(
+                    _("Can't create Operation with 'Withdrawal Due to Cancellation' Type of Operation manually!"))
+        return res
 
     @api.constrains('operation_number')
     def _check_operation_number(self):
@@ -662,7 +727,10 @@ class AccountPayment(models.Model):
                         balance_req = fin_req.request_id.balance_req_id
                         balance_req.state = 'confirmed'
                         if balance_req.bases_collaboration_id:
-                            if balance_req.type_of_operation == 'withdrawal':
+                            if balance_req.type_of_operation == 'withdrawal_cancellation':
+                                balance_req.bases_collaboration_id.available_bal = 0
+                                balance_req.bases_collaboration_id.state = 'cancelled'
+                            elif balance_req.type_of_operation == 'withdrawal':
                                 balance_req.bases_collaboration_id.available_bal = 0
                                 balance_req.bases_collaboration_id.state = 'cancelled'
                             elif balance_req.type_of_operation == 'retirement':

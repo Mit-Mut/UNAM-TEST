@@ -174,7 +174,7 @@ class MinimumAccountBalance(models.AbstractModel):
             sheet.insert_image(0,0, filename, {'image_data': image_data,'x_offset':8,'y_offset':3,'x_scale':0.6,'y_scale':0.6})
         
         col += 1
-        header_title = '''UNIVRSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nPATRONATO UNIVERSITARIO\nDIRECCIÓN GENERAL DE FINANZAS\n%s'''%self._get_report_name()
+        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nPATRONATO UNIVERSITARIO\nDIRECCIÓN GENERAL DE FINANZAS\n%s'''%self._get_report_name()
         sheet.merge_range(y_offset, col, 5, col+3, header_title,super_col_style)
         y_offset += 6
         col=1

@@ -40,14 +40,15 @@ class ReasonRejection(models.TransientModel):
             if rec.request_id:
                 rec.request_id.state = 'rejected'
                 rec.request_id.reason_rejection = self.name
-                if rec.request_id.balance_req_id:
-                    rec.request_id.balance_req_id.state = 'rejected'
-                    rec.request_id.balance_req_id.reason_rejection = self.name
+                if rec.request_id.type_of_operation != 'withdrawal_cancellation':
+                    if rec.request_id.balance_req_id:
+                        rec.request_id.balance_req_id.state = 'rejected'
+                        rec.request_id.balance_req_id.reason_rejection = self.name
         elif active_model == 'request.open.balance.invest':
             rec.state = 'rejected'
             rec.reason_rejection = self.name
             if rec.balance_req_id:
-                if rec.balance_req_id.type_of_operation in ('increase', 'retirement'):
+                if rec.balance_req_id.type_of_operation in ('increase', 'retirement', 'withdrawal_cancellation'):
                     rec.balance_req_id.state = 'canceled'
                     rec.balance_req_id.reason_rejection = self.name
                 else:

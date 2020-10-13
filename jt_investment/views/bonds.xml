@@ -7,12 +7,13 @@
             <field name="model">investment.bonds</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="name"/>
+                    <field name="folio"/>
        				<field name="kind_of_product"/>
        				<field name="key"/>
        				<field name="issue_date"/>
        				<field name="due_date"/>
        				<field name="nominal_value"/>
+       				<field name="state"/>
                 </tree>
             </field>
         </record>
@@ -24,6 +25,7 @@
                 <form>
                 	<header>
                 		<button name="action_confirm" states="draft" string="Confirm" class="oe_highlight" type="object" />
+                		<button name="action_reset_to_draft" states="in_process" string="Reset To Draft" class="oe_highlight" type="object"/>
                 		<button name="action_calculation" states="draft" string="Calculation" class="oe_highlight" type="object" />
                 		<button name="action_reinvestment" states="draft" string="Reinvestment" class="oe_highlight" type="object" />
                 		<field name="state" widget="statusbar"/>
@@ -32,9 +34,23 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="name" required="1"/>
+                                <field name="folio" readonly="1"/>
+                                <field name="date_time"/>
+                                <field name="journal_id" domain="[('type','=','bank')]" options="{'no_create': True}"/>
+                                <field name="bank_id"/>
+                                <field name="amount_invest"/>
+                                <field name="currency_id" options="{'no_create': True}"/>
+                                <field name="currency_rate_id" domain="[('currency_id','=',currency_id)]" options="{'no_create': True}"/>
+                                <field name="total_currency_rate"/>
                             </group>
                             <group>
+                                <field name="contract_id" options="{'no_create': True}"/>
+                                <field name="document_type"/>
+                                <field name="instrument_it"/>
+                                <field name="account_executive"/>
+                                <field name="UNAM_operator"/>
+                                <field name="is_federal_subsidy_resources"/>
+                                <field name="observations"/>                            
                             </group>
                         </group>
                         <notebook>
@@ -66,7 +82,6 @@
                         				<field name="udi_value_multiplied"/>
                         				<field name="coupon_rate"/>
                         				<field name="period_days"/>
-                        				<field name="coupon"/>
                         			</group>
                         		</group>
                         		
@@ -104,7 +119,7 @@
             <field name="model">investment.bonds</field>
             <field name="arch" type="xml">
                 <search>
-                    <field name="name"/>
+                    <field name="folio"/>
                 </search>
             </field>
         </record>

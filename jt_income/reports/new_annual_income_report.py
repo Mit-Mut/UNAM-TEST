@@ -21,7 +21,7 @@
 #
 ##############################################################################
 from odoo import models, api, _
-from datetime import datetime,timedelta
+from datetime import datetime
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tools.misc import formatLang
 from odoo.tools.misc import xlsxwriter
@@ -30,10 +30,10 @@ import base64
 from odoo.tools import config, date_utils, get_lang
 import lxml.html
 
-class SummaryofOperationsBankTransactions(models.AbstractModel):
-    _name = "jt_finance.summary.of.operations.bank.transactions"
+class AnnualIncomeReport(models.AbstractModel):
+    _name = "jt_income.annual.income.report"
     _inherit = "account.coa.report"
-    _description = "Summary of Operations - Bank Transactions"
+    _description = "Annual Income Report"
 
     filter_date = {'mode': 'range', 'filter': 'this_month'}
     filter_comparison = None
@@ -54,7 +54,7 @@ class SummaryofOperationsBankTransactions(models.AbstractModel):
 
     def _get_templates(self):
         templates = super(
-            SummaryofOperationsBankTransactions, self)._get_templates()
+            AnnualIncomeReport, self)._get_templates()
         templates[
             'main_table_header_template'] = 'account_reports.main_table_header'
         templates['main_template'] = 'account_reports.main_template'
@@ -62,16 +62,22 @@ class SummaryofOperationsBankTransactions(models.AbstractModel):
 
     def _get_columns_name(self, options):
         return [
-            {'name': _('No.')},
-            {'name': _('BANCO RETIRO')},
-            {'name': _('CUENTA')},
-            {'name': _('INTERBANCARIO')},
-            {'name': _('BANCARIO')},
-            {'name': _('CHEQUE')},
-            {'name': _('BANCO DEPOSITO')},
-            {'name': _('CUENTA DEPOSITO')},
-            {'name': _('CONCEPTO')},
-            {'name': _('ESTATUS')},
+            {'name': _('Mes')},
+            {'name': _('Subsidy 2020')},
+            {'name': _('Subsidy Receivable')},
+            {'name': _('Enrollment And Tuition')},
+            {'name': _('Selection Contest')},
+            {'name': _('Incorporation And Revalidation')},
+            {'name': _('Extraordinary Income')},
+            {'name': _('Patrimonial Income')},
+            {'name': _('Financial Products')},
+            {'name': _('Total')},
+            {'name': _('Nomina')},
+            {'name': _('Suppliers')},
+            {'name': _('Other Benefits')},
+            {'name': _('Major Maintenance Fund')},
+            {'name': _('FIF Funds')},
+            {'name': _('Total')},
         ]
 
     def _format(self, value,figure_type):
@@ -101,82 +107,31 @@ class SummaryofOperationsBankTransactions(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
-
-        lines.append({
-                'id': 'hierarchy1_EXPENSE',
-                'name': 'COBERTURA DE EGRESOS',
-                'columns': [{'name': ''}, {'name': ''},{'name': ''},{'name': ''},{'name': ''},{'name': ''},{'name': ''},{'name': ''},{'name': ''}],
-                'level': 1,
-                'unfoldable': False,
-                'unfolded': True,
-            })
-        bank_transfer_requests = self.env['bank.transfer.request'].search([('application_date', '>=', start), ('application_date', '<=', end),])
-        total_amount = 0
-        for transfer in bank_transfer_requests:
-            total_amount += transfer.amount
-            state = dict(transfer._fields['state'].selection).get(transfer.state)
-            lines.append({
-                    'id': 'hierarchy1_'+str(transfer.id),
-                    'name': transfer.name,
-                    'columns': [{'name': transfer.origin_bank_id and transfer.origin_bank_id.name or ''}, 
-                                {'name': transfer.origin_bank_account_id and transfer.origin_bank_account_id.acc_number or ''},
-                                {'name': ''},
-                                self._format({'name': transfer.amount},figure_type='float'),
-                                {'name': ''},
-                                {'name': transfer.bank_id and transfer.bank_id.name or ''},
-                                {'name': transfer.bank_account_id and transfer.bank_account_id.acc_number or ''},
-                                {'name': transfer.concept},
-                                {'name': state}],
-                    'level': 3,
-                    'unfoldable': False,
-                    'unfolded': True,
-                })
-        if total_amount:
-            lines.append({
-                    'id': 'hierarchy_total',
-                    'name': '',
-                    'columns': [{'name': ''}, 
-                                {'name': ''},
-                                {'name': ''},
-                                self._format({'name': total_amount},figure_type='float'),
-                                {'name': ''},
-                                {'name': ''},
-                                {'name': ''},
-                                {'name': ''},
-                                {'name': ''}],
-                    'level': 3,
-                    'unfoldable': False,
-                    'unfolded': True,
-                })
-    
-            lines.append({
-                    'id': 'hierarchy_total_movement',
-                    'name': '',
-                    'columns': [{'name': ''}, 
-                                {'name': ''},
-                                {'name': ''},
-                                {'name': ''},
-                                {'name': ''},
-                                {'name': ''},
-                                {'name': 'TOTAL MOVIMIENTOS:'},
-                                self._format({'name': total_amount},figure_type='float'),
-                                {'name': ''}],
-                    'level': 3,
-                    'unfoldable': False,
-                    'unfolded': True,
-                })
+        
+#         account_payment = self.env['account.payment'].search([('payment_date', '>=', start), ('payment_date', '<=', end),('payment_request_type','!=',False),('payment_state','=','for_payment_procedure')])
+#         for journal in account_payment.mapped("journal_id"):
+#             total_amount = 0
+#             lines.append({
+#                 'id': 'hierarchy1_' + str(journal.id),
+#                 'name': journal.name,
+#                 'columns': [{'name': ''}, {'name': ''}, {'name': ''}, {'name': ''}],
+#                 'level': 1,
+#                 'unfoldable': False,
+#                 'unfolded': True,
+#             })
             
         return lines
 
     def _get_report_name(self):
-        return _("Bank Journal (Summary of Operations - Bank Transactions)")
+        return _("Annual Income Report")
     
     @api.model
     def _get_super_columns(self, options):
         date_cols = options.get('date') and [options['date']] or []
         date_cols += (options.get('comparison') or {}).get('periods', [])
         columns = reversed(date_cols)
-        return {'columns': columns, 'x_offset': 1, 'merge': 4}
+        return {'columns': columns, 'x_offset': 1, 'merge': 5}
+
 
     def get_xlsx(self, options, response=None):
         output = io.BytesIO()
@@ -198,30 +153,35 @@ class SummaryofOperationsBankTransactions(models.AbstractModel):
         level_3_col1_total_style = workbook.add_format({'font_name': 'Arial', 'bold': True, 'font_size': 12, 'font_color': '#666666', 'indent': 1})
         level_3_style = workbook.add_format({'font_name': 'Arial', 'font_size': 12, 'font_color': '#666666'})
         currect_date_style = workbook.add_format({'font_name': 'Arial', 'bold': True, 'align': 'right'})
-        currect_date_style.set_border(0)
-        super_col_style.set_border(0)
+        
         #Set the first column width to 50
-        super_columns = self._get_super_columns(options)
         sheet.set_column(0, 0,15)
+        sheet.set_column(0, 1,20)
+        sheet.set_column(0, 2,20)
+        sheet.set_column(0, 3,12)
+        sheet.set_column(0, 4,20)
+        #sheet.set_row(0, 0,50)
+        #sheet.col(0).width = 90 * 20
+        super_columns = self._get_super_columns(options)
         #y_offset = bool(super_columns.get('columns')) and 1 or 0
         #sheet.write(y_offset, 0,'', title_style)
         y_offset = 0
         col = 0
         
-        sheet.merge_range(y_offset, col, 6, col, '',super_col_style)
+        sheet.merge_range(y_offset, col, 6, col, '')
         if self.env.user and self.env.user.company_id and self.env.user.company_id.header_logo:
             filename = 'logo.png'
             image_data = io.BytesIO(base64.standard_b64decode(self.env.user.company_id.header_logo))
-            sheet.insert_image(0,0, filename, {'image_data': image_data,'x_offset':5,'y_offset':3,'x_scale':0.46,'y_scale':0.6})
+            sheet.insert_image(0,0, filename, {'image_data': image_data,'x_offset':8,'y_offset':3,'x_scale':0.6,'y_scale':0.6})
         
         col += 1
         header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nPATRONATO UNIVERSITARIO\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nDepartamento de Control Financiero\n%s'''%self._get_report_name()
-        sheet.merge_range(y_offset, col, 5, col+8, header_title,super_col_style)
+        sheet.merge_range(y_offset, col, 5, col+3, header_title,super_col_style)
         y_offset += 6
         col=1
         currect_time_msg = "Fecha y hora de impresión: "
         currect_time_msg += datetime.today().strftime('%d/%m/%Y %H:%M')
-        sheet.merge_range(y_offset, col, y_offset, col+8, currect_time_msg,currect_date_style)
+        sheet.merge_range(y_offset, col, y_offset, col+3, currect_time_msg,currect_date_style)
         y_offset += 1
         
         # Todo in master: Try to put this logic elsewhere
@@ -299,6 +259,7 @@ class SummaryofOperationsBankTransactions(models.AbstractModel):
         generated_file = output.read()
         output.close()
         return generated_file    
+        
 
     def get_pdf(self, options, minimal_layout=True):
         # As the assets are generated during the same transaction as the rendering of the

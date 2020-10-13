@@ -46,6 +46,32 @@ class SummaryofOperationRecoveryofExpenses(models.AbstractModel):
     filter_unposted_in_period = None
     MAX_LINES = None
 
+    filter_currency = True
+    
+    @api.model
+    def _get_filter_currency(self):
+        return self.env['res.currency'].search([])
+
+    @api.model
+    def _init_filter_currency(self, options, previous_options=None):
+        if self.filter_currency is None:
+            return
+        if previous_options and previous_options.get('currency'):
+            journal_map = dict((opt['id'], opt['selected']) for opt in previous_options['currency'] if opt['id'] != 'divider' and 'selected' in opt)
+        else:
+            journal_map = {}
+        options['currency'] = []
+
+        default_group_ids = []
+
+        for j in self._get_filter_currency():
+            options['currency'].append({
+                'id': j.id,
+                'name': j.name,
+                'code': j.name,
+                'selected': journal_map.get(j.id, j.id in default_group_ids),
+            })
+
     def _get_reports_buttons(self):
         return [
             {'name': _('Print Preview'), 'sequence': 1, 'action': 'print_pdf', 'file_export_type': _('PDF')},
@@ -94,8 +120,13 @@ class SummaryofOperationRecoveryofExpenses(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+
+        currency_list = []
+        for select_curreny in options.get('currency'):
+            if select_curreny.get('selected',False)==True:
+                currency_list.append(select_curreny.get('id',0))
         
-        account_payment = self.env['account.payment'].search([('payment_date', '>=', start), ('payment_date', '<=', end),('payment_request_type','!=',False),('payment_state','=','for_payment_procedure')])
+        account_payment = self.env['account.payment'].search([('currency_id','in',currency_list),('payment_date', '>=', start), ('payment_date', '<=', end),('payment_request_type','!=',False),('payment_state','=','for_payment_procedure')])
         for journal in account_payment.mapped("journal_id"):
             total_amount_current = 0
             total_amount_expense = 0
@@ -110,7 +141,7 @@ class SummaryofOperationRecoveryofExpenses(models.AbstractModel):
             })
             account_id = journal.default_debit_account_id and journal.default_debit_account_id.id or False
             if account_id:
-                values= self.env['account.move.line'].search([('account_id', '=', account_id),('move_id.state', '=', 'posted')])
+                values= self.env['account.move.line'].search([('currency_id','in',currency_list),('account_id', '=', account_id),('move_id.state', '=', 'posted')])
                 total_amount_current = sum(x.debit-x.credit for x in values)
 
             payment_accounts = account_payment.filtered(lambda x:x.journal_id.id==journal.id).mapped('payment_issuing_bank_acc_id')
@@ -188,7 +219,7 @@ class SummaryofOperationRecoveryofExpenses(models.AbstractModel):
             sheet.insert_image(0,0, filename, {'image_data': image_data,'x_offset':8,'y_offset':3,'x_scale':0.6,'y_scale':0.6})
         
         col += 1
-        header_title = '''UNIVRSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nPATRONATO UNIVERSITARIO\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nDepartamento de Control Financiero\n%s'''%self._get_report_name()
+        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nPATRONATO UNIVERSITARIO\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nDepartamento de Control Financiero\n%s'''%self._get_report_name()
         sheet.merge_range(y_offset, col, 5, col+1, header_title,super_col_style)
         y_offset += 6
         col=1

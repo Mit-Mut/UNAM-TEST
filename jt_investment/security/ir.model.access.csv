@@ -4,3 +4,5 @@ access_investment_udibonos,investment.udibonos.access,model_investment_udibonos,
 access_investment_bonds,investment.bonds.access,model_investment_bonds,base.group_user,1,1,1,1
 access_investment_will_pay,investment.will.pay.access,model_investment_will_pay,base.group_user,1,1,1,1
 access_investment_contract,investment.contract.access,model_investment_contract,base.group_user,1,1,1,1
+access_purchase_sale_security,purchase.sale.security.access,model_purchase_sale_security,base.group_user,1,1,1,1
+

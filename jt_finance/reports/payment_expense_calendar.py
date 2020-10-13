@@ -119,14 +119,14 @@ class PaymentExpenseCalendar(models.AbstractModel):
                      
                 total_amount += payment.amount
                 payment_date = datetime.strftime(payment.payment_date, '%d/%m/%Y')
-
+                footnote = self.env['account.report.footnote'].search([('line','=','hierarchy2_' + str(payment.id))],limit=1)
                 lines.append({
                     'id': 'hierarchy2_' + str(payment.id),
                     'name': payment_date,
                     'columns': [{'name': payment_type}, 
                                 {'name': payment.payment_issuing_bank_acc_id and payment.payment_issuing_bank_acc_id.acc_number or ''}, 
                                 self._format({'name': payment.amount},figure_type='float'), 
-                                {'name':''}],
+                                {'name':footnote and footnote.text or ''}],
                     'level': 3,
                     'parent_id': 'hierarchy1_' + str(journal.id),
                     'caret_options': True,
@@ -198,7 +198,7 @@ class PaymentExpenseCalendar(models.AbstractModel):
             sheet.insert_image(0,0, filename, {'image_data': image_data,'x_offset':8,'y_offset':3,'x_scale':0.6,'y_scale':0.6})
         
         col += 1
-        header_title = '''UNIVRSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nPATRONATO UNIVERSITARIO\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nDepartamento de Control Financiero\n%s'''%self._get_report_name()
+        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nPATRONATO UNIVERSITARIO\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nDepartamento de Control Financiero\n%s'''%self._get_report_name()
         sheet.merge_range(y_offset, col, 5, col+3, header_title,super_col_style)
         y_offset += 6
         col=1

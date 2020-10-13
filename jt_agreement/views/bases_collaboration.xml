@@ -41,7 +41,8 @@
                                 <field name="operation_number" required="1"
                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="agreement_number" readonly="1"/>
-                                <field name="type_of_operation" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="type_of_operation"
+                                       attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
                             <group>
                                 <field name="apply_to_basis_collaboration" readonly="1"/>
@@ -72,7 +73,7 @@
                                 </group>
                             </page>
                              <page string="Supporting Documentaion" name="supporting_documentation">
-                                <group attrs="{'invisible': [('type_of_operation', 'in', ('withdrawal', 'increase', 'retirement'))]}">
+                                <group attrs="{'invisible': [('type_of_operation', 'in', ('withdrawal', 'increase', 'retirement','withdrawal_cancellation'))]}">
                                     <group>
                                         <field name="cbc_format"/>
                                     </group>
@@ -80,7 +81,7 @@
                                         <field name="cbc_shipping_office"/>
                                     </group>
                                 </group>
-                                 <group attrs="{'invisible': [('type_of_operation', 'not in', ('withdrawal', 'increase', 'retirement'))]}">
+                                 <group attrs="{'invisible': [('type_of_operation', 'not in', ('withdrawal', 'increase', 'retirement', 'withdrawal_cancellation'))]}">
                                     <group>
                                         <field name="supporting_documentation"/>
                                     </group>
@@ -145,6 +146,8 @@
                         <field name="state" widget="statusbar"/>
                         <button name="confirm" type="object" string="Confirm" class="oe_highlight"
                                  attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                        <button name="cancel" type="object" string="Cancel" class="oe_highlight"
+                                 attrs="{'invisible': [('state', '!=', 'valid')]}"/>
                     </header>
                     <sheet>
                          <div class="oe_button_box" name="button_box">
@@ -309,6 +312,14 @@
                                      </field>
                                  </group>
                             </page>
+                            <page name="cancellation_info" string="Cancellation Information"
+                                attrs="{'invisible': [('state', 'not in', ('in_force', 'to_be_cancelled', 'cancelled'))]}">
+                                <group>
+                                    <field name="cancel_date"/>
+                                    <field name="supporing_doc"/>
+                                    <field name="reason_cancel"/>
+                                </group>
+                            </page>
                         </notebook>
                     </sheet>
                 </form>
@@ -379,7 +390,7 @@
                                 </group>
                             </page>
                              <page string="Supporting Documentaion" name="supporting_documentation">
-                                <group attrs="{'invisible': [('type_of_operation', 'in', ('withdrawal', 'increase', 'retirement'))]}">
+                                <group attrs="{'invisible': [('type_of_operation', 'in', ('withdrawal', 'increase', 'retirement', 'withdrawal_cancellation'))]}">
                                     <group>
                                         <field name="cbc_format" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     </group>
@@ -388,7 +399,7 @@
                                                attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     </group>
                                 </group>
-                                  <group attrs="{'invisible': [('type_of_operation', 'not in', ('withdrawal', 'increase', 'retirement'))]}">
+                                  <group attrs="{'invisible': [('type_of_operation', 'not in', ('withdrawal', 'increase', 'retirement', 'withdrawal_cancellation'))]}">
                                     <group>
                                         <field name="supporting_documentation"
                                                attrs="{'readonly': [('state', '!=', 'draft')]}"/>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Sequences for sale.order -->
+        <record id="seq_purchase_sale_security" model="ir.sequence">
+            <field name="name">Purchase Sale Security</field>
+            <field name="code">purchase.sale.security</field>
+            <field name="padding">8</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_folio_cetes" model="ir.sequence">
+            <field name="name">folio_cetes</field>
+            <field name="code">folio.cetes</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_folio_udibonos" model="ir.sequence">
+            <field name="name">folio_udibonos</field>
+            <field name="code">folio.udibonos</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_folio_bonds" model="ir.sequence">
+            <field name="name">folio_bonds</field>
+            <field name="code">folio.bonds</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_folio_will_pay" model="ir.sequence">
+            <field name="name">folio_will_pay</field>
+            <field name="code">folio.will.pay</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

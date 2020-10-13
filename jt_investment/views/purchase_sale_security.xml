@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="purchase_sale_security_tree" model="ir.ui.view">
+            <field name="name">purchase.sale.security.tree.view</field>
+            <field name="model">purchase.sale.security</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+               		<field name="invesment_date"/>
+               		<field name="type_of_investment"/>
+               		<field name="due_date"/>
+               		<field name="amount"/>
+               		<field name="price"/>
+               		<field name="term"/>
+               		<field name="movement"/>                    
+                </tree>
+            </field>
+        </record>
+
+        <record id="purchase_sale_security_form" model="ir.ui.view">
+            <field name="name">purchase.sale.security.form.view</field>
+            <field name="model">purchase.sale.security</field>
+            <field name="arch" type="xml">
+                <form>
+                	<header>
+                	</header>
+                
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" readonly="1"/>
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                        <group>
+                        	<group>
+                        		<field name="invesment_date"/>
+                        		<field name="type_of_investment"/>
+                        		<field name="due_date"/>
+                        	</group>
+                        	<group>
+                        		<field name="amount"/>
+                        		<field name="price"/>
+                        		<field name="term"/>
+                        		<field name="movement"/>
+                        	</group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+          <record id="purchase_sale_security_search" model="ir.ui.view">
+            <field name="name">purchase.sale.security.search.view</field>
+            <field name="model">purchase.sale.security</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="movement"/>
+                </search>
+            </field>
+        </record>
+
+         <record id="action_purchase_sale_security" model="ir.actions.act_window">
+            <field name="name">Purchase / Sale of Securities</field>
+            <field name="res_model">purchase.sale.security</field>
+        </record>
+
+        <menuitem id="menu_purchase_sale_security" name="Purchase / Sale of Securities" sequence="2"
+            parent="submenu_menu_investment_titles" action="action_purchase_sale_security"/>
+    </data>
+</odoo>

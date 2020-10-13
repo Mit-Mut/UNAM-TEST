@@ -31,6 +31,7 @@
     'license': 'AGPL-3',
     'depends': ['account_accountant','jt_payroll_payment','jt_agreement'],
     'data': [
+        'data/sequence.xml',
         'security/ir.model.access.csv',
         'views/investment_menu.xml',
         'views/financial_product.xml',
@@ -40,6 +41,7 @@
         'views/will_pay.xml',
         'views/calendar_control.xml',
         'views/investment_contract.xml',
+        'views/purchase_sale_security.xml',
     ],
     'application': True,
     'installable': True,

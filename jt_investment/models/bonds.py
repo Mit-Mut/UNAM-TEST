@@ -4,8 +4,25 @@ class Bonds(models.Model):
 
     _name = 'investment.bonds'
     _description = "Investment Bonds"
-    
-    name = fields.Char("Name")
+    _rec_name = 'folio' 
+ 
+    folio = fields.Integer("Folio")
+    date_time = fields.Datetime("Date Time")
+    journal_id= fields.Many2one("account.journal",'Bank Account')
+    bank_id = fields.Many2one(related="journal_id.bank_id")
+    amount_invest = fields.Float("Amount to invest")
+    currency_id = fields.Many2one('res.currency', string='Currency',default=lambda self: self.env.company.currency_id)
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
+    currency_rate_id = fields.Many2one("res.currency.rate","Exchange Rate")
+    total_currency_rate = fields.Float(string="Total",compute="get_total_currency_amount",store=True)
+    contract_id = fields.Many2one("investment.contract","Contract")
+    document_type = fields.Selection([('cetes','CETES'),('udibonos','Udibonos'),('bonds','Bonds'),('promissory_note','Promissory note')],string="Document")
+    instrument_it = fields.Selection([('bank','Bank'),('paper_government','Paper Government Paper')],string="Instrument It")
+    account_executive = fields.Char("Account Executive")
+    UNAM_operator = fields.Char("UNAM Operator")
+    is_federal_subsidy_resources = fields.Boolean("Federal Subsidy Resourcesss")
+    observations = fields.Text("Observations")
+   
     kind_of_product = fields.Selection([('investment','Investment')],string="Kind Of Product",default="investment")
     key = fields.Char("Identification Key")
     issue_date = fields.Date('Date of issue')
@@ -14,7 +31,7 @@ class Bonds(models.Model):
     interest_rate = fields.Float("Interest Rate")
     time_for_each_cash_flow = fields.Integer(string="Time for each cash flow",size=4)
     time_to_expiration_date = fields.Integer(string="Time to Expiration Date",size=4)
-    coupon = fields.Float("Coupon")
+    coupon = fields.Float(string="Coupon",compute="get_coupon_amount",store=True)
     state = fields.Selection([('draft','Draft'),('in_process','In Process')],string="Status",default="draft")
         
     present_value_bond = fields.Float(string="Present Value of the Bond",compute="get_present_value_bond",store=True)    
@@ -29,7 +46,7 @@ class Bonds(models.Model):
     month_due_date = fields.Date('Due Date')
     number_of_title = fields.Float("Number of Titles")
     udi_value = fields.Float("UDI value")
-    udi_value_multiplied = fields.Float("The value of the Udi is multiplied by 100")
+    udi_value_multiplied = fields.Float(string="The value of the Udi is multiplied by 100",compute="get_udi_value_multiplied",store=True)
     coupon_rate = fields.Float("Coupon Rate")
     period_days = fields.Float("Period days")  
     
@@ -38,6 +55,24 @@ class Bonds(models.Model):
     monthly_real_interest = fields.Float(string="Real Interest")
 
     monthly_profit_variation = fields.Float(string="Estimated vs Real Profit Variation",compute="get_month_profit_variation",store=True)
+
+    @api.depends('udi_value')
+    def get_udi_value_multiplied(self):
+        for rec in self:
+            rec.udi_value_multiplied = rec.udi_value * 100
+             
+    @api.depends('nominal_value','interest_rate')
+    def get_coupon_amount(self):
+        for rec in self:
+            rec.coupon = rec.nominal_value * rec.interest_rate
+
+    @api.depends('amount_invest','currency_rate_id','currency_rate_id.rate')
+    def get_total_currency_amount(self):
+        for rec in self:
+            if rec.amount_invest and rec.currency_rate_id:
+                rec.total_currency_rate = rec.amount_invest * rec.currency_rate_id.rate
+            else:
+                rec.total_currency_rate = 0
     
     @api.depends('interest_rate','time_for_each_cash_flow','nominal_value')
     def get_present_value_bond(self):
@@ -72,9 +107,17 @@ class Bonds(models.Model):
     def get_month_profit_variation(self):
         for rec in self:
             rec.monthly_profit_variation = rec.monthly_estimated_interest - rec.monthly_real_interest
+
+    @api.model
+    def create(self,vals):
+        vals['folio'] = self.env['ir.sequence'].next_by_code('folio.bonds')
+        return super(Bonds,self).create(vals)
         
     def action_confirm(self):
         self.state='in_process'
+        
+    def action_reset_to_draft(self):
+        self.state='draft'
 
     def action_calculation(self):
         return 

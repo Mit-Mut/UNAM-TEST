@@ -40,17 +40,28 @@ class AccountMove(models.Model):
                                      compute="show_conac_move")
 
 
-    @api.onchange('dependancy_id','sub_dependancy_id')        
+    @api.onchange('dependancy_id','sub_dependancy_id','is_payroll_payment_request')        
     def onchange_dep_sub_dep(self):
-        if self.dependancy_id and self.sub_dependancy_id:
-            payment_place_id = self.env['payment.place'].search([('dependancy_id','=',self.dependancy_id.id),('sub_dependancy_id','=',self.sub_dependancy_id.id)])
-            if payment_place_id:
-                self.payment_place_id = payment_place_id.id
+        if self.is_payroll_payment_request:
+            if self.dependancy_id and self.sub_dependancy_id:
+                payment_place_id = self.env['payment.place'].search([('dependancy_id','=',self.dependancy_id.id),('sub_dependancy_id','=',self.sub_dependancy_id.id)])
+                if payment_place_id:
+                    self.payment_place_id = payment_place_id.id
+                else:
+                    self.payment_place_id = False
             else:
                 self.payment_place_id = False
-        else:
-            self.payment_place_id = False
-            
+
+    @api.onchange('payment_place_id','is_different_payroll_request','is_payment_request')        
+    def onchange_payment_place_id(self):
+        if self.is_different_payroll_request or self.is_payment_request:
+            if self.payment_place_id:
+                self.dependancy_id = self.payment_place_id.dependancy_id and self.payment_place_id.dependancy_id.id or False
+                self.sub_dependancy_id = self.payment_place_id.sub_dependancy_id and self.payment_place_id.sub_dependancy_id.id or False
+            else:  
+                self.dependancy_id = False
+                self.sub_dependancy_id = False
+                
     def action_register(self):
         for move in self:
             invoice_lines = move.invoice_line_ids.filtered(lambda x:not x.program_code_id)

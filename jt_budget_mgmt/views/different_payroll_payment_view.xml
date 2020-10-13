@@ -22,7 +22,7 @@
                 <field name="folio" position="after">
                     <field name="dependancy_id" context="{'show_for_supplier_payment':True}" attrs="{'readonly':[('payment_state', '!=', 'draft')]}"/>
                     <field name="sub_dependancy_id" context="{'show_for_supplier_payment':True}" attrs="{'readonly':[('payment_state', '!=', 'draft')]}"/>
-                    <field name="payment_place_id" domain="[('dependancy_id','=',dependancy_id),('sub_dependancy_id','=',sub_dependancy_id)]" attrs="{'readonly':[('payment_state', '!=', 'draft')]}"/>
+                    <field name="payment_place_id"  attrs="{'readonly':[('payment_state', '!=', 'draft')]}"/>
                 </field>
                 
                 <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_id']"

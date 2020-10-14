@@ -9,12 +9,8 @@
                 <tree>
                     <field name="name"/>
                		<field name="invesment_date"/>
-               		<field name="type_of_investment"/>
-               		<field name="due_date"/>
-               		<field name="amount"/>
                		<field name="price"/>
-               		<field name="term"/>
-               		<field name="movement"/>                    
+               		<field name="state"/>                    
                 </tree>
             </field>
         </record>
@@ -25,12 +21,15 @@
             <field name="arch" type="xml">
                 <form>
                 	<header>
+                		<button name="action_confirm" states="draft" string="Confirm" class="oe_highlight" type="object" />
+                		<button name="action_reject" states="draft" string="Reject" class="oe_highlight" type="object"/>
+                		<field name="state" widget="statusbar"/>
                 	</header>
                 
                     <sheet>
                         <group>
                             <group>
-                                <field name="name" readonly="1"/>
+                                <field name="name" required="1"/>
                             </group>
                             <group>
                             </group>
@@ -38,16 +37,35 @@
                         <group>
                         	<group>
                         		<field name="invesment_date"/>
-                        		<field name="type_of_investment"/>
-                        		<field name="due_date"/>
-                        	</group>
-                        	<group>
-                        		<field name="amount"/>
-                        		<field name="price"/>
-                        		<field name="term"/>
                         		<field name="movement"/>
                         	</group>
+                        	<group>
+                        		<field name="title"/>
+                        		<field name="price"/>
+                        		<field name="price_previous_day"/>
+                        		<field name="average_price_of_the_month"/>
+                        		<field name="file_name" invisible="1"/>
+                        		<field name="file_data" filename="file_name"/>
+                        	</group>
                         </group>
+                    <notebook>
+                    	<page string="Movements">
+                    		<group>
+	                    		<group>
+	                    			<field name="journal_id" domain="[('type','=','bank')]"/>
+	                    			<field name="bank_account_id"/>
+	                    			<field name="account_balance"/>
+	                    		</group>
+	                    		<group>
+	                    			<field name="movement_price"/>
+	                    			<field name="number_of_titles"/>
+	                    			<field name="amount"/>
+                    			</group>
+	                    		
+                    		</group>
+                    	</page>
+                    </notebook>
+                        
                     </sheet>
                 </form>
             </field>

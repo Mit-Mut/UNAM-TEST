@@ -11,3 +11,4 @@ class InvestementContract(models.Model):
     investent_type = fields.Selection([('bank_paper','Bank Paper'),('government_role','Government Role')],string="Investment Type")
     term = fields.Integer("Term")
     observations = fields.Text("Observations") 
+    fund_id = fields.Many2one('fund.type','Investment fund')

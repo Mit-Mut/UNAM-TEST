@@ -5,3 +5,5 @@ from . import bonds
 from . import will_pay
 from . import investment_contract
 from . import purchase_sale_security
+from . import request_open_balance_finance
+from . import stock_quotation

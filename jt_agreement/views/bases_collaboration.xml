@@ -267,8 +267,9 @@
                                         <field name="beneficiary_ids" nolabel="1"
                                                attrs="{'readonly': [('state', '!=', 'draft')]}">
                                             <tree>
-                                                <field name="partner_id" required="1"/>
-                                                <field name="bank_id"/>
+                                                <field name="employee_id" required="1"/>
+                                                <field name="bank_id" context="{'from_agreement':1}"
+                                                  domain="[('employee_id', '=', employee_id)]"/>
                                                 <field name="account_number"/>
                                                 <field name="amount"/>
                                                 <field name="validity_start"/>
@@ -278,8 +279,10 @@
                                             <form>
                                                 <group>
                                                     <group>
-                                                        <field name="partner_id" required="1"/>
-                                                        <field name="bank_id"/>
+                                                        <field name="employee_id" required="1"/>
+                                                        <field name="bank_id"
+                                                               domain="[('employee_id', '=', employee_id)]"
+                                                               context="{'from_agreement':1}"/>
                                                         <field name="account_number"/>
                                                         <field name="payment_rule_id"/>
                                                     </group>
@@ -299,13 +302,16 @@
                                             attrs="{'readonly': [('state', '!=', 'draft')]}">
                                          <tree editable="top">
                                              <field name="partner_id" required="1"/>
-                                                <field name="bank_id"/>
+                                                <field name="bank_id" domain="[('partner_id', '=', partner_id)]"
+                                                context="{'from_agreement':1}"/>
                                                 <field name="account_number"/>
                                          </tree>
                                          <form>
                                              <group>
                                                  <field name="partner_id" required="1"/>
-                                                <field name="bank_id"/>
+                                                <field name="bank_id"
+                                                 domain="[('partner_id', '=', partner_id)]"
+                                                context="{'from_agreement':1}"/>
                                                 <field name="account_number"/>
                                              </group>
                                          </form>
@@ -318,6 +324,12 @@
                                     <field name="cancel_date"/>
                                     <field name="supporing_doc"/>
                                     <field name="reason_cancel"/>
+                                </group>
+                            </page>
+                            <page name="closing_info" string="Information for Closing">
+                                <group>
+                                    <field name="fund_name_transfer_id"/>
+                                    <field name="closing_amt"/>
                                 </group>
                             </page>
                         </notebook>
@@ -497,7 +509,7 @@
                                 <field name="date"/>
                                 <field name="concept"/>
                                 <field name="user_id"/>
-                                <field name="employee_id"/>
+                                <field name="unit_req_transfer_id" context="{'show_for_agreement':1}"/>
                                 <field name="date_required"/>
                                 <field name="fund_type"/>
                             </group>
@@ -551,6 +563,7 @@
             <field name="name">Transfer Request</field>
             <field name="res_model">request.open.balance.finance</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">{'show_for_agreement':1}</field>
         </record>
 
 <!--          <record id="action_req_open_balance_finan_tree" model="ir.actions.act_window.view">-->

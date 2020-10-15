@@ -89,20 +89,20 @@ class AnnualIncomeReport(models.AbstractModel):
     def _get_columns_name(self, options):
         return [
             {'name': _('Mes')},
-            {'name': _('Subsidy 2020')},
-            {'name': _('Subsidy Receivable')},
-            {'name': _('Enrollment And Tuition')},
-            {'name': _('Selection Contest')},
-            {'name': _('Incorporation And Revalidation')},
-            {'name': _('Extraordinary Income')},
+            {'name': _('Subsidio')},
+            {'name': _('Subsidio por cobrar')},
+            {'name': _('Inscripciones y Colegiaturas')},
+            {'name': _('Concurso de selección')},
+            {'name': _('Incorporación y Revalidación')},
+            {'name': _('Ingresos Extraordinarios')},
             {'name': _('Patrimonial Income')},
-            {'name': _('Financial Products')},
+            {'name': _('Productos Financieros')},
             {'name': _('Total')},
             {'name': _('Nomina')},
-            {'name': _('Suppliers')},
-            {'name': _('Other Benefits')},
-            {'name': _('Major Maintenance Fund')},
-            {'name': _('FIF Funds')},
+            {'name': _('Proveedores')},
+            {'name': _('Otras Prestaciones')},
+            {'name': _('Fondo Mantenimiento Mayor')},
+            {'name': _('Fondos FIF')},
             {'name': _('Total')},
         ]
 
@@ -183,6 +183,22 @@ class AnnualIncomeReport(models.AbstractModel):
         
         for y in year_list_tuple:
             year_list.append(str(y))
+        total_subsidy = 0
+        total_subsidy_receivable = 0
+        total_enrollment_and_tuition = 0
+        total_selection_contest = 0
+        total_incorporation_and_revalidation = 0
+        total_extraordinary_income = 0
+        total_patrimonial_income = 0
+        total_financial_products = 0
+        master_total_1 = 0
+        total_nomina = 0
+        total_suppliers = 0
+        total_other_benefits = 0
+        total_major_maintenance_fund = 0
+        total_FIF_funds = 0
+        master_total_2 = 0
+        
         if is_company_currency:
             self.env.cr.execute('''
                     select max(am.id) as id,
@@ -334,26 +350,59 @@ class AnnualIncomeReport(models.AbstractModel):
                             'unfoldable': False,
                             'unfolded': True,
                         })
+
+
+                    subsidy = month_dict.get('subsidy_2020',0.0)/1000
+                    subsidy_receivable = month_dict.get('subsidy_receivable',0.0)/1000
+                    enrollment_and_tuition  = month_dict.get('enrollment_and_tuition',0.0)/1000
+                    selection_contest = month_dict.get('selection_contest',0.0)/1000
+                    incorporation_and_revalidation = month_dict.get('incorporation_and_revalidation',0.0)/1000
+                    extraordinary_income = month_dict.get('extraordinary_income',0.0)/1000
+                    patrimonial_income = month_dict.get('patrimonial_income',0.0)/1000
+                    financial_products = month_dict.get('financial_products',0.0)/1000
+                    total_1 = enrollment_and_tuition + selection_contest + incorporation_and_revalidation + extraordinary_income + patrimonial_income + financial_products
+                    nomina = month_dict.get('nomina',0.0)/1000
+                    suppliers = month_dict.get('suppliers',0.0)/1000
+                    other_benefits = month_dict.get('other_benefits',0.0)/1000
+                    major_maintenance_fund = month_dict.get('major_maintenance_fund',0.0)/1000
+                    FIF_funds = month_dict.get('fif_funds',0.0)/1000
+                    total_2 = nomina + suppliers + other_benefits + major_maintenance_fund + FIF_funds
+
+                    total_subsidy += subsidy
+                    total_subsidy_receivable += subsidy_receivable
+                    total_enrollment_and_tuition += enrollment_and_tuition
+                    total_selection_contest += selection_contest
+                    total_incorporation_and_revalidation += incorporation_and_revalidation
+                    total_extraordinary_income += extraordinary_income
+                    total_patrimonial_income += patrimonial_income
+                    total_financial_products += financial_products
+                    master_total_1 += total_1
+                    total_nomina += nomina
+                    total_suppliers += suppliers
+                    total_other_benefits += other_benefits
+                    total_major_maintenance_fund += major_maintenance_fund
+                    total_FIF_funds += FIF_funds
+                    master_total_2 += total_2
                          
                     lines.append({
                         'id': 'hierarchy1_' + month_dict.get('year','')+str(month_dict.get('month','')),
                         'name': self.get_month_name(month_dict.get('month',0)),
                         'columns': [
-                                    self._format({'name': month_dict.get('subsidy_2020',0.0)/1000},figure_type='float'),
-                                    self._format({'name': month_dict.get('subsidy_receivable',0.0)/1000},figure_type='float'),
-                                    self._format({'name': month_dict.get('enrollment_and_tuition',0.0)/1000},figure_type='float'),
-                                    self._format({'name': month_dict.get('selection_contest',0.0)/1000},figure_type='float'),
-                                    self._format({'name': month_dict.get('incorporation_and_revalidation',0.0)/1000},figure_type='float'),
-                                    self._format({'name': month_dict.get('extraordinary_income',0.0)/1000},figure_type='float'),
-                                    self._format({'name': month_dict.get('patrimonial_income',0.0)/1000},figure_type='float'),
-                                    self._format({'name': month_dict.get('financial_products',0.0)/1000},figure_type='float'),
-                                    self._format({'name': 0.0},figure_type='float'),
-                                    self._format({'name': month_dict.get('nomina',0.0)/1000},figure_type='float'),
-                                    self._format({'name': month_dict.get('suppliers',0.0)/1000},figure_type='float'),
-                                    self._format({'name': month_dict.get('other_benefits',0.0)/1000},figure_type='float'),
-                                    self._format({'name': month_dict.get('major_maintenance_fund',0.0)/1000},figure_type='float'),
-                                    self._format({'name': month_dict.get('fif_funds',0.0)/1000},figure_type='float'),
-                                    self._format({'name': 0.0},figure_type='float'),
+                                    self._format({'name': subsidy},figure_type='float'),
+                                    self._format({'name': subsidy_receivable},figure_type='float'),
+                                    self._format({'name': enrollment_and_tuition},figure_type='float'),
+                                    self._format({'name': selection_contest},figure_type='float'),
+                                    self._format({'name': incorporation_and_revalidation},figure_type='float'),
+                                    self._format({'name': extraordinary_income},figure_type='float'),
+                                    self._format({'name': patrimonial_income},figure_type='float'),
+                                    self._format({'name': financial_products},figure_type='float'),
+                                    self._format({'name': total_1},figure_type='float'),
+                                    self._format({'name': nomina},figure_type='float'),
+                                    self._format({'name': suppliers},figure_type='float'),
+                                    self._format({'name': other_benefits},figure_type='float'),
+                                    self._format({'name': major_maintenance_fund},figure_type='float'),
+                                    self._format({'name': FIF_funds},figure_type='float'),
+                                    self._format({'name': total_2},figure_type='float'),
                                     ],
                         'level': 3,
                         'unfoldable': False,
@@ -511,32 +560,89 @@ class AnnualIncomeReport(models.AbstractModel):
                             'unfolded': True,
                         })
                          
+                    subsidy = month_dict.get('subsidy_2020',0.0)/1000
+                    subsidy_receivable = month_dict.get('subsidy_receivable',0.0)/1000
+                    enrollment_and_tuition  = month_dict.get('enrollment_and_tuition',0.0)/1000
+                    selection_contest = month_dict.get('selection_contest',0.0)/1000
+                    incorporation_and_revalidation = month_dict.get('incorporation_and_revalidation',0.0)/1000
+                    extraordinary_income = month_dict.get('extraordinary_income',0.0)/1000
+                    patrimonial_income = month_dict.get('patrimonial_income',0.0)/1000
+                    financial_products = month_dict.get('financial_products',0.0)/1000
+                    total_1 = enrollment_and_tuition + selection_contest + incorporation_and_revalidation + extraordinary_income + patrimonial_income + financial_products
+                    nomina = month_dict.get('nomina',0.0)/1000
+                    suppliers = month_dict.get('suppliers',0.0)/1000
+                    other_benefits = month_dict.get('other_benefits',0.0)/1000
+                    major_maintenance_fund = month_dict.get('major_maintenance_fund',0.0)/1000
+                    FIF_funds = month_dict.get('fif_funds',0.0)/1000
+                    total_2 = nomina + suppliers + other_benefits + major_maintenance_fund + FIF_funds
+
+                    total_subsidy += subsidy
+                    total_subsidy_receivable += subsidy_receivable
+                    total_enrollment_and_tuition += enrollment_and_tuition
+                    total_selection_contest += selection_contest
+                    total_incorporation_and_revalidation += incorporation_and_revalidation
+                    total_extraordinary_income += extraordinary_income
+                    total_patrimonial_income += patrimonial_income
+                    total_financial_products += financial_products
+                    master_total_1 += total_1
+                    total_nomina += nomina
+                    total_suppliers += suppliers
+                    total_other_benefits += other_benefits
+                    total_major_maintenance_fund += major_maintenance_fund
+                    total_FIF_funds += FIF_funds
+                    master_total_2 += total_2
+                         
                     lines.append({
                         'id': 'hierarchy1_' + month_dict.get('year','')+str(month_dict.get('month','')),
                         'name': self.get_month_name(month_dict.get('month',0)),
                         'columns': [
-                                    self._format({'name': month_dict.get('subsidy_2020',0.0)/1000},figure_type='float'),
-                                    self._format({'name': month_dict.get('subsidy_receivable',0.0)/1000},figure_type='float'),
-                                    self._format({'name': month_dict.get('enrollment_and_tuition',0.0)/1000},figure_type='float'),
-                                    self._format({'name': month_dict.get('selection_contest',0.0)/1000},figure_type='float'),
-                                    self._format({'name': month_dict.get('incorporation_and_revalidation',0.0)/1000},figure_type='float'),
-                                    self._format({'name': month_dict.get('extraordinary_income',0.0)/1000},figure_type='float'),
-                                    self._format({'name': month_dict.get('patrimonial_income',0.0)/1000},figure_type='float'),
-                                    self._format({'name': month_dict.get('financial_products',0.0)/1000},figure_type='float'),
-                                    self._format({'name': 0.0},figure_type='float'),
-                                    self._format({'name': month_dict.get('nomina',0.0)/1000},figure_type='float'),
-                                    self._format({'name': month_dict.get('suppliers',0.0)/1000},figure_type='float'),
-                                    self._format({'name': month_dict.get('other_benefits',0.0)/1000},figure_type='float'),
-                                    self._format({'name': month_dict.get('major_maintenance_fund',0.0)/1000},figure_type='float'),
-                                    self._format({'name': month_dict.get('fif_funds',0.0)/1000},figure_type='float'),
-                                    self._format({'name': 0.0},figure_type='float'),
+                                    self._format({'name': subsidy},figure_type='float'),
+                                    self._format({'name': subsidy_receivable},figure_type='float'),
+                                    self._format({'name': enrollment_and_tuition},figure_type='float'),
+                                    self._format({'name': selection_contest},figure_type='float'),
+                                    self._format({'name': incorporation_and_revalidation},figure_type='float'),
+                                    self._format({'name': extraordinary_income},figure_type='float'),
+                                    self._format({'name': patrimonial_income},figure_type='float'),
+                                    self._format({'name': financial_products},figure_type='float'),
+                                    self._format({'name': total_1},figure_type='float'),
+                                    self._format({'name': nomina},figure_type='float'),
+                                    self._format({'name': suppliers},figure_type='float'),
+                                    self._format({'name': other_benefits},figure_type='float'),
+                                    self._format({'name': major_maintenance_fund},figure_type='float'),
+                                    self._format({'name': FIF_funds},figure_type='float'),
+                                    self._format({'name': total_2},figure_type='float'),
                                     ],
                         'level': 3,
                         'unfoldable': False,
                         'unfolded': True,
                     })
-                
         
+
+        if lines:
+            lines.append({
+                'id': 'hierarchy1_' + month_dict.get('year','')+str(month_dict.get('month','')),
+                'name': 'SUMAS',
+                'columns': [
+                            self._format({'name': total_subsidy},figure_type='float'),
+                            self._format({'name': total_subsidy_receivable},figure_type='float'),
+                            self._format({'name': total_enrollment_and_tuition},figure_type='float'),
+                            self._format({'name': total_selection_contest},figure_type='float'),
+                            self._format({'name': total_incorporation_and_revalidation},figure_type='float'),
+                            self._format({'name': total_extraordinary_income},figure_type='float'),
+                            self._format({'name': total_patrimonial_income},figure_type='float'),
+                            self._format({'name': total_financial_products},figure_type='float'),
+                            self._format({'name': master_total_1},figure_type='float'),
+                            self._format({'name': total_nomina},figure_type='float'),
+                            self._format({'name': total_suppliers},figure_type='float'),
+                            self._format({'name': total_other_benefits},figure_type='float'),
+                            self._format({'name': total_major_maintenance_fund},figure_type='float'),
+                            self._format({'name': total_FIF_funds},figure_type='float'),
+                            self._format({'name': master_total_2},figure_type='float'),
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
             
         return lines
 

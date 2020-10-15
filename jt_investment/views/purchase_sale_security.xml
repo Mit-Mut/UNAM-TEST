@@ -38,6 +38,9 @@
                         	<group>
                         		<field name="invesment_date"/>
                         		<field name="movement"/>
+                        		<field name="last_quote_id"/>
+                        		<field name="last_quote_price"/>
+                        		<field name="last_quote_date"/>
                         	</group>
                         	<group>
                         		<field name="title"/>

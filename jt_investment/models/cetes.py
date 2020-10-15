@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from datetime import datetime
 
 class CETES(models.Model):
 
@@ -42,7 +43,17 @@ class CETES(models.Model):
     estimated_profit = fields.Float(string="Estimated Profit",compute="get_estimated_profit",store=True)
     real_interest = fields.Float("Real Interest")
     real_profit = fields.Float(string="Real Profit",compute="get_real_profit",store=True)
-    state = fields.Selection([('draft','Draft'),('in_process','In Process')],string="Status",default="draft")
+    state = fields.Selection([('draft','Draft'),('in_process','In Process'),('requested','Requested'),('rejected','Rejected'),('confirmed','Confirmed'),('approved','Approved'),('done','Done'),('canceled','Canceled')],string="Status",default='draft')
+
+    #====== Accounting Fields =========#
+
+    investment_income_account_id = fields.Many2one('account.account','Income Account')
+    investment_expense_account_id = fields.Many2one('account.account','Expense Account')
+    investment_price_diff_account_id = fields.Many2one('account.account','Price Difference Account')    
+
+    return_income_account_id = fields.Many2one('account.account','Income Account')
+    return_expense_account_id = fields.Many2one('account.account','Expense Account')
+    return_price_diff_account_id = fields.Many2one('account.account','Price Difference Account')    
 
 
     @api.depends('amount_invest','currency_rate_id','currency_rate_id.rate')
@@ -98,7 +109,29 @@ class CETES(models.Model):
         return super(CETES,self).create(vals)
         
     def action_confirm(self):
-        self.state='in_process'
+        today = datetime.today().date()
+        user = self.env.user
+        employee = self.env['hr.employee'].search([('user_id', '=', user.id)], limit=1)
+        fund_type = False
+        if self.contract_id and self.contract_id.fund_id:
+            fund_type = self.contract_id.fund_id.id
+            
+        return {
+            'name': 'Approve Request',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': False,
+            'res_model': 'approve.money.market.bal.req',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+                'default_amount': self.amount_invest,
+                'default_date': today,
+                'default_employee_id': employee.id if employee else False,
+                'default_cetes_id' : self.id,
+                'default_fund_type' : fund_type,
+            }
+        }
 
     def action_reset_to_draft(self):
         self.state='draft'

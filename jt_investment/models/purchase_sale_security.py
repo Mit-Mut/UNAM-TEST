@@ -17,25 +17,34 @@ class PurchaseSaleSecurity(models.Model):
     term = fields.Integer("Investment Term")
     due_date = fields.Date("Due Date")
     movement = fields.Selection([('buy','Purchase'),('sell','Sale')],string="What move do I want to make?")
-    state = fields.Selection([('draft','Draft'),('requested','Requested'),('done','Done'),('rejected','rejected'),('canceled','Canceled')],string="Status",default='draft')
+    state = fields.Selection([('draft','Draft'),('requested','Requested'),('rejected','Rejected'),('confirmed','Confirmed'),('approved','Approved'),('done','Done'),('canceled','Canceled')],string="Status",default='draft')
     observations = fields.Text("Observations")    
     file_data = fields.Binary("Supporting document")
     file_name = fields.Char("File Name")
+    
+    last_quote_id = fields.Many2one('investment.stock.quotation','Last Quote')
+    last_quote_price = fields.Float(related='last_quote_id.price',string="Last Quote Price")
+    last_quote_date = fields.Date(related="last_quote_id.date",string="Last Quote Date")
     
     journal_id = fields.Many2one("account.journal","Bank")
     bank_account_id = fields.Many2one(related='journal_id.bank_account_id')
     account_balance = fields.Float("Account Balance")
     movement_price = fields.Float("Price")
     number_of_titles = fields.Float("Quantity of Securities")
-    amount = fields.Float("Investment amount")
-    
+    amount = fields.Float(string="Investment amount",compute="get_investment_amount",store=True)
+
+    @api.depends('movement_price','number_of_titles')
+    def get_investment_amount(self):
+        for rec in self:
+            rec.amount = rec.movement_price * rec.number_of_titles
+            
 #     @api.model
 #     def create(self,vals):
 #         vals['name'] = self.env['ir.sequence'].next_by_code('purchase.sale.security')
 #         return super(PurchaseSaleSecurity,self).create(vals)
     
     def action_confirm(self):
-        self.state = 'requested'
+        self.state = 'confirmed'
 
     def action_reject(self):
         self.state = 'rejected'

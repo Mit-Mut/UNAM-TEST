@@ -76,7 +76,8 @@
 	        <field name="view_mode">form</field>
 	        <field name="target">new</field>
         </record>
-				 
+
+	<!-- 				 
     <menuitem
         id="menu_income_by_item_month_wizard"
         name="Annual Income Report"
@@ -84,7 +85,8 @@
         sequence="5"
         action="action_income_by_item_month_wizard"
     />
-
+	 -->
+	 
 	<!--  Report Tree views -->
 
        <record id="income_by_item_report_data_search_view" model="ir.ui.view">

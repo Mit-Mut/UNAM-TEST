@@ -42,6 +42,9 @@
         'views/calendar_control.xml',
         'views/investment_contract.xml',
         'views/purchase_sale_security.xml',
+        'views/stock_quotation.xml',
+        'wizard/approve_inv_bal_req_view.xml',
+        
     ],
     'application': True,
     'installable': True,

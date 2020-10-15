@@ -649,6 +649,32 @@ msgstr "Impuestos"
 msgid "Income Invoice Lines"
 msgstr "Líneas de facturación de ingresos"
 
+#. module: jt_income
+#: code:addons/jt_income/reports/new_income_annual_report.py:0
+#: model:ir.actions.act_window,name:jt_income.action_income_annual_report
+#: model:ir.actions.client,name:jt_income.action_new_income_annual_report
+#: model:ir.actions.report,name:jt_income.pdf_income_annual_report
+#: model:ir.model,name:jt_income.model_income_annual_report
+#: model:ir.model,name:jt_income.model_jt_income_income_annual_report
+#: model:ir.ui.menu,name:jt_income.menu_income_annual_report
+#: model:ir.ui.menu,name:jt_income.menu_new_income_annual_report
+#, python-format
+msgid "Income Annual Report"
+msgstr "Informe Anual de Ingresos"
+
+#. module: jt_income
+#: code:addons/jt_income/reports/new_annual_income_report.py:0
+#: model:ir.actions.act_window,name:jt_income.action_income_by_item_month
+#: model:ir.actions.act_window,name:jt_income.action_income_by_item_month_wizard
+#: model:ir.actions.client,name:jt_income.action_new_annual_income_report
+#: model:ir.actions.report,name:jt_income.income_by_item_report
+#: model:ir.model,name:jt_income.model_jt_income_annual_income_report
+#: model:ir.ui.menu,name:jt_income.menu_income_by_item_month_wizard
+#: model:ir.ui.menu,name:jt_income.menu_new_annual_income_report
+#, python-format
+msgid "Annual Income Report"
+msgstr "Ingresos por rubro y mes"
+
 
 
 

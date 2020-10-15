@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from datetime import datetime
 
 class WillPay(models.Model):
 
@@ -35,7 +36,7 @@ class WillPay(models.Model):
     time_frame = fields.Float(string="Time frame",compute="get_time_frame",store=True)
     simple_interest = fields.Boolean(string="Simple Interest",default=False)
     compound_interest = fields.Boolean(string="Compound Interest",default=False)
-    state = fields.Selection([('draft','Draft'),('in_process','In Process')],string="Status",default="draft")
+    state = fields.Selection([('draft','Draft'),('in_process','In Process'),('requested','Requested'),('rejected','Rejected'),('confirmed','Confirmed'),('approved','Approved'),('done','Done'),('canceled','Canceled')],string="Status",default='draft')
     
     simple_interest_capital = fields.Float(string="Capital",compute="get_simple_interest_capital",store=True)
     simple_interest_future_value = fields.Float(string="Future Value",compute="get_simple_interest_future_value",store=True)
@@ -47,6 +48,16 @@ class WillPay(models.Model):
     compound_interest_estimated_yield = fields.Float(string="Estimated Yield",compute="get_compound_interest_estimated_yield",store=True)
     compound_interest_real_performance = fields.Float(string="Real Performance")
     compound_estimated_real_variation = fields.Float(string="Estimated vs. Real Yield Variation",compute="get_compound_estimated_real_variation",store=True)
+
+    #====== Accounting Fields =========#
+
+    investment_income_account_id = fields.Many2one('account.account','Income Account')
+    investment_expense_account_id = fields.Many2one('account.account','Expense Account')
+    investment_price_diff_account_id = fields.Many2one('account.account','Price Difference Account')    
+
+    return_income_account_id = fields.Many2one('account.account','Income Account')
+    return_expense_account_id = fields.Many2one('account.account','Expense Account')
+    return_price_diff_account_id = fields.Many2one('account.account','Price Difference Account')    
     
     @api.depends('amount_invest','currency_rate_id','currency_rate_id.rate')
     def get_total_currency_amount(self):
@@ -64,16 +75,18 @@ class WillPay(models.Model):
     @api.depends('amount','interest_rate','time_frame','simple_interest')
     def get_simple_interest_capital(self):
         for rec in self:
+            interest_rate = rec.interest_rate/100
             if rec.simple_interest:
-                rec.simple_interest_capital = rec.amount/(1+(rec.interest_rate*(rec.time_frame/360)))
+                rec.simple_interest_capital = rec.amount/(1+(interest_rate*(rec.time_frame/360)))
             else:
                 rec.simple_interest_capital = 0
                 
     @api.depends('simple_interest_capital','interest_rate','time_frame','simple_interest')
     def get_simple_interest_future_value(self):
         for rec in self:
+            interest_rate = rec.interest_rate/100
             if rec.simple_interest:
-                rec.simple_interest_future_value =rec.simple_interest_capital*(1+(rec.time_frame/360)*rec.interest_rate)
+                rec.simple_interest_future_value =rec.simple_interest_capital*(1+(rec.time_frame/360)*interest_rate)
             else:
                 rec.simple_interest_future_value = 0
                 
@@ -97,16 +110,17 @@ class WillPay(models.Model):
     @api.depends('amount','interest_rate','time_frame','compound_interest')
     def get_compound_interest_total(self):
         for rec in self:
+            interest_rate = rec.interest_rate/100
             if rec.compound_interest:
-                rec.compound_interest_total = rec.amount*((1+rec.interest_rate))**(rec.time_frame/360)
+                rec.compound_interest_total = rec.amount*((1+interest_rate))**(rec.time_frame/360)
             else:
                 rec.compound_interest_total = 0
 
-    @api.depends('compound_interest_total','time_frame','compound_interest')
+    @api.depends('compound_interest_total','amount','compound_interest')
     def get_compound_interest_estimated_yield(self):
         for rec in self:
             if rec.compound_interest:
-                rec.compound_interest_estimated_yield = rec.compound_interest_total - rec.time_frame
+                rec.compound_interest_estimated_yield = rec.compound_interest_total - rec.amount
             else:
                 rec.compound_interest_estimated_yield = 0 
 
@@ -114,7 +128,7 @@ class WillPay(models.Model):
     def get_compound_estimated_real_variation(self):
         for rec in self:
             if rec.compound_interest:
-                rec.compound_estimated_real_variation = rec.compound_interest_estimated_yield - rec.compound_interest_real_performance
+                rec.compound_estimated_real_variation = rec.compound_interest_real_performance - rec.compound_interest_estimated_yield
             else:
                 rec.compound_estimated_real_variation = 0 
 
@@ -124,7 +138,29 @@ class WillPay(models.Model):
         return super(WillPay,self).create(vals)
     
     def action_confirm(self):
-        self.state='in_process'
+        today = datetime.today().date()
+        user = self.env.user
+        employee = self.env['hr.employee'].search([('user_id', '=', user.id)], limit=1)
+        fund_type = False
+        if self.contract_id and self.contract_id.fund_id:
+            fund_type = self.contract_id.fund_id.id
+            
+        return {
+            'name': 'Approve Request',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': False,
+            'res_model': 'approve.money.market.bal.req',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+                'default_amount': self.amount_invest,
+                'default_date': today,
+                'default_employee_id': employee.id if employee else False,
+                'default_will_pay_id' : self.id,
+                'default_fund_type' : fund_type,
+            }
+        }
 
     def action_reset_to_draft(self):
         self.state='draft'

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="investment_stock_quotation_tree" model="ir.ui.view">
+            <field name="name">investment.stock.quotation.tree.view</field>
+            <field name="model">investment.stock.quotation</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+               		<field name="price"/>
+               		<field name="state"/>                    
+                </tree>
+            </field>
+        </record>
+
+        <record id="investment_stock_quotation_form" model="ir.ui.view">
+            <field name="name">investment.stock.quotation.form.view</field>
+            <field name="model">investment.stock.quotation</field>
+            <field name="arch" type="xml">
+                <form>
+                	<header>
+                		<button name="action_confirm" states="draft" string="Confirm" class="oe_highlight" type="object" />
+                		<field name="state" widget="statusbar"/>
+                	</header>
+                
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" required="1"/>
+                                <field name="journal_id"/>
+                                <field name="price"/>
+                            </group>
+                            <group>
+                            	<field name="date"/>
+                            	<field name="observations"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="bank_rate_id"/>
+                                <field name="cetes_currency_id"/>
+                                <field name="dollar_currency_id"/>
+                            </group>
+                            <group>
+                            	<field name="term"/>
+                            	<field name="term_cetes"/>
+                            	<field name="term_dollar"/>
+                            </group>
+                        </group>
+                        
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+          <record id="investment_stock_quotation_search" model="ir.ui.view">
+            <field name="name">investment.stock.quotation.search.view</field>
+            <field name="model">investment.stock.quotation</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+         <record id="action_investment_stock_quotation" model="ir.actions.act_window">
+            <field name="name">Quotes</field>
+            <field name="res_model">investment.stock.quotation</field>
+        </record>
+
+        <menuitem id="menu_investment_stock_quotation" name="Quotes" sequence="4"
+            parent="submenu_menu_investment_titles" action="action_investment_stock_quotation"/>
+    </data>
+</odoo>

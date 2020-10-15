@@ -27,7 +27,7 @@ class ApproveInvestmentBalReq(models.TransientModel):
     _name = 'approve.investment.bal.req'
     _description = "Approve Investment Balance request"
 
-    invoice = fields.Char("Invoice")
+    invoice = fields.Char("Folio")
     operation_number = fields.Char("Operation Number")
     agreement_number = fields.Char("Agreement Number")
     bank_account_id = fields.Many2one('account.journal', "Bank and Origin Account")
@@ -39,9 +39,16 @@ class ApproveInvestmentBalReq(models.TransientModel):
     date = fields.Date("Application date")
     concept = fields.Text("Application Concept")
     user_id = fields.Many2one('res.users', default=lambda self: self.env.user.id, string="Applicant")
-    employee_id = fields.Many2one('hr.employee', string="Unit requesting the transfer")
+    unit_req_transfer_id = fields.Many2one('dependency', string="Unit requesting the transfer")
     date_required = fields.Date("Date Required")
-    fund_type = fields.Many2one('fund.type', "Background")
+    fund_type = fields.Many2one('fund.type', "Fondo")
+
+    @api.model
+    def default_get(self, fields):
+        res = super(ApproveInvestmentBalReq, self).default_get(fields)
+        name = self.env['ir.sequence'].next_by_code('approve.bal.invest')
+        res.update({'invoice': name})
+        return res
 
     def approve(self):
         request = self.env['request.open.balance.invest'].browse(self.env.context.get('active_id'))
@@ -57,7 +64,7 @@ class ApproveInvestmentBalReq(models.TransientModel):
                     'amount': self.amount,
                     'date': self.date,
                     'concept': self.concept,
-                    'employee_id': self.employee_id.id if self.employee_id else False,
+                    'unit_req_transfer_id': self.unit_req_transfer_id.id if self.unit_req_transfer_id else False,
                     'date_required': self.date_required,
                     'fund_type': self.fund_type.id if self.fund_type else False,
                     'request_id': request.id,
@@ -67,5 +74,21 @@ class ApproveInvestmentBalReq(models.TransientModel):
             if request.balance_req_id:
                 request.balance_req_id.state = 'approved'
 
+class Dependency(models.Model):
 
+    _inherit = 'dependency'
+
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        args = args or []
+        if 'bal_user_id' in self._context:
+            user = self.env['res.users'].browse(self._context.get('bal_user_id'))
+            employees = self.env['hr.employee'].search([('user_id', '=', user.id)])
+            dependency_ids = []
+            for emp in employees:
+                if emp.dependancy_id:
+                    dependency_ids.append(emp.dependancy_id.id)
+            args = [['id', 'in', dependency_ids]]
+        res = super(Dependency, self).name_search(name, args=args, operator=operator, limit=limit)
+        return res
 

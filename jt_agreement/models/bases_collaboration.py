@@ -80,8 +80,31 @@ class BasesCollabration(models.Model):
     supporing_doc = fields.Binary("Supporting Documentation")
     reason_cancel = fields.Text("Reason for Cancellations")
 
+    fund_name_transfer_id = fields.Many2one('bases.collaboration', 'Fund name for transfers')
+    closing_amt = fields.Monetary("Amount")
+
     _sql_constraints = [
         ('folio_convention_no', 'unique(convention_no)', 'The Convention No. must be unique.')]
+
+    @api.model
+    def create(self, vals):
+        res = super(BasesCollabration, self).create(vals)
+        if res and res.beneficiary_ids:
+            if not res.no_beneficiary_allowed or (res.no_beneficiary_allowed and \
+                                                  res.no_beneficiary_allowed < len(res.beneficiary_ids)):
+                raise ValidationError(_("You can add only %s Beneficiaries which is mentined in "
+                                        "'Number of allowed beneficiaries'" % res.no_beneficiary_allowed))
+        return res
+
+    def write(self, vals):
+        res = super(BasesCollabration, self).write(vals)
+        for rec in self:
+            if rec and rec.beneficiary_ids:
+                if not rec.no_beneficiary_allowed or (rec.no_beneficiary_allowed and \
+                                                      rec.no_beneficiary_allowed < len(rec.beneficiary_ids)):
+                    raise ValidationError(_("You can add only %s Beneficiaries which is mentined in "
+                                            "'Number of allowed beneficiaries'" % rec.no_beneficiary_allowed))
+        return res
 
     def compute_operations(self):
         operation_obj = self.env['request.open.balance']
@@ -302,12 +325,18 @@ class Providers(models.Model):
     bank_id = fields.Many2one('res.partner.bank', "Bank")
     account_number = fields.Char("Account Number")
 
+    @api.onchange('bank_id')
+    def onchage_bank(self):
+        if self.bank_id:
+            self.account_number = self.bank_id.acc_number
+
+
 class Beneficiary(models.Model):
     _name = 'collaboration.beneficiary'
     _description = "Collaboration Beneficiary"
 
     collaboration_id = fields.Many2one('bases.collaboration')
-    partner_id = fields.Many2one('res.partner', "Name")
+    employee_id = fields.Many2one('hr.employee', "Name")
     bank_id = fields.Many2one('res.partner.bank', "Bank")
     account_number = fields.Char("Account Number")
     currency_id = fields.Many2one(
@@ -317,6 +346,25 @@ class Beneficiary(models.Model):
     validity_start = fields.Date("Validity of the beneficiary start")
     validity_final_beneficiary = fields.Date("Validity of the Final Beneficiary")
     withdrawal_sch_date = fields.Date("Withdrawal scheduling date")
+
+    @api.onchange('bank_id')
+    def onchage_bank(self):
+        if self.bank_id:
+            self.account_number = self.bank_id.acc_number
+
+class ResPartnerBank(models.Model):
+
+    _inherit = 'res.partner.bank'
+    _rec_name = 'bank_id'
+
+    def name_get(self):
+        if 'from_agreement' not in self._context:
+            res = []
+            for bank in self:
+                res.append((bank.id, bank.acc_number))
+        else:
+            res = super(ResPartnerBank, self).name_get()
+        return res
 
 class ResPartner(models.Model):
 
@@ -584,7 +632,8 @@ class RequestOpenBalanceInvestment(models.Model):
                 'default_amount': self.opening_balance,
                 'default_date': today,
                 'default_employee_id': employee.id if employee else False,
-                'default_fund_type': fund_type
+                'default_fund_type': fund_type,
+                'show_for_agreement':1
             }
         }
 
@@ -620,7 +669,7 @@ class RequestOpenBalanceFinance(models.Model):
     date = fields.Date("Application date")
     concept = fields.Text("Application Concept")
     user_id = fields.Many2one('res.users', default=lambda self: self.env.user.id, string="Applicant")
-    employee_id = fields.Many2one('hr.employee', string="Unit requesting the transfer")
+    unit_req_transfer_id = fields.Many2one('dependency', string="Unit requesting the transfer")
     date_required = fields.Date("Date Required")
     fund_type = fields.Many2one('fund.type', "Background")
     reason_rejection = fields.Text("Reason Rejection")

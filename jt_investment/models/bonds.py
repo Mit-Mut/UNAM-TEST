@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from datetime import datetime
 
 class Bonds(models.Model):
 
@@ -32,7 +33,7 @@ class Bonds(models.Model):
     time_for_each_cash_flow = fields.Integer(string="Time for each cash flow",size=4)
     time_to_expiration_date = fields.Integer(string="Time to Expiration Date",size=4)
     coupon = fields.Float(string="Coupon",compute="get_coupon_amount",store=True)
-    state = fields.Selection([('draft','Draft'),('in_process','In Process')],string="Status",default="draft")
+    state = fields.Selection([('draft','Draft'),('in_process','In Process'),('requested','Requested'),('rejected','Rejected'),('confirmed','Confirmed'),('approved','Approved'),('done','Done'),('canceled','Canceled')],string="Status",default='draft')
         
     present_value_bond = fields.Float(string="Present Value of the Bond",compute="get_present_value_bond",store=True)    
     estimated_interest = fields.Float(string="Estimated Interest",compute="get_estimated_interest",store=True)
@@ -46,7 +47,7 @@ class Bonds(models.Model):
     month_due_date = fields.Date('Due Date')
     number_of_title = fields.Float("Number of Titles")
     udi_value = fields.Float("UDI value")
-    udi_value_multiplied = fields.Float(string="The value of the Udi is multiplied by 100",compute="get_udi_value_multiplied",store=True)
+    udi_value_multiplied = fields.Float(string="The value of the Udi is multiplied by 100",default=100)
     coupon_rate = fields.Float("Coupon Rate")
     period_days = fields.Float("Period days")  
     
@@ -56,15 +57,20 @@ class Bonds(models.Model):
 
     monthly_profit_variation = fields.Float(string="Estimated vs Real Profit Variation",compute="get_month_profit_variation",store=True)
 
-    @api.depends('udi_value')
-    def get_udi_value_multiplied(self):
-        for rec in self:
-            rec.udi_value_multiplied = rec.udi_value * 100
-             
+    #====== Accounting Fields =========#
+
+    investment_income_account_id = fields.Many2one('account.account','Income Account')
+    investment_expense_account_id = fields.Many2one('account.account','Expense Account')
+    investment_price_diff_account_id = fields.Many2one('account.account','Price Difference Account')    
+
+    return_income_account_id = fields.Many2one('account.account','Income Account')
+    return_expense_account_id = fields.Many2one('account.account','Expense Account')
+    return_price_diff_account_id = fields.Many2one('account.account','Price Difference Account')    
+                 
     @api.depends('nominal_value','interest_rate')
     def get_coupon_amount(self):
         for rec in self:
-            rec.coupon = rec.nominal_value * rec.interest_rate
+            rec.coupon = (rec.nominal_value * rec.interest_rate)/100
 
     @api.depends('amount_invest','currency_rate_id','currency_rate_id.rate')
     def get_total_currency_amount(self):
@@ -77,9 +83,11 @@ class Bonds(models.Model):
     @api.depends('interest_rate','time_for_each_cash_flow','nominal_value')
     def get_present_value_bond(self):
         for rec in self:
-            value = (rec.nominal_value*rec.interest_rate)*((1+rec.interest_rate)**float(rec.time_for_each_cash_flow-1))/(rec.interest_rate+(1+rec.interest_rate)**rec.interest_rate)+rec.nominal_value*(1/(1+rec.interest_rate)**rec.interest_rate)
-            value = format(float(value), 'f')
-            rec.present_value_bond = value 
+            VA = rec.nominal_value
+            r = rec.interest_rate /100
+            n = rec.time_for_each_cash_flow
+            value = (VA * r) * ((1 + r) ** n-1) / (r + (1 + r) ** r) + VA * (1 / (1 + r) ** r)
+            rec.present_value_bond = value
             
 
     @api.depends('present_value_bond','nominal_value')
@@ -106,7 +114,7 @@ class Bonds(models.Model):
     @api.depends('monthly_estimated_interest','monthly_real_interest')
     def get_month_profit_variation(self):
         for rec in self:
-            rec.monthly_profit_variation = rec.monthly_estimated_interest - rec.monthly_real_interest
+            rec.monthly_profit_variation = rec.monthly_real_interest - rec.monthly_estimated_interest
 
     @api.model
     def create(self,vals):
@@ -114,7 +122,29 @@ class Bonds(models.Model):
         return super(Bonds,self).create(vals)
         
     def action_confirm(self):
-        self.state='in_process'
+        today = datetime.today().date()
+        user = self.env.user
+        employee = self.env['hr.employee'].search([('user_id', '=', user.id)], limit=1)
+        fund_type = False
+        if self.contract_id and self.contract_id.fund_id:
+            fund_type = self.contract_id.fund_id.id
+            
+        return {
+            'name': 'Approve Request',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': False,
+            'res_model': 'approve.money.market.bal.req',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+                'default_amount': self.amount_invest,
+                'default_date': today,
+                'default_employee_id': employee.id if employee else False,
+                'default_bonds_id' : self.id,
+                'default_fund_type' : fund_type,
+            }
+        }
         
     def action_reset_to_draft(self):
         self.state='draft'

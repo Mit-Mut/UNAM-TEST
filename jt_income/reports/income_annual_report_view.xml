@@ -65,7 +65,7 @@
         sequence="7"
     />
 
-    
+    <!-- 
     <menuitem
         id="menu_income_annual_report"
         name="Income Annual Report"
@@ -73,6 +73,6 @@
         sequence="1"
         action="action_income_annual_report"
     />
-
+	 -->
 	</data>
 </odoo>

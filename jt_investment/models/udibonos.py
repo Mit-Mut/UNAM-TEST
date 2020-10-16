@@ -33,7 +33,7 @@ class UDIBONOS(models.Model):
     time_for_each_cash_flow = fields.Integer(string="Time for each cash flow",size=4)
     time_to_expiration_date = fields.Integer(string="Time to Expiration Date",size=4)
     coupon = fields.Float(string="Coupon",compute="get_coupon_amount",store=True)
-    state = fields.Selection([('draft','Draft'),('in_process','In Process'),('requested','Requested'),('rejected','Rejected'),('confirmed','Confirmed'),('approved','Approved'),('done','Done'),('canceled','Canceled')],string="Status",default='draft')
+    state = fields.Selection([('draft','Draft'),('requested','Requested'),('rejected','Rejected'),('confirmed','Confirmed'),('approved','Approved'),('done','Done'),('canceled','Canceled')],string="Status",default='draft')
     
     present_value_bond = fields.Float(string="Present Value of the Bond",compute="get_present_value_bond",store=True)    
     estimated_interest = fields.Float(string="Estimated Interest",compute="get_estimated_interest",store=True)
@@ -157,3 +157,14 @@ class UDIBONOS(models.Model):
     
     def action_reinvestment(self):
         return 
+
+    def action_published_entries(self):
+        return {
+            'name': 'Published Entries',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'request.open.balance.finance',
+            'domain': [('udibonos_id', '=', self.id)],
+            'type': 'ir.actions.act_window',
+            'context': {'default_udibonos_id': self.id}
+        }

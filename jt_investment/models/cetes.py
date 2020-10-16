@@ -43,7 +43,7 @@ class CETES(models.Model):
     estimated_profit = fields.Float(string="Estimated Profit",compute="get_estimated_profit",store=True)
     real_interest = fields.Float("Real Interest")
     real_profit = fields.Float(string="Real Profit",compute="get_real_profit",store=True)
-    state = fields.Selection([('draft','Draft'),('in_process','In Process'),('requested','Requested'),('rejected','Rejected'),('confirmed','Confirmed'),('approved','Approved'),('done','Done'),('canceled','Canceled')],string="Status",default='draft')
+    state = fields.Selection([('draft','Draft'),('requested','Requested'),('rejected','Rejected'),('confirmed','Confirmed'),('approved','Approved'),('done','Done'),('canceled','Canceled')],string="Status",default='draft')
 
     #====== Accounting Fields =========#
 
@@ -141,3 +141,14 @@ class CETES(models.Model):
     
     def action_reinvestment(self):
         return 
+
+    def action_published_entries(self):
+        return {
+            'name': 'Published Entries',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'request.open.balance.finance',
+            'domain': [('cetes_id', '=', self.id)],
+            'type': 'ir.actions.act_window',
+            'context': {'default_cetes_id': self.id}
+        }

@@ -23,14 +23,17 @@
                                 <field name="date"/>
                                 <field name="concept"/>
                                 <field name="user_id"/>
-                                <field name="employee_id"/>
-                                <field name="date_required"/>
+                                <!-- 
+	                                <field name="employee_id"/>
+	                                <field name="date_required"/>
+                                 -->
                                 <field name="fund_type"/>
                                 
-                                <field name="bonds_id"/>
-                                <field name="cetes_id"/>
-                                <field name="udibonos_id"/>
-                                <field name="will_pay_id"/>
+                                <field name="bonds_id" invisible="1"/>
+                                <field name="cetes_id" invisible="1"/>
+                                <field name="udibonos_id" invisible="1"/>
+                                <field name="will_pay_id" invisible="1"/>
+                                <field name="purchase_sale_security_id" invisible="1"/>
                             </group>
                         </group>
                 	<footer>

@@ -286,6 +286,8 @@ class Invoice(models.Model):
                             } 
                 
                 invoice_line.append((0,0,line_vals))
+            print ("======",invoice_line)
+            
         self.invoice_line_ids = False
         self.invoice_line_ids = invoice_line
         self.invoice_line_ids._onchange_price_subtotal()
@@ -506,28 +508,38 @@ class Invoice(models.Model):
     def create(self, vals_list):
         result = super(Invoice, self).create(vals_list)
         self.set_pdf_remplate_data(result)
-#         for rec in result:
-#             if rec.type_of_revenue_collection and rec.journal_id:
-#                 if not rec.journal_id.default_debit_account_id:
-#                     if self.env.user.lang == 'es_MX':
-#                         raise ValidationError(_("Configure la cuenta de débito predeterminada del diario %s")%(rec.journal_id.name))
-#                     else:
-#                         raise ValidationError(_("Please Configure Default Debit Account of Journal %s")%(rec.journal_id.name))                
-#                 elif rec.journal_id.default_debit_account_id and rec.journal_id.default_debit_account_id.user_type_id.type != 'receivable':
-#                     if self.env.user.lang == 'es_MX':
-#                         raise ValidationError(_("Configure el tipo de cuenta por cobrar en la cuenta de débito predeterminada del diario %s")%(rec.journal_id.name))
-#                     else:
-#                         raise ValidationError(_("Please Configure The Receivable Type Account On Default Debit Account of Journal %s")%(rec.journal_id.name))
-#                 else:                    
-#                     for line in rec.line_ids.filtered(lambda x:x.account_id and line.debit != 0):
-#                         if line.account_id.user_type_id.type == 'receivable' and line.debit != 0:
-#                             line.account_id = rec.journal_id.default_debit_account_id.id
+        for rec in result:
+            if rec.type_of_revenue_collection=='deposit_cer' and rec.record_type=='manual' and rec.income_bank_journal_id:
+                if not rec.income_bank_journal_id.default_debit_account_id:
+                    if self.env.user.lang == 'es_MX':
+                        raise ValidationError(_("Configure la cuenta de débito predeterminada del Banco %s")%(rec.income_bank_journal_id.name))
+                    else:
+                        raise ValidationError(_("Please Configure Default Debit Account of Bank %s")%(rec.income_bank_journal_id.name))                
+                else:                    
+                    for line in rec.line_ids.filtered(lambda x:x.account_id and x.debit != 0):
+                        if line.account_id.user_type_id.type == 'receivable' and line.debit != 0:
+                            line.account_id = False
+                            line.account_id = rec.income_bank_journal_id.default_debit_account_id.id
         return result
     
     def write(self,vals):
         result = super(Invoice, self).write(vals)
         if vals.get('returned_check'):
             self.set_pdf_remplate_data(self)
+        if vals.get('type_of_revenue_collection',False) or vals.get('record_type',False) or vals.get('income_bank_journal_id',False):
+            for rec in self:
+                if rec.type_of_revenue_collection=='deposit_cer' and rec.record_type=='manual' and rec.income_bank_journal_id:
+                    if not rec.income_bank_journal_id.default_debit_account_id:
+                        if self.env.user.lang == 'es_MX':
+                            raise ValidationError(_("Configure la cuenta de débito predeterminada del Banco %s")%(rec.income_bank_journal_id.name))
+                        else:
+                            raise ValidationError(_("Please Configure Default Debit Account of Bank %s")%(rec.income_bank_journal_id.name))                
+                    else:                    
+                        for line in rec.line_ids.filtered(lambda x:x.account_id and x.debit != 0):
+                            if line.debit != 0:
+                                line.account_id = False
+                                line.account_id = rec.income_bank_journal_id.default_debit_account_id.id
+            
         return result
         
 class AccountMoveLine(models.Model):

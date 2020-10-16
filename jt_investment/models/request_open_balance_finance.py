@@ -10,5 +10,6 @@ class BasesCollabration(models.Model):
     cetes_id = fields.Many2one('investment.cetes','cetes')
     udibonos_id = fields.Many2one('investment.udibonos','Udibonos')
     will_pay_id = fields.Many2one('investment.will.pay','Will Pay')
+    purchase_sale_security_id = fields.Many2one('purchase.sale.security','Purchase Sale Security')
 
 

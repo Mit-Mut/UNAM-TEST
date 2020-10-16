@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from datetime import datetime
 
 class PurchaseSaleSecurity(models.Model):
 
@@ -33,6 +34,16 @@ class PurchaseSaleSecurity(models.Model):
     number_of_titles = fields.Float("Quantity of Securities")
     amount = fields.Float(string="Investment amount",compute="get_investment_amount",store=True)
 
+    #====== Accounting Fields =========#
+
+    investment_income_account_id = fields.Many2one('account.account','Income Account')
+    investment_expense_account_id = fields.Many2one('account.account','Expense Account')
+    investment_price_diff_account_id = fields.Many2one('account.account','Price Difference Account')    
+
+    return_income_account_id = fields.Many2one('account.account','Income Account')
+    return_expense_account_id = fields.Many2one('account.account','Expense Account')
+    return_price_diff_account_id = fields.Many2one('account.account','Price Difference Account')    
+
     @api.depends('movement_price','number_of_titles')
     def get_investment_amount(self):
         for rec in self:
@@ -44,7 +55,24 @@ class PurchaseSaleSecurity(models.Model):
 #         return super(PurchaseSaleSecurity,self).create(vals)
     
     def action_confirm(self):
-        self.state = 'confirmed'
+        today = datetime.today().date()
+        fund_type = False            
+        return {
+            'name': 'Approve Request',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': False,
+            'res_model': 'approve.money.market.bal.req',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+                'default_amount': self.price,
+                'default_date': today,
+                'default_purchase_sale_security_id' : self.id,
+                'default_fund_type' : fund_type,
+            }
+        }
+
 
     def action_reject(self):
         self.state = 'rejected'

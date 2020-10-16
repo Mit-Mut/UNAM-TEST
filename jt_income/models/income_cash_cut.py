@@ -21,3 +21,7 @@ class ActivityCatalog(models.Model):
     tax_id = fields.Many2one('account.tax','Tax')
     subtotal = fields.Float("Subtotal")
     total = fields.Float("Total")
+    
+    dependancy_id = fields.Many2one('dependency', string='Dependency')
+    sub_dependancy_id = fields.Many2one('sub.dependency', 'Sub Dependency')
+    

@@ -1,5 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+	<!--  Filter template dependancy -->
+    <template id="search_template_dependancy">
+        <a type="button" class="dropdown-toggle" data-toggle="dropdown">
+            <span class="fa fa-book"/>
+            Dependency:
+            <t t-set="selected_dependancy" t-value="options.get('name_journal_group') or ', '.join(c.get('name') for c in options['dependancy'] if c.get('selected'))"/>
+            <t t-if="selected_dependancy">
+                <t t-esc="selected_dependancy"/>
+            </t>
+            <t t-else="">
+           		<span>All</span>	     
+            </t>
+        </a>
+         
+        <div class="dropdown-menu o_filters_menu" role="menu">
+            <t t-foreach="options['dependancy']" t-as="j">
+                <t t-if="j.get('id') == 'divider'">
+                    <div role="separator" class="dropdown-divider"/>
+                    <b role="menuitem" class="ml4 dropdown-item-text"><t t-esc="j.get('name')"/></b>
+                    <div role="separator" class="dropdown-divider"/>
+                </t>
+                <t t-if="j.get('id') != 'divider'">
+                    <t>
+                        <a role="menuitem" class="dropdown-item js_account_report_choice_filter" t-att-title="j.get('name')" t-att-data-id="j.get('id')" data-filter="dependancy">
+                            <t t-esc="j.get('name')"/>
+                        </a>
+                    </t>
+                </t>
+            </t>
+        </div>
+        
+    </template>
+
     <template id="search_template_line_pages">
         <a type="button" class="dropdown-toggle" data-toggle="dropdown">
             <span class="fa fa-book"/>
@@ -93,6 +126,10 @@
             <div class="btn-group o_dropdown o_account_reports_filter_program_code_section" t-if="options.get('code_sections') != None">
                 <t t-call="jt_budget_mgmt.search_template_program_code_section"/>
             </div>
+           <div class="btn-group o_dropdown o_account_reports_filter_currency" t-if="options.get('dependancy') != None">
+                <t t-call="jt_budget_mgmt.search_template_dependancy"/>
+            </div>
+            
         </xpath>
     </template>
 

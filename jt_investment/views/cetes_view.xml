@@ -25,13 +25,18 @@
                 <form>
                 	<header>
                 		<button name="action_confirm" states="draft" string="Confirm" class="oe_highlight" type="object" />
-                		<button name="action_reset_to_draft" states="in_process" string="Reset To Draft" class="oe_highlight" type="object"/>
+                		<button name="action_reset_to_draft" attrs="{'invisible':[('state','=','draft')]}" string="Reset To Draft" class="oe_highlight" type="object"/>
                 		<button name="action_calculation" states="draft" string="Calculation" class="oe_highlight" type="object" />
                 		<button name="action_reinvestment" states="draft" string="Reinvestment" class="oe_highlight" type="object" />
                 		
                 		<field name="state" widget="statusbar"/>
                 	</header>
                     <sheet>
+                         <div class="oe_button_box" name="button_box">
+                            <button name="action_published_entries" string="Published Entries" type="object" class="oe_stat_button" icon="fa-random" attrs="{'invisible': [('state', '=', 'draft')]}">
+                            </button>
+                        </div>
+                    
                         <group>
                             <group>
                                 <field name="folio" readonly="1"/>

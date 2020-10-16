@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+         <record model="ir.ui.view" id="view_req_open_balance_form_investment_inherit">
+            <field name="name">request.open.balance.invest.form</field>
+            <field name="model">request.open.balance.invest</field>
+            <field name="inherit_id" ref="jt_agreement.view_req_open_balance_form_investment"/>
+            <field name="arch" type="xml">
+            	<field name="state" position="before">
+            		 <button name="set_to_requested" type="object" string="Requested" class="oe_highlight"
+                             attrs="{'invisible': [('state', '!=', 'draft')]}" />
+            	</field>
+			</field>
+		</record>
+	</data>
+</odoo>	

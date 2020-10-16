@@ -32,6 +32,8 @@
 			                    <field name="name"/>
 			                    <field name="folio_cfs"/>
 			                    <field name="folio_cfd"/>
+			                    <field name="dependancy_id" context="{'show_for_supplier_payment':True}"/>
+			                    <field name="sub_dependancy_id" domain="[('dependency_id','=',dependancy_id)]" context="{'show_for_supplier_payment':True}"/>
 			                    <field name="cut_date"/>
 			                    <field name="user_id"/>
 			                    <field name="l10n_mx_edi_payment_method_id"/>

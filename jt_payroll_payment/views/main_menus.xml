@@ -28,6 +28,10 @@
                   parent="menu_payment_of_payroll"
                   sequence="2"/>
 
+        <menuitem id="menu_report_payment_of_payroll" name="Reports"
+                  parent="menu_payment_of_payroll"
+                  sequence="3"/>
+
 
     </data>
 </odoo>

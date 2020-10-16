@@ -36,7 +36,7 @@ class WillPay(models.Model):
     time_frame = fields.Float(string="Time frame",compute="get_time_frame",store=True)
     simple_interest = fields.Boolean(string="Simple Interest",default=False)
     compound_interest = fields.Boolean(string="Compound Interest",default=False)
-    state = fields.Selection([('draft','Draft'),('in_process','In Process'),('requested','Requested'),('rejected','Rejected'),('confirmed','Confirmed'),('approved','Approved'),('done','Done'),('canceled','Canceled')],string="Status",default='draft')
+    state = fields.Selection([('draft','Draft'),('requested','Requested'),('rejected','Rejected'),('confirmed','Confirmed'),('approved','Approved'),('done','Done'),('canceled','Canceled')],string="Status",default='draft')
     
     simple_interest_capital = fields.Float(string="Capital",compute="get_simple_interest_capital",store=True)
     simple_interest_future_value = fields.Float(string="Future Value",compute="get_simple_interest_future_value",store=True)
@@ -170,4 +170,15 @@ class WillPay(models.Model):
     
     def action_reinvestment(self):
         return 
+    
+    def action_published_entries(self):
+        return {
+            'name': 'Published Entries',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'request.open.balance.finance',
+            'domain': [('will_pay_id', '=', self.id)],
+            'type': 'ir.actions.act_window',
+            'context': {'default_will_pay_id': self.id}
+        }
     

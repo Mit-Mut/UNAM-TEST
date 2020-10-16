@@ -20,34 +20,14 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Investment',
-    'summary': 'Investment',
-    'version': '13.0.0.1.0',
-    'category': 'Investment',
-    'author': 'Jupical Technologies Pvt. Ltd.',
-    'maintainer': 'Jupical Technologies Pvt. Ltd.',
-    'website': 'http://www.jupical.com',
-    'license': 'AGPL-3',
-    'depends': ['account_accountant','jt_payroll_payment','jt_agreement'],
-    'data': [
-        'data/sequence.xml',
-        'security/ir.model.access.csv',
-        'views/investment_menu.xml',
-        'views/financial_product.xml',
-        'views/cetes_view.xml',
-        'views/udibonos.xml',
-        'views/bonds.xml',
-        'views/will_pay.xml',
-        'views/calendar_control.xml',
-        'views/investment_contract.xml',
-        'views/purchase_sale_security.xml',
-        'views/stock_quotation.xml',
-        'views/increases_and_withdrawals.xml',
-        'wizard/approve_inv_bal_req_view.xml',
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
+from datetime import datetime
+
+class RequestOpenBalanceInvestment(models.Model):
+
+    _inherit = 'request.open.balance.invest'
+
+    def set_to_requested(self):
+        self.state = 'requested'
         
-    ],
-    'application': True,
-    'installable': True,
-    'auto_install': False,
-}

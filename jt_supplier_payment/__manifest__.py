@@ -61,7 +61,8 @@
         'views/different_payroll_payment_request.xml',
         # Payroll Reports
         'reports/payroll_bank_deposite_slip.xml',
-        
+        'reports/filtered_report_template.xml',
+        'reports/menu_reports.xml',
     ],
     'application': False,
     'installable': True,

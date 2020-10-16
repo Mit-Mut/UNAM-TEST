@@ -102,6 +102,8 @@
         'views/conac_move_view.xml',
         # Main Menu File
         'views/budget_menus.xml',
+        
+        'report/menu_total_payment_report.xml',
     ],
     'demo': [
         'demo/demo_code_structure.xml',

@@ -7,12 +7,21 @@
             <field name="model">investment.cetes</field>
             <field name="arch" type="xml">
                 <tree>
-                	<field name="folio"/>
-       				<field name="kind_of_product"/>
+                	<field name="folio" invisible="1"/>
+       				<field name="kind_of_product" invisible="1"/>
        				<field name="key"/>
        				<field name="start_date"/>
-       				<field name="due_date"/>
+       				<field name="due_date"/>	
        				<field name="nominal_value"/>
+       				<field name="yield_rate"/>
+       				<field name="term"/>
+       				<field name="cetes_price"/>
+       				<field name="cetes_quantity"/>
+       				<field name="estimated_interest"/>
+       				<field name="estimated_profit"/>
+       				<field name="real_interest"/>
+       				<field name="real_profit"/>
+       				<field name="profit_variation"/>
        				<field name="state"/>
                 </tree>
             </field>

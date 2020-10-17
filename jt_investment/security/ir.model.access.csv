@@ -6,4 +6,4 @@ access_investment_will_pay,investment.will.pay.access,model_investment_will_pay,
 access_investment_contract,investment.contract.access,model_investment_contract,base.group_user,1,1,1,1
 access_purchase_sale_security,purchase.sale.security.access,model_purchase_sale_security,base.group_user,1,1,1,1
 access_investment_stock_quotation,investment.stock.quotation.access,model_investment_stock_quotation,base.group_user,1,1,1,1
-
+access_investment_investment,investment.investment.access,model_investment_investment,base.group_user,1,1,1,1

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="investment_investment_tree" model="ir.ui.view">
+            <field name="name">investment.investment.tree.view</field>
+            <field name="model">investment.investment</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="invesment_date"/>
+               		<field name="journal_id"/>
+               		<field name="contract_id"/>
+               		<field name="amount_to_invest"/>
+               		<field name="interest_rate"/>
+               		<field name="term"/>
+               		<field name="capitalizable"/>
+               		<field name="currency_id"/>
+               		<field name="currency_rate_id"/>
+               		<field name="state"/>                    
+                </tree>
+            </field>
+        </record>
+
+        <record id="investment_investment_form" model="ir.ui.view">
+            <field name="name">investment.investment.form.view</field>
+            <field name="model">investment.investment</field>
+            <field name="arch" type="xml">
+                <form>
+                	<header>
+                		<button name="action_confirm" states="draft" string="Confirm" class="oe_highlight" type="object" />
+                		<button name="action_reject" states="draft" string="Reject" class="oe_highlight" type="object"/>
+                		<field name="state" widget="statusbar"/>
+                	</header>
+                
+                    <sheet>
+                        <group>
+                        	<group>
+			                    <field name="invesment_date"/>
+			               		<field name="journal_id"/>
+			               		<field name="contract_id"/>
+			               		<field name="amount_to_invest"/>
+			               		<field name="is_fixed_rate"/>
+			               		<field name="interest_rate"/>
+			               		<field name="extra_percentage"/>
+                        	</group>
+                        	<group>
+			               		<field name="term"/>
+			               		<field name="capitalizable"/>
+			               		<field name="frequency"/>
+			               		<field name="currency_id"/>
+			               		<field name="currency_rate_id" domain="[('currency_id','=',currency_id)]"/>
+                        		<field name="observations"/>
+                        		<field name="file_name" invisible="1"/>
+                        		<field name="file_data" filename="file_name"/>
+                        	</group>
+                        </group>
+                    <notebook>
+						<page string="Returns">
+							<group>
+								<group>
+									<field name="estimated_interest"/>
+									<field name="estimated_profit"/>
+								</group>
+								<group>
+									<field name="real_interest"/>
+									<field name="real_profit"/>
+									<field name="profit_variation"/>
+								</group>	
+							</group>
+						</page>                    	
+                    </notebook>
+                        
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+          <record id="investment_investment_search" model="ir.ui.view">
+            <field name="name">investment.investment.search.view</field>
+            <field name="model">investment.investment</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="journal_id"/>
+                    <field name="contract_id"/>
+                    <field name="currency_id"/>
+                </search>
+            </field>
+        </record>
+
+         <record id="action_investment_investment" model="ir.actions.act_window">
+            <field name="name">Investment</field>
+            <field name="res_model">investment.investment</field>
+        </record>
+
+        <menuitem id="menu_productive_accounts_investment" name="Investment" sequence="2"
+            parent="submenu_menu_investment_productive_accounts" action="action_investment_investment"/>
+    </data>
+</odoo>

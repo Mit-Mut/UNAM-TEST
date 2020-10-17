@@ -252,7 +252,7 @@ class TotalPaymentAmounts(models.AbstractModel):
         col += 1
         header_title = '''PATRONATO UNIVERSITARIO\nTESORERIA'''
         sheet.merge_range(y_offset, col, 6, col+1, header_title,super_col_style)
-        y_offset += 6
+        y_offset += 8
 #         col=1
 #         currect_time_msg = "Fecha y hora de impresión: "
 #         currect_time_msg += datetime.today().strftime('%d/%m/%Y %H:%M')

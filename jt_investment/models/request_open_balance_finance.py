@@ -11,5 +11,11 @@ class BasesCollabration(models.Model):
     udibonos_id = fields.Many2one('investment.udibonos','Udibonos')
     will_pay_id = fields.Many2one('investment.will.pay','Will Pay')
     purchase_sale_security_id = fields.Many2one('purchase.sale.security','Purchase Sale Security')
+    investment_id = fields.Many2one('investment.investment','Investment')
+    
 
-
+    def approve_finance(self):
+        result = super(BasesCollabration,self).approve_finance()
+        if self.purchase_sale_security_id:
+            self.purchase_sale_security_id.action_done()
+        return result 

@@ -88,7 +88,19 @@
                        			</group>
                        		</group>
                        	</page>
-						<page string="Returns"></page>                    	
+						<page string="Returns">
+							<group>
+								<group>
+									<field name="estimated_interest"/>
+									<field name="estimated_profit"/>
+								</group>
+								<group>
+									<field name="real_interest"/>
+									<field name="real_profit"/>
+									<field name="profit_variation"/>
+								</group>	
+							</group>
+						</page>                    	
                     </notebook>
                         
                     </sheet>

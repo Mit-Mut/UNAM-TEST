@@ -129,15 +129,16 @@ class ElectronicDepositsOfSalaries(models.AbstractModel):
         if not payment_method_list:
             payment_method_list = [0]
              
-        self.env.cr.execute('''select ap.journal_id as id,ap.l10n_mx_edi_payment_method_id as payment_method,
+        self.env.cr.execute('''select ap.journal_id as id,ap.payroll_request_type as payment_method,
                                 COALESCE(sum(amount),0) as amount
                                 from account_payment ap,account_journal aj
-                                where ap.payment_state in ('for_payment_procedure','posted','reconciled')
+                                where ap.payment_state in ('for_payment_procedure')
                                 and ap.payment_request_type = 'payroll_payment'
                                 and ap.journal_id IS NOT NULL
+                                and ap.payroll_request_type IS NOT NULL 
                                 and ap.journal_id = aj.id
                                 and ap.l10n_mx_edi_payment_method_id in %s
-                                group by ap.journal_id,ap.l10n_mx_edi_payment_method_id
+                                group by ap.journal_id,ap.payroll_request_type
             ''',(tuple(payment_method_list),))
         datas = self.env.cr.fetchall()
         total_amount = 0
@@ -148,7 +149,7 @@ class ElectronicDepositsOfSalaries(models.AbstractModel):
         total_payment_amount=0
         
         for data in datas:
-            payment_method_id = self.env['l10n_mx_edi.payment.method'].browse(data[1])
+            #payment_method_id = self.env['l10n_mx_edi.payment.method'].browse(data[1])
             if pre_journal != 0 and pre_journal != data[0]:
                 journal_id = self.env['account.journal'].browse(pre_journal)
                 lines.append({
@@ -169,10 +170,11 @@ class ElectronicDepositsOfSalaries(models.AbstractModel):
             pre_journal = data[0]   
             total_amount += data[2]
             total_journal_amount += data[2]
-             
+            
+            payroll_name = dict(self.env['account.payment']._fields['payroll_request_type'].selection).get(data[1]) 
             payment_method_line.append({
                 'id': 'hierarchy2_' + str(data[0])+str(data[1]),
-                'name': payment_method_id.name,
+                'name': payroll_name,
                 'columns': [
                             {'name': ''},
                             self._format({'name': data[2]},figure_type='float'),
@@ -185,7 +187,7 @@ class ElectronicDepositsOfSalaries(models.AbstractModel):
                 p_dict = list_payment_method.get(data[1],{})
                 p_dict.update({'amount':data[2]+p_dict.get('amount',0)})
             else:
-                list_payment_method.update({data[1]:{'name':payment_method_id.name,'amount':data[2]}})
+                list_payment_method.update({data[1]:{'name':payroll_name,'amount':data[2]}})
              
         if payment_method_line and pre_journal:
             journal_id = self.env['account.journal'].browse(pre_journal)
@@ -281,9 +283,9 @@ class ElectronicDepositsOfSalaries(models.AbstractModel):
         currect_date_style.set_border(0)
         super_col_style.set_border(0)
         #Set the first column width to 50
-        sheet.set_column(0, 0,25)
-        sheet.set_column(0, 1,25)
-        sheet.set_column(0, 2,25)
+        sheet.set_column(0, 0,35)
+        sheet.set_column(0, 1,35)
+        sheet.set_column(0, 2,35)
         super_columns = self._get_super_columns(options)
         y_offset = 0
         col = 0
@@ -297,7 +299,7 @@ class ElectronicDepositsOfSalaries(models.AbstractModel):
         col += 1
         header_title = '''REPORTE DE LOS IMPORTES DE LOS DEPOSITOS ELECTRONICOS'''
         sheet.merge_range(y_offset, col, 6, col+1, header_title,super_col_style)
-        y_offset += 6
+        y_offset += 8
 #         col=1
 #         currect_time_msg = "Fecha y hora de impresión: "
 #         currect_time_msg += datetime.today().strftime('%d/%m/%Y %H:%M')

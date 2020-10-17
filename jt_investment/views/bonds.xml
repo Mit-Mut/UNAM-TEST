@@ -7,12 +7,20 @@
             <field name="model">investment.bonds</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="folio"/>
-       				<field name="kind_of_product"/>
+                    <field name="folio" invisible="1"/>
+       				<field name="kind_of_product" invisible="1"/>
        				<field name="key"/>
        				<field name="issue_date"/>
        				<field name="due_date"/>
        				<field name="nominal_value"/>
+       				<field name="interest_rate"/>
+       				<field name="time_for_each_cash_flow"/>
+       				<field name="time_to_expiration_date"/>
+       				<field name="coupon"/>
+       				<field name="present_value_bond"/>
+       				<field name="estimated_interest"/>
+       				<field name="real_interest"/>
+       				<field name="profit_variation"/>       				
        				<field name="state"/>
                 </tree>
             </field>

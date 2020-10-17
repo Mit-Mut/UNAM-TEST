@@ -120,6 +120,17 @@ class BasesCollabration(models.Model):
                 modifications = modification_obj.search([('bases_collaboration_id', '=', rec.id)])
                 rec.total_modifications = len(modifications)
 
+    def action_closing_collaboration(self):
+        return {
+            'name': 'Closing Collaboration',
+            'view_mode': 'form',
+            'view_id': self.env.ref('jt_agreement.closing_collaboration_form_view').id,
+            'res_model': 'closing.collaboration',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {'active_ids': self.ids}
+        }
+
     def cancel(self):
         return {
             'name': 'Cancel Collaboration',
@@ -396,7 +407,9 @@ class RequestOpenBalance(models.Model):
                                           ('increase', 'Increase'),
                                           ('retirement', 'Retirement'),
                                           ('withdrawal', 'Withdrawal for settlement'),
-                                          ('withdrawal_cancellation', 'Withdrawal Due to Cancellation')],
+                                          ('withdrawal_cancellation', 'Withdrawal Due to Cancellation'),
+                                          ('withdrawal_closure', 'Withdrawal due to closure'),
+                                          ('increase_by_closing', 'Increase by closing')],
                                          string="Type of Operation")
     apply_to_basis_collaboration = fields.Boolean("Apply to Basis of Collaboration")
     origin_resource_id = fields.Many2one('sub.origin.resource', "Origin of the resource")

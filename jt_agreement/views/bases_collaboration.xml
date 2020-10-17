@@ -73,7 +73,8 @@
                                 </group>
                             </page>
                              <page string="Supporting Documentaion" name="supporting_documentation">
-                                <group attrs="{'invisible': [('type_of_operation', 'in', ('withdrawal', 'increase', 'retirement','withdrawal_cancellation'))]}">
+                                <group attrs="{'invisible': [('type_of_operation', 'in', ('withdrawal', 'increase',
+                                'retirement','withdrawal_cancellation', 'increase_by_closing', 'withdrawal_closure'))]}">
                                     <group>
                                         <field name="cbc_format"/>
                                     </group>
@@ -81,7 +82,8 @@
                                         <field name="cbc_shipping_office"/>
                                     </group>
                                 </group>
-                                 <group attrs="{'invisible': [('type_of_operation', 'not in', ('withdrawal', 'increase', 'retirement', 'withdrawal_cancellation'))]}">
+                                 <group attrs="{'invisible': [('type_of_operation', 'not in', ('withdrawal', 'increase',
+                                 'retirement', 'withdrawal_cancellation', 'withdrawal_closure', 'increase_by_closing'))]}">
                                     <group>
                                         <field name="supporting_documentation"/>
                                     </group>
@@ -596,6 +598,15 @@
             <field name="state">code</field>
             <field name="binding_view_types">list</field>
             <field name="code">action = records.action_schedule_withdrawal()</field>
+        </record>
+
+         <record id="action_closing_collaboration" model="ir.actions.server">
+            <field name="name">Closing of collaboration databases</field>
+            <field name="model_id" ref="jt_agreement.model_bases_collaboration"/>
+            <field name="binding_model_id" ref="jt_agreement.model_bases_collaboration"/>
+            <field name="state">code</field>
+            <field name="binding_view_types">list</field>
+            <field name="code">action = records.action_closing_collaboration()</field>
         </record>
 
     </data>

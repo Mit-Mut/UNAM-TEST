@@ -133,15 +133,15 @@ class GeneralTotalPaymentAmounts(models.AbstractModel):
 #         end = datetime.strptime(
 #             options['date'].get('date_to'), '%Y-%m-%d').date()
 
-        self.env.cr.execute('''select ap.payment_bank_id as id,rb.name as name,
+        self.env.cr.execute('''select ap.journal_id as id,rb.name as name,
                                 COALESCE(sum(amount),0) as amount
-                                from account_payment ap,res_bank rb
-                                where ap.payment_state in ('for_payment_procedure','posted','reconciled')
+                                from account_payment ap,account_journal rb
+                                where ap.payment_state in ('for_payment_procedure')
                                 and ap.payment_request_type = 'payroll_payment'
-                                and ap.payment_bank_id IS NOT NULL
-                                and ap.payment_bank_id = rb.id
+                                and ap.journal_id IS NOT NULL
+                                and ap.journal_id = rb.id
                                 and ap.l10n_mx_edi_payment_method_id in %s
-                                group by payment_bank_id,rb.name
+                                group by journal_id,rb.name
             ''',(tuple(payment_method_list),))
         datas = self.env.cr.fetchall()
         total_amount = 0
@@ -204,9 +204,8 @@ class GeneralTotalPaymentAmounts(models.AbstractModel):
         currect_date_style.set_border(0)
         super_col_style.set_border(0)
         #Set the first column width to 50
-        sheet.set_column(0, 0,25)
-        sheet.set_column(0, 1,25)
-        sheet.set_column(0, 2,25)
+        sheet.set_column(0, 0,40)
+        sheet.set_column(0, 1,40)
         super_columns = self._get_super_columns(options)
         y_offset = 0
         col = 0
@@ -219,8 +218,8 @@ class GeneralTotalPaymentAmounts(models.AbstractModel):
         
         col += 1
         header_title = '''PATRONATO UNIVERSITARIO\nTESORERIA'''
-        sheet.merge_range(y_offset, col, 6, col+1, header_title,super_col_style)
-        y_offset += 6
+        sheet.merge_range(y_offset, col, 6, col+0, header_title,super_col_style)
+        y_offset += 8
 #         col=1
 #         currect_time_msg = "Fecha y hora de impresión: "
 #         currect_time_msg += datetime.today().strftime('%d/%m/%Y %H:%M')

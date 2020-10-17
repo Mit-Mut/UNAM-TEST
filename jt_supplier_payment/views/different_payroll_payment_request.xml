@@ -544,7 +544,7 @@
             <field name="view_mode">tree,form</field>
             <field name="context">{'show_for_supplier_payment':True,'default_type': 'in_invoice', 'default_is_different_payroll_request': 1,
                 'from_move': 1}</field>
-            <field name="domain">[('type', '=', 'in_invoice'), ('is_different_payroll_request', '=', True)]</field>
+            <field name="domain">[('payment_state','in',('draft','registered')),('type', '=', 'in_invoice'), ('is_different_payroll_request', '=', True)]</field>
         </record>
 
 		<record id="different_payroll_payment_req_tree_action" model="ir.actions.act_window.view">
@@ -612,6 +612,39 @@
         </record>
         <menuitem id="different_payroll_payment_account_payment_menu" name="Payments"
                   action="different_payroll_payment_account_payment_action"
-                  parent="different_payroll_payment_management_menu" sequence="20"/>    	
+                  parent="different_payroll_payment_management_menu" sequence="20"/>
+                  
+      <!-- different_payroll_payment in payment menu -->
+
+        <menuitem id="different_payroll_payment_menu_in_payment" name="Different To Payroll"
+                  parent="jt_payroll_payment.menu_payroll_payment"  sequence="3"/>
+      
+          <record id="in_payment_different_payroll_payment_request_action" model="ir.actions.act_window">
+            <field name="name">Payroll</field>
+            <field name="res_model">account.move</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'show_for_supplier_payment':True,'default_type': 'in_invoice', 'default_is_different_payroll_request': 1,
+                'from_move': 1}</field>
+            <field name="domain">[('payment_state','!=','draft'),('type', '=', 'in_invoice'), ('is_different_payroll_request', '=', True)]</field>
+        </record>
+
+		<record id="in_payment_different_payroll_payment_req_tree_action" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="payment_req_tree_view"/>
+            <field name="act_window_id" ref="in_payment_different_payroll_payment_request_action"/>
+        </record>
+        <record id="in_payment_different_payroll_payment_req_form_action_suppliers" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="different_payroll_payment_req_form_view"/>
+            <field name="act_window_id" ref="in_payment_different_payroll_payment_request_action"/>
+        </record>
+
+		
+        <menuitem id="in_payment_different_payroll_payment_request_menu" name="Payroll"
+                  action="in_payment_different_payroll_payment_request_action"
+                  parent="different_payroll_payment_menu_in_payment" sequence="1"/>
+          	
 	</data>
 </odoo>

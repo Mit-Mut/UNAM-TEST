@@ -48,6 +48,7 @@ class ApproveInvestmentBalReq(models.TransientModel):
     udibonos_id = fields.Many2one('investment.udibonos','Udibonos')
     will_pay_id = fields.Many2one('investment.will.pay','Will Pay')
     purchase_sale_security_id = fields.Many2one('purchase.sale.security','Purchase Sale Security')
+    investment_id = fields.Many2one('investment.investment','Investment')
     
     def approve(self):
         self.env['request.open.balance.finance'].create(
@@ -65,6 +66,7 @@ class ApproveInvestmentBalReq(models.TransientModel):
                 'cetes_id': self.cetes_id and self.cetes_id.id or False,
                 'udibonos_id': self.udibonos_id and self.udibonos_id.id or False,
                 'will_pay_id': self.will_pay_id and self.will_pay_id.id or False,
+                'investment_id' : self.investment_id and self.investment_id.id or False,
                 'purchase_sale_security_id' : self.purchase_sale_security_id and self.purchase_sale_security_id.id or False,
                 'state': 'requested'
             }
@@ -79,4 +81,6 @@ class ApproveInvestmentBalReq(models.TransientModel):
             self.will_pay_id.state = 'confirmed'
         if self.purchase_sale_security_id:
             self.purchase_sale_security_id.state = 'confirmed'
+        if self.investment_id:
+            self.investment_id.state = 'confirmed'
 

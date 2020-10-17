@@ -234,7 +234,7 @@ class Invoice(models.Model):
                 for account_line in line.account_ie_id.ie_account_line_ids.filtered(lambda x:x.percentage > 0):
                     price_per = (line.price_unit*account_line.percentage)/100 
                     line_vals = {
-                                    'product_id':line.product_id and line.product_id.id,
+                                    'product_id':line.product_id and line.product_id.id or False,
                                     'name' : line.name,
                                     'account_id' : account_line.account_id and account_line.account_id.id or False,
                                     'price_unit' : price_per,   
@@ -261,7 +261,7 @@ class Invoice(models.Model):
                                         
             else:
                 line_vals = {
-                                'product_id':line.product_id and line.product_id.id,
+                                'product_id':line.product_id and line.product_id.id or False,
                                 'name' : line.name,
                                 'account_id' : line.account_id and line.account_id.id or False,
                                 'price_unit' : line.price_unit,   
@@ -286,7 +286,6 @@ class Invoice(models.Model):
                             } 
                 
                 invoice_line.append((0,0,line_vals))
-            print ("======",invoice_line)
             
         self.invoice_line_ids = False
         self.invoice_line_ids = invoice_line
@@ -515,18 +514,20 @@ class Invoice(models.Model):
                         raise ValidationError(_("Configure la cuenta de débito predeterminada del Banco %s")%(rec.income_bank_journal_id.name))
                     else:
                         raise ValidationError(_("Please Configure Default Debit Account of Bank %s")%(rec.income_bank_journal_id.name))                
-                else:                    
-                    for line in rec.line_ids.filtered(lambda x:x.account_id and x.debit != 0):
-                        if line.account_id.user_type_id.type == 'receivable' and line.debit != 0:
-                            line.account_id = False
-                            line.account_id = rec.income_bank_journal_id.default_debit_account_id.id
+                else:
+                    if any(rec.invoice_line_ids.filtered(lambda x:not x.program_code_id and x.account_ie_id)):
+                        for line in rec.line_ids.filtered(lambda x:x.account_id and x.debit != 0):
+                            if line.account_id.user_type_id.type == 'receivable' and line.debit != 0:
+                                line.account_id = False
+                                line.account_id = rec.income_bank_journal_id.default_debit_account_id.id
         return result
     
     def write(self,vals):
         result = super(Invoice, self).write(vals)
         if vals.get('returned_check'):
             self.set_pdf_remplate_data(self)
-        if vals.get('type_of_revenue_collection',False) or vals.get('record_type',False) or vals.get('income_bank_journal_id',False):
+        print ("vals=====",vals)
+        if vals.get('type_of_revenue_collection',False) or vals.get('record_type',False) or vals.get('income_bank_journal_id',False) or vals.get('line_ids',False):
             for rec in self:
                 if rec.type_of_revenue_collection=='deposit_cer' and rec.record_type=='manual' and rec.income_bank_journal_id:
                     if not rec.income_bank_journal_id.default_debit_account_id:
@@ -534,11 +535,12 @@ class Invoice(models.Model):
                             raise ValidationError(_("Configure la cuenta de débito predeterminada del Banco %s")%(rec.income_bank_journal_id.name))
                         else:
                             raise ValidationError(_("Please Configure Default Debit Account of Bank %s")%(rec.income_bank_journal_id.name))                
-                    else:                    
-                        for line in rec.line_ids.filtered(lambda x:x.account_id and x.debit != 0):
-                            if line.debit != 0:
-                                line.account_id = False
-                                line.account_id = rec.income_bank_journal_id.default_debit_account_id.id
+                    else:
+                        if any(rec.invoice_line_ids.filtered(lambda x:not x.program_code_id and x.account_ie_id)):                                            
+                            for line in rec.line_ids.filtered(lambda x:x.account_id and x.debit != 0):
+                                if line.debit != 0:
+                                    line.account_id = False
+                                    line.account_id = rec.income_bank_journal_id.default_debit_account_id.id
             
         return result
         
@@ -628,8 +630,7 @@ class AccountMoveLine(models.Model):
         if currency:
             res = {k: currency.round(v) for k, v in res.items()}
         return res
-    
-
+        
 class IncomeIncomeMoveLine(models.Model):
     
     _name = 'income.invoice.move.line'

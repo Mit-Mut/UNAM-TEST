@@ -44,6 +44,22 @@ class PurchaseSaleSecurity(models.Model):
     return_expense_account_id = fields.Many2one('account.account','Expense Account')
     return_price_diff_account_id = fields.Many2one('account.account','Price Difference Account')    
 
+    #=====Profit==========#
+    estimated_interest = fields.Float(string="Estimated Interest")
+    estimated_profit = fields.Float(string="Estimated Profit")
+    real_interest = fields.Float("Real Interest")
+    real_profit = fields.Float(string="Real Profit")
+    profit_variation = fields.Float(string="Estimated vs Real Profit Variation",compute="get_profit_variation",store=True)
+        
+    @api.depends('estimated_profit','real_profit')
+    def get_profit_variation(self):
+        for rec in self:
+            rec.profit_variation =  rec.real_profit - rec.estimated_profit
+            
+
+    
+
+
     @api.depends('movement_price','number_of_titles')
     def get_investment_amount(self):
         for rec in self:
@@ -76,3 +92,8 @@ class PurchaseSaleSecurity(models.Model):
 
     def action_reject(self):
         self.state = 'rejected'
+
+    def action_done(self):
+        self.state = 'done'
+        
+        

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="acc_transfer_fund_origin_res" model="sub.origin.resource">
+            <field name="name">Accounting transfer of funds</field>
+        </record>
+    </data>
+</odoo>

@@ -20,33 +20,27 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Agreements',
-    'summary': 'Agreements',
-    'version': '13.0.0.1.0',
-    'category': 'Agreements',
-    'author': 'Jupical Technologies Pvt. Ltd.',
-    'maintainer': 'Jupical Technologies Pvt. Ltd.',
-    'website': 'http://www.jupical.com',
-    'license': 'AGPL-3',
-    'depends': ['jt_income', 'jt_payroll_payment'],
-    'data': [
-        'views/fund_type.xml',
-        'views/agreement_type.xml',
-        'views/recurring_payment_temp.xml',
-        'views/bases_collaboration.xml',
-        'wizard/reason_rejected_open_bal.xml',
-        'wizard/approve_inv_bal_req_view.xml',
-        'views/collaboration_modification.xml',
-        'views/create_payment_request.xml',
-        'wizard/cancel_collaboration.xml',
-        'wizard/closing_collaboration.xml',
-        'views/ir_sequence.xml',
-        'views/menus.xml',
-        'data/data.xml',
-        'security/ir.model.access.csv'
-    ],
-    'application': False,
-    'installable': True,
-    'auto_install': False,
-}
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
+
+class ReasonRejection(models.TransientModel):
+    
+    _inherit = 'reason.rejection.open.bal'
+
+
+    def reject(self):
+        result = super(ReasonRejection,self).reject()
+        context = self.env.context
+        active_model = context.get('active_model')
+        active_id = context.get('active_id')
+        rec = self.env[active_model].browse(active_id)
+        if active_model == 'request.open.balance.finance':
+            if rec.purchase_sale_security_id:
+                rec.purchase_sale_security_id.action_reject()
+                
+        return result  
+            
+            
+            
+            
+            

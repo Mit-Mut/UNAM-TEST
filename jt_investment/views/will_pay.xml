@@ -7,12 +7,22 @@
             <field name="model">investment.will.pay</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="folio"/>
-       				<field name="kind_of_product"/>
+                    <field name="folio" invisible="1"/>
+       				<field name="kind_of_product" invisible="1"/>
        				<field name="key"/>
        				<field name="investment_date"/>
        				<field name="due_date"/>
        				<field name="amount"/>
+       				<field name="interest_rate"/>
+       				<field name="annual_term"/>
+       				<field name="monthly_term"/>
+       				<field name="term_days"/>
+       				<field name="time_frame"/>
+       				<field name="simple_interest_estimated_yield"/>
+       				<field name="simple_interest_real_performance"/>
+       				<field name="simple_estimated_real_variation"/>
+       				<field name="simple_interest"/>
+       				<field name="compound_interest"/>
        				<field name="state"/>
                     
                 </tree>

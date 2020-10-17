@@ -44,6 +44,7 @@
         'views/purchase_sale_security.xml',
         'views/stock_quotation.xml',
         'views/increases_and_withdrawals.xml',
+        'views/investment_view.xml',
         'wizard/approve_inv_bal_req_view.xml',
         
     ],

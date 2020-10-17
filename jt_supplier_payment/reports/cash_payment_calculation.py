@@ -115,6 +115,7 @@ class CashPaymentCalculation(models.AbstractModel):
             value['name'] = str(round(value['name'] * 100, 1)) + '%'
             value['class'] = 'number'
             return value
+        
         value['name'] = round(value['name'], 1)
         return value
 
@@ -132,7 +133,7 @@ class CashPaymentCalculation(models.AbstractModel):
         if not payment_method_list:
             payment_method_list = [0]
              
-        records = self.env['employee.payroll.file'].search([('state','=','done'),('payment_place_id','!=',False),('l10n_mx_edi_payment_method_id','in',payment_method_list)])
+        records = self.env['employee.payroll.file'].search([('substate','=','for_payment_procedure'),('payment_place_id','!=',False),('l10n_mx_edi_payment_method_id','in',payment_method_list)])
         
         payment_place_ids = records.mapped('payment_place_id')
         total_amount = 0
@@ -164,9 +165,9 @@ class CashPaymentCalculation(models.AbstractModel):
                 'columns': [
                             {'name':place_id.description},
                             self._format({'name': amount},figure_type='float'),
-                            {'name':rec_len},
-                            {'name':min_ref},
-                            {'name':max_ref},
+                            {'name':int(rec_len),'class':'number'},
+                            {'name':min_ref,'class':'number'},
+                            {'name':max_ref,'class':'number'},
                             ],
                 'level': 1,
                 'unfoldable': False,
@@ -179,7 +180,7 @@ class CashPaymentCalculation(models.AbstractModel):
                 'columns': [
                             {'name':''},
                             self._format({'name': total_amount},figure_type='float'),
-                            {'name':total_rec},
+                            {'name':total_rec,'class':'number'},
                             {'name':''},
                             {'name':''},
                             ],
@@ -224,8 +225,11 @@ class CashPaymentCalculation(models.AbstractModel):
         super_col_style.set_border(0)
         #Set the first column width to 50
         sheet.set_column(0, 0,25)
-        sheet.set_column(0, 1,25)
+        sheet.set_column(0, 1,40)
         sheet.set_column(0, 2,25)
+        sheet.set_column(0, 3,15)
+        sheet.set_column(0, 4,15)
+        sheet.set_column(0, 5,15)
         super_columns = self._get_super_columns(options)
         y_offset = 0
         col = 0
@@ -238,8 +242,8 @@ class CashPaymentCalculation(models.AbstractModel):
         
         col += 1
         header_title = '''PATRONATO UNIVERSITARIO\nTESORERIA'''
-        sheet.merge_range(y_offset, col, 6, col+1, header_title,super_col_style)
-        y_offset += 6
+        sheet.merge_range(y_offset, col, 6, col+4, header_title,super_col_style)
+        y_offset += 8
 #         col=1
 #         currect_time_msg = "Fecha y hora de impresión: "
 #         currect_time_msg += datetime.today().strftime('%d/%m/%Y %H:%M')

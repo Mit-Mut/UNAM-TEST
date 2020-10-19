@@ -31,6 +31,16 @@ class Investment(models.Model):
     real_interest = fields.Float("Real Interest")
     real_profit = fields.Float(string="Real Profit")
     profit_variation = fields.Float(string="Estimated vs Real Profit Variation",compute="get_profit_variation",store=True)
+
+    #====== Accounting Fields =========#
+
+    investment_income_account_id = fields.Many2one('account.account','Income Account')
+    investment_expense_account_id = fields.Many2one('account.account','Expense Account')
+    investment_price_diff_account_id = fields.Many2one('account.account','Price Difference Account')    
+
+    return_income_account_id = fields.Many2one('account.account','Income Account')
+    return_expense_account_id = fields.Many2one('account.account','Expense Account')
+    return_price_diff_account_id = fields.Many2one('account.account','Price Difference Account')    
         
     @api.depends('estimated_profit','real_profit')
     def get_profit_variation(self):

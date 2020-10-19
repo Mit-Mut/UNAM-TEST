@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+		<!-- Summary of Operation - Maturities -->
+        <record id="action_summary_of_operation_maturities" model="ir.actions.client">
+            <field name="name">Summary of Operation - Maturities</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'jt_investment.summary.of.operation.maturities'}"/>
+        </record>
+
+        <menuitem
+            id="menu_summary_of_operation_maturities"
+            name="Summary of Operation - Maturities"
+            parent="submenu_menu_investment_reports"
+            sequence="2"
+            action="action_summary_of_operation_maturities"
+        />
+
+		<!-- Summary of Operation - Money Market Investments -->
+        <record id="action_summary_of_operation_money_market_investments" model="ir.actions.client">
+            <field name="name">Summary of Operation - Money Market Investments</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'jt_investment.summary.of.operation.money.market.investments'}"/>
+        </record>
+
+        <menuitem
+            id="menu_summary_of_operation_money_market_investments"
+            name="Summary of Operation - Money Market Investments"
+            parent="submenu_menu_investment_reports"
+            sequence="4"
+            action="action_summary_of_operation_money_market_investments"
+        />
+        
+		<!-- Summary of Operation - Money Market Investments -->
+        <record id="action_summary_of_operation_investment_funds" model="ir.actions.client">
+            <field name="name">Summary of Operation - Investment Funds</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'jt_investment.summary.of.operation.investment.funds'}"/>
+        </record>
+
+        <menuitem
+            id="menu_summary_of_operation_investment_funds"
+            name="Summary of Operation - Investment Funds"
+            parent="submenu_menu_investment_reports"
+            sequence="6"
+            action="action_summary_of_operation_investment_funds"
+        />
+
+		<!-- Summary of Operation - Investment Fund Balances -->
+        <record id="action_summary_of_operation_investment_funds_balances" model="ir.actions.client">
+            <field name="name">Summary of Operation - Investment Fund Balances</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'jt_investment.summary.of.operation.investment.funds.balances'}"/>
+        </record>
+
+        <menuitem
+            id="menu_summary_of_operation_investment_funds_balances"
+            name="Summary of Operation - Investment Fund Balances"
+            parent="submenu_menu_investment_reports"
+            sequence="8"
+            action="action_summary_of_operation_investment_funds_balances"
+        />
+
+		<!-- Report on the quotation of Investment Funds -->
+        <record id="action_summary_of_quotation_of_investment_funds" model="ir.actions.client">
+            <field name="name">Report on the quotation of Investment Funds</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'jt_investment.report.quotation.investment.funds'}"/>
+        </record>
+
+        <menuitem
+            id="menu_summary_of_quotation_of_investment_funds"
+            name="Report on the quotation of Investment Funds"
+            parent="submenu_menu_investment_reports"
+            sequence="10"
+            action="action_summary_of_quotation_of_investment_funds"
+        />
+
+		<!-- 8.6 Report of Investment Funds -->
+        <record id="action_report_of_investment_funds" model="ir.actions.client">
+            <field name="name">Report of Investment Funds</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'jt_investment.report.of.investment.funds'}"/>
+        </record>
+
+        <menuitem
+            id="menu_report_of_investment_funds"
+            name="Report of Investment Funds"
+            parent="submenu_menu_investment_reports"
+            sequence="12"
+            action="action_report_of_investment_funds"
+        />
+
+		<!-- 8.7 Report of Investment Funds in Productive Accounts -->
+        <record id="action_investment_funds_in_productive_accounts" model="ir.actions.client">
+            <field name="name">Report of Investment Funds in Productive Accounts</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'jt_investment.investment.funds.productive.accounts'}"/>
+        </record>
+
+        <menuitem
+            id="menu_investment_funds_in_productive_accounts"
+            name="Report of Investment Funds in Productive Accounts"
+            parent="submenu_menu_investment_reports"
+            sequence="14"
+            action="action_investment_funds_in_productive_accounts"
+        />
+
+		<!-- 8.8 Report Productive Accounts -->
+        <record id="action_report_productive_accounts" model="ir.actions.client">
+            <field name="name">Report Productive Accounts</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'jt_investment.report.productive.accounts'}"/>
+        </record>
+
+        <menuitem
+            id="menu_report_productive_accounts"
+            name="Report Productive Accounts"
+            parent="submenu_menu_investment_reports"
+            sequence="16"
+            action="action_report_productive_accounts"
+        />
+               
+	</data>
+</odoo>

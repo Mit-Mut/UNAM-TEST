@@ -45,7 +45,7 @@ class BasesCollabration(models.Model):
     origin_resource_id = fields.Many2one('sub.origin.resource', "Origin of the resource")
     goals = fields.Char("Goals")
     registration_date = fields.Date("Date of registration in the system")
-
+    is_specific = fields.Boolean(string='Specific',default=False) 
     liability_account_id = fields.Many2one('account.account', "Liability Accounting Account")
     investment_account_id = fields.Many2one('account.account', "Investment Accounting Account")
     interest_account_id = fields.Many2one('account.account', "Interest Accounting Account")
@@ -679,6 +679,7 @@ class RequestOpenBalanceFinance(models.Model):
         'res.currency', default=lambda self: self.env.user.company_id.currency_id)
     amount = fields.Monetary("Amount")
     dependency_id = fields.Many2one('dependency', "Dependency")
+    sub_dependency_id = fields.Many2one('sub.dependency', "Subdependency")
     date = fields.Date("Application date")
     concept = fields.Text("Application Concept")
     user_id = fields.Many2one('res.users', default=lambda self: self.env.user.id, string="Applicant")

@@ -40,11 +40,13 @@
 			               		<field name="contract_id"/>
 			               		<field name="amount_to_invest"/>
 			               		<field name="is_fixed_rate"/>
+			               		<field name="is_variable_rate"/>
 			               		<field name="interest_rate"/>
 			               		<field name="extra_percentage"/>
                         	</group>
                         	<group>
-			               		<field name="term"/>
+			               		<field name="term" attrs="{'invisible':[('is_fixed_rate','=',False)]}"/>
+			               		<field name="term_variable" attrs="{'invisible':[('is_variable_rate','=',False)]}"/>
 			               		<field name="capitalizable"/>
 			               		<field name="frequency"/>
 			               		<field name="currency_id"/>

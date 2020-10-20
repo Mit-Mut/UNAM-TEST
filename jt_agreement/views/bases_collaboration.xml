@@ -174,6 +174,8 @@
                                 <field name="dependency_obs" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
                             <group>
+                            
+                            	<field name="is_specific" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="dependency_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="desc_dependency" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="subdependency_id" attrs="{'readonly': [('state', '!=', 'draft')]}"
@@ -328,7 +330,7 @@
                                     <field name="reason_cancel"/>
                                 </group>
                             </page>
-                            <page name="closing_info" string="Information for Closing">
+                            <page name="closing_info" string="Information for Closing" attrs="{'invisible':[('is_specific','=',True)]}">
                                 <group>
                                     <field name="fund_name_transfer_id"/>
                                     <field name="closing_amt"/>
@@ -351,10 +353,13 @@
             <field name="model">request.open.balance.invest</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="name"/>
-                    <field name="operation_number"/>
-                    <field name="request_date"/>
-                    <field name="user_id"/>
+                    <field name="agreement_number"/>
+                    <field name="type_of_operation"/>
+                    <field name="apply_to_basis_collaboration"/>
+                    <field name="origin_resource_id"/>
+                    <field name="reason_rejection"/>
+                    <field name="trade_number"/>
+                    <field name="opening_balance"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -506,6 +511,7 @@
                                 <field name="desti_bank_account_id"/>
                                 <field name="amount"/>
                                 <field name="dependency_id"/>
+                                <field name="sub_dependency_id" context="{'show_for_supplier_payment':1}"/>
                             </group>
                             <group>
                                 <field name="date"/>

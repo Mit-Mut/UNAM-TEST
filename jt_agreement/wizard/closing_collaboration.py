@@ -38,7 +38,14 @@ class ClosingCollaboration(models.TransientModel):
             if collab.fund_name_transfer_id and \
                     collab.closing_amt != 0 and collab.available_bal != 0 and \
                     collab.fund_name_transfer_id.name in ('Special Chairs Faculty of Engineering',
-                    'Fund for payment to beneficiaries Special Chairs Faculty of Engineering'):
+                    'Fund for payment to beneficiaries Special Chairs Faculty of Engineering',
+                    'Special Chairs Faculty of Law',
+                    'Regulatory Fund Special Chairs Faculty of Law',
+                    'Chairs and special general incentives',
+                    'Fund for payment to beneficiaries of Chairs and Special General Stimuli',
+                    'Extraordinary Chairs Faculty of Law',
+                    'Regulatory Fund Extraordinary Chairs Faculty of Law'
+                    ):
                 req_obj.create({
                     'bases_collaboration_id': collab.id,
                     'name': collab.name,

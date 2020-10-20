@@ -36,6 +36,7 @@ class ApproveInvestmentBalReq(models.TransientModel):
         'res.currency', default=lambda self: self.env.user.company_id.currency_id)
     amount = fields.Monetary("Amount")
     dependency_id = fields.Many2one('dependency', "Dependency")
+    sub_dependency_id = fields.Many2one('sub.dependency', "Subdependency")
     date = fields.Date("Application date")
     concept = fields.Text("Application Concept")
     user_id = fields.Many2one('res.users', default=lambda self: self.env.user.id, string="Applicant")
@@ -62,6 +63,8 @@ class ApproveInvestmentBalReq(models.TransientModel):
                 'date': self.date,
                 'concept': self.concept,
                 'fund_type': self.fund_type.id if self.fund_type else False,
+                'dependency_id' : self.dependency_id and self.dependency_id.id or False,
+                'sub_dependency_id' : self.sub_dependency_id and self.sub_dependency_id.id or False,
                 'bonds_id': self.bonds_id and self.bonds_id.id or False,
                 'cetes_id': self.cetes_id and self.cetes_id.id or False,
                 'udibonos_id': self.udibonos_id and self.udibonos_id.id or False,

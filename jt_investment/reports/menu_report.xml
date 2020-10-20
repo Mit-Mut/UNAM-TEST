@@ -120,6 +120,51 @@
             sequence="16"
             action="action_report_productive_accounts"
         />
+
+		<!-- 8.9 Report (Increases and Withdrawals). -->
+        <record id="action_report_increases_and_withdrawals" model="ir.actions.client">
+            <field name="name">Report Increases and Withdrawals</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'jt_investment.report.increases.and.withdrawals'}"/>
+        </record>
+
+        <menuitem
+            id="menu_report_increases_and_withdrawals"
+            name="Report Increases and Withdrawals"
+            parent="submenu_menu_investment_reports"
+            sequence="18"
+            action="action_report_increases_and_withdrawals"
+        />
+
+		<!-- 8.10 Indicators Report. -->
+        <record id="action_indicators_report" model="ir.actions.client">
+            <field name="name">Indicators Report</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'jt_investment.indicators.report'}"/>
+        </record>
+
+        <menuitem
+            id="menu_indicators_report"
+            name="Indicators Report"
+            parent="submenu_menu_investment_reports"
+            sequence="20"
+            action="action_indicators_report"
+        />
+
+		<!-- 8.11 Report to the Investment Committee. -->
+        <record id="action_investment_committee" model="ir.actions.client">
+            <field name="name">Report to the Investment Committee</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'jt_investment.investment.committee'}"/>
+        </record>
+
+        <menuitem
+            id="action_investment_committee"
+            name="Report to the Investment Committee"
+            parent="submenu_menu_investment_reports"
+            sequence="22"
+            action="action_investment_committee"
+        />
                
 	</data>
 </odoo>

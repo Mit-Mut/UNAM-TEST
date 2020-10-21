@@ -44,7 +44,12 @@ class PayrollPaymentProviderwizard(models.TransientModel):
         for record in self.emp_payroll_ids:
             line_vals = record.get_invoice_line_vals()
             invoice_line_list.append((0,0,line_vals))
-            
+        
+        cash_rec_ids = self.emp_payroll_ids.filtered(lambda x:x.l10n_mx_edi_payment_method_id.name in ('Cash','Efectivo'))
+        payment_method_id = False
+        if cash_rec_ids:
+            payment_method_id = cash_rec_ids[0].l10n_mx_edi_payment_method_id.id
+                
         vals = {
                 'partner_id' : self.partner_id.id,
                 'journal_id' : journal and journal.id or False,
@@ -54,7 +59,7 @@ class PayrollPaymentProviderwizard(models.TransientModel):
                 'type' : 'in_invoice',
                 'invoice_date' : fields.Date.today(),
                 'invoice_line_ids':invoice_line_list,
-                
+                'l10n_mx_edi_payment_method_id' : payment_method_id,
             }
         move_id = self.env['account.move'].create(vals)
         self.emp_payroll_ids.write({'move_id':move_id.id,'state':'done'})

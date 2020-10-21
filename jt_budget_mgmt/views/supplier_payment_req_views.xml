@@ -12,7 +12,7 @@
             		<button name="action_draft_budget" string="Draft" class="oe_highlight"
                             type="object"
                             attrs="{'invisible':[('payment_state', 'in', ('draft','paid','cancel'))]}"/>
-            		<button name="action_validate_budget" string="Validate budget" class="oe_highlight"
+            		<button name="action_validate_budget" invisible="context.get('hide_validate_button',False)"  string="Validate budget" class="oe_highlight"
                             type="object" attrs="{'invisible':[('payment_state', '!=', 'registered')]}"/>
             		<button name="action_cancel_budget" string="Cancel" class="oe_highlight"
                             type="object" attrs="{'invisible':[('payment_state', 'in', ('paid','cancel'))]}"/>

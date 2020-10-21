@@ -11,7 +11,7 @@
             <field name="name">Request for Payroll Payment</field>
             <field name="res_model">account.move</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'show_for_supplier_payment':True,'default_type': 'in_invoice', 'default_is_payroll_payment_request': 1,
+            <field name="context">{'hide_validate_button':True,'show_for_supplier_payment':True,'default_type': 'in_invoice', 'default_is_payroll_payment_request': 1,
                 'from_move': 1}</field>
             <field name="domain">[('payment_state','in',('draft','registered')),('type', '=', 'in_invoice'), ('is_payroll_payment_request', '=', True)]</field>
         </record>

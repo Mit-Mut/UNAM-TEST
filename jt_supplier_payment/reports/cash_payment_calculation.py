@@ -47,7 +47,7 @@ class CashPaymentCalculation(models.AbstractModel):
     filter_unposted_in_period = None
     MAX_LINES = None
 
-    filter_payment_method = True
+    filter_payment_method = None
     
     @api.model
     def _get_filter_payment_method(self):
@@ -122,40 +122,45 @@ class CashPaymentCalculation(models.AbstractModel):
     def _get_lines(self, options, line_id=None):
         lines = []
         payment_method_list = []
-        for select_curreny in options.get('payment_method'):
-            if select_curreny.get('selected',False)==True:
-                payment_method_list.append(select_curreny.get('id',0))
+#         for select_curreny in options.get('payment_method'):
+#             if select_curreny.get('selected',False)==True:
+#                 payment_method_list.append(select_curreny.get('id',0))
+#         
+#         if not payment_method_list:
+#             method_ids = self._get_filter_payment_method()
+#             payment_method_list = method_ids.ids
         
-        if not payment_method_list:
-            method_ids = self._get_filter_payment_method()
-            payment_method_list = method_ids.ids
-        
+        method_ids = self.env['l10n_mx_edi.payment.method'].search([('name','in',('Cash','Efectivo'))])
+        payment_method_list = method_ids.ids 
         if not payment_method_list:
             payment_method_list = [0]
              
-        records = self.env['employee.payroll.file'].search([('substate','=','for_payment_procedure'),('payment_place_id','!=',False),('l10n_mx_edi_payment_method_id','in',payment_method_list)])
+        #records = self.env['employee.payroll.file'].search([('substate','=','for_payment_procedure'),('payment_place_id','!=',False),('l10n_mx_edi_payment_method_id','in',payment_method_list)])
+        records = self.env['account.move'].search([('is_payroll_payment_request','=',True),('payment_state','=','for_payment_procedure'),('payment_place_id','!=',False),('l10n_mx_edi_payment_method_id','in',payment_method_list)])
         
         payment_place_ids = records.mapped('payment_place_id')
         total_amount = 0
         total_rec = 0
         
         for place_id in payment_place_ids:
-            amount = sum(x.amount_payable for x in records.filtered(lambda a:a.payment_place_id.id==place_id.id))
+            amount = sum(x.amount_total for x in records.filtered(lambda a:a.payment_place_id.id==place_id.id))
             rec_len = len(records.filtered(lambda a:a.payment_place_id.id==place_id.id))
-            
-            max_name = max(x.reference for x in records.filtered(lambda a:a.payment_place_id.id==place_id.id))
-            min_name = min(x.reference for x in records.filtered(lambda a:a.payment_place_id.id==place_id.id))
+            payroll_rec = self.env['employee.payroll.file'].search([('move_id','in',records.filtered(lambda a:a.payment_place_id.id==place_id.id).ids)])
             min_ref = ''
             max_ref = ''
-            if min_name:
-                split = min_name.split('/')
-                if split:
-                    min_ref = split[-1]
-
-            if max_name:
-                split = max_name.split('/')
-                if split:
-                    max_ref = split[-1]
+            
+            if payroll_rec:
+                max_name = max(x.reference for x in payroll_rec)
+                min_name = min(x.reference for x in payroll_rec)
+                if min_name:
+                    split = min_name.split('/')
+                    if split:
+                        min_ref = split[-1]
+    
+                if max_name:
+                    split = max_name.split('/')
+                    if split:
+                        max_ref = split[-1]
                      
             total_amount += amount
             total_rec += rec_len               

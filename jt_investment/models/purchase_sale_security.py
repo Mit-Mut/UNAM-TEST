@@ -29,7 +29,7 @@ class PurchaseSaleSecurity(models.Model):
     
     journal_id = fields.Many2one("account.journal","Bank")
     bank_account_id = fields.Many2one(related='journal_id.bank_account_id')
-    account_balance = fields.Float("Account Balance")
+    account_balance = fields.Float("Account Balance",compute="get_account_balance",store=True)
     movement_price = fields.Float("Price")
     number_of_titles = fields.Float("Quantity of Securities")
     amount = fields.Float(string="Investment amount",compute="get_investment_amount",store=True)
@@ -50,15 +50,21 @@ class PurchaseSaleSecurity(models.Model):
     real_interest = fields.Float("Real Interest")
     real_profit = fields.Float(string="Real Profit")
     profit_variation = fields.Float(string="Estimated vs Real Profit Variation",compute="get_profit_variation",store=True)
-        
+
+    @api.depends('journal_id','bank_account_id','journal_id.default_debit_account_id')
+    def get_account_balance(self):     
+        for rec in self:
+            if rec.journal_id and rec.bank_account_id and rec.journal_id.default_debit_account_id:
+                values= self.env['account.move.line'].search([('account_id', '=', rec.journal_id.default_debit_account_id.id),('move_id.state', '=', 'posted')])
+                rec.account_balance = sum(x.debit-x.credit for x in values)
+                
+            else:
+                rec.account_balance = 0
     @api.depends('estimated_profit','real_profit')
     def get_profit_variation(self):
         for rec in self:
             rec.profit_variation =  rec.real_profit - rec.estimated_profit
             
-
-    
-
 
     @api.depends('movement_price','number_of_titles')
     def get_investment_amount(self):

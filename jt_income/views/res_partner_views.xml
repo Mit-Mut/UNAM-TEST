@@ -16,7 +16,10 @@
                 <xpath expr="//field[@name='website']" position="attributes">
                     <attribute name="attrs">{'invisible':[('contact_type','=','client')]}</attribute>
                 </xpath>
-                
+                <xpath expr="//field[@name='category_id']" position="after">
+                    <field name="income_control" attrs="{'invisible':[('beneficiary_type','not in',('national_provider','foreign_supplier'))]}"/>
+                </xpath>
+
             </field>
         </record>
 

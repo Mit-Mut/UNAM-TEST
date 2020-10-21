@@ -6,3 +6,5 @@ class ResPartner(models.Model):
 
     contact_type = fields.Selection([('client', 'Client'),
                                      ('provider', 'Provider')], string="Contact Type")
+    
+    income_control = fields.Char('Control')

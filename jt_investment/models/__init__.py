@@ -9,3 +9,4 @@ from . import request_open_balance_finance
 from . import stock_quotation
 from . import increases_and_withdrawals
 from . import investment
+from . import investment_rate

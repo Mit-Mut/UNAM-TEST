@@ -20,7 +20,7 @@ class Investment(models.Model):
     capitalizable = fields.Integer("Days of capitalization")
     frequency = fields.Integer("Frequency of interest payments")
     currency_id = fields.Many2one("res.currency","Currency")
-    currency_rate_id = fields.Many2one("res.currency.rate","Exchange rate")
+    investment_rate_id = fields.Many2one("investment.period.rate","Exchange rate")
     observations = fields.Text("Observations")    
     file_data = fields.Binary("Supporting document")
     file_name = fields.Char("File Name")

@@ -152,18 +152,18 @@
         />
 
 		<!-- 8.11 Report to the Investment Committee. -->
-        <record id="action_investment_committee" model="ir.actions.client">
+        <record id="action_investment_committee_new" model="ir.actions.client">
             <field name="name">Report to the Investment Committee</field>
             <field name="tag">account_report</field>
             <field name="context" eval="{'model': 'jt_investment.investment.committee'}"/>
         </record>
 
         <menuitem
-            id="action_investment_committee"
+            id="menu_new_investment_committee"
             name="Report to the Investment Committee"
             parent="submenu_menu_investment_reports"
             sequence="22"
-            action="action_investment_committee"
+            action="action_investment_committee_new"
         />
                
 	</data>

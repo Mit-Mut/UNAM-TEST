@@ -212,6 +212,7 @@
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="income_isr" attrs="{'readonly': [('state', '!=', 'draft')],'invisible':[('record_type','!=','automatic')]}"/>
                                 <field name="surcharges_ps" attrs="{'readonly': [('state', '!=', 'draft')],'invisible':['|',('type_of_revenue_collection','!=','deposit_cer'),('record_type','!=','automatic')]}"/>
+                                <field name="payment_of_id" attrs="{'readonly': [('state', '!=', 'draft')],'invisible':[('type_of_revenue_collection','!=','billing')]}"/>
                                 <field name="returned_check" attrs="{'readonly': [('state', '!=', 'draft')],'invisible':[('type_of_revenue_collection','!=','billing')]}"/>
                                 <field name="is_show_trade_no" invisible="1"/>
                                 <field name="trade_no" attrs="{'readonly': [('state', '!=', 'draft')],'invisible':[('is_show_trade_no','=',False)]}"/>       

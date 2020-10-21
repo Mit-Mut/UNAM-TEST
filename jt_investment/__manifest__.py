@@ -32,6 +32,7 @@
     'depends': ['account_accountant','jt_payroll_payment','jt_agreement'],
     'data': [
         'data/sequence.xml',
+        'data/cron.xml',
         'security/ir.model.access.csv',
         'views/investment_menu.xml',
         'views/financial_product.xml',
@@ -45,6 +46,7 @@
         'views/stock_quotation.xml',
         'views/increases_and_withdrawals.xml',
         'views/investment_view.xml',
+        'views/investment_rate.xml',
         'wizard/approve_inv_bal_req_view.xml',
         'reports/header_template.xml',
         'reports/menu_report.xml',

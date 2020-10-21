@@ -116,7 +116,7 @@ class Invoice(models.Model):
     full_name = fields.Char("Full Name")
     type_of_changes = fields.Float("Type Of Changes")
     trade_no = fields.Char("Trade No")
-
+    payment_of_id = fields.Many2one('payment.of.income','Payment of')
     #===== Notice of compensation Tab fields=========#
 
     template1 = fields.Selection([('application_form_20','Application form 20%')],string="Template")

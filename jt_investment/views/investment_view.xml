@@ -15,7 +15,7 @@
                		<field name="term"/>
                		<field name="capitalizable"/>
                		<field name="currency_id"/>
-               		<field name="currency_rate_id"/>
+               		<field name="investment_rate_id"/>
                		<field name="state"/>                    
                 </tree>
             </field>
@@ -50,7 +50,7 @@
 			               		<field name="capitalizable"/>
 			               		<field name="frequency"/>
 			               		<field name="currency_id"/>
-			               		<field name="currency_rate_id" domain="[('currency_id','=',currency_id)]"/>
+			               		<field name="investment_rate_id" domain="[('product_type','=','TIIE')]" context="{'default_product_type':'TIIE'}"/>
                         		<field name="observations"/>
                         		<field name="file_name" invisible="1"/>
                         		<field name="file_data" filename="file_name"/>

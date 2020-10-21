@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="investment_period_rate_tiie_tree" model="ir.ui.view">
+            <field name="name">investment.period.rate.tree.view</field>
+            <field name="model">investment.period.rate</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="rate_date"/>
+                    <field name="daily_rate" digits="[12,4]"/>
+                    <field name="days_28" digits="[12,4]"/>
+                    <field name="days_91" digits="[12,4]"/>
+                    <field name="days_182" digits="[12,4]"/>
+                    
+                    <field name="product_type" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="investment_period_rate_tiie_form" model="ir.ui.view">
+            <field name="name">investment.period.rate.form.view</field>
+            <field name="model">investment.period.rate</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="rate_date" required="1"/>
+                                <field name="product_type" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="daily_rate" digits="[12,4]"/>
+			                    <field name="days_28" digits="[12,4]"/>
+			                    <field name="days_91" digits="[12,4]"/>
+			                    <field name="days_182" digits="[12,4]"/>                            
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+          <record id="investment_period_rate_tiie_search" model="ir.ui.view">
+            <field name="name">investment.period.rate.search.view</field>
+            <field name="model">investment.period.rate</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="rate_date"/>
+                </search>
+            </field>
+        </record>
+
+         <record id="action_investment_period_tiie_rate" model="ir.actions.act_window">
+            <field name="name">Investment Rate</field>
+            <field name="res_model">investment.period.rate</field>
+        </record>
+<!-- 
+        <menuitem id="menu_investment_contract" name="Investment Contract" sequence="5"
+            parent="submenu_menu_investment_config" action="action_investment_contract"/>
+ -->
+
+
+    </data>
+</odoo>

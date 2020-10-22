@@ -56,7 +56,12 @@
                                 <field name="bank_id"/>
                                 <field name="amount_invest"/>
                                 <field name="currency_id" options="{'no_create': True}"/>
-                                <field name="currency_rate_id" domain="[('currency_id','=',currency_id)]" options="{'no_create': True}"/>
+                                <field name="investment_rate_id" domain="[('product_type','=','PAGARE')]" context="{'default_product_type':'PAGARE',
+                                		'search_view_ref':'jt_investment.investment_period_rate_PAGARE_search',
+                                		'tree_view_ref': 'jt_investment.investment_period_rate_PAGARE_tree',
+                                		'form_view_ref': 'jt_investment.investment_period_rate_PAGARE_form'
+                                		}"/>
+
                                 <field name="total_currency_rate"/>
                             </group>
                             <group>

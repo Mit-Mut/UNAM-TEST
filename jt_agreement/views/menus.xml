@@ -18,8 +18,11 @@
         <menuitem id="menu_recurring_payments" name="Recurring Payments" parent="menu_agreements"
                  sequence="3"/>
 
-        <menuitem id="menu_setting_agreement" name="Settings" parent="menu_agreements"
+        <menuitem id="menu_report_agreement" name="Reports" parent="menu_agreements"
                  sequence="4"/>
+
+        <menuitem id="menu_setting_agreement" name="Settings" parent="menu_agreements"
+                 sequence="5"/>
 
         <!-- Sub menus for sub menus-->
         <menuitem id="menu_collaboration_basic" name="Basis of collaboration" parent="menu_collaboration_contracts"

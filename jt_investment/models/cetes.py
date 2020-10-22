@@ -14,7 +14,8 @@ class CETES(models.Model):
     amount_invest = fields.Float("Amount to invest")
     currency_id = fields.Many2one('res.currency', string='Currency',default=lambda self: self.env.company.currency_id)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
-    currency_rate_id = fields.Many2one("res.currency.rate","Exchange Rate")
+    
+    investment_rate_id = fields.Many2one("investment.period.rate","Exchange rate")
     total_currency_rate = fields.Float(string="Total",compute="get_total_currency_amount",store=True)
     contract_id = fields.Many2one("investment.contract","Contract")
     document_type = fields.Selection([('cetes','CETES'),('udibonos','Udibonos'),('bonds','Bonds'),('promissory_note','Promissory note')],string="Document")
@@ -56,11 +57,11 @@ class CETES(models.Model):
     return_price_diff_account_id = fields.Many2one('account.account','Price Difference Account')    
 
 
-    @api.depends('amount_invest','currency_rate_id','currency_rate_id.rate')
+    @api.depends('amount_invest')
     def get_total_currency_amount(self):
         for rec in self:
-            if rec.amount_invest and rec.currency_rate_id:
-                rec.total_currency_rate = rec.amount_invest * rec.currency_rate_id.rate
+            if rec.amount_invest:
+                rec.total_currency_rate = rec.amount_invest
             else:
                 rec.total_currency_rate = 0
             

@@ -445,6 +445,10 @@ class AccountMoveLine(models.Model):
     tax = fields.Float("Tax")
     turn_type = fields.Char("Turn type")
 
+    invoice_uuid = fields.Char("Invoice UUID")
+    invoice_series = fields.Char("Invoice Series")
+    folio_invoice = fields.Char("Folio Invoice")
+    vault_folio = fields.Char("Vault folio")
 
 
 

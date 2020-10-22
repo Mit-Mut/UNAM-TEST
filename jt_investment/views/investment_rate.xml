@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
+		<!-- TIIE Rate Views -->
         <record id="investment_period_rate_tiie_tree" model="ir.ui.view">
-            <field name="name">investment.period.rate.tree.view</field>
+            <field name="name">investment.period.rate.tiie.tree.view</field>
             <field name="model">investment.period.rate</field>
             <field name="arch" type="xml">
                 <tree>
                     <field name="rate_date"/>
-                    <field name="daily_rate" digits="[12,4]"/>
-                    <field name="days_28" digits="[12,4]"/>
-                    <field name="days_91" digits="[12,4]"/>
-                    <field name="days_182" digits="[12,4]"/>
-                    
+                    <field name="rate_daily" digits="[12,4]"/>
+                    <field name="rate_days_28" digits="[12,4]"/>
+                    <field name="rate_days_91" digits="[12,4]"/>
+                    <field name="rate_days_182" digits="[12,4]"/>
                     <field name="product_type" invisible="1"/>
                 </tree>
             </field>
         </record>
 
         <record id="investment_period_rate_tiie_form" model="ir.ui.view">
-            <field name="name">investment.period.rate.form.view</field>
+            <field name="name">investment.period.rate.tiie.form.view</field>
             <field name="model">investment.period.rate</field>
             <field name="arch" type="xml">
                 <form>
@@ -30,10 +29,10 @@
                                 <field name="product_type" invisible="1"/>
                             </group>
                             <group>
-                                <field name="daily_rate" digits="[12,4]"/>
-			                    <field name="days_28" digits="[12,4]"/>
-			                    <field name="days_91" digits="[12,4]"/>
-			                    <field name="days_182" digits="[12,4]"/>                            
+                                <field name="rate_daily" digits="[12,4]"/>
+			                    <field name="rate_days_28" digits="[12,4]"/>
+			                    <field name="rate_days_91" digits="[12,4]"/>
+			                    <field name="rate_days_182" digits="[12,4]"/>                            
                             </group>
                         </group>
                     </sheet>
@@ -60,6 +59,275 @@
             parent="submenu_menu_investment_config" action="action_investment_contract"/>
  -->
 
+		<!-- CETES Rate Views -->
+        <record id="investment_period_rate_cetes_tree" model="ir.ui.view">
+            <field name="name">investment.period.rate.cetes.tree.view</field>
+            <field name="model">investment.period.rate</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="rate_date"/>
+                    <field name="term_days_28"/>
+                    <field name="rate_days_28" digits="[12,4]"/>
+                    <field name="term_days_91"/>
+                    <field name="rate_days_91" digits="[12,4]"/>
+                    <field name="term_days_182"/>
+                    <field name="rate_days_182" digits="[12,4]"/>
+                    <field name="term_days_364"/>
+                    <field name="rate_days_364" digits="[12,4]"/>
+                    <field name="product_type" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="investment_period_rate_cetes_form" model="ir.ui.view">
+            <field name="name">investment.period.rate.cetes.form.view</field>
+            <field name="model">investment.period.rate</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="rate_date" required="1"/>
+                                <field name="product_type" invisible="1"/>
+                            </group>
+                            <group>
+			                    <field name="term_days_28"/>
+			                    <field name="rate_days_28" digits="[12,4]"/>
+			                    <field name="term_days_91"/>
+			                    <field name="rate_days_91" digits="[12,4]"/>
+			                    <field name="term_days_182"/>
+			                    <field name="rate_days_182" digits="[12,4]"/>
+			                    <field name="term_days_364"/>
+			                    <field name="rate_days_364" digits="[12,4]"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+          <record id="investment_period_rate_cetes_search" model="ir.ui.view">
+            <field name="name">investment.period.rate.cetes.search.view</field>
+            <field name="model">investment.period.rate</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="rate_date"/>
+                </search>
+            </field>
+        </record>
+
+         <record id="action_investment_period_cetes_rate" model="ir.actions.act_window">
+            <field name="name">Investment Rate</field>
+            <field name="res_model">investment.period.rate</field>
+        </record>
+<!-- 
+        <menuitem id="menu_investment_contract" name="Investment Contract" sequence="5"
+            parent="submenu_menu_investment_config" action="action_investment_contract"/>
+ -->
+
+
+		<!-- Udibonos Rate Views -->
+        <record id="investment_period_rate_udibonos_tree" model="ir.ui.view">
+            <field name="name">investment.period.rate.udibonos.tree.view</field>
+            <field name="model">investment.period.rate</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="rate_date"/>
+                    <field name="term_year_3"/>
+                    <field name="rate_year_3" digits="[12,4]"/>
+                    <field name="term_year_5"/>
+                    <field name="rate_year_5" digits="[12,4]"/>
+                    <field name="term_year_10"/>
+                    <field name="rate_year_10" digits="[12,4]"/>
+                    <field name="term_year_20"/>
+                    <field name="rate_year_20" digits="[12,4]"/>
+                    <field name="term_year_30"/>
+                    <field name="rate_year_30" digits="[12,4]"/>
+                    
+                    <field name="product_type" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="investment_period_rate_udibonos_form" model="ir.ui.view">
+            <field name="name">investment.period.rate.udibonos.form.view</field>
+            <field name="model">investment.period.rate</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="rate_date" required="1"/>
+                                <field name="product_type" invisible="1"/>
+                            </group>
+                            <group>
+			                    <field name="term_year_3"/>
+			                    <field name="rate_year_3" digits="[12,4]"/>
+			                    <field name="term_year_5"/>
+			                    <field name="rate_year_5" digits="[12,4]"/>
+			                    <field name="term_year_10"/>
+			                    <field name="rate_year_10" digits="[12,4]"/>
+			                    <field name="term_year_20"/>
+			                    <field name="rate_year_20" digits="[12,4]"/>
+			                    <field name="term_year_30"/>
+			                    <field name="rate_year_30" digits="[12,4]"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+          <record id="investment_period_rate_udibonos_search" model="ir.ui.view">
+            <field name="name">investment.period.rate.udibonos.search.view</field>
+            <field name="model">investment.period.rate</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="rate_date"/>
+                </search>
+            </field>
+        </record>
+
+         <record id="action_investment_period_udibonos_rate" model="ir.actions.act_window">
+            <field name="name">Investment Rate</field>
+            <field name="res_model">investment.period.rate</field>
+        </record>
+<!-- 
+        <menuitem id="menu_investment_contract" name="Investment Contract" sequence="5"
+            parent="submenu_menu_investment_config" action="action_investment_contract"/>
+ -->
+
+		<!-- BONUS Rate Views -->
+        <record id="investment_period_rate_BONUS_tree" model="ir.ui.view">
+            <field name="name">investment.period.rate.BONUS.tree.view</field>
+            <field name="model">investment.period.rate</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="rate_date"/>
+                    <field name="term_year_3"/>
+                    <field name="rate_year_3" digits="[12,4]"/>
+                    <field name="term_year_5"/>
+                    <field name="rate_year_5" digits="[12,4]"/>
+                    <field name="term_year_7"/>
+                    <field name="rate_year_7" digits="[12,4]"/>                    
+                    <field name="term_year_10"/>
+                    <field name="rate_year_10" digits="[12,4]"/>
+                    <field name="term_year_20"/>
+                    <field name="rate_year_20" digits="[12,4]"/>
+                    <field name="term_year_30"/>
+                    <field name="rate_year_30" digits="[12,4]"/>
+                    
+                    <field name="product_type" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="investment_period_rate_BONUS_form" model="ir.ui.view">
+            <field name="name">investment.period.rate.BONUS.form.view</field>
+            <field name="model">investment.period.rate</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="rate_date" required="1"/>
+                                <field name="product_type" invisible="1"/>
+                            </group>
+                            <group>
+			                    <field name="term_year_3"/>
+			                    <field name="rate_year_3" digits="[12,4]"/>
+			                    <field name="term_year_5"/>
+			                    <field name="rate_year_5" digits="[12,4]"/>
+			                    <field name="term_year_7"/>
+			                    <field name="rate_year_7" digits="[12,4]"/>
+			                    
+			                    <field name="term_year_10"/>
+			                    <field name="rate_year_10" digits="[12,4]"/>
+			                    <field name="term_year_20"/>
+			                    <field name="rate_year_20" digits="[12,4]"/>
+			                    <field name="term_year_30"/>
+			                    <field name="rate_year_30" digits="[12,4]"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+          <record id="investment_period_rate_BONUS_search" model="ir.ui.view">
+            <field name="name">investment.period.rate.BONUS.search.view</field>
+            <field name="model">investment.period.rate</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="rate_date"/>
+                </search>
+            </field>
+        </record>
+
+         <record id="action_investment_period_BONUS_rate" model="ir.actions.act_window">
+            <field name="name">Investment Rate</field>
+            <field name="res_model">investment.period.rate</field>
+        </record>
+<!-- 
+        <menuitem id="menu_investment_contract" name="Investment Contract" sequence="5"
+            parent="submenu_menu_investment_config" action="action_investment_contract"/>
+ -->
+
+		<!-- PAGARE Rate Views -->
+        <record id="investment_period_rate_PAGARE_tree" model="ir.ui.view">
+            <field name="name">investment.period.rate.PAGARE.tree.view</field>
+            <field name="model">investment.period.rate</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="rate_date"/>
+                    <field name="rate_days_28" digits="[12,4]"/>
+                    <field name="rate_days_91" digits="[12,4]"/>
+                    <field name="rate_days_182" digits="[12,4]"/>
+                    <field name="product_type" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="investment_period_rate_PAGARE_form" model="ir.ui.view">
+            <field name="name">investment.period.rate.PAGARE.form.view</field>
+            <field name="model">investment.period.rate</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="rate_date" required="1"/>
+                                <field name="product_type" invisible="1"/>
+                            </group>
+                            <group>
+			                    <field name="rate_days_28" digits="[12,4]"/>
+			                    <field name="rate_days_91" digits="[12,4]"/>
+			                    <field name="rate_days_182" digits="[12,4]"/>                            
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+          <record id="investment_period_rate_PAGARE_search" model="ir.ui.view">
+            <field name="name">investment.period.rate.PAGARE.search.view</field>
+            <field name="model">investment.period.rate</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="rate_date"/>
+                </search>
+            </field>
+        </record>
+
+         <record id="action_investment_period_PAGARE_rate" model="ir.actions.act_window">
+            <field name="name">Investment Rate</field>
+            <field name="res_model">investment.period.rate</field>
+        </record>
+<!-- 
+        <menuitem id="menu_investment_contract" name="Investment Contract" sequence="5"
+            parent="submenu_menu_investment_config" action="action_investment_contract"/>
+ -->
 
     </data>
 </odoo>

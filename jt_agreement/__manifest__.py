@@ -43,6 +43,7 @@
         'wizard/closing_collaboration.xml',
         'views/ir_sequence.xml',
         'views/menus.xml',
+        'reports/menu_reports.xml',
         'data/data.xml',
         'security/ir.model.access.csv'
     ],

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+		<!-- Account statements -->
+        <record id="action_account_statements_collaboration" model="ir.actions.client">
+            <field name="name">Account Statements</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'jt_agreement.account.statements.collaboration'}" />
+        </record>
+
+        <menuitem
+            id="menu_account_statements_collaboration"
+            name="Account Statements"
+            parent="menu_report_agreement"
+            sequence="2"
+            action="action_account_statements_collaboration"
+        />
+	</data>
+</odoo>

@@ -92,12 +92,12 @@
                              <page string="Accounts" name="accounts">
                                 <group>
                                     <group>
-                                        <field name="liability_account_id"/>
-                                        <field name="investment_account_id"/>
+                                        <field name="liability_account_id" readonly="1"/>
+                                        <field name="investment_account_id" readonly="1"/>
                                     </group>
                                     <group>
-                                        <field name="interest_account_id"/>
-                                        <field name="availability_account_id"/>
+                                        <field name="interest_account_id" readonly="1"/>
+                                        <field name="availability_account_id" readonly="1"/>
                                     </group>
                                 </group>
                             </page>

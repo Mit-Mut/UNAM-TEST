@@ -50,7 +50,13 @@
 			               		<field name="capitalizable"/>
 			               		<field name="frequency"/>
 			               		<field name="currency_id"/>
-			               		<field name="investment_rate_id" domain="[('product_type','=','TIIE')]" context="{'default_product_type':'TIIE'}"/>
+			               		<field name="investment_rate_id" domain="[('product_type','=','TIIE')]" 
+                                		context="{'default_product_type':'TIIE',
+                                		'search_view_ref': 'jt_investment.investment_period_rate_tiie_search',
+                                		'tree_view_ref': 'jt_investment.investment_period_rate_tiie_tree',
+                                		'form_view_ref': 'jt_investment.investment_period_rate_tiie_form'
+                                		}"/>
+
                         		<field name="observations"/>
                         		<field name="file_name" invisible="1"/>
                         		<field name="file_data" filename="file_name"/>

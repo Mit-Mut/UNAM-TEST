@@ -54,7 +54,10 @@
                                 <field name="bank_id"/>
                                 <field name="amount_invest"/>
                                 <field name="currency_id" options="{'no_create': True}"/>
-                                <field name="currency_rate_id" domain="[('currency_id','=',currency_id)]" options="{'no_create': True}"/>
+                                <field name="investment_rate_id" domain="[('product_type','=','CETES')]" context="{'default_product_type':'CETES','search_view_ref': 'jt_investment.investment_period_rate_cetes_search',
+                                		'tree_view_ref': 'jt_investment.investment_period_rate_cetes_tree',
+                                		'form_view_ref': 'jt_investment.investment_period_rate_cetes_form'
+                                		}"/>
                                 <field name="total_currency_rate"/>
                             </group>
                             <group>

@@ -136,16 +136,17 @@ class CashPaymentCalculation(models.AbstractModel):
             payment_method_list = [0]
              
         #records = self.env['employee.payroll.file'].search([('substate','=','for_payment_procedure'),('payment_place_id','!=',False),('l10n_mx_edi_payment_method_id','in',payment_method_list)])
-        records = self.env['account.move'].search([('is_payroll_payment_request','=',True),('payment_state','=','for_payment_procedure'),('payment_place_id','!=',False),('l10n_mx_edi_payment_method_id','in',payment_method_list)])
+        records = self.env['account.payment'].search([('payment_request_type','=','payroll_payment'),('payment_state','=','for_payment_procedure'),('payment_request_id.payment_place_id','!=',False),('l10n_mx_edi_payment_method_id','in',payment_method_list)])
         
-        payment_place_ids = records.mapped('payment_place_id')
+        payment_place_ids = records.mapped('payment_request_id.payment_place_id')
         total_amount = 0
         total_rec = 0
         
         for place_id in payment_place_ids:
-            amount = sum(x.amount_total for x in records.filtered(lambda a:a.payment_place_id.id==place_id.id))
-            rec_len = len(records.filtered(lambda a:a.payment_place_id.id==place_id.id))
-            payroll_rec = self.env['employee.payroll.file'].search([('move_id','in',records.filtered(lambda a:a.payment_place_id.id==place_id.id).ids)])
+            amount = sum(x.amount for x in records.filtered(lambda a:a.payment_request_id.payment_place_id.id==place_id.id))
+            rec_len = len(records.filtered(lambda a:a.payment_request_id.payment_place_id.id==place_id.id))
+            move_ids = records.filtered(lambda a:a.payment_request_id.payment_place_id.id==place_id.id).mapped('payment_request_id').ids 
+            payroll_rec = self.env['employee.payroll.file'].search([('move_id','in',move_ids)])
             min_ref = ''
             max_ref = ''
             

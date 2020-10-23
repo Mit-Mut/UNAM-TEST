@@ -143,6 +143,7 @@ class Bonds(models.Model):
                 'default_employee_id': employee.id if employee else False,
                 'default_bonds_id' : self.id,
                 'default_fund_type' : fund_type,
+                'show_for_supplier_payment':1,
             }
         }
         

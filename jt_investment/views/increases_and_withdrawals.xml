@@ -22,9 +22,20 @@
             	</field>
 			</field>
 		</record>
+
 		
 		<!--  Fund Menus -->
-		
+
+         <record model="ir.ui.view" id="view_req_open_balance_tree_invest_inherit">
+            <field name="name">view.req.open.balance.tree.invest.inherit</field>
+            <field name="model">request.open.balance.invest</field>
+            <field name="inherit_id" ref="jt_agreement.view_req_open_balance_tree_invest"/>
+            <field name="arch" type="xml">
+            	<field name="name" position="before">
+            		<field name="type_of_investment" invisible="not context.get('from_fund_view',False)"/>
+            	</field>
+			</field>
+		</record>		
         <record id="action_req_open_balance_investment_with_new_fund" model="ir.actions.act_window">
             <field name="name">Funds</field>
             <field name="res_model">request.open.balance.invest</field>

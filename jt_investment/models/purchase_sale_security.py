@@ -88,10 +88,11 @@ class PurchaseSaleSecurity(models.Model):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'context': {
-                'default_amount': self.price,
+                'default_amount': self.amount,
                 'default_date': today,
                 'default_purchase_sale_security_id' : self.id,
                 'default_fund_type' : fund_type,
+                'show_for_supplier_payment':1,
             }
         }
 
@@ -101,5 +102,4 @@ class PurchaseSaleSecurity(models.Model):
 
     def action_done(self):
         self.state = 'done'
-        
-        
+                

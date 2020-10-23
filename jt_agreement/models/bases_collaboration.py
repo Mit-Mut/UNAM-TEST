@@ -242,6 +242,7 @@ class BasesCollabration(models.Model):
         req_obj = self.env['request.open.balance']
         for collaboration in self:
             for beneficiary in collaboration.beneficiary_ids:
+                partner_id = beneficiary.employee_id and beneficiary.employee_id.user_id and beneficiary.employee_id.user_id.partner_id and beneficiary.employee_id.user_id.partner_id.id or False   
                 req_obj.create({
                     'bases_collaboration_id': collaboration.id,
                     'apply_to_basis_collaboration': True,
@@ -249,7 +250,28 @@ class BasesCollabration(models.Model):
                     'opening_balance': collaboration.available_bal,
                     'supporting_documentation': collaboration.cbc_format,
                     'type_of_operation': 'retirement',
-                    'beneficiary_id': beneficiary.partner_id.id,
+                    'beneficiary_id': partner_id,
+                    'name': self.name,
+                    'liability_account_id': collaboration.liability_account_id.id if collaboration.liability_account_id
+                    else False,
+                    'interest_account_id': collaboration.interest_account_id.id if collaboration.interest_account_id
+                    else False,
+                    'investment_account_id': collaboration.investment_account_id.id if collaboration.investment_account_id
+                    else False,
+                    'availability_account_id': collaboration.availability_account_id.id if collaboration.availability_account_id
+                    else False
+                })
+
+            for beneficiary in collaboration.provider_ids:
+                partner_id = beneficiary.partner_id and beneficiary.partner_id.id or False    
+                req_obj.create({
+                    'bases_collaboration_id': collaboration.id,
+                    'apply_to_basis_collaboration': True,
+                    'agreement_number': collaboration.convention_no,
+                    'opening_balance': collaboration.available_bal,
+                    'supporting_documentation': collaboration.cbc_format,
+                    'type_of_operation': 'retirement',
+                    'provider_id': partner_id,
                     'name': self.name,
                     'liability_account_id': collaboration.liability_account_id.id if collaboration.liability_account_id
                     else False,
@@ -584,6 +606,7 @@ class RequestOpenBalanceInvestment(models.Model):
     reason_rejection = fields.Text("Reason for Rejection")
     is_cancel_collaboration = fields.Boolean("Operation of cancel collaboration", default=False)
 
+
     @api.model
     def create(self, vals):
         res = super(RequestOpenBalanceInvestment, self).create(vals)
@@ -761,13 +784,22 @@ class RequestOpenBalanceFinance(models.Model):
                 amt = 0
                 for rec in rec_list:
                     amt += rec.amount
+                dep_id = False
+                sub_dep_id = False
+                
+                if rec_list:
+                    dep_id = rec_list[0].dependency_id and rec_list[0].dependency_id.id or False
+                    sub_dep_id = rec_list[0].sub_dependency_id and rec_list[0].sub_dependency_id.id or False  
+                    
                 payment = payment_obj.create({
                     'payment_type': 'transfer',
                     'amount': amt,
                     'journal_id': acc.id,
                     'destination_journal_id': dest_acc.id,
                     'payment_date': today,
-                    'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id
+                    'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+                    'dependancy_id' : dep_id,
+                    'sub_dependancy_id' : sub_dep_id,
                 })
                 if payment:
                     for rec in rec_list:

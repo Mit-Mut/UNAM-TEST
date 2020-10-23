@@ -6,119 +6,561 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-05 13:27+0000\n"
-"PO-Revision-Date: 2020-10-05 13:27+0000\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2020-10-22 18:03+0000\n"
+"PO-Revision-Date: 2020-10-22 20:22-0500\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.4.1\n"
+"Last-Translator: \n"
+"Language: es_MX\n"
 
 #. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_period_rate__days_182
 #: model:ir.model.fields.selection,name:jt_investment.selection__investment_cetes__term__182
 msgid "182 Days"
-msgstr ""
+msgstr "182 Días"
 
 #. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_period_rate__days_28
 #: model:ir.model.fields.selection,name:jt_investment.selection__investment_cetes__term__28
 msgid "28 Days"
-msgstr ""
+msgstr "28 Días"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
+#, python-format
+msgid "30 Dias Nominal"
+msgstr "Variación últimos 30 Días"
 
 #. module: jt_investment
 #: model:ir.model.fields.selection,name:jt_investment.selection__investment_cetes__term__364
 msgid "364 Days"
+msgstr "364 Días"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_period_rate__days_91
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_cetes__term__91
+msgid "91 Days"
+msgstr "91 Días"
+
+#. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_investment_committee
+msgid ""
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:14px;\">UNIVERSITY BOARD</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">SUBDIRECCION DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">COMITÉ DE INVERSIONES</"
+"span><br/>"
 msgstr ""
 
 #. module: jt_investment
-#: model:ir.model.fields.selection,name:jt_investment.selection__investment_cetes__term__91
-msgid "91 Days"
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_report_productive_accounts
+msgid ""
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:14px;\">UNIVERSITY BOARD</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">SUBDIRECCION DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">INFORME DE CUENTAS "
+"PRODUCTIVAS</span><br/>"
+msgstr ""
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:14px;\">UNIVERSITY BOARD</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">SUBDIRECCION DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">REPORTE DE CUENTAS "
+"PRODUCTIVAS</span><br/>"
+
+#. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_investment_funds_productive_accounts
+msgid ""
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:14px;\">UNIVERSITY BOARD</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">SUBDIRECCION DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">INFORME DE FONDOS DE "
+"INVERSIÓN EN CUENTAS PRODUCTIVAS</span><br/>"
+msgstr ""
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:14px;\">UNIVERSITY BOARD</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">SUBDIRECCION DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">REPORTE DE FONDOS DE "
+"INVERSIÓN EN CUENTAS PRODUCTIVAS</span><br/>"
+
+#. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_report_of_investment_funds
+msgid ""
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:14px;\">UNIVERSITY BOARD</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">SUBDIRECCION DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">INFORME DE FONDOS DE "
+"INVERSIÓN</span><br/>"
+msgstr ""
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:14px;\">UNIVERSITY BOARD</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">SUBDIRECCION DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">REPORTE DE FONDOS DE "
+"INVERSIÓN</span><br/>"
+
+#. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_quotation_of_investment_funds
+msgid ""
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:14px;\">UNIVERSITY BOARD</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">SUBDIRECCION DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">Informe de cotización "
+"de Fondos de Inversión</span><br/>"
+msgstr ""
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:14px;\">UNIVERSITY BOARD</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">SUBDIRECCION DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">REPORTE DE COTIZACIÓN "
+"DE FONDOS DE INVERSIÓN</span><br/>"
+
+#. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_report_increases_and_withdrawals
+msgid ""
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:14px;\">UNIVERSITY BOARD</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">SUBDIRECCION DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">REPORTE DE INCREMENTOS "
+"Y RETIROS</span><br/>"
+msgstr ""
+
+#. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_indicators_report
+msgid ""
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:14px;\">UNIVERSITY BOARD</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">SUBDIRECCION DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">REPORTE DE INDICADORES</"
+"span><br/>"
+msgstr ""
+
+#. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_investment_funds
+msgid ""
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:14px;\">UNIVERSITY BOARD</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">SUBDIRECCION DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">RESUMEN DE OPERACIÓN - "
+"FONDOS DE INVERSIÓN</span><br/>"
+msgstr ""
+
+#. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_money_market_investments
+msgid ""
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:14px;\">UNIVERSITY BOARD</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">SUBDIRECCION DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">RESUMEN DE OPERACIÓN - "
+"INVERSIONES MERCADO DE DINERO</span><br/>"
+msgstr ""
+
+#. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_investment_funds_balances
+msgid ""
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:14px;\">UNIVERSITY BOARD</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">SUBDIRECCION DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">RESUMEN DE OPERACIÓN - "
+"SALDOS DE FONDOS DE INVERSIÓN</span><br/>"
+msgstr ""
+
+#. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_summary_of_operation_maturities
+msgid ""
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:14px;\">UNIVERSITY BOARD</"
+"span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">SUBDIRECCION DE "
+"FINANZAS</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">RESUMEN DE OPERACIÓN - "
+"VENCIMIENTOS</span><br/>"
+msgstr ""
+
+#. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_indicators_report
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_investment_committee
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_investment_funds
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_investment_funds_balances
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_investment_funds_productive_accounts
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_money_market_investments
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_quotation_of_investment_funds
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_report_increases_and_withdrawals
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_report_of_investment_funds
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_report_productive_accounts
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_summary_of_operation_maturities
+msgid "<span>Fecha y hora de impresión  </span>"
 msgstr ""
 
 #. module: jt_investment
 #: model:ir.model.fields,help:jt_investment.field_product_product__type
 #: model:ir.model.fields,help:jt_investment.field_product_template__type
 msgid ""
-"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A storable product is a product for which you manage stock. The Inventory "
+"app has to be installed.\n"
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Un producto almacenable es un producto para el que gestiona stock. La aplicación de inventario debe estar instalada.\n"
-"Un producto consumible es un producto para el que no se gestionan las existencias.\n"
-"Un servicio es un producto no material."
 
 #. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__account_balance
+msgid "Account Balance"
+msgstr "Saldo de la Cuenta"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__account_executive
+#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__account_executive
+#: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__account_executive
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__account_executive
+msgid "Account Executive"
+msgstr "Ejecutivo de Cuenta"
+
+#. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_bonds_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_cetes_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_investment_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_udibonos_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_will_pay_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.purchase_sale_security_form
+msgid "Accounting"
+msgstr "Contabilidad"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/report_productive_accounts.py:0
+#, python-format
+msgid "Acumulado"
+msgstr "Acumulado"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__agreement_number
+msgid "Agreement Number"
+msgstr "Numero de Convenio"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/indicators_report.py:0
+#, python-format
+msgid "Alto Mes"
+msgstr "Alto mes"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__amount
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__amount
 msgid "Amount"
-msgstr ""
+msgstr "Monto"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__amount_invest
+#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__amount_invest
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__amount_to_invest
+#: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__amount_invest
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__amount_invest
+msgid "Amount to invest"
+msgstr "Monto a Invertir"
 
 #. module: jt_investment
 #: model_terms:ir.ui.view,arch_db:jt_investment.investment_bonds_form
 #: model_terms:ir.ui.view,arch_db:jt_investment.investment_udibonos_form
 msgid "Annual"
-msgstr ""
+msgstr "Anual"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__annual_term
 msgid "Annual Term"
-msgstr ""
+msgstr "Plazo Anual"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
+#, python-format
+msgid "Ano Actual Nominal"
+msgstr "Variación Acumulado año Actual"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__user_id
+msgid "Applicant"
+msgstr "Solicitante"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__concept
+msgid "Application Concept"
+msgstr "Concepto de Aplicación"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__date
+msgid "Application date"
+msgstr "Fecha de Aplicación"
+
+#. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.approve_money_market_bal_req_form
+msgid "Approve"
+msgstr "Aprobar"
+
+#. module: jt_investment
+#: model:ir.model,name:jt_investment.model_approve_money_market_bal_req
+msgid "Approve Money Market Balance request"
+msgstr "Aprobar solicitud de transferencia del mercado de dinero"
+
+#. module: jt_investment
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_bonds__state__approved
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_cetes__state__approved
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_investment__state__approved
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_udibonos__state__approved
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_will_pay__state__approved
+#: model:ir.model.fields.selection,name:jt_investment.selection__purchase_sale_security__state__approved
+msgid "Approved"
+msgstr "Aprobado"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_contract__name
 msgid "Associate Contract"
-msgstr ""
+msgstr "Contrato Asociado"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__average_price_of_the_month
+msgid "Average price of the month"
+msgstr "Precio Promedio del mes"
 
 #. module: jt_investment
 #: model_terms:ir.ui.view,arch_db:jt_investment.view_financial_product_form
 msgid "Aware of the payment"
-msgstr ""
+msgstr "Quien realiza el pago"
 
 #. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__fund_type
+msgid "Background"
+msgstr "Fondo"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/indicators_report.py:0
+#, python-format
+msgid "Bajo Mes"
+msgstr "Bajo Mes"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_committee.py:0
+#, python-format
+msgid "Banco"
+msgstr "Banco"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__bank_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__bank_id
 #: model:ir.model.fields,field_description:jt_investment.field_investment_contract__journal_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__journal_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_stock_quotation__journal_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__bank_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__bank_id
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__journal_id
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_bonds__instrument_it__bank
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_cetes__instrument_it__bank
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_udibonos__instrument_it__bank
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_will_pay__instrument_it__bank
 msgid "Bank"
-msgstr ""
+msgstr "Banco"
 
 #. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__journal_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__journal_id
 #: model:ir.model.fields,field_description:jt_investment.field_investment_contract__bank_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__journal_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__journal_id
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__bank_account_id
 msgid "Bank Account"
-msgstr ""
+msgstr "Cuenta bancaria"
 
 #. module: jt_investment
 #: model:ir.model.fields.selection,name:jt_investment.selection__investment_contract__investent_type__bank_paper
 msgid "Bank Paper"
-msgstr ""
+msgstr "Papel Bancario"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_stock_quotation__bank_rate_id
+msgid "Bank Rate"
+msgstr "Tasa Bancaria"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__bank_account_id
+msgid "Bank and Origin Account"
+msgstr "Cuenta bancaria  de origen"
 
 #. module: jt_investment
 #: model:ir.actions.act_window,name:jt_investment.action_investment_bonds
+#: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__bonds_id
+#: model:ir.model.fields,field_description:jt_investment.field_request_open_balance_finance__bonds_id
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_bonds__document_type__bonds
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_cetes__document_type__bonds
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_udibonos__document_type__bonds
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_will_pay__document_type__bonds
 #: model:ir.ui.menu,name:jt_investment.menu_investment_bonds
 msgid "Bonds"
-msgstr ""
+msgstr "BONOS"
 
 #. module: jt_investment
 #: model:ir.actions.act_window,name:jt_investment.action_investment_cetes
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_bonds__document_type__cetes
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_cetes__document_type__cetes
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_udibonos__document_type__cetes
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_will_pay__document_type__cetes
 #: model:ir.ui.menu,name:jt_investment.menu_investment_cetes
 msgid "CETES"
-msgstr ""
+msgstr "CETES"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__cetes_price
 msgid "CETES Price"
-msgstr ""
+msgstr "Precio CETES"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__cetes_quantity
 msgid "CETES Quantity"
-msgstr ""
+msgstr "Cantidad de Cetes"
 
 #. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_stock_quotation__cetes_currency_id
+msgid "CETES Rate"
+msgstr "Tasa CETES"
+
+#. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_bonds_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_cetes_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_udibonos_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_will_pay_form
+msgid "Calculation"
+msgstr "Cálculo"
+
+#. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.approve_money_market_bal_req_form
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: jt_investment
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_bonds__state__canceled
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_cetes__state__canceled
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_investment__state__canceled
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_udibonos__state__canceled
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_will_pay__state__canceled
+#: model:ir.model.fields.selection,name:jt_investment.selection__purchase_sale_security__state__canceled
+msgid "Canceled"
+msgstr "Cancelado"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#: code:addons/jt_investment/reports/report_productive_accounts.py:0
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__simple_interest_capital
+#, python-format
 msgid "Capital"
-msgstr ""
+msgstr "Capital"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_fund_balances.py:0
+#, python-format
+msgid "Clave Fondo"
+msgstr "Clave Fondo"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_funds.py:0
+#, python-format
+msgid "Clave Fondo Inversión"
+msgstr "Clave Fondo Inversión"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__company_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__company_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__company_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__company_id
+msgid "Company"
+msgstr "Compañia"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__compound_interest
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_will_pay_form
 msgid "Compound Interest"
-msgstr ""
+msgstr "Interés Compuesto"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_funds.py:0
+#, python-format
+msgid "Compra/Venta"
+msgstr "Compra/Venta"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_committee.py:0
+#, python-format
+msgid "Concepto"
+msgstr "Concepto"
 
 #. module: jt_investment
 #: model:ir.ui.menu,name:jt_investment.submenu_menu_investment_config
@@ -126,39 +568,134 @@ msgid "Configuration"
 msgstr "Configuración"
 
 #. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_bonds_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_cetes_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_investment_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_stock_quotation_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_udibonos_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_will_pay_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.purchase_sale_security_form
+msgid "Confirm"
+msgstr "Confirmar"
+
+#. module: jt_investment
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_bonds__state__confirmed
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_cetes__state__confirmed
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_investment__state__confirmed
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_stock_quotation__state__confirmed
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_udibonos__state__confirmed
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_will_pay__state__confirmed
+#: model:ir.model.fields.selection,name:jt_investment.selection__purchase_sale_security__state__confirmed
+msgid "Confirmed"
+msgstr "Confirmado"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__contract_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__contract_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__contract_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__contract_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__contract_id
+msgid "Contract"
+msgstr "Contrato"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_funds.py:0
+#: code:addons/jt_investment/reports/maturities.py:0
+#: code:addons/jt_investment/reports/money_market_investments.py:0
+#, python-format
+msgid "Contrato"
+msgstr "Contrato"
+
+#. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__coupon
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__coupon
 msgid "Coupon"
-msgstr ""
+msgstr "Cupón"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__coupon_rate
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__coupon_rate
 msgid "Coupon Rate"
-msgstr ""
+msgstr "Tasa Cupón"
 
 #. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__create_uid
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__create_uid
 #: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__create_uid
 #: model:ir.model.fields,field_description:jt_investment.field_investment_contract__create_uid
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__create_uid
+#: model:ir.model.fields,field_description:jt_investment.field_investment_period_rate__create_uid
+#: model:ir.model.fields,field_description:jt_investment.field_investment_stock_quotation__create_uid
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__create_uid
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__create_uid
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creado por"
 
 #. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__create_date
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__create_date
 #: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__create_date
 #: model:ir.model.fields,field_description:jt_investment.field_investment_contract__create_date
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__create_date
+#: model:ir.model.fields,field_description:jt_investment.field_investment_period_rate__create_date
+#: model:ir.model.fields,field_description:jt_investment.field_investment_stock_quotation__create_date
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__create_date
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__create_date
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Creado el"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/maturities.py:0
+#, python-format
+msgid "Cta Bancaria"
+msgstr "Cuenta Bancaria"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__currency_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__currency_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__currency_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__currency_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__currency_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__currency_id
+msgid "Currency"
+msgstr "Moneda"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/increases_and_withdrawals_report.py:0
+#, python-format
+msgid "DIA"
+msgstr "DÍA"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_period_rate__daily_rate
+msgid "Daily Rate"
+msgstr "Tasa Diaria"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_period_rate__rate_date
+#: model:ir.model.fields,field_description:jt_investment.field_investment_stock_quotation__date
+msgid "Date"
+msgstr "Fecha"
 
 #. module: jt_investment
 #: model:ir.ui.menu,name:jt_investment.menu_date_control_in
 msgid "Date Control"
-msgstr "Control de fecha"
+msgstr "Fecha de aplicación"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__date_required
+msgid "Date Required"
+msgstr "Fecha requerida"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__date_time
+#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__date_time
+#: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__date_time
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__date_time
+msgid "Date Time"
+msgstr "Fecha y Hora"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__issue_date
@@ -166,16 +703,112 @@ msgstr "Control de fecha"
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__issue_date
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__month_issue_date
 msgid "Date of issue"
-msgstr ""
+msgstr "Fechas de emisión"
 
 #. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__capitalizable
+msgid "Days of capitalization"
+msgstr "Días de capitalización"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__dependency_id
+msgid "Dependency"
+msgstr "Dependencia"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__desti_bank_account_id
+msgid "Destination Bank and Account"
+msgstr "Banco y cuenta de destino"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_committee.py:0
+#, python-format
+msgid "Destino Rendimiento"
+msgstr "Destino Rendimiento"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/indicators_report.py:0
+#, python-format
+msgid "Dia"
+msgstr "Día"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
+#, python-format
+msgid "Diaria Nominal"
+msgstr "Variación Diaria"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#: code:addons/jt_investment/reports/report_productive_accounts.py:0
+#, python-format
+msgid "Dias"
+msgstr "Días"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/report_productive_accounts.py:0
+#, python-format
+msgid "Diferencia"
+msgstr "Diferencia"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__display_name
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__display_name
 #: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__display_name
 #: model:ir.model.fields,field_description:jt_investment.field_investment_contract__display_name
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__display_name
+#: model:ir.model.fields,field_description:jt_investment.field_investment_period_rate__display_name
+#: model:ir.model.fields,field_description:jt_investment.field_investment_stock_quotation__display_name
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__display_name
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__display_name
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_indicators_report__display_name
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_investment_committee__display_name
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_investment_funds_productive_accounts__display_name
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_report_increases_and_withdrawals__display_name
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_report_of_investment_funds__display_name
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_report_productive_accounts__display_name
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_report_quotation_investment_funds__display_name
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_summary_of_operation_investment_funds__display_name
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_summary_of_operation_investment_funds_balances__display_name
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_summary_of_operation_maturities__display_name
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_summary_of_operation_money_market_investments__display_name
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nombre para mostrar"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__document_type
+#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__document_type
+#: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__document_type
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__document_type
+msgid "Document"
+msgstr "Instrumento"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_stock_quotation__dollar_currency_id
+msgid "Dollars"
+msgstr "Dólares"
+
+#. module: jt_investment
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_bonds__state__done
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_cetes__state__done
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_investment__state__done
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_udibonos__state__done
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_will_pay__state__done
+#: model:ir.model.fields.selection,name:jt_investment.selection__purchase_sale_security__state__done
+msgid "Done"
+msgstr "Hecho"
+
+#. module: jt_investment
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_bonds__state__draft
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_cetes__state__draft
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_investment__state__draft
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_stock_quotation__state__draft
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_udibonos__state__draft
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_will_pay__state__draft
+#: model:ir.model.fields.selection,name:jt_investment.selection__purchase_sale_security__state__draft
+msgid "Draft"
+msgstr "Borrador"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__due_date
@@ -184,53 +817,212 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__due_date
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__month_due_date
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__due_date
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__due_date
 msgid "Due Date"
-msgstr ""
+msgstr "Fecha de vencimiento"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#, python-format
+msgid "Entradas"
+msgstr "Entradas"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__estimated_interest
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__monthly_estimated_interest
 #: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__estimated_interest
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__estimated_interest
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__estimated_interest
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__monthly_estimated_interest
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__estimated_interest
 msgid "Estimated Interest"
-msgstr ""
+msgstr "Interés Estimado"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__estimated_profit
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__estimated_profit
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__estimated_profit
 msgid "Estimated Profit"
-msgstr ""
+msgstr "Ganancia Estimada"
 
 #. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__compound_interest_estimated_yield
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__simple_interest_estimated_yield
 msgid "Estimated Yield"
-msgstr ""
+msgstr "Rendimiento Estimado"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__monthly_profit_variation
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__profit_variation
 #: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__profit_variation
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__profit_variation
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__monthly_profit_variation
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__profit_variation
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__profit_variation
 msgid "Estimated vs Real Profit Variation"
-msgstr ""
+msgstr "Variación Ganancia Estimada vs Real"
 
 #. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__compound_estimated_real_variation
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__simple_estimated_real_variation
+msgid "Estimated vs. Real Yield Variation"
+msgstr "Variación Rendimiento Estimado vs Real"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__currency_rate_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__currency_rate_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__currency_rate_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__currency_rate_id
+msgid "Exchange Rate"
+msgstr "Tipo de Cambio"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__investment_rate_id
+msgid "Exchange rate"
+msgstr "Tipo de Cambio"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__investment_expense_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__return_expense_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__investment_expense_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__return_expense_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__investment_expense_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__return_expense_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__investment_expense_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__return_expense_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__investment_expense_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__return_expense_account_id
 #: model:ir.model.fields,field_description:jt_investment.field_product_product__investment_expense_account_id
 #: model:ir.model.fields,field_description:jt_investment.field_product_template__investment_expense_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__investment_expense_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__return_expense_account_id
 msgid "Expense Account"
-msgstr ""
+msgstr "Cuenta de Gasto"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/increases_and_withdrawals_report.py:0
+#: code:addons/jt_investment/reports/indicators_report.py:0
+#: code:addons/jt_investment/reports/investment_committee.py:0
+#: code:addons/jt_investment/reports/investment_fund_balances.py:0
+#: code:addons/jt_investment/reports/investment_funds.py:0
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#: code:addons/jt_investment/reports/maturities.py:0
+#: code:addons/jt_investment/reports/money_market_investments.py:0
+#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
+#: code:addons/jt_investment/reports/report_of_investment_funds.py:0
+#: code:addons/jt_investment/reports/report_productive_accounts.py:0
+#, python-format
+msgid "Export (XLSX)"
+msgstr "Exportar (XLSX)"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__extra_percentage
+msgid "Extra percentage"
+msgstr "Porcentaje Extra"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#, python-format
+msgid "F.A.N.D.C.R.J.P"
+msgstr "F.A.N.D.C.R.J.P"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#, python-format
+msgid "F.A.P.C.L."
+msgstr "F.A.P.C.L."
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#, python-format
+msgid "F.A.P.R.P.A."
+msgstr "F.A.P.R.P.A."
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#, python-format
+msgid "F.M.M."
+msgstr "F.M.M."
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#, python-format
+msgid "FC"
+msgstr "FC"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#, python-format
+msgid "FFAC"
+msgstr "FFAC"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#, python-format
+msgid "FFyPPU"
+msgstr "FFyPPU"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
+#: code:addons/jt_investment/reports/report_of_investment_funds.py:0
+#, python-format
+msgid "Fecha"
+msgstr "Fecha"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__is_federal_subsidy_resources
+#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__is_federal_subsidy_resources
+#: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__is_federal_subsidy_resources
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__is_federal_subsidy_resources
+msgid "Federal Subsidy Resourcesss"
+msgstr "Recursos de Subsidio Federal"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__file_name
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__file_name
+msgid "File Name"
+msgstr "Nombre de Archivo"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/indicators_report.py:0
+#, python-format
+msgid "Fin Mes"
+msgstr "Fin Mes"
 
 #. module: jt_investment
 #: model:ir.actions.act_window,name:jt_investment.ation_financial_product
 #: model:ir.ui.menu,name:jt_investment.menu_product_income
 msgid "Financial Product"
-msgstr "Producto financiero"
+msgstr "Producto Financiero"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__is_fixed_rate
+msgid "Fixed Rate"
+msgstr "Tasa Fija"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__term
+msgid "Fixed Term"
+msgstr "Plazo Fijo"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__folio
+#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__folio
+#: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__folio
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__folio
+msgid "Folio"
+msgstr "Folio"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__frequency
+msgid "Frequency of interest payments"
+msgstr "Frecuencia de los pagos de intereses"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__simple_interest_future_value
 msgid "Future Value"
-msgstr ""
+msgstr "Valor Futuro"
 
 #. module: jt_investment
 #: model_terms:ir.ui.view,arch_db:jt_investment.investment_bonds_form
@@ -238,27 +1030,49 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:jt_investment.investment_udibonos_form
 #: model_terms:ir.ui.view,arch_db:jt_investment.investment_will_pay_form
 msgid "General Information"
-msgstr ""
+msgstr "Información General"
 
 #. module: jt_investment
 #: model:ir.model.fields.selection,name:jt_investment.selection__investment_contract__investent_type__government_role
 msgid "Government Role"
-msgstr ""
+msgstr "Papel Gubernamental"
 
 #. module: jt_investment
 #: model:ir.actions.act_window,name:jt_investment.action_investment_will_pay
 #: model:ir.ui.menu,name:jt_investment.menu_investment_will_pay
 msgid "I WILL PAY"
-msgstr ""
+msgstr "Pagaré"
 
 #. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__id
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__id
 #: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__id
 #: model:ir.model.fields,field_description:jt_investment.field_investment_contract__id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_period_rate__id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_stock_quotation__id
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__id
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__id
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_indicators_report__id
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_investment_committee__id
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_investment_funds_productive_accounts__id
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_report_increases_and_withdrawals__id
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_report_of_investment_funds__id
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_report_productive_accounts__id
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_report_quotation_investment_funds__id
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_summary_of_operation_investment_funds__id
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_summary_of_operation_investment_funds_balances__id
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_summary_of_operation_maturities__id
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_summary_of_operation_money_market_investments__id
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/increases_and_withdrawals_report.py:0
+#, python-format
+msgid "INCREMENTOS"
+msgstr "INCREMENTOS"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__key
@@ -268,67 +1082,218 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__month_key
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__key
 msgid "Identification Key"
-msgstr ""
+msgstr "Clave de Identificación"
 
 #. module: jt_investment
+#: code:addons/jt_investment/reports/investment_committee.py:0
+#, python-format
+msgid "Importe"
+msgstr "Importe"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__investment_income_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__return_income_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__investment_income_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__return_income_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__investment_income_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__return_income_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__investment_income_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__return_income_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__investment_income_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__return_income_account_id
 #: model:ir.model.fields,field_description:jt_investment.field_product_product__investment_income_account_id
 #: model:ir.model.fields,field_description:jt_investment.field_product_template__investment_income_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__investment_income_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__return_income_account_id
 msgid "Income Account"
-msgstr ""
+msgstr "Cuenta de Ingresos"
+
+#. module: jt_investment
+#: model:ir.actions.act_window,name:jt_investment.action_req_open_balance_investment_with_new
+msgid "Increases and Withdrawals"
+msgstr "Incrementos y Retiros"
+
+#. module: jt_investment
+#: model:ir.ui.menu,name:jt_investment.menu_increments_withdrawals_inv
+msgid "Increments/Withdrawals"
+msgstr "Incrementos/Retiros"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/indicators_report.py:0
+#, python-format
+msgid "Indicadores"
+msgstr "Indicadores"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/indicators_report.py:0
+#: model:ir.actions.client,name:jt_investment.action_indicators_report
+#: model:ir.model,name:jt_investment.model_jt_investment_indicators_report
+#: model:ir.ui.menu,name:jt_investment.menu_indicators_report
+#, python-format
+msgid "Indicators Report"
+msgstr "Reporte de Indicadores"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/indicators_report.py:0
+#, python-format
+msgid "Inicio Mes"
+msgstr "Inicio Mes"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/money_market_investments.py:0
+#, python-format
+msgid "Institución financiera"
+msgstr "Institución financiera"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__instrument_it
+#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__instrument_it
+#: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__instrument_it
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__instrument_it
+msgid "Instrument It"
+msgstr "Instrumento"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/maturities.py:0
+#, python-format
+msgid "Intereses"
+msgstr "Intereses"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__interest_rate
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__interest_rate
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__interest_rate
 msgid "Interest Rate"
-msgstr ""
+msgstr "Tasa de interés"
 
 #. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__interest_rate
+msgid "Interest rate"
+msgstr "Tasa de interés"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
+#, python-format
+msgid "Interés"
+msgstr "Interés"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/report_productive_accounts.py:0
+#, python-format
+msgid "Interés 15 PB"
+msgstr "Interés 15 PB"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_fund_balances.py:0
+#: code:addons/jt_investment/reports/maturities.py:0
+#: code:addons/jt_investment/reports/money_market_investments.py:0
+#, python-format
+msgid "Inversión"
+msgstr "Inversión"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/report_of_investment_funds.py:0
+#, python-format
+msgid "Inversión Total"
+msgstr "Inversión Total"
+
+#. module: jt_investment
+#: model:ir.actions.act_window,name:jt_investment.action_investment_investment
+#: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__investment_id
+#: model:ir.model.fields,field_description:jt_investment.field_request_open_balance_finance__investment_id
 #: model:ir.model.fields.selection,name:jt_investment.selection__investment_bonds__kind_of_product__investment
 #: model:ir.model.fields.selection,name:jt_investment.selection__investment_cetes__kind_of_product__investment
 #: model:ir.model.fields.selection,name:jt_investment.selection__investment_udibonos__kind_of_product__investment
 #: model:ir.model.fields.selection,name:jt_investment.selection__investment_will_pay__kind_of_product__investment
 #: model:ir.model.fields.selection,name:jt_investment.selection__product_template__type__investment
 #: model:ir.ui.menu,name:jt_investment.main_menu_investment
+#: model:ir.ui.menu,name:jt_investment.menu_productive_accounts_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_bonds_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_cetes_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_investment_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_udibonos_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_will_pay_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.purchase_sale_security_form
 msgid "Investment"
 msgstr "Inversiones"
 
 #. module: jt_investment
 #: model:ir.model,name:jt_investment.model_investment_bonds
 msgid "Investment Bonds"
-msgstr ""
+msgstr "Inversión BONOS"
 
 #. module: jt_investment
 #: model:ir.model,name:jt_investment.model_investment_cetes
 msgid "Investment CETES"
-msgstr ""
+msgstr "Inversión CETES"
 
 #. module: jt_investment
 #: model:ir.actions.act_window,name:jt_investment.action_investment_contract
 #: model:ir.model,name:jt_investment.model_investment_contract
 #: model:ir.ui.menu,name:jt_investment.menu_investment_contract
+#: model:ir.ui.menu,name:jt_investment.menu_investment_contract_finance
 msgid "Investment Contract"
-msgstr "Contrato de inversión"
+msgstr "Contrato de Inversión"
 
 #. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__invesment_date
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__investment_date
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__invesment_date
 msgid "Investment Date"
-msgstr ""
+msgstr "Fecha de la Inversión"
+
+#. module: jt_investment
+#: model:ir.actions.server,name:jt_investment.ir_cron_investment_product_rate_ir_actions_server
+#: model:ir.cron,cron_name:jt_investment.ir_cron_investment_product_rate
+#: model:ir.cron,name:jt_investment.ir_cron_investment_product_rate
+msgid "Investment Product Rate"
+msgstr "Tasa del Producto de Inversión"
+
+#. module: jt_investment
+#: model:ir.actions.act_window,name:jt_investment.action_investment_period_tiie_rate
+#: model:ir.model,name:jt_investment.model_investment_period_rate
+msgid "Investment Rate"
+msgstr "Tasa de Inversión"
+
+#. module: jt_investment
+#: model:ir.model,name:jt_investment.model_investment_stock_quotation
+msgid "Investment Stock Quotation"
+msgstr "Cotización de precios de Inversión"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__term
+msgid "Investment Term"
+msgstr "Plazo de Inversión"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_contract__investent_type
 msgid "Investment Type"
-msgstr ""
+msgstr "Tipo de Inversión"
 
 #. module: jt_investment
 #: model:ir.model,name:jt_investment.model_investment_udibonos
 msgid "Investment UDIBONOS"
-msgstr ""
+msgstr "Inversión UDIBONOS"
 
 #. module: jt_investment
 #: model:ir.model,name:jt_investment.model_investment_will_pay
 msgid "Investment Will Pay"
-msgstr ""
+msgstr "Inversión PAGARÉ"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__amount
+msgid "Investment amount"
+msgstr "Monto de Inversión"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_contract__fund_id
+msgid "Investment fund"
+msgstr "Fondo de Inversión"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__invoice
+msgid "Invoice"
+msgstr "Factura"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__kind_of_product
@@ -336,34 +1301,93 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__kind_of_product
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__kind_of_product
 msgid "Kind Of Product"
-msgstr ""
+msgstr "Tipo de producto"
 
 #. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req____last_update
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds____last_update
 #: model:ir.model.fields,field_description:jt_investment.field_investment_cetes____last_update
 #: model:ir.model.fields,field_description:jt_investment.field_investment_contract____last_update
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment____last_update
+#: model:ir.model.fields,field_description:jt_investment.field_investment_period_rate____last_update
+#: model:ir.model.fields,field_description:jt_investment.field_investment_stock_quotation____last_update
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos____last_update
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay____last_update
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_indicators_report____last_update
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_investment_committee____last_update
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_investment_funds_productive_accounts____last_update
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_report_increases_and_withdrawals____last_update
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_report_of_investment_funds____last_update
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_report_productive_accounts____last_update
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_report_quotation_investment_funds____last_update
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_summary_of_operation_investment_funds____last_update
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_summary_of_operation_investment_funds_balances____last_update
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_summary_of_operation_maturities____last_update
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_summary_of_operation_money_market_investments____last_update
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Modificado el"
 
 #. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__last_quote_id
+msgid "Last Quote"
+msgstr "Última cotización"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__last_quote_date
+msgid "Last Quote Date"
+msgstr "Fecha última cotización"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__last_quote_price
+msgid "Last Quote Price"
+msgstr "Precio última cotización"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__write_uid
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__write_uid
 #: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__write_uid
 #: model:ir.model.fields,field_description:jt_investment.field_investment_contract__write_uid
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__write_uid
+#: model:ir.model.fields,field_description:jt_investment.field_investment_period_rate__write_uid
+#: model:ir.model.fields,field_description:jt_investment.field_investment_stock_quotation__write_uid
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__write_uid
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__write_uid
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Última actualización por"
 
 #. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__write_date
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__write_date
 #: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__write_date
 #: model:ir.model.fields,field_description:jt_investment.field_investment_contract__write_date
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__write_date
+#: model:ir.model.fields,field_description:jt_investment.field_investment_period_rate__write_date
+#: model:ir.model.fields,field_description:jt_investment.field_investment_stock_quotation__write_date
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__write_date
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__write_date
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Última actualización el"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/increases_and_withdrawals_report.py:0
+#, python-format
+msgid "MES"
+msgstr "MES"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#, python-format
+msgid "Mes"
+msgstr "Mes"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
+#, python-format
+msgid "Mes Actual Nominal"
+msgstr "Variación Acumulado mes Actual"
 
 #. module: jt_investment
 #: model:ir.ui.menu,name:jt_investment.submenu_menu_investment_money
@@ -373,103 +1397,415 @@ msgstr "Fondos"
 #. module: jt_investment
 #: model:ir.ui.menu,name:jt_investment.submenu_menu_investment_money_market
 msgid "Money Market"
-msgstr "Mercado de dinero"
+msgstr "Mercado de Dinero"
 
 #. module: jt_investment
 #: model_terms:ir.ui.view,arch_db:jt_investment.investment_bonds_form
 #: model_terms:ir.ui.view,arch_db:jt_investment.investment_udibonos_form
 msgid "Monthly"
-msgstr ""
+msgstr "Mensual"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__monthly_term
 msgid "Monthly Term"
-msgstr ""
+msgstr "Plazo mensual"
 
 #. module: jt_investment
-#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__name
-#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__name
-#: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__name
-#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__name
-msgid "Name"
-msgstr ""
+#: code:addons/jt_investment/reports/investment_funds.py:0
+#, python-format
+msgid "Monto de Inversión"
+msgstr "Monto de Inversión"
+
+#. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.purchase_sale_security_form
+msgid "Movements"
+msgstr "Movimientos"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/report_of_investment_funds.py:0
+#, python-format
+msgid "Nominal"
+msgstr "Variación Nominal"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__nominal_value
 #: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__nominal_value
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__nominal_value
 msgid "Nominal Value"
-msgstr ""
+msgstr "Valor Nominal"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__monthly_nominal_value
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__monthly_nominal_value
 msgid "Nominal value of the security in investment units"
-msgstr ""
+msgstr "Valor nominal del valor en unidades de inversión"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_committee.py:0
+#, python-format
+msgid "Notas"
+msgstr "Notas"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__number_of_title
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__number_of_title
 msgid "Number of Titles"
-msgstr ""
+msgstr "Número de Títulos"
 
 #. module: jt_investment
+#: code:addons/jt_investment/reports/investment_fund_balances.py:0
+#, python-format
+msgid "Número de contrato"
+msgstr "Número de contrato"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__observations
+#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__observations
 #: model:ir.model.fields,field_description:jt_investment.field_investment_contract__observations
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__observations
+#: model:ir.model.fields,field_description:jt_investment.field_investment_stock_quotation__observations
+#: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__observations
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__observations
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__observations
 msgid "Observations"
-msgstr ""
+msgstr "Observaciones"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__operation_number
+msgid "Operation Number"
+msgstr "Número de operación"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/increases_and_withdrawals_report.py:0
+#: code:addons/jt_investment/reports/indicators_report.py:0
+#: code:addons/jt_investment/reports/investment_committee.py:0
+#: code:addons/jt_investment/reports/investment_fund_balances.py:0
+#: code:addons/jt_investment/reports/investment_funds.py:0
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#: code:addons/jt_investment/reports/maturities.py:0
+#: code:addons/jt_investment/reports/money_market_investments.py:0
+#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
+#: code:addons/jt_investment/reports/report_of_investment_funds.py:0
+#: code:addons/jt_investment/reports/report_productive_accounts.py:0
+#, python-format
+msgid "PDF"
+msgstr "PDF"
+
+#. module: jt_investment
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_bonds__instrument_it__paper_government
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_cetes__instrument_it__paper_government
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_udibonos__instrument_it__paper_government
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_will_pay__instrument_it__paper_government
+msgid "Paper Government Paper"
+msgstr "Papel Gubernamental"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__period_days
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__period_days
 msgid "Period days"
-msgstr ""
+msgstr "Días del período"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/maturities.py:0
+#: code:addons/jt_investment/reports/money_market_investments.py:0
+#: code:addons/jt_investment/reports/report_productive_accounts.py:0
+#, python-format
+msgid "Plazo"
+msgstr "Plazo"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
+#: code:addons/jt_investment/reports/report_of_investment_funds.py:0
+#, python-format
+msgid "Porcentual"
+msgstr "Porcentual"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_fund_balances.py:0
+#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
+#: code:addons/jt_investment/reports/report_of_investment_funds.py:0
+#, python-format
+msgid "Precio"
+msgstr "Precio"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__present_value_bond
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__present_value_bond
 msgid "Present Value of the Bond"
-msgstr ""
+msgstr "Valor actual del bono"
 
 #. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_stock_quotation__price
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__movement_price
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__price
+msgid "Price"
+msgstr "Precio"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__investment_price_diff_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__return_price_diff_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__investment_price_diff_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__return_price_diff_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__investment_price_diff_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__return_price_diff_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__investment_price_diff_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__return_price_diff_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__investment_price_diff_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__return_price_diff_account_id
 #: model:ir.model.fields,field_description:jt_investment.field_product_product__investment_price_diff_account_id
 #: model:ir.model.fields,field_description:jt_investment.field_product_template__investment_price_diff_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__investment_price_diff_account_id
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__return_price_diff_account_id
 msgid "Price Difference Account"
-msgstr ""
+msgstr "Cuenta de diferencia de precio"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__price_previous_day
+msgid "Price previous day"
+msgstr "Precio día anterior"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/increases_and_withdrawals_report.py:0
+#: code:addons/jt_investment/reports/indicators_report.py:0
+#: code:addons/jt_investment/reports/investment_committee.py:0
+#: code:addons/jt_investment/reports/investment_fund_balances.py:0
+#: code:addons/jt_investment/reports/investment_funds.py:0
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#: code:addons/jt_investment/reports/maturities.py:0
+#: code:addons/jt_investment/reports/money_market_investments.py:0
+#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
+#: code:addons/jt_investment/reports/report_of_investment_funds.py:0
+#: code:addons/jt_investment/reports/report_productive_accounts.py:0
+#, python-format
+msgid "Print Preview"
+msgstr "Vista Preliminar"
 
 #. module: jt_investment
 #: model:ir.model,name:jt_investment.model_product_template
 msgid "Product Template"
-msgstr "Plantilla de producto"
+msgstr "Plantilla de Producto"
 
 #. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_period_rate__product_type
 #: model:ir.model.fields,field_description:jt_investment.field_product_product__type
 #: model:ir.model.fields,field_description:jt_investment.field_product_template__type
 msgid "Product Type"
-msgstr "Tipo de producto"
+msgstr "Tipo de Producto"
 
 #. module: jt_investment
 #: model:ir.ui.menu,name:jt_investment.submenu_menu_investment_productive_accounts
 msgid "Productive Accounts"
-msgstr "Cuentas productivas"
+msgstr "Cuentas Productivas"
+
+#. module: jt_investment
+#: model:ir.model,name:jt_investment.model_investment_investment
+msgid "Productive Accounts Investment"
+msgstr "Inversión Cuentas Productivas"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/indicators_report.py:0
+#, python-format
+msgid "Promedio"
+msgstr "Promedio"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#, python-format
+msgid "Promedio Diario"
+msgstr "Promedio Diario"
+
+#. module: jt_investment
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_bonds__document_type__promissory_note
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_cetes__document_type__promissory_note
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_udibonos__document_type__promissory_note
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_will_pay__document_type__promissory_note
+msgid "Promissory note"
+msgstr "Pagaré"
+
+#. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_bonds_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_cetes_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_udibonos_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_will_pay_form
+msgid "Published Entries"
+msgstr "Entradas publicadas"
+
+#. module: jt_investment
+#: model:ir.model.fields.selection,name:jt_investment.selection__purchase_sale_security__movement__buy
+msgid "Purchase"
+msgstr "Compra"
+
+#. module: jt_investment
+#: model:ir.actions.act_window,name:jt_investment.action_purchase_sale_security
+#: model:ir.ui.menu,name:jt_investment.menu_purchase_sale_security
+msgid "Purchase / Sale of Securities"
+msgstr "Compra / Venta de Títulos"
+
+#. module: jt_investment
+#: model:ir.model,name:jt_investment.model_purchase_sale_security
+#: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__purchase_sale_security_id
+#: model:ir.model.fields,field_description:jt_investment.field_request_open_balance_finance__purchase_sale_security_id
+msgid "Purchase Sale Security"
+msgstr "Compra / Venta de Títulos"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__number_of_titles
+msgid "Quantity of Securities"
+msgstr "Cantidad de Títulos"
+
+#. module: jt_investment
+#: model:ir.actions.act_window,name:jt_investment.action_investment_stock_quotation
+#: model:ir.ui.menu,name:jt_investment.menu_investment_stock_quotation
+msgid "Quotes"
+msgstr "Cotizaciones"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/increases_and_withdrawals_report.py:0
+#, python-format
+msgid "RETIROS"
+msgstr "RETIROS"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__monthly_real_interest
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__real_interest
 #: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__real_interest
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__real_interest
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__monthly_real_interest
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__real_interest
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__real_interest
 msgid "Real Interest"
-msgstr ""
+msgstr "Interés Real"
 
 #. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__compound_interest_real_performance
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__simple_interest_real_performance
 msgid "Real Performance"
-msgstr ""
+msgstr "Rendimiento Real"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__real_profit
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__real_profit
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__real_profit
 msgid "Real Profit"
-msgstr ""
+msgstr "Ganancia Real"
+
+#. module: jt_investment
+#: model:ir.model,name:jt_investment.model_reason_rejection_open_bal
+msgid "Reason Rejection of Open Balance"
+msgstr "Razón de rechazo de Apertura de Saldo"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_fund_balances.py:0
+#: code:addons/jt_investment/reports/investment_funds.py:0
+#: code:addons/jt_investment/reports/money_market_investments.py:0
+#, python-format
+msgid "Recurso"
+msgstr "Recurso"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/maturities.py:0
+#, python-format
+msgid "Recurso Institución"
+msgstr "Recurso Institución"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__name
+msgid "Reference"
+msgstr "Referencia"
+
+#. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_bonds_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_cetes_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_udibonos_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_will_pay_form
+msgid "Reinvestment"
+msgstr "Reinversión"
+
+#. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_investment_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.purchase_sale_security_form
+msgid "Reject"
+msgstr "Rechazar"
+
+#. module: jt_investment
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_bonds__state__rejected
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_cetes__state__rejected
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_investment__state__rejected
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_udibonos__state__rejected
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_will_pay__state__rejected
+#: model:ir.model.fields.selection,name:jt_investment.selection__purchase_sale_security__state__rejected
+msgid "Rejected"
+msgstr "Rechazado"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_fund_balances.py:0
+#: code:addons/jt_investment/reports/report_of_investment_funds.py:0
+#, python-format
+msgid "Remanente"
+msgstr "Remanente"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/report_of_investment_funds.py:0
+#, python-format
+msgid "Rentabilidad"
+msgstr "Rentabilidad"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/increases_and_withdrawals_report.py:0
+#: model:ir.actions.client,name:jt_investment.action_report_increases_and_withdrawals
+#: model:ir.model,name:jt_investment.model_jt_investment_report_increases_and_withdrawals
+#: model:ir.ui.menu,name:jt_investment.menu_report_increases_and_withdrawals
+#, python-format
+msgid "Report Increases and Withdrawals"
+msgstr "Reporte (Incrementos y Retiros)"
+
+#. module: jt_investment
+#: model:ir.model,name:jt_investment.model_jt_investment_report_of_investment_funds
+msgid "Report Of Investment Funds"
+msgstr "Reporte de Fondos de Inversión"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/report_productive_accounts.py:0
+#: model:ir.actions.client,name:jt_investment.action_report_productive_accounts
+#: model:ir.model,name:jt_investment.model_jt_investment_report_productive_accounts
+#: model:ir.ui.menu,name:jt_investment.menu_report_productive_accounts
+#, python-format
+msgid "Report Productive Accounts"
+msgstr "Reporte de Cuentas Productivas"
+
+#. module: jt_investment
+#: model:ir.actions.client,name:jt_investment.action_report_of_investment_funds
+#: model:ir.ui.menu,name:jt_investment.menu_report_of_investment_funds
+msgid "Report of Investment Funds"
+msgstr "Reporte de Fondos de Inversión"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#: model:ir.actions.client,name:jt_investment.action_investment_funds_in_productive_accounts
+#: model:ir.model,name:jt_investment.model_jt_investment_investment_funds_productive_accounts
+#: model:ir.ui.menu,name:jt_investment.menu_investment_funds_in_productive_accounts
+#, python-format
+msgid "Report of Investment Funds in Productive Accounts"
+msgstr "Reporte de Fondos de Inversión en Cuentas Productivas"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
+#: code:addons/jt_investment/reports/report_of_investment_funds.py:0
+#: model:ir.actions.client,name:jt_investment.action_summary_of_quotation_of_investment_funds
+#: model:ir.model,name:jt_investment.model_jt_investment_report_quotation_investment_funds
+#: model:ir.ui.menu,name:jt_investment.menu_summary_of_quotation_of_investment_funds
+#, python-format
+msgid "Report on the quotation of Investment Funds"
+msgstr "Reporte de la Cotización de Fondos de Inversión"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_committee.py:0
+#: model:ir.actions.client,name:jt_investment.action_investment_committee_new
+#: model:ir.model,name:jt_investment.model_jt_investment_investment_committee
+#: model:ir.ui.menu,name:jt_investment.menu_new_investment_committee
+#, python-format
+msgid "Report to the Investment Committee"
+msgstr "Reporte para el Comité de Inversiones"
 
 #. module: jt_investment
 #: model:ir.ui.menu,name:jt_investment.submenu_menu_investment_reports
@@ -482,51 +1818,236 @@ msgid "Request for Transfers"
 msgstr "Solicitud de transferencias"
 
 #. module: jt_investment
+#: model:ir.model,name:jt_investment.model_request_open_balance_finance
+msgid "Request to Open Balance For Finanace"
+msgstr "Solicitud de apertura de saldo para Finanzas"
+
+#. module: jt_investment
+#: model:ir.model,name:jt_investment.model_request_open_balance_invest
+msgid "Request to Open Balance Investment"
+msgstr "Solicitud de apertura de Inversión"
+
+#. module: jt_investment
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_bonds__state__requested
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_cetes__state__requested
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_investment__state__requested
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_udibonos__state__requested
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_will_pay__state__requested
+#: model:ir.model.fields.selection,name:jt_investment.selection__purchase_sale_security__state__requested
+#: model_terms:ir.ui.view,arch_db:jt_investment.view_req_open_balance_form_investment_inherit
+msgid "Requested"
+msgstr "Solicitado"
+
+#. module: jt_investment
 #: model_terms:ir.ui.view,arch_db:jt_investment.investment_bonds_form
 #: model_terms:ir.ui.view,arch_db:jt_investment.investment_cetes_form
 #: model_terms:ir.ui.view,arch_db:jt_investment.investment_udibonos_form
 #: model_terms:ir.ui.view,arch_db:jt_investment.investment_will_pay_form
+msgid "Reset To Draft"
+msgstr "Restablecer a borrador"
+
+#. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_bonds_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_cetes_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_investment_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_udibonos_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_will_pay_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.purchase_sale_security_form
 msgid "Returns"
-msgstr ""
+msgstr "Rendimientos"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/increases_and_withdrawals_report.py:0
+#, python-format
+msgid "SALDO FINAL"
+msgstr "SALDO FINAL"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/increases_and_withdrawals_report.py:0
+#, python-format
+msgid "SALDO INICIAL"
+msgstr "SALDO INICIAL"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#, python-format
+msgid "Saldo Final"
+msgstr "Saldo Final"
+
+#. module: jt_investment
+#: model:ir.model.fields.selection,name:jt_investment.selection__purchase_sale_security__movement__sell
+msgid "Sale"
+msgstr "Venta"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#, python-format
+msgid "Salidas"
+msgstr "Salidas"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
+#, python-format
+msgid "Semanal Nominal"
+msgstr "Variación Semanal"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__simple_interest
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_will_pay_form
 msgid "Simple Interest"
-msgstr ""
+msgstr "Interés simple"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__start_date
 msgid "Start Date"
-msgstr ""
+msgstr "Fecha de inicio"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__state
+#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__state
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__state
+#: model:ir.model.fields,field_description:jt_investment.field_investment_stock_quotation__state
+#: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__state
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__state
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__state
+msgid "Status"
+msgstr "Estatus"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__sub_dependency_id
+msgid "Subdependency"
+msgstr "Subdependencia"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_fund_balances.py:0
+#: model:ir.actions.client,name:jt_investment.action_summary_of_operation_investment_funds_balances
+#: model:ir.model,name:jt_investment.model_jt_investment_summary_of_operation_investment_funds_balances
+#: model:ir.ui.menu,name:jt_investment.menu_summary_of_operation_investment_funds_balances
+#, python-format
+msgid "Summary of Operation - Investment Fund Balances"
+msgstr "Resumen de Operación - Saldos de Fondos de Inversión"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_funds.py:0
+#: model:ir.actions.client,name:jt_investment.action_summary_of_operation_investment_funds
+#: model:ir.model,name:jt_investment.model_jt_investment_summary_of_operation_investment_funds
+#: model:ir.ui.menu,name:jt_investment.menu_summary_of_operation_investment_funds
+#, python-format
+msgid "Summary of Operation - Investment Funds"
+msgstr "Resumen de Operación - Fondos de Inversión"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/maturities.py:0
+#: model:ir.actions.client,name:jt_investment.action_summary_of_operation_maturities
+#: model:ir.model,name:jt_investment.model_jt_investment_summary_of_operation_maturities
+#: model:ir.ui.menu,name:jt_investment.menu_summary_of_operation_maturities
+#, python-format
+msgid "Summary of Operation - Maturities"
+msgstr "Resumen de Operación - Vencimientos"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/money_market_investments.py:0
+#: model:ir.actions.client,name:jt_investment.action_summary_of_operation_money_market_investments
+#: model:ir.model,name:jt_investment.model_jt_investment_summary_of_operation_money_market_investments
+#: model:ir.ui.menu,name:jt_investment.menu_summary_of_operation_money_market_investments
+#, python-format
+msgid "Summary of Operation - Money Market Investments"
+msgstr "Resumen de Operación - Inversiones Mercado de Dinero"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__file_data
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__file_data
+msgid "Supporting document"
+msgstr "Documento Soporte"
+
+#. module: jt_investment
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_period_rate__product_type__tiie
+msgid "TIIE"
+msgstr "TIIE"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/increases_and_withdrawals_report.py:0
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#, python-format
+msgid "TIIE 28"
+msgstr "TIIE 28"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/report_productive_accounts.py:0
+#, python-format
+msgid "Tasa"
+msgstr "Tasa"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/maturities.py:0
+#, python-format
+msgid "Tasa Interés"
+msgstr "Tasa Interés"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_committee.py:0
+#, python-format
+msgid "Tasa Rendimiento"
+msgstr "Tasa Rendimiento"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/money_market_investments.py:0
+#, python-format
+msgid "Tasa de interés"
+msgstr "Tasa de interés"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__term
 #: model:ir.model.fields,field_description:jt_investment.field_investment_contract__term
+#: model:ir.model.fields,field_description:jt_investment.field_investment_stock_quotation__term
+#: model:ir.model.fields,field_description:jt_investment.field_investment_stock_quotation__term_dollar
 msgid "Term"
-msgstr ""
+msgstr "Plazo"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__term_days
 msgid "Term Days"
-msgstr ""
+msgstr "Plazo en días"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_stock_quotation__term_cetes
+msgid "Terms"
+msgstr "Plazos"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__udi_value_multiplied
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__udi_value_multiplied
 msgid "The value of the Udi is multiplied by 100"
-msgstr ""
+msgstr "El valor de la Udi se multiplica por 100"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__time_for_each_cash_flow
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__time_for_each_cash_flow
 msgid "Time for each cash flow"
-msgstr ""
+msgstr "Tiempo para cada flujo de efectivo"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__time_frame
+msgid "Time frame"
+msgstr "Periodo de tiempo"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__time_to_expiration_date
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__time_to_expiration_date
 msgid "Time to Expiration Date"
-msgstr ""
+msgstr "Tiempo hasta la fecha de vencimiento"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_committee.py:0
+#, python-format
+msgid "Tipo"
+msgstr "Tipo"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_stock_quotation__name
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__title
+msgid "Title"
+msgstr "Título"
 
 #. module: jt_investment
 #: model:ir.ui.menu,name:jt_investment.submenu_menu_investment_titles
@@ -534,33 +2055,146 @@ msgid "Titles"
 msgstr "Títulos"
 
 #. module: jt_investment
-#: model_terms:ir.ui.view,arch_db:jt_investment.view_financial_product_form
-msgid "To Pay"
-msgstr ""
+#: code:addons/jt_investment/reports/investment_funds.py:0
+#, python-format
+msgid "Titulos"
+msgstr "Títulos"
 
 #. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.view_financial_product_form
+msgid "To Pay"
+msgstr "Pagar"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_funds.py:0
+#: code:addons/jt_investment/reports/maturities.py:0
+#: code:addons/jt_investment/reports/money_market_investments.py:0
+#: code:addons/jt_investment/reports/report_productive_accounts.py:0
+#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__total_currency_rate
+#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__total_currency_rate
+#: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__total_currency_rate
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__compound_interest_total
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__total_currency_rate
+#, python-format
 msgid "Total"
-msgstr ""
+msgstr "Total"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/report_of_investment_funds.py:0
+#, python-format
+msgid "Total de Titulos"
+msgstr "Total de Titulos"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__type_of_investment
+msgid "Type of Investment"
+msgstr "Tipo de Inversión"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_fund_balances.py:0
+#, python-format
+msgid "Títulos"
+msgstr "Títulos"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__udi_value
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__udi_value
 msgid "UDI value"
-msgstr ""
+msgstr "Valor UDI"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__UNAM_operator
+#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__UNAM_operator
+#: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__UNAM_operator
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__UNAM_operator
+msgid "UNAM Operator"
+msgstr "Operador de la UNAM"
 
 #. module: jt_investment
 #: model:ir.actions.act_window,name:jt_investment.action_investment_udibonos
+#: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__udibonos_id
+#: model:ir.model.fields,field_description:jt_investment.field_request_open_balance_finance__udibonos_id
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_bonds__document_type__udibonos
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_cetes__document_type__udibonos
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_udibonos__document_type__udibonos
+#: model:ir.model.fields.selection,name:jt_investment.selection__investment_will_pay__document_type__udibonos
 #: model:ir.ui.menu,name:jt_investment.menu_investment_udibonos
 msgid "Udibonos"
-msgstr ""
+msgstr "Udibonos"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__employee_id
+msgid "Unit requesting the transfer"
+msgstr "Área que solicita la transferencia"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_fund_balances.py:0
+#: code:addons/jt_investment/reports/report_of_investment_funds.py:0
+#, python-format
+msgid "Valuación"
+msgstr "Valuación"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__is_variable_rate
+msgid "Variable Rate"
+msgstr "Tasa variable"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__term_variable
+msgid "Variable Term"
+msgstr "Plazo Variable"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__movement
+msgid "What move do I want to make?"
+msgstr "¿Qué movimiento deseo hacer?"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__will_pay_id
+#: model:ir.model.fields,field_description:jt_investment.field_request_open_balance_finance__will_pay_id
+msgid "Will Pay"
+msgstr "Pagaré"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/increases_and_withdrawals_report.py:0
+#: code:addons/jt_investment/reports/indicators_report.py:0
+#: code:addons/jt_investment/reports/investment_committee.py:0
+#: code:addons/jt_investment/reports/investment_fund_balances.py:0
+#: code:addons/jt_investment/reports/investment_funds.py:0
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#: code:addons/jt_investment/reports/maturities.py:0
+#: code:addons/jt_investment/reports/money_market_investments.py:0
+#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
+#: code:addons/jt_investment/reports/report_of_investment_funds.py:0
+#: code:addons/jt_investment/reports/report_productive_accounts.py:0
+#, python-format
+msgid "XLSX"
+msgstr "XLSX"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__yield_rate
 msgid "Yield Rate"
-msgstr ""
+msgstr "Tasa de rendimiento"
 
 #. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_bonds_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_cetes_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_investment_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_udibonos_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_will_pay_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.purchase_sale_security_form
 #: model_terms:ir.ui.view,arch_db:jt_investment.view_financial_product_form
 msgid "Yields"
-msgstr ""
+msgstr "Rendimientos"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__cetes_id
+#: model:ir.model.fields,field_description:jt_investment.field_request_open_balance_finance__cetes_id
+msgid "cetes"
+msgstr "cetes"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/money_market_investments.py:0
+#, python-format
+msgid "cuenta bancaria"
+msgstr "cuenta bancaria"

@@ -41,7 +41,8 @@ class SubDependency(models.Model):
         result = []
         for rec in self:
             name = rec.sub_dependency or ''
-            if rec.description and self.env.context and self.env.context.get('show_for_supplier_payment',False): 
+            if rec.description and self.env.context and (self.env.context.get('show_for_supplier_payment',False) or
+                        self.env.context.get('show_for_agreement',False)): 
                 name += ' ' + rec.description
             result.append((rec.id, name))
         return result

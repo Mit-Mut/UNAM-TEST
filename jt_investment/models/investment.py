@@ -67,6 +67,7 @@ class Investment(models.Model):
                 'default_date': today,
                 'default_investment_id' : self.id,
                 'default_fund_type' : fund_type,
+                'show_for_supplier_payment':1,
             }
         }
 

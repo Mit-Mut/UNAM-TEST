@@ -8,3 +8,5 @@ access_purchase_sale_security,purchase.sale.security.access,model_purchase_sale_
 access_investment_stock_quotation,investment.stock.quotation.access,model_investment_stock_quotation,base.group_user,1,1,1,1
 access_investment_investment,investment.investment.access,model_investment_investment,base.group_user,1,1,1,1
 access_investment_period_rate,investment.period.rate.access,model_investment_period_rate,base.group_user,1,1,1,1
+access_stock_quote_price,stock.quote.price.access,model_stock_quote_price,base.group_user,1,1,1,1
+

@@ -43,6 +43,8 @@
         'wizard/closing_collaboration.xml',
         'views/ir_sequence.xml',
         'views/menus.xml',
+        'views/trust_request_open_balance.xml',
+        'views/agreement_trust.xml',
         'reports/menu_reports.xml',
         'data/data.xml',
         'security/ir.model.access.csv'

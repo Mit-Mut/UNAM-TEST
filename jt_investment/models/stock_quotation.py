@@ -21,25 +21,25 @@ class InvestmentStockQuotation(models.Model):
     observations = fields.Text("Observations")
     
     #=======Calculation========#
-    daily_nominal = fields.Float(string='Nominal',compute="get_daily_variation",store=True)
-    daily_percentage = fields.Float("Percentage",compute="get_daily_variation",store=True)
-    daily_interest = fields.Float("Interest",compute="get_daily_variation",store=True)
+    daily_nominal = fields.Float(string='Daily Variation Nominal',compute="get_daily_variation",store=True)
+    daily_percentage = fields.Float("Daily Variation Percentage",compute="get_daily_variation",store=True)
+    daily_interest = fields.Float("Daily Variation Interest",compute="get_daily_variation",store=True)
 
-    weekly_nominal = fields.Float(string='Nominal',compute="get_weekly_variation",store=True)
-    weekly_percentage = fields.Float("Percentage",compute="get_weekly_variation",store=True)
-    weekly_interest = fields.Float("Interest",compute="get_weekly_variation",store=True)
+    weekly_nominal = fields.Float(string='Weekly Variation Nominal',compute="get_weekly_variation",store=True)
+    weekly_percentage = fields.Float("Weekly Variation Percentage",compute="get_weekly_variation",store=True)
+    weekly_interest = fields.Float("Weekly Variation Interest",compute="get_weekly_variation",store=True)
 
-    last_30_days_nominal = fields.Float(string='Nominal',compute="get_last_30_days_variation",store=True)
-    last_30_days_percentage = fields.Float("Percentage",compute="get_last_30_days_variation",store=True)
-    last_30_days_interest = fields.Float("Interest",compute="get_last_30_days_variation",store=True)
+    last_30_days_nominal = fields.Float(string='Last 30 Days Nominal',compute="get_last_30_days_variation",store=True)
+    last_30_days_percentage = fields.Float("Last 30 Days Percentage",compute="get_last_30_days_variation",store=True)
+    last_30_days_interest = fields.Float("Last 30 Days Interest",compute="get_last_30_days_variation",store=True)
 
-    current_month_nominal = fields.Float(string='Nominal',compute="get_current_month_variation",store=True)
-    current_month_percentage = fields.Float("Percentage",compute="get_current_month_variation",store=True)
-    current_month_interest = fields.Float("Interest",compute="get_current_month_variation",store=True)
+    current_month_nominal = fields.Float(string='Current month Nominal',compute="get_current_month_variation",store=True)
+    current_month_percentage = fields.Float("Current month Percentage",compute="get_current_month_variation",store=True)
+    current_month_interest = fields.Float("Current month Interest",compute="get_current_month_variation",store=True)
 
-    current_year_nominal = fields.Float(string='Nominal',compute="get_current_year_variation",store=True)
-    current_year_percentage = fields.Float("Percentage",compute="get_current_year_variation",store=True)
-    current_year_interest = fields.Float("Interest",compute="get_current_year_variation",store=True)
+    current_year_nominal = fields.Float(string='Current year Nominal',compute="get_current_year_variation",store=True)
+    current_year_percentage = fields.Float("Current year Percentage",compute="get_current_year_variation",store=True)
+    current_year_interest = fields.Float("Current year Interest",compute="get_current_year_variation",store=True)
 
     @api.depends('date','price_id','price_id.price')
     def get_daily_variation(self):
@@ -125,10 +125,10 @@ class InvestmentStockQuotation(models.Model):
                     else:
                         rec.current_month_percentage = 0
                     
-#                     a1 = rec.current_month_percentage/day_diff
+                    a1 = rec.current_month_percentage/day_diff
 #                     a1 = a1/1
-#                     a1 = a1*360
-                    rec.current_month_interest = rec.current_month_percentage*360
+                    a1 = a1*360
+                    rec.current_month_interest = a1
                 else:
                     rec.current_month_nominal = 0
                     rec.current_month_percentage = 0

@@ -413,6 +413,15 @@ class ResPartner(models.Model):
                 for provider in collaboration.provider_ids:
                     partner_ids.append(provider.partner_id.id)
             args = [['id', 'in', partner_ids]]
+
+#         if 'from_trust_provider' in self._context and 'collaboration_id' in self._context:
+#             collaboration = self.env['bases.collaboration'].browse(self._context.get('collaboration_id'))
+#             partner_ids = []
+#             if collaboration and collaboration.provider_ids:
+#                 for provider in collaboration.provider_ids:
+#                     partner_ids.append(provider.partner_id.id)
+#             args = [['id', 'in', partner_ids]]
+            
         res = super(ResPartner, self).name_search(name, args=args, operator=operator, limit=limit)
         return res
 
@@ -464,6 +473,58 @@ class RequestOpenBalance(models.Model):
     provider_id = fields.Many2one('res.partner', "Provider")
     is_cancel_collaboration = fields.Boolean("Operation of cancel collaboration", default=False)
 
+    #==== fields for trust investment =======#
+    
+    trust_id = fields.Many2one('agreement.trust','Trust')
+    
+    patrimonial_account_id = fields.Many2one('account.account', "Patrimonial Account")
+    investment_account_id = fields.Many2one('account.account', "Investment Account")
+    interest_account_id = fields.Many2one('account.account', "Interest Accounting Account")
+    honorary_account_id = fields.Many2one('account.account', "Honorary Accounting Account")
+    availability_account_id = fields.Many2one('account.account', "Availability Accounting Account")
+    liability_account_id = fields.Many2one('account.account', "Liability Account")
+
+    trust_agreement_file = fields.Binary("Trustee Agreement")
+    trust_agreement_file_name = fields.Char("Trust Agreement File Name")
+    trust_office_file = fields.Binary("Trust Contract Official Letter")
+    trust_office_file_name = fields.Char("Trust Office File Name")
+
+    origin_journal_id = fields.Many2one('account.journal','Origin Bank Account')
+    destination_journal_id = fields.Many2one('account.journal','Destination Bank Account')
+    
+    trust_provider_ids = fields.Many2many('res.partner','rel_req_bal_trust_partner','partner_id','req_id',compute="get_trust_provider_ids")
+    trust_beneficiary_ids = fields.Many2many('res.partner','rel_req_bal_trust_beneficiary','partner_id','req_id',compute="get_trust_beneficiary_ids")
+    bases_collaboration_beneficiary_ids = fields.Many2many('res.partner','rel_req_bal_bases_collaboration_beneficiary','partner_id','req_id',compute="get_bases_collaboration_beneficiary_ids")
+
+    @api.depends('trust_id','trust_id.provider_ids','trust_id.provider_ids.partner_id')
+    def get_trust_provider_ids(self):
+        for rec in self:
+            if rec.trust_id and rec.trust_id.provider_ids:
+                rec.trust_provider_ids = [(6,0,rec.trust_id.provider_ids.mapped('partner_id').ids)]
+            else:
+                rec.trust_provider_ids = [(6,0,[])]
+                
+    @api.depends('trust_id','trust_id.beneficiary_ids','trust_id.beneficiary_ids.employee_id')
+    def get_trust_beneficiary_ids(self):
+        for rec in self:
+            partner_ids = []
+            if rec.trust_id and rec.trust_id.beneficiary_ids:
+                
+                for emp in rec.trust_id.beneficiary_ids.mapped('employee_id'):
+                    if emp.user_id and emp.user_id.partner_id: 
+                        partner_ids.append(emp.user_id.partner_id.id)
+            rec.trust_beneficiary_ids = [(6,0,partner_ids)]
+
+    @api.depends('bases_collaboration_id','bases_collaboration_id.beneficiary_ids','bases_collaboration_id.beneficiary_ids.employee_id')
+    def get_bases_collaboration_beneficiary_ids(self):
+        for rec in self:
+            partner_ids = []
+            if rec.bases_collaboration_id and rec.bases_collaboration_id.beneficiary_ids:
+                for emp in rec.bases_collaboration_id.beneficiary_ids.mapped('employee_id'):
+                    if emp.user_id and emp.user_id.partner_id: 
+                        partner_ids.append(emp.user_id.partner_id.id)
+            rec.bases_collaboration_beneficiary_ids = [(6,0,partner_ids)]
+                
     @api.model
     def create(self, vals):
         res = super(RequestOpenBalance, self).create(vals)
@@ -554,8 +615,20 @@ class RequestOpenBalance(models.Model):
             'investment_account_id': self.investment_account_id and self.investment_account_id.id or False,
             'interest_account_id': self.interest_account_id and self.interest_account_id.id or False,
             'availability_account_id': self.availability_account_id and self.availability_account_id.id or False,
-            'balance_req_id': self.id
-
+            'balance_req_id': self.id,
+            'patrimonial_account_id' : self.patrimonial_account_id and self.patrimonial_account_id.id or False,
+            'investment_account_id' : self.investment_account_id and self.investment_account_id.id or False,
+            'interest_account_id' : self.interest_account_id and self.interest_account_id.id or False,
+            'honorary_account_id' : self.honorary_account_id and self.honorary_account_id.id or False,
+            'availability_account_id' : self.availability_account_id and self.availability_account_id.id or False,
+            'liability_account_id' : self.liability_account_id and self.liability_account_id.id or False,
+            'trust_agreement_file' : self.trust_agreement_file,
+            'trust_agreement_file_name' : self.trust_agreement_file_name,
+            'trust_office_file' : self.trust_office_file,
+            'trust_office_file_name' : self.trust_office_file_name,
+            'trust_id' : self.trust_id and self.trust_id.id or False,
+            'origin_journal_id' : self.origin_journal_id and self.origin_journal_id.id or False,
+            "destination_journal_id" : self.destination_journal_id and self.destination_journal_id.id or False, 
         })
         self.state = 'requested'
         if self.type_of_operation == 'withdrawal_cancellation' and self.bases_collaboration_id:
@@ -603,6 +676,23 @@ class RequestOpenBalanceInvestment(models.Model):
     availability_account_id = fields.Many2one('account.account', "Availability Accounting Account")
     supporting_documentation = fields.Binary("Supporting Documentation")
 
+    origin_journal_id = fields.Many2one('account.journal','Origin Bank Account')
+    destination_journal_id = fields.Many2one('account.journal','Destination Bank Account')
+
+    patrimonial_account_id = fields.Many2one('account.account', "Patrimonial Account")
+    investment_account_id = fields.Many2one('account.account', "Investment Account")
+    interest_account_id = fields.Many2one('account.account', "Interest Accounting Account")
+    honorary_account_id = fields.Many2one('account.account', "Honorary Accounting Account")
+    availability_account_id = fields.Many2one('account.account', "Availability Accounting Account")
+    liability_account_id = fields.Many2one('account.account', "Liability Account")
+
+    trust_agreement_file = fields.Binary("Trustee Agreement")
+    trust_agreement_file_name = fields.Char("Trust Agreement File Name")
+    trust_office_file = fields.Binary("Trust Contract Official Letter")
+    trust_office_file_name = fields.Char("Trust Office File Name")
+
+    trust_id = fields.Many2one('agreement.trust','Trust')
+    
     reason_rejection = fields.Text("Reason for Rejection")
     is_cancel_collaboration = fields.Boolean("Operation of cancel collaboration", default=False)
 
@@ -669,7 +759,9 @@ class RequestOpenBalanceInvestment(models.Model):
                 'default_date': today,
                 'default_employee_id': employee.id if employee else False,
                 'default_fund_type': fund_type,
-                'show_for_agreement':1
+                'show_for_agreement':1,
+                'default_bank_account_id' : self.origin_journal_id and self.origin_journal_id.id or False,
+                'default_desti_bank_account_id' : self.destination_journal_id and self.destination_journal_id.id or False,
             }
         }
 

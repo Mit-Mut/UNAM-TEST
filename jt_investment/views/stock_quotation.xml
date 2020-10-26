@@ -7,8 +7,26 @@
             <field name="model">investment.stock.quotation</field>
             <field name="arch" type="xml">
                 <tree>
+					<field name="date"/>                
                     <field name="name"/>
                		<field name="price"/>
+               		
+     				<field name="daily_nominal" digits="[12,6]"/>
+     				<field name="daily_percentage" digits="[12,6]"/>
+     				<field name="daily_interest" digits="[12,6]"/>
+      				<field name="weekly_nominal" digits="[12,6]"/>
+      				<field name="weekly_percentage" digits="[12,6]"/>
+      				<field name="weekly_interest" digits="[12,6]"/>
+       				<field name="last_30_days_nominal" digits="[12,6]"/>
+       				<field name="last_30_days_percentage" digits="[12,6]"/>
+       				<field name="last_30_days_interest" digits="[12,6]"/>
+                    <field name="current_month_nominal" digits="[12,6]"/>
+                    <field name="current_month_percentage" digits="[12,6]"/>
+                    <field name="current_month_interest" digits="[12,6]"/>
+                    <field name="current_year_nominal" digits="[12,6]"/>
+                    <field name="current_year_percentage" digits="[12,6]"/>
+                    <field name="current_year_interest" digits="[12,6]"/>
+               		
                		<field name="state"/>                    
                 </tree>
             </field>
@@ -35,18 +53,6 @@
                             <group>
                             	<field name="date"/>
                             	<field name="observations"/>
-                            </group>
-                        </group>
-                        <group>
-                            <group>
-                                <field name="bank_rate_id"/>
-                                <field name="cetes_currency_id"/>
-                                <field name="dollar_currency_id"/>
-                            </group>
-                            <group>
-                            	<field name="term"/>
-                            	<field name="term_cetes"/>
-                            	<field name="term_dollar"/>
                             </group>
                         </group>
                         <notebook>

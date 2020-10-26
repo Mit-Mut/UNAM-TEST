@@ -10,3 +10,4 @@ access_request_open_balance_finance,request.open.balance.finance,model_request_o
 access_collaboration_modification,collaboration.modification,model_bases_collaboration_modification,base.group_user,1,1,1,1
 access_collaboration_beneficiary,collaboration.beneficiary,model_collaboration_beneficiary,base.group_user,1,1,1,1
 access_collaboration_providers,collaboration.providers,model_collaboration_providers,base.group_user,1,1,1,1
+access_agreement_trust,agreement.trust,model_agreement_trust,base.group_user,1,1,1,1

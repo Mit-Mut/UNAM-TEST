@@ -48,8 +48,10 @@
                                 <field name="apply_to_basis_collaboration" readonly="1"/>
                                 <field name="origin_resource_id" domain="[('is_it_enabled_for_agreement', '=',  True)]"
                                 attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="beneficiary_id"/>
+                                <field name="bases_collaboration_beneficiary_ids" invisible="1"/>
+                                <field name="beneficiary_id" domain="[('id','in',bases_collaboration_beneficiary_ids)]"/>
                                 <field name="bases_collaboration_id" invisible="1"/>
+                                <field name="trust_id" invisible="1"/>
                                 <field name="provider_id" context="{'from_retier_operation':1,
                                  'collaboration_id': bases_collaboration_id}"/>
                             </group>
@@ -384,6 +386,7 @@
                     <sheet>
                         <group>
                             <group>
+                            	<field name="trust_id" invisible="1"/>
                                 <field name="name" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="operation_number" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="agreement_number" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
@@ -393,10 +396,13 @@
                                 <field name="apply_to_basis_collaboration" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="origin_resource_id" attrs="{'readonly': [('state', '!=', 'draft')]}"
                                        domain="[('is_it_enabled_for_agreement', '=',  True)]"/>
+                                <field name="origin_journal_id" domain="[('type','=','bank')]" attrs="{'invisible':[('trust_id','=',False)],'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="destination_journal_id" domain="[('type','=','bank')]" attrs="{'invisible':[('trust_id','=',False)],'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
                         </group>
                         <group>
                             <field name="reason_rejection" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            
                         </group>
                         <notebook>
                             <page string="Operation" name="operation">
@@ -412,7 +418,7 @@
                                     </group>
                                 </group>
                             </page>
-                             <page string="Supporting Documentaion" name="supporting_documentation">
+                             <page string="Supporting Documentaion" name="supporting_documentation" attrs="{'invisible': [('trust_id', '!=', False)]}">
                                 <group attrs="{'invisible': [('type_of_operation', 'in', ('withdrawal', 'increase', 'retirement', 'withdrawal_cancellation'))]}">
                                     <group>
                                         <field name="cbc_format" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
@@ -429,7 +435,21 @@
                                     </group>
                                 </group>
                             </page>
-                             <page string="Accounts" name="accounts">
+
+                             <page string="Supporting Documentaion" name="supporting_documentation" attrs="{'invisible': [('trust_id', '=', False)]}">
+                        		<group>
+                        			<group>
+                        				<field name="trust_agreement_file_name" invisible="1"/>
+                        				<field name="trust_agreement_file" filename="trust_agreement_file_name" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        			</group>
+                        			<group>
+                        				<field name="trust_office_file_name" invisible="1"/>
+                        				<field name="trust_office_file" filename="trust_office_file_name" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        			</group>
+                        		</group>
+                            </page>
+                            
+                             <page string="Accounts" name="accounts" attrs="{'invisible': [('trust_id', '!=', False)]}">
                                 <group>
                                     <group>
                                         <field name="liability_account_id"
@@ -445,6 +465,22 @@
                                     </group>
                                 </group>
                             </page>
+
+                             <page string="Accounts" name="accounts" attrs="{'invisible': [('trust_id', '=', False)]}">
+                        		<group>
+                        			<group>
+                        				<field name="patrimonial_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        				<field name="investment_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        				<field name="interest_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        			</group>
+                        			<group>
+                        				<field name="honorary_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        				<field name="availability_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        				<field name="liability_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        			</group>
+                        		</group>
+                            </page>
+                            
                         </notebook>
                     </sheet>
                 </form>

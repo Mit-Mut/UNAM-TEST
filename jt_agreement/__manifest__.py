@@ -45,6 +45,10 @@
         'views/menus.xml',
         'views/trust_request_open_balance.xml',
         'views/agreement_trust.xml',
+        'views/trust_modification.xml',
+        'views/background_project.xml',
+        'views/specific_projects.xml',
+        'wizard/cancel_trust_wizard.xml',
         'reports/menu_reports.xml',
         'data/data.xml',
         'security/ir.model.access.csv'

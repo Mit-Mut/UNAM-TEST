@@ -150,9 +150,7 @@ class BasesCollabration(models.Model):
                 'view_type': 'form',
                 # 'view_id': self.env.ref('jt_agreement.view_req_open_balance_tree').id,
                 'view_mode': 'tree,form',
-                'view_ids': [(5, 0, 0),
-                             (0, 0, {self.env.ref("jt_agreement.view_req_open_balance_tree").id}),
-                             (0, 0, {self.env.ref("jt_agreement.view_req_open_balance_form").id})],
+                'views': [(self.env.ref("jt_agreement.view_req_open_balance_tree").id, 'tree'), (self.env.ref("jt_agreement.view_req_open_balance_form").id, 'form')],
                 'res_model': 'request.open.balance',
                 'domain': [('bases_collaboration_id', '=', self.id)],
                 'type': 'ir.actions.act_window',
@@ -633,6 +631,9 @@ class RequestOpenBalance(models.Model):
         self.state = 'requested'
         if self.type_of_operation == 'withdrawal_cancellation' and self.bases_collaboration_id:
             self.bases_collaboration_id.state = 'to_be_cancelled'
+        if self.type_of_operation == 'withdrawal_cancellation' and self.trust_id:
+            self.trust_id.action_to_be_cancelled()
+
 
 class RequestOpenBalanceInvestment(models.Model):
 
@@ -924,6 +925,18 @@ class AccountPayment(models.Model):
                                 balance_req.create_payment_request = True
                             else:
                                 balance_req.bases_collaboration_id.available_bal += fin_req.amount
+
+                        if balance_req.trust_id:
+                            if balance_req.type_of_operation == 'withdrawal_cancellation':
+                                balance_req.trust_id.available_bal = 0
+                                balance_req.trust_id.action_set_cancel()
+                            elif balance_req.type_of_operation == 'withdrawal':
+                                balance_req.trust_id.available_bal = 0
+                                balance_req.trust_id.action_set_cancel()
+                            elif balance_req.type_of_operation == 'retirement':
+                                balance_req.create_payment_request = True
+                            else:
+                                balance_req.trust_id.available_bal += fin_req.amount
         return res
 
 

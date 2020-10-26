@@ -5,3 +5,5 @@ from . import bases_collaboration
 from . import collboration_modification
 from . import create_payment_request
 from . import trust
+from . import background_projects
+from . import specific_projects

@@ -21,10 +21,10 @@
                         <field name="state" widget="statusbar"/>
                         <button name="confirm" type="object" string="Confirm" class="oe_highlight"
                                  attrs="{'invisible': [('state', '!=', 'draft')]}"/>
-                        <!-- 
+                        
                         <button name="cancel" type="object" string="Cancel" class="oe_highlight"
                                  attrs="{'invisible': [('state', '!=', 'valid')]}"/>
-                          -->
+                          
                     </header>
                 
                     <sheet>
@@ -33,12 +33,12 @@
                                     icon="fa-random" attrs="{'invisible': [('state', '=', 'draft')]}">
                                 <field name="total_operations" widget="statinfo"/>
                             </button>
-                            <!-- 
+                             
                              <button name="action_modifications" type="object" class="oe_stat_button"
                                     icon="fa-random" attrs="{'invisible': [('state', '=', 'draft')]}">
                                 <field name="total_modifications" widget="statinfo"/>
                             </button>
-							 -->
+							 
                     	</div>
                     	<group>
 	                        <group>
@@ -46,14 +46,17 @@
 	                            <field name="bank_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 	                            <field name="dependency_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 	                            <field name="dependency_desc" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+	                            <field name="goals" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 	                        </group>
 	                        <group>
 	                            <field name="opening_balance" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+	                            <field name="available_bal" readonly="1"/>
 	                            <field name="origin_resource_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 	                            <field name="executive_name" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 	                            <field name="phone" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 	                            <field name="email" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 	                            <field name="home" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+	                            
 	                        </group>
                         </group>
                         <notebook>
@@ -162,8 +165,14 @@
                         			</group>
                         		</group>
                         	</page>
-                        	<page string="Cancellation Information" name="cancellation_information">
-                        	</page>
+                            <page name="cancellation_info" string="Cancellation Information"
+                                attrs="{'invisible': [('state', 'not in', ('in_force', 'to_be_cancelled', 'cancelled'))]}">
+                                <group>
+                                    <field name="cancel_date"/>
+                                    <field name="supporing_doc"/>
+                                    <field name="reason_cancel"/>
+                                </group>
+                            </page>
                         	
                         </notebook>
                     </sheet>
@@ -179,6 +188,16 @@
 
         <menuitem id="menu_agreement_trust" name="Trusts" parent="menu_collaboration_contracts"
                 action="action_agreement_trust" sequence="2"/>
+
+		<!-- Schedule Transfers -->
+         <record id="action_schedule_transfers_trust" model="ir.actions.server">
+            <field name="name">Withdrawal Schedule</field>
+            <field name="model_id" ref="jt_agreement.model_agreement_trust"/>
+            <field name="binding_model_id" ref="jt_agreement.model_agreement_trust"/>
+            <field name="state">code</field>
+            <field name="binding_view_types">list</field>
+            <field name="code">action = records.action_schedule_withdrawal()</field>
+        </record>
 
     </data>
 </odoo>

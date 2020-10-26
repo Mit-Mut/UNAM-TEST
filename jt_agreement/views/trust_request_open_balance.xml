@@ -76,7 +76,8 @@
                                 </group>
                             </page>
                              <page string="Supporting Documentaion" name="supporting_documentation">
-                        		<group>
+                        		<group attrs="{'invisible': [('type_of_operation', 'in', ('withdrawal', 'increase',
+                                'retirement','withdrawal_cancellation', 'increase_by_closing', 'withdrawal_closure'))]}">
                         			<group>
                         				<field name="trust_agreement_file_name" invisible="1"/>
                         				<field name="trust_agreement_file" filename="trust_agreement_file_name" />
@@ -86,6 +87,13 @@
                         				<field name="trust_office_file" filename="trust_office_file_name" />
                         			</group>
                         		</group>
+                                 <group attrs="{'invisible': [('type_of_operation', 'not in', ('withdrawal', 'increase',
+                                 'retirement', 'withdrawal_cancellation', 'withdrawal_closure', 'increase_by_closing'))]}">
+                                    <group>
+                                        <field name="supporting_documentation"/>
+                                    </group>
+                                </group>
+                        		
                             </page>
                              <page string="Accounts" name="accounts">
                         		<group>

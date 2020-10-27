@@ -20,7 +20,7 @@
             
                 <field name="workstation_id" position="after">
                     <field name="dependancy_id" context="{'show_for_supplier_payment':True}" attrs="{'readonly':[('payment_state', '!=', 'draft')]}"/>
-                    <field name="sub_dependancy_id" context="{'show_for_supplier_payment':True}" attrs="{'readonly':[('payment_state', '!=', 'draft')]}"/>
+                    <field name="sub_dependancy_id" domain="[('dependency_id','=',dependancy_id)]" context="{'show_for_supplier_payment':True}" attrs="{'readonly':[('payment_state', '!=', 'draft')]}"/>
                     <field name="payment_place_id"  attrs="{'readonly':[('payment_state', '!=', 'draft')]}"/>
                 </field>
                 <field name="administrative_secretary_id" position="attributes">

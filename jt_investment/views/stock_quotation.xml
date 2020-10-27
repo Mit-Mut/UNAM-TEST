@@ -9,7 +9,7 @@
                 <tree>
 					<field name="date"/>                
                     <field name="name"/>
-               		<field name="price"/>
+               		<field name="price" digits="[12,6]"/>
                		
      				<field name="daily_nominal" digits="[12,6]"/>
      				<field name="daily_percentage" digits="[12,6]"/>

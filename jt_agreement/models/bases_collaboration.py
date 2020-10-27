@@ -480,7 +480,6 @@ class RequestOpenBalance(models.Model):
     interest_account_id = fields.Many2one('account.account', "Interest Accounting Account")
     honorary_account_id = fields.Many2one('account.account', "Honorary Accounting Account")
     availability_account_id = fields.Many2one('account.account', "Availability Accounting Account")
-    liability_account_id = fields.Many2one('account.account', "Liability Account")
 
     trust_agreement_file = fields.Binary("Trustee Agreement")
     trust_agreement_file_name = fields.Char("Trust Agreement File Name")
@@ -493,6 +492,20 @@ class RequestOpenBalance(models.Model):
     trust_provider_ids = fields.Many2many('res.partner','rel_req_bal_trust_partner','partner_id','req_id',compute="get_trust_provider_ids")
     trust_beneficiary_ids = fields.Many2many('res.partner','rel_req_bal_trust_beneficiary','partner_id','req_id',compute="get_trust_beneficiary_ids")
     bases_collaboration_beneficiary_ids = fields.Many2many('res.partner','rel_req_bal_bases_collaboration_beneficiary','partner_id','req_id',compute="get_bases_collaboration_beneficiary_ids")
+
+    #==== fields for patrimonial =======#
+    
+    patrimonial_resources_id = fields.Many2one('patrimonial.resources','Patrimonial Resources')
+    patrimonial_equity_account_id = fields.Many2one('account.account', "Equity accounting account")
+    patrimonial_yield_account_id = fields.Many2one('account.account', "Yield account of the productive investment account")
+    
+    
+    @api.constrains('type_of_operation')
+    def _check_type_of_operation(self):
+        if self.type_of_operation and self.bases_collaboration_id and self.type_of_operation=='open_bal':
+            records = self.env['request.open.balance'].search([('id','!=',self.id),('bases_collaboration_id','=',self.bases_collaboration_id.id),('type_of_operation','=','open_bal')])
+            if records: 
+                raise ValidationError(_('Operation of opening balance can be performed just one time in each agreement'))
 
     @api.depends('trust_id','trust_id.provider_ids','trust_id.provider_ids.partner_id')
     def get_trust_provider_ids(self):
@@ -547,9 +560,13 @@ class RequestOpenBalance(models.Model):
         payment_req_obj = self.env['payment.request']
         payment_reqs = payment_req_obj.search([('balance_req_id', '=', self.id)])
         beneficiary = False
-        if self.beneficiary_id:
-            beneficiary = self.env['collaboration.beneficiary'].search([
-            ('collaboration_id', '=', self.bases_collaboration_id.id), ('partner_id', '=', self.beneficiary_id.id)])
+        if self.beneficiary_id and self.bases_collaboration_id:
+            user = self.env['res.users'].sudo().search([('partner_id','=',self.beneficiary_id.id)],limit=1)
+            if user: 
+                emp_id = self.env['hr.employee'].sudo().search([('user_id','=',user.id)],limit=1)
+                if emp_id:
+                    beneficiary = self.env['collaboration.beneficiary'].search([
+                    ('collaboration_id', '=', self.bases_collaboration_id.id), ('employee_id', '=', emp_id.id)])
         if payment_reqs:
             return {
                 'name': 'Payment Requests',
@@ -615,11 +632,8 @@ class RequestOpenBalance(models.Model):
             'availability_account_id': self.availability_account_id and self.availability_account_id.id or False,
             'balance_req_id': self.id,
             'patrimonial_account_id' : self.patrimonial_account_id and self.patrimonial_account_id.id or False,
-            'investment_account_id' : self.investment_account_id and self.investment_account_id.id or False,
             'interest_account_id' : self.interest_account_id and self.interest_account_id.id or False,
             'honorary_account_id' : self.honorary_account_id and self.honorary_account_id.id or False,
-            'availability_account_id' : self.availability_account_id and self.availability_account_id.id or False,
-            'liability_account_id' : self.liability_account_id and self.liability_account_id.id or False,
             'trust_agreement_file' : self.trust_agreement_file,
             'trust_agreement_file_name' : self.trust_agreement_file_name,
             'trust_office_file' : self.trust_office_file,
@@ -627,6 +641,9 @@ class RequestOpenBalance(models.Model):
             'trust_id' : self.trust_id and self.trust_id.id or False,
             'origin_journal_id' : self.origin_journal_id and self.origin_journal_id.id or False,
             "destination_journal_id" : self.destination_journal_id and self.destination_journal_id.id or False, 
+            'patrimonial_id' : self.patrimonial_resources_id and self.patrimonial_resources_id.id or False,
+            'patrimonial_yield_account_id' : self.patrimonial_yield_account_id and self.patrimonial_yield_account_id.id or False,
+            'patrimonial_equity_account_id' : self.patrimonial_equity_account_id and self.patrimonial_equity_account_id.id or False,
         })
         self.state = 'requested'
         if self.type_of_operation == 'withdrawal_cancellation' and self.bases_collaboration_id:
@@ -694,6 +711,10 @@ class RequestOpenBalanceInvestment(models.Model):
 
     trust_id = fields.Many2one('agreement.trust','Trust')
     
+    patrimonial_id = fields.Many2one('patrimonial.resources','Patrimonial')
+    patrimonial_yield_account_id = fields.Many2one('account.account', "Yield account of the productive investment account")
+    patrimonial_equity_account_id = fields.Many2one('account.account', "Equity accounting account")
+    
     reason_rejection = fields.Text("Reason for Rejection")
     is_cancel_collaboration = fields.Boolean("Operation of cancel collaboration", default=False)
 
@@ -738,8 +759,13 @@ class RequestOpenBalanceInvestment(models.Model):
     def approve_investment(self):
         today = datetime.today().date()
         user = self.env.user
+        unit_req_transfer_id = False
         employee = self.env['hr.employee'].search([('user_id', '=', user.id)], limit=1)
+        if employee and employee.dependancy_id:
+            unit_req_transfer_id = employee.dependancy_id.id
+              
         collaboration = False
+        
         if self.balance_req_id and self.balance_req_id.bases_collaboration_id:
             collaboration = self.balance_req_id.bases_collaboration_id
         fund_type = False
@@ -763,6 +789,7 @@ class RequestOpenBalanceInvestment(models.Model):
                 'show_for_agreement':1,
                 'default_bank_account_id' : self.origin_journal_id and self.origin_journal_id.id or False,
                 'default_desti_bank_account_id' : self.destination_journal_id and self.destination_journal_id.id or False,
+                'default_unit_req_transfer_id' : unit_req_transfer_id,
             }
         }
 
@@ -825,6 +852,8 @@ class RequestOpenBalanceFinance(models.Model):
         action['context'] = {}
         if self.payment_ids:
             action['domain'] = [('id', 'in', self.payment_ids.ids)]
+        else:
+            action['domain'] = [('id', 'in', [])]
         return action
 
     def count_payment(self):

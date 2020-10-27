@@ -49,6 +49,8 @@
         'views/background_project.xml',
         'views/specific_projects.xml',
         'wizard/cancel_trust_wizard.xml',
+        'views/patrimonial_resources.xml',
+        'views/patrimonial_request_open_balance.xml',
         'reports/menu_reports.xml',
         'data/data.xml',
         'security/ir.model.access.csv'

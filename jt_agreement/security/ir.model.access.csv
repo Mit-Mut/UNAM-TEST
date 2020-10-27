@@ -12,5 +12,7 @@ access_collaboration_beneficiary,collaboration.beneficiary,model_collaboration_b
 access_collaboration_providers,collaboration.providers,model_collaboration_providers,base.group_user,1,1,1,1
 access_agreement_trust,agreement.trust,model_agreement_trust,base.group_user,1,1,1,1
 access_agreement_trust_modification,agreement.trust.modification,model_agreement_trust_modification,base.group_user,1,1,1,1
-access_background_project,background_project,model_background_project,base.group_user,1,1,1,1
-access_specific_project,specific_project,model_specific_project,base.group_user,1,1,1,1
+access_background_project,background.project,model_background_project,base.group_user,1,1,1,1
+access_specific_project,specific.project,model_specific_project,base.group_user,1,1,1,1
+access_patrimonial_resources,patrimonial.resources,model_patrimonial_resources,base.group_user,1,1,1,1
+

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="patrimonial_resources_tree_view" model="ir.ui.view">
+            <field name="name">patrimonial.resources.tree.view</field>
+            <field name="model">patrimonial.resources</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="patrimonial_resources_form_view" model="ir.ui.view">
+            <field name="name">patrimonial.resources.form.view</field>
+            <field name="model">patrimonial.resources</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <field name="state" widget="statusbar"/>
+                        <button name="confirm" type="object" string="Confirm" class="oe_highlight"
+                                 attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                        
+                        <button name="cancel" type="object" string="Cancel" class="oe_highlight"
+                                 attrs="{'invisible': [('state', '!=', 'valid')]}"/>
+                          
+                    </header>
+                
+                    <sheet>
+                    	 
+                         <div class="oe_button_box" name="button_box">
+                            <button name="action_operations" type="object" class="oe_stat_button"
+                                    icon="fa-random" attrs="{'invisible': [('state', '=', 'draft')]}">
+                                <field name="total_operations" widget="statinfo"/>
+                            </button>
+                             
+                    	</div>
+                    	
+                    	<group>
+	                        <group>
+	                            <field name="name" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+	                            <field name="key" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+	                            <field name="opening_balance" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+	                            <field name="available_bal" readonly="1"/>
+	                            
+	                            <field name="dependency_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+	                            <field name="desc_dependency" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+	                        </group>
+	                        <group>
+	                            <field name="subdependency_id" domain="[('dependency_id','=',dependency_id)]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+	                            <field name="desc_subdependency" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+	                            <field name="origin_resource_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+	                            <field name="goals" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+	                        	<field name="registration_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+	                            <field name="background_project_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+	                            <field name="specifics_project_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+	                            
+	                        </group>
+                        </group>
+                        <notebook>
+                        	<page string="Accounts" name="accounts">
+                        		<group>
+                        			<group>
+		                        		<field name="patrimonial_equity_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+		                        		<field name="patrimonial_liability_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+	                        		</group>
+	                        		<group>
+	                        			<field name="patrimonial_yield_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+	                        		</group>
+                        		</group>
+                        	</page>
+                        	<page string="Collaboration Base Contacts" name="collaboration_base_contacts">
+                        		<group>
+                        			<group>
+                        				<field name="employee_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        				<field name="job_id" />
+                        				<field name="work_phone"/>
+                        			</group>
+                        			<group>
+                        				<field name="unit_address" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        				<field name="observations" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        			</group>
+                        		</group>
+                        		<group>
+                        			<group>
+                        				<field name="administrative_employee_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        				<field name="administrative_work_phone" />
+                        			</group>
+                        			<group>
+                        				<field name="direct_responsable_employee_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        				<field name="direct_responsable_work_phone" />
+                        				<field name="direct_responsable_email" />
+                        			</group>
+                        		</group>
+                        	</page>
+                        	<page string="Beneficiaries" name="beneficiaries">
+                                <group string="Beneficiaries Sectional">
+                                    <group>
+                                        <field name="no_beneficiary_allowed"
+                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="beneficiary_ids" nolabel="1"
+                                               attrs="{'readonly': [('state', '!=', 'draft')]}">
+                                            <tree>
+                                                <field name="employee_id" required="1"/>
+                                                <field name="bank_id" context="{'from_agreement':1}"
+                                                  domain="[('employee_id', '=', employee_id)]"/>
+                                                <field name="account_number"/>
+                                                <field name="amount"/>
+                                                <field name="validity_start"/>
+                                                <field name="validity_final_beneficiary"/>
+                                                <field name="withdrawal_sch_date"/>
+                                            </tree>
+                                            <form>
+                                                <group>
+                                                    <group>
+                                                        <field name="employee_id" required="1"/>
+                                                        <field name="bank_id"
+                                                               domain="[('employee_id', '=', employee_id)]"
+                                                               context="{'from_agreement':1}"/>
+                                                        <field name="account_number"/>
+                                                        <field name="payment_rule_id"/>
+                                                    </group>
+                                                     <group>
+                                                         <field name="amount"/>
+                                                        <field name="validity_start"/>
+                                                        <field name="validity_final_beneficiary"/>
+                                                        <field name="withdrawal_sch_date"/>
+                                                    </group>
+                                                </group>
+                                            </form>
+                                        </field>
+                                    </group>
+                                </group>                        	
+                        	</page>
+                        	<page string="Supporting Documentation" name="supporting_documentation">
+                        		<group>
+                        			<group>
+                        				<field name="fund_registration_file_name" invisible="1"/>
+                        				<field name="fund_registration_file" attrs="{'readonly': [('state', '!=', 'draft')]}" filename="trust_agreement_file_name" required="1"/>
+                        			</group>
+                        			<group>
+                        				<field name="fund_office_file_name" invisible="1"/>
+                        				<field name="fund_office_file" attrs="{'readonly': [('state', '!=', 'draft')]}" filename="trust_office_file_name" required="1"/>
+                        			</group>
+                        		</group>
+                        	</page>
+                            <page name="cancellation_info" string="Cancellation Information"
+                                attrs="{'invisible': [('state', 'not in', ('in_force', 'to_be_cancelled', 'cancelled'))]}">
+                                <group>
+                                    <field name="cancel_date"/>
+                                    <field name="supporing_doc"/>
+                                    <field name="reason_cancel"/>
+                                </group>
+                            </page>
+                        	
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_patrimonial_resources" model="ir.actions.act_window">
+            <field name="name">Patrimonial Resources</field>
+            <field name="res_model">patrimonial.resources</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_patrimonial_resources" name="Patrimonial Resources" parent="menu_collaboration_contracts"
+                action="action_patrimonial_resources" sequence="4"/>
+
+		<!-- Schedule Transfers -->
+         <record id="action_schedule_transfers_trust" model="ir.actions.server">
+            <field name="name">Withdrawal Schedule</field>
+            <field name="model_id" ref="jt_agreement.model_patrimonial_resources"/>
+            <field name="binding_model_id" ref="jt_agreement.model_patrimonial_resources"/>
+            <field name="state">code</field>
+            <field name="binding_view_types">list</field>
+            <field name="code">action = records.action_schedule_withdrawal()</field>
+        </record>
+    </data>
+</odoo>

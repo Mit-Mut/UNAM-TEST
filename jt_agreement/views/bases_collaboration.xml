@@ -173,6 +173,7 @@
                                 <field name="available_bal" readonly="1"/>
                                 <field name="agreement_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="fund_type_id" readonly="1" force_save="1"/>
+                                <field name="fund_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="dependency_obs" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
                             <group>
@@ -348,6 +349,7 @@
             <field name="name">Bases of Collabration</field>
             <field name="res_model">bases.collaboration</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">{'from_agreement':True}</field>
         </record>
 
           <record id="view_req_open_balance_tree_invest" model="ir.ui.view">

@@ -36,6 +36,7 @@ class ExpenditureBudget(models.Model):
     _description = 'Expenditure Budget'
     _rec_name = 'name'
 
+    @api.depends('success_line_ids','success_line_ids.imported','success_line_ids.state','state')
     def _get_count(self):
         for record in self:
             record.record_number = len(record.success_line_ids)
@@ -60,7 +61,8 @@ class ExpenditureBudget(models.Model):
         'validate': [('readonly', True)]}, tracking=True)
     to_date = fields.Date(string='To', states={
         'validate': [('readonly', True)]}, tracking=True)
-
+    
+    @api.depends('total_budget_validate','state','success_line_ids','success_line_ids.authorized')    
     def _compute_total_budget(self):
         for budget in self:
             if budget.state in ('validate', 'done'):
@@ -70,14 +72,15 @@ class ExpenditureBudget(models.Model):
                     budget.success_line_ids.mapped('authorized'))
 
     total_budget = fields.Float(
-        string='Total budget', tracking=True, compute="_compute_total_budget")
+        string='Total budget', tracking=True, compute="_compute_total_budget",store=True)
     total_budget_validate = fields.Float(string='Total budget', copy=False)
 
     record_number = fields.Integer(
-        string='Number of records', compute='_get_count')
+        string='Number of records', compute='_get_count',store=True)
     import_record_number = fields.Integer(
-        string='Number of imported records', readonly=True, compute='_get_count')
+        string='Number of imported records', readonly=True, compute='_get_count',store=True)
 
+    @api.depends('success_line_ids','success_line_ids.start_date','success_line_ids.end_date','success_line_ids.assigned','success_line_ids.state','state')
     def _compute_total_quarter_budget(self):
         for budget in self:
             total_quarter_budget = 0
@@ -87,7 +90,7 @@ class ExpenditureBudget(models.Model):
             budget.total_quarter_budget = total_quarter_budget
 
     total_quarter_budget = fields.Float(
-        string='Total 1st Quarter', tracking=True, compute="_compute_total_quarter_budget")
+        string='Total 1st Quarter', tracking=True, compute="_compute_total_quarter_budget",store=True)
     journal_id = fields.Many2one('account.journal')
     move_line_ids = fields.One2many('account.move.line', 'budget_id', string="Journal Items")
 
@@ -106,6 +109,7 @@ class ExpenditureBudget(models.Model):
             res.update({'journal_id': budget_app_jou.id})
         return res
 
+    @api.depends('line_ids','line_ids.state','success_line_ids','success_line_ids.state','state')
     def _get_imported_lines_count(self):
         for record in self:
             record.imported_lines_count = len(record.line_ids)
@@ -151,10 +155,11 @@ class ExpenditureBudget(models.Model):
         ('done', 'Done')], default='draft', required=True, string='State', tracking=True)
 
     imported_lines_count = fields.Integer(
-        string='Imported Lines', compute='_get_imported_lines_count')
+        string='Imported Lines', compute='_get_imported_lines_count',store=True)
     success_lines_count = fields.Integer(
-        string='Success Lines', compute='_get_imported_lines_count')
+        string='Success Lines', compute='_get_imported_lines_count',store=True)
 
+    @api.depends('line_ids','line_ids.state','success_line_ids','success_line_ids.state','state')
     def _compute_total_rows(self):
         for budget in self:
             budget.draft_rows = self.env['expenditure.budget.line'].search_count(
@@ -176,13 +181,13 @@ class ExpenditureBudget(models.Model):
     fialed_row_filename = fields.Char(
         string='File name', default="Failed_Rows.txt")
     draft_rows = fields.Integer(
-        string='Failed Rows', compute="_compute_total_rows")
+        string='Failed Rows', compute="_compute_total_rows",store=True)
     failed_rows = fields.Integer(
-        string='Failed Rows', compute="_compute_total_rows")
+        string='Failed Rows', compute="_compute_total_rows",store=True)
     success_rows = fields.Integer(
-        string='Success Rows', compute="_compute_total_rows")
+        string='Success Rows', compute="_compute_total_rows",store=True)
     total_rows = fields.Integer(
-        string="Total Rows", compute="_compute_total_rows")
+        string="Total Rows", compute="_compute_total_rows",store=True)
 
     is_validation_process_start = fields.Boolean(default=False)
 

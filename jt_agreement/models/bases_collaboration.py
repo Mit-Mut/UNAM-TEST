@@ -37,6 +37,7 @@ class BasesCollabration(models.Model):
     available_bal = fields.Monetary("Available Balance")
     agreement_type_id = fields.Many2one('agreement.agreement.type', 'Agreement Type')
     fund_type_id = fields.Many2one('fund.type', "Fund Type")
+    fund_id = fields.Many2one('agreement.fund','Fund') 
     dependency_obs = fields.Text("Dependency Observations")
     dependency_id = fields.Many2one('dependency', "Unit No.")
     desc_dependency = fields.Text("Description Dependency")
@@ -582,7 +583,8 @@ class RequestOpenBalance(models.Model):
                             'default_amount': self.opening_balance,
                              'default_beneficiary_id': self.beneficiary_id and self.beneficiary_id.id or False,
                              'default_bank_id': beneficiary.bank_id.id if beneficiary and beneficiary.bank_id else False,
-                             'default_account_number': beneficiary.account_number if beneficiary else ''
+                             'default_account_number': beneficiary.account_number if beneficiary else '',
+                             'from_agreement':True,
                             }
             }
         else:
@@ -599,7 +601,8 @@ class RequestOpenBalance(models.Model):
                             'default_amount': self.opening_balance,
                             'default_beneficiary_id': self.beneficiary_id and self.beneficiary_id.id or False,
                             'default_bank_id': beneficiary.bank_id.id if beneficiary and beneficiary.bank_id else False,
-                            'default_account_number': beneficiary.account_number if beneficiary else ''
+                            'default_account_number': beneficiary.account_number if beneficiary else '',
+                            'from_agreement':True,
                             }
             }
 
@@ -650,6 +653,8 @@ class RequestOpenBalance(models.Model):
             self.bases_collaboration_id.state = 'to_be_cancelled'
         if self.type_of_operation == 'withdrawal_cancellation' and self.trust_id:
             self.trust_id.action_to_be_cancelled()
+        if self.type_of_operation == 'withdrawal_cancellation' and self.patrimonial_resources_id:
+            self.patrimonial_resources_id.action_to_be_cancelled()
 
 
 class RequestOpenBalanceInvestment(models.Model):
@@ -718,7 +723,26 @@ class RequestOpenBalanceInvestment(models.Model):
     reason_rejection = fields.Text("Reason for Rejection")
     is_cancel_collaboration = fields.Boolean("Operation of cancel collaboration", default=False)
 
+    #====== fields for the Investment Funds View   ====>
 
+    fund_id = fields.Many2one('agreement.fund','Fund')
+    fund_key = fields.Char(related='fund_id.fund_key',string="Password of the Fund")
+    
+    fund_type_id = fields.Many2one('fund.type','Type of Fund')
+    type_of_agreement_id = fields.Many2one('agreement.agreement.type','Type of Agreement')
+    bases_collaboration_id = fields.Many2one('bases.collaboration','Name of Agreement')
+    is_fund = fields.Boolean(default=False,string="Fund")
+
+    dependency_id = fields.Many2one('dependency', "Dependency")
+    subdependency_id = fields.Many2one('sub.dependency', "Sub Dependency")
+    dependency_holder = fields.Char("Dependency Holder")
+    responsible_user_id = fields.Many2one('res.users',string='Responsible')
+    type_of_resource = fields.Char("Type Of Resource")
+
+    bank_id = fields.Many2one('res.partner.bank', "Bank")
+    account_number = fields.Char(related="bank_id.acc_number",string='Account Number')
+    
+    
     @api.model
     def create(self, vals):
         res = super(RequestOpenBalanceInvestment, self).create(vals)
@@ -952,6 +976,7 @@ class AccountPayment(models.Model):
                                 balance_req.bases_collaboration_id.state = 'cancelled'
                             elif balance_req.type_of_operation == 'retirement':
                                 balance_req.create_payment_request = True
+                                balance_req.bases_collaboration_id.available_bal -= fin_req.amount
                             else:
                                 balance_req.bases_collaboration_id.available_bal += fin_req.amount
 
@@ -964,8 +989,23 @@ class AccountPayment(models.Model):
                                 balance_req.trust_id.action_set_cancel()
                             elif balance_req.type_of_operation == 'retirement':
                                 balance_req.create_payment_request = True
+                                balance_req.trust_id.available_bal -= fin_req.amount
                             else:
                                 balance_req.trust_id.available_bal += fin_req.amount
+
+                        if balance_req.patrimonial_resources_id:
+                            if balance_req.type_of_operation == 'withdrawal_cancellation':
+                                balance_req.patrimonial_resources_id.available_bal = 0
+                                balance_req.patrimonial_resources_id.action_set_cancel()
+                            elif balance_req.type_of_operation == 'withdrawal':
+                                balance_req.patrimonial_resources_id.available_bal = 0
+                                balance_req.patrimonial_resources_id.action_set_cancel()
+                            elif balance_req.type_of_operation == 'retirement':
+                                balance_req.create_payment_request = True
+                                balance_req.patrimonial_resources_id.available_bal -= fin_req.amount
+                            else:
+                                balance_req.patrimonial_resources_id.available_bal += fin_req.amount
+                                
         return res
 
 

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+         <record id="request_transfer_tree_view" model="ir.ui.view">
+            <field name="name">Request Transfer List view</field>
+            <field name="model">request.transfer</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="invoice"/>
+                    <field name="user_id"/>
+                </tree>
+            </field>
+         </record>
+
+         <record id="request_transfer_from_view" model="ir.ui.view">
+            <field name="name">Request Transfer Form view</field>
+            <field name="model">request.transfer</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="generate_request" string="Generate Request" class="oe_highlight"
+                                type="object" attrs="{'invisible': [('status', '!=', 'draft')]}"/>
+                        <field name="status" widget="statusbar" />
+                    </header>
+                    <sheet>
+                         <div class="oe_title">
+                            <h1><field name="invoice" attrs="{'readonly': [('status', '!=', 'draft')]}" nolabel="1"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="application_date"  attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                                <field name="request_area" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                                <field name="user_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                                <field name="destination_journal_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                                <field name="destination_bank_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                                <field name="currency_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                                <field name="amount_req_tranfer" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                            </group>
+                            <group>
+                                <field name="handover_date" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                                <field name="application_concept" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                                <field name="origin_journal_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                                <field name="origin_bank_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                                <field name="aggrement" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+         </record>
+
+        <record id="request_transfer_action" model="ir.actions.act_window">
+            <field name="name">Requests to Transfer</field>
+            <field name="res_model">request.transfer</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'from_conacyt':1}</field>
+        </record>
+
+        <menuitem id="menu_request_transfer" name="Request for transfer"
+                  action="request_transfer_action"
+                  parent="menu_conacyt"/>
+
+     </data>
+</odoo>

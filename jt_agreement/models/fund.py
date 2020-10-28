@@ -21,24 +21,11 @@
 #
 ##############################################################################
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
-from datetime import datetime
 
-class RequestOpenBalanceInvestment(models.Model):
+class AgreementFund(models.Model):
 
-    _inherit = 'request.open.balance.invest'
+    _name = 'agreement.fund'
+    _description = "Funds"
 
-    type_of_investment = fields.Selection([('productive_account','Productive Account'),
-                                           ('securities','Securities'),('money_market','Money Market')
-                                           ],string="Type Of Investment")
-    
-    type_of_financial_products = fields.Selection([
-                                           ('CETES','CETES'),('UDIBONOS','UDIBONOS'),
-                                           ('BondsNotes','BondsNotes'),('Promissory','Promissory'),
-                                           ],string="Type Of Investment")
-
-    
-    def set_to_requested(self):
-        self.state = 'requested'
-    
-    
+    fund_key = fields.Char("Fund Key")
+    name = fields.Char("Fund Name")

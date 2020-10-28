@@ -29,12 +29,13 @@
     'maintainer': 'Jupical Technologies Pvt. Ltd.',
     'website': 'http://www.jupical.com',
     'license': 'AGPL-3',
-    'depends': ['jt_finance', 'jt_payroll_payment'],
+    'depends': ['jt_finance', 'jt_payroll_payment','jt_agreement'],
     'data': [
         'views/rejection_checks_views.xml',
         'views/project_registry_views.xml',
         'views/request_account_views.xml',
-        'security/ir.model.access.csv'
+        'views/request_trasfer_view.xml',
+        'security/ir.model.access.csv',
     ],
     'application': False,
     'installable': True,

@@ -148,6 +148,16 @@ class PatrimonialResources(models.Model):
     def action_set_cancel(self):
         self.state = 'cancelled'
 
+    def cancel(self):
+        return {
+            'name': 'Cancel Patrimonial',
+            'view_mode': 'form',
+            'view_id': self.env.ref('jt_agreement.cancel_patrimonial_form_view').id,
+            'res_model': 'cancel.patrimonial',
+            'type': 'ir.actions.act_window',
+            'target': 'new'
+        }
+
     def action_operations(self):
         if self.request_open_balance_ids:
             return {

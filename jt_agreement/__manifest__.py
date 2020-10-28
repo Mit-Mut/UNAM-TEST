@@ -42,6 +42,7 @@
         'wizard/cancel_collaboration.xml',
         'wizard/closing_collaboration.xml',
         'views/ir_sequence.xml',
+        'views/funds.xml',
         'views/menus.xml',
         'views/trust_request_open_balance.xml',
         'views/agreement_trust.xml',
@@ -51,6 +52,7 @@
         'wizard/cancel_trust_wizard.xml',
         'views/patrimonial_resources.xml',
         'views/patrimonial_request_open_balance.xml',
+        'wizard/cancel_patrimonial_resource.xml',
         'reports/menu_reports.xml',
         'data/data.xml',
         'security/ir.model.access.csv'

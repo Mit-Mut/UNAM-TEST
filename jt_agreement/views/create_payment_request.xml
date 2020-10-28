@@ -27,7 +27,7 @@
                                     <field name="reference"/>
                                     <field name="counter_receipt_sheet"/>
                                     <field name="beneficiary_id"/>
-                                    <field name="bank_id"/>
+                                    <field name="bank_id" context="{'from_agreement':True}"/>
                                     <field name="account_number"/>
                                 </group>
                             </group>

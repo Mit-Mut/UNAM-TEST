@@ -366,7 +366,10 @@ class DetailsBudgetSummaryReport(models.TransientModel):
 
         budget_lines = b_line_obj.search(domain)
         program_codes = budget_lines.mapped('program_code_id')
-        
+        program_codes_list = [0]
+        if program_codes:
+            program_codes_list = program_codes.ids
+            
         col_query = '''select yc.name as year,pp.key_unam as program,sp.sub_program as sub_program,
                         dp.dependency as dependency,sdp.sub_dependency as sub_dependency,expi.item as exp_name,
                         pc.check_digit as check_digit,ro.key_origin as resource_origin_id,
@@ -464,7 +467,7 @@ class DetailsBudgetSummaryReport(models.TransientModel):
                             
                             start,end,q1_start_date,q1_end_date,q2_start_date,q2_end_date,q3_start_date,q3_end_date,q4_start_date,q4_end_date,
                             
-                            tuple(program_codes.ids),'100','999']
+                            tuple(program_codes_list),'100','999']
         
 #         tuple_where_data.append()
 #         tuple_where_data.append('100')
@@ -474,287 +477,289 @@ class DetailsBudgetSummaryReport(models.TransientModel):
         sql_query =  col_query +  from_query + where_query + order_by
         self.env.cr.execute(sql_query,tuple(tuple_where_data))
         my_datas = self.env.cr.dictfetchall()
-        if my_datas:
-            wb1 = xlwt.Workbook(encoding='utf-8')
-            if self.env.user.lang == 'es_MX':
-                ws1 = wb1.add_sheet('Reporte Detallado de Presupuesto')
-            else:         
-                ws1 = wb1.add_sheet('Details Budget Report')
-            fp = BytesIO()
-            header_style = xlwt.easyxf('font: bold 1')
-            float_sytle = xlwt.easyxf(num_format_str = '$#,##0.00')
-            #total_style = xlwt.easyxf('num_format_str :0.00;' 'font: bold 1;' )
 
-            ezxf = xlwt.easyxf
-            total_style = ezxf(
-                'font: italic true; pattern: pattern solid, fore_colour grey25',num_format_str='$#,##0.00')
+        wb1 = xlwt.Workbook(encoding='utf-8')
+        if self.env.user.lang == 'es_MX':
+            ws1 = wb1.add_sheet('Reporte Detallado de Presupuesto')
+        else:         
+            ws1 = wb1.add_sheet('Details Budget Report')
+        fp = BytesIO()
+        
+        #if my_datas:
+        header_style = xlwt.easyxf('font: bold 1')
+        float_sytle = xlwt.easyxf(num_format_str = '$#,##0.00')
+        #total_style = xlwt.easyxf('num_format_str :0.00;' 'font: bold 1;' )
+
+        ezxf = xlwt.easyxf
+        total_style = ezxf(
+            'font: italic true; pattern: pattern solid, fore_colour grey25',num_format_str='$#,##0.00')
 #             ws1.set_panes_frozen(True)
 #             ws1.set_horz_split_pos(1) 
 #             ws1.set_vert_split_pos(18) 
-            row = 0
+        row = 0
+        col = 0
+        if self.env.user.lang == 'es_MX':
+            ws1.write_merge(row, row,col,col+19, 'Reporte Detallado de Presupuesto',header_style)
+        else:
+            ws1.write_merge(row, row,col,col+19, 'Details Budget Report',header_style)
+        
+        row+=1
+        col = 0
+        row,col = self.add_report_header(row,col,header_style,ws1)
+        total_assigned = 0
+        total_assigned_1st = 0
+        total_assigned_2nd = 0
+        total_assigned_3rd = 0
+        total_assigned_4th = 0
+        
+        total_annual_expansion = 0
+        total_annual_expansion_q1 = 0
+        total_annual_expansion_q2 = 0
+        total_annual_expansion_q3 = 0
+        total_annual_expansion_q4 = 0
+        
+        total_annual_reduction = 0
+        total_annual_reduction_q1 = 0
+        total_annual_reduction_q2 = 0
+        total_annual_reduction_q3 = 0
+        total_annual_reduction_q4 = 0
+        
+        total_authorized = 0
+        total_authorized_q1 = 0
+        total_authorized_q2 = 0
+        total_authorized_q3 = 0
+        total_authorized_q4 = 0
+        
+        
+        for data in my_datas:
+            
+            #=== 1st section ====#
             col = 0
-            if self.env.user.lang == 'es_MX':
-                ws1.write_merge(row, row,col,col+19, 'Reporte Detallado de Presupuesto',header_style)
-            else:
-                ws1.write_merge(row, row,col,col+19, 'Details Budget Report',header_style)
-            
-            row+=1
-            col = 0
-            row,col = self.add_report_header(row,col,header_style,ws1)
-            total_assigned = 0
-            total_assigned_1st = 0
-            total_assigned_2nd = 0
-            total_assigned_3rd = 0
-            total_assigned_4th = 0
-            
-            total_annual_expansion = 0
-            total_annual_expansion_q1 = 0
-            total_annual_expansion_q2 = 0
-            total_annual_expansion_q3 = 0
-            total_annual_expansion_q4 = 0
-            
-            total_annual_reduction = 0
-            total_annual_reduction_q1 = 0
-            total_annual_reduction_q2 = 0
-            total_annual_reduction_q3 = 0
-            total_annual_reduction_q4 = 0
-            
-            total_authorized = 0
-            total_authorized_q1 = 0
-            total_authorized_q2 = 0
-            total_authorized_q3 = 0
-            total_authorized_q4 = 0
-            
-            
-            for data in my_datas:
-                
-                #=== 1st section ====#
-                col = 0
-                ws1.write(row, col, data.get('year'))
-                col+=1
-                ws1.write(row, col, data.get('program'))
-                col+=1
-                ws1.write(row, col, data.get('sub_program'))
-                col+=1
-                ws1.write(row, col, data.get('dependency'))
-                col+=1
-                ws1.write(row, col, data.get('sub_dependency'))
-                col+=1
-                ws1.write(row, col, data.get('exp_name'))
-                col+=1
-                ws1.write(row, col, data.get('check_digit'))
-                col+=1
-                ws1.write(row, col, data.get('resource_origin_id'))
-                col+=1
-                ws1.write(row, col, data.get('institutional_activity_id'))
-                col+=1
-                ws1.write(row, col, data.get('conversion_program'))
-                col+=1
-                ws1.write(row, col, data.get('shcp_item'))
-                col+=1
-                ws1.write(row, col, data.get('type_of_expenditure'))
-                col+=1
-                ws1.write(row, col, data.get('geographic_location'))
-                col+=1
-                ws1.write(row, col, data.get('wallet_key'))
-                col+=1
-                ws1.write(row, col, data.get('type_of_project'))
-                col+=1
-                ws1.write(row, col, data.get('project_number'))
-                col+=1
-                ws1.write(row, col, data.get('stage_identofier'))
-                col+=1
-                ws1.write(row, col, data.get('type_of_agreement'))
-                col+=1
-                ws1.write(row, col, data.get('number_of_agreement'))
-                col+=1
-                #==== 2nd section ====#
-                total_assigned += data.get('assigned')
-                ws1.write(row, col, data.get('assigned'),float_sytle)
-                col+=1
-                total_assigned_1st += data.get('assigned_1st')
-                ws1.write(row, col, data.get('assigned_1st'),float_sytle)
-                col+=1
-                total_assigned_2nd += data.get('assigned_2nd')
-                ws1.write(row, col, data.get('assigned_2nd'),float_sytle)
-                col+=1
-                total_assigned_3rd += data.get('assigned_3rd')
-                ws1.write(row, col, data.get('assigned_3rd'),float_sytle)
-                col+=1
-                total_assigned_4th += data.get('assigned_4th')
-                ws1.write(row, col, data.get('assigned_4th'),float_sytle)
-                col+=1
-                #==== 3rd section ====#
-                total_standardization_expansion = data.get('standardization_expansion_q1') + data.get('standardization_expansion_q2')+data.get('standardization_expansion_q3')+data.get('standardization_expansion_q4') 
-                total_annual_expansion += data.get('annual_expansion') + total_standardization_expansion
-                ws1.write(row, col, data.get('annual_expansion')+total_standardization_expansion,float_sytle)
-                col+=1
-                total_annual_expansion_q1 += data.get('annual_expansion_q1') + data.get('standardization_expansion_q1')
-                ws1.write(row, col, data.get('annual_expansion_q1')+data.get('standardization_expansion_q1') ,float_sytle)
-                col+=1
-                total_annual_expansion_q2 += data.get('annual_expansion_q2')+data.get('standardization_expansion_q2')
-                ws1.write(row, col, data.get('annual_expansion_q2')+data.get('standardization_expansion_q2'),float_sytle)
-                col+=1
-                total_annual_expansion_q3 += data.get('annual_expansion_q3')+data.get('standardization_expansion_q3')
-                ws1.write(row, col, data.get('annual_expansion_q3')+data.get('standardization_expansion_q3'),float_sytle)
-                col+=1
-                total_annual_expansion_q4 += data.get('annual_expansion_q4')+data.get('standardization_expansion_q4')
-                ws1.write(row, col, data.get('annual_expansion_q4')+data.get('standardization_expansion_q4'),float_sytle)
-                col+=1
-
-                #==== 4th section ====#
-                total_standardization_reduction = data.get('standardization_reduction_q1') + data.get('standardization_reduction_q2') + data.get('standardization_reduction_q3') + data.get('standardization_reduction_q4')
-                total_annual_reduction += data.get('annual_reduction') + total_standardization_reduction
-                ws1.write(row, col, data.get('annual_reduction')+total_standardization_reduction,float_sytle)
-                col+=1
-                total_annual_reduction_q1 += data.get('annual_reduction_q1') + data.get('standardization_reduction_q1')
-                ws1.write(row, col, data.get('annual_reduction_q1')+data.get('standardization_reduction_q1'),float_sytle)
-                col+=1
-                total_annual_reduction_q2 += data.get('annual_reduction_q2') + data.get('standardization_reduction_q2')
-                ws1.write(row, col, data.get('annual_reduction_q2')+data.get('standardization_reduction_q2'),float_sytle)
-                col+=1
-                total_annual_reduction_q3 += data.get('annual_reduction_q3') + data.get('standardization_reduction_q3')
-                ws1.write(row, col, data.get('annual_reduction_q3') + data.get('standardization_reduction_q3'),float_sytle)
-                col+=1
-                total_annual_reduction_q4 += data.get('annual_reduction_q4') + data.get('standardization_reduction_q4')
-                ws1.write(row, col, data.get('annual_reduction_q4')+data.get('standardization_reduction_q4'),float_sytle)
-                col+=1
-                
-                #==== 5th section ====#
-                authorized_q1 = data.get('assigned_1st') + data.get('annual_expansion_q1',0) + data.get('standardization_expansion_q1') - data.get('annual_reduction_q1',0) - data.get('standardization_reduction_q1',0)
-                authorized_q2 = data.get('assigned_2nd') + data.get('annual_expansion_q2',0) + data.get('standardization_expansion_q2') - data.get('annual_reduction_q2',0) - data.get('standardization_reduction_q2',0)
-                authorized_q3 = data.get('assigned_3rd') + data.get('annual_expansion_q3',0) + data.get('standardization_expansion_q3') - data.get('annual_reduction_q3',0) - data.get('standardization_reduction_q3',0)
-                authorized_q4 = data.get('assigned_4th') + data.get('annual_expansion_q4',0) + data.get('standardization_expansion_q4') - data.get('annual_reduction_q4',0) - data.get('standardization_reduction_q4',0)
-                authorized = authorized_q1 + authorized_q2 + authorized_q3 + authorized_q4
-                total_authorized += authorized   
-                ws1.write(row, col, authorized,float_sytle)
-                col+=1
-                total_authorized_q1 += authorized_q1   
-                ws1.write(row, col, authorized_q1,float_sytle)
-                col+=1
-                total_authorized_q2 += authorized_q2   
-                ws1.write(row, col, authorized_q2,float_sytle)
-                col+=1
-                total_authorized_q3 += authorized_q3   
-                ws1.write(row, col, authorized_q3,float_sytle)
-                col+=1
-                total_authorized_q4 += authorized_q4   
-                ws1.write(row, col, authorized_q4,float_sytle)
-                col+=1
-                
-                #=== 6th section ====#
-                ws1.write(row, col, 0.00,float_sytle)
-                col+=1
-                ws1.write(row, col, 0.00,float_sytle)
-                col+=1
-                ws1.write(row, col, 0.00,float_sytle)
-                col+=1
-                ws1.write(row, col, 0.00,float_sytle)
-                col+=1
-                ws1.write(row, col, 0.00,float_sytle)
-                col+=1
-                ws1.write(row, col, 0.00,float_sytle)
-                col+=1
-                ws1.write(row, col, 0.00,float_sytle)
-                col+=1
-                ws1.write(row, col, 0.00,float_sytle)
-                col+=1
-                ws1.write(row, col, 0.00,float_sytle)
-                col+=1
-                ws1.write(row, col, 0.00,float_sytle)
-                col+=1
-                ws1.write(row, col, 0.00,float_sytle)
-                col+=1
-                ws1.write(row, col, 0.00,float_sytle)
-                col+=1
-                ws1.write(row, col, 0.00,float_sytle)
-                col+=1
-
-                row+=1
-            
-            #===== Total=======#
-            row+=1
-            col=19
+            ws1.write(row, col, data.get('year'))
+            col+=1
+            ws1.write(row, col, data.get('program'))
+            col+=1
+            ws1.write(row, col, data.get('sub_program'))
+            col+=1
+            ws1.write(row, col, data.get('dependency'))
+            col+=1
+            ws1.write(row, col, data.get('sub_dependency'))
+            col+=1
+            ws1.write(row, col, data.get('exp_name'))
+            col+=1
+            ws1.write(row, col, data.get('check_digit'))
+            col+=1
+            ws1.write(row, col, data.get('resource_origin_id'))
+            col+=1
+            ws1.write(row, col, data.get('institutional_activity_id'))
+            col+=1
+            ws1.write(row, col, data.get('conversion_program'))
+            col+=1
+            ws1.write(row, col, data.get('shcp_item'))
+            col+=1
+            ws1.write(row, col, data.get('type_of_expenditure'))
+            col+=1
+            ws1.write(row, col, data.get('geographic_location'))
+            col+=1
+            ws1.write(row, col, data.get('wallet_key'))
+            col+=1
+            ws1.write(row, col, data.get('type_of_project'))
+            col+=1
+            ws1.write(row, col, data.get('project_number'))
+            col+=1
+            ws1.write(row, col, data.get('stage_identofier'))
+            col+=1
+            ws1.write(row, col, data.get('type_of_agreement'))
+            col+=1
+            ws1.write(row, col, data.get('number_of_agreement'))
+            col+=1
             #==== 2nd section ====#
-            ws1.write(row, col, total_assigned,total_style)
+            total_assigned += data.get('assigned')
+            ws1.write(row, col, data.get('assigned'),float_sytle)
             col+=1
-            ws1.write(row, col, total_assigned_1st,total_style)
+            total_assigned_1st += data.get('assigned_1st')
+            ws1.write(row, col, data.get('assigned_1st'),float_sytle)
             col+=1
-            ws1.write(row, col, total_assigned_2nd,total_style)
+            total_assigned_2nd += data.get('assigned_2nd')
+            ws1.write(row, col, data.get('assigned_2nd'),float_sytle)
             col+=1
-            ws1.write(row, col, total_assigned_3rd,total_style)
+            total_assigned_3rd += data.get('assigned_3rd')
+            ws1.write(row, col, data.get('assigned_3rd'),float_sytle)
             col+=1
-            ws1.write(row, col, total_assigned_4th,total_style)
+            total_assigned_4th += data.get('assigned_4th')
+            ws1.write(row, col, data.get('assigned_4th'),float_sytle)
             col+=1
             #==== 3rd section ====#
-            ws1.write(row, col, total_annual_expansion,total_style)
+            total_standardization_expansion = data.get('standardization_expansion_q1') + data.get('standardization_expansion_q2')+data.get('standardization_expansion_q3')+data.get('standardization_expansion_q4') 
+            total_annual_expansion += data.get('annual_expansion') + total_standardization_expansion
+            ws1.write(row, col, data.get('annual_expansion')+total_standardization_expansion,float_sytle)
             col+=1
-            ws1.write(row, col, total_annual_expansion_q1,total_style)
+            total_annual_expansion_q1 += data.get('annual_expansion_q1') + data.get('standardization_expansion_q1')
+            ws1.write(row, col, data.get('annual_expansion_q1')+data.get('standardization_expansion_q1') ,float_sytle)
             col+=1
-            ws1.write(row, col, total_annual_expansion_q2,total_style)
+            total_annual_expansion_q2 += data.get('annual_expansion_q2')+data.get('standardization_expansion_q2')
+            ws1.write(row, col, data.get('annual_expansion_q2')+data.get('standardization_expansion_q2'),float_sytle)
             col+=1
-            ws1.write(row, col, total_annual_expansion_q3,total_style)
+            total_annual_expansion_q3 += data.get('annual_expansion_q3')+data.get('standardization_expansion_q3')
+            ws1.write(row, col, data.get('annual_expansion_q3')+data.get('standardization_expansion_q3'),float_sytle)
             col+=1
-            ws1.write(row, col, total_annual_expansion_q4,total_style)
+            total_annual_expansion_q4 += data.get('annual_expansion_q4')+data.get('standardization_expansion_q4')
+            ws1.write(row, col, data.get('annual_expansion_q4')+data.get('standardization_expansion_q4'),float_sytle)
             col+=1
+
             #==== 4th section ====#
-            ws1.write(row, col, total_annual_reduction,total_style)
+            total_standardization_reduction = data.get('standardization_reduction_q1') + data.get('standardization_reduction_q2') + data.get('standardization_reduction_q3') + data.get('standardization_reduction_q4')
+            total_annual_reduction += data.get('annual_reduction') + total_standardization_reduction
+            ws1.write(row, col, data.get('annual_reduction')+total_standardization_reduction,float_sytle)
             col+=1
-            ws1.write(row, col, total_annual_reduction_q1,total_style)
+            total_annual_reduction_q1 += data.get('annual_reduction_q1') + data.get('standardization_reduction_q1')
+            ws1.write(row, col, data.get('annual_reduction_q1')+data.get('standardization_reduction_q1'),float_sytle)
             col+=1
-            ws1.write(row, col, total_annual_reduction_q2,total_style)
+            total_annual_reduction_q2 += data.get('annual_reduction_q2') + data.get('standardization_reduction_q2')
+            ws1.write(row, col, data.get('annual_reduction_q2')+data.get('standardization_reduction_q2'),float_sytle)
             col+=1
-            ws1.write(row, col, total_annual_reduction_q3,total_style)
+            total_annual_reduction_q3 += data.get('annual_reduction_q3') + data.get('standardization_reduction_q3')
+            ws1.write(row, col, data.get('annual_reduction_q3') + data.get('standardization_reduction_q3'),float_sytle)
             col+=1
-            ws1.write(row, col, total_annual_reduction_q4,total_style)
-            col+=1
-            #==== 5th section ====#
-            ws1.write(row, col, total_authorized,total_style)
-            col+=1
-            ws1.write(row, col, total_authorized_q1,total_style)
-            col+=1
-            ws1.write(row, col, total_authorized_q2,total_style)
-            col+=1
-            ws1.write(row, col, total_authorized_q3,total_style)
-            col+=1
-            ws1.write(row, col, total_authorized_q4,total_style)
-            col+=1
-            #==== 6th Section =====#
-            ws1.write(row, col, 0.00,total_style)
-            col+=1
-            ws1.write(row, col, 0.00,total_style)
-            col+=1
-            ws1.write(row, col, 0.00,total_style)
-            col+=1
-            ws1.write(row, col, 0.00,total_style)
-            col+=1
-            ws1.write(row, col, 0.00,total_style)
-            col+=1
-            ws1.write(row, col, 0.00,total_style)
-            col+=1
-            ws1.write(row, col, 0.00,total_style)
-            col+=1
-            ws1.write(row, col, 0.00,total_style)
-            col+=1
-            ws1.write(row, col, 0.00,total_style)
-            col+=1
-            ws1.write(row, col, 0.00,total_style)
-            col+=1
-            ws1.write(row, col, 0.00,total_style)
-            col+=1
-            ws1.write(row, col, 0.00,total_style)
-            col+=1
-            ws1.write(row, col, 0.00,total_style)
+            total_annual_reduction_q4 += data.get('annual_reduction_q4') + data.get('standardization_reduction_q4')
+            ws1.write(row, col, data.get('annual_reduction_q4')+data.get('standardization_reduction_q4'),float_sytle)
             col+=1
             
-            wb1.save(fp)
-            out = base64.encodestring(fp.getvalue())
-            self.report_file = out
-            if self.env.user.lang == 'es_MX':
-                self.name = 'reporte_detallado_de_presupuesto.xls'
-            else:
-                self.name = 'details_budget_report.xls'
-            self.state = 'download'
+            #==== 5th section ====#
+            authorized_q1 = data.get('assigned_1st') + data.get('annual_expansion_q1',0) + data.get('standardization_expansion_q1') - data.get('annual_reduction_q1',0) - data.get('standardization_reduction_q1',0)
+            authorized_q2 = data.get('assigned_2nd') + data.get('annual_expansion_q2',0) + data.get('standardization_expansion_q2') - data.get('annual_reduction_q2',0) - data.get('standardization_reduction_q2',0)
+            authorized_q3 = data.get('assigned_3rd') + data.get('annual_expansion_q3',0) + data.get('standardization_expansion_q3') - data.get('annual_reduction_q3',0) - data.get('standardization_reduction_q3',0)
+            authorized_q4 = data.get('assigned_4th') + data.get('annual_expansion_q4',0) + data.get('standardization_expansion_q4') - data.get('annual_reduction_q4',0) - data.get('standardization_reduction_q4',0)
+            authorized = authorized_q1 + authorized_q2 + authorized_q3 + authorized_q4
+            total_authorized += authorized   
+            ws1.write(row, col, authorized,float_sytle)
+            col+=1
+            total_authorized_q1 += authorized_q1   
+            ws1.write(row, col, authorized_q1,float_sytle)
+            col+=1
+            total_authorized_q2 += authorized_q2   
+            ws1.write(row, col, authorized_q2,float_sytle)
+            col+=1
+            total_authorized_q3 += authorized_q3   
+            ws1.write(row, col, authorized_q3,float_sytle)
+            col+=1
+            total_authorized_q4 += authorized_q4   
+            ws1.write(row, col, authorized_q4,float_sytle)
+            col+=1
+            
+            #=== 6th section ====#
+            ws1.write(row, col, 0.00,float_sytle)
+            col+=1
+            ws1.write(row, col, 0.00,float_sytle)
+            col+=1
+            ws1.write(row, col, 0.00,float_sytle)
+            col+=1
+            ws1.write(row, col, 0.00,float_sytle)
+            col+=1
+            ws1.write(row, col, 0.00,float_sytle)
+            col+=1
+            ws1.write(row, col, 0.00,float_sytle)
+            col+=1
+            ws1.write(row, col, 0.00,float_sytle)
+            col+=1
+            ws1.write(row, col, 0.00,float_sytle)
+            col+=1
+            ws1.write(row, col, 0.00,float_sytle)
+            col+=1
+            ws1.write(row, col, 0.00,float_sytle)
+            col+=1
+            ws1.write(row, col, 0.00,float_sytle)
+            col+=1
+            ws1.write(row, col, 0.00,float_sytle)
+            col+=1
+            ws1.write(row, col, 0.00,float_sytle)
+            col+=1
+
+            row+=1
+        
+        #===== Total=======#
+        row+=1
+        col=19
+        #==== 2nd section ====#
+        ws1.write(row, col, total_assigned,total_style)
+        col+=1
+        ws1.write(row, col, total_assigned_1st,total_style)
+        col+=1
+        ws1.write(row, col, total_assigned_2nd,total_style)
+        col+=1
+        ws1.write(row, col, total_assigned_3rd,total_style)
+        col+=1
+        ws1.write(row, col, total_assigned_4th,total_style)
+        col+=1
+        #==== 3rd section ====#
+        ws1.write(row, col, total_annual_expansion,total_style)
+        col+=1
+        ws1.write(row, col, total_annual_expansion_q1,total_style)
+        col+=1
+        ws1.write(row, col, total_annual_expansion_q2,total_style)
+        col+=1
+        ws1.write(row, col, total_annual_expansion_q3,total_style)
+        col+=1
+        ws1.write(row, col, total_annual_expansion_q4,total_style)
+        col+=1
+        #==== 4th section ====#
+        ws1.write(row, col, total_annual_reduction,total_style)
+        col+=1
+        ws1.write(row, col, total_annual_reduction_q1,total_style)
+        col+=1
+        ws1.write(row, col, total_annual_reduction_q2,total_style)
+        col+=1
+        ws1.write(row, col, total_annual_reduction_q3,total_style)
+        col+=1
+        ws1.write(row, col, total_annual_reduction_q4,total_style)
+        col+=1
+        #==== 5th section ====#
+        ws1.write(row, col, total_authorized,total_style)
+        col+=1
+        ws1.write(row, col, total_authorized_q1,total_style)
+        col+=1
+        ws1.write(row, col, total_authorized_q2,total_style)
+        col+=1
+        ws1.write(row, col, total_authorized_q3,total_style)
+        col+=1
+        ws1.write(row, col, total_authorized_q4,total_style)
+        col+=1
+        #==== 6th Section =====#
+        ws1.write(row, col, 0.00,total_style)
+        col+=1
+        ws1.write(row, col, 0.00,total_style)
+        col+=1
+        ws1.write(row, col, 0.00,total_style)
+        col+=1
+        ws1.write(row, col, 0.00,total_style)
+        col+=1
+        ws1.write(row, col, 0.00,total_style)
+        col+=1
+        ws1.write(row, col, 0.00,total_style)
+        col+=1
+        ws1.write(row, col, 0.00,total_style)
+        col+=1
+        ws1.write(row, col, 0.00,total_style)
+        col+=1
+        ws1.write(row, col, 0.00,total_style)
+        col+=1
+        ws1.write(row, col, 0.00,total_style)
+        col+=1
+        ws1.write(row, col, 0.00,total_style)
+        col+=1
+        ws1.write(row, col, 0.00,total_style)
+        col+=1
+        ws1.write(row, col, 0.00,total_style)
+        col+=1
+            
+        wb1.save(fp)
+        out = base64.encodestring(fp.getvalue())
+        self.report_file = out
+        if self.env.user.lang == 'es_MX':
+            self.name = 'reporte_detallado_de_presupuesto.xls'
+        else:
+            self.name = 'details_budget_report.xls'
+        self.state = 'download'
             
 
         return {

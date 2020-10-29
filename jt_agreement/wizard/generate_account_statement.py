@@ -21,12 +21,35 @@
 #
 ##############################################################################
 from odoo import models, fields, api, _
+import base64
+from odoo.http import request, content_disposition
 
-class FundType(models.Model):
+class AccountStatement(models.TransientModel):
+    _name = 'account.statement'
+    _description = "Generate Account Statement"
 
-    _name = 'fund.type'
-    _description = "Fund Type"
+    start_date = fields.Date(string="Start Date")
+    end_date = fields.Date(string="End Date")
+    file = fields.Binary(string='File')
+    filename = fields.Char(string='File name')
 
-    key = fields.Char("Fund Type Key")
-    name = fields.Char("Fund Type Name")
-    fund_id = fields.Many2one('agreement.fund',string="Fund")
+    def print_account_statement(self):
+        report_name = "jt_agreement.account_statement_report"
+        print("**************",self.filename)
+        pdf = self.env['account.statement'].sudo().get_pdf([self.id], report_name)
+        self.file = base64.encodestring(pdf)
+        return {
+            'name': 'Download Sample File',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': False,
+            'res_model': 'account.statement',
+            'domain': [],
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'res_id': self.id,
+        }
+
+
+
+    

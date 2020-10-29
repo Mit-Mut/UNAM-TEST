@@ -10,6 +10,7 @@
                     <field name="code"/>
                     <field name="name"/>
                     <field name="fund_type_id"/>
+                    <field name="fund_id" string="Fund Name"/>
                 </tree>
             </field>
         </record>
@@ -24,6 +25,7 @@
                             <field name="code"/>
                             <field name="name"/>
                             <field name="fund_type_id"/>
+                            <field name="fund_id"/>
                         </group>
                     </sheet>
                 </form>

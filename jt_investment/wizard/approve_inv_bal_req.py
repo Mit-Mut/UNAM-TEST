@@ -75,15 +75,15 @@ class ApproveInvestmentBalReq(models.TransientModel):
             }
         )
         if self.bonds_id:
-            self.bonds_id.state = 'confirmed'
+            self.bonds_id.action_requested()
         if self.cetes_id:
-            self.cetes_id.state = 'confirmed'
+            self.cetes_id.action_requested()
         if self.udibonos_id:
-            self.udibonos_id.state = 'confirmed'
+            self.udibonos_id.action_requested()
         if self.will_pay_id:
-            self.will_pay_id.state = 'confirmed'
+            self.will_pay_id.action_requested()
         if self.purchase_sale_security_id:
             self.purchase_sale_security_id.state = 'confirmed'
         if self.investment_id:
-            self.investment_id.state = 'confirmed'
+            self.investment_id.action_requested()
 

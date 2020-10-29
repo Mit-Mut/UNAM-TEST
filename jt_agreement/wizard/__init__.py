@@ -4,3 +4,5 @@ from . import cancel_collaboration
 from . import closing_collaboration
 from . import cancel_trust
 from . import cancel_patrimonial_resources
+from . import generate_account_statement
+

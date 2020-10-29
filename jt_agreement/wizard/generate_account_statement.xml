@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="generate_account_statement" model="ir.ui.view">
+            <field name="name">generate.account.statement.view</field>
+            <field name="model">account.statement</field>
+            <field name="arch" type="xml">
+                <form>
+                	<group>
+                        <field name="start_date" required="1"/>
+                        <field name="end_date" required="1"/>
+                        <field name="filename" invisible="1"/>
+                        <field name="file" filename="filename" readonly="1"/>
+                    </group>
+                	<footer>
+                        <button string="Cancel" class="btn btn-default" special="cancel"/>
+                        <button string="Print" name="print_account_statement" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <act_window name="Generate Account Statement"
+            id="action_generate_account_statement"
+            res_model="account.statement"
+            binding_model="agreement.trust"
+            view_mode="form"
+            target="new"
+        />
+
+	</data>
+</odoo>

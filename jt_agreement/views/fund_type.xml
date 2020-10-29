@@ -9,6 +9,7 @@
                 <tree>
                     <field name="key"/>
                     <field name="name"/>
+                    <field name="fund_id" string="Fund Name"/>
                 </tree>
             </field>
         </record>
@@ -22,6 +23,7 @@
                         <group>
                             <field name="key"/>
                             <field name="name"/>
+                            <field name="fund_id"/>
                         </group>
                     </sheet>
                 </form>

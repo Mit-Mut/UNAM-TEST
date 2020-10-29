@@ -44,7 +44,7 @@ class CETES(models.Model):
     estimated_profit = fields.Float(string="Estimated Profit",compute="get_estimated_profit",store=True)
     real_interest = fields.Float("Real Interest")
     real_profit = fields.Float(string="Real Profit",compute="get_real_profit",store=True)
-    state = fields.Selection([('draft','Draft'),('requested','Requested'),('rejected','Rejected'),('confirmed','Confirmed'),('approved','Approved'),('done','Done'),('canceled','Canceled')],string="Status",default='draft')
+    state = fields.Selection([('draft','Draft'),('requested','Requested'),('rejected','Rejected'),('approved','Approved'),('confirmed','Confirmed'),('done','Done'),('canceled','Canceled')],string="Status",default='draft')
 
     #====== Accounting Fields =========#
 
@@ -56,6 +56,8 @@ class CETES(models.Model):
     return_expense_account_id = fields.Many2one('account.account','Expense Account')
     return_price_diff_account_id = fields.Many2one('account.account','Price Difference Account')    
 
+    request_finance_ids = fields.One2many('request.open.balance.finance','cetes_id')
+    
 
     @api.depends('amount_invest')
     def get_total_currency_amount(self):
@@ -137,7 +139,19 @@ class CETES(models.Model):
 
     def action_reset_to_draft(self):
         self.state='draft'
+        for rec in self.request_finance_ids:
+            rec.canceled_finance()
 
+    def action_requested(self):
+        self.state = 'requested'
+
+    def action_approved(self):
+        self.state = 'approved'
+
+    def action_confirmed(self):
+        self.state = 'confirmed'
+            
+        
     def action_calculation(self):
         return 
     

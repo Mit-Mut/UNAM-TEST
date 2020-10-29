@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="account_statement_template_header" name="account_statment_pdf">
+           
+            <!-- <div class="header"> -->
+                <div class="row">
+                    <table style="width:100%">
+                        <tr>
+                        <td>
+                            <img t-attf-src="data:image/png;base64,{{res_company.header_logo}}" style="width:150px;height:170px;"/>
+                        </td>
+
+                        <td style="text-align:center">
+                            <b>
+                                <span style="font-size:16px;text-align:center" class="text-center">UNIVERSIDAD NACIONAL AUTONOMA DE MAXICO</span><br/>
+                                <span style="font-size:14px;" class="text-center">PATRONATO UNIVERSITARO</span><br/>
+                                <span style="font-size:12px;" class="text-center">Direccion General de Finanzas</span><br/>
+                                <span style="font-size:12px;" class="text-center">Departamento de Control Financiero</span><br/>
+                                <span style="font-size:12px;" class="text-center">Movimientos de Fideicomisos</span><br/>
+                                <span style="font-size:12px;" class="text-center">CONSULTA: GENERAL POR FIDEICOMISO</span><br/>
+                            </b>
+                        </td>
+                        </tr>
+                        <br/><br/>
+                    </table>
+
+                    <div>
+                        <b><span style="margin-left:5px;font-size:15px;">FIDEICOMISO:</span></b>
+                        <b><span style="margin-left:400px;font-size:15px;">Fecha de Impresion:</span></b>
+                        <br/><br/>
+                    </div>
+                </div>
+            <!-- </div> -->
+
+        </template>
+
+        <template id="account_statement_template">
+        <t t-call="web.html_container">
+        <t t-call="jt_agreement.account_statement_template_header"/>
+            <div class="page">
+                <style>
+                 .border1
+                    {
+                        border-bottom: 1px solid black;
+                    }
+
+                .style1
+                    {
+                        font-size:15px;
+                    }
+                </style>
+
+                <table style="width:100%;">
+                    <tr style="height:6%;text-align:center;font-size:15px;background-color:#C0C0C0;">
+                        <th class="style1">Folio C</th>
+                        <th class="style1">Fecha</th>
+                        <th class="style1">Operacion</th>
+                        <th class="style1">Debe</th>
+                        <th class="style1">Haber</th>
+                        <th class="style1">Saldo</th>
+                    </tr>
+                </table>
+                <table style="width:100%;border: 1px solid black;">
+                    <br/>
+                    <tr class="style1">
+                        <td class="style1 border1" style="text-align:center;">Demo Data</td>
+                        <td class="style1 border1" style="text-align:center;">Demo Data</td>
+                        <td class="style1 border1" style="text-align:center;">Demo Data</td>
+                        <td class="style1 border1" style="text-align:center;">Demo Data</td>
+                        <td class="style1 border1" style="text-align:center;">Demo Data</td>
+                        <td class="style1 border1" style="text-align:center;">Demo Data</td>
+                    </tr>
+                    <tr class="style1">
+                        <td class="style1" style="text-align:center;">Demo Data</td>
+                        <td class="style1" style="text-align:center;">Demo Data</td>
+                        <td class="style1" style="text-align:center;">Demo Data</td>
+                        <td class="style1" style="text-align:center;">Demo Data</td>
+                        <td class="style1" style="text-align:center;">Demo Data</td>
+                        <td class="style1" style="text-align:center;">Demo Data</td>
+                    </tr>
+                </table>  
+            </div>
+        </t>
+       </template>
+
+        <record id="paperformat_account_statement" model="report.paperformat">
+            <field name="name">Format 1</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">6</field>
+            <field name="margin_bottom">60</field>
+            <field name="margin_left">10</field>
+            <field name="margin_right">10</field>
+            <field name="header_line" eval="False"/>
+            <field name="dpi">100</field>
+        </record>
+
+        <report 
+            id="account_statement_report"
+            model="agreement.trust"
+            string="Account Statement"
+            report_type="qweb-pdf"
+            name="jt_agreement.account_statement_template"
+            file="jt_agreement.account_statement_template"
+            print_report_name="object.name"
+            paperformat="jt_agreement.paperformat_account_statement"
+        />
+
+    </data>
+</odoo>

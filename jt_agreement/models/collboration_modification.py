@@ -65,7 +65,7 @@ class BasesCollabrationModification(models.Model):
             self.env['request.open.balance'].create({
                 'name': collaboration.name,
                 'bases_collaboration_id': collaboration.id,
-                'agreement_number_id': collaboration.agreement_type_id and collaboration.agreement_type_id.id or False,
+                #'agreement_number_id': collaboration.agreement_type_id and collaboration.agreement_type_id.id or False,
                 'type_of_operation': 'withdrawal',
                 'apply_to_basis_collaboration': True,
                 'opening_balance': collaboration.available_bal,

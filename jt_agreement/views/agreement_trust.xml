@@ -151,8 +151,18 @@
                                          </form>
                                      </field>
                                  </group>
-                        	
                         	</page>
+                            <page string="Interests" name="interest">
+                                <group>
+                                    <group>
+                                        <field name="yields"/>
+                                        <field name="fees"/>
+                                    </group>
+                                    <group>
+                                        <field name="interest_date"/>
+                                    </group>
+                                </group>
+                            </page>
                         	<page string="Supporting Documentation" name="supporting_documentation">
                         		<group>
                         			<group>

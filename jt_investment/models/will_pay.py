@@ -36,7 +36,7 @@ class WillPay(models.Model):
     time_frame = fields.Float(string="Time frame",compute="get_time_frame",store=True)
     simple_interest = fields.Boolean(string="Simple Interest",default=False)
     compound_interest = fields.Boolean(string="Compound Interest",default=False)
-    state = fields.Selection([('draft','Draft'),('requested','Requested'),('rejected','Rejected'),('confirmed','Confirmed'),('approved','Approved'),('done','Done'),('canceled','Canceled')],string="Status",default='draft')
+    state = fields.Selection([('draft','Draft'),('requested','Requested'),('rejected','Rejected'),('approved','Approved'),('confirmed','Confirmed'),('done','Done'),('canceled','Canceled')],string="Status",default='draft')
     
     simple_interest_capital = fields.Float(string="Capital",compute="get_simple_interest_capital",store=True)
     simple_interest_future_value = fields.Float(string="Future Value",compute="get_simple_interest_future_value",store=True)
@@ -59,11 +59,13 @@ class WillPay(models.Model):
     return_expense_account_id = fields.Many2one('account.account','Expense Account')
     return_price_diff_account_id = fields.Many2one('account.account','Price Difference Account')    
     
+    request_finance_ids = fields.One2many('request.open.balance.finance','will_pay_id')
+    
     @api.depends('amount_invest')
     def get_total_currency_amount(self):
         for rec in self:
-            if rec.amount_invest and rec.currency_rate_id:
-                rec.total_currency_rate = rec.amount_invest * rec.currency_rate_id.rate
+            if rec.amount_invest:
+                rec.total_currency_rate = rec.amount_invest
             else:
                 rec.total_currency_rate = 0
 
@@ -165,6 +167,17 @@ class WillPay(models.Model):
 
     def action_reset_to_draft(self):
         self.state='draft'
+        for rec in self.request_finance_ids:
+            rec.canceled_finance()
+
+    def action_requested(self):
+        self.state = 'requested'
+
+    def action_approved(self):
+        self.state = 'approved'
+
+    def action_confirmed(self):
+        self.state = 'confirmed'
     
     def action_calculation(self):
         return 

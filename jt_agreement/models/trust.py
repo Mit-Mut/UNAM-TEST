@@ -74,6 +74,10 @@ class Trust(models.Model):
     cancel_date = fields.Date("Cancellation date")
     supporing_doc = fields.Binary("Supporting Documentation")
     reason_cancel = fields.Text("Reason for Cancellations")
+
+    interest_date = fields.Date(string="Interest Date")
+    fees = fields.Monetary(string="Fees")
+    yields = fields.Monetary(string="Yields")
          
     def compute_operations(self):
         for rec in self:

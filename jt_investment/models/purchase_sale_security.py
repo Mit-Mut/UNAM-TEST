@@ -18,7 +18,7 @@ class PurchaseSaleSecurity(models.Model):
     term = fields.Integer("Investment Term")
     due_date = fields.Date("Due Date")
     movement = fields.Selection([('buy','Purchase'),('sell','Sale')],string="What move do I want to make?")
-    state = fields.Selection([('draft','Draft'),('requested','Requested'),('rejected','Rejected'),('confirmed','Confirmed'),('approved','Approved'),('done','Done'),('canceled','Canceled')],string="Status",default='draft')
+    state = fields.Selection([('draft','Draft'),('requested','Requested'),('rejected','Rejected'),('approved','Approved'),('confirmed','Confirmed'),('done','Done'),('canceled','Canceled')],string="Status",default='draft')
     observations = fields.Text("Observations")    
     file_data = fields.Binary("Supporting document")
     file_name = fields.Char("File Name")

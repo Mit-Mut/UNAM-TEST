@@ -153,7 +153,8 @@ class ProgramCode(models.Model):
                                          ('expenditure_budget_id.state', '=', 'validate')])
             authorized = assigned = st_ass = nd_ass = rd_ass = th_ass = 0
             for line in lines:
-                authorized += line.authorized
+                if not line.imported_sessional:
+                    authorized += line.authorized
                 assigned += line.assigned
                 if line.start_date and line.end_date and line.start_date.month == 1 and \
                     line.start_date.day == 1 and line.end_date.month == 3 and line.end_date.day == 31:

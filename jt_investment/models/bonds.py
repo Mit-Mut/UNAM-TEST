@@ -33,7 +33,7 @@ class Bonds(models.Model):
     time_for_each_cash_flow = fields.Integer(string="Time for each cash flow",size=4)
     time_to_expiration_date = fields.Integer(string="Time to Expiration Date",size=4)
     coupon = fields.Float(string="Coupon",compute="get_coupon_amount",store=True)
-    state = fields.Selection([('draft','Draft'),('requested','Requested'),('rejected','Rejected'),('confirmed','Confirmed'),('approved','Approved'),('done','Done'),('canceled','Canceled')],string="Status",default='draft')
+    state = fields.Selection([('draft','Draft'),('requested','Requested'),('rejected','Rejected'),('approved','Approved'),('confirmed','Confirmed'),('done','Done'),('canceled','Canceled')],string="Status",default='draft')
         
     present_value_bond = fields.Float(string="Present Value of the Bond",compute="get_present_value_bond",store=True)    
     estimated_interest = fields.Float(string="Estimated Interest",compute="get_estimated_interest",store=True)
@@ -66,7 +66,9 @@ class Bonds(models.Model):
     return_income_account_id = fields.Many2one('account.account','Income Account')
     return_expense_account_id = fields.Many2one('account.account','Expense Account')
     return_price_diff_account_id = fields.Many2one('account.account','Price Difference Account')    
-                 
+
+    request_finance_ids = fields.One2many('request.open.balance.finance','bonds_id')
+                     
     @api.depends('nominal_value','interest_rate')
     def get_coupon_amount(self):
         for rec in self:
@@ -149,6 +151,17 @@ class Bonds(models.Model):
         
     def action_reset_to_draft(self):
         self.state='draft'
+        for rec in self.request_finance_ids:
+            rec.canceled_finance()
+
+    def action_requested(self):
+        self.state = 'requested'
+
+    def action_approved(self):
+        self.state = 'approved'
+
+    def action_confirmed(self):
+        self.state = 'confirmed'
 
     def action_calculation(self):
         return 

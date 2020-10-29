@@ -31,6 +31,7 @@ class AgreementType(models.Model):
     code = fields.Char("Agreement Type Code")
     name = fields.Char("Name of Agreement Type")
     fund_type_id = fields.Many2one('fund.type', "Fund Type")
+    fund_id = fields.Many2one('agreement.fund',string="Fund")
 
     @api.constrains('code')
     def _check_code(self):

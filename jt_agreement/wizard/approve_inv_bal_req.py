@@ -54,7 +54,7 @@ class ApproveInvestmentBalReq(models.TransientModel):
     def approve(self):
         request = self.env['request.open.balance.invest'].browse(self.env.context.get('active_id'))
         if request:
-            request.state = 'confirmed'
+            request.state = 'requested'
             self.env['request.open.balance.finance'].create(
                 {
                     'invoice': self.invoice,

@@ -41,6 +41,7 @@
         'views/create_payment_request.xml',
         'wizard/cancel_collaboration.xml',
         'wizard/closing_collaboration.xml',
+        'wizard/generate_account_statement.xml',
         'views/ir_sequence.xml',
         'views/funds.xml',
         'views/menus.xml',
@@ -53,6 +54,7 @@
         'views/patrimonial_resources.xml',
         'views/patrimonial_request_open_balance.xml',
         'wizard/cancel_patrimonial_resource.xml',
+        'reports/account_statement_report.xml',
         'reports/menu_reports.xml',
         'data/data.xml',
         'security/ir.model.access.csv'

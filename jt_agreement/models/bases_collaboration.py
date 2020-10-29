@@ -387,13 +387,16 @@ class Beneficiary(models.Model):
 class ResPartnerBank(models.Model):
 
     _inherit = 'res.partner.bank'
-    _rec_name = 'bank_id'
-
+    #_rec_name = 'bank_id'
+ 
     def name_get(self):
-        if 'from_agreement' not in self._context:
+        if 'from_agreement' in self._context:
             res = []
             for bank in self:
-                res.append((bank.id, bank.acc_number))
+                bank_name = ''
+                if bank.bank_id:
+                    bank_name = bank.bank_id.name 
+                res.append((bank.id, bank_name))
         else:
             res = super(ResPartnerBank, self).name_get()
         return res
@@ -620,7 +623,7 @@ class RequestOpenBalance(models.Model):
             'type_of_operation': self.type_of_operation,
             'apply_to_basis_collaboration': self.apply_to_basis_collaboration,
             'origin_resource_id': self.origin_resource_id and self.origin_resource_id.id or False,
-            'state': 'requested',
+            'state': 'draft',
             'request_date': self.request_date,
             'trade_number': self.trade_number,
             'currency_id': self.currency_id and self.currency_id.id or False,
@@ -677,8 +680,8 @@ class RequestOpenBalanceInvestment(models.Model):
     state = fields.Selection([('draft', 'Draft'),
                                ('requested', 'Requested'),
                                ('rejected', 'Rejected'),
+                               ('approved', 'Approved'),
                                ('confirmed', 'Confirmed'),
-                              ('approved', 'Approved'),
                               ('done', 'Done'),
                                ('canceled', 'Canceled')], string="Status", default="draft")
 
@@ -690,7 +693,8 @@ class RequestOpenBalanceInvestment(models.Model):
     observations = fields.Text("Observations")
     user_id = fields.Many2one('res.users', default=lambda self: self.env.user.id,
                               string="Requesting User")
-
+    is_manually = fields.Float("Manually Records",default=False)
+    
     cbc_format = fields.Binary("CBC Format")
     cbc_shipping_office = fields.Binary("CBC Shipping Office")
     liability_account_id = fields.Many2one('account.account', "Liability Accounting Account")
@@ -898,6 +902,12 @@ class RequestOpenBalanceFinance(models.Model):
     def approve_finance(self):
         self.state = 'approved'
 
+    def canceled_finance(self):
+        self.state = 'canceled'
+
+    def confirmed_finance(self):
+        self.state = 'confirmed'
+        
     def action_schedule_transfers(self):
         payment_obj = self.env['account.payment']
         today = datetime.today().date()
@@ -961,7 +971,7 @@ class AccountPayment(models.Model):
         for payment in self:
             finance_reqs = finance_req_obj.search([('payment_ids', 'in', payment.id)])
             for fin_req in finance_reqs:
-                fin_req.state = 'confirmed'
+                fin_req.confirmed_finance()
                 if fin_req.request_id:
                     fin_req.request_id.state = 'done'
                     if fin_req.request_id.balance_req_id:

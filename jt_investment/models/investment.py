@@ -25,7 +25,7 @@ class Investment(models.Model):
     file_data = fields.Binary("Supporting document")
     file_name = fields.Char("File Name")
     
-    state = fields.Selection([('draft','Draft'),('requested','Requested'),('rejected','Rejected'),('confirmed','Confirmed'),('approved','Approved'),('done','Done'),('canceled','Canceled')],string="Status",default='draft')
+    state = fields.Selection([('draft','Draft'),('requested','Requested'),('rejected','Rejected'),('approved','Approved'),('confirmed','Confirmed'),('done','Done'),('canceled','Canceled')],string="Status",default='draft')
 
     #=====Profit==========#
     estimated_interest = fields.Float(string="Estimated Interest")
@@ -74,3 +74,13 @@ class Investment(models.Model):
 
     def action_reject(self):
         self.state = 'rejected'
+
+    def action_requested(self):
+        self.state = 'requested'
+
+    def action_approved(self):
+        self.state = 'approved'
+
+    def action_confirmed(self):
+        self.state = 'confirmed'
+        

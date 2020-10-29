@@ -25,10 +25,10 @@ import io
 import math
 from datetime import datetime, timedelta
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError,UserError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 import re
-
+from odoo.tools.misc import ustr
 
 class ExpenditureBudget(models.Model):
     _name = 'expenditure.budget'
@@ -836,21 +836,39 @@ class ExpenditureBudget(models.Model):
             raise ValidationError("Budget Validation Process Is Started By Other Users!")
         self.is_validation_process_start = True
         self.env.cr.commit()
-        msg = (_("Budget Validation Process Started at %s" % datetime.strftime(
-            datetime.now(), DEFAULT_SERVER_DATETIME_FORMAT)))
-        self.env['mail.message'].create({'model': 'expenditure.budget', 'res_id': self.id,
-                                         'body': msg})
+        
+        try:
+            msg = (_("Budget Validation Process Started at %s" % datetime.strftime(
+                datetime.now(), DEFAULT_SERVER_DATETIME_FORMAT)))
+            self.env['mail.message'].create({'model': 'expenditure.budget', 'res_id': self.id,
+                                            'body': msg})
+            if self.success_rows != self.total_rows:
+                self.validate_and_add_budget_line()
+                total_lines = len(self.success_line_ids.filtered(
+                    lambda l: l.state == 'success'))
+    
+                if total_lines == self.total_rows:
+                    self.state = 'previous'
+                    msg = (_("Budget Validation Process Ended at %s" % datetime.strftime(
+                        datetime.now(), DEFAULT_SERVER_DATETIME_FORMAT)))
+                        
+        except ValueError as e:
+            self.is_validation_process_start = False
+            self.env.cr.commit()            
+            raise ValidationError(_("%s")% (ustr(e)))
+                
+        except ValidationError as e:
+            self.is_validation_process_start = False
+            self.env.cr.commit()            
+            raise ValidationError(_("%s")% (ustr(e)))
+            
+        except UserError as e:
+            self.is_validation_process_start = False
+            self.env.cr.commit()            
+            raise ValidationError(_("%s")% (ustr(e)))
 
-        if self.success_rows != self.total_rows:
-            self.validate_and_add_budget_line()
-            total_lines = len(self.success_line_ids.filtered(
-                lambda l: l.state == 'success'))
-
-            if total_lines == self.total_rows:
-                self.state = 'previous'
-                msg = (_("Budget Validation Process Ended at %s" % datetime.strftime(
-                    datetime.now(), DEFAULT_SERVER_DATETIME_FORMAT)))
-
+            
+        self.is_validation_process_start = False
 
     def confirm(self):
         self.verify_data()

@@ -339,6 +339,13 @@
                                     <field name="closing_amt"/>
                                 </group>
                             </page>
+
+                            <page name="interest_rate_page" string="Interest Rate">
+                                <group>
+                                    <field name="interest_rate"/>
+                                </group>
+                            </page>
+                            
                         </notebook>
                     </sheet>
                 </form>
@@ -358,17 +365,29 @@
             <field name="arch" type="xml">
                 <tree>
                 	<field name="name"/>
-                	<field name="operation_number"/>
-                	<field name="request_date"/>
-                	<field name="user_id"/>
-                    <field name="agreement_number"/>
-                    <field name="type_of_operation"/>
-                    <field name="apply_to_basis_collaboration"/>
-                    <field name="origin_resource_id"/>
-                    <field name="reason_rejection"/>
-                    <field name="trade_number"/>
-                    <field name="opening_balance"/>
+                	<field name="operation_number" invisible="context.get('from_fund_view',False)"/>
+                	<field name="request_date" invisible="context.get('from_fund_view',False)"/>
+                	<field name="user_id" invisible="context.get('from_fund_view',False)"/>
+                    <field name="agreement_number" invisible="context.get('from_fund_view',False)"/>
+                    <field name="type_of_operation" invisible="context.get('from_fund_view',False)"/>
+                    <field name="apply_to_basis_collaboration" invisible="context.get('from_fund_view',False)"/>
+                    <field name="origin_resource_id" invisible="context.get('from_fund_view',False)"/>
+                    <field name="reason_rejection" invisible="context.get('from_fund_view',False)"/>
+                    <field name="trade_number" invisible="context.get('from_fund_view',False)"/>
+                    <field name="opening_balance" invisible="context.get('from_fund_view',False)"/>
+
+                     <field name="fund_request_date" invisible="not context.get('from_fund_view',False)"/>
+                     <field name="dependency_id"  invisible="not context.get('from_fund_view',False)"/>
+                     <field name="subdependency_id" invisible="not context.get('from_fund_view',False)"/>
+                     <field name="dependency_holder"  invisible="not context.get('from_fund_view',False)"/>
+                     <field name="responsible_user_id"  invisible="not context.get('from_fund_view',False)"/>
+                     <field name="type_of_resource"  invisible="not context.get('from_fund_view',False)"/>
+                     <field name="bank_id" invisible="not context.get('from_fund_view',False)"/>
+                     <field name="account_number" invisible="not context.get('from_fund_view',False)"/>
+                     <field name="request_office" invisible="not context.get('from_fund_view',False)"/>
+                    
                     <field name="state"/>
+                    
                 </tree>
             </field>
         </record>
@@ -388,20 +407,35 @@
                     <sheet>
                         <group>
                             <group>
+                            	<field name="is_fund" invisible="1"/>
                             	<field name="trust_id" invisible="1"/>
                             	<field name="patrimonial_id" invisible="1"/>
                             	<field name="is_manually" invisible="1"/>
                                 <field name="name" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
-                                <field name="operation_number" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
-                                <field name="agreement_number" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
-                                <field name="type_of_operation" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
+                                <field name="operation_number" attrs="{'readonly': [('state', '!=', 'draft')]}" required="not context.get('from_fund_view',False)" invisible="context.get('from_fund_view',False)"/>
+                                <field name="agreement_number" attrs="{'readonly': [('state', '!=', 'draft')]}" required="not context.get('from_fund_view',False)" invisible="context.get('from_fund_view',False)"/>
+                                <field name="type_of_operation" attrs="{'readonly': [('state', '!=', 'draft')]}" required="not context.get('from_fund_view',False)" invisible="context.get('from_fund_view',False)"/>
+                                
+                                <field name="fund_request_date" attrs="{'readonly': [('state', '!=', 'draft')]}" required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)"/>
+                                <field name="dependency_id" attrs="{'readonly': [('state', '!=', 'draft')]}" required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)"/>
+                                <field name="subdependency_id" domain="[('dependency_id','=',dependency_id)]" attrs="{'readonly': [('state', '!=', 'draft')]}" required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)"/>
+                                <field name="dependency_holder" attrs="{'readonly': [('state', '!=', 'draft')]}" required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)"/>
+                                <field name="responsible_user_id" attrs="{'readonly': [('state', '!=', 'draft')]}" required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)"/>
+                                <field name="type_of_resource" attrs="{'readonly': [('state', '!=', 'draft')]}" required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)"/>
+                                <field name="bank_id" attrs="{'readonly': [('state', '!=', 'draft')]}" required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)"/>
+                                <field name="account_number"  required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)"/>
+                                <field name="request_office" attrs="{'readonly': [('state', '!=', 'draft')]}" required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)"/>
                             </group>
                             <group>
-                                <field name="apply_to_basis_collaboration" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="apply_to_basis_collaboration" attrs="{'readonly': [('state', '!=', 'draft')]}" invisible="context.get('from_fund_view',False)"/>
                                 <field name="origin_resource_id" attrs="{'readonly': [('state', '!=', 'draft')]}"
-                                       domain="[('is_it_enabled_for_agreement', '=',  True)]" required="1"/>
+                                       domain="[('is_it_enabled_for_agreement', '=',  True)]" required="not context.get('from_fund_view',False)" invisible="context.get('from_fund_view',False)"/>
                                 <field name="origin_journal_id" domain="[('type','=','bank')]" attrs="{'required':[('trust_id','!=',False)],'invisible':[('trust_id','=',False)],'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="destination_journal_id" domain="[('type','=','bank')]" attrs="{'required':[('trust_id','!=',False)],'invisible':[('trust_id','=',False)],'readonly': [('state', '!=', 'draft')]}"/>
+                                
+                                <field name="permanent_instructions" attrs="{'readonly': [('state', '!=', 'draft')]}"  required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)"/>
+                                <field name="fund_observation" attrs="{'readonly': [('state', '!=', 'draft')]}"  required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)"/>
+                                
                             </group>
                         </group>
                         <group>
@@ -558,7 +592,10 @@
                                 <field name="user_id"/>
                                 <field name="unit_req_transfer_id" context="{'show_for_agreement':1}"/>
                                 <field name="date_required"/>
+                                <field name="fund_id"/>
                                 <field name="fund_type"/>
+                                <field name="agreement_type_id"/>
+                                <field name="base_collabaration_id"/>
                             </group>
                         </group>
                         <group>

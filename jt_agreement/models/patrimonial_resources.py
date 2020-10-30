@@ -22,6 +22,7 @@
 ##############################################################################
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
+from dateutil.relativedelta import relativedelta
 
 class PatrimonialResources(models.Model):
 
@@ -214,21 +215,32 @@ class PatrimonialResources(models.Model):
         req_obj = self.env['request.open.balance']
         for patimonial in self:
             for beneficiary in patimonial.beneficiary_ids:
-                partner_id = beneficiary.employee_id and beneficiary.employee_id.user_id and beneficiary.employee_id.user_id.partner_id and beneficiary.employee_id.user_id.partner_id.id or False   
-                req_obj.create({
-                    'patrimonial_resources_id': patimonial.id,
-                    'apply_to_basis_collaboration': True,
-                    #'agreement_number': collaboration.convention_no,
-                    'opening_balance': patimonial.opening_balance,
-                    'supporting_documentation': patimonial.fund_registration_file,
-                    'type_of_operation': 'retirement',
-                    'beneficiary_id': partner_id,
-                    'name': self.name,
-                    'patrimonial_equity_account_id': patimonial.patrimonial_equity_account_id and  patimonial.patrimonial_equity_account_id.id or False,
-                    'liability_account_id': patimonial.patrimonial_liability_account_id and patimonial.patrimonial_liability_account_id.id or False,
-                    'patrimonial_yield_account_id': patimonial.patrimonial_yield_account_id.id and patimonial.patrimonial_yield_account_id.id or False
+                if beneficiary.validity_start and beneficiary.validity_final_beneficiary and beneficiary.withdrawal_sch_date:
                     
-                })
+                    total_month = (beneficiary.validity_final_beneficiary.year - beneficiary.validity_start.year) * 12 +  (beneficiary.validity_final_beneficiary.month - beneficiary.validity_start.month)
+                    start_date = beneficiary.validity_start
+                    req_date = start_date.replace(day=beneficiary.withdrawal_sch_date.day)
+                    
+                    for month in range(total_month+1):
+                        if month != 0:
+                            req_date = req_date + relativedelta(months=1)
+                
+                        partner_id = beneficiary.employee_id and beneficiary.employee_id.user_id and beneficiary.employee_id.user_id.partner_id and beneficiary.employee_id.user_id.partner_id.id or False   
+                        req_obj.create({
+                            'patrimonial_resources_id': patimonial.id,
+                            'apply_to_basis_collaboration': True,
+                            #'agreement_number': collaboration.convention_no,
+                            'opening_balance': beneficiary.amount,
+                            'supporting_documentation': patimonial.fund_registration_file,
+                            'type_of_operation': 'retirement',
+                            'beneficiary_id': partner_id,
+                            'name': self.name,
+                            'request_date' : req_date,
+                            'patrimonial_equity_account_id': patimonial.patrimonial_equity_account_id and  patimonial.patrimonial_equity_account_id.id or False,
+                            'liability_account_id': patimonial.patrimonial_liability_account_id and patimonial.patrimonial_liability_account_id.id or False,
+                            'patrimonial_yield_account_id': patimonial.patrimonial_yield_account_id.id and patimonial.patrimonial_yield_account_id.id or False
+                            
+                        })
             
 class Beneficiary(models.Model):
     _inherit = 'collaboration.beneficiary'

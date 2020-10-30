@@ -29,7 +29,7 @@ class UDIBONOS(models.Model):
     key = fields.Char("Identification Key")
     issue_date = fields.Date('Date of issue')
     due_date = fields.Date('Due Date')
-    nominal_value = fields.Float("Nominal Value")
+    nominal_value = fields.Float(related='amount_invest',string="Nominal Value")
     interest_rate = fields.Float("Interest Rate")
     time_for_each_cash_flow = fields.Integer(string="Time for each cash flow",size=4)
     time_to_expiration_date = fields.Integer(string="Time to Expiration Date",size=4)

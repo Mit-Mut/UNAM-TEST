@@ -15,12 +15,15 @@
             	</field>
             	<field name="type_of_operation" position="after">
             		<field name="type_of_investment" required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+            		<field name="type_of_financial_products" attrs="{'invisible':[('type_of_investment','!=','money_market')],'required':[('type_of_investment','=','money_market')]}"/>
             	</field>
             	<field name="origin_resource_id" position="after">
-            		<field name="fund_id" required="not context.get('from_fund_view',False)"  invisible="context.get('from_fund_view',False)" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-            		<field name="fund_type_id" required="not context.get('from_fund_view',False)" invisible="context.get('from_fund_view',False)" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-            		<field name="type_of_agreement_id" required="not context.get('from_fund_view',False)" invisible="context.get('from_fund_view',False)" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-            		<field name="bases_collaboration_id" required="not context.get('from_fund_view',False)" invisible="context.get('from_fund_view',False)" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+            		<field name="contract_id" required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+            		<field name="fund_id" required="1"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+            		<field name="fund_key" readonly="1"/>
+            		<field name="fund_type_id" required="1"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+            		<field name="type_of_agreement_id" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+            		<field name="bases_collaboration_id" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
             	</field>
 			</field>
 		</record>
@@ -35,6 +38,14 @@
             <field name="arch" type="xml">
             	<field name="name" position="before">
             		<field name="type_of_investment" invisible="not context.get('from_fund_view',False)"/>
+            		<field name="contract_id" invisible="not context.get('from_fund_view',False)" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+            		<!-- 
+            		<field name="fund_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+            		<field name="fund_key" />
+            		<field name="fund_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+            		<field name="type_of_agreement_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+            		<field name="bases_collaboration_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+            		 -->
             	</field>
 			</field>
 		</record>		
@@ -42,7 +53,7 @@
             <field name="name">Funds</field>
             <field name="res_model">request.open.balance.invest</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'default_is_manually':True,'default_state':'draft','from_fund_view':True}</field>
+            <field name="context">{'default_is_manually':True,'default_is_fund':True,'default_state':'draft','from_fund_view':True}</field>
         </record>
                
         <menuitem id="menu_increments_withdrawals_inv_fund" name="Funds"

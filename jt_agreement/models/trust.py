@@ -22,6 +22,7 @@
 ##############################################################################
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
+from dateutil.relativedelta import relativedelta
 
 class Trust(models.Model):
 
@@ -244,23 +245,34 @@ class Trust(models.Model):
         req_obj = self.env['request.open.balance']
         for trust in self:
             for beneficiary in trust.beneficiary_ids:
-                partner_id = beneficiary.employee_id and beneficiary.employee_id.user_id and beneficiary.employee_id.user_id.partner_id and beneficiary.employee_id.user_id.partner_id.id or False   
-                req_obj.create({
-                    'trust_id': trust.id,
-                    'apply_to_basis_collaboration': True,
-                    #'agreement_number': collaboration.convention_no,
-                    'opening_balance': trust.opening_balance,
-                    'supporting_documentation': trust.trust_office_file,
-                    'type_of_operation': 'retirement',
-                    'beneficiary_id': partner_id,
-                    'name': self.name,
-                    'patrimonial_account_id' : trust.patrimonial_account_id and trust.patrimonial_account_id.id or False,
-                    'investment_account_id' : trust.investment_account_id and trust.investment_account_id.id or False,
-                    'interest_account_id' : trust.interest_account_id and trust.interest_account_id.id or False,
-                    'honorary_account_id' : trust.honorary_account_id and trust.honorary_account_id.id or False,
-                    'availability_account_id' : trust.availability_account_id and trust.availability_account_id.id or False,
-                    'liability_account_id' : trust.liability_account_id and trust.liability_account_id.id or False,
-                })
+                if beneficiary.validity_start and beneficiary.validity_final_beneficiary and beneficiary.withdrawal_sch_date:
+                    
+                    total_month = (beneficiary.validity_final_beneficiary.year - beneficiary.validity_start.year) * 12 +  (beneficiary.validity_final_beneficiary.month - beneficiary.validity_start.month)
+                    start_date = beneficiary.validity_start
+                    req_date = start_date.replace(day=beneficiary.withdrawal_sch_date.day)
+                    
+                    for month in range(total_month+1):
+                        if month != 0:
+                            req_date = req_date + relativedelta(months=1)
+                
+                        partner_id = beneficiary.employee_id and beneficiary.employee_id.user_id and beneficiary.employee_id.user_id.partner_id and beneficiary.employee_id.user_id.partner_id.id or False   
+                        req_obj.create({
+                            'trust_id': trust.id,
+                            'apply_to_basis_collaboration': True,
+                            #'agreement_number': collaboration.convention_no,
+                            'opening_balance': beneficiary.amount,
+                            'supporting_documentation': trust.trust_office_file,
+                            'type_of_operation': 'retirement',
+                            'beneficiary_id': partner_id,
+                            'name': self.name,
+                            'request_date' : req_date,
+                            'patrimonial_account_id' : trust.patrimonial_account_id and trust.patrimonial_account_id.id or False,
+                            'investment_account_id' : trust.investment_account_id and trust.investment_account_id.id or False,
+                            'interest_account_id' : trust.interest_account_id and trust.interest_account_id.id or False,
+                            'honorary_account_id' : trust.honorary_account_id and trust.honorary_account_id.id or False,
+                            'availability_account_id' : trust.availability_account_id and trust.availability_account_id.id or False,
+                            'liability_account_id' : trust.liability_account_id and trust.liability_account_id.id or False,
+                        })
 
             for beneficiary in trust.provider_ids:
                 partner_id = beneficiary.partner_id and beneficiary.partner_id.id or False    

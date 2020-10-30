@@ -48,58 +48,58 @@
                         <group>
                             <group>
                                 <field name="folio" readonly="1"/>
-                                <field name="date_time"/>
-                                <field name="journal_id" domain="[('type','=','bank')]" options="{'no_create': True}"/>
+                                <field name="date_time" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="journal_id" domain="[('type','=','bank')]" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="bank_id"/>
                                 <field name="amount_invest"/>
-                                <field name="currency_id" options="{'no_create': True}"/>
+                                <field name="currency_id" options="{'no_create': True}" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="investment_rate_id" domain="[('product_type','=','BONUS')]" context="{'default_product_type':'BONUS',
                                 		'search_view_ref': 'jt_investment.investment_period_rate_BONUS_search',
                                 		'tree_view_ref': 'jt_investment.investment_period_rate_BONUS_tree',
                                 		'form_view_ref': 'jt_investment.investment_period_rate_BONUS_form'
-                                		}"/>
+                                		}" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 
                                 <field name="total_currency_rate"/>
                             </group>
                             <group>
-                                <field name="contract_id" options="{'no_create': True}"/>
-                                <field name="document_type"/>
-                                <field name="instrument_it"/>
-                                <field name="account_executive"/>
-                                <field name="UNAM_operator"/>
-                                <field name="is_federal_subsidy_resources"/>
-                                <field name="observations"/>                            
+                                <field name="contract_id" options="{'no_create': True}" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="document_type" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="instrument_it" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
+                                <field name="account_executive" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="UNAM_operator" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
+                                <field name="is_federal_subsidy_resources" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="observations" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>                            
                             </group>
                         </group>
                         <notebook>
                         	<page string="General Information" name="general_information">
                         		<group string="Annual">
                         			<group>
-                        				<field name="kind_of_product"/>
-                        				<field name="key"/>
-                        				<field name="issue_date"/>
-                        				<field name="due_date"/>
+                        				<field name="kind_of_product" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        				<field name="key" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        				<field name="issue_date" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        				<field name="due_date" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         			</group>
                         			<group>
-                        				<field name="nominal_value"/>
-                        				<field name="interest_rate"/>
-                        				<field name="time_for_each_cash_flow"/>
-                        				<field name="time_to_expiration_date"/>
+                        				<field name="nominal_value" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        				<field name="interest_rate" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        				<field name="time_for_each_cash_flow" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        				<field name="time_to_expiration_date" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         				<field name="coupon"/>
                         			</group>
                         		</group>
                         		<group string="Monthly">
                         			<group>
-                        				<field name="month_key"/>
-                        				<field name="month_issue_date"/>
-                        				<field name="month_due_date"/>
-                        				<field name="number_of_title"/>
+                        				<field name="month_key" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        				<field name="month_issue_date" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        				<field name="month_due_date" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        				<field name="number_of_title" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         			</group>
                         			<group>
-                        				<field name="udi_value"/>
-                        				<field name="udi_value_multiplied" readonly="1"/>
-                        				<field name="coupon_rate"/>
-                        				<field name="period_days"/>
+                        				<field name="udi_value" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        				<field name="udi_value_multiplied" readonly="1" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        				<field name="coupon_rate" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        				<field name="period_days" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         			</group>
                         		</group>
                         		
@@ -107,20 +107,20 @@
                         	<page string="Accounting" name="account">
                         		<group string="Investment">
                         			<group>
-                        				<field name="investment_income_account_id"/>
+                        				<field name="investment_income_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         			</group>
                         			<group>
-                        				<field name="investment_expense_account_id"/>
-                        				<field name="investment_price_diff_account_id"/>
+                        				<field name="investment_expense_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        				<field name="investment_price_diff_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         			</group>
                         		</group>
                         		<group string="Yields">
                         			<group>
-                        				<field name="return_income_account_id"/>
+                        				<field name="return_income_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         			</group>
                         			<group>
-                        				<field name="return_expense_account_id"/>
-                        				<field name="return_price_diff_account_id"/>
+                        				<field name="return_expense_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        				<field name="return_price_diff_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         			</group>
                         		</group>
                         	</page>

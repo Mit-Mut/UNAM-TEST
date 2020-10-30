@@ -22,7 +22,8 @@
 ##############################################################################
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
-from datetime import datetime
+from datetime import datetime,timedelta
+from dateutil.relativedelta import relativedelta
 
 class BasesCollabration(models.Model):
 
@@ -83,6 +84,10 @@ class BasesCollabration(models.Model):
 
     fund_name_transfer_id = fields.Many2one('bases.collaboration', 'Fund name for transfers')
     closing_amt = fields.Monetary("Amount")
+
+    interest_date = fields.Date(string="Interest Date")
+    interest_rate = fields.Monetary(string="Interest Rate")
+    yields = fields.Monetary(string="Yields")
 
     _sql_constraints = [
         ('folio_convention_no', 'unique(convention_no)', 'The Convention No. must be unique.')]
@@ -241,25 +246,35 @@ class BasesCollabration(models.Model):
         req_obj = self.env['request.open.balance']
         for collaboration in self:
             for beneficiary in collaboration.beneficiary_ids:
-                partner_id = beneficiary.employee_id and beneficiary.employee_id.user_id and beneficiary.employee_id.user_id.partner_id and beneficiary.employee_id.user_id.partner_id.id or False   
-                req_obj.create({
-                    'bases_collaboration_id': collaboration.id,
-                    'apply_to_basis_collaboration': True,
-                    'agreement_number': collaboration.convention_no,
-                    'opening_balance': collaboration.available_bal,
-                    'supporting_documentation': collaboration.cbc_format,
-                    'type_of_operation': 'retirement',
-                    'beneficiary_id': partner_id,
-                    'name': self.name,
-                    'liability_account_id': collaboration.liability_account_id.id if collaboration.liability_account_id
-                    else False,
-                    'interest_account_id': collaboration.interest_account_id.id if collaboration.interest_account_id
-                    else False,
-                    'investment_account_id': collaboration.investment_account_id.id if collaboration.investment_account_id
-                    else False,
-                    'availability_account_id': collaboration.availability_account_id.id if collaboration.availability_account_id
-                    else False
-                })
+                if beneficiary.validity_start and beneficiary.validity_final_beneficiary and beneficiary.withdrawal_sch_date:
+                    
+                    total_month = (beneficiary.validity_final_beneficiary.year - beneficiary.validity_start.year) * 12 +  (beneficiary.validity_final_beneficiary.month - beneficiary.validity_start.month)
+                    start_date = beneficiary.validity_start
+                    req_date = start_date.replace(day=beneficiary.withdrawal_sch_date.day)
+                    
+                    for month in range(total_month+1):
+                        if month != 0:
+                            req_date = req_date + relativedelta(months=1)
+                        partner_id = beneficiary.employee_id and beneficiary.employee_id.user_id and beneficiary.employee_id.user_id.partner_id and beneficiary.employee_id.user_id.partner_id.id or False   
+                        req_obj.create({
+                            'bases_collaboration_id': collaboration.id,
+                            'apply_to_basis_collaboration': True,
+                            'agreement_number': collaboration.convention_no,
+                            'opening_balance': beneficiary.amount,
+                            'supporting_documentation': collaboration.cbc_format,
+                            'type_of_operation': 'retirement',
+                            'beneficiary_id': partner_id,
+                            'name': self.name,
+                            'request_date' : req_date,
+                            'liability_account_id': collaboration.liability_account_id.id if collaboration.liability_account_id
+                            else False,
+                            'interest_account_id': collaboration.interest_account_id.id if collaboration.interest_account_id
+                            else False,
+                            'investment_account_id': collaboration.investment_account_id.id if collaboration.investment_account_id
+                            else False,
+                            'availability_account_id': collaboration.availability_account_id.id if collaboration.availability_account_id
+                            else False
+                        })
 
             for beneficiary in collaboration.provider_ids:
                 partner_id = beneficiary.partner_id and beneficiary.partner_id.id or False    
@@ -650,6 +665,10 @@ class RequestOpenBalance(models.Model):
             'patrimonial_id' : self.patrimonial_resources_id and self.patrimonial_resources_id.id or False,
             'patrimonial_yield_account_id' : self.patrimonial_yield_account_id and self.patrimonial_yield_account_id.id or False,
             'patrimonial_equity_account_id' : self.patrimonial_equity_account_id and self.patrimonial_equity_account_id.id or False,
+            'bases_collaboration_id' : self.bases_collaboration_id and self.bases_collaboration_id.id or False,
+            'fund_type_id' : self.bases_collaboration_id and self.bases_collaboration_id.fund_type_id and self.bases_collaboration_id.fund_type_id.id or False,
+            'type_of_agreement_id' : self.bases_collaboration_id and self.bases_collaboration_id.agreement_type_id and self.bases_collaboration_id.agreement_type_id.id or False,
+            'fund_id' :  self.bases_collaboration_id and self.bases_collaboration_id.fund_id and self.bases_collaboration_id.fund_id.id or False,
         })
         self.state = 'requested'
         if self.type_of_operation == 'withdrawal_cancellation' and self.bases_collaboration_id:
@@ -737,6 +756,7 @@ class RequestOpenBalanceInvestment(models.Model):
     bases_collaboration_id = fields.Many2one('bases.collaboration','Name of Agreement')
     is_fund = fields.Boolean(default=False,string="Fund")
 
+    fund_request_date = fields.Date('Request')
     dependency_id = fields.Many2one('dependency', "Dependency")
     subdependency_id = fields.Many2one('sub.dependency', "Sub Dependency")
     dependency_holder = fields.Char("Dependency Holder")
@@ -745,7 +765,9 @@ class RequestOpenBalanceInvestment(models.Model):
 
     bank_id = fields.Many2one('res.partner.bank', "Bank")
     account_number = fields.Char(related="bank_id.acc_number",string='Account Number')
-    
+    request_office = fields.Char("Request Office")
+    permanent_instructions =fields.Text("Permanent Instructions")
+    fund_observation = fields.Text("Permanent Instructions")
     
     @api.model
     def create(self, vals):
@@ -792,13 +814,7 @@ class RequestOpenBalanceInvestment(models.Model):
         if employee and employee.dependancy_id:
             unit_req_transfer_id = employee.dependancy_id.id
               
-        collaboration = False
         
-        if self.balance_req_id and self.balance_req_id.bases_collaboration_id:
-            collaboration = self.balance_req_id.bases_collaboration_id
-        fund_type = False
-        if collaboration and collaboration.fund_type_id:
-            fund_type = collaboration.fund_type_id.id
         return {
             'name': 'Approve Request',
             'view_type': 'form',
@@ -813,11 +829,15 @@ class RequestOpenBalanceInvestment(models.Model):
                 'default_amount': self.opening_balance,
                 'default_date': today,
                 'default_employee_id': employee.id if employee else False,
-                'default_fund_type': fund_type,
+                'default_fund_type': self.fund_type_id and self.fund_type_id.id or False,
                 'show_for_agreement':1,
                 'default_bank_account_id' : self.origin_journal_id and self.origin_journal_id.id or False,
                 'default_desti_bank_account_id' : self.destination_journal_id and self.destination_journal_id.id or False,
                 'default_unit_req_transfer_id' : unit_req_transfer_id,
+                'default_fund_id' : self.fund_id and self.fund_id.id or False,
+                'default_agreement_type_id' : self.type_of_agreement_id and self.type_of_agreement_id.id or False,
+                'default_base_collabaration_id' : self.bases_collaboration_id and self.bases_collaboration_id.id or False,
+                
             }
         }
 
@@ -857,6 +877,10 @@ class RequestOpenBalanceFinance(models.Model):
     unit_req_transfer_id = fields.Many2one('dependency', string="Unit requesting the transfer")
     date_required = fields.Date("Date Required")
     fund_type = fields.Many2one('fund.type', "Background")
+    agreement_type_id = fields.Many2one('agreement.agreement.type', 'Agreement Type')
+    fund_id = fields.Many2one('agreement.fund','Fund') 
+    base_collabaration_id = fields.Many2one('bases.collaboration','Name Of Agreements')
+    
     reason_rejection = fields.Text("Reason Rejection")
     state = fields.Selection([('draft', 'Draft'),
                               ('requested', 'Requested'),

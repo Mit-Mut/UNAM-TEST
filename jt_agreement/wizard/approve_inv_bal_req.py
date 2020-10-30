@@ -42,8 +42,11 @@ class ApproveInvestmentBalReq(models.TransientModel):
     user_id = fields.Many2one('res.users', default=lambda self: self.env.user.id, string="Applicant")
     unit_req_transfer_id = fields.Many2one('dependency', string="Unit requesting the transfer")
     date_required = fields.Date("Date Required")
-    fund_type = fields.Many2one('fund.type', "Fondo")
-
+    fund_type = fields.Many2one('fund.type', "Type Of Fund")
+    agreement_type_id = fields.Many2one('agreement.agreement.type', 'Agreement Type')
+    fund_id = fields.Many2one('agreement.fund','Fund') 
+    base_collabaration_id = fields.Many2one('bases.collaboration','Name Of Agreements')
+    
     @api.model
     def default_get(self, fields):
         res = super(ApproveInvestmentBalReq, self).default_get(fields)
@@ -68,6 +71,9 @@ class ApproveInvestmentBalReq(models.TransientModel):
                     'unit_req_transfer_id': self.unit_req_transfer_id.id if self.unit_req_transfer_id else False,
                     'date_required': self.date_required,
                     'fund_type': self.fund_type.id if self.fund_type else False,
+                    'agreement_type_id' : self.agreement_type_id and self.agreement_type_id.id or False,
+                    'fund_id' : self.fund_id and self.fund_id.id or False,
+                    'base_collabaration_id' : self.base_collabaration_id and self.base_collabaration_id.id or False,
                     'request_id': request.id,
                     'state': 'requested',
                     'dependency_id' : self.dependency_id and self.dependency_id.id or False,

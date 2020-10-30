@@ -173,7 +173,7 @@
                 action="action_patrimonial_resources" sequence="4"/>
 
 		<!-- Schedule Transfers -->
-         <record id="action_schedule_transfers_trust" model="ir.actions.server">
+         <record id="action_schedule_transfers_patrimonial" model="ir.actions.server">
             <field name="name">Withdrawal Schedule</field>
             <field name="model_id" ref="jt_agreement.model_patrimonial_resources"/>
             <field name="binding_model_id" ref="jt_agreement.model_patrimonial_resources"/>

@@ -9,14 +9,14 @@
                 <tree>
                 	<field name="name"/>
                 	<field name="invesment_date"/>
-                	<field name="price"/>
+                	<field name="price" digits="[12,6]"/>
                     <field name="movement"/>
                		<field name="last_quote_id"/>
-               		<field name="last_quote_price"/>
+               		<field name="last_quote_price" digits="[12,6]"/>
                		<field name="last_quote_date"/>
                		<field name="title"/>
-               		<field name="price_previous_day"/>
-               		<field name="average_price_of_the_month"/>
+               		<field name="price_previous_day" digits="[12,6]"/>
+               		<field name="average_price_of_the_month" digits="[12,6]"/>
                		<field name="journal_id"/>
                		<field name="bank_account_id"/>
                		<field name="number_of_titles"/>
@@ -50,14 +50,14 @@
                         		<field name="invesment_date"/>
                         		<field name="movement"/>
                         		<field name="last_quote_id"/>
-                        		<field name="last_quote_price"/>
+                        		<field name="last_quote_price" digits="[12,6]"/>
                         		<field name="last_quote_date"/>
                         	</group>
                         	<group>
                         		<field name="title"/>
-                        		<field name="price"/>
-                        		<field name="price_previous_day"/>
-                        		<field name="average_price_of_the_month"/>
+                        		<field name="price" digits="[12,6]"/>
+                        		<field name="price_previous_day" digits="[12,6]"/>
+                        		<field name="average_price_of_the_month" digits="[12,6]"/>
                         		<field name="observations"/>
                         		<field name="file_name" invisible="1"/>
                         		<field name="file_data" filename="file_name"/>
@@ -72,7 +72,7 @@
 	                    			<field name="account_balance"/>
 	                    		</group>
 	                    		<group>
-	                    			<field name="movement_price"/>
+	                    			<field name="movement_price" digits="[12,6]"/>
 	                    			<field name="number_of_titles"/>
 	                    			<field name="amount"/>
                     			</group>

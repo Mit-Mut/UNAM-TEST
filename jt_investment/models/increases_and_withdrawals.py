@@ -37,6 +37,7 @@ class RequestOpenBalanceInvestment(models.Model):
                                            ('BondsNotes','BondsNotes'),('Promissory','Promissory'),
                                            ],string="Type Of Investment")
 
+    contract_id = fields.Many2one('investment.contract','Contract')
     
     def set_to_requested(self):
         self.state = 'requested'

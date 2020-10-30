@@ -49,8 +49,10 @@ class AccountStatementsCollaboration(models.AbstractModel):
 
     def _get_reports_buttons(self):
         return [
-            {'name': _('Print Preview'), 'sequence': 1, 'action': 'print_pdf', 'file_export_type': _('PDF')},
-            {'name': _('Export (XLSX)'), 'sequence': 2, 'action': 'print_xlsx', 'file_export_type': _('XLSX')},
+            {'name': _('Print Preview'), 'sequence': 1,
+             'action': 'print_pdf', 'file_export_type': _('PDF')},
+            {'name': _('Export (XLSX)'), 'sequence': 2,
+             'action': 'print_xlsx', 'file_export_type': _('XLSX')},
         ]
 
     def _get_templates(self):
@@ -70,18 +72,19 @@ class AccountStatementsCollaboration(models.AbstractModel):
             {'name': _('Saldo')},
         ]
 
-    def _format(self, value,figure_type):
+    def _format(self, value, figure_type):
         if self.env.context.get('no_format'):
             return value
         value['no_format_name'] = value['name']
-        
+
         if figure_type == 'float':
             currency_id = self.env.company.currency_id
             if currency_id.is_zero(value['name']):
                 # don't print -0.0 in reports
                 value['name'] = abs(value['name'])
                 value['class'] = 'number text-muted'
-            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id)
+            value['name'] = formatLang(
+                self.env, value['name'], currency_obj=currency_id)
             value['class'] = 'number'
             return value
         if figure_type == 'percents':
@@ -97,12 +100,12 @@ class AccountStatementsCollaboration(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
-        
+
         return lines
 
     def _get_report_name(self):
         return _("Account Statements")
-    
+
     @api.model
     def _get_super_columns(self, options):
         date_cols = options.get('date') and [options['date']] or []

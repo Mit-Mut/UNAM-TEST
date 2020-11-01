@@ -100,8 +100,7 @@ class AccountStatementsCollaboration(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
-
-        return lines
+        
 
     def _get_report_name(self):
         return _("Account Statements")

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 	<data>
-		<record id="generate_account_statement" model="ir.ui.view">
+		<record id="generate_bases_collaboration_view" model="ir.ui.view">
             <field name="name">generate.account.statement.view</field>
-            <field name="model">trust.account.statement</field>
+            <field name="model">jt_agreement.bases.collaboration</field>
             <field name="arch" type="xml">
                 <form>
                 	<group>
@@ -14,28 +14,27 @@
                     	<page string="Downloads" attrs="{'invisible':[('line_ids','=',False)]}">
                     		<field name="line_ids" readonly="1">
                     			<tree create="0" edit="0" delete="0">
-                    				<field name="trust_id"/>
+                    				<field name="bases_id"/>
 			                        <field name="filename" readonly="1"/>
 			                        <field name="file" invisible="1" filename="filename" readonly="1"/>
-			                        <button name="download_pdf" type="object" string="Download"></button>                    				
+			                        <button name="download_pdf" type="object" string="Download"></button>
                     			</tree>
                     		
                     		</field>
                     	</page>
                     </notebook>
                 	<footer>
-                		<button string="Print" name="print_account_statement" type="object" class="oe_highlight"/>
+                		<button string="Print" name="print_bases_collaboration" type="object" class="oe_highlight"/>
                         <button string="Cancel" class="btn btn-default" special="cancel"/>
-                        
                     </footer>
                 </form>
             </field>
         </record>
 
-        <act_window name="Generate Account Statement"
-            id="action_generate_account_statement"
-            res_model="trust.account.statement"
-            binding_model="agreement.trust"
+        <act_window name="Generate Bases collaboration"
+            id="action_generate_bases_collaboration"
+            res_model="jt_agreement.bases.collaboration"
+            binding_model="bases.collaboration"
             view_mode="form"
             target="new"
         />

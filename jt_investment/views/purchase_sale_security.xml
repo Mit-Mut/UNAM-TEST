@@ -40,34 +40,34 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="name" required="1"/>
+                                <field name="name" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
                             <group>
                             </group>
                         </group>
                         <group>
                         	<group>
-                        		<field name="invesment_date"/>
-                        		<field name="movement"/>
-                        		<field name="last_quote_id"/>
+                        		<field name="invesment_date" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                        		<field name="movement" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        		<field name="last_quote_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         		<field name="last_quote_price" digits="[12,6]"/>
                         		<field name="last_quote_date"/>
                         	</group>
                         	<group>
-                        		<field name="title"/>
+                        		<field name="title" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         		<field name="price" digits="[12,6]"/>
                         		<field name="price_previous_day" digits="[12,6]"/>
                         		<field name="average_price_of_the_month" digits="[12,6]"/>
-                        		<field name="observations"/>
+                        		<field name="observations" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         		<field name="file_name" invisible="1"/>
-                        		<field name="file_data" filename="file_name"/>
+                        		<field name="file_data" filename="file_name" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         	</group>
                         </group>
                     <notebook>
                     	<page string="Movements">
                     		<group>
 	                    		<group>
-	                    			<field name="journal_id" domain="[('type','=','bank')]"/>
+	                    			<field name="journal_id" domain="[('type','=','bank')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 	                    			<field name="bank_account_id"/>
 	                    			<field name="account_balance"/>
 	                    		</group>
@@ -82,32 +82,32 @@
                        	<page string="Accounting" name="account">
                        		<group string="Investment">
                        			<group>
-                       				<field name="investment_income_account_id"/>
+                       				<field name="investment_income_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                        			</group>
                        			<group>
-                       				<field name="investment_expense_account_id"/>
-                       				<field name="investment_price_diff_account_id"/>
+                       				<field name="investment_expense_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                       				<field name="investment_price_diff_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                        			</group>
                        		</group>
                        		<group string="Yields">
                        			<group>
-                       				<field name="return_income_account_id"/>
+                       				<field name="return_income_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                        			</group>
                        			<group>
-                       				<field name="return_expense_account_id"/>
-                       				<field name="return_price_diff_account_id"/>
+                       				<field name="return_expense_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                       				<field name="return_price_diff_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                        			</group>
                        		</group>
                        	</page>
 						<page string="Returns">
 							<group>
 								<group>
-									<field name="estimated_interest"/>
-									<field name="estimated_profit"/>
+									<field name="estimated_interest" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+									<field name="estimated_profit" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 								</group>
 								<group>
-									<field name="real_interest"/>
-									<field name="real_profit"/>
+									<field name="real_interest" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+									<field name="real_profit" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 									<field name="profit_variation"/>
 								</group>	
 							</group>

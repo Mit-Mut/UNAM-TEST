@@ -925,6 +925,11 @@ class ExpenditureBudget(models.Model):
         }
 
     def unlink(self):
+        program_codes = self.env['program.code']
+        for rec in self:
+            program_codes += rec.success_line_ids.mapped('program_code_id')
+            program_codes += rec.line_ids.mapped('program_code_id')
+                 
         if not self._context.get('from_wizard'):
             for budget in self:
                 if budget.state not in ('draft', 'previous'):
@@ -934,7 +939,10 @@ class ExpenditureBudget(models.Model):
                     else:
                         raise ValidationError(
                             'You can not delete processed budget!')
-        return super(ExpenditureBudget, self).unlink()
+        res = super(ExpenditureBudget, self).unlink()
+        if program_codes:
+            program_codes.filtered(lambda x:x.state!='validated').unlink()
+        return res
 
     def show_imported_lines(self):
         action = self.env.ref(
@@ -1019,7 +1027,7 @@ class ExpenditureBudgetLine(models.Model):
         ('uniq_quarter', 'unique(program_code_id,start_date,end_date)',
          'The Program code must be unique per quarter!'),
     ]
-
+    
     @api.onchange('assigned')
     def onchange_assigned(self):
         if self.assigned:

@@ -56,6 +56,8 @@
         'wizard/cancel_patrimonial_resource.xml',
         'reports/account_statement_report.xml',
         'reports/menu_reports.xml',
+        'reports/bases_collaboration_report.xml',
+        'wizard/bases_collaboration.xml',
         'data/data.xml',
         'security/ir.model.access.csv'
     ],

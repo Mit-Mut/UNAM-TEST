@@ -35,7 +35,7 @@
 
         </template>
 
-        <template id="account_statement_template">
+        <template id="trust_account_statement_template_doc">
         <t t-call="web.html_container">
         <t t-call="jt_agreement.account_statement_template_header"/>
             <div class="page">
@@ -51,38 +51,53 @@
                     }
                 </style>
 
-                <table style="width:100%;">
-                    <tr style="height:6%;text-align:center;font-size:15px;background-color:#C0C0C0;">
-                        <th class="style1">Folio C</th>
-                        <th class="style1">Fecha</th>
-                        <th class="style1">Operacion</th>
-                        <th class="style1">Debe</th>
-                        <th class="style1">Haber</th>
-                        <th class="style1">Saldo</th>
-                    </tr>
-                </table>
                 <table style="width:100%;border: 1px solid black;">
-                    <br/>
-                    <tr class="style1">
-                        <td class="style1 border1" style="text-align:center;">Demo Data</td>
-                        <td class="style1 border1" style="text-align:center;">Demo Data</td>
-                        <td class="style1 border1" style="text-align:center;">Demo Data</td>
-                        <td class="style1 border1" style="text-align:center;">Demo Data</td>
-                        <td class="style1 border1" style="text-align:center;">Demo Data</td>
-                        <td class="style1 border1" style="text-align:center;">Demo Data</td>
-                    </tr>
-                    <tr class="style1">
-                        <td class="style1" style="text-align:center;">Demo Data</td>
-                        <td class="style1" style="text-align:center;">Demo Data</td>
-                        <td class="style1" style="text-align:center;">Demo Data</td>
-                        <td class="style1" style="text-align:center;">Demo Data</td>
-                        <td class="style1" style="text-align:center;">Demo Data</td>
-                        <td class="style1" style="text-align:center;">Demo Data</td>
-                    </tr>
+                	<thead>
+	                    <tr style="height:6%;text-align:center;font-size:15px;background-color:#C0C0C0;">
+	                        <th class="style1">Folio C</th>
+	                        <th class="style1">Fecha</th>
+	                        <th class="style1">Operacion</th>
+	                        <th class="style1">Debe</th>
+	                        <th class="style1">Haber</th>
+	                        <th class="style1">Saldo</th>
+	                    </tr>
+                    </thead>
+                    <tbody>
+                    	<t t-set="total_final" t-value="0"/>
+	                    <tr class="style1" t-foreach="o.request_open_balance_ids" t-as="line">
+	                    	<t t-set="debit" t-value="0"/>
+	                    	<t t-set="credit" t-value="0"/>
+	                    
+	                        <td class="style1 border1" style="text-align:center;"><span t-field="line.operation_number"/></td>
+	                        <td class="style1 border1" style="text-align:center;"><span t-field="line.request_date"/></td>
+	                        <td class="style1 border1" style="text-align:center;"><span t-field="line.type_of_operation"/></td>
+	                        <t t-if="line.type_of_operation in ('withdrawal','retirement')">
+	                        	<t t-set="credit" t-value="line.opening_balance"/>
+	                        	<t t-set="total_final" t-value="total_final - line.opening_balance"/>
+	                        </t>
+	                        <t t-if="line.type_of_operation in ('increase','increase_by_closing')">
+	                        	<t t-set="debit" t-value="line.opening_balance"/>
+	                        	<t t-set="total_final" t-value="total_final + line.opening_balance"/>
+	                        </t>
+	                        <td class="style1 border1" style="text-align:center;"><span t-esc="debit"/></td>
+	                        <td class="style1 border1" style="text-align:center;"><span t-esc="credit"/></td>
+	                        <td class="style1 border1" style="text-align:center;"><span t-esc="total_final"/></td>
+	                    </tr>
+                    </tbody>
                 </table>  
             </div>
         </t>
        </template>
+
+        <template id="account_statement_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <!-- <t t-set="lang" t-value="o.invoice_user_id.sudo().lang if o.type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
+                     -->
+                    <t t-call="jt_agreement.trust_account_statement_template_doc"/>
+                </t>
+            </t>
+        </template>
 
         <record id="paperformat_account_statement" model="report.paperformat">
             <field name="name">Format 1</field>

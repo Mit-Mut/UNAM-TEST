@@ -48,7 +48,7 @@ class BasesCollabrationModification(models.Model):
     new_committe_ids = fields.One2many('committee', 'new_collaboration_modi_id', string="Committees")
 
     def confirm(self):
-        if self.change_of == 'goals' and self.current_target and self.new_objective and self.bases_collaboration_id:
+        if self.change_of == 'goals' and self.new_objective and self.bases_collaboration_id:
             self.bases_collaboration_id.goals = self.new_objective
         if self.change_of == 'committee' and self.bases_collaboration_id:
             self.bases_collaboration_id.committe_ids = [(5, 0)]

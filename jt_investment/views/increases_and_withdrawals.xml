@@ -17,7 +17,7 @@
             		<field name="type_of_investment" required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
             		<field name="type_of_financial_products" attrs="{'invisible':[('type_of_investment','!=','money_market')],'required':[('type_of_investment','=','money_market')]}"/>
             	</field>
-            	<field name="origin_resource_id" position="after">
+            	<field name="permanent_instructions" position="before">
             		<field name="contract_id" required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
             		<field name="fund_id" required="1"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
             		<field name="fund_key" readonly="1"/>

@@ -9,7 +9,6 @@
                 <search>
                     <field name="origin"/>
                     <field name="organization"/>
-                    <field name="description"/>
                 </search>
             </field>
         </record>
@@ -24,7 +23,7 @@
                         <group>
                             <field name="origin" required="1"/>
                             <field name="organization"/>
-                            <field name="description"/>
+                            <field name="description" invisible="1"/>
                         </group>
                     </sheet>
                 </form>
@@ -39,7 +38,7 @@
                 <tree>
                     <field name="origin"/>
                     <field name="organization"/>
-                    <field name="description"/>
+                    <field name="description" invisible="1"/>
                 </tree>
             </field>
         </record>

@@ -48,18 +48,13 @@ class VerficationOfExpense(models.Model):
         'hr.employee', string='Administrative manager')
     ext_sponsor = fields.Text('External sponsor')
     observation = fields.Text('Observations')
-    reason_for_rejection = fields.Many2one(
-        'rejection.check', string='Reason for rejection')
+    reason_for_rejection = fields.Char('Reason for rejection')
     verifcation_expense_ids = fields.One2many(
         'verification.expense.line', 'verification_expense_id', string='Verfication Expense Line')
 
     def action_approve(self):
 
-        self.state = 'approve'
-
-    def action_reject(self):
-
-        self.state = 'reject'
+        self.status = 'approve'
 
 
 class VerificationOfExpenseLine(models.Model):

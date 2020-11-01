@@ -165,6 +165,7 @@ class AccountMove(models.Model):
     is_zone_res = fields.Boolean('Show Zone Res',default=False)
     is_show_resposible_group = fields.Boolean('Resposible Group',default=False)
 
+
     @api.depends('payment_state','is_payroll_payment_request','is_payment_request','state')
     def get_conac_line_display(self):
         for rec in self:
@@ -417,6 +418,7 @@ class AccountMove(models.Model):
                 rec.employee_paryoll_ids.write({'payment_issuing_bank_id':rec.payment_issuing_bank_id and rec.payment_issuing_bank_id.id or False,
                                                 'bank_acc_payment_insur_id' : rec.payment_issuing_bank_acc_id and rec.payment_issuing_bank_acc_id.id or False
                                                 })
+        
         return res
     
 #     def remove_journal_line(self):
@@ -450,7 +452,24 @@ class AccountMoveLine(models.Model):
     folio_invoice = fields.Char("Folio Invoice")
     vault_folio = fields.Char("Vault folio")
 
-
-
-
+    @api.model_create_multi
+    def create(self, vals_list):
+        lines = super(AccountMoveLine, self).create(vals_list)
+        print 
+        if any(lines.filtered(lambda x:x.move_id.is_payment_request and not x.egress_key_id and not x.exclude_from_invoice_tab)):
+            raise ValidationError(_("Please add Egress Key into lines"))
+        return lines
+            
+    def write(self,vals):
+        result = super(AccountMoveLine,self).write(vals)
+        if 'egress_key_id' in vals:
+            if any(self.filtered(lambda x:x.move_id.is_payment_request and not x.egress_key_id and x.move_id.payment_state=='draft')):
+                raise ValidationError(_("Please add Egress Key into lines"))
+             
+            
+#         if vals.get('account_id'):
+#             for res in self:
+#                 if res.account_id and res.account_id.coa_conac_id and not res.coa_conac_id:
+#                     res.coa_conac_id = res.account_id.coa_conac_id.id
+        return result
 

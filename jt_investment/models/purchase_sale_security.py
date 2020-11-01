@@ -58,8 +58,8 @@ class PurchaseSaleSecurity(models.Model):
     @api.depends('last_quote_id','last_quote_id.price_id')
     def get_previous_price_days(self):
         for rec in self:
-            if self.last_quote_id and self.last_quote_id.price_id:
-                previous_rec = self.env['stock.quote.price'].search([('date','<',self.last_quote_id.price_id.date)],limit=1,order='date desc')
+            if rec.last_quote_id and rec.last_quote_id.price_id:
+                previous_rec = self.env['stock.quote.price'].search([('date','<',rec.last_quote_id.price_id.date)],limit=1,order='date desc')
                 if previous_rec:
                     rec.price_previous_day = previous_rec.price
                 else:
@@ -70,12 +70,19 @@ class PurchaseSaleSecurity(models.Model):
     @api.depends('last_quote_id','last_quote_id.price_id')
     def get_average_price_of_the_month(self):
         for rec in self:
-            if self.last_quote_id and self.last_quote_id.price_id:
-                p_date = self.last_quote_id.price_id.date.replace(day=1) - timedelta(days=1)
-                
-                previous_rec = self.env['stock.quote.price'].search([('date','<=',p_date)],limit=1,order='date desc')
+            if rec.last_quote_id and rec.last_quote_id.price_id:
+                p_date = rec.last_quote_id.price_id.date.replace(day=1)
+                day_diff = rec.last_quote_id.price_id.date - p_date
+                day_diff = day_diff.days+1
+
+                previous_rec = self.env['stock.quote.price'].search([('date','>=',p_date),('date','<=',rec.last_quote_id.price_id.date)],order='date desc')
                 if previous_rec:
-                    rec.average_price_of_the_month = previous_rec.price
+                    sum_price =  sum(x.price for x in previous_rec)
+                    if day_diff:
+                        sum_price = sum_price/day_diff
+                        rec.average_price_of_the_month = sum_price
+                    else: 
+                        rec.average_price_of_the_month = sum_price
                 else:
                     rec.average_price_of_the_month = 0.0
             else:

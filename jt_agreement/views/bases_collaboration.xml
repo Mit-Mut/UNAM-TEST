@@ -421,15 +421,16 @@
                                 <field name="subdependency_id" domain="[('dependency_id','=',dependency_id)]" attrs="{'readonly': [('state', '!=', 'draft')]}" required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)"/>
                                 <field name="dependency_holder" attrs="{'readonly': [('state', '!=', 'draft')]}" required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)"/>
                                 <field name="responsible_user_id" attrs="{'readonly': [('state', '!=', 'draft')]}" required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)"/>
-                                <field name="type_of_resource" attrs="{'readonly': [('state', '!=', 'draft')]}" required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)"/>
+                                <field name="origin_resource_id" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                                       domain="[('is_it_enabled_for_agreement', '=',  True)]" required="1"/>
+                               
                                 <field name="bank_id" attrs="{'readonly': [('state', '!=', 'draft')]}" required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)"/>
                                 <field name="account_number"  required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)"/>
                                 <field name="request_office" attrs="{'readonly': [('state', '!=', 'draft')]}" required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)"/>
                             </group>
                             <group>
                                 <field name="apply_to_basis_collaboration" attrs="{'readonly': [('state', '!=', 'draft')]}" invisible="context.get('from_fund_view',False)"/>
-                                <field name="origin_resource_id" attrs="{'readonly': [('state', '!=', 'draft')]}"
-                                       domain="[('is_it_enabled_for_agreement', '=',  True)]" required="not context.get('from_fund_view',False)" invisible="context.get('from_fund_view',False)"/>
+                                
                                 <field name="origin_journal_id" domain="[('type','=','bank')]" attrs="{'required':[('trust_id','!=',False)],'invisible':[('trust_id','=',False)],'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="destination_journal_id" domain="[('type','=','bank')]" attrs="{'required':[('trust_id','!=',False)],'invisible':[('trust_id','=',False)],'readonly': [('state', '!=', 'draft')]}"/>
                                 

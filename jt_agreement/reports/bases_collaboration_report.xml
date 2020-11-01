@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="bases_collaboration_template_header" name="bases_collaboration_pdf">
+           
+            <!-- <div class="header"> -->
+                <div class="row">
+                    <table style="width:100%;border: 1px solid grey;">
+                        <tr>
+                            <tr style="width:100%;">
+                                <td>
+                                    <img t-attf-src="data:image/png;base64,{{res_company.header_logo}}" style="width:150px;height:170px;"/>
+                                </td>
+
+                                <td style="text-align:right">
+                                    <b>
+                                        <span style="font-size:20px;" >UNIVERSIDAD NACIONAL AUTONOMA DE MAXICO</span><br/>
+                                        <span style="font-size:18px;">PATRONATO UNIVERSITARO-TESORERIA</span><br/>
+                                        <span style="font-size:18px;">DIRECCION GENERAL DE FINANZAS</span><br/>
+                                        <span style="font-size:18px;">DIRECCION DE INGRESOS Y OPERATION FINANCIERA</span><br/>
+                                    </b>
+                                </td><br/>
+                            </tr>
+
+                            <tr style="width:100%;">
+                                <td>
+                                    <b><span style="font-size:15px;">ESTA DE CUENTA DE CONVENIOS BASES DE COLABORACION:</span></b>
+                                </td>
+                                <td>
+                                    <span style="margin-left:400px;font-size:15px;">Fecha de Impresion:</span>
+                                </td>
+                                <br/><br/>
+                                <!-- <hr style="width:60%;"/> -->
+                            </tr>
+ 
+                        </tr>
+                    </table>
+
+                </div>
+            <!-- </div> -->
+
+        </template>
+
+        <template id="bases_collaboration_report_template_doc">
+        <t t-call="web.html_container">
+        <t t-call="jt_agreement.bases_collaboration_template_header"/>
+
+            <div class="page">
+                <style>
+                .border
+                    {
+                    border: 1px solid grey;
+                    }
+
+                .style1
+                    {
+                        font-size:15px;
+                    }
+                </style>
+
+                <div>
+                    <br/><br/><br/>
+                </div>
+				<table style="width:100%">
+                 <tr style="width:100%;">
+                     <!-- <hr/><hr/> -->
+                     <td style="width:50%;">
+                         <b><span>Fondo:</span></b><br/><br/>
+                         <b><span>Convenio:</span></b><br/><br/>
+                         <b><span>Dep:</span></b><br/><br/>
+                     </td>
+                     <td style="width:50%;">
+                         <b><span>Periodo:</span></b><br/><br/>
+                         <b><span>Num.de Convenio:</span></b><br/><br/>
+                         <b><span>Clave dependencia:</span></b><br/><br/>
+                         <b><span>Moneda:</span></b><br/><br/>
+                     </td>
+                 </tr>
+				</table>
+                <div style="border:1px solid grey;">
+                <table style="width:100%;border-top: 1px solid black;border-bottom:1px solid black;">
+                    <tr style="width:100%;" class="border">
+                        <b>
+                        <span style="margin-left:800px;">Saldo Anterior:</span><br/>
+                        <span style="margin-left:800px;">(+) Depositos:</span><br/>
+                        <span style="margin-left:800px;">(-) Retiros:</span><br/>
+                        <span style="margin-left:800px;">(+) Intereses:</span><br/>
+                        <span style="margin-left:800px;">(-) Recup. por Financ.:</span><br/>
+                        <span style="margin-left:800px;">(+) Dif. Por Redondeo:</span><br/>
+                        <span style="margin-left:800px;">Saldo Actual:</span><br/></b><br/>
+                    </tr>
+
+                	<thead>
+	                    <tr style="height:6%;text-align:center;font-size:15px;background-color:#C0C0C0;">
+	                        <th class="style1">Fecha</th>
+	                        <th class="style1">Operacion</th>
+	                        <th class="style1">Depositos</th>
+	                        <th class="style1">Retiro</th>
+	                        <th class="style1">Saldo</th>
+	                    </tr>
+                    </thead>
+                    <tbody>
+                    	<t t-set="total_final" t-value="0"/>
+	                    <tr class="style1" t-foreach="o.request_open_balance_ids" t-as="line">
+	                    	<t t-set="debit" t-value="0"/>
+	                    	<t t-set="credit" t-value="0"/>
+	                    
+	                        <td class="style1 border1" style="text-align:center;"><span t-field="line.request_date"/></td>
+	                        <td class="style1 border1" style="text-align:center;"><span t-field="line.type_of_operation"/></td>
+	                        <t t-if="line.type_of_operation in ('withdrawal','retirement')">
+	                        	<t t-set="credit" t-value="line.opening_balance"/>
+	                        	<t t-set="total_final" t-value="total_final - line.opening_balance"/>
+	                        </t>
+	                        <t t-if="line.type_of_operation in ('increase','increase_by_closing')">
+	                        	<t t-set="debit" t-value="line.opening_balance"/>
+	                        	<t t-set="total_final" t-value="total_final + line.opening_balance"/>
+	                        </t>
+	                        <td class="style1 border1" style="text-align:center;"><span t-esc="debit"/></td>
+	                        <td class="style1 border1" style="text-align:center;"><span t-esc="credit"/></td>
+	                        <td class="style1 border1" style="text-align:center;"><span t-esc="total_final"/></td>
+	                    </tr>
+                    </tbody>
+                </table>
+                </div>
+              
+            </div>
+        </t>
+       </template>
+
+        <template id="bases_collaboration_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <!-- <t t-set="lang" t-value="o.invoice_user_id.sudo().lang if o.type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
+                     -->
+                    <t t-call="jt_agreement.bases_collaboration_report_template_doc"/>
+                </t>
+            </t>
+        </template>
+
+        <record id="paperformat_bases_collaboration" model="report.paperformat">
+            <field name="name">Format 1</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">6</field>
+            <field name="margin_bottom">60</field>
+            <field name="margin_left">10</field>
+            <field name="margin_right">10</field>
+            <field name="header_line" eval="False"/>
+            <field name="dpi">100</field>
+        </record>
+
+        <report 
+            id="bases_collaboration_report"
+            model="bases.collaboration"
+            string="Bases collaboration"
+            report_type="qweb-pdf"
+            name="jt_agreement.bases_collaboration_template"
+            file="jt_agreement.bases_collaboration_template"
+            print_report_name="object.name"
+            paperformat="jt_agreement.paperformat_bases_collaboration"
+        />
+
+    </data>
+</odoo>

@@ -35,43 +35,43 @@
                     <sheet>
                         <group>
                         	<group>
-			                    <field name="invesment_date"/>
-			               		<field name="journal_id"/>
-			               		<field name="contract_id"/>
-			               		<field name="amount_to_invest"/>
-			               		<field name="is_fixed_rate"/>
-			               		<field name="is_variable_rate"/>
-			               		<field name="interest_rate"/>
-			               		<field name="extra_percentage"/>
+			                    <field name="invesment_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			               		<field name="journal_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			               		<field name="contract_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			               		<field name="amount_to_invest" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			               		<field name="is_fixed_rate" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			               		<field name="is_variable_rate" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			               		<field name="interest_rate" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			               		<field name="extra_percentage" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         	</group>
                         	<group>
-			               		<field name="term" attrs="{'invisible':[('is_fixed_rate','=',False)]}"/>
-			               		<field name="term_variable" attrs="{'invisible':[('is_variable_rate','=',False)]}"/>
-			               		<field name="capitalizable"/>
-			               		<field name="frequency"/>
-			               		<field name="currency_id"/>
+			               		<field name="term" attrs="{'invisible':[('is_fixed_rate','=',False)],'readonly': [('state', '!=', 'draft')]}"/>
+			               		<field name="term_variable" attrs="{'invisible':[('is_variable_rate','=',False)],'readonly': [('state', '!=', 'draft')]}"/>
+			               		<field name="capitalizable" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			               		<field name="frequency" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			               		<field name="currency_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			               		<field name="investment_rate_id" domain="[('product_type','=','TIIE')]" 
                                 		context="{'default_product_type':'TIIE',
                                 		'search_view_ref': 'jt_investment.investment_period_rate_tiie_search',
                                 		'tree_view_ref': 'jt_investment.investment_period_rate_tiie_tree',
                                 		'form_view_ref': 'jt_investment.investment_period_rate_tiie_form'
-                                		}"/>
+                                		}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 
-                        		<field name="observations"/>
+                        		<field name="observations" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         		<field name="file_name" invisible="1"/>
-                        		<field name="file_data" filename="file_name"/>
+                        		<field name="file_data" filename="file_name" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         	</group>
                         </group>
                     <notebook>
 						<page string="Returns">
 							<group>
 								<group>
-									<field name="estimated_interest"/>
-									<field name="estimated_profit"/>
+									<field name="estimated_interest" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+									<field name="estimated_profit" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 								</group>
 								<group>
-									<field name="real_interest"/>
-									<field name="real_profit"/>
+									<field name="real_interest" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+									<field name="real_profit" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 									<field name="profit_variation"/>
 								</group>	
 							</group>
@@ -79,20 +79,20 @@
                        	<page string="Accounting" name="account">
                        		<group string="Investment">
                        			<group>
-                       				<field name="investment_income_account_id"/>
+                       				<field name="investment_income_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                        			</group>
                        			<group>
-                       				<field name="investment_expense_account_id"/>
-                       				<field name="investment_price_diff_account_id"/>
+                       				<field name="investment_expense_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                       				<field name="investment_price_diff_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                        			</group>
                        		</group>
                        		<group string="Yields">
                        			<group>
-                       				<field name="return_income_account_id"/>
+                       				<field name="return_income_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                        			</group>
                        			<group>
-                       				<field name="return_expense_account_id"/>
-                       				<field name="return_price_diff_account_id"/>
+                       				<field name="return_expense_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                       				<field name="return_price_diff_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                        			</group>
                        		</group>
                        	</page>

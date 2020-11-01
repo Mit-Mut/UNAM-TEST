@@ -38,6 +38,15 @@ class RequestOpenBalanceInvestment(models.Model):
                                            ],string="Type Of Investment")
 
     contract_id = fields.Many2one('investment.contract','Contract')
+
+    @api.onchange('contract_id')
+    def onchange_contract_id(self):
+      if self.contract_id:
+        self.fund_type_id = self.contract_id.fund_type_id
+        self.type_of_agreement_id = self.contract_id.agreement_type_id
+        self.fund_id = self.contract_id.fund_id
+        self.base_collabaration_id = self.contract_id.base_collabaration_id
+    
     
     def set_to_requested(self):
         self.state = 'requested'

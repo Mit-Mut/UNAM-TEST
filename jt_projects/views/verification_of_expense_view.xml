@@ -24,8 +24,8 @@
                     <header>
                         <button name="action_approve" string="Approve" class="oe_highlight"
                                 type="object" attrs="{'invisible': [('status', '=', 'approve')]}"/>
-                        <button name="action_reject" string="Reject" class="oe_highlight"
-                                type="object" attrs="{'invisible': [('status', '=', 'reject')]}"/>
+                        <button name="%(jt_projects.action_reason_for_rejection)d" string="Reject" class="oe_highlight"
+                                type="action" attrs="{'invisible': [('status', '=', 'reject')]}"/>
                         <field name="status" widget="statusbar" />
                     </header>
                     <sheet>

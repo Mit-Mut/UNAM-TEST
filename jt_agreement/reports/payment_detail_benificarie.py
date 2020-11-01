@@ -72,4 +72,56 @@ class PaymentDetailsBeneficiaries(models.AbstractModel):
         record = options['date']
         start = record.get('date_from')
         end = record.get('date_to')
+
+        base_ids = self.env['bases.collaboration'].search([('beneficiary_ids','!=',False)])
+        
+        for base in base_ids:
+            base_no = ''
+            if base.convention_no:
+                base_no = base.convention_no
+                
+            lines.append({
+                'id': 'hierarchy_base' + str(base.id),
+                'name': 'CATEDRA:' + base_no,
+                'columns': [{'name': base.name}, 
+                            {'name': ''}, 
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+            employee_ids =  base.beneficiary_ids.mapped('employee_id')
+            for emp in employee_ids:
+                lines.append({
+                    'id': 'hierarchy_emp' + str(base.id) + str(emp.id),
+                    'name': emp.rfc,
+                    'columns': [{'name': emp.name}, 
+                                {'name': ''}, 
+                                {'name': ''},
+                                {'name': ''},
+                                ],
+                    'level': 2,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+                
+                ben_ids =  base.beneficiary_ids.filtered(lambda x:x.employee_id.id==emp.id)
+                for ben in ben_ids:
+                    lines.append({
+                        'id': 'hierarchy_ben' + str(ben.id),
+                        'name': '',
+                        'columns': [
+                                    {'name': ben.validity_start}, 
+                                    {'name': ben.validity_final_beneficiary},
+                                    {'name': base.state},
+                                    {'name': ben.amount},
+                                    ],
+                        'level': 3,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+                    
+                
         return lines

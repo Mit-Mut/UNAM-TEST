@@ -92,7 +92,7 @@
                                 <field name="commitment_date" attrs="{'invisible':['|',('is_payment_request','=',False),('is_show_commitment_date','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 <field name="folio_dependency" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 <field name="date_receipt" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
-                                <field name="date_approval_request" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                <field name="date_approval_request" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', 'in', ('draft','registered'))]}"/>
                                 <field name="invoice_date" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 <field name="administrative_forms" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 <field name="no_of_document" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>

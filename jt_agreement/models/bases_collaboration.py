@@ -59,7 +59,8 @@ class BasesCollabration(models.Model):
                               ('cancelled', 'Cancelled')], "Status", default='draft')
     total_operations = fields.Integer("Operations", compute="compute_operations")
     total_modifications = fields.Integer("Modifications", compute="compute_modifications")
-
+    request_open_balance_ids = fields.One2many('request.open.balance','bases_collaboration_id')
+    
     employee_id = fields.Many2one('hr.employee', 'Holder of the unit')
     job_id = fields.Many2one('hr.job', "Market Stall")
     phone = fields.Char("Telephone of the unit holder")
@@ -767,7 +768,7 @@ class RequestOpenBalanceInvestment(models.Model):
     account_number = fields.Char(related="bank_id.acc_number",string='Account Number')
     request_office = fields.Char("Request Office")
     permanent_instructions =fields.Text("Permanent Instructions")
-    fund_observation = fields.Text("Permanent Instructions")
+    fund_observation = fields.Text("Observations")
     
     @api.model
     def create(self, vals):
@@ -875,7 +876,7 @@ class RequestOpenBalanceFinance(models.Model):
     concept = fields.Text("Application Concept")
     user_id = fields.Many2one('res.users', default=lambda self: self.env.user.id, string="Applicant")
     unit_req_transfer_id = fields.Many2one('dependency', string="Unit requesting the transfer")
-    date_required = fields.Date("Date Required")
+    date_required = fields.Date("Date Required",required=True)
     fund_type = fields.Many2one('fund.type', "Background")
     agreement_type_id = fields.Many2one('agreement.agreement.type', 'Agreement Type')
     fund_id = fields.Many2one('agreement.fund','Fund') 

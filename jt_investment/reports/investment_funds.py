@@ -69,7 +69,6 @@ class SummaryofOperationInvestmentFunds(models.AbstractModel):
             {'name': _('Compra/Venta')},
             {'name': _('Titulos')},
             {'name': _('Monto de Inversión')},
-            {'name': _('Total')},
         ]
 
     def _format(self, value,figure_type):
@@ -99,7 +98,40 @@ class SummaryofOperationInvestmentFunds(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
-                    
+        records = self.env['purchase.sale.security'].search([('state','=','confirmed'),('invesment_date','>=',start),('invesment_date','<=',end)])
+        total_amount = 0
+        
+        for rec in records:
+            total_amount += rec.amount 
+            movement = dict(rec._fields['movement'].selection).get(rec.movement)
+            lines.append({
+                'id': 'hierarchy' + str(rec.id),
+                'name': rec.name,
+                'columns': [{'name': ''}, 
+                            {'name': ''}, 
+                            {'name': movement},
+                            self._format({'name': rec.title},figure_type='float'),
+                            self._format({'name': rec.amount},figure_type='float'),
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        lines.append({
+            'id': 'hierarchy_total',
+            'name': 'Total',
+            'columns': [{'name': ''}, 
+                        {'name': ''}, 
+                        {'name': ''},
+                        {'name': ''},
+                        self._format({'name': total_amount},figure_type='float'),
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+                        
         return lines
 
     def _get_report_name(self):

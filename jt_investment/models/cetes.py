@@ -60,6 +60,8 @@ class CETES(models.Model):
     state = fields.Selection([('draft', 'Draft'), ('requested', 'Requested'), ('rejected', 'Rejected'), ('approved', 'Approved'),
                               ('confirmed', 'Confirmed'), ('done', 'Done'), ('canceled', 'Canceled')], string="Status", default='draft')
 
+    origin_resource_id = fields.Many2one('sub.origin.resource', "Origin of the resource")
+    
     #====== Accounting Fields =========#
 
     investment_income_account_id = fields.Many2one(

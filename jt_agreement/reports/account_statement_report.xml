@@ -27,7 +27,7 @@
 
                     <div>
                         <b><span style="margin-left:5px;font-size:15px;">FIDEICOMISO:</span></b>
-                        <b><span style="margin-left:400px;font-size:15px;">Fecha de Impresion:</span></b>
+                        <b><span style="margin-left:400px;font-size:15px;">Fecha y hora de impresión  </span><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/></b>
                         <br/><br/>
                     </div>
                 </div>

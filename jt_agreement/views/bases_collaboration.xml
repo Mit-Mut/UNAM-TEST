@@ -123,12 +123,12 @@
 <!--            <field name="act_window_id" ref="action_req_open_balance"/>-->
 <!--        </record>-->
 
-<!--        <record id="action_req_open_balance_form" model="ir.actions.act_window.view">-->
-<!--            <field eval="2" name="sequence"/>-->
-<!--            <field name="view_mode">form</field>-->
-<!--            <field name="view_id" ref="view_req_open_balance_form"/>-->
-<!--            <field name="act_window_id" ref="action_req_open_balance"/>-->
-<!--        </record>-->
+        <!-- <record id="action_req_open_balance_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_req_open_balance_form"/>
+            <field name="act_window_id" ref="action_req_open_balance"/>
+        </record> -->
 
 
         <record id="view_bases_collabration_tree" model="ir.ui.view">

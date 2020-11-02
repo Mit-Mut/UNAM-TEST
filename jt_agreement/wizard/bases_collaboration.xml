@@ -7,11 +7,12 @@
             <field name="arch" type="xml">
                 <form>
                 	<group>
-                        <field name="start_date" required="1"/>
-                        <field name="end_date" required="1"/>
+                		<field name="is_hide_button" invisible="1"/>
+                        <field name="start_date" required="1" attrs="{'invisible':[('is_hide_button','=',True)]}"/>
+                        <field name="end_date" required="1" attrs="{'invisible':[('is_hide_button','=',True)]}"/>
                     </group>
                     <notebook>
-                    	<page string="Downloads" attrs="{'invisible':[('line_ids','=',False)]}">
+                    	<page  string="Downloads" attrs="{'invisible':[('is_hide_button','=',False)]}">
                     		<field name="line_ids" readonly="1">
                     			<tree create="0" edit="0" delete="0">
                     				<field name="bases_id"/>
@@ -24,7 +25,7 @@
                     	</page>
                     </notebook>
                 	<footer>
-                		<button string="Print" name="print_bases_collaboration" type="object" class="oe_highlight"/>
+                		<button string="Print" name="print_bases_collaboration" type="object" class="oe_highlight" attrs="{'invisible':[('is_hide_button','=',True)]}"/>
                         <button string="Cancel" class="btn btn-default" special="cancel"/>
                     </footer>
                 </form>

@@ -4,3 +4,4 @@ access_request_accounts,request_accounts,model_request_accounts,base.group_user,
 access_request_transfer,request_transfer,model_request_transfer,base.group_user,1,1,1,1 
 access_expense_verification,expense_verification,model_expense_verification,base.group_user,1,1,1,1 
 access_verification_expense_line,verification_expense_line,model_verification_expense_line,base.group_user,1,1,1,1
+access_account_cancel,account_cancel,model_account_cancel,base.group_user,1,1,1,1

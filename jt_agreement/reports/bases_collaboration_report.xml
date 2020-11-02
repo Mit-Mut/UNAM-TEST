@@ -24,15 +24,20 @@
 
                             <tr style="width:100%;">
                                 <td>
-                                    <b><span style="font-size:15px;">ESTA DE CUENTA DE CONVENIOS BASES DE COLABORACION:</span></b>
+                                    <b><span style="font-size:17px;margin-left:5px;">ESTA DE CUENTA DE CONVENIOS BASES DE COLABORACION:</span></b>
                                 </td>
                                 <td>
-                                    <span style="margin-left:400px;font-size:15px;">Fecha de Impresion:</span>
+                                    <span style="margin-left:300px;font-size:15px;">Fecha y hora de impresión  </span><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/>
                                 </td>
                                 <br/><br/>
-                                <!-- <hr style="width:60%;"/> -->
                             </tr>
- 
+
+                            <tr style="width:100%;">
+                                <td>
+                                    <hr style="width:90%;border-top: 2px solid black;margin-left:5px;"/>
+                                    <hr style="margin-left:5px;width:190%;border-top: 4px solid black;"/>
+                                </td>
+                            </tr>
                         </tr>
                     </table>
 
@@ -57,31 +62,47 @@
                         font-size:15px;
                     }
                 </style>
-
-                <div>
-                    <br/><br/><br/>
-                </div>
+				<span t-set="opening_bal" t-value="o.get_opening_balance()"/>
 				<table style="width:100%">
-                 <tr style="width:100%;">
-                     <!-- <hr/><hr/> -->
-                     <td style="width:50%;">
-                         <b><span>Fondo:</span></b><br/><br/>
-                         <b><span>Convenio:</span></b><br/><br/>
-                         <b><span>Dep:</span></b><br/><br/>
-                     </td>
-                     <td style="width:50%;">
-                         <b><span>Periodo:</span></b><br/><br/>
-                         <b><span>Num.de Convenio:</span></b><br/><br/>
-                         <b><span>Clave dependencia:</span></b><br/><br/>
-                         <b><span>Moneda:</span></b><br/><br/>
-                     </td>
-                 </tr>
+					<span t-set="period_name" t-value="o.get_period_name()"/>
+                 	<tr style="width:100%">
+                 		<th style="width:10%;text-align:left;">Fondo:</th>
+                 		<td style="width:50%;text-align:left;"><span t-field="o.name"/></td>
+                 		<th style="width:15%;text-align:left;">Periodo:</th>
+                 		<td style="width:35%;text-align:left;"><span t-esc="period_name"/></td>
+                 	</tr>
+                 	<tr style="width:100%">
+                 		<th style="width:10%;text-align:left;">Convenio:</th>
+                 		<td style="width:50%;text-align:left;"><span t-field="o.name"/></td>
+                 		<th style="width:15%;text-align:left;">Num.de Convenio:</th>
+                 		<td style="width:35%;text-align:left;"> <span t-field="o.convention_no"/></td>
+                 	</tr>
+
+                 	<tr style="width:100%">
+                 		<th style="width:10%;text-align:left;">Dep:</th>
+                 		<td style="width:50%;text-align:left;"><span t-if="o.dependency_id" t-field="o.dependency_id.description"/></td>
+                 		<th style="width:15%;text-align:left;">Clave dependencia:</th>
+                 		<td style="width:35%text-align:left;"> <span t-if="o.dependency_id" t-field="o.dependency_id.dependency"/>
+                         	<span t-if="o.subdependency_id" t-field="o.subdependency_id.sub_dependency"/>
+                        </td>
+                 	</tr>
+                 	<tr style="width:100%">
+                 		<th style="width:10%"></th>
+                 		<td style="width:50%"></td>
+                 		<th style="width:15%;text-align:left;">Moneda:</th>
+                 		<td style="width:35%;text-align:left;"> <span t-if="o.currency_id" t-field="o.currency_id.name"/>
+                        </td>
+                 	</tr>
 				</table>
                 <div style="border:1px solid grey;">
                 <table style="width:100%;border-top: 1px solid black;border-bottom:1px solid black;">
                     <tr style="width:100%;" class="border">
+
+                        <hr style="width:98%;border-top: 2px solid black;margin-left:5px;"/>
+                        <hr style="width:98%;border-top: 4px solid black;margin-left:5px;"/>
+
                         <b>
-                        <span style="margin-left:800px;">Saldo Anterior:</span><br/>
+                        <span style="margin-left:800px;">Saldo Anterior:<span t-esc="opening_bal"/></span><br/>
                         <span style="margin-left:800px;">(+) Depositos:</span><br/>
                         <span style="margin-left:800px;">(-) Retiros:</span><br/>
                         <span style="margin-left:800px;">(+) Intereses:</span><br/>
@@ -101,12 +122,19 @@
                     </thead>
                     <tbody>
                     	<t t-set="total_final" t-value="0"/>
-	                    <tr class="style1" t-foreach="o.request_open_balance_ids" t-as="line">
+                    	<tr>
+                    		<td></td>
+                    		<td></td>
+                    		<td></td>
+                    		<td></td>
+                    		<td class="style1 border1" style="text-align:right;"><span t-esc="opening_bal"/></td>
+                    	</tr>
+	                    <tr class="style1" t-foreach="o.get_report_lines()" t-as="line">
 	                    	<t t-set="debit" t-value="0"/>
 	                    	<t t-set="credit" t-value="0"/>
 	                    
-	                        <td class="style1 border1" style="text-align:center;"><span t-field="line.request_date"/></td>
-	                        <td class="style1 border1" style="text-align:center;"><span t-field="line.type_of_operation"/></td>
+	                        <td class="style1 border1" style="text-align:left;"><span t-field="line.request_date"/></td>
+	                        <td class="style1 border1" style="text-align:left;"><span t-field="line.type_of_operation"/></td>
 	                        <t t-if="line.type_of_operation in ('withdrawal','retirement')">
 	                        	<t t-set="credit" t-value="line.opening_balance"/>
 	                        	<t t-set="total_final" t-value="total_final - line.opening_balance"/>
@@ -115,12 +143,22 @@
 	                        	<t t-set="debit" t-value="line.opening_balance"/>
 	                        	<t t-set="total_final" t-value="total_final + line.opening_balance"/>
 	                        </t>
-	                        <td class="style1 border1" style="text-align:center;"><span t-esc="debit"/></td>
-	                        <td class="style1 border1" style="text-align:center;"><span t-esc="credit"/></td>
-	                        <td class="style1 border1" style="text-align:center;"><span t-esc="total_final"/></td>
+	                        <td class="style1 border1" style="text-align:right;"><span t-esc="debit"/></td>
+	                        <td class="style1 border1" style="text-align:right;"><span t-esc="credit"/></td>
+	                        <td class="style1 border1" style="text-align:right;"><span t-esc="total_final"/></td>
 	                    </tr>
+                        
                     </tbody>
                 </table>
+                <!-- 
+                <table style="width:100%;">
+                    <tr>
+                        <div style="border: 1px solid grey;border-radius: 5px;margin-left:10px;width:98%;height:3%;">
+                            <span style="margin-left:20px;"><b>Total:</b></span>
+                        </div>
+                    </tr>
+                </table>
+                 -->
                 </div>
               
             </div>
@@ -141,9 +179,8 @@
             <field name="name">Format 1</field>
             <field name="default" eval="True"/>
             <field name="format">A4</field>
-            <field name="orientation">Landscape</field>
             <field name="margin_top">6</field>
-            <field name="margin_bottom">60</field>
+            <field name="margin_bottom">10</field>
             <field name="margin_left">10</field>
             <field name="margin_right">10</field>
             <field name="header_line" eval="False"/>
@@ -159,6 +196,8 @@
             file="jt_agreement.bases_collaboration_template"
             print_report_name="object.name"
             paperformat="jt_agreement.paperformat_bases_collaboration"
+            menu="False"
+        
         />
 
     </data>

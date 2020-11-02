@@ -70,7 +70,6 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
             {'name': _('Inversión')},
             {'name': _('Plazo')},
             {'name': _('Tasa de interés')},
-            {'name': _('Total')},
         ]
 
     def _format(self, value,figure_type):
@@ -100,6 +99,241 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+        
+        cetes_records = self.env['investment.cetes'].search([('state','=','confirmed'),('date_time','>=',start),('date_time','<=',end)])
+        udibonos_records = self.env['investment.udibonos'].search([('state','=','confirmed'),('date_time','>=',start),('date_time','<=',end)])
+        bonds_records = self.env['investment.bonds'].search([('state','=','confirmed'),('date_time','>=',start),('date_time','<=',end)])
+        will_pay_records = self.env['investment.will.pay'].search([('state','=','confirmed'),('date_time','>=',start),('date_time','<=',end)])
+        
+#         cetes_records = self.env['investment.cetes'].search([('date_time','>=',start),('date_time','<=',end)])
+#         udibonos_records = self.env['investment.udibonos'].search([('date_time','>=',start),('date_time','<=',end)])
+#         bonds_records = self.env['investment.bonds'].search([('date_time','>=',start),('date_time','<=',end)])
+#         will_pay_records = self.env['investment.will.pay'].search([('date_time','>=',start),('date_time','<=',end)])
+        total_investment = 0
+
+        #==== CETES========#        
+        for cetes in cetes_records:
+            total_investment += cetes.nominal_value
+            resouce_name = cetes.origin_resource_id and cetes.origin_resource_id.name or ''
+            lines.append({
+                'id': 'hierarchy_cetes' + str(cetes.id),
+                'name' : resouce_name, 
+                'columns': [{'name': cetes.journal_id and cetes.journal_id.name or ''}, 
+                            {'name': cetes.contract_id and cetes.contract_id.name or ''}, 
+                            {'name': cetes.journal_id and cetes.journal_id.bank_account_id and cetes.journal_id.bank_account_id.acc_number or ''},
+                            self._format({'name': cetes.nominal_value},figure_type='float'),
+                            {'name': cetes.term},
+                            self._format({'name': cetes.yield_rate},figure_type='float'),
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        #==== udibonos========#
+        for udibonos in udibonos_records:
+            total_investment += udibonos.nominal_value
+            resouce_name = udibonos.origin_resource_id and udibonos.origin_resource_id.name or ''
+            lines.append({
+                'id': 'hierarchy_udibonos' + str(udibonos.id),
+                'name': resouce_name,
+                'columns': [{'name': udibonos.journal_id and udibonos.journal_id.name or ''}, 
+                            {'name': udibonos.contract_id and udibonos.contract_id.name or ''}, 
+                            {'name': udibonos.journal_id and udibonos.journal_id.bank_account_id and udibonos.journal_id.bank_account_id.acc_number or ''},
+                            self._format({'name': udibonos.nominal_value},figure_type='float'),
+                            {'name': udibonos.time_for_each_cash_flow},
+                            self._format({'name': udibonos.interest_rate},figure_type='float'),
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        #==== bonds========#
+        for bonds in bonds_records:
+            total_investment += bonds.nominal_value
+            resouce_name = bonds.origin_resource_id and bonds.origin_resource_id.name or ''
+            lines.append({
+                'id': 'hierarchy_bonds' + str(bonds.id),
+                'name': resouce_name,
+                'columns': [{'name': bonds.journal_id and bonds.journal_id.name or ''}, 
+                            {'name': bonds.contract_id and bonds.contract_id.name or ''}, 
+                            {'name': bonds.journal_id and bonds.journal_id.bank_account_id and bonds.journal_id.bank_account_id.acc_number or ''},
+                            self._format({'name': bonds.nominal_value},figure_type='float'),
+                            {'name': bonds.time_for_each_cash_flow},
+                            self._format({'name': bonds.interest_rate},figure_type='float'),
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        #==== Pay========#
+        for pay in will_pay_records:
+            total_investment += pay.amount
+            resouce_name = pay.origin_resource_id and pay.origin_resource_id.name or ''
+            
+            lines.append({
+                'id': 'hierarchy_bonds' + str(pay.id),
+                'name': resouce_name,
+                'columns': [{'name': pay.journal_id and pay.journal_id.name or ''}, 
+                            {'name': pay.contract_id and pay.contract_id.name or ''}, 
+                            {'name': pay.journal_id and pay.journal_id.bank_account_id and pay.journal_id.bank_account_id.acc_number or ''},
+                            self._format({'name': pay.amount},figure_type='float'),
+                            {'name': pay.term_days},
+                            self._format({'name': pay.interest_rate},figure_type='float'),
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+
+        lines.append({
+            'id': 'hierarchy_res_total',
+            'name': '',
+            'columns': [{'name': 'Total Recursos'}, 
+                        {'name': ''}, 
+                        {'name': ''},
+                        self._format({'name': total_investment},figure_type='float'),
+                        {'name': ''},
+                        {'name': ''},
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+        #===================== Bank Data ==========#
+
+        journal_ids = self.env['account.journal']
+        journal_ids += cetes_records.mapped('journal_id')
+        journal_ids += udibonos_records.mapped('journal_id')
+        journal_ids += bonds_records.mapped('journal_id')
+        journal_ids += will_pay_records.mapped('journal_id')
+        
+        if journal_ids:
+            journals = list(set(journal_ids.ids))
+            journal_ids = self.env['account.journal'].browse(journals)
+            
+        lines.append({
+            'id': 'hierarchy_inst' ,
+            'name': '',
+            'columns': [{'name': 'Institución'}, 
+                        {'name': ''}, 
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+        
+        total_ins = 0
+        for journal in journal_ids:
+            amount = 0
+            amount += sum(x.nominal_value for x in cetes_records.filtered(lambda x:x.journal_id.id==journal.id))
+            amount += sum(x.nominal_value for x in udibonos_records.filtered(lambda x:x.journal_id.id==journal.id))
+            amount += sum(x.nominal_value for x in bonds_records.filtered(lambda x:x.journal_id.id==journal.id))
+            amount += sum(x.amount for x in will_pay_records.filtered(lambda x:x.journal_id.id==journal.id))                        
+            
+            total_ins += amount
+            lines.append({
+                'id': 'hierarchy_jr' + str(journal.id),
+                'name': '',
+                'columns': [{'name': journal.name}, 
+                            {'name': ''}, 
+                            {'name': ''},
+                            self._format({'name': amount},figure_type='float'),
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        lines.append({
+            'id': 'hierarchy_inst_total' ,
+            'name': '',
+            'columns': [{'name': 'Institución'}, 
+                        {'name': ''}, 
+                        {'name': ''},
+                        self._format({'name': total_ins},figure_type='float'),
+                        {'name': ''},
+                        {'name': ''},
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+
+        #================ Origin Data ====================#
+        origin_ids = self.env['sub.origin.resource']
+
+        origin_ids += cetes_records.mapped('origin_resource_id')        
+        origin_ids += udibonos_records.mapped('origin_resource_id')        
+        origin_ids += bonds_records.mapped('origin_resource_id')
+        origin_ids += will_pay_records.mapped('origin_resource_id')
+
+        if origin_ids:
+            origins = list(set(origin_ids.ids))
+            origin_ids = self.env['sub.origin.resource'].browse(origins)
+
+        lines.append({
+            'id': 'hierarchy_origin_total' ,
+            'name': '',
+            'columns': [{'name': 'Tipo de recurso'}, 
+                        {'name': ''}, 
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+        
+        total_ins = 0
+        for origin in origin_ids:
+            amount = 0
+            amount += sum(x.nominal_value for x in cetes_records.filtered(lambda x:x.origin_resource_id.id==origin.id))
+            amount += sum(x.nominal_value for x in udibonos_records.filtered(lambda x:x.origin_resource_id.id==origin.id))
+            amount += sum(x.nominal_value for x in bonds_records.filtered(lambda x:x.origin_resource_id.id==origin.id))
+            amount += sum(x.amount for x in will_pay_records.filtered(lambda x:x.origin_resource_id.id==origin.id))                        
+            
+            total_ins += amount
+            lines.append({
+                'id': 'hierarchy_or' + str(origin.id),
+                'name': '',
+                'columns': [{'name': origin.name}, 
+                            {'name': ''}, 
+                            {'name': ''},
+                            self._format({'name': amount},figure_type='float'),
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        lines.append({
+            'id': 'hierarchy_total_or' ,
+            'name': '',
+            'columns': [{'name': 'Total'}, 
+                        {'name': ''}, 
+                        {'name': ''},
+                        self._format({'name': total_ins},figure_type='float'),
+                        {'name': ''},
+                        {'name': ''},
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
                     
         return lines
 

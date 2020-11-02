@@ -67,6 +67,7 @@
                                 <field name="account_executive" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="UNAM_operator" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="is_federal_subsidy_resources" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
+                                <field name="origin_resource_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="observations" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             
                             </group>

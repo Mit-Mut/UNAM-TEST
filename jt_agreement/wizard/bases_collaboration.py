@@ -32,11 +32,17 @@ class AgreementBasesCollabration(models.TransientModel):
     start_date = fields.Date(string="Start Date")
     end_date = fields.Date(string="End Date")
     line_ids = fields.One2many('jt_agreement.bases.collaboration.line',"wizard_id")
-    
+    is_hide_button = fields.Boolean(default=False)
+        
     def print_bases_collaboration(self):
         lines = []
-        pdf_rec = self.env['jt_agreement.bases.collaboration'].create({'start_date':self.start_date,'end_date':self.end_date})
+        pdf_rec = self.env['jt_agreement.bases.collaboration'].create({'is_hide_button':True,'start_date':self.start_date,'end_date':self.end_date})
         for rec in self.env.context.get('active_ids'):
+            base_records = self.env['bases.collaboration'].browse(rec)
+            
+            base_records.report_start_date = self.start_date
+            base_records.report_end_date = self.end_date
+            
             qr_pdf = self.env.ref('jt_agreement.bases_collaboration_report').render_qweb_pdf([rec])[0]
             qr_pdf = base64.b64encode(qr_pdf)
             lines.append((0,0,{'bases_id':rec,'file':qr_pdf,'filename':'bases_collaboration.pdf'}))

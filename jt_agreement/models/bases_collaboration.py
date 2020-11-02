@@ -90,9 +90,66 @@ class BasesCollabration(models.Model):
     interest_rate = fields.Monetary(string="Interest Rate")
     yields = fields.Monetary(string="Yields")
 
+    report_start_date = fields.Date("Report Start Date")
+    report_end_date = fields.Date("Report End Date")
+    
     _sql_constraints = [
         ('folio_convention_no', 'unique(convention_no)', 'The Convention No. must be unique.')]
 
+    def get_month_name(self,month):
+        month_name = ''
+        if month==1:
+            month_name = 'Enero'
+        elif month==2:
+            month_name = 'Febrero'
+        elif month==3:
+            month_name = 'Marzo'
+        elif month==4:
+            month_name = 'Abril'
+        elif month==5:
+            month_name = 'Mayo'
+        elif month==6:
+            month_name = 'Junio'
+        elif month==7:
+            month_name = 'Julio'
+        elif month==8:
+            month_name = 'Agosto'
+        elif month==9:
+            month_name = 'Septiembre'
+        elif month==10:
+            month_name = 'Octubre'
+        elif month==11:
+            month_name = 'Noviembre'
+        elif month==12:
+            month_name = 'Diciembre'
+            
+        return month_name.upper()
+
+    def get_period_name(self):
+        period_name = ''
+        if self.report_start_date and self.report_end_date:
+            period_name += "Del "+str(self.report_start_date.day)
+            
+            if self.report_start_date.month != self.report_end_date.month:
+                if self.report_start_date.year == self.report_end_date.year:
+                    period_name += " de "+self.get_month_name(self.report_start_date.month)
+                    
+            if self.report_start_date.year != self.report_end_date.year:
+                period_name += " de "+self.get_month_name(self.report_start_date.month)+" de"+ str(self.report_start_date.year)
+            
+            period_name += " al "+str(self.report_end_date.day)+" de "+ self.get_month_name(self.report_end_date.month)+" "+str(self.report_end_date.year)   
+            
+        return period_name
+
+    def get_opening_balance(self):
+        opening_bal = sum(x.opening_balance for x in self.request_open_balance_ids.filtered(lambda x:x.type_of_operation=='open_bal'))
+        return opening_bal
+    
+    def get_report_lines(self): 
+        lines = self.env['request.open.balance'].search([('bases_collaboration_id','=',self.id),('request_date','>=',self.report_start_date),('request_date','<=',self.report_end_date)])
+        print ("===",lines)
+        return lines
+    
     @api.model
     def create(self, vals):
         res = super(BasesCollabration, self).create(vals)

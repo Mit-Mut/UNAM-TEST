@@ -23,7 +23,8 @@ class Bonds(models.Model):
     UNAM_operator = fields.Char("UNAM Operator")
     is_federal_subsidy_resources = fields.Boolean("Federal Subsidy Resourcesss")
     observations = fields.Text("Observations")
-   
+    origin_resource_id = fields.Many2one('sub.origin.resource', "Origin of the resource")
+    
     kind_of_product = fields.Selection([('investment','Investment')],string="Kind Of Product",default="investment")
     key = fields.Char("Identification Key")
     issue_date = fields.Date('Date of issue')

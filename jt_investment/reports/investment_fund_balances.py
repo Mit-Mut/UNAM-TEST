@@ -37,7 +37,7 @@ class SummaryofOperationInvestmentFundsBalances(models.AbstractModel):
     _description = "Summary of Operation - Investment Fund Balances"
 
     filter_date = {'mode': 'range', 'filter': 'this_month'}
-    filter_comparison = {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
+    filter_comparison = None 
     filter_all_entries = None
     filter_journals = None
     filter_analytic = None
@@ -47,6 +47,8 @@ class SummaryofOperationInvestmentFundsBalances(models.AbstractModel):
     filter_unposted_in_period = None
     MAX_LINES = None
 
+    # {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
+    
     def _get_reports_buttons(self):
         return [
             {'name': _('Print Preview'), 'sequence': 1, 'action': 'print_pdf', 'file_export_type': _('PDF')},
@@ -100,8 +102,68 @@ class SummaryofOperationInvestmentFundsBalances(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
-                    
+
+        
+        records = self.env['purchase.sale.security'].search([('state','=','confirmed'),('invesment_date','>=',start),('invesment_date','<=',end)])
+        total_amount = 0
+        total_title = 0
+        total_movement_price = 0
+        
+        for rec in records:
+            total_amount += rec.amount
+            total_title += rec.title
+            total_movement_price += rec.movement_price
+             
+            lines.append({
+                'id': 'hierarchy' + str(rec.id),
+                'name': rec.name,
+                'columns': [{'name': ''}, 
+                            {'name': ''}, 
+                            self._format({'name': rec.amount},figure_type='float'),
+                            self._format({'name': rec.title},figure_type='float'),
+                            {'name': ''},
+                            self._format({'name': rec.movement_price},figure_type='float'),
+                            {'name': ''},
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+            lines.append({
+                'id': 'hierarchy_total' + str(rec.id),
+                'name': '',
+                'columns': [{'name': ''}, 
+                            {'name': 'Total'}, 
+                            self._format({'name': rec.amount},figure_type='float'),
+                            self._format({'name': rec.title},figure_type='float'),
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        lines.append({
+            'id': 'hierarchy_total',
+            'name': 'Total General',
+            'columns': [{'name': ''}, 
+                        {'name': ''}, 
+                        self._format({'name': total_amount},figure_type='float'),
+                        self._format({'name': total_title},figure_type='float'),
+                        {'name': ''},
+                        self._format({'name': total_movement_price},figure_type='float'),
+                        {'name': ''},
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+                        
         return lines
+                    
 
     def _get_report_name(self):
         return _("Summary of Operation - Investment Fund Balances")
@@ -322,7 +384,7 @@ class SummaryofOperationInvestmentFundsBalances(models.AbstractModel):
         report = {}
         #options.get('date',{}).update({'string':''}) 
         lines = self._get_lines(options, line_id=line_id)
-
+        
         if options.get('hierarchy'):
             lines = self._create_hierarchy(lines, options)
         if options.get('selected_column'):

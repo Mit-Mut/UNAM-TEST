@@ -37,6 +37,7 @@
         'views/request_trasfer_view.xml',
         'wizard/reason_of_rejection.xml',
         'views/verification_of_expense_view.xml',
+        'views/account_cancellation.xml',
         'security/ir.model.access.csv',
     ],
     'application': False,

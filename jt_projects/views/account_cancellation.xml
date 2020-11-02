@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+		<record id="account_cancel_form_view" model="ir.ui.view">
+			<field name="name">Account Cancel Form View</field>
+            <field name="model">account.cancel</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="invoice"/>
+                                <field name="movement_type"/>
+                                <field name="project_num"/>
+                                <field name="observations"/>
+                                <field name="bank_account"/>
+                            </group>
+                            <group>
+                                <field name="project_type"/>
+                                <field name="amount_of_ministration"/>
+                                <field name="authorized_amount"/>
+                                <field name="contract_no"/>
+                                <field name="supporting_docs"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+		</record>
+
+		<record id="account_cancel_tree_view" model="ir.ui.view">
+            <field name="name">Account Cancel Tree View</field>
+            <field name="model">account.cancel</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="invoice"/>
+                    <field name="movement_type"/>
+                </tree>
+            </field>
+         </record>
+
+         <record id="account_cancel_action" model="ir.actions.act_window">
+            <field name="name">Request for account cancellation</field>
+            <field name="res_model">account.cancel</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="account_cancel_menu" name="Request for account cancellation"
+                action="jt_projects.account_cancel_action" parent="jt_projects.menu_conacyt"/>
+
+	</data>
+</odoo>

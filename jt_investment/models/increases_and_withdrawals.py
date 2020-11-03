@@ -35,20 +35,30 @@ class RequestOpenBalanceInvestment(models.Model):
     type_of_financial_products = fields.Selection([
                                            ('CETES','CETES'),('UDIBONOS','UDIBONOS'),
                                            ('BondsNotes','BondsNotes'),('Promissory','Promissory'),
-                                           ],string="Type Of Investment")
+                                           ],string="Type Of Financial Products")
 
     contract_id = fields.Many2one('investment.contract','Contract')
 
     @api.onchange('contract_id')
     def onchange_contract_id(self):
-      if self.contract_id:
-        self.fund_type_id = self.contract_id.fund_type_id
-        self.type_of_agreement_id = self.contract_id.agreement_type_id
-        self.fund_id = self.contract_id.fund_id
-        self.base_collabaration_id = self.contract_id.base_collabaration_id
-    
-    
+        if self.contract_id:
+            self.fund_type_id = self.contract_id.fund_type_id and self.contract_id.fund_type_id.id or False 
+            self.type_of_agreement_id = self.contract_id.agreement_type_id and self.contract_id.agreement_type_id.id or False
+            self.fund_id = self.contract_id.fund_id and self.contract_id.fund_id.id or False
+            self.base_collabaration_id = self.contract_id.base_collabaration_id and self.contract_id.base_collabaration_id.id or False
+        else:
+            self.fund_type_id = False
+            self.type_of_agreement_id = False
+            self.fund_id = False
+            self.base_collabaration_id = False
+            
     def set_to_requested(self):
         self.state = 'requested'
-    
+        
+    @api.model
+    def create(self,vals):
+        res = super(RequestOpenBalanceInvestment,self).create(vals)
+        if not res.name and res.fund_id:
+            res.name = res.fund_id.name
+        return res
     

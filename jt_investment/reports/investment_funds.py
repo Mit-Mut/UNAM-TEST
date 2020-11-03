@@ -98,7 +98,7 @@ class SummaryofOperationInvestmentFunds(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
-        records = self.env['purchase.sale.security'].search([('state','=','confirmed'),('invesment_date','>=',start),('invesment_date','<=',end)])
+        records = self.env['purchase.sale.security'].search([('state','in',('confirmed','done')),('invesment_date','>=',start),('invesment_date','<=',end)])
         total_amount = 0
         
         for rec in records:
@@ -106,9 +106,9 @@ class SummaryofOperationInvestmentFunds(models.AbstractModel):
             movement = dict(rec._fields['movement'].selection).get(rec.movement)
             lines.append({
                 'id': 'hierarchy' + str(rec.id),
-                'name': rec.name,
-                'columns': [{'name': ''}, 
-                            {'name': ''}, 
+                'name': rec.fund_id and rec.fund_id.name or '',
+                'columns': [{'name': rec.contract_id and rec.contract_id.name}, 
+                            {'name': rec.fund_key}, 
                             {'name': movement},
                             self._format({'name': rec.title},figure_type='float'),
                             self._format({'name': rec.amount},figure_type='float'),

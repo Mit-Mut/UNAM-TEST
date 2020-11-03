@@ -334,26 +334,26 @@ class BasesCollabration(models.Model):
                             else False
                         })
 
-            for beneficiary in collaboration.provider_ids:
-                partner_id = beneficiary.partner_id and beneficiary.partner_id.id or False    
-                req_obj.create({
-                    'bases_collaboration_id': collaboration.id,
-                    'apply_to_basis_collaboration': True,
-                    'agreement_number': collaboration.convention_no,
-                    'opening_balance': collaboration.available_bal,
-                    'supporting_documentation': collaboration.cbc_format,
-                    'type_of_operation': 'retirement',
-                    'provider_id': partner_id,
-                    'name': self.name,
-                    'liability_account_id': collaboration.liability_account_id.id if collaboration.liability_account_id
-                    else False,
-                    'interest_account_id': collaboration.interest_account_id.id if collaboration.interest_account_id
-                    else False,
-                    'investment_account_id': collaboration.investment_account_id.id if collaboration.investment_account_id
-                    else False,
-                    'availability_account_id': collaboration.availability_account_id.id if collaboration.availability_account_id
-                    else False
-                })
+#             for beneficiary in collaboration.provider_ids:
+#                 partner_id = beneficiary.partner_id and beneficiary.partner_id.id or False    
+#                 req_obj.create({
+#                     'bases_collaboration_id': collaboration.id,
+#                     'apply_to_basis_collaboration': True,
+#                     'agreement_number': collaboration.convention_no,
+#                     'opening_balance': collaboration.available_bal,
+#                     'supporting_documentation': collaboration.cbc_format,
+#                     'type_of_operation': 'retirement',
+#                     'provider_id': partner_id,
+#                     'name': self.name,
+#                     'liability_account_id': collaboration.liability_account_id.id if collaboration.liability_account_id
+#                     else False,
+#                     'interest_account_id': collaboration.interest_account_id.id if collaboration.interest_account_id
+#                     else False,
+#                     'investment_account_id': collaboration.investment_account_id.id if collaboration.investment_account_id
+#                     else False,
+#                     'availability_account_id': collaboration.availability_account_id.id if collaboration.availability_account_id
+#                     else False
+#                 })
 
     @api.onchange('direct_manager_cbc_id')
     def onchange_direct_manager_cbc(self):
@@ -564,7 +564,9 @@ class RequestOpenBalance(models.Model):
     trust_office_file_name = fields.Char("Trust Office File Name")
 
     origin_journal_id = fields.Many2one('account.journal','Origin Bank Account')
+    origin_bank_account_id = fields.Many2one(related='origin_journal_id.bank_account_id')
     destination_journal_id = fields.Many2one('account.journal','Destination Bank Account')
+    destination_bank_account_id = fields.Many2one(related='destination_journal_id.bank_account_id')
     
     trust_provider_ids = fields.Many2many('res.partner','rel_req_bal_trust_partner','partner_id','req_id',compute="get_trust_provider_ids")
     trust_beneficiary_ids = fields.Many2many('res.partner','rel_req_bal_trust_beneficiary','partner_id','req_id',compute="get_trust_beneficiary_ids")
@@ -575,8 +577,7 @@ class RequestOpenBalance(models.Model):
     patrimonial_resources_id = fields.Many2one('patrimonial.resources','Patrimonial Resources')
     patrimonial_equity_account_id = fields.Many2one('account.account', "Equity accounting account")
     patrimonial_yield_account_id = fields.Many2one('account.account', "Yield account of the productive investment account")
-    
-    
+        
     @api.constrains('type_of_operation')
     def _check_type_of_operation(self):
         if self.type_of_operation and self.bases_collaboration_id and self.type_of_operation=='open_bal':
@@ -612,6 +613,20 @@ class RequestOpenBalance(models.Model):
                     if emp.user_id and emp.user_id.partner_id: 
                         partner_ids.append(emp.user_id.partner_id.id)
             rec.bases_collaboration_beneficiary_ids = [(6,0,partner_ids)]
+
+    @api.model
+    def default_get(self, fields):
+        res = super(RequestOpenBalance, self).default_get(fields)
+        
+        if 'operation_number' in fields:
+            seq_ids = self.env['ir.sequence'].search([('code', '=', 'agreement.operation')], order='company_id')
+            number_next = 0
+            if seq_ids:
+                number_next = seq_ids[0].number_next_actual 
+            res.update({
+                'operation_number': str(number_next)
+            })
+        return res
                 
     @api.model
     def create(self, vals):
@@ -620,6 +635,11 @@ class RequestOpenBalance(models.Model):
             raise ValidationError(_("Type of Operation must be 'Withdrawal Due to Cancellation' for this operation!"))
         if res and not res.is_cancel_collaboration and res.type_of_operation == 'withdrawal_cancellation':
             raise ValidationError(_("Can't create Operation with 'Withdrawal Due to Cancellation' Type of Operation manually!"))
+
+        name = self.env['ir.sequence'].next_by_code('agreement.operation')
+        res.operation_number = name
+        return res
+        
         return res
 
     def write(self, vals):
@@ -696,7 +716,7 @@ class RequestOpenBalance(models.Model):
             'type_of_operation': self.type_of_operation,
             'apply_to_basis_collaboration': self.apply_to_basis_collaboration,
             'origin_resource_id': self.origin_resource_id and self.origin_resource_id.id or False,
-            'state': 'draft',
+            'state': 'requested',
             'request_date': self.request_date,
             'trade_number': self.trade_number,
             'currency_id': self.currency_id and self.currency_id.id or False,
@@ -827,6 +847,21 @@ class RequestOpenBalanceInvestment(models.Model):
     permanent_instructions =fields.Text("Permanent Instructions")
     fund_observation = fields.Text("Observations")
     
+    hide_is_manually = fields.Boolean('Hide Manully Button',default=True,compute='get_record_state_change')
+    hide_is_auto = fields.Boolean('Hide Auto Button',default=True,compute='get_record_state_change')
+    
+    @api.depends('state','is_manually')
+    def get_record_state_change(self):
+        for rec in self:
+            hide_is_manually = True
+            hide_is_auto = True
+            if rec.is_manually and rec.state=='draft':
+                hide_is_manually = False
+            if not rec.is_manually and rec.state=='requested':
+                hide_is_auto = False
+            rec.hide_is_manually = hide_is_manually
+            rec.hide_is_auto = hide_is_auto
+
     @api.model
     def create(self, vals):
         res = super(RequestOpenBalanceInvestment, self).create(vals)
@@ -933,7 +968,7 @@ class RequestOpenBalanceFinance(models.Model):
     concept = fields.Text("Application Concept")
     user_id = fields.Many2one('res.users', default=lambda self: self.env.user.id, string="Applicant")
     unit_req_transfer_id = fields.Many2one('dependency', string="Unit requesting the transfer")
-    date_required = fields.Date("Date Required",required=True)
+    date_required = fields.Date("Date Required")
     fund_type = fields.Many2one('fund.type', "Background")
     agreement_type_id = fields.Many2one('agreement.agreement.type', 'Agreement Type')
     fund_id = fields.Many2one('agreement.fund','Fund') 

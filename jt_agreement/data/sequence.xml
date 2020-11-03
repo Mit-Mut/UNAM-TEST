@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Sequences for Folio -->
+        <record id="seq_agreement_operation" model="ir.sequence">
+            <field name="name">Agreement Operation</field>
+            <field name="code">agreement.operation</field>
+            <field name="padding">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
+
+    </data>
+</odoo>

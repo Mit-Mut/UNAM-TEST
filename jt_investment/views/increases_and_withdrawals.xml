@@ -13,14 +13,14 @@
                              attrs="{'invisible': [('state', '!=', 'draft')]}" />
                         -->
             	</field>
-            	<field name="type_of_operation" position="after">
-            		<field name="type_of_investment" required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-            		<field name="type_of_financial_products" attrs="{'invisible':[('type_of_investment','!=','money_market')],'required':[('type_of_investment','=','money_market')]}"/>
-            	</field>
+	            	<field name="type_of_operation" position="after">
+	            		<field name="type_of_investment" invisible="1"/>
+	            		<field name="type_of_financial_products" invisible="1"/>
+	            	</field>
+            	
             	<field name="permanent_instructions" position="before">
-            		<field name="contract_id" required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-            		<field name="fund_id" required="1"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-            		<field name="fund_key" readonly="1"/>
+            		<field name="fund_id" invisible="1"/>
+            		<field name="fund_key" invisible="1"/>
             		<field name="fund_type_id" required="1"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
             		<field name="type_of_agreement_id" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
             		<field name="bases_collaboration_id" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
@@ -48,12 +48,44 @@
             		 -->
             	</field>
 			</field>
+		</record>	
+
+         <record model="ir.ui.view" id="view_req_open_balance_form_investment_fund_inherit">
+            <field name="name">view.req.open.balance.form.investment.fund.inherit</field>
+            <field name="model">request.open.balance.invest</field>
+            <field name="inherit_id" ref="jt_agreement.view_req_open_balance_form_investment_fund"/>
+            <field name="arch" type="xml">
+            	
+	            	<field name="type_of_operation" position="after">
+	            		<field name="type_of_investment" required="1"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+	            		<field name="type_of_financial_products" attrs="{'invisible':[('type_of_investment','!=','money_market')],'required':[('type_of_investment','=','money_market')]}"/>
+	            	</field>
+            	<field name="permanent_instructions" position="before">
+            		<field name="contract_id" required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+            	</field>
+	            	
+			
+			</field>
 		</record>		
+	
         <record id="action_req_open_balance_investment_with_new_fund" model="ir.actions.act_window">
             <field name="name">Funds</field>
             <field name="res_model">request.open.balance.invest</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'default_is_manually':True,'default_is_fund':True,'default_state':'draft','from_fund_view':True}</field>
+            <field name="context">{'show_for_agreement':True,'from_agreement':True,'default_is_manually':True,'default_is_fund':True,'default_state':'draft','from_fund_view':True}</field>
+        </record>
+
+		<record id="action_req_open_balance_investment_with_new_fund_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="jt_agreement.view_req_open_balance_tree_invest"/>
+            <field name="act_window_id" ref="action_req_open_balance_investment_with_new_fund"/>
+        </record>
+        <record id="action_req_open_balance_investment_with_new_fund_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="jt_agreement.view_req_open_balance_form_investment_fund"/>
+            <field name="act_window_id" ref="action_req_open_balance_investment_with_new_fund"/>
         </record>
                
         <menuitem id="menu_increments_withdrawals_inv_fund" name="Funds"

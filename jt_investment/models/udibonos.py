@@ -72,6 +72,25 @@ class UDIBONOS(models.Model):
     return_price_diff_account_id = fields.Many2one('account.account','Price Difference Account')    
 
     request_finance_ids = fields.One2many('request.open.balance.finance','udibonos_id')
+
+    fund_type_id = fields.Many2one('fund.type', "Type Of Fund")
+    agreement_type_id = fields.Many2one('agreement.agreement.type', 'Agreement Type')
+    fund_id = fields.Many2one('agreement.fund','Fund') 
+    fund_key = fields.Char(related='fund_id.fund_key',string="Password of the Fund")
+    base_collaboration_id = fields.Many2one('bases.collaboration','Name Of Agreements')
+
+    @api.onchange('contract_id')
+    def onchange_contract_id(self):
+        if self.contract_id:
+            self.fund_type_id = self.contract_id.fund_type_id and self.contract_id.fund_type_id.id or False 
+            self.agreement_type_id = self.contract_id.agreement_type_id and self.contract_id.agreement_type_id.id or False
+            self.fund_id = self.contract_id.fund_id and self.contract_id.fund_id.id or False
+            self.base_collaboration_id = self.contract_id.base_collabaration_id and self.contract_id.base_collabaration_id.id or False
+        else:
+            self.fund_type_id = False
+            self.agreement_type_id = False
+            self.fund_id = False
+            self.base_collaboration_id = False
     
     @api.depends('nominal_value','interest_rate')
     def get_coupon_amount(self):

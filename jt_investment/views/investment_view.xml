@@ -11,7 +11,7 @@
                		<field name="journal_id"/>
                		<field name="contract_id"/>
                		<field name="amount_to_invest"/>
-               		<field name="interest_rate"/>
+               		<field name="interest_rate" digits="[12,6]"/>
                		<field name="term"/>
                		<field name="capitalizable"/>
                		<field name="currency_id"/>
@@ -41,8 +41,15 @@
 			               		<field name="amount_to_invest" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			               		<field name="is_fixed_rate" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			               		<field name="is_variable_rate" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-			               		<field name="interest_rate" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-			               		<field name="extra_percentage" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			               		<field name="interest_rate" digits="[12,6]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			               		<field name="extra_percentage" digits="[12,6]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+
+			            		<field name="fund_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			            		<field name="fund_key" readonly="1"/>
+			            		<field name="fund_type_id"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			            		<field name="agreement_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			            		<field name="base_collaboration_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			               		
                         	</group>
                         	<group>
 			               		<field name="term" attrs="{'invisible':[('is_fixed_rate','=',False)],'readonly': [('state', '!=', 'draft')]}"/>

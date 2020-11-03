@@ -10,3 +10,4 @@ from . import stock_quotation
 from . import increases_and_withdrawals
 from . import investment
 from . import investment_rate
+from . import agreement_trust

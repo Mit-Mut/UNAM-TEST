@@ -104,7 +104,7 @@ class SummaryofOperationInvestmentFundsBalances(models.AbstractModel):
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
         
-        records = self.env['purchase.sale.security'].search([('state','=','confirmed'),('invesment_date','>=',start),('invesment_date','<=',end)])
+        records = self.env['purchase.sale.security'].search([('state','in',('confirmed','done')),('invesment_date','>=',start),('invesment_date','<=',end)])
         total_amount = 0
         total_title = 0
         total_movement_price = 0
@@ -116,9 +116,9 @@ class SummaryofOperationInvestmentFundsBalances(models.AbstractModel):
              
             lines.append({
                 'id': 'hierarchy' + str(rec.id),
-                'name': rec.name,
-                'columns': [{'name': ''}, 
-                            {'name': ''}, 
+                'name': rec.fund_id and rec.fund_id.name or '',
+                'columns': [{'name': rec.contract_id and rec.contract_id.name}, 
+                            {'name': rec.fund_key}, 
                             self._format({'name': rec.amount},figure_type='float'),
                             self._format({'name': rec.title},figure_type='float'),
                             {'name': ''},

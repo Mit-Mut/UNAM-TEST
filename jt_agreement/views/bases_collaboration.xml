@@ -398,10 +398,18 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
+                    	<field name="hide_is_manually" invisible="1"/>
+                    	<field name="hide_is_auto" invisible="1"/>
                         <button name="reject_request" type="object" string="Reject" class="oe_highlight"
-                             attrs="{'invisible': [('state', '!=', 'draft')]}" context="{'from_investment':1}"/>
+                             attrs="{'invisible': [('hide_is_auto','=',True)]}" context="{'from_investment':1}"/>
                         <button name="approve_investment" type="object" string="Approve" class="oe_highlight"
-                             attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                             attrs="{'invisible': [('hide_is_auto','=',True)]}"/>
+
+                        <button name="reject_request" type="object" string="Reject" class="oe_highlight"
+                             attrs="{'invisible': [('hide_is_manually','=',True)]}" context="{'from_investment':1}"/>
+                        <button name="approve_investment" type="object" string="Approve" class="oe_highlight"
+                             attrs="{'invisible': [('hide_is_manually','=',True)]}"/>
+                             
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
@@ -592,7 +600,7 @@
                                 <field name="concept"/>
                                 <field name="user_id"/>
                                 <field name="unit_req_transfer_id" context="{'show_for_agreement':1}"/>
-                                <field name="date_required"/>
+                                <field name="date_required" required="1"/>
                                 <field name="fund_id"/>
                                 <field name="fund_type"/>
                                 <field name="agreement_type_id"/>

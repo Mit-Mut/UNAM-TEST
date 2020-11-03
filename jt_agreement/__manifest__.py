@@ -31,6 +31,7 @@
     'license': 'AGPL-3',
     'depends': ['jt_income', 'jt_payroll_payment'],
     'data': [
+        'data/sequence.xml',
         'views/fund_type.xml',
         'views/agreement_type.xml',
         'views/recurring_payment_temp.xml',
@@ -53,6 +54,7 @@
         'wizard/cancel_trust_wizard.xml',
         'views/patrimonial_resources.xml',
         'views/patrimonial_request_open_balance.xml',
+        'views/investment_fund_view.xml',
         'wizard/cancel_patrimonial_resource.xml',
         'reports/account_statement_report.xml',
         'reports/menu_reports.xml',

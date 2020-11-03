@@ -11,6 +11,7 @@
                 </tree>
             </field>
          </record>
+    
 
          <record id="project_registry_form_view" model="ir.ui.view">
             <field name="name">Project Registry Form view</field>
@@ -23,6 +24,15 @@
                         <field name="status" widget="statusbar" />
                     </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box" groups="base.group_user">
+                            <field name='check_project_due' invisible="1"/>
+                            <field name='check_project_expire' invisible="1"/>
+                            
+                            <button string="Project Due" class="oe_stat_button" type="object" name="calculate_project_overdue" attrs="{'invisible': [('check_project_due', '=',False)]}">
+                            </button>
+                            <button string="Project next to expire"  class="oe_stat_button" type="object" name="calculate_project_overdue" attrs="{'invisible': [('check_project_expire', '=',False)]}">
+                            </button>
+                            </div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only" string="Project Name"/>
                             <h1><field name="name"/></h1>

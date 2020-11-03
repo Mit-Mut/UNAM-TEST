@@ -27,9 +27,15 @@ class Investment(models.Model):
     
     state = fields.Selection([('draft','Draft'),('requested','Requested'),('rejected','Rejected'),('approved','Approved'),('confirmed','Confirmed'),('done','Done'),('canceled','Canceled')],string="Status",default='draft')
 
+    fund_type_id = fields.Many2one('fund.type', "Type Of Fund")
+    agreement_type_id = fields.Many2one('agreement.agreement.type', 'Agreement Type')
+    fund_id = fields.Many2one('agreement.fund','Fund') 
+    fund_key = fields.Char(related='fund_id.fund_key',string="Password of the Fund")
+    base_collaboration_id = fields.Many2one('bases.collaboration','Name Of Agreements')
+
     #=====Profit==========#
-    estimated_interest = fields.Float(string="Estimated Interest")
-    estimated_profit = fields.Float(string="Estimated Profit")
+    estimated_interest = fields.Float(string="Estimated Interest",compute="get_estimated_interest",store=True)
+    estimated_profit = fields.Float(string="Estimated Profit",compute="get_estimated_profit",store=True)
     real_interest = fields.Float("Real Interest")
     real_profit = fields.Float(string="Real Profit")
     profit_variation = fields.Float(string="Estimated vs Real Profit Variation",compute="get_profit_variation",store=True)
@@ -49,8 +55,32 @@ class Investment(models.Model):
         for rec in self:
             rec.profit_variation =  rec.real_profit - rec.estimated_profit
 
+    @api.depends('is_fixed_rate','is_variable_rate','amount_to_invest','interest_rate','extra_percentage','term_variable','term')
+    def get_estimated_interest(self):
+        for rec in self:
+            term = 0
+            if rec.is_fixed_rate:
+                term = rec.term
+            elif rec.is_variable_rate:
+                term = rec.term_variable
+            
+            rec.estimated_interest =  (((rec.amount_to_invest*(rec.interest_rate+rec.extra_percentage))/100)/360)*term
 
+    @api.depends('estimated_interest','amount_to_invest')
+    def get_estimated_profit(self):
+        for rec in self:
+            rec.estimated_profit =  rec.estimated_interest + rec.amount_to_invest
 
+    @api.onchange('is_fixed_rate')
+    def onchange_is_fixed_rate(self):
+        if self.is_fixed_rate:
+            self.is_variable_rate = False
+
+    @api.onchange('is_variable_rate')
+    def onchange_is_variable_rate(self):
+        if self.is_variable_rate:
+            self.is_fixed_rate = False
+                
     def action_confirm(self):
         today = datetime.today().date()
         fund_type = False            

@@ -38,6 +38,13 @@ class PurchaseSaleSecurity(models.Model):
     number_of_titles = fields.Float(related='title',string="Quantity of Securities")
     amount = fields.Float(string="Investment amount",compute="get_investment_amount",store=True)
 
+    contract_id = fields.Many2one("investment.contract", "Contract")
+    fund_type_id = fields.Many2one('fund.type', "Type Of Fund")
+    agreement_type_id = fields.Many2one('agreement.agreement.type', 'Agreement Type')
+    fund_id = fields.Many2one('agreement.fund','Fund') 
+    fund_key = fields.Char(related='fund_id.fund_key',string="Password of the Fund")
+    base_collaboration_id = fields.Many2one('bases.collaboration','Name Of Agreements')
+
     #====== Accounting Fields =========#
 
     investment_income_account_id = fields.Many2one('account.account','Income Account')
@@ -54,6 +61,19 @@ class PurchaseSaleSecurity(models.Model):
     real_interest = fields.Float("Real Interest")
     real_profit = fields.Float(string="Real Profit")
     profit_variation = fields.Float(string="Estimated vs Real Profit Variation",compute="get_profit_variation",store=True)
+
+    @api.onchange('contract_id')
+    def onchange_contract_id(self):
+        if self.contract_id:
+            self.fund_type_id = self.contract_id.fund_type_id and self.contract_id.fund_type_id.id or False 
+            self.agreement_type_id = self.contract_id.agreement_type_id and self.contract_id.agreement_type_id.id or False
+            self.fund_id = self.contract_id.fund_id and self.contract_id.fund_id.id or False
+            self.base_collaboration_id = self.contract_id.base_collabaration_id and self.contract_id.base_collabaration_id.id or False
+        else:
+            self.fund_type_id = False
+            self.agreement_type_id = False
+            self.fund_id = False
+            self.base_collaboration_id = False
 
     @api.depends('last_quote_id','last_quote_id.price_id')
     def get_previous_price_days(self):

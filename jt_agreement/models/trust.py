@@ -31,6 +31,14 @@ class Trust(models.Model):
 
     name = fields.Char("Trust Name")
     bank_id = fields.Many2one('res.bank','Banking institution')
+
+    street = fields.Char(related='bank_id.street')
+    street2 = fields.Char(related='bank_id.street2')
+    city = fields.Char(related='bank_id.city')
+    state = fields.Many2one(related='bank_id.state')
+    zip = fields.Char(related='bank_id.zip')
+    country = fields.Many2one(related='bank_id.country')
+    
     dependency_id = fields.Many2one('dependency', "Dependency")
     dependency_desc =  fields.Text(related="dependency_id.description")
     currency_id = fields.Many2one(

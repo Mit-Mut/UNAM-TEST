@@ -28,8 +28,8 @@
                                     'show_for_agreement':1}"/>
                                 <field name="date_required"/>
                                 <field name="fund_id" required="1"/>
-                                <field name="fund_type" required="1"/>
-                                <field name="agreement_type_id" required="1"/>
+                                <field name="fund_type" />
+                                <field name="agreement_type_id"/>
                                 <field name="base_collabaration_id" />
                             </group>
                         </group>

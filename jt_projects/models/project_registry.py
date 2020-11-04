@@ -24,7 +24,6 @@ class ProjectRegistry(models.Model):
     branch_office = fields.Char("Square")
     ministrations = fields.Integer("Number of ministrations")
     ministering_amount = fields.Monetary("Ministering amount")
-
     check_project_due = fields.Boolean("Check Project Due",default=True,compute="get_project_due",store=True)
     check_project_expire = fields.Boolean("Check Project expire",default=True,compute="get_project_due",store=True)
     
@@ -64,6 +63,7 @@ class ProjectRegistry(models.Model):
     def calculate_project_overdue(self):
         print ("calll")
 
+
     def name_get(self):
         result = []
         for project in self:
@@ -87,3 +87,21 @@ class ProjectRegistry(models.Model):
 
     def close_project(self):
         self.status = 'closed'
+        return {
+            'name': 'Project Close',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': False,
+            'res_model': 'project.close',
+            'domain': [],
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context':{'default_current_id':self.id}
+        }
+        
+
+    def show_attachment(self):
+        action = self.env.ref('base.action_attachment').read()[0]
+        return action
+
+    

@@ -33,7 +33,7 @@
                 <form>
                 	<header>
                 		<button name="action_confirm" states="draft" string="Confirm" class="oe_highlight" type="object" />
-                		<button name="action_reject" states="draft" string="Reject" class="oe_highlight" type="object"/>
+                		<!-- <button name="action_reject" states="draft" string="Reject" class="oe_highlight" type="object"/> -->
                 		<field name="state" widget="statusbar"/>
                 	</header>
                 
@@ -52,13 +52,14 @@
                         		<field name="last_quote_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         		<field name="last_quote_price" digits="[12,6]"/>
                         		<field name="last_quote_date"/>
-                        		
+                        		<field name="investment_fund_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         		<field name="contract_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         		<field name="fund_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			            		<field name="fund_key" readonly="1"/>
 			            		<field name="fund_type_id"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			            		<field name="agreement_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			            		<field name="base_collaboration_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			            		<field name="reason_rejection" readonly="1" attrs="{'invisible': [('state', '!=', 'rejected')]}"/>
                         		
                         	</group>
                         	<group>
@@ -69,14 +70,17 @@
                         		<field name="observations" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         		<field name="file_name" invisible="1"/>
                         		<field name="file_data" filename="file_name" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="dependency_id" context="{'show_for_supplier_payment':1}" readonly="1"/>
+                                <field name="sub_dependency_id" domain="[('dependency_id','=',dependency_id)]" context="{'show_for_supplier_payment':1}" readonly="1"/>
+                        		
                         	</group>
                         </group>
                     <notebook>
                     	<page string="Movements">
                     		<group>
 	                    		<group>
-	                    			<field name="journal_id" domain="[('type','=','bank')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-	                    			<field name="bank_account_id"/>
+	                    			<field name="journal_id" domain="[('type','=','bank')]" required="1"/>
+	                    			<field name="bank_account_id" readonly="1"/>
 	                    			<field name="account_balance"/>
 	                    		</group>
 	                    		<group>
@@ -141,6 +145,7 @@
          <record id="action_purchase_sale_security" model="ir.actions.act_window">
             <field name="name">Purchase / Sale of Securities</field>
             <field name="res_model">purchase.sale.security</field>
+            <field name="context">{'show_for_agreement':True}</field>
         </record>
 
         <menuitem id="menu_purchase_sale_security" name="Purchase / Sale of Securities" sequence="2"

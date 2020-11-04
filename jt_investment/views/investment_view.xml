@@ -15,7 +15,7 @@
                		<field name="term"/>
                		<field name="capitalizable"/>
                		<field name="currency_id"/>
-               		<field name="investment_rate_id"/>
+               		<field name="currency_rate"/>
                		<field name="state"/>                    
                 </tree>
             </field>
@@ -37,6 +37,7 @@
                         	<group>
 			                    <field name="invesment_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			               		<field name="journal_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			               		<field name="investment_fund_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			               		<field name="contract_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			               		<field name="amount_to_invest" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			               		<field name="is_fixed_rate" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
@@ -49,6 +50,7 @@
 			            		<field name="fund_type_id"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			            		<field name="agreement_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			            		<field name="base_collaboration_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			            		<field name="reason_rejection" readonly="1" attrs="{'invisible': [('state', '!=', 'rejected')]}"/>
 			               		
                         	</group>
                         	<group>
@@ -57,16 +59,15 @@
 			               		<field name="capitalizable" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			               		<field name="frequency" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			               		<field name="currency_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-			               		<field name="investment_rate_id" domain="[('product_type','=','TIIE')]" 
-                                		context="{'default_product_type':'TIIE',
-                                		'search_view_ref': 'jt_investment.investment_period_rate_tiie_search',
-                                		'tree_view_ref': 'jt_investment.investment_period_rate_tiie_tree',
-                                		'form_view_ref': 'jt_investment.investment_period_rate_tiie_form'
-                                		}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			               		<field name="currency_rate" readonly="1" digits="[12,12]"/>
 
                         		<field name="observations" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         		<field name="file_name" invisible="1"/>
                         		<field name="file_data" filename="file_name" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+
+                                <field name="dependency_id" context="{'show_for_supplier_payment':1}" readonly="1"/>
+                                <field name="sub_dependency_id" domain="[('dependency_id','=',dependency_id)]" context="{'show_for_supplier_payment':1}" readonly="1"/>
+                        		
                         	</group>
                         </group>
                     <notebook>
@@ -126,6 +127,7 @@
          <record id="action_investment_investment" model="ir.actions.act_window">
             <field name="name">Investment</field>
             <field name="res_model">investment.investment</field>
+            <field name="context">{'show_for_agreement':True}</field>
         </record>
 
         <menuitem id="menu_productive_accounts_investment" name="Investment" sequence="2"

@@ -1,7 +1,8 @@
-from odoo import models, fields, api
+from odoo import models, fields, api,_
 from datetime import datetime
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
+from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
 
 class PurchaseSaleSecurity(models.Model):
 
@@ -44,6 +45,10 @@ class PurchaseSaleSecurity(models.Model):
     fund_id = fields.Many2one('agreement.fund','Fund') 
     fund_key = fields.Char(related='fund_id.fund_key',string="Password of the Fund")
     base_collaboration_id = fields.Many2one('bases.collaboration','Name Of Agreements')
+    reason_rejection = fields.Text("Reason Rejection")
+    
+    dependency_id = fields.Many2one('dependency', "Dependency")
+    sub_dependency_id = fields.Many2one('sub.dependency', "Subdependency")
 
     #====== Accounting Fields =========#
 
@@ -61,7 +66,8 @@ class PurchaseSaleSecurity(models.Model):
     real_interest = fields.Float("Real Interest")
     real_profit = fields.Float(string="Real Profit")
     profit_variation = fields.Float(string="Estimated vs Real Profit Variation",compute="get_profit_variation",store=True)
-
+    investment_fund_id = fields.Many2one('investment.funds','Investment Funds')
+    
     @api.onchange('contract_id')
     def onchange_contract_id(self):
         if self.contract_id:
@@ -135,7 +141,10 @@ class PurchaseSaleSecurity(models.Model):
     
     def action_confirm(self):
         today = datetime.today().date()
-        fund_type = False            
+        fund_type = False
+        if self.amount ==0 or self.movement_price==0 or self.number_of_titles==0 or self.account_balance==0:
+            raise ValidationError(_("Please add mandatory data to approve"))
+        
         return {
             'name': 'Approve Request',
             'view_type': 'form',
@@ -149,6 +158,7 @@ class PurchaseSaleSecurity(models.Model):
                 'default_date': today,
                 'default_purchase_sale_security_id' : self.id,
                 'default_fund_type' : fund_type,
+                'default_bank_account_id' : self.journal_id and self.journal_id.id or False,
                 'show_for_supplier_payment':1,
             }
         }
@@ -159,4 +169,14 @@ class PurchaseSaleSecurity(models.Model):
 
     def action_done(self):
         self.state = 'done'
-                
+     
+    def action_requested(self):
+        self.state = 'rejected'
+    
+    def action_approved(self):
+        self.state = 'approved'
+
+    def action_confirmed(self):
+        self.state = 'confirmed'
+    
+           

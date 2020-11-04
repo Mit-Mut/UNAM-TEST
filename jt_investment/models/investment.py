@@ -20,6 +20,8 @@ class Investment(models.Model):
     capitalizable = fields.Integer("Days of capitalization")
     frequency = fields.Integer("Frequency of interest payments")
     currency_id = fields.Many2one("res.currency","Currency")
+    currency_rate = fields.Float(related="currency_id.rate",string="Exchange rate")
+    
     investment_rate_id = fields.Many2one("investment.period.rate","Exchange rate")
     observations = fields.Text("Observations")    
     file_data = fields.Binary("Supporting document")
@@ -32,7 +34,12 @@ class Investment(models.Model):
     fund_id = fields.Many2one('agreement.fund','Fund') 
     fund_key = fields.Char(related='fund_id.fund_key',string="Password of the Fund")
     base_collaboration_id = fields.Many2one('bases.collaboration','Name Of Agreements')
-
+    investment_fund_id = fields.Many2one('investment.funds','Funds')
+    
+    dependency_id = fields.Many2one('dependency', "Dependency")
+    sub_dependency_id = fields.Many2one('sub.dependency', "Subdependency")
+    reason_rejection = fields.Text("Reason Rejection")
+    
     #=====Profit==========#
     estimated_interest = fields.Float(string="Estimated Interest",compute="get_estimated_interest",store=True)
     estimated_profit = fields.Float(string="Estimated Profit",compute="get_estimated_profit",store=True)
@@ -97,6 +104,7 @@ class Investment(models.Model):
                 'default_date': today,
                 'default_investment_id' : self.id,
                 'default_fund_type' : fund_type,
+                'default_bank_account_id' : self.journal_id and self.journal_id.id or False,
                 'show_for_supplier_payment':1,
             }
         }

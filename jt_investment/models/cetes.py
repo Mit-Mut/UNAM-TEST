@@ -23,16 +23,18 @@ class CETES(models.Model):
     total_currency_rate = fields.Float(
         string="Total", compute="get_total_currency_amount", store=True)
     contract_id = fields.Many2one("investment.contract", "Contract")
-    document_type = fields.Selection([('cetes', 'CETES'), ('udibonos', 'Udibonos'), (
-        'bonds', 'Bonds'), ('promissory_note', 'Promissory note')], string="Document")
     instrument_it = fields.Selection(
-        [('bank', 'Bank'), ('paper_government', 'Paper Government Paper')], string="Instrument It")
+        [('bank', 'Bank'), ('paper_government', 'Paper Government Paper')], string="Document")
     account_executive = fields.Char("Account Executive")
-    UNAM_operator = fields.Char("UNAM Operator")
+    UNAM_operator = fields.Many2one("hr.employee","UNAM Operator")
     is_federal_subsidy_resources = fields.Boolean(
         "Federal Subsidy Resourcesss")
     observations = fields.Text("Observations")
 
+    dependency_id = fields.Many2one('dependency', "Dependency")
+    sub_dependency_id = fields.Many2one('sub.dependency', "Subdependency")
+    reason_rejection = fields.Text("Reason Rejection")
+    
     kind_of_product = fields.Selection(
         [('investment', 'Investment')], string="Kind Of Product", default="investment")
     key = fields.Char("Identification Key")
@@ -86,7 +88,8 @@ class CETES(models.Model):
     fund_id = fields.Many2one('agreement.fund','Fund') 
     fund_key = fields.Char(related='fund_id.fund_key',string="Password of the Fund")
     base_collaboration_id = fields.Many2one('bases.collaboration','Name Of Agreements')
-
+    investment_fund_id = fields.Many2one('investment.funds','Investment Funds')
+    
     @api.onchange('contract_id')
     def onchange_contract_id(self):
         if self.contract_id:
@@ -177,6 +180,7 @@ class CETES(models.Model):
                 'default_employee_id': employee.id if employee else False,
                 'default_cetes_id': self.id,
                 'default_fund_type': fund_type,
+                'default_bank_account_id' : self.journal_id and self.journal_id.id or False,
                 'show_for_supplier_payment': 1,
             }
         }
@@ -194,6 +198,9 @@ class CETES(models.Model):
 
     def action_confirmed(self):
         self.state = 'confirmed'
+        
+    def action_reject(self):
+        self.state = 'rejected'
 
     def action_calculation(self):
         return

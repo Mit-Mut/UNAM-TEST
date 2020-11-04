@@ -25,8 +25,14 @@ class RequestAccounts(models.Model):
     rejection_observations = fields.Text("Observations")
     status = fields.Selection([('eraser', 'Eraser'),
                                ('request', 'Request'),
+                               ('approved','Approved'), 
                                ('confirmed', 'Confirmed'),
-                               ('rejected', 'Rejected')], default='eraser')
+                               ('rejected', 'Rejected')], default='eraser',copy=False)
+
+    move_type = fields.Selection([
+        ('account cancel', 'Account Cancellation'),
+        ('account open','Account Open'),
+    ], 'Move Type')
 
     def generate_request(self):
         self.status = 'request'
@@ -39,3 +45,13 @@ class RequestAccounts(models.Model):
             self.user_id = project.user_id if project.user_id else False
             self.project_type_identifier = project.project_type_identifier
             self.project_stage_identifier = project.stage_identifier
+
+
+    def approve_account(self):
+        self.write({'status':'approved'})
+
+    def confirm_account(self):
+        self.write({'status':'confirmed'})
+
+    def reject_account(self):
+        self.write({'status':'rejected'})

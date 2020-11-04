@@ -13,7 +13,7 @@
                                 <field name="operation_number" readonly="1"/>
                                 <field name="agreement_number" readonly="1"/>
                                 <field name="bank_account_id" domain="[('type', '=', 'bank')]"
-                                    required="1"/>
+                                    readonly="1"/>
                                 <field name="desti_bank_account_id" domain="[('type', '=', 'bank')]"
                                     required="1"/>
                                 <field name="amount" readonly="1"/>

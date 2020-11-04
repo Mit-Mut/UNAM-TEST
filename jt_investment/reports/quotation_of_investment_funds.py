@@ -37,7 +37,8 @@ class ReportonthequotationofInvestmentFunds(models.AbstractModel):
     _description = "Report on the quotation of Investment Funds"
 
     filter_date = {'mode': 'range', 'filter': 'this_month'}
-    filter_comparison = {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
+    #filter_comparison = {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
+    filter_comparison = None
     filter_all_entries = None
     filter_journals = None
     filter_analytic = None
@@ -45,7 +46,7 @@ class ReportonthequotationofInvestmentFunds(models.AbstractModel):
     filter_cash_basis = None
     filter_hierarchy = None
     filter_unposted_in_period = None
-    MAX_LINES = None
+    MAX_LINES = None    
 
     def _get_reports_buttons(self):
         return [
@@ -85,6 +86,7 @@ class ReportonthequotationofInvestmentFunds(models.AbstractModel):
     def _format(self, value,figure_type):
         if self.env.context.get('no_format'):
             return value
+        
         value['no_format_name'] = value['name']
         
         if figure_type == 'float':
@@ -93,7 +95,8 @@ class ReportonthequotationofInvestmentFunds(models.AbstractModel):
                 # don't print -0.0 in reports
                 value['name'] = abs(value['name'])
                 value['class'] = 'number text-muted'
-            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id)
+            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id,digits=6)
+            print ("values======",value)
             value['class'] = 'number'
             return value
         if figure_type == 'percents':
@@ -109,7 +112,41 @@ class ReportonthequotationofInvestmentFunds(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
-                    
+
+        #records = self.env['investment.stock.quotation'].search([('state','in',('confirmed','done')),('invesment_date','>=',start),('invesment_date','<=',end)])
+        records = self.env['investment.stock.quotation'].search([('date','>=',start),('date','<=',end)])
+        total_amount = 0
+
+        for rec in records:
+            #total_amount += rec.amount 
+            #movement = dict(rec._fields['movement'].selection).get(rec.movement)
+            lines.append({
+                'id': 'hierarchy' + str(rec.id),
+                'name': rec.date,
+                'columns': [self._format({'name': rec.price},figure_type='float'),
+                            self._format({'name': rec.daily_nominal},figure_type='float'),
+                            self._format({'name': rec.daily_percentage},figure_type='float'),
+                            self._format({'name': rec.daily_interest},figure_type='float'), 
+                            self._format({'name': rec.weekly_nominal},figure_type='float'),
+                            self._format({'name': rec.weekly_percentage},figure_type='float'),
+                            self._format({'name': rec.weekly_interest},figure_type='float'), 
+                            self._format({'name': rec.last_30_days_nominal},figure_type='float'),
+                            self._format({'name': rec.last_30_days_percentage},figure_type='float'),
+                            self._format({'name': rec.last_30_days_interest},figure_type='float'), 
+                            self._format({'name': rec.current_month_nominal},figure_type='float'),
+                            self._format({'name': rec.current_month_percentage},figure_type='float'),
+                            self._format({'name': rec.current_month_interest},figure_type='float'), 
+                            self._format({'name': rec.current_year_nominal},figure_type='float'),
+                            self._format({'name': rec.current_year_percentage},figure_type='float'),
+                            self._format({'name': rec.current_year_interest},figure_type='float'), 
+                            
+
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
         return lines
 
     def _get_report_name(self):

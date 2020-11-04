@@ -557,6 +557,7 @@
                 <tree>
                     <field name="invoice"/>
                     <field name="operation_number"/>
+                    <field name="amount"/>
                     <field name="date"/>
                     <field name="user_id"/>
                     <field name="state"/>
@@ -592,8 +593,8 @@
                                 <field name="bank_account_id"/>
                                 <field name="desti_bank_account_id"/>
                                 <field name="amount"/>
-                                <field name="dependency_id"/>
-                                <field name="sub_dependency_id" context="{'show_for_supplier_payment':1}"/>
+                                <field name="dependency_id" context="{'show_for_agreement':1}"/>
+                                <field name="sub_dependency_id" context="{'show_for_agreement':1}"/>
                             </group>
                             <group>
                                 <field name="date"/>
@@ -608,7 +609,7 @@
                             </group>
                         </group>
                         <group>
-                            <field name="reason_rejection"/>
+                            <field name="reason_rejection" readonly="1"/>
                         </group>
 <!--                        <notebook>-->
 <!--                            <page string="Operation" name="operation">-->
@@ -700,5 +701,17 @@
             <field name="code">action = records.action_closing_collaboration()</field>
         </record>
 
+		<!-- Action Inherit -->
+
+		<record id="account.action_account_payments" model="ir.actions.act_window">
+		    <field name="context">{
+                'default_payment_type': 'inbound',
+                'default_partner_type': 'customer',
+                'search_default_inbound_filter': 1,
+                'res_partner_search_mode': 'customer',
+                'show_for_agreement':True
+            }</field>
+
+		</record>		
     </data>
 </odoo>

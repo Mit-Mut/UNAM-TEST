@@ -994,7 +994,13 @@ class RequestOpenBalanceFinance(models.Model):
 
     def open_payments(self):
         action = self.env.ref('account.action_account_payments').read()[0]
-        action['context'] = {}
+        action['context'] =   {'default_payment_type': 'inbound',
+                'default_partner_type': 'customer',
+                #'search_default_inbound_filter': 1,
+                #'res_partner_search_mode': 'customer',
+                'show_for_agreement':True
+                }
+
         if self.payment_ids:
             action['domain'] = [('id', 'in', self.payment_ids.ids)]
         else:
@@ -1018,12 +1024,17 @@ class RequestOpenBalanceFinance(models.Model):
 
     def approve_finance(self):
         self.state = 'approved'
+#         for rec in self.payment_ids:
+#             rec.
 
     def canceled_finance(self):
         self.state = 'canceled'
 
     def confirmed_finance(self):
         self.state = 'confirmed'
+
+    def reject_finance(self):
+        self.state = 'rejected'
         
     def action_schedule_transfers(self):
         payment_obj = self.env['account.payment']

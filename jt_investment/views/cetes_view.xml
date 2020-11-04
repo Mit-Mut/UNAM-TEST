@@ -34,22 +34,22 @@
                 <form>
                 	<header>
                 		<button name="action_confirm" states="draft" string="Confirm" class="oe_highlight" type="object" />
-                		<button name="action_reset_to_draft" attrs="{'invisible':[('state','=','draft')]}" string="Reset To Draft" class="oe_highlight" type="object"/>
-                		<button name="action_calculation" states="draft" string="Calculation" class="oe_highlight" type="object" />
+                		<button name="action_reset_to_draft" attrs="{'invisible':[('state','in',('draft','requested','approved'))]}" string="Reset To Draft" class="oe_highlight" type="object"/>
                 		<button name="action_reinvestment" states="draft" string="Reinvestment" class="oe_highlight" type="object" />
                 		
                 		<field name="state" widget="statusbar"/>
                 	</header>
                     <sheet>
                          <div class="oe_button_box" name="button_box">
-                            <button name="action_published_entries" string="Published Entries" type="object" class="oe_stat_button" icon="fa-random" attrs="{'invisible': [('state', '=', 'draft')]}">
+<!--                             <button name="action_published_entries" string="Published Entries" type="object" class="oe_stat_button" icon="fa-random" attrs="{'invisible': [('state', '=', 'draft')]}">
                             </button>
-                        </div>
+ -->                        </div>
                     
                         <group>
                             <group>
                                 <field name="folio" readonly="1"/>
                                 <field name="date_time" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="investment_fund_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="journal_id" required="1" domain="[('type','=','bank')]" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="bank_id"/>
                                 <field name="amount_invest" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
@@ -59,6 +59,10 @@
                                 		'form_view_ref': 'jt_investment.investment_period_rate_cetes_form'
                                 		}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="total_currency_rate"/>
+
+                                <field name="dependency_id" context="{'show_for_supplier_payment':1}" readonly="1"/>
+                                <field name="sub_dependency_id" domain="[('dependency_id','=',dependency_id)]" context="{'show_for_supplier_payment':1}" readonly="1"/>
+                                <field name="reason_rejection" readonly="1" attrs="{'invisible': [('state', '!=', 'rejected')]}"/>
                             </group>
                             <group>
                                 <field name="contract_id" required="1" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
@@ -69,7 +73,6 @@
 			            		<field name="agreement_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			            		<field name="base_collaboration_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 
-                                <field name="document_type" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="instrument_it" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="account_executive" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="UNAM_operator" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
@@ -150,6 +153,7 @@
          <record id="action_investment_cetes" model="ir.actions.act_window">
             <field name="name">CETES</field>
             <field name="res_model">investment.cetes</field>
+            <field name="context">{'show_for_agreement':True}</field>
         </record>
 
         <menuitem id="menu_investment_cetes" name="CETES" sequence="2"

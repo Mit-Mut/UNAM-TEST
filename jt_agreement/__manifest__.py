@@ -54,7 +54,6 @@
         'wizard/cancel_trust_wizard.xml',
         'views/patrimonial_resources.xml',
         'views/patrimonial_request_open_balance.xml',
-        'views/investment_fund_view.xml',
         'wizard/cancel_patrimonial_resource.xml',
         'reports/account_statement_report.xml',
         'reports/menu_reports.xml',

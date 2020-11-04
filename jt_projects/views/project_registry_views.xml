@@ -2,7 +2,7 @@
 <odoo>
     <data>
 
-         <record id="project_registry_tree_view" model="ir.ui.view">
+        <record id="project_registry_tree_view" model="ir.ui.view">
             <field name="name">Project Registry List view</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
@@ -12,6 +12,7 @@
             </field>
          </record>
     
+
 
          <record id="project_registry_form_view" model="ir.ui.view">
             <field name="name">Project Registry Form view</field>
@@ -25,6 +26,12 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box" groups="base.group_user">
+                            <button name="show_attachment"
+                                string="Files"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-file">
+                            </button>
                             <field name='check_project_due' invisible="1"/>
                             <field name='check_project_expire' invisible="1"/>
                             
@@ -33,6 +40,7 @@
                             <button string="Project next to expire"  class="oe_stat_button" type="object" name="calculate_project_overdue" attrs="{'invisible': [('check_project_expire', '=',False)]}">
                             </button>
                             </div>
+
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only" string="Project Name"/>
                             <h1><field name="name"/></h1>
@@ -122,6 +130,7 @@
 
         <menuitem id="menu_project_registry" name="Projects" action="project_registry_action_conacyt"
                   parent="menu_conacyt" sequence="1"/>
+
 
 
     </data>

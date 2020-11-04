@@ -48,6 +48,7 @@
         'views/increases_and_withdrawals.xml',
         'views/investment_view.xml',
         'views/agreement_trust_view.xml',
+        'views/investment_fund_view.xml',
         'wizard/approve_inv_bal_req_view.xml',
         'reports/header_template.xml',
         'reports/menu_report.xml',

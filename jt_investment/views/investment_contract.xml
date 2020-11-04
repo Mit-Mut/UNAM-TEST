@@ -40,9 +40,9 @@
                         		<field name="investent_type" required="1"/>
                         	</group>
                         	<group>
-                                <field name="fund_id" required="1"/>
-			                    <field name="fund_type_id" required="1"/>
-			                    <field name="agreement_type_id" required="1"/>
+                                <field name="fund_id" />
+			                    <field name="fund_type_id" />
+			                    <field name="agreement_type_id" />
 			                    <field name="base_collabaration_id"/>
                         		<field name="term" required="1"/>
                         		<field name="observations" required="1"/>

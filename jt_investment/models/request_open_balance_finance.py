@@ -12,12 +12,13 @@ class BasesCollabration(models.Model):
     will_pay_id = fields.Many2one('investment.will.pay','Will Pay')
     purchase_sale_security_id = fields.Many2one('purchase.sale.security','Purchase Sale Security')
     investment_id = fields.Many2one('investment.investment','Investment')
-    
+    investment_fund_id = fields.Many2one('investment.funds','Investment Funds')
 
     def approve_finance(self):
         result = super(BasesCollabration,self).approve_finance()
         if self.purchase_sale_security_id:
-            self.purchase_sale_security_id.action_done()
+            self.purchase_sale_security_id.action_approved()
+            
         if self.investment_id:
             self.investment_id.action_approved()
 
@@ -32,11 +33,17 @@ class BasesCollabration(models.Model):
 
         if self.will_pay_id:
             self.will_pay_id.action_approved()
-            
+        
+        if self.investment_fund_id:
+            self.investment_fund_id.action_approved()
         return result
      
     def confirmed_finance(self):
         result = super(BasesCollabration,self).confirmed_finance()
+
+        if self.purchase_sale_security_id:
+            self.purchase_sale_security_id.action_confirmed()
+        
         if self.investment_id:
             self.investment_id.action_confirmed()
 
@@ -52,4 +59,37 @@ class BasesCollabration(models.Model):
         if self.will_pay_id:
             self.will_pay_id.action_confirmed()
 
+        if self.investment_fund_id:
+            self.investment_fund_id.action_confirmed()
+
         return result 
+    
+    def reject_finance(self):
+        
+        result = super(BasesCollabration,self).reject_finance()
+
+        if self.purchase_sale_security_id:
+            self.purchase_sale_security_id.action_reject()
+            self.purchase_sale_security_id.reason_rejection = self.reason_rejection
+            
+        if self.investment_id:
+            self.investment_id.action_reject()
+            self.investment_id.reason_rejection = self.reason_rejection 
+        if self.bonds_id:
+            self.bonds_id.action_reject()
+            self.bonds_id.reason_rejection = self.reason_rejection 
+
+        if self.cetes_id:
+            self.cetes_id.action_reject()
+            self.cetes_id.reason_rejection = self.reason_rejection 
+
+        if self.udibonos_id:
+            self.udibonos_id.action_reject()
+            self.udibonos_id.reason_rejection = self.reason_rejection 
+
+        if self.will_pay_id:
+            self.will_pay_id.action_reject()
+            self.will_pay_id.reason_rejection = self.reason_rejection 
+    
+        return result
+    

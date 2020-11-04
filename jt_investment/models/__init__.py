@@ -11,3 +11,4 @@ from . import increases_and_withdrawals
 from . import investment
 from . import investment_rate
 from . import agreement_trust
+from . import investment_funds

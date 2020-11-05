@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="travel_request_template_docs">
+        <t t-call="web.html_container">
+            <div class="page">
+                <style>
+                 .border1
+                    {
+                        border: 1px solid black;
+                    }
+
+                .style1
+                    {
+                        font-size:15px;
+                    }
+                </style>
+                <div style="border: 1px solid black;">
+                    <table style="width:100%;">
+                        <tr>
+                            <td style="width:30%;">
+                            <img t-attf-src="data:image/png;base64,{{res_company.header_logo}}" style="width:150px;height:170px;margin-left:30px;margin-top:10px;"/></td>
+
+                            <td style="width:80%;">
+                                <b>
+                                <span style="font-size:16px;">SOLICITUD DE PAGO POR GASTOS DE VIATICOS</span><br/>
+                                <hr style="width:100%;"></hr>
+                                </b>
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="width:100%;">
+                    	<tr>
+                            <br/>
+                            <b><span style="margin-left:20px;font-size:16px;">Dependencia:&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</span></b>
+                            <b><span style="margin-left:20px;font-size:16px;">Subdependencia:&#160;&#160;&#160;&#160;&#160;&#160;</span></b>
+                            <b><span style="margin-left:20px;font-size:16px;">Folio de dependencia:&#160;&#160;&#160;&#160;&#160;&#160;</span></b>
+                            <b><span style="margin-left:20px;font-size:16px;">Fetcha:</span></b><br/><br/><br/>
+                        </tr>
+                        <tr>
+                            <b><span style="margin-left:20px;font-size:16px;">Medio de pago:&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</span></b>
+                            <b><span style="margin-left:20px;font-size:16px;">Moneda:&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</span></b>
+                            <b><span style="margin-left:20px;font-size:16px;">Documentos:&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</span></b>
+                            <b><span style="margin-left:20px;font-size:16px;">Formas:</span></b><br/><br/><br/>
+                        </tr>
+                        <tr>
+                            <b><span style="margin-left:20px;font-size:16px;">Nombre del responsable:&#160;&#160;&#160;&#160;&#160;&#160;</span></b>
+                            <b><span style="margin-left:20px;font-size:16px;">RFC:&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</span></b>
+                            <b><span style="margin-left:20px;font-size:16px;">Clave categoria:&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</span></b>
+                            <b><span style="margin-left:20px;font-size:16px;">Nombramiento:</span></b><br/><br/><br/>
+                        </tr>
+                        <tr>
+                            <b><span style="margin-left:350px;">MOTIVO DEL VIAJE</span></b><br/><br/>
+                            <span style="margin-left:20px;position: absolute;">TRABAJOS DE REVISION Y MANTENIMIENTO LAS ESTACIONES ACELEROGRAFICAS UBICADAS EN LOS POBLADOS DE PETATLAN Y LA UNION, GUERRERO; Y CALETA DE CAMPOS, MACHOACAN.</span>
+                            <br/><br/>
+                            <b><span style="margin-left:380px;">DESTINO</span></b><br/><br/>
+                            <span style="margin-left:20px;">GUERRERO Y MICHOACAN DEL 22/01/2019 AL 24/01/2019</span><br/>
+                        </tr>
+                        
+                        <table style="margin-left:20px;width:95%;">
+                            <tr>
+                            <b><span style="margin-left:350px;">ZONA CORRESPONDIENTE</span></b>
+                            </tr>
+                            <tr>
+                                <th class="border1" style="text-align:center;">Zona</th>
+                                <th class="border1" style="text-align:center;">Tarifa</th>
+                                <th class="border1" style="text-align:center;">Dias</th>
+                            </tr>
+                            <tr style="border: 1px solid black;margin-left:20px;">
+                                <td class="border1" style="text-align:center;">3</td>
+                                <td class="border1" style="text-align:center;">$1037.63</td>
+                                <td class="border1" style="text-align:center;">2</td>
+                            </tr><br/><br/>
+                        </table>
+
+                        <table style="margin-left:20px;width:95%;">
+                            <tr>
+                                <b><span style="margin-left:350px;">DATOS PARA ELEGRESO</span></b>
+                            </tr>
+                            <tr>
+                                <th style="text-align:center;">Clave de egreso</th>
+                                <th style="text-align:center;">Cuenta y/o codigo programatico</th>
+                                <th style="text-align:center;">Precio Unitario</th>
+                                <th style="text-align:center;">Importe</th>
+                            </tr>
+                            <tr>
+                                <td style="text-align:center;">IEMN</td>
+                                <td style="text-align:center;">601.84.01 Otros gastos generales</td>
+                                <td style="text-align:center;">10,000</td>
+                                <td style="text-align:center;">10,000</td>
+                            </tr><br/><br/>
+                        </table>
+                        <tr>
+                            <hr style="width:30%;margin-left:600px; border: 1px solid black;"/>
+                            <b><span style="margin-left:600px;">Subtotal</span><br/><br/>
+                            <hr style="width:30%;margin-left:600px; border: 1px solid black;"/>
+                            <span style="margin-left:600px;">Total</span></b>
+                        </tr>
+
+                        <table style="margin-left:20px;width:95%;border-radius:10px;">
+                            <tr>
+                                <th class="border1" style="height:20px;">Titular de la dependencia</th>
+                                <th class="border1">Secretario Administrativo</th>
+                                <th class="border1">UNIDAD DE PROCESO ADMINISTRATIVO/MODULO</th>
+                            </tr>
+                            <tr>
+                                <td class="border1" style="text-align:center;">Luis Agustin Alvarez lcaza</td>
+                                <td class="border1" style="text-align:center;">Salvador Barba Echavarria</td>
+                                <td class="border1" style="text-align:center;"></td>
+                                <br/><br/><br/>
+                            </tr>
+                        </table>
+                    </table>
+                </div>  
+            </div>
+        </t>
+       </template>
+
+        <template id="travel_request_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="jt_projects.travel_request_template_docs"/>
+                </t>
+            </t>
+        </template>
+
+        <record id="paperformat_travel_request" model="report.paperformat">
+            <field name="name">Format 1</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">6</field>
+            <field name="margin_bottom">60</field>
+            <field name="margin_left">10</field>
+            <field name="margin_right">10</field>
+            <field name="header_line" eval="False"/>
+            <field name="dpi">100</field>
+        </record>
+
+        <report 
+            id="travel_request_action"
+            model="account.move"
+            string="Travel Request"
+            report_type="qweb-pdf"
+            name="jt_projects.travel_request_template"
+            file="jt_projects.travel_request_template"
+            print_report_name="object.name"
+            paperformat="jt_projects.paperformat_travel_request"
+        />
+
+    </data>
+</odoo>

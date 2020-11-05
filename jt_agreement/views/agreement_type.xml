@@ -8,6 +8,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="code"/>
+                    <field name="group"/>
                     <field name="name"/>
                     <field name="fund_type_id"/>
                     <field name="fund_id" string="Fund Name"/>
@@ -23,6 +24,7 @@
                     <sheet>
                         <group>
                             <field name="code"/>
+                            <field name="group"/>
                             <field name="name"/>
                             <field name="fund_type_id"/>
                             <field name="fund_id"/>

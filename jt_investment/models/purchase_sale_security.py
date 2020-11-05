@@ -22,7 +22,7 @@ class PurchaseSaleSecurity(models.Model):
     price = fields.Float(related='last_quote_id.price',string="Price")
     price_previous_day = fields.Float(compute='get_previous_price_days',string="Price previous day")
     average_price_of_the_month = fields.Float(compute='get_average_price_of_the_month',string="Average price of the month")
-    title = fields.Float("Title")
+    title = fields.Integer("Title")
     term = fields.Integer("Investment Term")
     due_date = fields.Date("Due Date")
     movement = fields.Selection([('buy','Purchase'),('sell','Sale')],string="What move do I want to make?")
@@ -36,7 +36,7 @@ class PurchaseSaleSecurity(models.Model):
     bank_account_id = fields.Many2one(related='journal_id.bank_account_id')
     account_balance = fields.Float("Account Balance",compute="get_account_balance",store=True)
     movement_price = fields.Float(related='last_quote_id.price',string="Price")
-    number_of_titles = fields.Float(related='title',string="Quantity of Securities")
+    number_of_titles = fields.Integer(related='title',string="Quantity of Securities")
     amount = fields.Float(string="Investment amount",compute="get_investment_amount",store=True)
 
     contract_id = fields.Many2one("investment.contract", "Contract")

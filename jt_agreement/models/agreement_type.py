@@ -29,6 +29,7 @@ class AgreementType(models.Model):
     _description = "Agreement Type"
 
     code = fields.Char("Agreement Type Code")
+    group = fields.Char("Group",size=1)
     name = fields.Char("Name of Agreement Type")
     fund_type_id = fields.Many2one('fund.type', "Fund Type")
     fund_id = fields.Many2one('agreement.fund',string="Fund")
@@ -37,3 +38,13 @@ class AgreementType(models.Model):
     def _check_code(self):
         if self.code and len(self.code) != 2:
             raise ValidationError(_('Agreement Type Code must be 2 characters.'))
+
+    @api.constrains('group')
+    def _check_group(self):
+        group = self.group
+        if group.isdigit():
+            return True
+        else:
+            raise ValidationError(_("Group Value Must Be numeric"))
+
+

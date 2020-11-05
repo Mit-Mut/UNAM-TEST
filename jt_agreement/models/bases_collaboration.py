@@ -21,7 +21,7 @@
 #
 ##############################################################################
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError,UserError
 from datetime import datetime,timedelta
 from dateutil.relativedelta import relativedelta
 
@@ -92,9 +92,27 @@ class BasesCollabration(models.Model):
 
     report_start_date = fields.Date("Report Start Date")
     report_end_date = fields.Date("Report End Date")
+    n_report = fields.Char(string="N° para reporte")
+    holder_email = fields.Char("Email")
+    administrative_secretary_email = fields.Char("Administrative Secretary Email")
+
     
     _sql_constraints = [
         ('folio_convention_no', 'unique(convention_no)', 'The Convention No. must be unique.')]
+
+
+    @api.onchange('dependency_id','agreement_type_id')
+    def onchange_dependency_agrtype(self):
+        for rec in self:
+            if rec.dependency_id and self.agreement_type_id and self.agreement_type_id.group:
+                rec.convention_no = '%s' %(rec.dependency_id.dependency) + '%s' %(rec.agreement_type_id.group)
+
+    @api.onchange('dependency_id','agreement_type_id','subdependency_id')
+    def onchange_deb_sub_agr(self):
+        for rec in self:
+            if rec.dependency_id and rec.agreement_type_id and rec.subdependency_id:
+                group = rec.agreement_type_id.group and rec.agreement_type_id.group or ''
+                rec.n_report = '%s' %(rec.dependency_id.dependency) +'%s' %(rec.subdependency_id.sub_dependency) + '%s' %(group)
 
     def get_month_name(self,month):
         month_name = ''
@@ -367,6 +385,8 @@ class BasesCollabration(models.Model):
     def onchange_administrative_secretary(self):
         if self.administrative_secretary_id and self.administrative_secretary_id.work_phone:
             self.administrative_secretary_phone = self.administrative_secretary_id.work_phone
+        if self.administrative_secretary_id and self.administrative_secretary_id.work_email:
+            self.administrative_secretary_email = self.administrative_secretary_id.work_email
 
     @api.onchange('employee_id')
     def onchange_emp_id(self):
@@ -376,22 +396,23 @@ class BasesCollabration(models.Model):
                 self.job_id = emp.job_id.id
             if emp.work_phone:
                 self.phone = emp.work_phone
+            if emp.work_email:
+                self.holder_email = emp.work_email
 
     @api.constrains('convention_no')
     def _check_convention_no(self):
         if self.convention_no and not self.convention_no.isnumeric():
             raise ValidationError(_('Convention No must be Numeric.'))
-        if self.convention_no and len(self.convention_no) != 8:
-            raise ValidationError(_('Convention No must be 8 characters.'))
-        if self.dependency_id and self.subdependency_id:
-            name = self.dependency_id.dependency + self.subdependency_id.sub_dependency
+        if self.convention_no and len(self.convention_no) != 6:
+            raise ValidationError(_('Convention No must be 6 characters.'))
+        if self.dependency_id and self.agreement_type_id and self.agreement_type_id.group:
+            name = self.dependency_id.dependency + self.agreement_type_id.group
             if not self.convention_no.startswith(name):
-                raise ValidationError(_('First 5 character of Convention must be Dependency and Sub Dependency.'))
+                raise ValidationError(_('First 4 character of Convention must be Dependency and Group.'))
 
     @api.onchange('dependency_id', 'subdependency_id')
     def onchange_dep_subdep(self):
         if self.dependency_id or self.subdependency_id:
-            self.convention_no = ''
             number = ''
             if self.dependency_id:
                 number += self.dependency_id.dependency
@@ -399,12 +420,14 @@ class BasesCollabration(models.Model):
             if self.subdependency_id:
                 number += self.subdependency_id.sub_dependency
                 self.desc_subdependency = self.subdependency_id.description
-            self.convention_no = number
+            #self.convention_no = number
 
     @api.onchange('agreement_type_id')
     def onchange_agreement_type_id(self):
         if self.agreement_type_id and self.agreement_type_id.fund_type_id:
             self.fund_type_id = self.agreement_type_id.fund_type_id.id
+
+
 
 class Committe(models.Model):
 
@@ -577,6 +600,13 @@ class RequestOpenBalance(models.Model):
     patrimonial_resources_id = fields.Many2one('patrimonial.resources','Patrimonial Resources')
     patrimonial_equity_account_id = fields.Many2one('account.account', "Equity accounting account")
     patrimonial_yield_account_id = fields.Many2one('account.account', "Yield account of the productive investment account")
+
+    def unlink(self):
+        for rec in self:
+            if rec.state in ['requested']:
+                raise UserError(_('You cannot delete an entry which has been requested.'))
+        return super(RequestOpenBalance, self).unlink()
+
         
     @api.constrains('type_of_operation')
     def _check_type_of_operation(self):
@@ -773,6 +803,8 @@ class RequestOpenBalanceInvestment(models.Model):
                                           ('withdrawal_cancellation', 'Withdrawal Due to Cancellation')],
                                             string="Type of Operation")
     apply_to_basis_collaboration = fields.Boolean("Apply to Basis of Collaboration")
+    apply_to_trust = fields.Boolean(related='apply_to_basis_collaboration',string="Apply to Trust")
+    
     origin_resource_id = fields.Many2one('sub.origin.resource', "Origin of the resource")
     state = fields.Selection([('draft', 'Draft'),
                                ('requested', 'Requested'),

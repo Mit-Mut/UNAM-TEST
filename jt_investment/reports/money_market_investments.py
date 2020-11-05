@@ -37,7 +37,8 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
     _description = "Summary of Operation - Money Market Investments"
 
     filter_date = {'mode': 'range', 'filter': 'this_month'}
-    filter_comparison = {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
+    #filter_comparison = {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
+    filter_comparison = None
     filter_all_entries = None
     filter_journals = None
     filter_analytic = None
@@ -68,6 +69,7 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
             {'name': _('Contrato')},
             {'name': _('cuenta bancaria')},
             {'name': _('Inversión')},
+            {'name': _('Producto')},
             {'name': _('Plazo')},
             {'name': _('Tasa de interés')},
         ]
@@ -114,14 +116,15 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
         #==== CETES========#        
         for cetes in cetes_records:
             total_investment += cetes.nominal_value
-            resouce_name = cetes.origin_resource_id and cetes.origin_resource_id.name or ''
+            resouce_name = cetes.fund_id and cetes.fund_id.name or ''
             lines.append({
                 'id': 'hierarchy_cetes' + str(cetes.id),
                 'name' : resouce_name, 
-                'columns': [{'name': cetes.journal_id and cetes.journal_id.name or ''}, 
+                'columns': [{'name': cetes.bank_id and cetes.bank_id.name or ''}, 
                             {'name': cetes.contract_id and cetes.contract_id.name or ''}, 
                             {'name': cetes.journal_id and cetes.journal_id.bank_account_id and cetes.journal_id.bank_account_id.acc_number or ''},
                             self._format({'name': cetes.nominal_value},figure_type='float'),
+                            {'name': 'CETES'},
                             {'name': cetes.term},
                             self._format({'name': cetes.yield_rate},figure_type='float'),
                             ],
@@ -133,14 +136,15 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
         #==== udibonos========#
         for udibonos in udibonos_records:
             total_investment += udibonos.nominal_value
-            resouce_name = udibonos.origin_resource_id and udibonos.origin_resource_id.name or ''
+            resouce_name = udibonos.fund_id and udibonos.fund_id.name or ''
             lines.append({
                 'id': 'hierarchy_udibonos' + str(udibonos.id),
                 'name': resouce_name,
-                'columns': [{'name': udibonos.journal_id and udibonos.journal_id.name or ''}, 
+                'columns': [{'name': udibonos.bank_id and udibonos.bank_id.name or ''}, 
                             {'name': udibonos.contract_id and udibonos.contract_id.name or ''}, 
                             {'name': udibonos.journal_id and udibonos.journal_id.bank_account_id and udibonos.journal_id.bank_account_id.acc_number or ''},
                             self._format({'name': udibonos.nominal_value},figure_type='float'),
+                            {'name': 'UDIBONOS'},
                             {'name': udibonos.time_for_each_cash_flow},
                             self._format({'name': udibonos.interest_rate},figure_type='float'),
                             ],
@@ -152,14 +156,15 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
         #==== bonds========#
         for bonds in bonds_records:
             total_investment += bonds.nominal_value
-            resouce_name = bonds.origin_resource_id and bonds.origin_resource_id.name or ''
+            resouce_name = bonds.fund_id and bonds.fund_id.name or ''
             lines.append({
                 'id': 'hierarchy_bonds' + str(bonds.id),
                 'name': resouce_name,
-                'columns': [{'name': bonds.journal_id and bonds.journal_id.name or ''}, 
+                'columns': [{'name': bonds.bank_id and bonds.bank_id.name or ''}, 
                             {'name': bonds.contract_id and bonds.contract_id.name or ''}, 
                             {'name': bonds.journal_id and bonds.journal_id.bank_account_id and bonds.journal_id.bank_account_id.acc_number or ''},
                             self._format({'name': bonds.nominal_value},figure_type='float'),
+                            {'name': 'BONOS'},
                             {'name': bonds.time_for_each_cash_flow},
                             self._format({'name': bonds.interest_rate},figure_type='float'),
                             ],
@@ -171,15 +176,16 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
         #==== Pay========#
         for pay in will_pay_records:
             total_investment += pay.amount
-            resouce_name = pay.origin_resource_id and pay.origin_resource_id.name or ''
+            resouce_name = pay.fund_id and pay.fund_id.name or ''
             
             lines.append({
                 'id': 'hierarchy_bonds' + str(pay.id),
                 'name': resouce_name,
-                'columns': [{'name': pay.journal_id and pay.journal_id.name or ''}, 
+                'columns': [{'name': pay.bank_id and pay.bank_id.name or ''}, 
                             {'name': pay.contract_id and pay.contract_id.name or ''}, 
                             {'name': pay.journal_id and pay.journal_id.bank_account_id and pay.journal_id.bank_account_id.acc_number or ''},
                             self._format({'name': pay.amount},figure_type='float'),
+                            {'name': 'PAGARE'},
                             {'name': pay.term_days},
                             self._format({'name': pay.interest_rate},figure_type='float'),
                             ],
@@ -205,15 +211,15 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
         })
         #===================== Bank Data ==========#
 
-        journal_ids = self.env['account.journal']
-        journal_ids += cetes_records.mapped('journal_id')
-        journal_ids += udibonos_records.mapped('journal_id')
-        journal_ids += bonds_records.mapped('journal_id')
-        journal_ids += will_pay_records.mapped('journal_id')
+        journal_ids = self.env['res.bank']
+        journal_ids += cetes_records.mapped('bank_id')
+        journal_ids += udibonos_records.mapped('bank_id')
+        journal_ids += bonds_records.mapped('bank_id')
+        journal_ids += will_pay_records.mapped('bank_id')
         
         if journal_ids:
             journals = list(set(journal_ids.ids))
-            journal_ids = self.env['account.journal'].browse(journals)
+            journal_ids = self.env['res.bank'].browse(journals)
             
         lines.append({
             'id': 'hierarchy_inst' ,
@@ -233,10 +239,10 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
         total_ins = 0
         for journal in journal_ids:
             amount = 0
-            amount += sum(x.nominal_value for x in cetes_records.filtered(lambda x:x.journal_id.id==journal.id))
-            amount += sum(x.nominal_value for x in udibonos_records.filtered(lambda x:x.journal_id.id==journal.id))
-            amount += sum(x.nominal_value for x in bonds_records.filtered(lambda x:x.journal_id.id==journal.id))
-            amount += sum(x.amount for x in will_pay_records.filtered(lambda x:x.journal_id.id==journal.id))                        
+            amount += sum(x.nominal_value for x in cetes_records.filtered(lambda x:x.bank_id.id==journal.id))
+            amount += sum(x.nominal_value for x in udibonos_records.filtered(lambda x:x.bank_id.id==journal.id))
+            amount += sum(x.nominal_value for x in bonds_records.filtered(lambda x:x.bank_id.id==journal.id))
+            amount += sum(x.amount for x in will_pay_records.filtered(lambda x:x.bank_id.id==journal.id))                        
             
             total_ins += amount
             lines.append({
@@ -270,16 +276,16 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
         })
 
         #================ Origin Data ====================#
-        origin_ids = self.env['sub.origin.resource']
+        origin_ids = self.env['agreement.fund']
 
-        origin_ids += cetes_records.mapped('origin_resource_id')        
-        origin_ids += udibonos_records.mapped('origin_resource_id')        
-        origin_ids += bonds_records.mapped('origin_resource_id')
-        origin_ids += will_pay_records.mapped('origin_resource_id')
+        origin_ids += cetes_records.mapped('fund_id')        
+        origin_ids += udibonos_records.mapped('fund_id')        
+        origin_ids += bonds_records.mapped('fund_id')
+        origin_ids += will_pay_records.mapped('fund_id')
 
         if origin_ids:
             origins = list(set(origin_ids.ids))
-            origin_ids = self.env['sub.origin.resource'].browse(origins)
+            origin_ids = self.env['agreement.fund'].browse(origins)
 
         lines.append({
             'id': 'hierarchy_origin_total' ,
@@ -299,10 +305,10 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
         total_ins = 0
         for origin in origin_ids:
             amount = 0
-            amount += sum(x.nominal_value for x in cetes_records.filtered(lambda x:x.origin_resource_id.id==origin.id))
-            amount += sum(x.nominal_value for x in udibonos_records.filtered(lambda x:x.origin_resource_id.id==origin.id))
-            amount += sum(x.nominal_value for x in bonds_records.filtered(lambda x:x.origin_resource_id.id==origin.id))
-            amount += sum(x.amount for x in will_pay_records.filtered(lambda x:x.origin_resource_id.id==origin.id))                        
+            amount += sum(x.nominal_value for x in cetes_records.filtered(lambda x:x.fund_id.id==origin.id))
+            amount += sum(x.nominal_value for x in udibonos_records.filtered(lambda x:x.fund_id.id==origin.id))
+            amount += sum(x.nominal_value for x in bonds_records.filtered(lambda x:x.fund_id.id==origin.id))
+            amount += sum(x.amount for x in will_pay_records.filtered(lambda x:x.fund_id.id==origin.id))                        
             
             total_ins += amount
             lines.append({

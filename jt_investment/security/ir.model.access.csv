@@ -10,5 +10,11 @@ access_investment_investment,investment.investment.access,model_investment_inves
 access_investment_period_rate,investment.period.rate.access,model_investment_period_rate,base.group_user,1,1,1,1
 access_stock_quote_price,stock.quote.price.access,model_stock_quote_price,base.group_user,1,1,1,1
 access_investment_funds,investment.funds.access,model_investment_funds,base.group_user,1,1,1,1
+access_distribution_of_income,distribution.of.income.access,model_distribution_of_income,base.group_user,1,1,1,1
+access_distribution_of_income_line,distribution.of.income.line.access,model_distribution_of_income_line,base.group_user,1,1,1,1
+
+
+
+
 
 

@@ -104,47 +104,53 @@ class SummaryofOperationInvestmentFundsBalances(models.AbstractModel):
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
         
-        records = self.env['purchase.sale.security'].search([('state','in',('confirmed','done')),('invesment_date','>=',start),('invesment_date','<=',end)])
+        #records = self.env['purchase.sale.security'].search([('state','in',('confirmed','done')),('invesment_date','>=',start),('invesment_date','<=',end)])
+        records = self.env['purchase.sale.security'].search([('invesment_date','>=',start),('invesment_date','<=',end)])
         total_amount = 0
         total_title = 0
-        total_movement_price = 0
-        
+        total_val = 0
         for rec in records:
-            total_amount += rec.amount
-            total_title += rec.title
-            total_movement_price += rec.movement_price
-             
-            lines.append({
-                'id': 'hierarchy' + str(rec.id),
-                'name': rec.fund_id and rec.fund_id.name or '',
-                'columns': [{'name': rec.contract_id and rec.contract_id.name}, 
-                            {'name': rec.fund_key}, 
-                            self._format({'name': rec.amount},figure_type='float'),
-                            self._format({'name': rec.title},figure_type='float'),
-                            {'name': ''},
-                            self._format({'name': rec.movement_price},figure_type='float'),
-                            {'name': ''},
-                            ],
-                'level': 3,
-                'unfoldable': False,
-                'unfolded': True,
-            })
-
-            lines.append({
-                'id': 'hierarchy_total' + str(rec.id),
-                'name': '',
-                'columns': [{'name': ''}, 
-                            {'name': 'Total'}, 
-                            self._format({'name': rec.amount},figure_type='float'),
-                            self._format({'name': rec.title},figure_type='float'),
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            ],
-                'level': 1,
-                'unfoldable': False,
-                'unfolded': True,
-            })
+            if rec.movement:
+                if rec.movement == 'sell':
+                    total_title -= rec.title
+                    total_amount -= rec.amount
+                elif rec.movement == 'buy':
+                    total_title += rec.title
+                    total_amount += rec.amount
+                valuation = rec.title * rec.movement_price
+                total_val += valuation
+                 
+                lines.append({
+                    'id': 'hierarchy' + str(rec.id),
+                    'name': rec.fund_id and rec.fund_id.name or '',
+                    'columns': [{'name': rec.contract_id and rec.contract_id.name or ''}, 
+                                {'name': rec.fund_key}, 
+                                self._format({'name': rec.amount},figure_type='float'),
+                                {'class':'number','name':format(rec.title, ',d')},
+                                {'name': ''},
+                                self._format({'name': rec.movement_price},figure_type='float'),
+                                self._format({'name': valuation},figure_type='float'),
+                                ],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+    
+                lines.append({
+                    'id': 'hierarchy_total' + str(rec.id),
+                    'name': '',
+                    'columns': [{'name': ''}, 
+                                {'name': 'Total'}, 
+                                self._format({'name': rec.amount},figure_type='float'),
+                                {'class':'number','name':format(rec.title, ',d')},
+                                {'class':'number','name':format(total_title, ',d')},
+                                {'name': ''},
+                                {'name': ''},
+                                ],
+                    'level': 1,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
 
         lines.append({
             'id': 'hierarchy_total',
@@ -152,10 +158,11 @@ class SummaryofOperationInvestmentFundsBalances(models.AbstractModel):
             'columns': [{'name': ''}, 
                         {'name': ''}, 
                         self._format({'name': total_amount},figure_type='float'),
-                        self._format({'name': total_title},figure_type='float'),
-                        {'name': ''},
-                        self._format({'name': total_movement_price},figure_type='float'),
-                        {'name': ''},
+                        {'class':'number','name':format(total_title, ',d')},
+                        {'class':'number','name':format(total_title, ',d')},
+                         {'name': ''},
+                        self._format({'name': total_val},figure_type='float'),
+                        
                         ],
             'level': 1,
             'unfoldable': False,

@@ -38,6 +38,59 @@ class InvestmentPeriodRate(models.Model):
     rate_year_7 = fields.Float(string="7 Year Rate",digits=0)
     term_year_7 = fields.Integer(string="7 Year Term")
     
+    _sql_constraints = [('rate_date_product_type', 'unique(rate_date,product_type)',
+                         'Rate already register for this date')]
+    
+    def set_blank_fields(self):
+        self.rate_daily = 0
+        self.rate_days_28 = 0
+        self.term_days_28 = 0
+        self.rate_days_91 = 0
+        self.term_days_91 = 0
+        self.rate_days_182 = 0
+        self.term_days_182 = 0
+        self.rate_days_364 = 0
+        self.term_days_364 = 0
+    
+        #=====UDIBONOS=====#    
+        self.rate_year_3 = 0
+        self.term_year_3 = 0
+        self.rate_year_5 = 0
+        self.term_year_5 = 0
+        self.rate_year_10 = 0
+        self.term_year_10 = 0
+        self.rate_year_20 = 0
+        self.term_year_20 = 0
+        self.rate_year_30 = 0
+        self.term_year_30 = 0
+        
+        #========BONUS=====#
+        self.rate_year_7 = 0
+        self.term_year_7 = 0
+
+    @api.onchange('rate_date')
+    def onchange_rate_date(self):
+        self.set_blank_fields()
+        if self.rate_date and self.product_type:
+            token = 'fccfd1e45c7e54ef7a6896f25f7dcf01d51cfa033424abd345707b6a8d2b59c3'
+            url = 'https://www.banxico.org.mx/SieAPIRest/service/v1/series/'
+            
+            # url +=  series_str+"/datos/oportuno?token=%s"%token
+            date_range = self.rate_date
+            date_range = datetime.strftime(date_range,'%Y-%m-%d')
+            date_range = date_range+"/"+date_range
+            
+            if self.product_type=='TIIE':
+                self.with_context(call_from_onchange=True).get_investment_product_rate(token,url,date_range)
+            elif self.product_type=='CETES':
+                self.with_context(call_from_onchange=True).get_cetes_product_rate(token,url,date_range)
+            elif self.product_type=='UDIBONOS':
+                self.with_context(call_from_onchange=True).get_UDIBONOS_product_rate(token,url,date_range)
+            elif self.product_type=='BONUS':
+                self.with_context(call_from_onchange=True).get_BONUS_product_rate(token,url,date_range)
+            elif self.product_type=='PAGARE':    
+                self.with_context(call_from_onchange=True).get_PAGARE_product_rate(token,url,date_range)
+            
     def create_update_product_rate(self,product_type,series_fields_map,series_fields_type_map,data):
         idSerie = data.get('idSerie',False)
         date_data = data.get('datos',[])
@@ -61,23 +114,26 @@ class InvestmentPeriodRate(models.Model):
                     rate = float(rate)
                 else:
                     rate = 0
-                        
-                exist_rec = self.env['investment.period.rate'].search([('product_type','=',product_type),('rate_date','=',rec_date)],limit=1)
-                if exist_rec:
-                    exist_rec.write({field_name : rate})
+                
+                if self.env.context and self.env.context.get('call_from_onchange'):
+                    self.write({field_name : rate})
                 else:
-                    vals = {'product_type':product_type,
-                            'rate_date':rec_date,
-                            field_name : rate,
-                            }
-                    self.env['investment.period.rate'].create(vals)
+                    exist_rec = self.env['investment.period.rate'].search([('product_type','=',product_type),('rate_date','=',rec_date)],limit=1)
+                    if exist_rec:
+                        exist_rec.write({field_name : rate})
+                    else:
+                        vals = {'product_type':product_type,
+                                'rate_date':rec_date,
+                                field_name : rate,
+                                }
+                        self.env['investment.period.rate'].create(vals)
                     
                   
-    def get_investment_product_rate(self,token,url):
+    def get_investment_product_rate(self,token,url,date_range):
         series_fields_map = {'SF331451':'rate_daily','SF43783':'rate_days_28','SF43878':'rate_days_91','SF111916':'rate_days_182'}
         series_fields_type_map = {'SF331451':'float','SF43783':'float','SF43878':'float','SF111916':'float'}
         series_str = 'SF331451,SF43783,SF43878,SF111916'
-        url +=  series_str+"/datos/oportuno?token=%s"%token
+        url +=  series_str+"/datos/%s?token=%s"%(date_range,token)
 
         req = urllib.request.Request(url)
         response = urllib.request.urlopen(req).read()
@@ -87,7 +143,7 @@ class InvestmentPeriodRate(models.Model):
             for data in series_dict.get('series',[]):
                 self.create_update_product_rate('TIIE', series_fields_map,series_fields_type_map, data)
 
-    def get_cetes_product_rate(self,token,url):
+    def get_cetes_product_rate(self,token,url,date_range):
         #=======link=======#
         #=====  https://www.banxico.org.mx/SieAPIRest/service/v1/doc/catalogoSeries#    ====#
         series_fields_map = {'SF43935':'term_days_28','SF43936':'rate_days_28',
@@ -104,7 +160,7 @@ class InvestmentPeriodRate(models.Model):
         
         series_str = 'SF43935,SF43936,SF43938,SF43939,SF43941,SF43942,SF43944,SF43945'
         
-        url +=  series_str+"/datos/oportuno?token=%s"%token
+        url +=  series_str+"/datos/%s?token=%s"%(date_range,token)
 
         req = urllib.request.Request(url)
         response = urllib.request.urlopen(req).read()
@@ -115,7 +171,7 @@ class InvestmentPeriodRate(models.Model):
                 self.create_update_product_rate('CETES', series_fields_map,series_fields_type_map, data)
         
 
-    def get_UDIBONOS_product_rate(self,token,url):
+    def get_UDIBONOS_product_rate(self,token,url,date_range):
         #=======link=======#
         #=====  https://www.banxico.org.mx/SieAPIRest/service/v1/doc/catalogoSeries#    ====#
 
@@ -134,7 +190,7 @@ class InvestmentPeriodRate(models.Model):
         
         series_str = 'SF61593,SF61592,SF43926,SF43927,SF43923,SF43924,SF46957,SF46958,SF46960,SF46961'
         
-        url +=  series_str+"/datos/oportuno?token=%s"%token
+        url +=  series_str+"/datos/%s?token=%s"%(date_range,token)
 
         req = urllib.request.Request(url)
         response = urllib.request.urlopen(req).read()
@@ -144,8 +200,8 @@ class InvestmentPeriodRate(models.Model):
             for data in series_dict.get('series',[]):
                 self.create_update_product_rate('UDIBONOS', series_fields_map,series_fields_type_map, data)
 
-    def get_BONUS_product_rate(self,token,url):
-        #=======link=======#
+    def get_BONUS_product_rate(self,token,url,date_range):
+        #=======link=======#        
         #=====  https://www.banxico.org.mx/SieAPIRest/service/v1/doc/catalogoSeries#    ====#
 
         series_fields_map = {'SF43882':'term_year_3','SF43883':'rate_year_3',
@@ -165,7 +221,7 @@ class InvestmentPeriodRate(models.Model):
         
         series_str = 'SF43882,SF43883,SF43885,SF43886,SF44945,SF44946,SF44070,SF44071,SF45383,SF45384,SF60689,SF60696'
         
-        url +=  series_str+"/datos/oportuno?token=%s"%token
+        url +=  series_str+"/datos/%s?token=%s"%(date_range,token)
 
         req = urllib.request.Request(url)
         response = urllib.request.urlopen(req).read()
@@ -175,11 +231,11 @@ class InvestmentPeriodRate(models.Model):
             for data in series_dict.get('series',[]):
                 self.create_update_product_rate('BONUS', series_fields_map,series_fields_type_map, data)   
 
-    def get_PAGARE_product_rate(self,token,url):
+    def get_PAGARE_product_rate(self,token,url,date_range):
         series_fields_map = {'SF43783':'rate_days_28','SF43878':'rate_days_91','SF111916':'rate_days_182'}
         series_fields_type_map = {'SF43783':'float','SF43878':'float','SF111916':'float'}
         series_str = 'SF43783,SF43878,SF111916'
-        url +=  series_str+"/datos/oportuno?token=%s"%token
+        url +=  series_str+"/datos/%s?token=%s"%(date_range,token)
 
         req = urllib.request.Request(url)
         response = urllib.request.urlopen(req).read()
@@ -192,9 +248,15 @@ class InvestmentPeriodRate(models.Model):
     def create_investment_period_rate(self):
         token = 'fccfd1e45c7e54ef7a6896f25f7dcf01d51cfa033424abd345707b6a8d2b59c3'
         url = 'https://www.banxico.org.mx/SieAPIRest/service/v1/series/'
-        self.get_investment_product_rate(token,url)
-        self.get_cetes_product_rate(token,url)
-        self.get_UDIBONOS_product_rate(token,url)
-        self.get_BONUS_product_rate(token,url)
-        self.get_PAGARE_product_rate(token,url)
+        
+        # url +=  series_str+"/datos/oportuno?token=%s"%token
+        date_range = datetime.now()
+        date_range = datetime.strftime(date_range,'%Y-%m-%d')
+        date_range = date_range+"/"+date_range
+        
+        self.get_investment_product_rate(token,url,date_range)
+        self.get_cetes_product_rate(token,url,date_range)
+        self.get_UDIBONOS_product_rate(token,url,date_range)
+        self.get_BONUS_product_rate(token,url,date_range)
+        self.get_PAGARE_product_rate(token,url,date_range)
         

@@ -41,6 +41,7 @@
         'views/request_for_payment.xml',
         'views/account_cancellation.xml',   
         'wizard/project_close.xml',
+        'reports/travel_request.xml',
         'security/ir.model.access.csv',
     ],
     'application': False,

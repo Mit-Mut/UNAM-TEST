@@ -49,6 +49,7 @@
         'views/investment_view.xml',
         'views/agreement_trust_view.xml',
         'views/investment_fund_view.xml',
+        'views/distribution_of_income.xml',
         'wizard/approve_inv_bal_req_view.xml',
         'reports/header_template.xml',
         'reports/menu_report.xml',

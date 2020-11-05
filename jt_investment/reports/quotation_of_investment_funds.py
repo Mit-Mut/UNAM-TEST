@@ -95,8 +95,7 @@ class ReportonthequotationofInvestmentFunds(models.AbstractModel):
                 # don't print -0.0 in reports
                 value['name'] = abs(value['name'])
                 value['class'] = 'number text-muted'
-            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id,digits=6)
-            print ("values======",value)
+            value['name'] = formatLang(self.env, value['name'], currency_obj=False,digits=6)
             value['class'] = 'number'
             return value
         if figure_type == 'percents':
@@ -118,8 +117,6 @@ class ReportonthequotationofInvestmentFunds(models.AbstractModel):
         total_amount = 0
 
         for rec in records:
-            #total_amount += rec.amount 
-            #movement = dict(rec._fields['movement'].selection).get(rec.movement)
             lines.append({
                 'id': 'hierarchy' + str(rec.id),
                 'name': rec.date,

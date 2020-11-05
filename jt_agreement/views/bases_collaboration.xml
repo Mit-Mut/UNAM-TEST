@@ -39,7 +39,7 @@
                             <group>
                                 <field name="name" readonly="1"/>
                                 <field name="operation_number" required="1"
-                                       attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                 readonly="1"/>
                                 <field name="agreement_number" readonly="1"/>
                                 <field name="type_of_operation"
                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
@@ -47,13 +47,15 @@
                             <group>
                                 <field name="apply_to_basis_collaboration" readonly="1"/>
                                 <field name="origin_resource_id" domain="[('is_it_enabled_for_agreement', '=',  True)]"
-                                attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                attrs="{'readonly': [('state', '!=', 'draft')]}"
+                                required="1"/>
                                 <field name="bases_collaboration_beneficiary_ids" invisible="1"/>
-                                <field name="beneficiary_id" domain="[('id','in',bases_collaboration_beneficiary_ids)]"/>
+                                <field name="beneficiary_id" domain="[('id','in',bases_collaboration_beneficiary_ids)]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="bases_collaboration_id" invisible="1"/>
                                 <field name="trust_id" invisible="1"/>
                                 <field name="provider_id" context="{'from_retier_operation':1,
-                                 'collaboration_id': bases_collaboration_id}"/>
+                                 'collaboration_id': bases_collaboration_id}"
+                                 attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
                         </group>
                         <group>
@@ -64,13 +66,13 @@
                             <page string="Operation" name="operation">
                                 <group>
                                     <group>
-                                        <field name="request_date"/>
-                                        <field name="trade_number"/>
-                                        <field name="opening_balance"/>
+                                        <field name="request_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        <field name="trade_number" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
+                                        <field name="opening_balance" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     </group>
                                     <group>
-                                        <field name="observations"/>
-                                        <field name="user_id" readonly="1"/>
+                                        <field name="observations" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
+                                        <field name="user_id" readonly="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     </group>
                                 </group>
                             </page>
@@ -169,11 +171,12 @@
                             <group>
                                 <field name="name" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="convention_no" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="n_report" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="opening_bal" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="available_bal" readonly="1"/>
                                 <field name="agreement_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="fund_type_id" readonly="1" force_save="1"/>
-                                <field name="fund_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <!-- <field name="fund_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/> -->
                                 <field name="dependency_obs" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
                             <group>
@@ -213,12 +216,14 @@
                                         <field name="employee_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                         <field name="job_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                         <field name="phone" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        <field name="holder_email" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     </group>
                                     <group string="Administrative Secretary">
                                         <field name="administrative_secretary_id"
                                                attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                         <field name="administrative_secretary_phone"
                                             attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        <field name="administrative_secretary_email" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     </group>
                                     <group string="Responsible Directer of CBC">
                                         <field name="direct_manager_cbc_id"
@@ -437,7 +442,8 @@
                                 <field name="request_office" attrs="{'readonly': [('state', '!=', 'draft')]}" required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)"/>
                             </group>
                             <group>
-                                <field name="apply_to_basis_collaboration" attrs="{'readonly': [('state', '!=', 'draft')]}" invisible="context.get('from_fund_view',False)"/>
+                                <field name="apply_to_basis_collaboration" attrs="{'invisible':[('trust_id','!=',False)],'readonly': [('state', '!=', 'draft')]}" />
+                                <field name="apply_to_trust" attrs="{'invisible':[('trust_id','=',False)],'readonly': [('state', '!=', 'draft')]}" />
                                 
                                 <field name="origin_journal_id" domain="[('type','=','bank')]" attrs="{'required':[('trust_id','!=',False)],'invisible':[('trust_id','=',False)],'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="destination_journal_id" domain="[('type','=','bank')]" attrs="{'required':[('trust_id','!=',False)],'invisible':[('trust_id','=',False)],'readonly': [('state', '!=', 'draft')]}"/>
@@ -679,9 +685,10 @@
             <field name="model_id" ref="jt_agreement.model_request_open_balance_finance"/>
             <field name="binding_model_id" ref="jt_agreement.model_request_open_balance_finance"/>
             <field name="state">code</field>
-            <field name="binding_view_types">list</field>
+            <field name="binding_view_types"></field>
             <field name="code">action = records.action_schedule_transfers()</field>
         </record>
+
 
           <record id="action_schedule_withdrawal" model="ir.actions.server">
             <field name="name">Withdrawal Schedule</field>

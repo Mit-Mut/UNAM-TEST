@@ -19,23 +19,26 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
+                    	<button name="action_calculation" states="draft" string="Calculation" class="oe_highlight" type="object"/>
+                    	<button name="action_confirm" states="draft" string="Confirm" class="oe_highlight" type="object"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
                         <group>
                             <group>
                             	<field name="all_agreement"/>
-                            	<field name="fund_ids"/>
+                            	<field name="fund_ids" widget="many2many_tags" attrs="{'invisible':[('all_agreement','=',True)]}"/>
                             	<field name="all_types_of_Agreements"/>
-                            	<field name="agreement_type_ids"/>
-                            	<field name="all_base"/>
-                            	<field name="base_ids"/>
-                            	<field name="all_dependencies"/>
-                            	<field name="dependency_ids"/>
+                            	<field name="agreement_type_ids" widget="many2many_tags" attrs="{'invisible':[('all_types_of_Agreements','=',True)]}"/>
                             	<field name="start_date"/>
 			                	<field name="end_date"/>
+			                	<field name="reason_rejection" readonly="1" attrs="{'invisible': [('state', '!=', 'rejected')]}"/>
                             </group>
-                            <group>                                
+                            <group>
+                            	<field name="all_base"/>
+                            	<field name="base_ids" widget="many2many_tags" attrs="{'invisible':[('all_base','=',True)]}"/>
+                            	<field name="all_dependencies"/>
+                            	<field name="dependency_ids" widget="many2many_tags" context="{'show_for_agreement':True}" attrs="{'invisible':[('all_dependencies','=',True)]}"/>
                             </group>
                         </group>
                         <group>
@@ -43,6 +46,24 @@
                         </group>
                         <notebook>
                         	<page string="Calculation">
+                        		<field name="calculation_line_ids" >
+                        			<tree create="0" edit="0" delete="0">
+                        				<field name="fund_id"/>
+                        				<field name="dependency_id" invisible="1"/>
+                        				<field name="dependency_name"/>
+                        				<field name="dependency_description" invisible="1"/>
+                        				<field name="capital" digits="[12,4]" sum="total"/>
+                        				<field name="increments" digits="[12,4]" sum="total"/>
+                        				<field name="withdrawals" digits="[12,4]" sum="total"/>
+                        				<field name="final_balance" digits="[12,4]" sum="total"/>
+                        				<field name="income" digits="[12,4]" sum="total"/>
+                        				<field name="rounded" digits="[12,3]" sum="total"/>
+                        				<field name="rate" digits="[12,4]"/>
+                        				<field name="days"/>
+                        			</tree>
+                        		</field>
+                        	</page>
+                        	<page string="Agreements" invisible="1">
                         		<field name="line_ids" create="0" edit="0" delete="0">
                         			<tree>
                         				<field name="fund_id"/>
@@ -55,7 +76,6 @@
                         				<field name="increments"/>
                         				<field name="withdrawals"/>
                         				<field name="final_balance"/>
-                        				
                         			</tree>
                         		</field>
                         	</page>

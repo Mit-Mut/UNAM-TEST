@@ -95,10 +95,27 @@ class BasesCollabration(models.Model):
     n_report = fields.Char(string="N° para reporte")
     holder_email = fields.Char("Email")
     administrative_secretary_email = fields.Char("Administrative Secretary Email")
+    next_no = fields.Integer(string="Next Number")
 
     
     _sql_constraints = [
         ('folio_convention_no', 'unique(convention_no)', 'The Convention No. must be unique.')]
+
+
+    def unlink(self):
+        for rec in self:
+            if rec.state not in ['draft']:
+                raise UserError(_('You can erase only draft status data.'))
+        return super(BasesCollabration, self).unlink()
+
+
+    @api.constrains('n_report')
+    def _check_n_report(self):
+        if self.n_report and not self.n_report.isnumeric():
+            raise ValidationError(_('N° para reporte must be Numeric.'))
+        if self.n_report and len(self.n_report) != 8:
+            raise ValidationError(_('N° para reporte must be 8 Digits.'))
+        
 
 
     @api.onchange('dependency_id','agreement_type_id')
@@ -269,6 +286,7 @@ class BasesCollabration(models.Model):
                             'default_opening_balance': self.opening_bal,
                             'default_agreement_number': self.convention_no,
                             'default_name': self.name,
+                            'default_operation_number':self.next_no,
                             'default_cbc_format': self.cbc_format,
                             'default_supporting_documentation': self.cbc_format,
                             'default_cbc_shipping_office': self.cbc_shipping_office,
@@ -601,9 +619,10 @@ class RequestOpenBalance(models.Model):
     patrimonial_equity_account_id = fields.Many2one('account.account', "Equity accounting account")
     patrimonial_yield_account_id = fields.Many2one('account.account', "Yield account of the productive investment account")
 
+
     def unlink(self):
         for rec in self:
-            if rec.state in ['requested']:
+            if rec.state not in ['draft']:
                 raise UserError(_('You cannot delete an entry which has been requested.'))
         return super(RequestOpenBalance, self).unlink()
 
@@ -611,7 +630,7 @@ class RequestOpenBalance(models.Model):
     @api.constrains('type_of_operation')
     def _check_type_of_operation(self):
         if self.type_of_operation and self.bases_collaboration_id and self.type_of_operation=='open_bal':
-            records = self.env['request.open.balance'].search([('id','!=',self.id),('bases_collaboration_id','=',self.bases_collaboration_id.id),('type_of_operation','=','open_bal')])
+            records = self.env['request.open.balance'].search([('id','!=',self.id),('bases_collaboration_id','=',self.bases_collaboration_id.id),('type_of_operation','=','open_bal'),('state','not in',('rejected','canceled'))])
             if records: 
                 raise ValidationError(_('Operation of opening balance can be performed just one time in each agreement'))
 
@@ -647,15 +666,38 @@ class RequestOpenBalance(models.Model):
     @api.model
     def default_get(self, fields):
         res = super(RequestOpenBalance, self).default_get(fields)
-        
-        if 'operation_number' in fields:
-            seq_ids = self.env['ir.sequence'].search([('code', '=', 'agreement.operation')], order='company_id')
-            number_next = 0
-            if seq_ids:
-                number_next = seq_ids[0].number_next_actual 
+        if res.get('bases_collaboration_id',False):
+            base_id = self.env['bases.collaboration'].browse(res.get('bases_collaboration_id'))
+            number = 0
+            if base_id:
+                number = base_id.next_no+1
+                 
             res.update({
-                'operation_number': str(number_next)
+                'operation_number': str(number)
             })
+        elif res.get('trust_id',False):
+            trust_id = self.env['agreement.trust'].browse(res.get('trust_id'))
+            number = 0
+            if trust_id:
+                number = trust_id.next_no+1
+                 
+            res.update({
+                'operation_number': str(number)
+            })
+        elif res.get('patrimonial_resources_id',False):
+            patrimonial_resources_id = self.env['patrimonial.resources'].browse(res.get('patrimonial_resources_id'))
+            number = 0
+            if patrimonial_resources_id:
+                number = patrimonial_resources_id.next_no+1
+                 
+            res.update({
+                'operation_number': str(number)
+            })
+        else:
+            res.update({
+                'operation_number': str(0)
+            })
+            
         return res
                 
     @api.model
@@ -665,11 +707,20 @@ class RequestOpenBalance(models.Model):
             raise ValidationError(_("Type of Operation must be 'Withdrawal Due to Cancellation' for this operation!"))
         if res and not res.is_cancel_collaboration and res.type_of_operation == 'withdrawal_cancellation':
             raise ValidationError(_("Can't create Operation with 'Withdrawal Due to Cancellation' Type of Operation manually!"))
+        # name = self.env['ir.sequence'].next_by_code('agreement.operation')
+        if res.bases_collaboration_id:
+            res.bases_collaboration_id.next_no += 1   
+            res.operation_number = res.bases_collaboration_id.next_no
 
-        name = self.env['ir.sequence'].next_by_code('agreement.operation')
-        res.operation_number = name
-        return res
-        
+        if res.trust_id:
+            res.trust_id.next_no += 1   
+            res.operation_number = res.trust_id.next_no
+            
+        if res.patrimonial_resources_id:
+            res.patrimonial_resources_id.next_no += 1   
+            res.operation_number = res.patrimonial_resources_id.next_no
+
+        # res.operation_number = name
         return res
 
     def write(self, vals):
@@ -785,6 +836,8 @@ class RequestOpenBalance(models.Model):
             self.trust_id.action_to_be_cancelled()
         if self.type_of_operation == 'withdrawal_cancellation' and self.patrimonial_resources_id:
             self.patrimonial_resources_id.action_to_be_cancelled()
+        elif self.type_of_operation == 'retirement':
+            self.create_payment_request = True
 
 
 class RequestOpenBalanceInvestment(models.Model):

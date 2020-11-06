@@ -108,7 +108,16 @@ class InvestmentFunds(models.Model):
         fund_type = False
         if self.contract_id and self.contract_id.fund_id:
             fund_type = self.contract_id.fund_id.id
-
+        
+        amount = 0
+        
+        amount += sum(x.amount for x in self.purchase_sale_ids)
+        amount += sum(x.amount_invest for x in self.cetes_ids)
+        amount += sum(x.amount_invest for x in self.udibonos_ids)
+        amount += sum(x.amount_invest for x in self.bonds_ids)
+        amount += sum(x.amount_invest for x in self.will_pay_ids)
+        amount += sum(x.amount_to_invest for x in self.productive_ids)
+        
         return {
             'name': 'Approve Request',
             'view_type': 'form',
@@ -118,7 +127,7 @@ class InvestmentFunds(models.Model):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'context': {
-                'default_amount': self.opening_balance,
+                'default_amount': amount,
                 'default_date': today,
                 'default_employee_id': employee.id if employee else False,
                 'default_investment_fund_id': self.id,
@@ -130,6 +139,18 @@ class InvestmentFunds(models.Model):
 
     def action_requested(self):
         self.state = 'requested'
+        for rec in self.purchase_sale_ids:
+            rec.action_requested()
+        for rec in self.cetes_ids:
+            rec.action_requested()
+        for rec in self.udibonos_ids:
+            rec.action_requested()
+        for rec in self.bonds_ids:
+            rec.action_requested()
+        for rec in self.will_pay_ids:
+            rec.action_requested()
+        for rec in self.productive_ids:
+            rec.action_requested()
 
     def action_approved(self):
         self.state = 'approved'

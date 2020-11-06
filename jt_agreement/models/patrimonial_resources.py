@@ -51,7 +51,7 @@ class PatrimonialResources(models.Model):
     goals = fields.Char("Goals")
     registration_date = fields.Date("Date of registration in the system")
 
-    background_project_id = fields.Many2one('background.project','Background Project')
+    background_project_id = fields.Many2one('background.project','Background Project',related="specifics_project_id.backgound_project_id")
     specifics_project_id = fields.Many2one('specific.project','Specific project')
 
     patrimonial_equity_account_id = fields.Many2one('account.account', "Equity accounting account")
@@ -87,6 +87,8 @@ class PatrimonialResources(models.Model):
     request_open_balance_ids = fields.One2many('request.open.balance','patrimonial_resources_id')
     total_operations = fields.Integer("Operations", compute="compute_operations")
 
+    next_no = fields.Integer(string="Next Number")
+    
     def compute_operations(self):
         for rec in self:
             operations = len(rec.request_open_balance_ids)

@@ -34,7 +34,7 @@
                 <form>
                 	<header>
                 		<button name="action_confirm" states="draft" string="Confirm" class="oe_highlight" type="object" />
-                		<button name="action_reset_to_draft" attrs="{'invisible':[('state','in',('draft','requested','approved'))]}" string="Reset To Draft" class="oe_highlight" type="object"/>
+                		<!-- <button name="action_reset_to_draft" attrs="{'invisible':[('state','in',('draft','requested','approved'))]}" string="Reset To Draft" class="oe_highlight" type="object"/> -->
                 		<button name="action_reinvestment" states="draft" string="Reinvestment" class="oe_highlight" type="object" />
                 		
                 		<field name="state" widget="statusbar"/>
@@ -49,7 +49,7 @@
                             <group>
                                 <field name="folio" readonly="1"/>
                                 <field name="date_time" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="investment_fund_id" invisible="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="investment_fund_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="journal_id" required="1" domain="[('type','=','bank')]" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="bank_id"/>
                                 <field name="amount_invest" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>

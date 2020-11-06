@@ -21,9 +21,9 @@
             	<field name="permanent_instructions" position="before">
             		<field name="fund_id" invisible="1"/>
             		<field name="fund_key" invisible="1"/>
-            		<field name="fund_type_id" required="1"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-            		<field name="type_of_agreement_id" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-            		<field name="bases_collaboration_id" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+            		<field name="fund_type_id" attrs="{'readonly': [('state', '!=', 'draft')],'required':[('trust_id','=',False),('patrimonial_id','=',False)]}"/>
+            		<field name="type_of_agreement_id" attrs="{'readonly': [('state', '!=', 'draft')],'required':[('trust_id','=',False),('patrimonial_id','=',False)]}"/>
+            		<field name="bases_collaboration_id" attrs="{'readonly': [('state', '!=', 'draft')],'required':[('trust_id','=',False),('patrimonial_id','=',False)]}"/>
             	</field>
 			</field>
 		</record>

@@ -87,6 +87,7 @@ class Trust(models.Model):
     interest_date = fields.Date(string="Interest Date")
     fees = fields.Monetary(string="Fees")
     yields = fields.Monetary(string="Yields")
+    next_no = fields.Integer(string="Next Number")
          
     def compute_operations(self):
         for rec in self:

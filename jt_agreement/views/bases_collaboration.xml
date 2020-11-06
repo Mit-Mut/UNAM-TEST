@@ -170,6 +170,7 @@
                         <group>
                             <group>
                                 <field name="name" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="next_no" invisible="1"/>
                                 <field name="convention_no" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="n_report" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="opening_bal" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
@@ -425,8 +426,10 @@
                             	<field name="patrimonial_id" invisible="1"/>
                             	<field name="is_manually" invisible="1"/>
                                 <field name="name" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
-                                <field name="operation_number" attrs="{'readonly': [('state', '!=', 'draft')]}" required="not context.get('from_fund_view',False)" invisible="context.get('from_fund_view',False)"/>
-                                <field name="agreement_number" attrs="{'readonly': [('state', '!=', 'draft')]}" required="not context.get('from_fund_view',False)" invisible="context.get('from_fund_view',False)"/>
+                                <field name="operation_number" attrs="{'readonly': [('state', '!=', 'draft')]}" required="not context.get('from_fund_view',False)"/>
+
+                                <field name="agreement_number" attrs="{'readonly': [('state', '!=', 'draft')],'required':[('trust_id','=',False),('patrimonial_id','=',False)]}" />
+
                                 <field name="type_of_operation" attrs="{'readonly': [('state', '!=', 'draft')]}" required="not context.get('from_fund_view',False)" invisible="context.get('from_fund_view',False)"/>
                                 
                                 <field name="fund_request_date" attrs="{'readonly': [('state', '!=', 'draft')]}" required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)"/>

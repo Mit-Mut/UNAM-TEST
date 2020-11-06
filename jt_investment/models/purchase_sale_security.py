@@ -171,7 +171,7 @@ class PurchaseSaleSecurity(models.Model):
         self.state = 'done'
      
     def action_requested(self):
-        self.state = 'rejected'
+        self.state = 'requested'
     
     def action_approved(self):
         self.state = 'approved'

@@ -51,6 +51,7 @@ class ApproveInvestmentBalReq(models.TransientModel):
     purchase_sale_security_id = fields.Many2one('purchase.sale.security','Purchase Sale Security')
     investment_id = fields.Many2one('investment.investment','Investment')
     investment_fund_id = fields.Many2one('investment.funds','Investment Funds')
+    distribution_id = fields.Many2one('distribution.of.income','Distribution Income')
     
     agreement_type = fields.Many2one('agreement.agreement.type',string="Agreement Type")
     base_collabaration_id = fields.Many2one('bases.collaboration','Name Of Agreements')
@@ -76,6 +77,7 @@ class ApproveInvestmentBalReq(models.TransientModel):
                 'udibonos_id': self.udibonos_id and self.udibonos_id.id or False,
                 'will_pay_id': self.will_pay_id and self.will_pay_id.id or False,
                 'investment_id' : self.investment_id and self.investment_id.id or False,
+                'distribution_id' : self.distribution_id and self.distribution_id.id or False,
                 'purchase_sale_security_id' : self.purchase_sale_security_id and self.purchase_sale_security_id.id or False,
                 'state': 'requested'
             }
@@ -110,4 +112,7 @@ class ApproveInvestmentBalReq(models.TransientModel):
             self.investment_fund_id.dependency_id = self.dependency_id and self.dependency_id.id or False
             self.investment_fund_id.subdependency_id = self.sub_dependency_id and self.sub_dependency_id.id or False
             self.investment_fund_id.journal_id = self.bank_account_id and self.bank_account_id.id or False
+
+        if self.distribution_id:
+            self.distribution_id.action_requested()
             

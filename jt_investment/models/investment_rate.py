@@ -3,6 +3,8 @@ from datetime import datetime
 import requests
 import urllib.request
 import json
+from odoo.exceptions import ValidationError,UserError
+from odoo.tools.misc import ustr
 
 class InvestmentPeriodRate(models.Model):
 
@@ -10,7 +12,7 @@ class InvestmentPeriodRate(models.Model):
     _description = "Investment Rate"
     _rec_name = 'rate_date'
     
-    rate_date = fields.Date('Date')
+    rate_date = fields.Date(string='Date',default=datetime.today())
     product_type = fields.Selection([('TIIE','TIIE'),('CETES','CETES'),('UDIBONOS','UDIBONOS'),('BONUS','BONUS'),('PAGARE','PAGARE')],string="Product Type")
     rate_daily = fields.Float(string="Daily Rate",digits=0)
     rate_days_28 = fields.Float(string="28 Days",digits=0)
@@ -90,6 +92,7 @@ class InvestmentPeriodRate(models.Model):
                 self.with_context(call_from_onchange=True).get_BONUS_product_rate(token,url,date_range)
             elif self.product_type=='PAGARE':    
                 self.with_context(call_from_onchange=True).get_PAGARE_product_rate(token,url,date_range)
+
             
     def create_update_product_rate(self,product_type,series_fields_map,series_fields_type_map,data):
         idSerie = data.get('idSerie',False)

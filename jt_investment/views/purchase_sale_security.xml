@@ -52,7 +52,7 @@
                         		<field name="last_quote_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         		<field name="last_quote_price" digits="[12,6]"/>
                         		<field name="last_quote_date"/>
-                        		<field name="investment_fund_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        		<field name="investment_fund_id" inisible="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         		<field name="contract_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         		<field name="fund_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			            		<field name="fund_key" readonly="1"/>

@@ -13,6 +13,7 @@ class ProjectRegistry(models.Model):
     proj_end_date = fields.Date("End Date")
     visibility = fields.Selection(
         [('due', 'due'), ('expire', 'expire')], 'visibility')
+    program_code = fields.Many2one('program.code', string='Program Code')
     rfc = fields.Char("RFC of the person in charge")
     allocated_amount = fields.Monetary("Allocated Amount")
     approved_amount = fields.Monetary("Approved Amount")
@@ -24,33 +25,36 @@ class ProjectRegistry(models.Model):
     branch_office = fields.Char("Square")
     ministrations = fields.Integer("Number of ministrations")
     ministering_amount = fields.Monetary("Ministering amount")
-    check_project_due = fields.Boolean("Check Project Due",default=True,compute="get_project_due",store=True)
-    check_project_expire = fields.Boolean("Check Project expire",default=True,compute="get_project_due",store=True)
-    
+    check_project_due = fields.Boolean(
+        "Check Project Due", default=True, compute="get_project_due", store=True)
+    check_project_expire = fields.Boolean(
+        "Check Project expire", default=True, compute="get_project_due", store=True)
+
     def get_project_due_records(self):
-        open_project = self.env['project.project'].search([('status','=','open')])
+        open_project = self.env['project.project'].search(
+            [('status', '=', 'open')])
         if open_project:
             open_project.get_project_due()
-            
-    @api.depends('proj_end_date','status')
+
+    @api.depends('proj_end_date', 'status')
     def get_project_due(self):
         for rec in self:
             if rec.proj_end_date and rec.status:
                 end_date = rec.proj_end_date
                 today = date.today()
                 diff = (end_date - today).days
-                if end_date < today and rec.status=='open':
+                if end_date < today and rec.status == 'open':
                     rec.check_project_due = True
                 else:
                     rec.check_project_due = False
-                if diff <= 21 and diff >= 0 and rec.status=='open':
+                if diff <= 21 and diff >= 0 and rec.status == 'open':
                     rec.check_project_expire = True
                 else:
                     rec.check_project_expire = False
             else:
                 rec.check_project_expire = False
                 rec.check_project_due = False
-                
+
     # def calculate_project_next_to_expire(self):
 
     #     end_date = self.proj_end_date
@@ -61,8 +65,7 @@ class ProjectRegistry(models.Model):
     #         self.visibility = 'expire'
 
     def calculate_project_overdue(self):
-        print ("calll")
-
+        print("calll")
 
     def name_get(self):
         result = []
@@ -96,12 +99,9 @@ class ProjectRegistry(models.Model):
             'domain': [],
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'context':{'default_current_id':self.id}
+            'context': {'default_current_id': self.id}
         }
-        
 
     def show_attachment(self):
         action = self.env.ref('base.action_attachment').read()[0]
         return action
-
-    

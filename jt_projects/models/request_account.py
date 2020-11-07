@@ -1,5 +1,6 @@
 from odoo import models, fields, api
 
+
 class RequestAccounts(models.Model):
 
     _name = 'request.accounts'
@@ -7,7 +8,8 @@ class RequestAccounts(models.Model):
     _rec_name = 'invoice'
 
     invoice = fields.Char("Invoice")
-    movement_type = fields.Selection([('acc_req', 'Account Request')], "Movement Type", default='acc_req')
+    movement_type = fields.Selection(
+        [('acc_req', 'Account Request')], "Movement Type", default='acc_req')
     project_no = fields.Many2one('project.project', "Project Number")
     project_name = fields.Char("Project Name")
     user_id = fields.Many2one('res.users', "Project Manager")
@@ -18,20 +20,21 @@ class RequestAccounts(models.Model):
     observations = fields.Text("Observations")
     bank_account_id = fields.Many2one("account.journal", "Bank Accounts")
     bank_acc_number_id = fields.Many2one("res.partner.bank", "Bank")
+    no_contract = fields.Char('No. Contract')
     customer_number = fields.Char("Contact No.")
     supporting_documentation = fields.Binary("Supporting Documentation")
     reason_rejection = fields.Selection([('discharge', 'Does not comply with the documentation supporting the discharge')],
-                                         string="Reason for rejection")
+                                        string="Reason for rejection")
     rejection_observations = fields.Text("Observations")
     status = fields.Selection([('eraser', 'Eraser'),
                                ('request', 'Request'),
-                               ('approved','Approved'), 
+                               ('approved', 'Approved'),
                                ('confirmed', 'Confirmed'),
-                               ('rejected', 'Rejected')], default='eraser',copy=False)
+                               ('rejected', 'Rejected')], default='eraser', copy=False)
 
     move_type = fields.Selection([
         ('account cancel', 'Account Cancellation'),
-        ('account open','Account Open'),
+        ('account open', 'Account Open'),
     ], 'Move Type')
 
     def generate_request(self):
@@ -46,12 +49,11 @@ class RequestAccounts(models.Model):
             self.project_type_identifier = project.project_type_identifier
             self.project_stage_identifier = project.stage_identifier
 
-
     def approve_account(self):
-        self.write({'status':'approved'})
+        self.write({'status': 'approved'})
 
     def confirm_account(self):
-        self.write({'status':'confirmed'})
+        self.write({'status': 'confirmed'})
 
     def reject_account(self):
-        self.write({'status':'rejected'})
+        self.write({'status': 'rejected'})

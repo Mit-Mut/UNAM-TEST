@@ -113,6 +113,8 @@ class AccountMove(models.Model):
     status = fields.Selection(
         [('accept', 'Accepted'), ('reject', 'Rejected')], string='Status')
     is_project_payment = fields.Boolean('Is Project Payment', default=True)
+    line = fields.Integer("Line")
+    previous = fields.Monetary('Previous')
 
     # More info Tab
     reason_for_expendiure = fields.Char("Reason for Expenditure/Trip")

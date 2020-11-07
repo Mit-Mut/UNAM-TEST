@@ -26,10 +26,11 @@ from odoo.exceptions import ValidationError
 class AgreementType(models.Model):
 
     _name = 'agreement.agreement.type'
+    _inherit = 'mail.thread'
     _description = "Agreement Type"
 
     code = fields.Char("Agreement Type Code")
-    group = fields.Char("Group",size=1)
+    group = fields.Char("Group",size=1,required=True)
     name = fields.Char("Name of Agreement Type")
     fund_type_id = fields.Many2one('fund.type', "Fund Type")
     fund_id = fields.Many2one('agreement.fund',string="Fund")

@@ -25,6 +25,7 @@ from odoo import models, fields, api, _
 class AgreementFund(models.Model):
 
     _name = 'agreement.fund'
+    _inherit = 'mail.thread'
     _description = "Funds"
 
     fund_key = fields.Char("Fund Key")

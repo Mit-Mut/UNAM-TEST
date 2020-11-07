@@ -72,6 +72,8 @@
                                 <field name="excercise"/>
                                 <field name="project_key"/>
                                 <field name="invoice_vault_folio"/>
+                                <field name="line"/>
+                                <field name="previous"/>
 
                             </group>
                             <group>

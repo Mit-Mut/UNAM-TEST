@@ -25,6 +25,7 @@ from odoo import models, fields, api, _
 class SpecificProjects(models.Model):
 
     _name = 'specific.project'
+    _inherit = 'mail.thread'
     _description = "Specific Projects"
     _rec_name = 'key'
     

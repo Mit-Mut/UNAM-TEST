@@ -27,6 +27,7 @@ from dateutil.relativedelta import relativedelta
 class Trust(models.Model):
 
     _name = 'agreement.trust'
+    _inherit = 'mail.thread'
     _description = "Agreement Trust"
 
     name = fields.Char("Trust Name")
@@ -35,7 +36,7 @@ class Trust(models.Model):
     street = fields.Char(related='bank_id.street')
     street2 = fields.Char(related='bank_id.street2')
     city = fields.Char(related='bank_id.city')
-    state = fields.Many2one(related='bank_id.state')
+    state_id = fields.Many2one(related='bank_id.state')
     zip = fields.Char(related='bank_id.zip')
     country = fields.Many2one(related='bank_id.country')
     
@@ -128,6 +129,9 @@ class Trust(models.Model):
     
     def confirm(self):
         self.state = 'valid'
+        if self.opening_balance==0:
+            raise ValidationError(_("Please add the opening balance amount"))
+            
         
     def in_force(self):
         self.state = 'in_force'
@@ -323,6 +327,7 @@ class Committe(models.Model):
 class AgreementTrustModification(models.Model):
 
     _name = 'agreement.trust.modification'
+    _inherit = 'mail.thread'
     _description = "Agreement Trust Modification"
     _rec_name = 'folio'
 

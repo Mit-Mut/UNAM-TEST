@@ -130,7 +130,37 @@ class BasesCollabration(models.Model):
             
         if self.distribution_id:
             self.distribution_id.action_approved()
+
+    def canceled_finance(self):
+        result = super(BasesCollabration,self).canceled_finance()
+
+        if self.purchase_sale_security_id:
+            self.purchase_sale_security_id.action_canceled()
+         
+        if self.investment_id:
+            self.investment_id.action_canceled()
  
+        if self.bonds_id:
+            self.bonds_id.action_canceled()
+ 
+        if self.cetes_id:
+            self.cetes_id.action_canceled()
+ 
+        if self.udibonos_id:
+            self.udibonos_id.action_canceled()
+ 
+        if self.will_pay_id:
+            self.will_pay_id.action_canceled()
+ 
+        if self.investment_fund_id:
+            self.investment_fund_id.action_canceled()
+ 
+        if self.distribution_id:
+            self.distribution_id.action_canceled()
+ 
+        return result
+    
+
 class AccountPayment(models.Model):
     _inherit = 'account.payment'
     
@@ -144,3 +174,12 @@ class AccountPayment(models.Model):
                 fin_req.reset_draft_finance_payment()
         return res
     
+    def cancel(self):
+        res = super(AccountPayment, self).cancel()
+        finance_req_obj = self.env['request.open.balance.finance']
+        for payment in self:
+            finance_reqs = finance_req_obj.search([('payment_ids', 'in', payment.id)])
+            for fin_req in finance_reqs:
+                fin_req.canceled_finance()
+        return res
+        

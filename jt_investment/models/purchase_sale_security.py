@@ -31,7 +31,7 @@ class PurchaseSaleSecurity(models.Model):
     file_data = fields.Binary("Supporting document")
     file_name = fields.Char("File Name")
     
-    
+    bank_id = fields.Many2one(related="last_quote_id.price_id.journal_id")
     journal_id = fields.Many2one("account.journal","Bank")
     bank_account_id = fields.Many2one(related='journal_id.bank_account_id')
     account_balance = fields.Float("Account Balance",compute="get_account_balance",store=True)
@@ -49,6 +49,7 @@ class PurchaseSaleSecurity(models.Model):
     
     dependency_id = fields.Many2one('dependency', "Dependency")
     sub_dependency_id = fields.Many2one('sub.dependency', "Subdependency")
+    expiry_date = fields.Date(string="Expiration Date")
 
     #====== Accounting Fields =========#
 
@@ -67,6 +68,7 @@ class PurchaseSaleSecurity(models.Model):
     real_profit = fields.Float(string="Real Profit")
     profit_variation = fields.Float(string="Estimated vs Real Profit Variation",compute="get_profit_variation",store=True)
     investment_fund_id = fields.Many2one('investment.funds','Investment Funds')
+    sub_origin_resource = fields.Many2one('sub.origin.resource', "Origin of the resource")
     
     @api.onchange('contract_id')
     def onchange_contract_id(self):
@@ -172,11 +174,21 @@ class PurchaseSaleSecurity(models.Model):
      
     def action_requested(self):
         self.state = 'requested'
-    
+        if self.investment_fund_id and self.investment_fund_id.state != 'requested':
+            self.investment_fund_id.action_requested()
+
     def action_approved(self):
         self.state = 'approved'
+        if self.investment_fund_id and self.investment_fund_id.state != 'approved':
+            self.investment_fund_id.action_approved()
 
     def action_confirmed(self):
         self.state = 'confirmed'
+        if self.investment_fund_id and self.investment_fund_id.state != 'confirmed':
+            self.investment_fund_id.action_confirmed()
+
+    def action_canceled(self):
+        self.state = 'canceled'
+        if self.investment_fund_id and self.investment_fund_id.state != 'canceled':
+            self.investment_fund_id.action_canceled()
     
-           

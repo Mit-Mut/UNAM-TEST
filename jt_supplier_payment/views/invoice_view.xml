@@ -703,6 +703,16 @@
         <menuitem id="supplier_payment_request_menu" name="Payment Request"
                   action="supplier_payment_action"
                   parent="jt_payroll_payment.menu_payroll_admin_process_unit" sequence="3"/>
+
+        <record id="validate_supplier_payment_request" model="ir.actions.server">
+            <field name="name">Validate Budget</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">action = records.validate_multiple_budgets()</field>
+        </record>
+
     </data>
 
 </odoo>

@@ -26,6 +26,7 @@ from odoo.exceptions import ValidationError
 class RecurringPaymentTemplate(models.Model):
 
     _name = 'recurring.payment.template'
+    _inherit = 'mail.thread'
     _description = "Recurring Payment Template"
 
     name = fields.Char("Payment Rule Name")

@@ -3,6 +3,7 @@ from odoo import models, fields, api, _
 class PaymentRequest(models.Model):
 
     _name = 'payment.request'
+    _inherit = 'mail.thread'
     _description = "Payment Request"
 
     name = fields.Char("Agreement Name")

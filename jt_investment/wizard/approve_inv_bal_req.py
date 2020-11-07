@@ -83,36 +83,36 @@ class ApproveInvestmentBalReq(models.TransientModel):
             }
         )
         if self.bonds_id:
-            self.bonds_id.action_requested()
             self.bonds_id.dependency_id = self.dependency_id and self.dependency_id.id or False
             self.bonds_id.sub_dependency_id = self.sub_dependency_id and self.sub_dependency_id.id or False
+            self.bonds_id.action_requested()
         if self.cetes_id:
-            self.cetes_id.action_requested()
             self.cetes_id.dependency_id = self.dependency_id and self.dependency_id.id or False
             self.cetes_id.sub_dependency_id = self.sub_dependency_id and self.sub_dependency_id.id or False
+            self.cetes_id.action_requested()
         if self.udibonos_id:
             self.udibonos_id.action_requested()
             self.udibonos_id.dependency_id = self.dependency_id and self.dependency_id.id or False
             self.udibonos_id.sub_dependency_id = self.sub_dependency_id and self.sub_dependency_id.id or False
         if self.will_pay_id:
-            self.will_pay_id.action_requested()
             self.will_pay_id.dependency_id = self.dependency_id and self.dependency_id.id or False
             self.will_pay_id.sub_dependency_id = self.sub_dependency_id and self.sub_dependency_id.id or False
+            self.will_pay_id.action_requested()
         if self.purchase_sale_security_id:
-            self.purchase_sale_security_id.action_requested()
             self.purchase_sale_security_id.dependency_id = self.dependency_id and self.dependency_id.id or False
             self.purchase_sale_security_id.sub_dependency_id = self.sub_dependency_id and self.sub_dependency_id.id or False
             self.purchase_sale_security_id.journal_id = self.bank_account_id and self.bank_account_id.id or False
+            self.purchase_sale_security_id.action_requested()
         if self.investment_id:
-            self.investment_id.action_requested()
             self.investment_id.dependency_id = self.dependency_id and self.dependency_id.id or False
             self.investment_id.sub_dependency_id = self.sub_dependency_id and self.sub_dependency_id.id or False
+            self.investment_id.action_requested()
         if self.investment_fund_id:
-            self.investment_fund_id.action_requested()
             self.investment_fund_id.dependency_id = self.dependency_id and self.dependency_id.id or False
             self.investment_fund_id.subdependency_id = self.sub_dependency_id and self.sub_dependency_id.id or False
             self.investment_fund_id.journal_id = self.bank_account_id and self.bank_account_id.id or False
-
+            self.investment_fund_id.action_requested()
+            
         if self.distribution_id:
             self.distribution_id.action_requested()
             

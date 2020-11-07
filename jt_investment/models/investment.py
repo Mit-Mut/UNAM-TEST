@@ -56,6 +56,8 @@ class Investment(models.Model):
     return_income_account_id = fields.Many2one('account.account','Income Account')
     return_expense_account_id = fields.Many2one('account.account','Expense Account')
     return_price_diff_account_id = fields.Many2one('account.account','Price Difference Account')    
+    sub_origin_resource = fields.Many2one('sub.origin.resource', "Origin of the resource")
+    expiry_date = fields.Date(string="Expiration Date")
 
     @api.onchange('contract_id')
     def onchange_contract_id(self):
@@ -127,12 +129,25 @@ class Investment(models.Model):
     def action_reject(self):
         self.state = 'rejected'
 
+
     def action_requested(self):
         self.state = 'requested'
+        if self.investment_fund_id and self.investment_fund_id.state != 'requested':
+            self.investment_fund_id.action_requested()
 
     def action_approved(self):
         self.state = 'approved'
+        if self.investment_fund_id and self.investment_fund_id.state != 'approved':
+            self.investment_fund_id.action_approved()
 
     def action_confirmed(self):
         self.state = 'confirmed'
+        if self.investment_fund_id and self.investment_fund_id.state != 'confirmed':
+            self.investment_fund_id.action_confirmed()
+
+ 
+    def action_canceled(self):
+        self.state = 'canceled'
+        if self.investment_fund_id and self.investment_fund_id.state != 'canceled':
+            self.investment_fund_id.action_canceled()
         

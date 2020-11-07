@@ -25,6 +25,7 @@ from odoo import models, fields, api, _
 class FundType(models.Model):
 
     _name = 'fund.type'
+    _inherit = 'mail.thread'
     _description = "Fund Type"
 
     key = fields.Char("Fund Type Key")

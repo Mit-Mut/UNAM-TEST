@@ -174,7 +174,9 @@ class StockQuotePrice(models.Model):
     _name = 'stock.quote.price'
     _description = "Stock Quote Price"
     _rec_name = 'date'
-    
+
+
+    journal_id = fields.Many2one('account.journal',string="Bank")
     date = fields.Date('Date')
     price = fields.Float(digit=0,string='Price')
     

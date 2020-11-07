@@ -139,25 +139,76 @@ class InvestmentFunds(models.Model):
 
     def action_requested(self):
         self.state = 'requested'
-        for rec in self.purchase_sale_ids:
+        for rec in self.purchase_sale_ids.filtered(lambda x:x.state != 'requested'):
+            rec.dependency_id = self.dependency_id and self.dependency_id.id or False
+            rec.sub_dependency_id = self.subdependency_id and self.subdependency_id.id or False
             rec.action_requested()
-        for rec in self.cetes_ids:
+        for rec in self.cetes_ids.filtered(lambda x:x.state != 'requested'):
+            rec.dependency_id = self.dependency_id and self.dependency_id.id or False
+            rec.sub_dependency_id = self.subdependency_id and self.subdependency_id.id or False            
             rec.action_requested()
-        for rec in self.udibonos_ids:
+        for rec in self.udibonos_ids.filtered(lambda x:x.state != 'requested'):
+            rec.dependency_id = self.dependency_id and self.dependency_id.id or False
+            rec.sub_dependency_id = self.subdependency_id and self.subdependency_id.id or False            
             rec.action_requested()
-        for rec in self.bonds_ids:
+        for rec in self.bonds_ids.filtered(lambda x:x.state != 'requested'):
+            rec.dependency_id = self.dependency_id and self.dependency_id.id or False
+            rec.sub_dependency_id = self.subdependency_id and self.subdependency_id.id or False            
             rec.action_requested()
-        for rec in self.will_pay_ids:
+        for rec in self.will_pay_ids.filtered(lambda x:x.state != 'requested'):
+            rec.dependency_id = self.dependency_id and self.dependency_id.id or False
+            rec.sub_dependency_id = self.subdependency_id and self.subdependency_id.id or False            
             rec.action_requested()
-        for rec in self.productive_ids:
+        for rec in self.productive_ids.filtered(lambda x:x.state != 'requested'):
+            rec.dependency_id = self.dependency_id and self.dependency_id.id or False
+            rec.sub_dependency_id = self.subdependency_id and self.subdependency_id.id or False            
             rec.action_requested()
 
     def action_approved(self):
         self.state = 'approved'
+        for rec in self.purchase_sale_ids.filtered(lambda x:x.state != 'approved'):
+            rec.action_approved()
+        for rec in self.cetes_ids.filtered(lambda x:x.state != 'approved'):
+            rec.action_approved()
+        for rec in self.udibonos_ids.filtered(lambda x:x.state != 'approved'):
+            rec.action_approved()
+        for rec in self.bonds_ids.filtered(lambda x:x.state != 'approved'):
+            rec.action_approved()
+        for rec in self.will_pay_ids.filtered(lambda x:x.state != 'approved'):
+            rec.action_approved()
+        for rec in self.productive_ids.filtered(lambda x:x.state != 'approved'):
+            rec.action_approved()
 
     def action_confirmed(self):
         self.state = 'confirmed'
+        for rec in self.purchase_sale_ids.filtered(lambda x:x.state != 'confirmed'):
+            rec.action_confirmed()
+        for rec in self.cetes_ids.filtered(lambda x:x.state != 'confirmed'):
+            rec.action_confirmed()
+        for rec in self.udibonos_ids.filtered(lambda x:x.state != 'confirmed'):
+            rec.action_confirmed()
+        for rec in self.bonds_ids.filtered(lambda x:x.state != 'confirmed'):
+            rec.action_confirmed()
+        for rec in self.will_pay_ids.filtered(lambda x:x.state != 'confirmed'):
+            rec.action_confirmed()
+        for rec in self.productive_ids.filtered(lambda x:x.state != 'confirmed'):
+            rec.action_confirmed()
 
+
+    def action_canceled(self):
+        self.state = 'canceled'
+        for rec in self.purchase_sale_ids.filtered(lambda x:x.state != 'canceled'):
+            rec.action_canceled()
+        for rec in self.cetes_ids.filtered(lambda x:x.state != 'canceled'):
+            rec.action_canceled()
+        for rec in self.udibonos_ids.filtered(lambda x:x.state != 'canceled'):
+            rec.action_canceled()
+        for rec in self.bonds_ids.filtered(lambda x:x.state != 'canceled'):
+            rec.action_canceled()
+        for rec in self.will_pay_ids.filtered(lambda x:x.state != 'canceled'):
+            rec.action_canceled()
+        for rec in self.productive_ids.filtered(lambda x:x.state != 'canceled'):
+            rec.action_canceled()
     
     
     

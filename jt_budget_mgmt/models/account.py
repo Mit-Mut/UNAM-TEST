@@ -69,7 +69,99 @@ class AccountMove(models.Model):
                 raise ValidationError("Please add program code into invoice lines")
         return super(AccountMove,self).action_register()
 
-        
+    def validate_multiple_budgets(self):
+        str_msg = "Budgetary Insufficiency For Program Code\n\n"
+        is_check = False
+        budget_msg = "Budget sufficiency"
+        insufficient_move_ids = []
+        sufficient_move_ids = []
+        budget_line_obj = self.env['expenditure.budget.line']
+        move_str_msg_dict = {} # Msg Dict for insufficient move and its program code list that will help to save
+                                # rejection message
+        code_dict = {} # To minus available balance if same program code with different request
+        # For e.g. Procom code 1 is added in two requests with amount 3000 & 4000 and available balance is 5000
+        # So when checking second request need to minus first request amount otherwise in both we get suffient
+        for request in self:
+            if request.payment_state == 'registered':
+                move_str_msg = "Budgetary Insufficiency For Program Code\n\n"
+                sufficient_move_ids.append(request.id)
+                for line in request.invoice_line_ids:
+                    total_available_budget = 0
+                    if line.program_code_id:
+                        budget_line = self.env['expenditure.budget.line']
+                        budget_lines = budget_line_obj.sudo().search(
+                            [('program_code_id', '=', line.program_code_id.id),
+                             ('expenditure_budget_id', '=', line.program_code_id.budget_id.id),
+                             ('expenditure_budget_id.state', '=', 'validate')])
+
+                        if request.invoice_date and budget_lines:
+                            b_month = request.invoice_date.month
+                            for b_line in budget_lines:
+                                if b_line.start_date:
+                                    b_s_month = b_line.start_date.month
+                                    if b_month in (1, 2, 3) and b_s_month in (1, 2, 3):
+                                        budget_line += b_line
+                                    elif b_month in (4, 5, 6) and b_s_month in (4, 5, 6):
+                                        budget_line += b_line
+                                    elif b_month in (7, 8, 9) and b_s_month in (7, 8, 8):
+                                        budget_line += b_line
+                                    elif b_month in (10, 11, 12) and b_s_month in (10, 11, 12):
+                                        budget_line += b_line
+                            total_available_budget = sum(x.available for x in budget_line)
+
+                            # Minus if same programcode exits in another request which is also selected
+                            if line.program_code_id.id in code_dict.keys():
+                                exit_lines = code_dict.get(line.program_code_id.id)
+                                for exit_line in exit_lines:
+                                    if exit_line.move_id.invoice_date.month == b_month:
+                                        total_available_budget -= exit_line.debit if exit_line.debit else exit_line.credit
+
+                            # Preparing code_dict purpose added where defined
+                            if line.program_code_id.id in code_dict.keys():
+                                code_dict.update({line.program_code_id.id: code_dict.get(line.program_code_id.id) + [line]})
+                            else:
+                                code_dict.update({line.program_code_id.id: [line]})
+                    line_amount = 0
+                    if line.debit:
+                        line_amount = line.debit
+                    else:
+                        line_amount = line.credit
+                    if total_available_budget < line_amount:
+                        is_check = True
+                        program_name = ''
+                        if line.program_code_id:
+                            program_name = line.program_code_id.program_code
+                            str_msg += program_name + " Available Amount Is " + str(total_available_budget) + "\n\n"
+                            move_str_msg += program_name + " Available Amount Is " + str(total_available_budget) + "\n\n"
+                            insufficient_move_ids.append(request.id)
+                if request.id in insufficient_move_ids:
+                    move_str_msg_dict.update({request.id: move_str_msg})
+        if is_check:
+            return {
+                'name': _('Budgetary Insufficiency'),
+                'type': 'ir.actions.act_window',
+                'res_model': 'budget.insufficien.wiz',
+                'view_mode': 'form',
+                'view_type': 'form',
+                'views': [(False, 'form')],
+                'target': 'new',
+                'context': {'default_msg': str_msg, 'default_is_budget_suf': False,
+                            'move_str_msg_dict': move_str_msg_dict,
+                            'default_move_ids': [(4, move) for move in insufficient_move_ids]}
+            }
+        else:
+            return {
+                'name': _('Budget sufficiency'),
+                'type': 'ir.actions.act_window',
+                'res_model': 'budget.insufficien.wiz',
+                'view_mode': 'form',
+                'view_type': 'form',
+                'views': [(False, 'form')],
+                'target': 'new',
+                'context': {'default_msg': budget_msg, 'default_is_budget_suf': True,
+                            'default_move_ids': [(4, move) for move in sufficient_move_ids]}
+            }
+
     def action_validate_budget(self):
         self.ensure_one()
         str_msg = "Budgetary Insufficiency For Program Code\n\n"

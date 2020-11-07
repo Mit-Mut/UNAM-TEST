@@ -28,6 +28,7 @@ from dateutil.relativedelta import relativedelta
 class BasesCollabration(models.Model):
 
     _name = 'bases.collaboration'
+    _inherit = 'mail.thread'
     _description = "Bases of collaboration"
 
     name = fields.Char("Agreement Name")
@@ -336,6 +337,9 @@ class BasesCollabration(models.Model):
     def confirm(self):
         self.state = 'valid'
 
+        if self.opening_bal==0:
+            raise ValidationError(_("Please add the opening balance amount"))
+
     def action_schedule_withdrawal(self):
         req_obj = self.env['request.open.balance']
         for collaboration in self:
@@ -544,6 +548,7 @@ class ResPartner(models.Model):
 class RequestOpenBalance(models.Model):
 
     _name = 'request.open.balance'
+    _inherit = 'mail.thread'
     _description = "Request to Open Balance"
 
     name = fields.Char("Name")
@@ -843,6 +848,7 @@ class RequestOpenBalance(models.Model):
 class RequestOpenBalanceInvestment(models.Model):
 
     _name = 'request.open.balance.invest'
+    _inherit = 'mail.thread'
     _description = "Request to Open Balance Investment"
 
     name = fields.Char("Name")
@@ -1035,6 +1041,7 @@ class Project(models.Model):
 class RequestOpenBalanceFinance(models.Model):
 
     _name = 'request.open.balance.finance'
+    _inherit = 'mail.thread'
     _description = "Request to Open Balance For Finanace"
     _rec_name = 'invoice'
 

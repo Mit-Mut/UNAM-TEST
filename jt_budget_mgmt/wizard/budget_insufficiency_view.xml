@@ -7,10 +7,10 @@
             <field name="model">budget.insufficien.wiz</field>
             <field name="arch" type="xml">
                 <form>
-                    
                     <field name="msg" readonly="1"/>
                     <group>
                     	<field name="move_id" invisible="1"/>
+                    	<field name="move_ids" invisible="1"/>
          				<field name="is_budget_suf" invisible="1"/>
                     </group>
                     <footer>

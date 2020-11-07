@@ -75,7 +75,7 @@ class SummaryofOperationInvestmentFundsBalances(models.AbstractModel):
             {'name': _('Valuación')},
         ]
 
-    def _format(self, value,figure_type):
+    def _format(self, value,figure_type,digit):
         if self.env.context.get('no_format'):
             return value
         value['no_format_name'] = value['name']
@@ -86,7 +86,7 @@ class SummaryofOperationInvestmentFundsBalances(models.AbstractModel):
                 # don't print -0.0 in reports
                 value['name'] = abs(value['name'])
                 value['class'] = 'number text-muted'
-            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id)
+            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id,digits=digit)
             value['class'] = 'number'
             return value
         if figure_type == 'percents':
@@ -104,8 +104,8 @@ class SummaryofOperationInvestmentFundsBalances(models.AbstractModel):
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
         
-        #records = self.env['purchase.sale.security'].search([('state','in',('confirmed','done')),('invesment_date','>=',start),('invesment_date','<=',end)])
-        records = self.env['purchase.sale.security'].search([('invesment_date','>=',start),('invesment_date','<=',end)])
+        records = self.env['purchase.sale.security'].search([('state','in',('confirmed','done')),('invesment_date','>=',start),('invesment_date','<=',end)])
+        #records = self.env['purchase.sale.security'].search([('invesment_date','>=',start),('invesment_date','<=',end),('state','=','draft')])
         total_amount = 0
         total_title = 0
         total_val = 0
@@ -125,11 +125,11 @@ class SummaryofOperationInvestmentFundsBalances(models.AbstractModel):
                     'name': rec.fund_id and rec.fund_id.name or '',
                     'columns': [{'name': rec.contract_id and rec.contract_id.name or ''}, 
                                 {'name': rec.fund_key}, 
-                                self._format({'name': rec.amount},figure_type='float'),
+                                self._format({'name': rec.amount},figure_type='float',digit=2),
                                 {'class':'number','name':format(rec.title, ',d')},
                                 {'name': ''},
-                                self._format({'name': rec.movement_price},figure_type='float'),
-                                self._format({'name': valuation},figure_type='float'),
+                                self._format({'name': rec.movement_price},figure_type='float',digit=6),
+                                self._format({'name': valuation},figure_type='float',digit=2),
                                 ],
                     'level': 3,
                     'unfoldable': False,
@@ -141,7 +141,7 @@ class SummaryofOperationInvestmentFundsBalances(models.AbstractModel):
                     'name': '',
                     'columns': [{'name': ''}, 
                                 {'name': 'Total'}, 
-                                self._format({'name': rec.amount},figure_type='float'),
+                                self._format({'name': rec.amount},figure_type='float',digit=2),
                                 {'class':'number','name':format(rec.title, ',d')},
                                 {'class':'number','name':format(total_title, ',d')},
                                 {'name': ''},
@@ -157,11 +157,11 @@ class SummaryofOperationInvestmentFundsBalances(models.AbstractModel):
             'name': 'Total General',
             'columns': [{'name': ''}, 
                         {'name': ''}, 
-                        self._format({'name': total_amount},figure_type='float'),
+                        self._format({'name': total_amount},figure_type='float',digit=2),
                         {'class':'number','name':format(total_title, ',d')},
                         {'class':'number','name':format(total_title, ',d')},
                          {'name': ''},
-                        self._format({'name': total_val},figure_type='float'),
+                        self._format({'name': total_val},figure_type='float',digit=2),
                         
                         ],
             'level': 1,

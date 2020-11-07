@@ -5,6 +5,7 @@ from datetime import datetime
 class BasesCollabrationModification(models.Model):
 
     _name = 'bases.collaboration.modification'
+    _inherit = 'mail.thread'
     _description = "Bases Collaboration Modification"
     _rec_name = 'folio'
 

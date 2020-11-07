@@ -49,7 +49,7 @@
                                     <field name="street" readonly="1" placeholder="Street..." class="o_address_street"/>
                                     <field name="street2" readonly="1" placeholder="Street 2..." class="o_address_street"/>
                                     <field name="city" readonly="1" placeholder="City" class="o_address_city"/>
-                                    <field name="state" readonly="1" class="o_address_state" placeholder="State" options="{&quot;no_open&quot;: True}"/>
+                                    <field name="state_id" readonly="1" class="o_address_state" placeholder="State" options="{&quot;no_open&quot;: True}"/>
                                     <field name="zip" readonly="1" placeholder="ZIP" class="o_address_zip"/>
                                     <field name="country" readonly="1" placeholder="Country" class="o_address_country" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
                                 </div>
@@ -193,9 +193,12 @@
                                     <field name="reason_cancel"/>
                                 </group>
                             </page>
-                        	
                         </notebook>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>

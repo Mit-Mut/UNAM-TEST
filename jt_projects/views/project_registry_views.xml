@@ -52,6 +52,7 @@
                                 <field name="desc_stage"/>
                                 <field name="project_type_identifier"/>
                                 <field name="number"/>
+                                <field name="program_code"/>
                                 <field name="user_id" string="Responsible name"/>
                                 <field name="rfc"/>
                             </group>

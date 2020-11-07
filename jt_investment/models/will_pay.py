@@ -196,15 +196,26 @@ class WillPay(models.Model):
 
     def action_requested(self):
         self.state = 'requested'
+        if self.investment_fund_id and self.investment_fund_id.state != 'requested':
+            self.investment_fund_id.action_requested()
 
     def action_approved(self):
         self.state = 'approved'
+        if self.investment_fund_id and self.investment_fund_id.state != 'approved':
+            self.investment_fund_id.action_approved()
 
     def action_confirmed(self):
         self.state = 'confirmed'
+        if self.investment_fund_id and self.investment_fund_id.state != 'confirmed':
+            self.investment_fund_id.action_confirmed()
 
     def action_reject(self):
         self.state = 'rejected'
+
+    def action_canceled(self):
+        self.state = 'canceled'
+        if self.investment_fund_id and self.investment_fund_id.state != 'canceled':
+            self.investment_fund_id.action_canceled()
     
     def action_calculation(self):
         return 

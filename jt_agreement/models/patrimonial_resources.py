@@ -27,6 +27,7 @@ from dateutil.relativedelta import relativedelta
 class PatrimonialResources(models.Model):
 
     _name = 'patrimonial.resources'
+    _inherit = 'mail.thread'
     _description = "Patrimonial Resources"
 
     name = fields.Char("Fund Name")
@@ -141,6 +142,9 @@ class PatrimonialResources(models.Model):
             
     def confirm(self):
         self.state = 'valid'
+
+        if self.opening_balance==0:
+            raise ValidationError(_("Please add the opening balance amount"))
         
     def in_force(self):
         self.state = 'in_force'

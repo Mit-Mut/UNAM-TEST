@@ -20,33 +20,22 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Projects',
-    'summary': 'Projects',
-    'version': '13.0.0.1.0',
-    'category': 'Invoicing',
-    'author': 'Jupical Technologies Pvt. Ltd.',
-    'maintainer': 'Jupical Technologies Pvt. Ltd.',
-    'website': 'http://www.jupical.com',
-    'license': 'AGPL-3',
-    'depends': ['jt_finance', 'jt_payroll_payment', 'jt_agreement', 'project'],
-    'data': [
-        'data/ir_cron.xml',
-        'views/rejection_checks_views.xml',
-        'views/project_registry_views.xml',
-        'views/request_trasfer_view.xml',
-        'wizard/reason_of_rejection.xml',
-        'views/verification_of_expense_view.xml',
-        'views/request_for_payment.xml',
-        'views/account_cancellation.xml',
-        'wizard/project_close.xml',
-        'wizard/request_confirm_view.xml',
-        'wizard/request_reject_view.xml',
-        'views/request_account_views.xml',
-        'reports/travel_request.xml',
-        'security/ir.model.access.csv',
-    ],
-    'application': False,
-    'installable': True,
-    'auto_install': False,
-}
+from odoo import models, fields
+
+
+class RequestConfirm(models.TransientModel):
+    _name = 'request.confirm'
+
+    bank_account_id = fields.Many2one('account.journal', string='Bank Account')
+    bank_acc_number_id = fields.Many2one("res.partner.bank", "Bank")
+    no_contract = fields.Char('No. contract')
+
+    def apply(self):
+
+        active_id = self._context.get('active_id', False)
+        if active_id:
+            request_account_id = self.env['request.accounts'].browse(active_id)
+            request_account_id.status = 'confirmed'
+            request_account_id.bank_account_id = self.bank_account_id
+            request_account_id.bank_acc_number_id = self.bank_acc_number_id
+            request_account_id.no_contract = self.no_contract

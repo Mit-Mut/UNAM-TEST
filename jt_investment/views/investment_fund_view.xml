@@ -7,7 +7,6 @@
             <field name="model">investment.funds</field>
             <field name="arch" type="xml">
                 <tree>
-                	<field name="type_of_investment"/>
                 	<field name="contract_id"/>
                 	<field name="fund_id"/>
                 	<field name="fund_key"/>
@@ -39,9 +38,6 @@
                             <group>
 								<field name="fund_id" string="Fund Name" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 								<field name="fund_key" string="Fund Code" readonly="1"/>                            	
-                               	<field name="type_of_investment" required="1"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-	            				<field name="type_of_financial_products" attrs="{'invisible':[('type_of_investment','!=','money_market')],'required':[('type_of_investment','=','money_market')]}"/>
-                                
                                 <field name="fund_request_date" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
                                 <field name="dependency_id" context="{'show_for_agreement':1}" attrs="{'readonly': [('state', '!=', 'draft')]}" readonly="1"/>
                                 <field name="subdependency_id" context="{'show_for_agreement':1}" domain="[('dependency_id','=',dependency_id)]" attrs="{'readonly': [('state', '!=', 'draft')]}" readonly="1"/>

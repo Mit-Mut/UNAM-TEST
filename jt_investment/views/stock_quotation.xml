@@ -46,7 +46,7 @@
                         <group>
                             <group>
                                 <field name="name" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="journal_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <!-- <field name="journal_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/> -->
                                 <field name="price_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="price" digits="[12,6]"/>
                             </group>
@@ -116,6 +116,7 @@
             <field name="model">stock.quote.price</field>
             <field name="arch" type="xml">
                 <tree>
+                    <field name="journal_id"/>
                     <field name="date"/>
                		<field name="price" digits="[12,6]"/>
                 </tree>
@@ -130,6 +131,7 @@
                     <sheet>
                         <group>
                             <group>
+                                <field name="journal_id" required="1"/>
                                 <field name="date" required="1"/>
                                 <field name="price" required="1" digits="[12,6]"/>
                             </group>

@@ -37,6 +37,7 @@
                                 <field name="number" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 
                                 <field name="type_of_currency" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                  <field name="exchange_rate" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="stage_id" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                  <field name="dependence" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="subdependence" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>

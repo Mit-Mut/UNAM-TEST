@@ -32,6 +32,14 @@
                                 class="oe_stat_button"
                                 icon="fa-file">
                             </button>
+                           
+                            <button type="object"
+                                name="count_expense_checks"
+                                class="oe_stat_button"
+                                icon="fa-file-text-o"
+                                attrs="{'invisible': [('check_counts', '=', 0)]}">
+                                <field name="check_counts" widget="statinfo" string="Checks"/>
+                            </button>
                             <field name='check_project_due' invisible="1"/>
                             <field name='check_project_expire' invisible="1"/>
                             

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <template id="travel_request_template_docs">
+        <template id="school_intership_request_docs">
         <t t-call="web.html_container">
             <div class="page">
                 <style>
@@ -23,7 +23,7 @@
 
                             <td style="width:80%;">
                                 <b>
-                                <span style="font-size:15px;margin-top:10px;">SOLICITUD DE PAGO POR GASTOS DE VIATICOS</span>
+                                <span style="font-size:17px;margin-top:10px;">Request for payment for school placement expenses</span>
                                 </b>
                                 <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('CODE39',o.folio_dependency, 80, 100)"
                                 style="width:200px;height:50px" alt="Barcode"/><br/>
@@ -67,65 +67,82 @@
 
                             <span t-field="o.no_of_document" style="margin-left:90px;font-size:16px;"></span>
 
-                            <span t-field="o.administrative_forms" style="font-size:16px;margin-left:210px;"/><br/>
+                            <span t-field="o.administrative_forms" style="font-size:16px;margin-left:210px;"/><br/><br/><br/>
+                        </tr>
+                        <tr>
+                            <b><span style="margin-left:350px;">BENEFICIARY DATA</span></b><br/>
                         </tr>
                         <tr>
                             <br/>
-                            <b><span style="margin-left:20px;font-size:16px;">Nombre del responsable:&#160;&#160;&#160;&#160;&#160;&#160;</span></b>
-                            <b><span style="margin-left:20px;font-size:16px;">RFC:&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</span></b>
-                            <b><span style="margin-left:20px;font-size:16px;">Clave categoria:&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</span></b>
-                            <b><span style="margin-left:20px;font-size:16px;">Nombramiento:</span></b><br/><br/>
+                            <b><span style="margin-left:20px;font-size:16px;">Name:</span></b>
+                            <b><span style="margin-left:225px;font-size:16px;">Key:</span></b><br/><br/>
                         </tr>
                         <tr>
-                            <span t-field="o.responsible_id" style="margin-left:20px;font-size:16px;"></span>
+                            <span t-field="o.parnter_id" style="margin-left:20px;font-size:16px;"></span>
 
-                            <span t-field="o.rf_person" style="margin-left:160px;font-size:16px;"></span>
+                            <span t-field="o.rfc" style="margin-left:165px;font-size:16px;">demo</span><br/><br/>
+                        </tr>
 
-                            <span t-field="o.responsible_category_key" style="margin-left:200px;font-size:16px;"></span>
 
-                            <span t-field="o.responsible_job_position" style="margin-left:190px;font-size:16px;"/><br/>
+                        <tr>
+                            <b><span style="margin-left:350px;">PROJECT</span></b><br/>
+                        </tr>
+                        <tr>
+                            <br/>
+                            <b><span style="margin-left:20px;font-size:16px;">Project (s):</span></b>
+                            <b><span style="margin-left:150px;font-size:16px;">Agreement (s):</span></b>
+                            <b><span style="margin-left:130px;font-size:16px;">Responsible Name:</span></b>
+                            <b><span style="margin-left:70px;font-size:16px;">RFC:</span></b><br/><br/>
+                            
+                        </tr>
+                        <tr>
+                            <span t-field="o.project_number_id" style="margin-left:20px;font-size:16px;"></span>
+
+                            <span t-field="o.agreement_number" style="margin-left:20px;font-size:16px;"></span>
+
+                            <span t-field="o.responsible_id" style="margin-left:175px;font-size:16px;"></span>
+
+                            <span t-field="o.rf_person" style="margin-left:70px;font-size:16px;"></span><br/><br/>
+                        </tr>
+                        <tr>
+                            <br/> 
+                            <b><span style="margin-left:20px;font-size:16px;"> Category Key:</span></b>
+                            <b><span style="margin-left:120px;font-size:16px;"> Appointment:</span></b><br/><br/>
+                        </tr>
+                        <tr>
+                            <span t-field="o.category_key" style="margin-left:20;font-size:16px;">demo</span>
+                            <span t-field="o.workstation_id" style="margin-left:175px;font-size:16px;">demo</span><br/><br/>
                         </tr>
 
                         <tr>
                             <br/>
-                            <b><span style="margin-left:350px;">MOTIVO DEL VIAJE</span></b><br/><br/>
+                            <b><span style="margin-left:350px;">REASON FOR EXPENDITURE</span></b><br/><br/>
                             <span t-field="o.reason_for_expendiure" style="margin-left:20px;position: absolute;"/>
 
                             <br/><br/>
-                            <b><span style="margin-left:380px;">DESTINO</span></b><br/><br/>
+                            <b><span style="margin-left:380px;">DESTINATION</span></b><br/><br/>
                             <span t-field="o.destination" style="margin-left:20px;"/>
                         </tr>
-                        
+                    
                         <table style="margin-left:20px;width:95%;">
                             <tr>
-                            <b><span style="margin-left:350px;">ZONA CORRESPONDIENTE</span></b>
+                            <br/>
+                            <b><span style="margin-left:350px;">DATA FOR DISCHARGE</span></b>
                             </tr>
                             <tr>
-                                <th class="border1" style="text-align:center;">Zona</th>
-                                <th class="border1" style="text-align:center;">Tarifa</th>
-                                <th class="border1" style="text-align:center;">Dias</th>
-                            </tr>
-                            <tr style="border: 1px solid black;margin-left:20px;">
-                                <td class="border1" style="text-align:center;"><span t-field="o.zone"/></td>
-                                <td class="border1" style="text-align:center;">
-                                <span t-field="o.rate"/></td>
-                                <td class="border1" style="text-align:center;">
-                                <span t-field="o.days"/>
-                                </td>
-                            </tr><br/><br/>
-                        </table>
+                                <th style="height:30px;text-align:center;border-top:1px solid grey;border-bottom: 1px solid grey;">
+                                Egress Key</th>
 
-                        <table style="margin-left:20px;width:95%;">
-                            <tr>
-                                <b><span style="margin-left:350px;">DATOS PARA ELEGRESO</span></b>
-                            </tr>
-                            <tr>
-                                <th style="height:30px;text-align:center;border-top:1px solid grey;border-bottom: 1px solid grey;">Clave de egreso</th>
                                 <th style="text-align:center;border-top:1px solid grey;border-bottom: 1px solid grey;">
-                                Cuenta y/o codigo programatico
+                                Account and / or Program Code
                                 </th>
-                                <th style="text-align:center;border-top:1px solid grey;border-bottom: 1px solid grey;">Precio Unitario</th>
-                                <th style="text-align:center;border-top:1px solid grey;border-bottom: 1px solid grey;">Importe</th>
+
+                                <th style="text-align:center;border-top:1px solid grey;border-bottom: 1px solid grey;">Unit price</th>
+
+                                <th style="text-align:center;border-top:1px solid grey;border-bottom: 1px solid grey;">Amount</th>
+
+                                <th style="text-align:center;border-top:1px solid grey;border-bottom:1px solid grey;">Subtotal</th>
+
                             </tr>
                             <tr t-foreach="o.invoice_line_ids" t-as="line">
                                 <td style="text-align:center;border-bottom: 1px solid grey;"><span t-field="line.egress_key_id"/></td>
@@ -134,18 +151,21 @@
                                 <span t-field="line.bill"/>/<span t-field="line.programatic_code_id"/></td>
 
                                 <td style="text-align:center;border-bottom: 1px solid grey;"><span t-field="line.price_unit"/></td>
+
                                 <td style="text-align:center;border-bottom: 1px solid grey;"><span t-field="line.other_amounts"/></td>
+
+                                <td style="text-align:center;border-bottom: 1px solid grey;"><span t-field="line.price_subtotal"/></td>
+
                             </tr><br/><br/>
                         </table>
 
-                        <tr t-foreach="o.invoice_line_ids" t-as="total">
-                            <hr style="width:30%;margin-left:600px; border: 1px solid black;"/>
-
-                            <b><span style="margin-left:600px;">Subtotal&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</span><span t-field="total.price_subtotal"/><br/><br/>
-
+                        <tr>
+                            <b>
                             <hr style="width:30%;margin-left:600px; border: 1px solid black;"/>
 
                             <span style="margin-left:600px;">Total&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</span><span t-field="o.amount_total"/></b>
+
+                            <hr style="width:30%;margin-left:600px; border: 1px solid black;"/>   
                         </tr>
 
                         <table style="margin-left:20px;width:95%;border-radius:10px;">
@@ -169,15 +189,15 @@
         </t>
        </template>
 
-        <template id="travel_request_template">
+        <template id="school_internship_request">
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="o">
-                    <t t-call="jt_projects.travel_request_template_docs"/>
+                    <t t-call="jt_projects.school_intership_request_docs"/>
                 </t>
             </t>
         </template>
 
-        <record id="paperformat_travel_request" model="report.paperformat">
+        <record id="paperformat_school_internship" model="report.paperformat">
             <field name="name">Format 1</field>
             <field name="default" eval="True"/>
             <field name="format">A4</field>
@@ -191,14 +211,14 @@
         </record>
 
         <report 
-            id="travel_request_action"
+            id="supplier_request_action"
             model="account.move"
-            string="Travel Request"
+            string="School Internship Request"
             report_type="qweb-pdf"
-            name="jt_projects.travel_request_template"
-            file="jt_projects.travel_request_template"
+            name="jt_projects.school_internship_request"
+            file="jt_projects.school_internship_request"
             print_report_name="object.name"
-            paperformat="jt_projects.paperformat_travel_request"
+            paperformat="jt_projects.paperformat_school_internship"
         />
 
     </data>

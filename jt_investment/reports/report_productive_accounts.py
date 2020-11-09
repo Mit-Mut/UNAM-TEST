@@ -29,7 +29,8 @@ import io
 import base64
 from odoo.tools import config, date_utils, get_lang
 import lxml.html
-
+from datetime import timedelta
+from dateutil.relativedelta import relativedelta
 
 class ReportProductiveAccounts(models.AbstractModel):
     _name = "jt_investment.report.productive.accounts"
@@ -73,7 +74,36 @@ class ReportProductiveAccounts(models.AbstractModel):
             {'name': _('Diferencia')},
         ]
 
-    def _format(self, value,figure_type):
+    def get_month_name(self,month):
+        month_name = ''
+        if month==1:
+            month_name = 'Enero'
+        elif month==2:
+            month_name = 'Febrero'
+        elif month==3:
+            month_name = 'Marzo'
+        elif month==4:
+            month_name = 'Abril'
+        elif month==5:
+            month_name = 'Mayo'
+        elif month==6:
+            month_name = 'Junio'
+        elif month==7:
+            month_name = 'Julio'
+        elif month==8:
+            month_name = 'Agosto'
+        elif month==9:
+            month_name = 'Septiembre'
+        elif month==10:
+            month_name = 'Octubre'
+        elif month==11:
+            month_name = 'Noviembre'
+        elif month==12:
+            month_name = 'Diciembre'
+            
+        return month_name.upper()
+
+    def _format(self, value,figure_type,digit):
         if self.env.context.get('no_format'):
             return value
         value['no_format_name'] = value['name']
@@ -84,7 +114,7 @@ class ReportProductiveAccounts(models.AbstractModel):
                 # don't print -0.0 in reports
                 value['name'] = abs(value['name'])
                 value['class'] = 'number text-muted'
-            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id)
+            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id,digits=digit)
             value['class'] = 'number'
             return value
         if figure_type == 'percents':
@@ -100,7 +130,83 @@ class ReportProductiveAccounts(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
-                    
+
+        records = self.env['investment.investment'].search([('state','in',('confirmed','done')),('invesment_date','>=',start),('invesment_date','<=',end)])
+        #records = self.env['investment.investment'].search([('invesment_date','>=',start),('invesment_date','<=',end)],order='invesment_date')
+        
+        month_list = {1:[],2:[],3:[],4:[],5:[],6:[],
+                      7:[],8:[],9:[],10:[],11:[],12:[]
+                      }
+
+        total_month_list = {1:[],2:[],3:[],4:[],5:[],6:[],
+                      7:[],8:[],9:[],10:[],11:[],12:[]
+                      }
+        
+        total_days = 0
+        for rec in records:
+            term = 0
+            if rec.is_fixed_rate:
+                term = rec.term
+            if rec.is_variable_rate:
+                term = rec.term_variable
+            days = ((rec.amount_to_invest * rec.interest_rate)/100)/360*term
+            total_days += days
+            extra_percentage_value =  (rec.amount_to_invest * rec.extra_percentage)/100
+            diffrence = rec.amount_to_invest - extra_percentage_value
+            capital =  self._format({'name': rec.amount_to_invest},figure_type='float',digit=2)
+            capital = capital.get('name')
+            lines.append({
+                'id': 'hierarchy' + str(rec.id),
+                'name': capital,
+                'columns': [self._format({'name': rec.interest_rate},figure_type='float',digit=6),
+                            {'name': term},
+                            self._format({'name': days},figure_type='float',digit=2),
+                            {'name': ''},
+                            {'name': ''},
+                            self._format({'name': extra_percentage_value},figure_type='float',digit=2),
+                            self._format({'name': diffrence},figure_type='float',digit=2),
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+#             end_date = rec.invesment_date + timedelta(days=term)
+#             total_month = (end_date.year - rec.invesment_date.year) * 12 +  (end_date.month - rec.invesment_date.month)
+#             
+#             current_month_start_date = rec.invesment_date
+#             
+#             for month in range(total_month+1):
+# 
+#                 current_month_start_date = current_month_start_date
+#                 current_month_end_date = current_month_start_date.replace(day=1) + relativedelta(months=1) - timedelta(days=1)
+#                 
+#                 if current_month_end_date > end_date:
+#                     current_month_end_date = end_date
+#                 
+#                 day_diff = current_month_start_date - current_month_end_date
+#                 day_diff = day_diff.days
+#                 
+#                 days = ((rec.amount_to_invest * rec.interest_rate)/100)/360*day_diff
+# 
+#                 month_vals={
+#                 'id': 'hierarchy' + str(rec.id)+ str(current_month_start_date.month),
+#                 'name': capital,
+#                 'columns': [self._format({'name': rec.interest_rate},figure_type='float',digit=6),
+#                             {'name': day_diff},
+#                             self._format({'name': days},figure_type='float',digit=2),
+#                             {'name': ''},
+#                             {'name': ''},
+#                             {'name': ''},
+#                             {'name': ''},
+#                             ],
+#                 'level': 3,
+#                 'unfoldable': False,
+#                 'unfolded': True,
+#                 }
+#                 month_list.get(current_month_start_date.month,[]).append(month_vals)
+#                 
+#                 current_month_start_date = current_month_start_date.replace(day=1) + relativedelta(months=1)
+                
         return lines
 
     def _get_report_name(self):

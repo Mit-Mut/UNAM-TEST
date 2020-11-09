@@ -20,6 +20,7 @@ class ProjectRegistry(models.Model):
     trade_number = fields.Char("Trade Number")
     status = fields.Selection([('open', 'Open'),
                                ('closed', 'Closed')], "Status", default='open')
+    check_counts = fields.Integer(compute='compute_count')
     bank_account_id = fields.Many2one("account.journal", "Bank Accounts")
     bank_acc_number_id = fields.Many2one("res.partner.bank", "Bank Key")
     branch_office = fields.Char("Square")
@@ -29,6 +30,11 @@ class ProjectRegistry(models.Model):
         "Check Project Due", default=True, compute="get_project_due", store=True)
     check_project_expire = fields.Boolean(
         "Check Project expire", default=True, compute="get_project_due", store=True)
+
+    def compute_count(self):
+        for record in self:
+            record.check_counts = self.env['expense.verification'].search_count(
+                [('project_number_id', '=', self.number)])
 
     def get_project_due_records(self):
         open_project = self.env['project.project'].search(
@@ -105,3 +111,13 @@ class ProjectRegistry(models.Model):
     def show_attachment(self):
         action = self.env.ref('base.action_attachment').read()[0]
         return action
+
+    def count_expense_checks(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Checks',
+            'view_mode': 'tree,form',
+            'res_model': 'expense.verification',
+            'domain': [('project_number_id', '=', self.number)],
+            'context': "{'create': False}"
+        }

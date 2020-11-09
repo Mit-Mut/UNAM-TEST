@@ -74,7 +74,7 @@ class ReportOfInvestmentFunds(models.AbstractModel):
             {'name': _('Rentabilidad')},
         ]
 
-    def _format(self, value,figure_type):
+    def _format(self, value,figure_type,digit):
         if self.env.context.get('no_format'):
             return value
         value['no_format_name'] = value['name']
@@ -85,7 +85,7 @@ class ReportOfInvestmentFunds(models.AbstractModel):
                 # don't print -0.0 in reports
                 value['name'] = abs(value['name'])
                 value['class'] = 'number text-muted'
-            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id)
+            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id,digits=digit)
             value['class'] = 'number'
             return value
         if figure_type == 'percents':
@@ -101,6 +101,61 @@ class ReportOfInvestmentFunds(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+
+        records = self.env['purchase.sale.security'].search([('state','in',('confirmed','done')),('invesment_date','>=',start),('invesment_date','<=',end)])
+        #records = self.env['purchase.sale.security'].search([('invesment_date','>=',start),('invesment_date','<=',end),('state','=','draft')])
+        total_amount = 0
+        total_title = 0
+        total_val = 0
+        for rec in records:
+            valuation = rec.title * rec.movement_price
+            total_val += valuation
+            nominal = rec.price - rec.price_previous_day
+            percentage = 0.0
+            if rec.price_previous_day:
+                percentage = nominal*100/rec.price_previous_day
+
+            if rec.movement == 'sell':
+                total_title -= rec.title
+                total_amount -= rec.amount
+            elif rec.movement == 'buy':
+                total_title += rec.title
+                total_amount += rec.amount
+            profit =  valuation - rec.amount + total_title
+                
+            lines.append({
+                'id': 'hierarchy' + str(rec.id),
+                'name': rec.invesment_date,
+                'columns': [self._format({'name': rec.movement_price},figure_type='float',digit=6),
+                            self._format({'name': nominal},figure_type='float',digit=6),
+                            self._format({'name': percentage},figure_type='float',digit=6),
+                            self._format({'name': rec.amount},figure_type='float',digit=2),
+                            {'class':'number','name':format(total_title, ',d')},
+                            {'class':'number','name':format(rec.title, ',d')},
+                            self._format({'name': valuation},figure_type='float',digit=2),
+                            self._format({'name': profit},figure_type='float',digit=2),
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+            
+#         lines.append({
+#             'id': 'hierarchy_total',
+#             'name': 'Total General',
+#             'columns': [{'name': ''}, 
+#                         {'name': ''}, 
+#                         self._format({'name': total_amount},figure_type='float',digit=2),
+#                         {'class':'number','name':format(total_title, ',d')},
+#                         {'class':'number','name':format(total_title, ',d')},
+#                          {'name': ''},
+#                         self._format({'name': total_val},figure_type='float',digit=2),
+#                         
+#                         ],
+#             'level': 1,
+#             'unfoldable': False,
+#             'unfolded': True,
+#         })
                     
         return lines
 

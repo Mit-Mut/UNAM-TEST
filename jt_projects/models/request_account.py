@@ -18,14 +18,15 @@ class RequestAccounts(models.Model):
     ministrations_amount = fields.Float("Amount of ministrations")
     authorized_amount = fields.Float("Authorized Amount")
     observations = fields.Text("Observations")
-    bank_account_id = fields.Many2one("account.journal", "Bank Accounts")
+    bank_account_id = fields.Many2one(
+        "account.journal", "Bank Accounts", domain=[('type', '=', 'bank')])
     bank_acc_number_id = fields.Many2one("res.partner.bank", "Bank")
     no_contract = fields.Char('No. Contract')
     customer_number = fields.Char("Contact No.")
     supporting_documentation = fields.Binary("Supporting Documentation")
     reason_rejection = fields.Selection([('discharge', 'Does not comply with the documentation supporting the discharge')],
                                         string="Reason for rejection")
-    rejection_observations = fields.Text("Observations")
+    rejection_observations = fields.Text("Rejection observation")
     status = fields.Selection([('eraser', 'Eraser'),
                                ('request', 'Request'),
                                ('approved', 'Approved'),

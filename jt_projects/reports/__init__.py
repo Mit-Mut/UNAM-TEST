@@ -19,25 +19,11 @@
 #    GENERAL PUBLIC LICENSE (LGPL v3) along with this program.
 #    If not, see <http://www.gnu.org/licenses/>.
 #
-##############################################################################
-from odoo import models, fields
+##############################################################
 
-
-class RequestConfirm(models.TransientModel):
-    _name = 'request.confirm'
-
-    bank_account_id = fields.Many2one(
-        'account.journal', string='Bank Account', domain=[('type', '=', 'bank')])
-    bank_acc_number_id = fields.Many2one(
-        related='bank_account_id.bank_account_id', string="Bank")
-    no_contract = fields.Char('No. contract')
-
-    def apply(self):
-
-        active_id = self._context.get('active_id', False)
-        if active_id:
-            request_account_id = self.env['request.accounts'].browse(active_id)
-            request_account_id.status = 'confirmed'
-            request_account_id.bank_account_id = self.bank_account_id
-            request_account_id.bank_acc_number_id = self.bank_acc_number_id
-            request_account_id.no_contract = self.no_contract
+from . import integration_current_project
+from . import accumulated_verfication_report
+from . import comparison_of_balance_check
+# from . import cumulative_comparison
+from . import accounting_and_bank_account_balances
+from . import integration_curr_exp_project

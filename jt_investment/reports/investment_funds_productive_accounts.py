@@ -81,7 +81,36 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
             {'name': _('Promedio Diario')},
         ]
 
-    def _format(self, value,figure_type):
+    def get_month_name(self,month):
+        month_name = ''
+        if month==1:
+            month_name = 'Enero'
+        elif month==2:
+            month_name = 'Febrero'
+        elif month==3:
+            month_name = 'Marzo'
+        elif month==4:
+            month_name = 'Abril'
+        elif month==5:
+            month_name = 'Mayo'
+        elif month==6:
+            month_name = 'Junio'
+        elif month==7:
+            month_name = 'Julio'
+        elif month==8:
+            month_name = 'Agosto'
+        elif month==9:
+            month_name = 'Septiembre'
+        elif month==10:
+            month_name = 'Octubre'
+        elif month==11:
+            month_name = 'Noviembre'
+        elif month==12:
+            month_name = 'Diciembre'
+            
+        return month_name.upper()
+
+    def _format(self, value,figure_type,digit):
         if self.env.context.get('no_format'):
             return value
         value['no_format_name'] = value['name']
@@ -92,7 +121,7 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                 # don't print -0.0 in reports
                 value['name'] = abs(value['name'])
                 value['class'] = 'number text-muted'
-            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id)
+            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id,digits=digit)
             value['class'] = 'number'
             return value
         if figure_type == 'percents':
@@ -108,6 +137,26 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+        
+        
+        records = self.env['purchase.sale.security'].search([('state','in',('confirmed','done')),('invesment_date','>=',start),('invesment_date','<=',end)])
+        #records = self.env['investment.investment'].search([('invesment_date','>=',start),('invesment_date','<=',end)],order='invesment_date')
+        for rec in records:
+            month_name = self.get_month_name(rec.invesment_date.month)
+            
+            lines.append({
+                'id': 'hierarchy' + str(rec.id),
+                'name': rec.invesment_date.day,
+                'columns': [{'name': month_name}, 
+                            {'name': rec.invesment_date.day},
+                            self._format({'name': rec.currency_rate},figure_type='float',digit=4),
+                            self._format({'name': rec.amount_to_invest},figure_type='float',digit=2),
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+    
                     
         return lines
 

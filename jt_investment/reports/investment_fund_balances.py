@@ -105,7 +105,7 @@ class SummaryofOperationInvestmentFundsBalances(models.AbstractModel):
 
         
         records = self.env['purchase.sale.security'].search([('state','in',('confirmed','done')),('invesment_date','>=',start),('invesment_date','<=',end)])
-        #records = self.env['purchase.sale.security'].search([('invesment_date','>=',start),('invesment_date','<=',end),('state','=','draft')])
+        #records = self.env['purchase.sale.security'].search([('invesment_date','>=',start),('invesment_date','<=',end)])
         total_amount = 0
         total_title = 0
         total_val = 0
@@ -117,6 +117,7 @@ class SummaryofOperationInvestmentFundsBalances(models.AbstractModel):
                 elif rec.movement == 'buy':
                     total_title += rec.title
                     total_amount += rec.amount
+                    
                 valuation = rec.title * rec.movement_price
                 total_val += valuation
                  

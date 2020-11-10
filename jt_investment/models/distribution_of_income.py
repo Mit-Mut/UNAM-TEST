@@ -77,8 +77,8 @@ class DistributionOfIncome(models.Model):
             cal_vals.append([0, 0, 
                         {
                          'fund_id':base.agreement_type_id and base.agreement_type_id.fund_id and base.agreement_type_id.fund_id.id or False,
-                         #'agreement_type_id':base.agreement_type_id and base.agreement_type_id.id or False,
-                         #'base_id' : base.id,
+                         'agreement_type_id':base.agreement_type_id and base.agreement_type_id.id or False,
+                         'base_id' : base.id,
                          'dependency_id' : base.dependency_id and base.dependency_id.id or False,
                          'capital' : base.opening_bal,
                          'increments' : inc,
@@ -157,6 +157,8 @@ class DistributionOfIncomecalculation(models.Model):
     distribution_id = fields.Many2one('distribution.of.income','Distribution')    
 
     fund_id = fields.Many2one('agreement.fund','Fund')
+    agreement_type_id = fields.Many2one('agreement.agreement.type','Type Of Agreements')
+    base_id = fields.Many2one('bases.collaboration','Basis of Collaboration')    
     dependency_id = fields.Many2one('dependency','Dependency')
     dependency_name = fields.Char(related='dependency_id.dependency',string='Dependency')
     dependency_description = fields.Text(related='dependency_id.description',string='Dependency Description')

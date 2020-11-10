@@ -28,7 +28,8 @@
 	                                <field name="employee_id"/>
 	                                <field name="date_required"/>
                                  -->
-                                <field name="fund_type"/>
+                                <field name="fund_id" /> 
+                                <field name="fund_type" invisible="1"/>
                                 <field name="agreement_type"/>
                                 <field name="base_collabaration_id"/>
                                 

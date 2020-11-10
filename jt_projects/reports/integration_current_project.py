@@ -64,6 +64,30 @@ class IntegrationOfCurrentResearchProjects(models.AbstractModel):
         templates['main_template'] = 'account_reports.main_template'
         return templates
 
+    def _get_lines(self, options, line_id=None):
+        lines = []
+        print('lines', lines)
+        start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+        project_records = self.env['project.project'].search(
+            [('status', '=', 'open'), ('proj_start_date', '>=', start), ('proj_end_date', '<=', end)])
+
+        for record in project_records:
+            lines.append({
+                'id': 'projects' + str(record.id),
+                'name': record.name,
+                'columns': [{'name': record.stage_identifier + '/' + record.proj_start_date.year or ''},
+
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        return lines
+
     def _get_columns_name(self, options):
         return [
             {'name': _('Stage / Year')},

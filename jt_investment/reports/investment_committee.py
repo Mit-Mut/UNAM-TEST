@@ -64,8 +64,6 @@ class InvestmentCommittee(models.AbstractModel):
     def _get_columns_name(self, options):
         return [
             {'name': _('Concepto')},
-            {'name': _('Importe')},
-            {'name': _('Notas')},
             {'name': _('Banco')},
             {'name': _('Importe')},
             {'name': _('Tipo')},
@@ -100,6 +98,353 @@ class InvestmentCommittee(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+        
+        cetes_records = self.env['investment.cetes'].search([('state','=','confirmed'),('date_time','>=',start),('date_time','<=',end)])
+        udibonos_records = self.env['investment.udibonos'].search([('state','=','confirmed'),('date_time','>=',start),('date_time','<=',end)])
+        bonds_records = self.env['investment.bonds'].search([('state','=','confirmed'),('date_time','>=',start),('date_time','<=',end)])
+        will_pay_records = self.env['investment.will.pay'].search([('state','=','confirmed'),('date_time','>=',start),('date_time','<=',end)])
+        sale_security_ids = self.env['purchase.sale.security'].search([('state','in',('confirmed','done')),('invesment_date','>=',start),('invesment_date','<=',end)])
+        productive_ids = self.env['investment.investment'].search([('state','in',('confirmed','done')),('invesment_date','>=',start),('invesment_date','<=',end)])
+
+#         lines.append({
+#             'id': 'hierarchy_cash_flow',
+#             'name': 'Cash Flow',
+#             'columns': [{'name': ''}, 
+#                         {'name': ''}, 
+#                         {'name': ''},
+#                         {'name': ''},
+#                         {'name': ''},
+#                         {'name': ''},
+#                         ],
+#             'level': 1,
+#             'unfoldable': False,
+#             'unfolded': True,
+#         })
+
+
+        lines.append({
+            'id': 'hierarchy_account_main',
+            'name': 'Accounts Productivas',
+            'columns': [{'name': ''}, 
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+
+        total_amount = 0
+
+        #===== Investment =======#        
+        for account in productive_ids:
+            total_amount += account.amount_to_invest
+
+            lines.append({
+                'id': 'hierarchy_account' + str(account.id),
+                'name' : '', 
+                'columns': [ 
+                             
+                            {'name':  account.journal_id and account.journal_id.bank_id and account.journal_id.bank_id.name or ''},
+                            self._format({'name': account.amount_to_invest},figure_type='float'),
+                            {'name': 'Accounts Productivas'},
+                            {'name': account.interest_rate or ''},
+                            {'name': ''},
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        lines.append({
+            'id': 'hierarchy_account_productivas_total',
+            'name': 'Total',
+            'columns': [
+                         
+                        {'name': ''},
+                        self._format({'name': total_amount},figure_type='float'),
+                        {'name': ''},
+                        {'name': ''},
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+
+#         lines.append({
+#             'id': 'hierarchy_money_market',
+#             'name': 'Money Market',
+#             'columns': [{'name': ''}, 
+#                         {'name': ''}, 
+#                         {'name': ''},
+#                         {'name': ''},
+#                         {'name': ''},
+#                         {'name': ''},
+#                         ],
+#             'level': 1,
+#             'unfoldable': False,
+#             'unfolded': True,
+#         })
+
+        lines.append({
+            'id': 'hierarchy_cetes_main',
+            'name': 'CETES',
+            'columns': [{'name': ''}, 
+                        {'name': ''}, 
+                        {'name': ''},
+                        {'name': ''},
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+
+        cetes_total_amount = 0
+        #==== CETES========#        
+        for cetes in cetes_records:
+            cetes_total_amount += cetes.nominal_value
+
+            lines.append({
+                'id': 'hierarchy_cetes' + str(cetes.id),
+                'name' : '', 
+                'columns': [ 
+                             
+                            {'name':  cetes.bank_id and cetes.bank_id.name or ''},
+                            self._format({'name': cetes.nominal_value},figure_type='float'),
+                            {'name': 'CETES'},
+                            {'name': cetes.yield_rate or ''},
+                            {'name': ''},
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        lines.append({
+            'id': 'hierarchy_cetes_total',
+            'name': 'Total',
+            'columns': [
+                         
+                        {'name': ''},
+                        self._format({'name': cetes_total_amount},figure_type='float'),
+                        {'name': ''},
+                        {'name': ''},
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+
+
+        lines.append({
+            'id': 'hierarchy_udibonos_main',
+            'name': 'UDIBONOS',
+            'columns': [{'name': ''}, 
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+
+        udibonos_total_amount = 0
+        #==== udibonos========#
+        for udibonos in udibonos_records:
+            udibonos_total_amount += udibonos.nominal_value
+
+            lines.append({
+                'id': 'hierarchy_udibonos' + str(udibonos.id),
+                'name': '',
+                'columns': [ 
+                             
+                            {'name':udibonos.bank_id and udibonos.bank_id.name or ''},
+                            self._format({'name': udibonos.nominal_value},figure_type='float'),
+                            {'name': 'UDIBONOS'},
+                            {'name': udibonos.interest_rate or ''},
+                            {'name': ''},
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+
+        lines.append({
+            'id': 'hierarchy_udibonos_total',
+            'name': 'Total',
+            'columns': [
+                         
+                        {'name': ''},
+                        self._format({'name': udibonos_total_amount},figure_type='float'),
+                        {'name': ''},
+                        {'name': ''},
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+
+        lines.append({
+            'id': 'hierarchy_bonds_main',
+            'name': 'Bonds',
+            'columns': [{'name': ''}, 
+                        {'name': ''}, 
+                        {'name': ''},
+                        {'name': ''},
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+
+        bonds_total_amount = 0
+        #==== bonds========#
+        for bonds in bonds_records:
+            bonds_total_amount += bonds.nominal_value
+
+            lines.append({
+                'id': 'hierarchy_bonds' + str(bonds.id),
+                'name': '',
+                'columns': [ 
+                             
+                            {'name': bonds.bank_id and bonds.bank_id.name or ''},
+                            self._format({'name': bonds.nominal_value},figure_type='float'),
+                            {'name': 'BONDS'},
+                            {'name': bonds.interest_rate or ''},
+                           {'name': ''},
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        lines.append({
+            'id': 'hierarchy_bonds_total',
+            'name': 'Total',
+            'columns': [
+                        {'name': ''},
+                        self._format({'name': bonds_total_amount},figure_type='float'),
+                        {'name': ''},
+                        {'name': ''},
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+
+        lines.append({
+            'id': 'hierarchy_pay_main',
+            'name': 'Pay',
+            'columns': [{'name': ''}, 
+                        {'name': ''}, 
+                        {'name': ''},
+                        {'name': ''},
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+
+        pay_total_amount = 0
+        #==== I will pay========#
+        for pay in will_pay_records:
+            pay_total_amount += pay.amount
+            lines.append({
+                'id': 'hierarchy_pay' + str(pay.id),
+                'name': '',
+                'columns': [
+                             
+                            {'name': pay.bank_id and pay.bank_id.name or ''},
+                            self._format({'name': pay.amount},figure_type='float'),
+                            {'name': 'Promissory'},
+                            {'name': pay.interest_rate or ''},
+                            {'name': ''},
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        lines.append({
+            'id': 'hierarchy_pay_total',
+            'name': 'Total',
+            'columns': [
+                        {'name': ''},
+                        self._format({'name': pay_total_amount},figure_type='float'),
+                        {'name': ''},
+                        {'name': ''},
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+
+#         lines.append({
+#             'id': 'hierarchy_funds',
+#             'name': 'Funds',
+#             'columns': [{'name': ''}, 
+#                         {'name': ''}, 
+#                         {'name': ''},
+#                         {'name': ''},
+#                         {'name': ''},
+#                         {'name': ''},
+#                         ],
+#             'level': 1,
+#             'unfoldable': False,
+#             'unfolded': True,
+#         })
+
+        lines.append({
+            'id': 'hierarchy_sale_main',
+            'name': 'Security',
+            'columns': [{'name': ''}, 
+                        {'name': ''}, 
+                        {'name': ''},
+                        {'name': ''},
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+        
+        sale_total_amount = 0
+        #==== Sale Security========#
+        for sale in sale_security_ids:
+            sale_total_amount += sale.amount
+
+            lines.append({
+                'id': 'hierarchy_sale' + str(sale.id),
+                'name': '',
+                'columns': [  
+                             
+                            {'name': sale.journal_id and sale.journal_id.bank_id and sale.journal_id.bank_id.name or ''},
+                            self._format({'name': sale.amount},figure_type='float'),
+                            {'name': 'TITLES'},
+                            {'name': sale.price or ''},
+                            {'name': ''},
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        lines.append({
+            'id': 'hierarchy_sale_total',
+            'name': 'Total',
+            'columns': [
+                         
+                        {'name': ''},
+                        self._format({'name': sale_total_amount},figure_type='float'),
+                        {'name': ''},
+                        {'name': ''},
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
                     
         return lines
 

@@ -64,6 +64,14 @@ class BankAccountingBalance(models.AbstractModel):
         templates['main_template'] = 'account_reports.main_template'
         return templates
 
+    def _get_lines(self, options, line_id=None):
+        lines = []
+        start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+        return lines
+
     def _get_columns_name(self, options):
         return [
             {'name': _('Stage')},

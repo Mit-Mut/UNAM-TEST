@@ -70,6 +70,10 @@ class AccountMove(models.Model):
         return super(AccountMove,self).action_register()
 
     def validate_multiple_budgets(self):
+        
+        if any(self.filtered(lambda x:x.payment_state != 'registered')):
+            raise ValidationError("Only allowed to validate registered payment")
+        
         str_msg = "Budgetary Insufficiency For Program Code\n\n"
         is_check = False
         budget_msg = "Budget sufficiency"

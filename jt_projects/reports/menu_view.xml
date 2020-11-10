@@ -61,23 +61,7 @@
             sequence="3"
         />
 
-        <!-- Cumulative comparison-->
-        <!-- <record id="action_cumulative_comparison_report" model="ir.actions.client">
-            <field name="name">Cumulative comparison</field>
-            <field name="tag">account_report</field>
-            <field name="context" eval="{'model':'jt_projects.cumulative.comparison_report'}" />
-        </record>
- -->
-
-        <!--Cumulative comparison  -->
-     <!--    <menuitem
-            id="menu_cumulative_comparison"
-            name="Cumulative Comparison"
-            parent="jt_projects.conacyt_submenu"
-            action="action_cumulative_comparison_report"
-            sequence="4"
-        /> -->
-
+       
 
          <!-- "Accounting and bank account balances-->
         <record id="action_accounting_bank_balance_report" model="ir.actions.client">
@@ -111,6 +95,23 @@
             parent="jt_projects.conacyt_submenu"
             action="action_integration_of_curr_expired_projects"
             sequence="6"
+        />
+
+        <!-- Cumulative comparison-->
+        <record id="action_cumulative_comparision" model="ir.actions.client">
+            <field name="name">Cumulative comparison</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model':'jt_projects.cumulative.comparison'}" />
+        </record>
+
+
+        <!--Cumulative comparison -->
+        <menuitem
+            id="menu_cumulative_comparison"
+            name="Cumulative Comparison"
+            parent="jt_projects.conacyt_submenu"
+            action="action_cumulative_comparision"
+            sequence="7"
         />
     </data>
 </odoo>

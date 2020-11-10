@@ -1062,6 +1062,7 @@ class RequestOpenBalanceFinance(models.Model):
     unit_req_transfer_id = fields.Many2one('dependency', string="Unit requesting the transfer")
     date_required = fields.Date("Date Required")
     fund_type = fields.Many2one('fund.type', "Background")
+    
     agreement_type_id = fields.Many2one('agreement.agreement.type', 'Agreement Type')
     fund_id = fields.Many2one('agreement.fund','Fund') 
     base_collabaration_id = fields.Many2one('bases.collaboration','Name Of Agreements')

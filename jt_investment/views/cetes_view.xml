@@ -49,6 +49,7 @@
                             <group>
                                 <field name="folio" readonly="1"/>
                                 <field name="date_time" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="expiry_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="investment_fund_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="journal_id" required="1" domain="[('type','=','bank')]" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="bank_id"/>

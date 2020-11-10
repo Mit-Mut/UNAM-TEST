@@ -80,5 +80,13 @@ class InegrationOfExpAndCurrProject(models.AbstractModel):
             {'name': _('Grand Total [Vertical]')},
         ]
 
+    def _get_lines(self, options, line_id=None):
+        lines = []
+        start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+        return lines
+
     def _get_report_name(self):
         return _("Integration of current and expired projects")

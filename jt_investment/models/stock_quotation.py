@@ -1,5 +1,7 @@
-from odoo import models, fields, api
+from odoo import models, fields, api , _
 from datetime import timedelta
+from odoo.exceptions import UserError
+
 
 class InvestmentStockQuotation(models.Model):
 
@@ -11,7 +13,7 @@ class InvestmentStockQuotation(models.Model):
     date = fields.Date("Date")
     price_id = fields.Many2one('stock.quote.price',string="Price History")
     price = fields.Float(related="price_id.price")
-    journal_id = fields.Many2one("account.journal","Bank")
+    journal_id = fields.Many2one(related="price_id.journal_id")
     bank_rate_id = fields.Many2one("res.currency","Bank Rate")
     term = fields.Integer("Term")
     cetes_currency_id = fields.Many2one("res.currency","CETES Rate")
@@ -40,6 +42,12 @@ class InvestmentStockQuotation(models.Model):
     current_year_nominal = fields.Float(string='Current year Nominal',compute="get_current_year_variation",store=True)
     current_year_percentage = fields.Float("Current year Percentage",compute="get_current_year_variation",store=True)
     current_year_interest = fields.Float("Current year Interest",compute="get_current_year_variation",store=True)
+
+    def unlink(self):
+        for rec in self:
+            if rec.state not in ['draft']:
+                raise UserError(_('You can delete only draft status data.'))
+        return super(InvestmentStockQuotation, self).unlink()
 
     @api.depends('date','price_id','price_id.price')
     def get_daily_variation(self):

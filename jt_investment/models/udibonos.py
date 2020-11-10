@@ -1,5 +1,6 @@
-from odoo import models, fields, api
+from odoo import models, fields, api , _
 from datetime import datetime
+from odoo.exceptions import UserError
 
 class UDIBONOS(models.Model):
 
@@ -74,7 +75,7 @@ class UDIBONOS(models.Model):
     return_expense_account_id = fields.Many2one('account.account','Expense Account')
     return_price_diff_account_id = fields.Many2one('account.account','Price Difference Account')    
 
-    request_finance_ids = fields.One2many('request.open.balance.finance','udibonos_id')
+    request_finance_ids = fields.One2many('request.open.balance.finance','udibonos_id',copy=False)
 
     fund_type_id = fields.Many2one('fund.type', "Type Of Fund")
     agreement_type_id = fields.Many2one('agreement.agreement.type', 'Agreement Type')
@@ -82,7 +83,15 @@ class UDIBONOS(models.Model):
     fund_key = fields.Char(related='fund_id.fund_key',string="Password of the Fund")
     base_collaboration_id = fields.Many2one('bases.collaboration','Name Of Agreements')
 
-    investment_fund_id = fields.Many2one('investment.funds','Investment Funds')
+    investment_fund_id = fields.Many2one('investment.funds','Investment Funds',copy=False)
+    expiry_date = fields.Date(string="Expiration Date")
+
+
+    def unlink(self):
+        for rec in self:
+            if rec.state not in ['draft']:
+                raise UserError(_('You can delete only draft status data.'))
+        return super(UDIBONOS, self).unlink()
     
     @api.onchange('contract_id')
     def onchange_contract_id(self):
@@ -175,6 +184,7 @@ class UDIBONOS(models.Model):
                 'default_fund_type' : fund_type,
                 'default_bank_account_id' : self.journal_id and self.journal_id.id or False,
                 'show_for_supplier_payment':1,
+                'default_fund_id' : self.fund_id and self.fund_id.id or False,
             }
         }
 
@@ -186,17 +196,17 @@ class UDIBONOS(models.Model):
     def action_requested(self):
         self.state = 'requested'
         if self.investment_fund_id and self.investment_fund_id.state != 'requested':
-            self.investment_fund_id.action_requested()
+            self.investment_fund_id.with_context(call_from_product=True).action_requested()
 
     def action_approved(self):
         self.state = 'approved'
         if self.investment_fund_id and self.investment_fund_id.state != 'approved':
-            self.investment_fund_id.action_approved()
+            self.investment_fund_id.with_context(call_from_product=True).action_approved()
 
     def action_confirmed(self):
         self.state = 'confirmed'
         if self.investment_fund_id and self.investment_fund_id.state != 'confirmed':
-            self.investment_fund_id.action_confirmed()
+            self.investment_fund_id.with_context(call_from_product=True).action_confirmed()
 
     def action_reject(self):
         self.state = 'rejected'
@@ -204,7 +214,7 @@ class UDIBONOS(models.Model):
     def action_canceled(self):
         self.state = 'canceled'
         if self.investment_fund_id and self.investment_fund_id.state != 'canceled':
-            self.investment_fund_id.action_canceled()
+            self.investment_fund_id.with_context(call_from_product=True).action_canceled()
 
     def action_calculation(self):
         return 

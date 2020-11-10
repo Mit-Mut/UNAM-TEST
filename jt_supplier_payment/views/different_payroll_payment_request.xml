@@ -505,26 +505,26 @@
                                 <group>
                                     <group name="zone" string="Zone Responsible">
                                     	<field name="is_zone_res" invisible="1"/>
-                                        <field name="zone" attrs="{'invisible':[('is_zone_res','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
-                                        <field name="rate" attrs="{'invisible':[('is_zone_res','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
-                                        <field name="days" attrs="{'invisible':[('is_zone_res','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                        <field name="zone" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                        <field name="rate" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                        <field name="days" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
                                     </group>
                                     <group name="reason" string="Reason">
                                     	<field name="is_show_reason_for_expendiure" invisible="1"/>
-                                        <field name="reason_for_expendiure" attrs="{'invisible':[('is_show_reason_for_expendiure','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                        <field name="reason_for_expendiure" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
                                         <field name="is_show_destination" invisible="1"/>
-                                        <field name="destination" attrs="{'invisible':[('is_show_destination','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                        <field name="destination" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
                                         <field name="is_show_origin" invisible="1"/>
-                                        <field name="origin_payment" attrs="{'invisible':[('is_show_origin','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                        <field name="origin_payment" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
                                         <field name="rf_person" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
                                     </group>
                                 </group>
                                 <group name="responsible" string="Responsible">
                                 	<field name="is_show_resposible_group" invisible="1"/>
-                                    <field name="responsible_expend_id" attrs="{'invisible':[('is_show_resposible_group','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
-                                    <field name="responsible_category_key" attrs="{'invisible':[('is_show_resposible_group','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
-                                    <field name="responsible_rfc" attrs="{'invisible':[('is_show_resposible_group','=',False)]}"/>
-                                    <field name="manager_job_id" attrs="{'invisible':[('is_show_resposible_group','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                    <field name="responsible_expend_id" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                    <field name="responsible_category_key" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                    <field name="responsible_rfc" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                    <field name="manager_job_id" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
                                     <field name="provenance" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 </group>
 

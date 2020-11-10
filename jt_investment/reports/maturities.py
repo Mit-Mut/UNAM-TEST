@@ -66,6 +66,8 @@ class SummaryOfOperationMaturities(models.AbstractModel):
             {'name': _('Recurso')},
             {'name': _('Institución financiera')},
             {'name': _('Contrato')},
+            {'name': _('Fecha de inicio')},
+            {'name': _('Fecha de caducidad')},
             {'name': _('Cta Bancaria')},
             {'name': _('Inversión')},
             {'name': _('Producto')},
@@ -106,8 +108,8 @@ class SummaryOfOperationMaturities(models.AbstractModel):
         udibonos_records = self.env['investment.udibonos'].search([('state','=','confirmed'),('date_time','>=',start),('date_time','<=',end)])
         bonds_records = self.env['investment.bonds'].search([('state','=','confirmed'),('date_time','>=',start),('date_time','<=',end)])
         will_pay_records = self.env['investment.will.pay'].search([('state','=','confirmed'),('date_time','>=',start),('date_time','<=',end)])
-        sale_security_ids = self.env['purchase.sale.security'].search([('state','in',('confirmed','done')),('invesment_date','>=',start),('invesment_date','<=',end)])
-        productive_ids = self.env['investment.investment'].search([('state','in',('confirmed','done')),('invesment_date','>=',start),('invesment_date','<=',end)])
+        sale_security_ids = self.env['purchase.sale.security'].search([('state','=','confirmed'),('invesment_date','>=',start),('invesment_date','<=',end)])
+        productive_ids = self.env['investment.investment'].search([('state','=','confirmed'),('invesment_date','>=',start),('invesment_date','<=',end)])
                     
 #         cetes_records = self.env['investment.cetes'].search([('date_time','>=',start),('date_time','<=',end)])
 #         udibonos_records = self.env['investment.udibonos'].search([('date_time','>=',start),('date_time','<=',end)])
@@ -130,7 +132,9 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                 'id': 'hierarchy_sale' + str(sale.id),
                 'name' : resouce_name, 
                 'columns': [ {'name': sale.journal_id and sale.journal_id.bank_id and sale.journal_id.bank_id.name or ''},
-                            {'name': sale.contract_id and sale.contract_id.name or ''}, 
+                            {'name': sale.contract_id and sale.contract_id.name or ''},
+                            {'name': sale.invesment_date},
+                            {'name': sale.expiry_date}, 
                             {'name': sale.journal_id and sale.journal_id.bank_account_id and sale.journal_id.bank_account_id.acc_number or ''},
                             self._format({'name': sale.amount},figure_type='float'),
                             {'name': 'Securities'},
@@ -150,13 +154,19 @@ class SummaryOfOperationMaturities(models.AbstractModel):
             term = 0
             if cetes.term:
                 term =int(cetes.term)
+
+            invesment_date = ''
+            if cetes.date_time:
+                invesment_date = cetes.date_time.strftime('%Y-%m-%d') 
                  
             interest = ((cetes.nominal_value*cetes.yield_rate/100)*term/360)
             lines.append({
                 'id': 'hierarchy_cetes' + str(cetes.id),
                 'name' : resouce_name, 
                 'columns': [ {'name': cetes.bank_id and cetes.bank_id.name or ''},
-                            {'name': cetes.contract_id and cetes.contract_id.name or ''}, 
+                            {'name': cetes.contract_id and cetes.contract_id.name or ''},
+                            {'name': invesment_date},
+                            {'name': cetes.expiry_date},  
                             {'name': cetes.journal_id and cetes.journal_id.bank_account_id and cetes.journal_id.bank_account_id.acc_number or ''},
                             self._format({'name': cetes.nominal_value},figure_type='float'),
                             {'name': 'CETES'},
@@ -173,13 +183,19 @@ class SummaryOfOperationMaturities(models.AbstractModel):
         for udibonos in udibonos_records:
             total_investment += udibonos.nominal_value
             resouce_name = udibonos.fund_id and udibonos.fund_id.name or ''
+
+            invesment_date = ''
+            if udibonos.date_time:
+                invesment_date = udibonos.date_time.strftime('%Y-%m-%d') 
             
             interest = ((udibonos.nominal_value*udibonos.interest_rate/100)*udibonos.time_for_each_cash_flow/360)
             lines.append({
                 'id': 'hierarchy_udibonos' + str(udibonos.id),
                 'name': resouce_name,
                 'columns': [ {'name': udibonos.bank_id and udibonos.bank_id.name or ''},
-                            {'name': udibonos.contract_id and udibonos.contract_id.name or ''}, 
+                            {'name': udibonos.contract_id and udibonos.contract_id.name or ''},
+                            {'name': invesment_date},
+                            {'name': udibonos.expiry_date},                               
                             {'name': udibonos.journal_id and udibonos.journal_id.bank_account_id and udibonos.journal_id.bank_account_id.acc_number or ''},
                             self._format({'name': udibonos.nominal_value},figure_type='float'),
                             {'name': 'UDIBONOS'},
@@ -198,12 +214,18 @@ class SummaryOfOperationMaturities(models.AbstractModel):
             resouce_name = bonds.fund_id and bonds.fund_id.name or ''
             
             interest = ((bonds.nominal_value*bonds.interest_rate/100)*bonds.time_for_each_cash_flow/360)
+
+            invesment_date = ''
+            if bonds.date_time:
+                invesment_date = bonds.date_time.strftime('%Y-%m-%d') 
             
             lines.append({
                 'id': 'hierarchy_bonds' + str(bonds.id),
                 'name': resouce_name,
                 'columns': [ {'name': bonds.bank_id and bonds.bank_id.name or ''},
-                            {'name': bonds.contract_id and bonds.contract_id.name or ''}, 
+                            {'name': bonds.contract_id and bonds.contract_id.name or ''},
+                            {'name': invesment_date},
+                            {'name': bonds.expiry_date},                               
                             {'name': bonds.journal_id and bonds.journal_id.bank_account_id and bonds.journal_id.bank_account_id.acc_number or ''},
                             self._format({'name': bonds.nominal_value},figure_type='float'),
                             {'name': 'BONOS'},
@@ -222,12 +244,18 @@ class SummaryOfOperationMaturities(models.AbstractModel):
             resouce_name = pay.fund_id and pay.fund_id.name or ''
             
             interest = ((pay.amount*pay.interest_rate/100)*pay.term_days/360)
+
+            invesment_date = ''
+            if pay.date_time:
+                invesment_date = pay.date_time.strftime('%Y-%m-%d') 
             
             lines.append({
                 'id': 'hierarchy_bonds' + str(pay.id),
                 'name': resouce_name,
                 'columns': [ {'name': pay.bank_id and pay.bank_id.name or ''},
-                            {'name': pay.contract_id and pay.contract_id.name or ''}, 
+                            {'name': pay.contract_id and pay.contract_id.name or ''},
+                            {'name': invesment_date},
+                            {'name': pay.expiry_date},                               
                             {'name': pay.journal_id and pay.journal_id.bank_account_id and pay.journal_id.bank_account_id.acc_number or ''},
                             self._format({'name': pay.amount},figure_type='float'),
                             {'name': 'PAGARE'},
@@ -254,12 +282,16 @@ class SummaryOfOperationMaturities(models.AbstractModel):
             resouce_name = pro.fund_id and pro.fund_id.name or ''
             
             interest = ((pro.amount_to_invest * pro.interest_rate/100)*term/360)
-            
+            invesment_date = ''
+            if pro.invesment_date:
+                invesment_date = pro.invesment_date.strftime('%Y-%m-%d') 
             lines.append({
                 'id': 'hierarchy_pro' + str(pro.id),
                 'name': resouce_name,
                 'columns': [ {'name': pro.journal_id and pro.journal_id.bank_id and pro.journal_id.bank_id.name or ''},
-                            {'name': pro.contract_id and pro.contract_id.name or ''}, 
+                            {'name': pro.contract_id and pro.contract_id.name or ''},
+                            {'name': invesment_date},
+                            {'name': pro.expiry_date},                               
                             {'name': pro.journal_id and pro.journal_id.bank_account_id and pro.journal_id.bank_account_id.acc_number or ''},
                             self._format({'name': pro.amount_to_invest},figure_type='float'),
                             {'name': 'Productive Accounts'},

@@ -43,7 +43,8 @@ class ApproveInvestmentBalReq(models.TransientModel):
     employee_id = fields.Many2one('hr.employee', string="Unit requesting the transfer")
     date_required = fields.Date("Date Required")
     fund_type = fields.Many2one('fund.type', "Background")
-
+    fund_id = fields.Many2one('agreement.fund','Funds')
+    
     bonds_id = fields.Many2one('investment.bonds','Bonds')
     cetes_id = fields.Many2one('investment.cetes','cetes')
     udibonos_id = fields.Many2one('investment.udibonos','Udibonos')
@@ -79,7 +80,8 @@ class ApproveInvestmentBalReq(models.TransientModel):
                 'investment_id' : self.investment_id and self.investment_id.id or False,
                 'distribution_id' : self.distribution_id and self.distribution_id.id or False,
                 'purchase_sale_security_id' : self.purchase_sale_security_id and self.purchase_sale_security_id.id or False,
-                'state': 'requested'
+                'state': 'requested',
+                'fund_id' : self.fund_id and self.fund_id.id or False,
             }
         )
         if self.bonds_id:

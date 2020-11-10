@@ -66,8 +66,7 @@ class ReportProductiveAccounts(models.AbstractModel):
         return [
             {'name': _('Capital')},
             {'name': _('Tasa')},
-            {'name': _('Plazo')},
-            {'name': _('Dias')},
+            {'name': _('Plazo Dies')},
             {'name': _('Total')},
             {'name': _('Acumulado')},
             {'name': _('Interés 15 PB')},
@@ -131,7 +130,7 @@ class ReportProductiveAccounts(models.AbstractModel):
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
-        records = self.env['investment.investment'].search([('state','in',('confirmed','done')),('invesment_date','>=',start),('invesment_date','<=',end)])
+        records = self.env['investment.investment'].search([('state','=','confirmed'),('invesment_date','>=',start),('invesment_date','<=',end)])
         #records = self.env['investment.investment'].search([('invesment_date','>=',start),('invesment_date','<=',end)],order='invesment_date')
         
         month_list = {1:[],2:[],3:[],4:[],5:[],6:[],
@@ -143,6 +142,7 @@ class ReportProductiveAccounts(models.AbstractModel):
                       }
         
         total_days = 0
+        total_p_amount = 0
         for rec in records:
             term = 0
             if rec.is_fixed_rate:
@@ -155,13 +155,15 @@ class ReportProductiveAccounts(models.AbstractModel):
             diffrence = rec.amount_to_invest - extra_percentage_value
             capital =  self._format({'name': rec.amount_to_invest},figure_type='float',digit=2)
             capital = capital.get('name')
+            
+            total_p_amount += days
+             
             lines.append({
                 'id': 'hierarchy' + str(rec.id),
                 'name': capital,
                 'columns': [self._format({'name': rec.interest_rate},figure_type='float',digit=6),
                             {'name': term},
                             self._format({'name': days},figure_type='float',digit=2),
-                            {'name': ''},
                             {'name': ''},
                             self._format({'name': extra_percentage_value},figure_type='float',digit=2),
                             self._format({'name': diffrence},figure_type='float',digit=2),
@@ -170,43 +172,124 @@ class ReportProductiveAccounts(models.AbstractModel):
                 'unfoldable': False,
                 'unfolded': True,
             })
-#             end_date = rec.invesment_date + timedelta(days=term)
-#             total_month = (end_date.year - rec.invesment_date.year) * 12 +  (end_date.month - rec.invesment_date.month)
-#             
-#             current_month_start_date = rec.invesment_date
-#             
-#             for month in range(total_month+1):
-# 
-#                 current_month_start_date = current_month_start_date
-#                 current_month_end_date = current_month_start_date.replace(day=1) + relativedelta(months=1) - timedelta(days=1)
-#                 
-#                 if current_month_end_date > end_date:
-#                     current_month_end_date = end_date
-#                 
-#                 day_diff = current_month_start_date - current_month_end_date
-#                 day_diff = day_diff.days
-#                 
-#                 days = ((rec.amount_to_invest * rec.interest_rate)/100)/360*day_diff
-# 
-#                 month_vals={
-#                 'id': 'hierarchy' + str(rec.id)+ str(current_month_start_date.month),
-#                 'name': capital,
-#                 'columns': [self._format({'name': rec.interest_rate},figure_type='float',digit=6),
-#                             {'name': day_diff},
-#                             self._format({'name': days},figure_type='float',digit=2),
-#                             {'name': ''},
-#                             {'name': ''},
-#                             {'name': ''},
-#                             {'name': ''},
-#                             ],
-#                 'level': 3,
-#                 'unfoldable': False,
-#                 'unfolded': True,
-#                 }
-#                 month_list.get(current_month_start_date.month,[]).append(month_vals)
-#                 
-#                 current_month_start_date = current_month_start_date.replace(day=1) + relativedelta(months=1)
+            end_date = rec.invesment_date + timedelta(days=term)
+
+            total_month = (end_date.year - rec.invesment_date.year) * 12 +  (end_date.month - rec.invesment_date.month)
+             
+            current_month_start_date = rec.invesment_date
+             
+            for month in range(total_month+1):
+ 
+                current_month_start_date = current_month_start_date
+                current_month_end_date = current_month_start_date.replace(day=1) + relativedelta(months=1) - timedelta(days=1)
                 
+                remove_days=0 
+                if current_month_end_date > end_date:
+                    current_month_end_date = end_date
+                    remove_days = 1
+                    
+                day_diff = current_month_end_date - current_month_start_date 
+                day_diff = day_diff.days + 1 - remove_days
+                 
+                days = ((rec.amount_to_invest * rec.interest_rate)/100)/360*day_diff
+ 
+                month_vals={
+                'id': 'hierarchy_' + str(rec.id) + str(current_month_start_date.month),
+                'name': capital,
+                'columns': [self._format({'name': rec.interest_rate},figure_type='float',digit=6),
+                            {'name': day_diff},
+                            self._format({'name': days},figure_type='float',digit=2),
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+                }
+                month_list.get(current_month_start_date.month,[]).append(month_vals)
+                 
+                current_month_start_date = current_month_start_date.replace(day=1) + relativedelta(months=1)
+
+
+        lines.append({
+            'id': 'hierarchy_total_pro',
+            'name': '',
+            'columns': [{'name': ''},
+                        {'name': ''},
+                        self._format({'name': total_p_amount},figure_type='float',digit=2),
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+                
+        acc_total = 0
+        for month in month_list:
+            if month_list.get(month):
+                lines.append({
+                'id': 'hierarchy_month_' + str(current_month_start_date.month),
+                'name': '',
+                'columns': [{'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+                })
+                
+                lines.append({
+                'id': 'hierarchy_month_' + str(current_month_start_date.month),
+                'name': 'INVERSION '+self.get_month_name(month),
+                'columns': [{'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+                })
+
+                total_month_amount =  0
+                total_len = len(month_list.get(month))
+                count = 0 
+                for m_dict in month_list.get(month):
+                    count += 1
+                    col = m_dict.get('columns')
+                    a= col[2]
+                    total_month_amount += a.get('no_format_name') 
+                    lines.append(m_dict)
+                    
+                    if count == total_len:
+                        acc_total += total_month_amount
+                        
+                        lines.append({
+                        'id': 'hierarchy_month_total_' + str(current_month_start_date.month),
+                        'name': '',
+                        'columns': [{'name': ''},
+                                    {'name': ''},
+                                    self._format({'name': total_month_amount},figure_type='float',digit=2),
+                                    self._format({'name': acc_total},figure_type='float',digit=2),
+                                    {'name': ''},
+                                    {'name': ''},
+                                    ],
+                        'level': 1,
+                        'unfoldable': False,
+                        'unfolded': True,
+                        })
+                    
+                
+            #print("=======",month_list.get(month))
         return lines
 
     def _get_report_name(self):

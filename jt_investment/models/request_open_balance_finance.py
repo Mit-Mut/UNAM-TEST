@@ -6,14 +6,14 @@ class BasesCollabration(models.Model):
 
     _inherit = 'request.open.balance.finance'
     
-    bonds_id = fields.Many2one('investment.bonds','Bonds')
-    cetes_id = fields.Many2one('investment.cetes','cetes')
-    udibonos_id = fields.Many2one('investment.udibonos','Udibonos')
-    will_pay_id = fields.Many2one('investment.will.pay','Will Pay')
-    purchase_sale_security_id = fields.Many2one('purchase.sale.security','Purchase Sale Security')
-    investment_id = fields.Many2one('investment.investment','Investment')
-    investment_fund_id = fields.Many2one('investment.funds','Investment Funds')
-    distribution_id = fields.Many2one('distribution.of.income','Distribution Income')
+    bonds_id = fields.Many2one('investment.bonds','Bonds',copy=False)
+    cetes_id = fields.Many2one('investment.cetes','cetes',copy=False)
+    udibonos_id = fields.Many2one('investment.udibonos','Udibonos',copy=False)
+    will_pay_id = fields.Many2one('investment.will.pay','Will Pay',copy=False)
+    purchase_sale_security_id = fields.Many2one('purchase.sale.security','Purchase Sale Security',copy=False)
+    investment_id = fields.Many2one('investment.investment','Investment',copy=False)
+    investment_fund_id = fields.Many2one('investment.funds','Investment Funds',copy=False)
+    distribution_id = fields.Many2one('distribution.of.income','Distribution Income',copy=False)
     
     def approve_finance(self):
         result = super(BasesCollabration,self).approve_finance()

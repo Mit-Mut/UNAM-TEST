@@ -121,7 +121,8 @@ class Investment(models.Model):
                 'default_bank_account_id' : self.journal_id and self.journal_id.id or False,
                 'show_for_supplier_payment':1,
                 'default_agreement_type' : self.agreement_type_id and self.agreement_type_id.id or False,
-                'default_base_collabaration_id' : self.base_collaboration_id and self.base_collaboration_id.id or False
+                'default_base_collabaration_id' : self.base_collaboration_id and self.base_collaboration_id.id or False,
+                'default_fund_id' : self.fund_id and self.fund_id.id or False,
             }
         }
 
@@ -133,21 +134,21 @@ class Investment(models.Model):
     def action_requested(self):
         self.state = 'requested'
         if self.investment_fund_id and self.investment_fund_id.state != 'requested':
-            self.investment_fund_id.action_requested()
+            self.investment_fund_id.with_context(call_from_product=True).action_requested()
 
     def action_approved(self):
         self.state = 'approved'
         if self.investment_fund_id and self.investment_fund_id.state != 'approved':
-            self.investment_fund_id.action_approved()
+            self.investment_fund_id.with_context(call_from_product=True).action_approved()
 
     def action_confirmed(self):
         self.state = 'confirmed'
         if self.investment_fund_id and self.investment_fund_id.state != 'confirmed':
-            self.investment_fund_id.action_confirmed()
+            self.investment_fund_id.with_context(call_from_product=True).action_confirmed()
 
  
     def action_canceled(self):
         self.state = 'canceled'
         if self.investment_fund_id and self.investment_fund_id.state != 'canceled':
-            self.investment_fund_id.action_canceled()
+            self.investment_fund_id.with_context(call_from_product=True).action_canceled()
         

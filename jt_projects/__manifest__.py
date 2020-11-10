@@ -50,6 +50,7 @@
         'reports/request_reimbursement.xml',
         'reports/school_internship_request.xml',
         'reports/school_internship_request.xml',
+        'reports/exchange_request.xml',
         'security/ir.model.access.csv',
     ],
     'application': False,

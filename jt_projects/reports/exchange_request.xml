@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <template id="school_intership_request_docs">
+        <template id="exchange_request_template_docs">
         <t t-call="web.html_container">
             <div class="page">
                 <style>
@@ -23,7 +23,7 @@
 
                             <td style="width:80%;">
                                 <b>
-                                <span style="font-size:17px;margin-top:10px;">Request for payment for school placement expenses</span>
+                                <span style="font-size:17px;margin-top:10px;">Request for payment exchange expenses of</span>
                                 </b>
                                 <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('CODE39',o.folio_dependency, 80, 100)"
                                 style="width:200px;height:50px" alt="Barcode"/><br/>
@@ -90,30 +90,26 @@
                         <tr>
                             <br/>
                             <b><span style="margin-left:20px;font-size:16px;">Project (s):</span></b>
-                            <b><span style="margin-left:150px;font-size:16px;">Agreement (s):</span></b>
                             <b><span style="margin-left:130px;font-size:16px;">Responsible Name:</span></b>
-                            <b><span style="margin-left:70px;font-size:16px;">RFC:</span></b><br/><br/>
+                            <b><span style="margin-left:80px;font-size:16px;">RFC:</span></b>
+                            <b><span style="margin-left:130px;font-size:16px;"> Category Key:</span></b><br/><br/>
                             
                         </tr>
                         <tr>
                             <span t-field="o.project_number_id" style="margin-left:20px;font-size:16px;"></span>
 
-                            <span t-field="o.agreement_number" style="margin-left:170px;font-size:16px;"></span>
-
                             <span t-field="o.responsible_id" style="margin-left:200px;font-size:16px;"></span>
 
-                            <span t-field="o.rf_person" style="margin-left:150px;font-size:16px;"></span>
+                            <span t-field="o.rf_person" style="margin-left:100px;font-size:16px;"></span>
 
+                            <span t-field="o.category_key" style="margin-left:130;font-size:16px;"></span><br/><br/>
                           <br/>
                         </tr>
                         <tr>
-                            <br/> 
-                            <b><span style="margin-left:20px;font-size:16px;"> Category Key:</span></b>
-                            <b><span style="margin-left:120px;font-size:16px;"> Appointment:</span></b><br/><br/>
+                            <b><span style="margin-left:20px;font-size:16px;"> Appointment:</span></b><br/><br/>
                         </tr>
-                        <tr>
-                            <span t-field="o.category_key" style="margin-left:20;font-size:16px;"></span>
-                            <span t-field="o.workstation_id" style="margin-left:180px;font-size:16px;"></span><br/><br/>
+                        <tr> 
+                            <span t-field="o.workstation_id" style="margin-left:20px;font-size:16px;"></span><br/><br/>
                         </tr>
 
                         <tr>
@@ -122,8 +118,8 @@
                             <span t-field="o.reason_for_expendiure" style="margin-left:20px;position: absolute;"/>
 
                             <br/><br/>
-                            <b><span style="margin-left:380px;">DESTINATION</span></b><br/><br/>
-                            <span t-field="o.destination" style="margin-left:20px;"/>
+                            <b><span style="margin-left:380px;">ORIGIN</span></b><br/><br/>
+                            <span t-field="o.origin_payment" style="margin-left:20px;"/>
                         </tr>
                     
                         <table style="margin-left:20px;width:95%;">
@@ -191,15 +187,15 @@
         </t>
        </template>
 
-        <template id="school_internship_request">
+        <template id="exchange_request_template">
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="o">
-                    <t t-call="jt_projects.school_intership_request_docs"/>
+                    <t t-call="jt_projects.exchange_request_template_docs"/>
                 </t>
             </t>
         </template>
 
-        <record id="paperformat_school_internship" model="report.paperformat">
+        <record id="paperformat_exchange_request" model="report.paperformat">
             <field name="name">Format 1</field>
             <field name="default" eval="True"/>
             <field name="format">A4</field>
@@ -213,14 +209,14 @@
         </record>
 
         <report 
-            id="supplier_request_action"
+            id="exchange_request_action"
             model="account.move"
-            string="School Internship Request"
+            string="Exchange Request"
             report_type="qweb-pdf"
-            name="jt_projects.school_internship_request"
-            file="jt_projects.school_internship_request"
+            name="jt_projects.exchange_request_template"
+            file="jt_projects.exchange_request_template"
             print_report_name="object.name"
-            paperformat="jt_projects.paperformat_school_internship"
+            paperformat="jt_projects.paperformat_exchange_request"
         />
 
     </data>

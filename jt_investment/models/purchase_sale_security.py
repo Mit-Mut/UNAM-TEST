@@ -31,7 +31,7 @@ class PurchaseSaleSecurity(models.Model):
     file_data = fields.Binary("Supporting document")
     file_name = fields.Char("File Name")
     
-    bank_id = fields.Many2one(related="last_quote_id.price_id.journal_id")
+    bank_id = fields.Many2one('account.journal','Bank')
     journal_id = fields.Many2one("account.journal","Bank")
     bank_account_id = fields.Many2one(related='journal_id.bank_account_id')
     account_balance = fields.Float("Account Balance",compute="get_account_balance",store=True)
@@ -67,8 +67,14 @@ class PurchaseSaleSecurity(models.Model):
     real_interest = fields.Float("Real Interest")
     real_profit = fields.Float(string="Real Profit")
     profit_variation = fields.Float(string="Estimated vs Real Profit Variation",compute="get_profit_variation",store=True)
-    investment_fund_id = fields.Many2one('investment.funds','Investment Funds')
+    investment_fund_id = fields.Many2one('investment.funds','Investment Funds',copy=False)
     sub_origin_resource = fields.Many2one('sub.origin.resource', "Origin of the resource")
+
+    def unlink(self):
+        for rec in self:
+            if rec.state not in ['draft']:
+                raise UserError(_('You can delete only draft status data.'))
+        return super(PurchaseSaleSecurity, self).unlink()
     
     @api.onchange('contract_id')
     def onchange_contract_id(self):
@@ -87,7 +93,8 @@ class PurchaseSaleSecurity(models.Model):
     def get_previous_price_days(self):
         for rec in self:
             if rec.last_quote_id and rec.last_quote_id.price_id:
-                previous_rec = self.env['stock.quote.price'].search([('date','<',rec.last_quote_id.price_id.date)],limit=1,order='date desc')
+                bank_id = rec.bank_id and rec.bank_id.id or False
+                previous_rec = self.env['stock.quote.price'].search([('journal_id','=',bank_id),('date','<',rec.last_quote_id.price_id.date)],limit=1,order='date desc')
                 if previous_rec:
                     rec.price_previous_day = previous_rec.price
                 else:
@@ -102,8 +109,8 @@ class PurchaseSaleSecurity(models.Model):
                 p_date = rec.last_quote_id.price_id.date.replace(day=1)
                 day_diff = rec.last_quote_id.price_id.date - p_date
                 day_diff = day_diff.days+1
-
-                previous_rec = self.env['stock.quote.price'].search([('date','>=',p_date),('date','<=',rec.last_quote_id.price_id.date)],order='date desc')
+                bank_id = rec.bank_id and rec.bank_id.id or False
+                previous_rec = self.env['stock.quote.price'].search([('journal_id','=',bank_id),('date','>=',p_date),('date','<=',rec.last_quote_id.price_id.date)],order='date desc')
                 if previous_rec:
                     sum_price =  sum(x.price for x in previous_rec)
                     if day_diff:
@@ -162,6 +169,7 @@ class PurchaseSaleSecurity(models.Model):
                 'default_fund_type' : fund_type,
                 'default_bank_account_id' : self.journal_id and self.journal_id.id or False,
                 'show_for_supplier_payment':1,
+                'default_fund_id' : self.fund_id and self.fund_id.id or False,
             }
         }
 
@@ -175,20 +183,20 @@ class PurchaseSaleSecurity(models.Model):
     def action_requested(self):
         self.state = 'requested'
         if self.investment_fund_id and self.investment_fund_id.state != 'requested':
-            self.investment_fund_id.action_requested()
+            self.investment_fund_id.with_context(call_from_product=True).action_requested()
 
     def action_approved(self):
         self.state = 'approved'
         if self.investment_fund_id and self.investment_fund_id.state != 'approved':
-            self.investment_fund_id.action_approved()
+            self.investment_fund_id.with_context(call_from_product=True).action_approved()
 
     def action_confirmed(self):
         self.state = 'confirmed'
         if self.investment_fund_id and self.investment_fund_id.state != 'confirmed':
-            self.investment_fund_id.action_confirmed()
+            self.investment_fund_id.with_context(call_from_product=True).action_confirmed()
 
     def action_canceled(self):
         self.state = 'canceled'
         if self.investment_fund_id and self.investment_fund_id.state != 'canceled':
-            self.investment_fund_id.action_canceled()
+            self.investment_fund_id.with_context(call_from_product=True).action_canceled()
     

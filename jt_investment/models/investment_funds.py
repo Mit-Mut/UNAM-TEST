@@ -21,7 +21,7 @@
 #
 ##############################################################################
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError , UserError
 from datetime import datetime
 
 class InvestmentFunds(models.Model):
@@ -100,6 +100,13 @@ class InvestmentFunds(models.Model):
     request_finance_ids = fields.One2many(
         'request.open.balance.finance', 'investment_fund_id')
 
+
+    def unlink(self):
+        for rec in self:
+            if rec.state not in ['draft']:
+                raise UserError(_('You can delete only draft status data.'))
+        return super(InvestmentFunds, self).unlink()
+
     def approve_investment(self):
         today = datetime.today().date()
         user = self.env.user
@@ -134,81 +141,83 @@ class InvestmentFunds(models.Model):
                 'default_fund_type': fund_type,
                 'default_bank_account_id' : self.journal_id and self.journal_id.id or False,
                 'show_for_supplier_payment': 1,
+                'default_fund_id' : self.fund_id and self.fund_id.id or False,
             }
         }
 
     def action_requested(self):
         self.state = 'requested'
-        for rec in self.purchase_sale_ids.filtered(lambda x:x.state != 'requested'):
-            rec.dependency_id = self.dependency_id and self.dependency_id.id or False
-            rec.sub_dependency_id = self.subdependency_id and self.subdependency_id.id or False
-            rec.action_requested()
-        for rec in self.cetes_ids.filtered(lambda x:x.state != 'requested'):
-            rec.dependency_id = self.dependency_id and self.dependency_id.id or False
-            rec.sub_dependency_id = self.subdependency_id and self.subdependency_id.id or False            
-            rec.action_requested()
-        for rec in self.udibonos_ids.filtered(lambda x:x.state != 'requested'):
-            rec.dependency_id = self.dependency_id and self.dependency_id.id or False
-            rec.sub_dependency_id = self.subdependency_id and self.subdependency_id.id or False            
-            rec.action_requested()
-        for rec in self.bonds_ids.filtered(lambda x:x.state != 'requested'):
-            rec.dependency_id = self.dependency_id and self.dependency_id.id or False
-            rec.sub_dependency_id = self.subdependency_id and self.subdependency_id.id or False            
-            rec.action_requested()
-        for rec in self.will_pay_ids.filtered(lambda x:x.state != 'requested'):
-            rec.dependency_id = self.dependency_id and self.dependency_id.id or False
-            rec.sub_dependency_id = self.subdependency_id and self.subdependency_id.id or False            
-            rec.action_requested()
-        for rec in self.productive_ids.filtered(lambda x:x.state != 'requested'):
-            rec.dependency_id = self.dependency_id and self.dependency_id.id or False
-            rec.sub_dependency_id = self.subdependency_id and self.subdependency_id.id or False            
-            rec.action_requested()
+        if self.env.context and not self.env.context.get('call_from_product'):
+            for rec in self.purchase_sale_ids.filtered(lambda x:x.state != 'requested'):
+                rec.dependency_id = self.dependency_id and self.dependency_id.id or False
+                rec.sub_dependency_id = self.subdependency_id and self.subdependency_id.id or False
+                rec.action_requested()
+            for rec in self.cetes_ids.filtered(lambda x:x.state != 'requested'):
+                rec.dependency_id = self.dependency_id and self.dependency_id.id or False
+                rec.sub_dependency_id = self.subdependency_id and self.subdependency_id.id or False            
+                rec.action_requested()
+            for rec in self.udibonos_ids.filtered(lambda x:x.state != 'requested'):
+                rec.dependency_id = self.dependency_id and self.dependency_id.id or False
+                rec.sub_dependency_id = self.subdependency_id and self.subdependency_id.id or False            
+                rec.action_requested()
+            for rec in self.bonds_ids.filtered(lambda x:x.state != 'requested'):
+                rec.dependency_id = self.dependency_id and self.dependency_id.id or False
+                rec.sub_dependency_id = self.subdependency_id and self.subdependency_id.id or False            
+                rec.action_requested()
+            for rec in self.will_pay_ids.filtered(lambda x:x.state != 'requested'):
+                rec.dependency_id = self.dependency_id and self.dependency_id.id or False
+                rec.sub_dependency_id = self.subdependency_id and self.subdependency_id.id or False            
+                rec.action_requested()
+            for rec in self.productive_ids.filtered(lambda x:x.state != 'requested'):
+                rec.dependency_id = self.dependency_id and self.dependency_id.id or False
+                rec.sub_dependency_id = self.subdependency_id and self.subdependency_id.id or False            
+                rec.action_requested()
 
     def action_approved(self):
         self.state = 'approved'
-        for rec in self.purchase_sale_ids.filtered(lambda x:x.state != 'approved'):
-            rec.action_approved()
-        for rec in self.cetes_ids.filtered(lambda x:x.state != 'approved'):
-            rec.action_approved()
-        for rec in self.udibonos_ids.filtered(lambda x:x.state != 'approved'):
-            rec.action_approved()
-        for rec in self.bonds_ids.filtered(lambda x:x.state != 'approved'):
-            rec.action_approved()
-        for rec in self.will_pay_ids.filtered(lambda x:x.state != 'approved'):
-            rec.action_approved()
-        for rec in self.productive_ids.filtered(lambda x:x.state != 'approved'):
-            rec.action_approved()
+        if self.env.context and not self.env.context.get('call_from_product'):        
+            for rec in self.purchase_sale_ids.filtered(lambda x:x.state != 'approved'):
+                rec.action_approved()
+            for rec in self.cetes_ids.filtered(lambda x:x.state != 'approved'):
+                rec.action_approved()
+            for rec in self.udibonos_ids.filtered(lambda x:x.state != 'approved'):
+                rec.action_approved()
+            for rec in self.bonds_ids.filtered(lambda x:x.state != 'approved'):
+                rec.action_approved()
+            for rec in self.will_pay_ids.filtered(lambda x:x.state != 'approved'):
+                rec.action_approved()
+            for rec in self.productive_ids.filtered(lambda x:x.state != 'approved'):
+                rec.action_approved()
 
     def action_confirmed(self):
         self.state = 'confirmed'
-        for rec in self.purchase_sale_ids.filtered(lambda x:x.state != 'confirmed'):
-            rec.action_confirmed()
-        for rec in self.cetes_ids.filtered(lambda x:x.state != 'confirmed'):
-            rec.action_confirmed()
-        for rec in self.udibonos_ids.filtered(lambda x:x.state != 'confirmed'):
-            rec.action_confirmed()
-        for rec in self.bonds_ids.filtered(lambda x:x.state != 'confirmed'):
-            rec.action_confirmed()
-        for rec in self.will_pay_ids.filtered(lambda x:x.state != 'confirmed'):
-            rec.action_confirmed()
-        for rec in self.productive_ids.filtered(lambda x:x.state != 'confirmed'):
-            rec.action_confirmed()
+        if self.env.context and not self.env.context.get('call_from_product'):
+            for rec in self.purchase_sale_ids.filtered(lambda x:x.state != 'confirmed'):
+                rec.action_confirmed()
+            for rec in self.cetes_ids.filtered(lambda x:x.state != 'confirmed'):
+                rec.action_confirmed()
+            for rec in self.udibonos_ids.filtered(lambda x:x.state != 'confirmed'):
+                rec.action_confirmed()
+            for rec in self.bonds_ids.filtered(lambda x:x.state != 'confirmed'):
+                rec.action_confirmed()
+            for rec in self.will_pay_ids.filtered(lambda x:x.state != 'confirmed'):
+                rec.action_confirmed()
+            for rec in self.productive_ids.filtered(lambda x:x.state != 'confirmed'):
+                rec.action_confirmed()
 
 
     def action_canceled(self):
         self.state = 'canceled'
-        for rec in self.purchase_sale_ids.filtered(lambda x:x.state != 'canceled'):
-            rec.action_canceled()
-        for rec in self.cetes_ids.filtered(lambda x:x.state != 'canceled'):
-            rec.action_canceled()
-        for rec in self.udibonos_ids.filtered(lambda x:x.state != 'canceled'):
-            rec.action_canceled()
-        for rec in self.bonds_ids.filtered(lambda x:x.state != 'canceled'):
-            rec.action_canceled()
-        for rec in self.will_pay_ids.filtered(lambda x:x.state != 'canceled'):
-            rec.action_canceled()
-        for rec in self.productive_ids.filtered(lambda x:x.state != 'canceled'):
-            rec.action_canceled()
-    
-    
-    
+        if self.env.context and not self.env.context.get('call_from_product'):
+            for rec in self.purchase_sale_ids.filtered(lambda x:x.state != 'canceled'):
+                rec.action_canceled()
+            for rec in self.cetes_ids.filtered(lambda x:x.state != 'canceled'):
+                rec.action_canceled()
+            for rec in self.udibonos_ids.filtered(lambda x:x.state != 'canceled'):
+                rec.action_canceled()
+            for rec in self.bonds_ids.filtered(lambda x:x.state != 'canceled'):
+                rec.action_canceled()
+            for rec in self.will_pay_ids.filtered(lambda x:x.state != 'canceled'):
+                rec.action_canceled()
+            for rec in self.productive_ids.filtered(lambda x:x.state != 'canceled'):
+                rec.action_canceled()

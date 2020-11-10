@@ -15,7 +15,7 @@
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU LESSER GENERAL PUBLIC LICENSE (LGPL v3) for more details.
 #
-#    You should have received a copy of the GNU LESSER GENERAL PUBLIC LICENSE
+# You should have received a copy of the GNU LESSER GENERAL PUBLIC LICENSE
 #    GENERAL PUBLIC LICENSE (LGPL v3) along with this program.
 #    If not, see <http://www.gnu.org/licenses/>.
 #
@@ -33,9 +33,9 @@ import lxml.html
 
 class CumulativeComparison(models.AbstractModel):
 
-    _name = "jt_projects.cumulative.comparison_report"
+    _name = "jt_projects.cumulative.comparison"
     _inherit = "account.coa.report"
-    _description = "Cumulative comparison"
+    _description = "Cumulative Comparison"
 
     filter_date = {'mode': 'range', 'filter': 'this_month'}
     filter_comparison = None
@@ -64,13 +64,59 @@ class CumulativeComparison(models.AbstractModel):
         templates['main_template'] = 'account_reports.main_template'
         return templates
 
+    def _get_lines(self, options, line_id=None):
+        lines = []
+        start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+        return lines
+        project_records = self.env['project.project'].search(
+            [('status', '=', 'open'), ('proj_start_date', '>=', start), ('proj_end_date', '<=', end)])
+        for record in project_records:
+            lines.append({
+                'id': 'hierarchy1_' + str(record.id),
+                'name': record.name,
+                'columns': [{'name': ''}, {'name': ''}],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
     def _get_columns_name(self, options):
         return [
-            {'name': _('Stage / Year')},
-            {'name': _('CONACYT research projects')},
-            {'name': _('Special Research Projects')},
-            {'name': _('TOTAL')}
+            {'name': _('Number of projects')},
+            {'name': _('Overdue projects')},
+            {'name': _('Current projects')},
+            {'name': _('Subtotal')},
+            {'name': _('Projects checked with zero bank balance')},
+            {'name': _('Projects checked with bank balance')},
+            {'name': _('CONACYT projects')},
+            {'name': _('Countable balance')},
+            {'name': _('Account balance')},
+            {'name': _('%')},
+            {'name': _('Number of projects')},
+            {'name': _('Overdue projects')},
+            {'name': _('Current projects')},
+            {'name': _('Subtotal')},
+            {'name': _('Projects checked with')},
+            {'name': _('zero bank balance')},
+            {'name': _('Projects checked with bank balance')},
+            {'name': _('CONACYT projects')},
+            {'name': _('Countable balance')},
+            {'name': _('Account balance')},
+            {'name': _('%')},
+            {'name': _('Number of projects')},
+            {'name': _('Overdue projects')},
+            {'name': _('Current projects')},
+            {'name': _('Subtotal')},
+            {'name': _('Projects checked with zero bank balance')},
+            {'name': _('Projects checked with bank balance')},
+            {'name': _('CONACYT projects')},
+            {'name': _('Countable balance')},
+            {'name': _('Account balance')},
+
         ]
 
     def _get_report_name(self):
-        return _("Cumulative comparison")
+        return _("Cumulative Comparison")

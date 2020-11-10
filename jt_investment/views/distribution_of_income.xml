@@ -49,6 +49,8 @@
                         		<field name="calculation_line_ids" >
                         			<tree create="0" edit="0" delete="0">
                         				<field name="fund_id"/>
+                        				<field name="agreement_type_id"/>
+                        				<field name="base_id"/>
                         				<field name="dependency_id" invisible="1"/>
                         				<field name="dependency_name"/>
                         				<field name="dependency_description" invisible="1"/>

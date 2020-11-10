@@ -782,7 +782,7 @@ msgstr "Nombre para mostrar"
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__document_type
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__document_type
 msgid "Document"
-msgstr "Instrumento"
+msgstr "Documento"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_stock_quotation__dollar_currency_id

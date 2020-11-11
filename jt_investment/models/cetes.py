@@ -170,9 +170,6 @@ class CETES(models.Model):
         user = self.env.user
         employee = self.env['hr.employee'].search(
             [('user_id', '=', user.id)], limit=1)
-        fund_type = False
-        if self.contract_id and self.contract_id.fund_id:
-            fund_type = self.contract_id.fund_id.id
 
         return {
             'name': 'Approve Request',
@@ -187,10 +184,13 @@ class CETES(models.Model):
                 'default_date': today,
                 'default_employee_id': employee.id if employee else False,
                 'default_cetes_id': self.id,
-                'default_fund_type': fund_type,
+                'default_fund_type' : self.fund_type_id and self.fund_type_id.id or False,
                 'default_bank_account_id' : self.journal_id and self.journal_id.id or False,
                 'default_fund_id' : self.fund_id and self.fund_id.id or False,
                 'show_for_supplier_payment': 1,
+                'default_agreement_type': self.agreement_type_id and self.agreement_type_id.id or False,
+                'default_base_collabaration_id': self.base_collaboration_id and self.base_collaboration_id.id or False,
+
             }
         }
 

@@ -21,7 +21,7 @@
 #
 ##############################################################################
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError ,UserError
 from datetime import datetime
 
 class RequestOpenBalanceInvestment(models.Model):
@@ -51,6 +51,12 @@ class RequestOpenBalanceInvestment(models.Model):
             self.type_of_agreement_id = False
             self.fund_id = False
             self.base_collabaration_id = False
+
+    def unlink(self):
+        for rec in self:
+            if rec.state not in ['draft']:
+                raise UserError(_('You can delete only draft status data.'))
+        return super(RequestOpenBalanceInvestment, self).unlink()
             
     def set_to_requested(self):
         self.state = 'requested'

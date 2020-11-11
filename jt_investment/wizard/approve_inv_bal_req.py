@@ -42,7 +42,7 @@ class ApproveInvestmentBalReq(models.TransientModel):
     user_id = fields.Many2one('res.users', default=lambda self: self.env.user.id, string="Applicant")
     employee_id = fields.Many2one('hr.employee', string="Unit requesting the transfer")
     date_required = fields.Date("Date Required")
-    fund_type = fields.Many2one('fund.type', "Background")
+    fund_type = fields.Many2one('fund.type', "Type Of Funds")
     fund_id = fields.Many2one('agreement.fund','Funds')
     
     bonds_id = fields.Many2one('investment.bonds','Bonds')

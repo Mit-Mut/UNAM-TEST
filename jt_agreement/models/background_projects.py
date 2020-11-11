@@ -25,7 +25,7 @@ from odoo import models, fields, api, _
 class BackgroundProjects(models.Model):
 
     _name = 'background.project'
-    _inherit = 'mail.thread'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Background Projects"
     _rec_name = 'key'
     

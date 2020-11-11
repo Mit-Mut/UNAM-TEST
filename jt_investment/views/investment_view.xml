@@ -38,7 +38,7 @@
                         	<group>
 			                    <field name="invesment_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                           <field name="expiry_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-			               		<field name="journal_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			               		<field name="journal_id" attrs="{'readonly': [('state', '!=', 'draft')]}" domain="[('type','=','bank')]"/>
 			               		<field name="investment_fund_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			               		<field name="contract_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			               		<field name="amount_to_invest" attrs="{'readonly': [('state', '!=', 'draft')]}"/>

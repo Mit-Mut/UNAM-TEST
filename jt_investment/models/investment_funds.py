@@ -26,13 +26,8 @@ from datetime import datetime
 
 class InvestmentFunds(models.Model):
 
-    _name = 'investment.funds'
-    _description = "Investment Funds"
-    _rec_name = 'fund_id'
-     
-    fund_id = fields.Many2one('agreement.fund','Fund Name')
-    fund_key = fields.Char(related='fund_id.fund_key',string="Fund Code")
-    
+    _inherit = 'investment.funds'
+         
     fund_type_id = fields.Many2one('fund.type','Type of Fund')
     type_of_agreement_id = fields.Many2one('agreement.agreement.type','Type of Agreement')
     bases_collaboration_id = fields.Many2one('bases.collaboration','Name of Agreement')

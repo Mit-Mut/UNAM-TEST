@@ -24,6 +24,7 @@ from odoo import models, api, _
 from datetime import datetime
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tools.misc import formatLang
+from odoo.tools import format_date
 from odoo.tools.misc import xlsxwriter
 import io
 import base64
@@ -66,38 +67,56 @@ class IntegrationOfCurrentResearchProjects(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         lines = []
-        print('lines', lines)
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
         project_records = self.env['project.project'].search(
-            [('status', '=', 'open'), ('proj_start_date', '>=', start), ('proj_end_date', '<=', end)])
+            [('proj_start_date', '>=', start), ('proj_end_date', '<=', end)])
 
         for record in project_records:
+            name = str(record.stage_identifier or '') + \
+                '/' + str(record.proj_start_date.year)
             lines.append({
                 'id': 'projects' + str(record.id),
-                'name': record.name,
-                'columns': [{'name': record.stage_identifier + '/' + record.proj_start_date.year or ''},
+                'name': name,
+                'columns': [{'name': record.ministering_amount or 0.00},
+                            {'name': ''},
+                            {'name': ''},
 
                             ],
-                'level': 3,
+                'level': 2,
                 'unfoldable': False,
                 'unfolded': True,
             })
 
         return lines
 
-    def _get_columns_name(self, options):
-        return [
-            {'name': _('Stage / Year')},
-            {'name': _('Active project control system balances')},
-            {'name': _('Ministered')},
-            {'name': _('Checked')},
-            {'name': _('To check')},
-            {'name': _('Countable balance')},
-            {'name': _('Accounting account of various debtors')},
-            {'name': _('Total of (Number of projects)')},
+    def get_header(self, options):
+
+        start_date = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        return[
+
+            [
+                {'name': ''},
+                {'name': _('Active project control system balances'),
+                 'colspan': 3},
+                {'name': _('Accounting Balance at') + ' ' +
+                 str(start_date), 'class': 'number'},
+
+            ],
+
+            [
+                {'name': 'Stage / Year'},
+                {'name': _('Ministered')},
+                {'name': _('Checked')},
+                {'name': _('To check')},
+                {'name': _('Countable balance')},
+                {'name': _('Total of (Number of projects)')},
+                {'name': _('Accounting account of various debtors'),
+                 'colspan': 2},
+            ]
         ]
 
     def _get_report_name(self):

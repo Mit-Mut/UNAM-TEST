@@ -27,7 +27,8 @@
                                 <field name="unit_req_transfer_id" context="{'bal_user_id': user_id,
                                     'show_for_agreement':1}"/>
                                 <field name="date_required"/>
-                                <field name="fund_id" required="1"/>
+                                <field name="fund_id" invisible="1"/>
+                                <field name="investment_fund_id"/>
                                 <field name="fund_type" />
                                 <field name="agreement_type_id"/>
                                 <field name="base_collabaration_id" />

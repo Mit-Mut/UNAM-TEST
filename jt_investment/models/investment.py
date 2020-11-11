@@ -1,5 +1,6 @@
-from odoo import models, fields, api
+from odoo import models, fields, api , _
 from datetime import datetime
+from odoo.exceptions import UserError
 
 class Investment(models.Model):
 
@@ -58,6 +59,13 @@ class Investment(models.Model):
     return_price_diff_account_id = fields.Many2one('account.account','Price Difference Account')    
     sub_origin_resource = fields.Many2one('sub.origin.resource', "Origin of the resource")
     expiry_date = fields.Date(string="Expiration Date")
+
+
+    def unlink(self):
+        for rec in self:
+            if rec.state not in ['draft']:
+                raise UserError(_('You can delete only draft status data.'))
+        return super(Investment, self).unlink()
 
     @api.onchange('contract_id')
     def onchange_contract_id(self):
@@ -123,6 +131,7 @@ class Investment(models.Model):
                 'default_agreement_type' : self.agreement_type_id and self.agreement_type_id.id or False,
                 'default_base_collabaration_id' : self.base_collaboration_id and self.base_collaboration_id.id or False,
                 'default_fund_id' : self.fund_id and self.fund_id.id or False,
+                
             }
         }
 

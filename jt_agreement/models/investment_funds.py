@@ -21,15 +21,14 @@
 #
 ##############################################################################
 from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError , UserError
+from datetime import datetime
 
-class SpecificProjects(models.Model):
+class InvestmentFunds(models.Model):
 
-    _name = 'specific.project'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
-    _description = "Specific Projects"
-    _rec_name = 'key'
-    
-    key = fields.Char("Specific Project Key")
-    desc = fields.Text("Specific Project Description")
-    backgound_project_id = fields.Many2one('background.project','Background Project')
-    
+    _name = 'investment.funds'
+    _description = "Investment Funds"
+    _rec_name = 'fund_id'
+     
+    fund_id = fields.Many2one('agreement.fund','Fund Name')
+    fund_key = fields.Char(related='fund_id.fund_key',string="Fund Code")

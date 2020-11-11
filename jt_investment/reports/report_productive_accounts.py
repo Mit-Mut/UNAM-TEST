@@ -64,12 +64,15 @@ class ReportProductiveAccounts(models.AbstractModel):
 
     def _get_columns_name(self, options):
         return [
+            {'name': _('Recurso')},
+            {'name': _('Institución financiera')},
+            {'name': _('Contrato')},            
             {'name': _('Capital')},
             {'name': _('Tasa')},
             {'name': _('Plazo Dies')},
             {'name': _('Total')},
-            {'name': _('Acumulado')},
-            {'name': _('Interés 15 PB')},
+            {'name': _('Procentual extra')},
+            {'name': _('Procentual extra')},
             {'name': _('Diferencia')},
         ]
 
@@ -131,7 +134,7 @@ class ReportProductiveAccounts(models.AbstractModel):
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
         records = self.env['investment.investment'].search([('state','=','confirmed'),('invesment_date','>=',start),('invesment_date','<=',end)])
-        #records = self.env['investment.investment'].search([('invesment_date','>=',start),('invesment_date','<=',end)],order='invesment_date')
+        records = self.env['investment.investment'].search([('invesment_date','>=',start),('invesment_date','<=',end)],order='invesment_date')
         
         month_list = {1:[],2:[],3:[],4:[],5:[],6:[],
                       7:[],8:[],9:[],10:[],11:[],12:[]
@@ -143,28 +146,40 @@ class ReportProductiveAccounts(models.AbstractModel):
         
         total_days = 0
         total_p_amount = 0
+        total_extra_amount = 0
+        total_diff_amount = 0
         for rec in records:
             term = 0
             if rec.is_fixed_rate:
                 term = rec.term
             if rec.is_variable_rate:
                 term = rec.term_variable
-            days = ((rec.amount_to_invest * rec.interest_rate)/100)/360*term
+            total_rate = rec.extra_percentage + rec.interest_rate
+            
+            days = ((rec.amount_to_invest * total_rate)/100)/360*term
             total_days += days
-            extra_percentage_value =  (rec.amount_to_invest * rec.extra_percentage)/100
-            diffrence = rec.amount_to_invest - extra_percentage_value
+            extra_percentage_value =  ((rec.amount_to_invest * rec.extra_percentage)/100)/360*term
+            diffrence = days - extra_percentage_value
             capital =  self._format({'name': rec.amount_to_invest},figure_type='float',digit=2)
             capital = capital.get('name')
             
             total_p_amount += days
+            total_extra_amount += extra_percentage_value
+            total_diff_amount += diffrence
+            
+            resouce_name = rec.fund_id and rec.fund_id.name or ''
              
             lines.append({
                 'id': 'hierarchy' + str(rec.id),
-                'name': capital,
-                'columns': [self._format({'name': rec.interest_rate},figure_type='float',digit=6),
+                'name': resouce_name,
+                'columns': [
+                            {'name': rec.journal_id and rec.journal_id.bank_id and rec.journal_id.bank_id.name or ''}, 
+                            {'name': rec.contract_id and rec.contract_id.name or ''},
+                            self._format({'name': rec.amount_to_invest},figure_type='float',digit=2),
+                            self._format({'name': total_rate},figure_type='float',digit=6),
                             {'name': term},
                             self._format({'name': days},figure_type='float',digit=2),
-                            {'name': ''},
+                            self._format({'name': rec.extra_percentage},figure_type='float',digit=6),
                             self._format({'name': extra_percentage_value},figure_type='float',digit=2),
                             self._format({'name': diffrence},figure_type='float',digit=2),
                             ],
@@ -190,18 +205,26 @@ class ReportProductiveAccounts(models.AbstractModel):
                     
                 day_diff = current_month_end_date - current_month_start_date 
                 day_diff = day_diff.days + 1 - remove_days
+                
+                total_rate = rec.extra_percentage + rec.interest_rate
                  
-                days = ((rec.amount_to_invest * rec.interest_rate)/100)/360*day_diff
+                days = ((rec.amount_to_invest * total_rate)/100)/360*day_diff
+
+                extra_percentage_value =  ((rec.amount_to_invest * rec.extra_percentage)/100)/360*day_diff
+                diffrence = days - extra_percentage_value
  
                 month_vals={
                 'id': 'hierarchy_' + str(rec.id) + str(current_month_start_date.month),
-                'name': capital,
-                'columns': [self._format({'name': rec.interest_rate},figure_type='float',digit=6),
+                'name': resouce_name,
+                'columns': [{'name': rec.journal_id and rec.journal_id.bank_id and rec.journal_id.bank_id.name or ''}, 
+                            {'name': rec.contract_id and rec.contract_id.name or ''},
+                            self._format({'name': rec.amount_to_invest},figure_type='float',digit=2),
+                            self._format({'name': total_rate},figure_type='float',digit=6),
                             {'name': day_diff},
                             self._format({'name': days},figure_type='float',digit=2),
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
+                            self._format({'name': rec.extra_percentage},figure_type='float',digit=6),
+                            self._format({'name': extra_percentage_value},figure_type='float',digit=2),
+                            self._format({'name': diffrence},figure_type='float',digit=2),
                             ],
                 'level': 3,
                 'unfoldable': False,
@@ -217,10 +240,14 @@ class ReportProductiveAccounts(models.AbstractModel):
             'name': '',
             'columns': [{'name': ''},
                         {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
                         self._format({'name': total_p_amount},figure_type='float',digit=2),
                         {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
+                        
+                        self._format({'name': total_extra_amount},figure_type='float',digit=2),
+                        self._format({'name': total_diff_amount},figure_type='float',digit=2),
                         ],
             'level': 1,
             'unfoldable': False,
@@ -234,6 +261,9 @@ class ReportProductiveAccounts(models.AbstractModel):
                 'id': 'hierarchy_month_' + str(current_month_start_date.month),
                 'name': '',
                 'columns': [{'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
                             {'name': ''},
                             {'name': ''},
                             {'name': ''},
@@ -254,6 +284,9 @@ class ReportProductiveAccounts(models.AbstractModel):
                             {'name': ''},
                             {'name': ''},
                             {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
                             ],
                 'level': 1,
                 'unfoldable': False,
@@ -261,13 +294,33 @@ class ReportProductiveAccounts(models.AbstractModel):
                 })
 
                 total_month_amount =  0
+                total_month_extra =  0
+                total_month_diff =  0
+                
                 total_len = len(month_list.get(month))
                 count = 0 
                 for m_dict in month_list.get(month):
                     count += 1
                     col = m_dict.get('columns')
-                    a= col[2]
-                    total_month_amount += a.get('no_format_name') 
+                    a= col[5]
+                    b = col[7]
+                    c = col[8]
+                    
+                    if 'no_format_name' in a:
+                        total_month_amount += a.get('no_format_name',0) 
+                    elif a.get('name',0):
+                        total_month_amount += a.get('name',0) 
+
+                    if 'no_format_name' in b:
+                        total_month_extra += b.get('no_format_name',0) 
+                    elif b.get('name',0):
+                        total_month_extra += b.get('name',0) 
+
+                    if 'no_format_name' in c:
+                        total_month_diff += c.get('no_format_name',0) 
+                    elif c.get('name',0):
+                        total_month_diff += c.get('name',0) 
+
                     lines.append(m_dict)
                     
                     if count == total_len:
@@ -278,10 +331,13 @@ class ReportProductiveAccounts(models.AbstractModel):
                         'name': '',
                         'columns': [{'name': ''},
                                     {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
                                     self._format({'name': total_month_amount},figure_type='float',digit=2),
-                                    self._format({'name': acc_total},figure_type='float',digit=2),
                                     {'name': ''},
-                                    {'name': ''},
+                                    self._format({'name': total_month_extra},figure_type='float',digit=2),
+                                    self._format({'name': total_month_diff},figure_type='float',digit=2),
                                     ],
                         'level': 1,
                         'unfoldable': False,

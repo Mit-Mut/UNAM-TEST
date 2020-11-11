@@ -46,7 +46,7 @@
                                 <field name="origin_resource_id" attrs="{'readonly': [('state', '!=', 'draft')]}"
                                        domain="[('is_it_enabled_for_agreement', '=',  True)]" required="1"/>
                                
-                                <field name="journal_id" required="1"/>
+                                <field name="journal_id" required="1" domain="[('type','=','bank')]"/>
                                 <field name="bank_account_id" readonly="1"/>
                                 <field name="request_office" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
                             </group>

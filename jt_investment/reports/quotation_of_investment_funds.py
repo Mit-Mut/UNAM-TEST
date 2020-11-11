@@ -64,6 +64,7 @@ class ReportonthequotationofInvestmentFunds(models.AbstractModel):
 
     def _get_columns_name(self, options):
         return [
+            {'name': _('Bank')},
             {'name': _('Fecha')},
             {'name': _('Precio')},
             {'name': _('Diaria Nominal')},
@@ -119,8 +120,9 @@ class ReportonthequotationofInvestmentFunds(models.AbstractModel):
         for rec in records:
             lines.append({
                 'id': 'hierarchy' + str(rec.id),
-                'name': rec.date,
-                'columns': [self._format({'name': rec.price},figure_type='float'),
+                'name': rec.journal_id and rec.journal_id.name or '',
+                'columns': [{'name': rec.date},
+                            self._format({'name': rec.price},figure_type='float'),
                             self._format({'name': rec.daily_nominal},figure_type='float'),
                             self._format({'name': rec.daily_percentage},figure_type='float'),
                             self._format({'name': rec.daily_interest},figure_type='float'), 
@@ -135,8 +137,8 @@ class ReportonthequotationofInvestmentFunds(models.AbstractModel):
                             self._format({'name': rec.current_month_interest},figure_type='float'), 
                             self._format({'name': rec.current_year_nominal},figure_type='float'),
                             self._format({'name': rec.current_year_percentage},figure_type='float'),
-                            self._format({'name': rec.current_year_interest},figure_type='float'), 
                             
+                            self._format({'name': rec.current_year_interest},figure_type='float'), 
 
                             ],
                 'level': 3,

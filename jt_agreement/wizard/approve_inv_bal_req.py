@@ -46,7 +46,14 @@ class ApproveInvestmentBalReq(models.TransientModel):
     agreement_type_id = fields.Many2one('agreement.agreement.type', 'Agreement Type')
     fund_id = fields.Many2one('agreement.fund','Fund') 
     base_collabaration_id = fields.Many2one('bases.collaboration','Name Of Agreements')
+    investment_fund_id = fields.Many2one('investment.funds','Fund')
     
+    @api.onchange('base_collabaration_id')
+    def onchange_base_collabaration_id(self):
+        if self.base_collabaration_id:
+            self.dependency_id = self.base_collabaration_id and self.base_collabaration_id.dependency_id and self.base_collabaration_id.dependency_id.id or False
+            self.sub_dependency_id = self.base_collabaration_id and self.base_collabaration_id.subdependency_id and self.base_collabaration_id.subdependency_id.id or False
+            
     @api.model
     def default_get(self, fields):
         res = super(ApproveInvestmentBalReq, self).default_get(fields)
@@ -76,6 +83,7 @@ class ApproveInvestmentBalReq(models.TransientModel):
                     'fund_type': self.fund_type.id if self.fund_type else False,
                     'agreement_type_id' : self.agreement_type_id and self.agreement_type_id.id or False,
                     'fund_id' : self.fund_id and self.fund_id.id or False,
+                    'investment_fund_id' : self.investment_fund_id and self.investment_fund_id.id or False,
                     'base_collabaration_id' : self.base_collabaration_id and self.base_collabaration_id.id or False,
                     'request_id': request.id,
                     'state': 'requested',

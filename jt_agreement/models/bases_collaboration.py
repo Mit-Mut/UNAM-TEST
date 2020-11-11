@@ -28,7 +28,7 @@ from dateutil.relativedelta import relativedelta
 class BasesCollabration(models.Model):
 
     _name = 'bases.collaboration'
-    _inherit = 'mail.thread'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Bases of collaboration"
 
     name = fields.Char("Agreement Name")
@@ -548,7 +548,7 @@ class ResPartner(models.Model):
 class RequestOpenBalance(models.Model):
 
     _name = 'request.open.balance'
-    _inherit = 'mail.thread'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Request to Open Balance"
 
     name = fields.Char("Name")
@@ -848,7 +848,7 @@ class RequestOpenBalance(models.Model):
 class RequestOpenBalanceInvestment(models.Model):
 
     _name = 'request.open.balance.invest'
-    _inherit = 'mail.thread'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Request to Open Balance Investment"
 
     name = fields.Char("Name")
@@ -1041,7 +1041,7 @@ class Project(models.Model):
 class RequestOpenBalanceFinance(models.Model):
 
     _name = 'request.open.balance.finance'
-    _inherit = 'mail.thread'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Request to Open Balance For Finanace"
     _rec_name = 'invoice'
 
@@ -1062,6 +1062,7 @@ class RequestOpenBalanceFinance(models.Model):
     unit_req_transfer_id = fields.Many2one('dependency', string="Unit requesting the transfer")
     date_required = fields.Date("Date Required")
     fund_type = fields.Many2one('fund.type', "Background")
+    investment_fund_id = fields.Many2one('investment.funds','Investment Fund')
     
     agreement_type_id = fields.Many2one('agreement.agreement.type', 'Agreement Type')
     fund_id = fields.Many2one('agreement.fund','Fund') 

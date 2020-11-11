@@ -70,51 +70,69 @@ class CumulativeComparison(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
-        return lines
         project_records = self.env['project.project'].search(
-            [('status', '=', 'open'), ('proj_start_date', '>=', start), ('proj_end_date', '<=', end)])
+            [('proj_start_date', '>=', start), ('proj_end_date', '<=', end)])
+
         for record in project_records:
+            name = str(record.stage_identifier or '') + \
+                '/' + str(record.proj_start_date.year)
             lines.append({
-                'id': 'hierarchy1_' + str(record.id),
-                'name': record.name,
-                'columns': [{'name': ''}, {'name': ''}],
+                'id': 'projects' + str(record.id),
+                'name': name,
+                'columns': [{'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+
+                            ],
                 'level': 1,
                 'unfoldable': False,
                 'unfolded': True,
             })
 
-    def _get_columns_name(self, options):
-        return [
-            {'name': _('Number of projects')},
-            {'name': _('Overdue projects')},
-            {'name': _('Current projects')},
-            {'name': _('Subtotal')},
-            {'name': _('Projects checked with zero bank balance')},
-            {'name': _('Projects checked with bank balance')},
-            {'name': _('CONACYT projects')},
-            {'name': _('Countable balance')},
-            {'name': _('Account balance')},
-            {'name': _('%')},
-            {'name': _('Number of projects')},
-            {'name': _('Overdue projects')},
-            {'name': _('Current projects')},
-            {'name': _('Subtotal')},
-            {'name': _('Projects checked with')},
-            {'name': _('zero bank balance')},
-            {'name': _('Projects checked with bank balance')},
-            {'name': _('CONACYT projects')},
-            {'name': _('Countable balance')},
-            {'name': _('Account balance')},
-            {'name': _('%')},
-            {'name': _('Number of projects')},
-            {'name': _('Overdue projects')},
-            {'name': _('Current projects')},
-            {'name': _('Subtotal')},
-            {'name': _('Projects checked with zero bank balance')},
-            {'name': _('Projects checked with bank balance')},
-            {'name': _('CONACYT projects')},
-            {'name': _('Countable balance')},
-            {'name': _('Account balance')},
+        return lines
+
+    def get_header(self, options):
+        return[
+
+            [
+                {'name': _('Stage / Year')},
+                {'name': _('CONACYT research projects')},
+                {'name': _('Special Research Projects')},
+                {'name': _('TOTAL')},
+            ],
+            [
+                {'name': _('Number of projects')},
+                {'name': _('Overdue projects')},
+                {'name': _('Current projects')},
+                {'name': _('Subtotal')},
+                {'name': _('Projects checked with zero bank balance')},
+                {'name': _('Projects checked with bank balance')},
+                {'name': _('CONACYT projects')},
+                {'name': _('Countable balance')},
+                {'name': _('Account balance')},
+                {'name': _('%')},
+                {'name': _('Number of projects')},
+                {'name': _('Overdue projects')},
+                {'name': _('Current projects')},
+                {'name': _('Subtotal')},
+                {'name': _('Projects checked with')},
+                {'name': _('zero bank balance')},
+                {'name': _('Projects checked with bank balance')},
+                {'name': _('CONACYT projects')},
+                {'name': _('Countable balance')},
+                {'name': _('Account balance')},
+                {'name': _('%')},
+                {'name': _('Number of projects')},
+                {'name': _('Overdue projects')},
+                {'name': _('Current projects')},
+                {'name': _('Subtotal')},
+                {'name': _('Projects checked with zero bank balance')},
+                {'name': _('Projects checked with bank balance')},
+                {'name': _('CONACYT projects')},
+                {'name': _('Countable balance')},
+                {'name': _('Account balance')},
+
+            ],
 
         ]
 

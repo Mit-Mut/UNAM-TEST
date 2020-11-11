@@ -37,9 +37,9 @@ class SummaryOfOperationMaturities(models.AbstractModel):
     _description = "Summary of Operation - Maturities"
 
     filter_date = {'mode': 'range', 'filter': 'this_month'}
-    filter_comparison = {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
-    filter_all_entries = None
-    filter_journals = None
+    filter_comparison = None
+    filter_all_entries = True
+    filter_journals = True
     filter_analytic = None
     filter_unfold_all = None
     filter_cash_basis = None
@@ -76,6 +76,12 @@ class SummaryOfOperationMaturities(models.AbstractModel):
             {'name': _('Intereses')},
         ]
 
+    @api.model
+    def _get_filter_journals(self):
+        return self.env['account.journal'].search([('type','=','bank'),
+            ('company_id', 'in', self.env.user.company_ids.ids or [self.env.company.id])
+        ], order="company_id, name")
+
     def _format(self, value,figure_type):
         if self.env.context.get('no_format'):
             return value
@@ -99,32 +105,42 @@ class SummaryOfOperationMaturities(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         lines = []
+
+        if options.get('all_entries') is False:
+            domain=[('state','=','confirmed')]
+        else:
+            domain=[('state','not in',('rejected','canceled'))]
+        
+        journal = self._get_options_journals_domain(options)
+        if journal:
+            domain+=journal
+            
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
-        cetes_records = self.env['investment.cetes'].search([('state','=','confirmed'),('date_time','>=',start),('date_time','<=',end)])
-        udibonos_records = self.env['investment.udibonos'].search([('state','=','confirmed'),('date_time','>=',start),('date_time','<=',end)])
-        bonds_records = self.env['investment.bonds'].search([('state','=','confirmed'),('date_time','>=',start),('date_time','<=',end)])
-        will_pay_records = self.env['investment.will.pay'].search([('state','=','confirmed'),('date_time','>=',start),('date_time','<=',end)])
-        sale_security_ids = self.env['purchase.sale.security'].search([('state','=','confirmed'),('invesment_date','>=',start),('invesment_date','<=',end)])
-        productive_ids = self.env['investment.investment'].search([('state','=','confirmed'),('invesment_date','>=',start),('invesment_date','<=',end)])
-                    
-#         cetes_records = self.env['investment.cetes'].search([('date_time','>=',start),('date_time','<=',end)])
-#         udibonos_records = self.env['investment.udibonos'].search([('date_time','>=',start),('date_time','<=',end)])
-#         bonds_records = self.env['investment.bonds'].search([('date_time','>=',start),('date_time','<=',end)])
-#         will_pay_records = self.env['investment.will.pay'].search([('date_time','>=',start),('date_time','<=',end)])
-#         sale_security_ids = self.env['purchase.sale.security'].search([('invesment_date','>=',start),('invesment_date','<=',end)])
-#         productive_ids = self.env['investment.investment'].search([('invesment_date','>=',start),('invesment_date','<=',end)],order='invesment_date')
+        cetes_domain = domain + [('date_time','>=',start),('date_time','<=',end)]
+        udibonos_domain = domain + [('date_time','>=',start),('date_time','<=',end)]
+        bonds_domain = domain + [('date_time','>=',start),('date_time','<=',end)]
+        will_pay_domain = domain + [('date_time','>=',start),('date_time','<=',end)]
+        sale_domain = domain + [('invesment_date','>=',start),('invesment_date','<=',end)]
+        productive_domain = domain + [('invesment_date','>=',start),('invesment_date','<=',end)]
         
+        cetes_records = self.env['investment.cetes'].search(cetes_domain)
+        udibonos_records = self.env['investment.udibonos'].search(udibonos_domain)
+        bonds_records = self.env['investment.bonds'].search(bonds_domain)
+        will_pay_records = self.env['investment.will.pay'].search(will_pay_domain)
+        sale_security_ids = self.env['purchase.sale.security'].search(sale_domain)
+        productive_ids = self.env['investment.investment'].search(productive_domain)
+                
         total_investment = 0
 
         #==== Sale Security========#        
         for sale in sale_security_ids:
             #total_investment += cetes.nominal_value
             resouce_name = sale.fund_id and sale.fund_id.name or ''
-            term = sale.number_of_titles
+            term = sale.term
             total_investment += sale.amount
             
             interest = ((sale.amount*sale.price/100)*term/360)
@@ -242,8 +258,15 @@ class SummaryOfOperationMaturities(models.AbstractModel):
         for pay in will_pay_records:
             total_investment += pay.amount
             resouce_name = pay.fund_id and pay.fund_id.name or ''
-            
-            interest = ((pay.amount*pay.interest_rate/100)*pay.term_days/360)
+            term = 0
+            if pay.term_days:
+                term = pay.term_days
+            elif pay.monthly_term:
+                term = pay.monthly_term * 30
+            elif pay.annual_term:
+                term = pay.annual_term * 360
+                
+            interest = ((pay.amount*pay.interest_rate/100)*term/360)
 
             invesment_date = ''
             if pay.date_time:
@@ -252,14 +275,14 @@ class SummaryOfOperationMaturities(models.AbstractModel):
             lines.append({
                 'id': 'hierarchy_bonds' + str(pay.id),
                 'name': resouce_name,
-                'columns': [ {'name': pay.bank_id and pay.bank_id.name or ''},
+                'columns': [{'name': pay.bank_id and pay.bank_id.name or ''},
                             {'name': pay.contract_id and pay.contract_id.name or ''},
                             {'name': invesment_date},
                             {'name': pay.expiry_date},                               
                             {'name': pay.journal_id and pay.journal_id.bank_account_id and pay.journal_id.bank_account_id.acc_number or ''},
                             self._format({'name': pay.amount},figure_type='float'),
                             {'name': 'PAGARE'},
-                            {'name': pay.term_days},
+                            {'name': term},
                             self._format({'name': pay.interest_rate},figure_type='float'),
                             self._format({'name': interest},figure_type='float'),
                             ],

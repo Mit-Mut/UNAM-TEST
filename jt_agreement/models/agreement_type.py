@@ -26,7 +26,7 @@ from odoo.exceptions import ValidationError
 class AgreementType(models.Model):
 
     _name = 'agreement.agreement.type'
-    _inherit = 'mail.thread'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Agreement Type"
 
     code = fields.Char("Agreement Type Code")

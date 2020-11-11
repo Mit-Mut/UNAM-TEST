@@ -21,7 +21,7 @@
 #
 ##############################################################################
 from odoo import models, api, _
-from datetime import datetime
+from datetime import datetime ,timedelta,date
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tools.misc import formatLang
 from odoo.tools.misc import xlsxwriter
@@ -29,6 +29,7 @@ import io
 import base64
 from odoo.tools import config, date_utils, get_lang
 import lxml.html
+from dateutil.relativedelta import relativedelta
 
 
 class IndicatorsReport(models.AbstractModel):
@@ -100,6 +101,512 @@ class IndicatorsReport(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+
+        cetes_rate = self.env['investment.period.rate'].search([('product_type','=','CETES')])
+        bonds_rate = self.env['investment.period.rate'].search([('product_type','=','BONUS')])
+        udibonos_rate = self.env['investment.period.rate'].search([('product_type','=','UDIBONOS')])
+        TIIE = self.env['investment.period.rate'].search([('product_type','=','TIIE')])
+
+        for rec in cetes_rate:
+            current_month_start_date = rec.rate_date.replace(day=1)
+            current_month_end_date = rec.rate_date.replace(day=1) + relativedelta(months=1) - timedelta(days=1)
+            highest_rate = rec.rate_date
+
+            lines.append({
+                'id': 'hierarchy_cetes',
+                'name': 'A) CETES',
+                'columns': [{'name': ''}, 
+                            {'name': ''}, 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+            days28_rate,days28_end_rate = 0,0
+            if current_month_start_date == rec.rate_date:
+                days28_rate += rec.rate_days_28
+            elif current_month_end_date == rec.rate_date:
+                days28_end_rate += rec.rate_days_28
+            
+            lines.append({
+                'id': 'hierarchy_cetes_28_days',
+                'name': '28 DAYS',
+                'columns': [{'name':days28_rate}, 
+                            {'name': days28_end_rate}, 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+            days91_rate , days91_end_rate = 0,0
+            if current_month_start_date == rec.rate_date:
+                days91_rate += rec.rate_days_91
+            elif current_month_end_date == rec.rate_date:
+                days91_end_rate += rec.rate_days_91
+
+
+            lines.append({
+                'id': 'hierarchy_cetes_91_days',
+                'name': '91 DAYS',
+                'columns': [{'name':days91_rate}, 
+                            {'name': days91_end_rate}, 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+            days182_rate , days182_end_rate = 0,0
+            if current_month_start_date == rec.rate_date:
+                days182_rate += rec.rate_days_182
+            elif current_month_end_date == rec.rate_date:
+                days182_end_rate += rec.rate_days_182
+
+            lines.append({
+                'id': 'hierarchy_cetes_182_days',
+                'name': '182 DAYS',
+                'columns': [{'name': days182_rate}, 
+                            {'name': days182_end_rate}, 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+            days364_rate , days364_end_rate = 0,0
+            if current_month_start_date == rec.rate_date:
+                days364_rate += rec.rate_days_364
+            elif current_month_end_date == rec.rate_date:
+                days364_end_rate += rec.rate_days_364
+
+            lines.append({
+                'id': 'hierarchy_cetes_364_days',
+                'name': '364 DAYS',
+                'columns': [{'name': days364_rate}, 
+                            {'name': days364_end_rate}, 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+
+        for rec in bonds_rate:
+            current_month_start_date = rec.rate_date.replace(day=1)
+            current_month_end_date = rec.rate_date.replace(day=1) + relativedelta(months=1) - timedelta(days=1)
+            lines.append({
+                'id': 'hierarchy_bonds',
+                'name': 'B) BONDS',
+                'columns': [{'name': ''}, 
+                            {'name': ''}, 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+            years3_rate , years3_end_rate = 0,0
+            if current_month_start_date == rec.rate_date:
+                years3_rate += rec.rate_year_3
+            elif current_month_end_date == rec.rate_date:
+                years3_end_rate += rec.rate_year_3
+           
+            lines.append({
+                'id': 'hierarchy_bonds_3_years',
+                'name': '3 YEARS',
+                'columns': [{'name': years3_rate}, 
+                            {'name': years3_end_rate}, 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+            years5_rate , years5_end_rate = 0,0
+            if current_month_start_date == rec.rate_date:
+                years5_rate += rec.rate_year_5
+            elif current_month_end_date == rec.rate_date:
+                years5_end_rate += rec.rate_year_5
+
+            lines.append({
+                'id': 'hierarchy_bonds_5_years',
+                'name': '5 YEARS',
+                'columns': [{'name': years5_rate}, 
+                            {'name': years5_end_rate}, 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+            years7_rate , years7_end_rate = 0,0
+            if current_month_start_date == rec.rate_date:
+                years7_rate += rec.rate_year_7
+            elif current_month_end_date == rec.rate_date:
+                years7_end_rate += rec.rate_year_7
+
+            lines.append({
+                'id': 'hierarchy_bonds_7_years',
+                'name': '7 YEARS',
+                'columns': [{'name': years7_rate}, 
+                            {'name': years7_end_rate}, 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+            years10_rate , years10_end_rate = 0,0
+            if current_month_start_date == rec.rate_date:
+                years10_rate += rec.rate_year_10
+            elif current_month_end_date == rec.rate_date:
+                years10_end_rate += rec.rate_year_10
+
+            lines.append({
+                'id': 'hierarchy_bonds_10_years',
+                'name': '10 YEARS',
+                'columns': [{'name': years10_rate}, 
+                            {'name': years10_end_rate}, 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+            years20_rate , years20_end_rate = 0,0
+            if current_month_start_date == rec.rate_date:
+                years20_rate += rec.rate_year_20
+            elif current_month_end_date == rec.rate_date:
+                years20_end_rate += rec.rate_year_20
+
+            lines.append({
+                'id': 'hierarchy_bonds_20_years',
+                'name': '20 YEARS',
+                'columns': [{'name': years20_rate}, 
+                            {'name': years20_end_rate}, 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+            years30_rate , years30_end_rate = 0,0
+            if current_month_start_date == rec.rate_date:
+                years30_rate += rec.rate_year_30
+            elif current_month_end_date == rec.rate_date:
+                years30_end_rate += rec.rate_year_30
+
+            lines.append({
+                'id': 'hierarchy_bonds_30_years',
+                'name': '30 YEARS',
+                'columns': [{'name': years30_rate}, 
+                            {'name': years30_end_rate}, 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        for rec in udibonos_rate:
+            current_month_start_date = rec.rate_date.replace(day=1)
+            current_month_end_date = rec.rate_date.replace(day=1) + relativedelta(months=1) - timedelta(days=1)
+            lines.append({
+                'id': 'hierarchy_udibonos',
+                'name': 'C) UDIBONOS',
+                'columns': [{'name': ''}, 
+                            {'name': ''}, 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+            udi_year3_rate , udi_year3_end_rate = 0,0
+            if current_month_start_date == rec.rate_date:
+                udi_year3_rate += rec.rate_year_3
+            elif current_month_end_date == rec.rate_date:
+                udi_year3_end_rate += rec.rate_year_3
+
+
+            lines.append({
+                'id': 'hierarchy_udibonos_3_years',
+                'name': '3 YEARS',
+                'columns': [{'name': udi_year3_rate}, 
+                            {'name': udi_year3_end_rate}, 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+            udi_year5_rate , udi_year5_end_rate = 0,0
+            if current_month_start_date == rec.rate_date:
+                udi_year5_rate += rec.rate_year_5
+            elif current_month_end_date == rec.rate_date:
+                udi_year5_end_rate += rec.rate_year_5
+
+            lines.append({
+                'id': 'hierarchy_udibonos_5_years',
+                'name': '5 YEARS',
+                'columns': [{'name': udi_year5_rate}, 
+                            {'name': udi_year5_end_rate}, 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+            udi_year10_rate , udi_year10_end_rate = 0,0
+            if current_month_start_date == rec.rate_date:
+                udi_year10_rate += rec.rate_year_10
+            elif current_month_end_date == rec.rate_date:
+                udi_year10_end_rate += rec.rate_year_10
+
+
+            lines.append({
+                'id': 'hierarchy_udibonos_10_years',
+                'name': '10 YEARS',
+                'columns': [{'name': udi_year10_rate}, 
+                            {'name': udi_year10_end_rate}, 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+            udi_year20_rate , udi_year20_end_rate = 0,0
+            if current_month_start_date == rec.rate_date:
+                udi_year20_rate += rec.rate_year_20
+            elif current_month_end_date == rec.rate_date:
+                udi_year20_end_rate += rec.rate_year_20
+
+            lines.append({
+                'id': 'hierarchy_udibonos_20_years',
+                'name': '20 YEARS',
+                'columns': [{'name': udi_year20_rate}, 
+                            {'name': udi_year20_end_rate}, 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+            udi_year30_rate , udi_year30_end_rate = 0,0
+            if current_month_start_date == rec.rate_date:
+                udi_year30_rate += rec.rate_year_30
+            elif current_month_end_date == rec.rate_date:
+                udi_year30_end_rate += rec.rate_year_30
+
+
+            lines.append({
+                'id': 'hierarchy_udibonos_30_years',
+                'name': '30 YEARS',
+                'columns': [{'name': udi_year30_rate}, 
+                            {'name': udi_year30_end_rate}, 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        for rec in TIIE:
+            current_month_start_date = rec.rate_date.replace(day=1) 
+            current_month_end_date = rec.rate_date.replace(day=1) + relativedelta(months=1) - timedelta(days=1)
+            lines.append({
+                'id': 'hierarchy_titles',
+                'name': 'D) TIIE',
+                'columns': [{'name': ''}, 
+                            {'name': ''}, 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+            day1_rate , day1_end_rate = 0,0
+            if current_month_start_date == rec.rate_date:
+                day1_rate += rec.rate_daily
+            elif current_month_end_date == rec.rate_date:
+                day1_end_rate += rec.rate_daily
+            
+            lines.append({
+                'id': 'hierarchy_titles_1_day',
+                'name': '1 DAY',
+                'columns': [{'name': day1_rate}, 
+                            {'name': day1_end_rate}, 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+            t_day28_rate , t_day28_end_rate = 0,0
+            if current_month_start_date == rec.rate_date:
+                t_day28_rate += rec.rate_days_28
+            elif current_month_end_date == rec.rate_date:
+                t_day28_end_rate += rec.rate_days_28
+
+            lines.append({
+                'id': 'hierarchy_titles_28_days',
+                'name': '28 DAYS',
+                'columns': [{'name':t_day28_rate}, 
+                            {'name': t_day28_end_rate}, 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+            t_day91_rate , t_day91_end_rate = 0,0
+            if current_month_start_date == rec.rate_date:
+                t_day91_rate += rec.rate_days_91
+            elif current_month_end_date == rec.rate_date:
+                t_day91_end_rate += rec.rate_days_91
+
+            lines.append({
+                'id': 'hierarchy_titles_91_days',
+                'name': '91 DAYS',
+                'columns': [{'name': t_day91_rate}, 
+                            {'name': t_day91_end_rate}, 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+            t_day182_rate , t_day182_end_rate = 0,0
+            if current_month_start_date == rec.rate_date:
+                t_day182_rate += rec.rate_days_182
+            elif current_month_end_date == rec.rate_date:
+                t_day182_end_rate += rec.rate_days_182
+
+            lines.append({
+                'id': 'hierarchy_titles_182_days',
+                'name': '182 DAYS',
+                'columns': [{'name': t_day182_rate}, 
+                            {'name': t_day182_end_rate}, 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
                     
         return lines
 

@@ -27,7 +27,7 @@ from dateutil.relativedelta import relativedelta
 class Trust(models.Model):
 
     _name = 'agreement.trust'
-    _inherit = 'mail.thread'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Agreement Trust"
 
     name = fields.Char("Trust Name")
@@ -327,7 +327,7 @@ class Committe(models.Model):
 class AgreementTrustModification(models.Model):
 
     _name = 'agreement.trust.modification'
-    _inherit = 'mail.thread'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Agreement Trust Modification"
     _rec_name = 'folio'
 

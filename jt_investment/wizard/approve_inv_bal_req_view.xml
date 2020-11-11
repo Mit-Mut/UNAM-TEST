@@ -29,7 +29,7 @@
 	                                <field name="date_required"/>
                                  -->
                                 <field name="fund_id" /> 
-                                <field name="fund_type" invisible="1"/>
+                                <field name="fund_type"/>
                                 <field name="agreement_type"/>
                                 <field name="base_collabaration_id"/>
                                 

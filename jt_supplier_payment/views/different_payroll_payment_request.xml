@@ -397,7 +397,7 @@
                                         <field name="invoice_series" invisible="1"/>
                                         <field name="folio_invoice" invisible="1"/>
                                         <field name="vault_folio" invisible="1"/>
-                                        
+                                        <field name="other_amounts" invisible="1"/>
                                         <field name="payment_id" invisible="1"/>
 
                                         <field name="product_id" invisible="1"/>

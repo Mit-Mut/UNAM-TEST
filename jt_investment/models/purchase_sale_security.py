@@ -23,7 +23,7 @@ class PurchaseSaleSecurity(models.Model):
     price_previous_day = fields.Float(compute='get_previous_price_days',string="Price previous day")
     average_price_of_the_month = fields.Float(compute='get_average_price_of_the_month',string="Average price of the month")
     title = fields.Integer("Title")
-    term = fields.Integer("Investment Term")
+    term = fields.Integer("Term")
     due_date = fields.Date("Due Date")
     movement = fields.Selection([('buy','Purchase'),('sell','Sale')],string="What move do I want to make?")
     state = fields.Selection([('draft','Draft'),('requested','Requested'),('rejected','Rejected'),('approved','Approved'),('confirmed','Confirmed'),('done','Done'),('canceled','Canceled')],string="Status",default='draft')
@@ -166,10 +166,12 @@ class PurchaseSaleSecurity(models.Model):
                 'default_amount': self.amount,
                 'default_date': today,
                 'default_purchase_sale_security_id' : self.id,
-                'default_fund_type' : fund_type,
+                'default_fund_type' : self.fund_type_id and self.fund_type_id.id or False,
                 'default_bank_account_id' : self.journal_id and self.journal_id.id or False,
                 'show_for_supplier_payment':1,
                 'default_fund_id' : self.fund_id and self.fund_id.id or False,
+                'default_agreement_type': self.agreement_type_id and self.agreement_type_id.id or False,
+                'default_base_collabaration_id': self.base_collaboration_id and self.base_collaboration_id.id or False,
             }
         }
 

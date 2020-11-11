@@ -195,6 +195,17 @@ class AccountMove(models.Model):
             res.line_ids = False
         return res
 
+    def unlink(self):
+        for rec in self:
+            if rec.is_payment_request and rec.payment_state not in ['draft']:
+                raise UserError(_('You can delete only draft request'))
+            if rec.is_payroll_payment_request and rec.payment_state not in ['draft']:
+                raise UserError(_('You can delete only draft request'))
+            if rec.is_different_payroll_request and rec.payment_state not in ['draft']:
+                raise UserError(_('You can delete only draft request'))
+            
+        return super(AccountMove, self).unlink()
+
     @api.onchange('partner_id') 
     def onchange_partner_bak_account(self):
         if self.partner_id and self.partner_id.bank_ids:
@@ -451,6 +462,7 @@ class AccountMoveLine(models.Model):
     invoice_series = fields.Char("Invoice Series")
     folio_invoice = fields.Char("Folio Invoice")
     vault_folio = fields.Char("Vault folio")
+
 
     @api.model_create_multi
     def create(self, vals_list):

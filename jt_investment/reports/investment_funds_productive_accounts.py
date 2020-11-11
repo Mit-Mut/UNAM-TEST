@@ -139,7 +139,7 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
             options['date'].get('date_to'), '%Y-%m-%d').date()
         
         
-        records = self.env['purchase.sale.security'].search([('state','=','confirmed'),('invesment_date','>=',start),('invesment_date','<=',end)])
+        records = self.env['investment.investment'].search([('state','=','confirmed'),('invesment_date','>=',start),('invesment_date','<=',end)])
         #records = self.env['investment.investment'].search([('invesment_date','>=',start),('invesment_date','<=',end)],order='invesment_date')
         for rec in records:
             month_name = self.get_month_name(rec.invesment_date.month)

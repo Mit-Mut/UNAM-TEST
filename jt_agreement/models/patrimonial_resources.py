@@ -27,7 +27,7 @@ from dateutil.relativedelta import relativedelta
 class PatrimonialResources(models.Model):
 
     _name = 'patrimonial.resources'
-    _inherit = 'mail.thread'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Patrimonial Resources"
 
     name = fields.Char("Fund Name")

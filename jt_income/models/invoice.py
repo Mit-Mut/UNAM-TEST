@@ -617,7 +617,8 @@ class AccountMoveLine(models.Model):
             price_unit_wo_discount = price_unit - self[0].fixed_discount 
             
         subtotal = quantity * price_unit_wo_discount
-
+        if self and self[0].other_amounts:
+            subtotal = subtotal+ self[0].other_amounts
         # Compute 'price_total'.
         if taxes:
             taxes_res = taxes._origin.compute_all(price_unit_wo_discount,

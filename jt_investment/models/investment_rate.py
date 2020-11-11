@@ -43,6 +43,27 @@ class InvestmentPeriodRate(models.Model):
     _sql_constraints = [('rate_date_product_type', 'unique(rate_date,product_type)',
                          'Rate already register for this date')]
     
+#     def get_rates(self):
+#         domain = []
+#         views = []
+#         
+#         if self.env.context and self.env.context.get('default_product_type',False):
+#             if self.env.context.get('default_product_type',False) == 'CETES':
+#                 domain = [('product_type', '=', 'CETES')]
+#                 views = [(self.env.ref("jt_investment.investment_period_rate_cetes_tree").id, 'tree'), (self.env.ref("jt_investment.investment_period_rate_cetes_form").id, 'form')]
+#                 
+#  
+#         return {
+#                 'name': 'Rates',
+#                 'view_type': 'form',
+#                 'view_mode': 'tree,form',
+#                 'views': views,
+#                 'res_model': 'investment.period.rate',
+#                 'domain': domain,
+#                 'type': 'ir.actions.act_window',
+#             }
+
+        
     def set_blank_fields(self):
         self.rate_daily = 0
         self.rate_days_28 = 0
@@ -235,9 +256,9 @@ class InvestmentPeriodRate(models.Model):
                 self.create_update_product_rate('BONUS', series_fields_map,series_fields_type_map, data)   
 
     def get_PAGARE_product_rate(self,token,url,date_range):
-        series_fields_map = {'SF43783':'rate_days_28','SF43878':'rate_days_91','SF111916':'rate_days_182'}
-        series_fields_type_map = {'SF43783':'float','SF43878':'float','SF111916':'float'}
-        series_str = 'SF43783,SF43878,SF111916'
+        series_fields_map = {'SF331451':'rate_daily','SF43783':'rate_days_28','SF43878':'rate_days_91','SF111916':'rate_days_182'}
+        series_fields_type_map = {'SF331451':'float','SF43783':'float','SF43878':'float','SF111916':'float'}
+        series_str = 'SF331451,SF43783,SF43878,SF111916'
         url +=  series_str+"/datos/%s?token=%s"%(date_range,token)
 
         req = urllib.request.Request(url)

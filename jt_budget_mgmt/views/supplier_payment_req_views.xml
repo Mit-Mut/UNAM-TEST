@@ -18,7 +18,7 @@
                             type="object" attrs="{'invisible':[('payment_state', 'in', ('paid','cancel'))]}"/>
             	</xpath>
             
-                <field name="workstation_id" position="after">
+                <field name="rfc" position="after">
                     <field name="dependancy_id" context="{'show_for_supplier_payment':True}" attrs="{'readonly':[('payment_state', '!=', 'draft')]}"/>
                     <field name="sub_dependancy_id" domain="[('dependency_id','=',dependancy_id)]" context="{'show_for_supplier_payment':True}" attrs="{'readonly':[('payment_state', '!=', 'draft')]}"/>
                     <field name="payment_place_id"  attrs="{'readonly':[('payment_state', '!=', 'draft')]}"/>
@@ -30,7 +30,7 @@
                 	<attribute name="domain">[('dependancy_id','=',dependancy_id)]</attribute>
                 </field>
                 
-                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='type_of_bussiness_line']"
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='turn_type']"
                        position="before">
                     <field name="program_code_id" domain="[('budget_id.state','=','validate')]"/>
                 </xpath>

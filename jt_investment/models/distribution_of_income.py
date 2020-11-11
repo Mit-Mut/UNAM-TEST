@@ -1,5 +1,6 @@
-from odoo import models, fields, api
+from odoo import models, fields, api , _
 from datetime import datetime
+from odoo.exceptions import UserError
 
 
 class DistributionOfIncome(models.Model):
@@ -34,6 +35,13 @@ class DistributionOfIncome(models.Model):
     
 
     #@api.onchange('start_date','end_date','dependency_ids','agreement_type_ids','base_ids','fund_ids')
+
+
+    def unlink(self):
+        for rec in self:
+            if rec.state not in ['draft']:
+                raise UserError(_('You can delete only draft status data.'))
+        return super(DistributionOfIncome, self).unlink()
     
     def action_calculation(self):
         domain = [('bases_collaboration_id','!=',False)]

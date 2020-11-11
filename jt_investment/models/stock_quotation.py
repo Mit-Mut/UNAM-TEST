@@ -13,7 +13,7 @@ class InvestmentStockQuotation(models.Model):
     date = fields.Date("Date")
     price_id = fields.Many2one('stock.quote.price',string="Price History")
     price = fields.Float(related="price_id.price")
-    journal_id = fields.Many2one(related="price_id.journal_id")
+    journal_id = fields.Many2one('account.journal','Bank')
     bank_rate_id = fields.Many2one("res.currency","Bank Rate")
     term = fields.Integer("Term")
     cetes_currency_id = fields.Many2one("res.currency","CETES Rate")
@@ -176,6 +176,9 @@ class InvestmentStockQuotation(models.Model):
 
     def action_confirm(self):
         self.state = 'confirmed'
+
+    def action_reset_draft(self):
+        self.state = 'draft'
 
 class StockQuotePrice(models.Model):
     

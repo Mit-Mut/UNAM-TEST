@@ -63,6 +63,7 @@ class ReportOfInvestmentFunds(models.AbstractModel):
 
     def _get_columns_name(self, options):
         return [
+            {'name': _('Recurso')},
             {'name': _('Fecha')},
             {'name': _('Precio')},
             {'name': _('Nominal')},
@@ -122,11 +123,14 @@ class ReportOfInvestmentFunds(models.AbstractModel):
                 total_title += rec.title
                 total_amount += rec.amount
             profit =  valuation - rec.amount + total_title
+            
+            resouce_name = rec.fund_id and rec.fund_id.name or ''
                 
             lines.append({
                 'id': 'hierarchy' + str(rec.id),
-                'name': rec.invesment_date,
-                'columns': [self._format({'name': rec.movement_price},figure_type='float',digit=6),
+                'name': resouce_name,
+                'columns': [{'name': rec.invesment_date}, 
+                            self._format({'name': rec.movement_price},figure_type='float',digit=6),
                             self._format({'name': nominal},figure_type='float',digit=6),
                             self._format({'name': percentage},figure_type='float',digit=6),
                             self._format({'name': rec.amount},figure_type='float',digit=2),

@@ -939,6 +939,7 @@ msgstr "Conversión de salida"
 #: code:addons/jt_budget_mgmt/static/src/js/widget_financial_report.js:0
 #: model:ir.model,name:jt_budget_mgmt.model_dependency
 #: model:ir.model.fields,field_description:jt_budget_mgmt.field_account_move__dependancy_id
+#: model:ir.model.fields,field_description:jt_budget_mgmt.field_account_payment__dependancy_id
 #: model:ir.model.fields,field_description:jt_budget_mgmt.field_control_assigned_amounts_lines__dependency
 #: model:ir.model.fields,field_description:jt_budget_mgmt.field_dependency__dependency
 #: model:ir.model.fields,field_description:jt_budget_mgmt.field_employee_payroll_file__dependancy_id
@@ -3282,6 +3283,7 @@ msgstr ""
 
 #. module: jt_budget_mgmt
 #: model:ir.model.fields,field_description:jt_budget_mgmt.field_account_move__sub_dependancy_id
+#: model:ir.model.fields,field_description:jt_budget_mgmt.field_account_payment__sub_dependancy_id
 #: model:ir.model.fields,field_description:jt_budget_mgmt.field_employee_payroll_file__sub_dependancy_id
 #: model:ir.model.fields,field_description:jt_budget_mgmt.field_hr_employee__sub_dependancy_id
 #: model:ir.model.fields,field_description:jt_budget_mgmt.field_payment_place__sub_dependancy_id

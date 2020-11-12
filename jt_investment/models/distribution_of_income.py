@@ -44,7 +44,8 @@ class DistributionOfIncome(models.Model):
         return super(DistributionOfIncome, self).unlink()
     
     def action_calculation(self):
-        domain = [('bases_collaboration_id','!=',False)]
+        #domain = [('bases_collaboration_id','!=',False)]
+        domain = []
         self.line_ids = [(6, 0, [])]
         self.calculation_line_ids = [(6, 0, [])]
         vals = []

@@ -76,5 +76,19 @@ class ResourceOrigin(models.Model):
             name = rec.key_origin or ''
             if rec.desc and self.env.context and self.env.context.get('show_desc_name',False): 
                 name = dict(rec._fields['desc'].selection).get(rec.desc)
+                if self.env.user.lang == 'es_MX':
+                    if name=='Federal Subsidy':
+                        name = 'Subsidio Federal'
+                    elif name=='Extraordinary Income':
+                        name = 'Ingresos Extraordinarios'
+                    elif name=='Education Services':
+                        name = 'Servicios de Educación'
+                    elif name=='Financial':
+                        name = 'Rendimientos Financieros'
+                    elif name=='Other Products':
+                        name = 'Otros Productos'
+                    elif name=='Returns Reassignment PEF':
+                        name = 'Reasignación PEF'
+                        
             result.append((rec.id, name))
         return result    

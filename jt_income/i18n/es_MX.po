@@ -1773,7 +1773,7 @@ msgstr "Las líneas de las cuentas \"fuera de balance\" no se pueden conciliar"
 #: code:addons/jt_income/models/invoice.py:0 model:ir.model.fields.selection,name:jt_income.selection__liquid_adjustments_manual_deposite__adaptation_type__liquid
 #, python-format
 msgid "Liquid Adjustments"
-msgstr ""
+msgstr "Liquidez"
 
 #. module: jt_income
 #: model:ir.model,name:jt_income.model_liquid_adjustments_manual_deposite
@@ -2367,8 +2367,8 @@ msgid "Reference of DGAE"
 msgstr "Referencias DGAE"
 
 #. module: jt_income
-#: model:ir.model,name:jt_income.model_account_payment_register model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
-msgid "Register Payment"
+#: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
+msgid "Register Payments"
 msgstr "Registrar Cobro"
 
 #. module: jt_income

@@ -118,7 +118,10 @@ class AccountMove(models.Model):
                                 exit_lines = code_dict.get(line.program_code_id.id)
                                 for exit_line in exit_lines:
                                     if exit_line.move_id.invoice_date.month == b_month:
-                                        total_available_budget -= exit_line.debit if exit_line.debit else exit_line.credit
+                                        if exit_line.debit:
+                                            total_available_budget -= exit_line.debit + exit_line.tax_price_cr
+                                        else:
+                                            total_available_budget -= exit_line.credit + exit_line.tax_price_cr 
 
                             # Preparing code_dict purpose added where defined
                             if line.program_code_id.id in code_dict.keys():
@@ -127,9 +130,10 @@ class AccountMove(models.Model):
                                 code_dict.update({line.program_code_id.id: [line]})
                     line_amount = 0
                     if line.debit:
-                        line_amount = line.debit
+                        line_amount = line.debit + line.tax_price_cr
                     else:
-                        line_amount = line.credit
+                        line_amount = line.credit + line.tax_price_cr
+                        
                     if total_available_budget < line_amount:
                         is_check = True
                         program_name = ''
@@ -217,9 +221,9 @@ class AccountMove(models.Model):
                     
             line_amount =  0
             if line.debit:
-                line_amount = line.debit
+                line_amount = line.debit + line.tax_price_cr
             else: 
-                line_amount = line.credit
+                line_amount = line.credit + line.tax_price_cr
                 
             if total_available_budget < line_amount:
                 is_check = True

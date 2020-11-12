@@ -47,7 +47,7 @@
                         <field name="is_project_payment" invisible="1"/>
                         <group>
                             <group>
-                                <field name="parnter_id"/>
+                                <field name="partner_id" string="Beneficiary of the payment"/>
                                 <field name="baneficiary_key"/>
                                 <field name="rfc"/>
                                 <field name="student_account"/>
@@ -58,22 +58,22 @@
                                 <field name="no_of_document"/>
                                 <field name="vault_folio"/>
                                 <field name="payment_bank_id"/>
-                                <field name="payment_bank_account_id"/>
-                                <field name="payment_issuing_bank_id"/>
+                                <field name="payment_bank_account_id" string="Payment receipt bank account"/>
+                                <field name="payment_issuing_bank_id" string="Payment issuing Bank"/>
                                 <field name="payment_issuing_bank_acc_id"/>
                                 <field name="responsible_id"/>
                                 <field name="administrative_secretary_id"/>
-                                <field name="holder_of_unit_id" />
+                                <field name="holder_of_dependency_id" string="Holder of the Unit" />
                                 <field name="invoice_uuid"/>
                                 <field name="invoice_series"/>
                                 <field name="folio_invoice"/>
-                                <field name="user_registering_id"/>
+                                <field name="user_id" string="User who registers"/>
                                 <field name="diary"/>
                                 <field name="excercise"/>
                                 <field name="project_key"/>
                                 <field name="invoice_vault_folio"/>
                                 <field name="line"/>
-                                <field name="previous"/>
+                               
 
                             </group>
                             <group>
@@ -81,7 +81,7 @@
                                 <field name="agreement_number"/>
                                 <field name="stage"/>
                                 <field name="folio_dependency"/>
-                                <field name="folio_against_reciept"/>
+                                <field name="folio"/>
                                 <field name="operation_type_id"/>
                                 <field name="date_receipt"/>
                                 <field name="date_approval_request"/>
@@ -97,7 +97,7 @@
                                 <field name="project_code"/>
                                 <field name="exchange_rate"/>
                                 <field name="foreign_currency_amount"/>
-                                
+                                <field name="previous"/>
                                 <field name="reason_rejection_req"/>
                                 <field name="reason_rejection"/>
                                 <field name="reason_cancellation"/>

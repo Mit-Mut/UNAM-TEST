@@ -229,6 +229,13 @@ msgid ""
 "                                <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'out_receipt'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Draft Sales Receipt</span>\n"
 "                                <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'in_receipt'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Draft Purchase Receipt</span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'out_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Proyecto de factura</span>\n"
+"                                <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'out_refund'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Draft Credit Note</span>\n"
+"                                <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'in_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Draft Bill</span>\n"
+"                                <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'in_refund'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Draft Refund</span>\n"
+"                                <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'out_receipt'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Draft Sales Receipt</span>\n"
+"                                <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'in_receipt'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Draft Purchase Receipt</span>"
+
 
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
@@ -240,7 +247,7 @@ msgstr ""
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
 msgid "<span class=\"o_form_label\" attrs=\"{'invisible': [('invoice_sequence_number_next_prefix', '=', False)]}\">First Number:</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\" attrs=\"{'invisible': [('invoice_sequence_number_next_prefix', '=', False)]}\">Primer número:</span>"
 
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.pdf_external_layout_income_annual_report
@@ -347,7 +354,7 @@ msgstr "Actividad"
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_liquid_adjustments_manual_deposite__adaptation_type
 msgid "Adaptation Type"
-msgstr ""
+msgstr "Tipo de Adecuación"
 
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
@@ -357,7 +364,7 @@ msgstr "Agregar nota de crédito"
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
 msgid "Add a line"
-msgstr ""
+msgstr "Agregar una línea"
 
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
@@ -567,7 +574,7 @@ msgstr "Sucursal"
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
 msgid "Budget Refund"
-msgstr ""
+msgstr "Generar Adecuacion"
 
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.external_layout_7
@@ -903,7 +910,7 @@ msgstr ""
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_liquid_adjustments_manual_deposite__journal_id
 msgid "Daily"
-msgstr ""
+msgstr "Diario"
 
 #. module: jt_income
 #: model:ir.actions.act_window,name:jt_income.action_daily_cash_cuts model:ir.ui.menu,name:jt_income.menu_daily_cash_cur
@@ -919,7 +926,7 @@ msgstr "Fecha y hora"
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_liquid_adjustments_manual_deposite__date_of_liquid_adu
 msgid "Date of Liquid Adjustments"
-msgstr ""
+msgstr "Fecha de Afection"
 
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_account_move__date_reference
@@ -1175,7 +1182,7 @@ msgstr "Egreso"
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_liquid_adjustments_manual_deposite__budget_id
 msgid "Expenditure Budget"
-msgstr ""
+msgstr "Presupuesto de Egresos"
 
 #. module: jt_income
 #: code:addons/jt_income/reports/new_annual_income_report.py:0 code:addons/jt_income/reports/new_income_annual_report.py:0
@@ -1338,7 +1345,7 @@ msgstr "Descripción general"
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.view_liquid_adjustments_manual_deposite
 msgid "Generate Adequacies"
-msgstr ""
+msgstr "Generar Adecuaciones"
 
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.income_by_item_report_wizard_view
@@ -1678,7 +1685,7 @@ msgstr ""
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_liquid_adjustments_manual_deposite__observation
 msgid "Justification of the Movement"
-msgstr ""
+msgstr "Justificación del Movimiento"
 
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_account_move_line__l10n_mx_edi_product_code_sat_id
@@ -2362,7 +2369,7 @@ msgstr "Referencias DGAE"
 #. module: jt_income
 #: model:ir.model,name:jt_income.model_account_payment_register model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
 msgid "Register Payment"
-msgstr "Registrar cobro"
+msgstr "Registrar Cobro"
 
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_account_move__registry
@@ -2399,7 +2406,7 @@ msgstr ""
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
 msgid "Reset to Draft"
-msgstr ""
+msgstr "Regresar a Borrador"
 
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__amount_residual
@@ -2472,7 +2479,7 @@ msgstr "Concurso de selección"
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
 msgid "Send & Print"
-msgstr ""
+msgstr "Enviar e Imprimir"
 
 #. module: jt_income
 #: model:ir.model,name:jt_income.model_sender_recipient_trades
@@ -3108,3 +3115,4 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_1_document
 msgid "y antecedentes."
 msgstr ""
+

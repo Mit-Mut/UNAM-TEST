@@ -463,7 +463,22 @@ class AccountMoveLine(models.Model):
     folio_invoice = fields.Char("Folio Invoice")
     vault_folio = fields.Char("Vault folio")
 
-
+    @api.depends('price_subtotal','price_total')
+    def get_price_tax_cr(self):
+        for rec in self:
+             
+            if rec.currency_id and rec.company_id.currency_id and rec.currency_id != rec.company_id.currency_id:
+                amount_currency = abs(rec.price_total - rec.price_subtotal)
+                balance = self.currency_id._convert(amount_currency, rec.company_currency_id, rec.company_id, rec.move_id.date)
+                rec.tax_price_cr = balance 
+            else:
+                balance = abs(rec.price_total - rec.price_subtotal)
+                rec.tax_price_cr = balance
+                
+            
+    tax_price_cr = fields.Monetary(string='Tax Price', store=True, readonly=True,
+        currency_field='always_set_currency_id',compute="get_price_tax_cr")
+ 
     @api.model_create_multi
     def create(self, vals_list):
         lines = super(AccountMoveLine, self).create(vals_list)

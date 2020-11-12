@@ -617,8 +617,8 @@ class AccountMoveLine(models.Model):
             price_unit_wo_discount = price_unit - self[0].fixed_discount 
             
         subtotal = quantity * price_unit_wo_discount
-        if self and self[0].other_amounts:
-            subtotal = subtotal+ self[0].other_amounts
+#         if self and self[0].other_amounts:
+#             subtotal = subtotal+ self[0].other_amounts
         # Compute 'price_total'.
         if taxes:
             taxes_res = taxes._origin.compute_all(price_unit_wo_discount,
@@ -1031,6 +1031,11 @@ class IncomeIncomeMoveLine(models.Model):
     @api.onchange('product_id')
     def get_ie_accounts_ids(self):
         self.get_account_list()
+
+        if self.product_id and self.product_id.ie_account_id and len(self.product_id.ie_account_id)==1:
+            self.account_ie_id = self.product_id.ie_account_id[0].id
+        else:
+            self.account_ie_id = False
 
 
     @api.onchange('product_id')

@@ -39,6 +39,7 @@
         'views/verification_of_expense_view.xml',
         'views/request_for_payment.xml',
         'views/account_cancellation.xml',
+        'views/remaining_resource_view.xml',
         'wizard/project_close.xml',
         'wizard/request_confirm_view.xml',
         'wizard/request_reject_view.xml',

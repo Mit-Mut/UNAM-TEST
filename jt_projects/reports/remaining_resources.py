@@ -20,22 +20,22 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from odoo import models, api, _
+from odoo import models, _
 from datetime import datetime
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
-from odoo.tools.misc import formatLang
-from odoo.tools.misc import xlsxwriter
-import io
-import base64
-from odoo.tools import config, date_utils, get_lang
-import lxml.html
+# from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
+# from odoo.tools.misc import formatLang
+# from odoo.tools.misc import xlsxwriter
+# # import io
+# # import base64
+# from odoo.tools import config, date_utils, get_lang
+# import lxml.html
 
 
-class BankAccountingBalance(models.AbstractModel):
+class IntegrationOfRemainingResource(models.AbstractModel):
 
-    _name = "jt_projects.bank.account.balances"
+    _name = "jt_projects.integration.remaining.resources"
     _inherit = "account.coa.report"
-    _description = "Accounting and bank account balances"
+    _description = "Integration of remaining resources"
 
     filter_date = {'mode': 'range', 'filter': 'this_month'}
     filter_comparison = None
@@ -58,11 +58,21 @@ class BankAccountingBalance(models.AbstractModel):
 
     def _get_templates(self):
         templates = super(
-            BankAccountingBalance, self)._get_templates()
+            IntegrationOfRemainingResource, self)._get_templates()
         templates[
             'main_table_header_template'] = 'account_reports.main_table_header'
         templates['main_template'] = 'account_reports.main_template'
         return templates
+
+    def _get_columns_name(self, options):
+        return [
+            {'name': _('Concept')},
+            {'name': _('Stage')},
+            {'name': _('Year')},
+            {'name': _('Project Type')},
+            {'name': _('Accounting account')},
+
+        ]
 
     def _get_lines(self, options, line_id=None):
         lines = []
@@ -70,49 +80,23 @@ class BankAccountingBalance(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
-        project_records = self.env['project.project'].search(
-            [('proj_start_date', '>=', start), ('proj_end_date', '<=', end)])
-
-        for record in project_records:
-            name = record.stage_identifier or ''
+        records = self.env['remaining.resource'].search(
+            [('create_date', '>=', start), ('create_date', '<=', end)])
+        for record in records:
+            print(record)
             lines.append({
-                'id': 'projects' + str(record.id),
-                'name': name,
-                'columns': [{'name': ''},
-                            {'name': record.number or ''},
-                            {'name': record.status},
-                            {'name': record.bank_account_id.name or ''},
-                            {'name': record.ministering_amount or 0.00},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': record.proj_start_date},
-                            {'name': record.proj_end_date},
-
-
+                'id': 'hierarchy' + str(record.id),
+                'name': record.stage or '',
+                'columns': [{'name': record.concept or ''},
+                            {'name': record.year},
+                            {'name': record.project_type},
+                            {'name': record.account_id.name}
                             ],
-                'level': 2,
+                'level': 3,
                 'unfoldable': False,
                 'unfolded': True,
             })
         return lines
 
-    def _get_columns_name(self, options):
-        return [
-            {'name': _('Stage')},
-            {'name': _('Dependence')},
-            {'name': _('Draft')},
-            {'name': _('State')},
-            {'name': _('Bank account')},
-            {'name': _('Financing')},
-            {'name': _('Checked')},
-            {'name': _('To check')},
-            {'name': _('Validity')},
-            {'name': _('Start')},
-            {'name': _('End')},
-            {'name': _('Subtotal')},
-            {'name': _('Total SubDep')},
-        ]
-
     def _get_report_name(self):
-        return _("Accounting and bank account balances")
+        return _("Integration of remaining resources")

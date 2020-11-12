@@ -97,6 +97,9 @@
             sequence="6"
         />
 
+
+        
+
         <!-- Cumulative comparison-->
         <record id="action_cumulative_comparision" model="ir.actions.client">
             <field name="name">Cumulative comparison</field>
@@ -112,6 +115,24 @@
             parent="jt_projects.conacyt_submenu"
             action="action_cumulative_comparision"
             sequence="7"
+        />
+
+
+         <!--Remnant Resource Integration Configuration-->
+        <record id="action_resource_remaining_config" model="ir.actions.client">
+            <field name="name">Integration of remaining resources</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model':'jt_projects.integration.remaining.resources'}" />
+        </record>
+
+
+        <!--Remnant Resource Integration Configuration -->
+        <menuitem
+            id="menu_integration_of_remaining_resource"
+            name="Integration of remaining resources "
+            parent="jt_projects.conacyt_submenu"
+            action="action_resource_remaining_config"
+            sequence="8"
         />
     </data>
 </odoo>

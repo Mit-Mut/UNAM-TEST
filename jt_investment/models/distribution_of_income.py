@@ -50,11 +50,12 @@ class DistributionOfIncome(models.Model):
         vals = []
         cal_vals = []
         if self.start_date:
-            domain.append(('request_date','>=',self.start_date))
+            domain.append(('registration_date','>=',self.start_date))
         if self.end_date:
-            domain.append(('request_date','<=',self.end_date))
-        requests = self.env['request.open.balance'].search(domain)
-        base_ids = requests.mapped('bases_collaboration_id')
+            domain.append(('registration_date','<=',self.end_date))
+            
+        base_ids = self.env['bases.collaboration'].search(domain)
+        #base_ids = requests.mapped('bases_collaboration_id')
         
         if self.dependency_ids and not self.all_dependencies:
             base_ids = base_ids.filtered(lambda x:x.dependency_id.id in self.dependency_ids.ids)
@@ -67,9 +68,12 @@ class DistributionOfIncome(models.Model):
 
         
         for base in base_ids:
-            inc = sum(x.opening_balance for x in requests.filtered(lambda a:a.bases_collaboration_id.id==base.id and a.type_of_operation == 'increase'))
-            withdrawal = sum(x.opening_balance for x in requests.filtered(lambda a:a.bases_collaboration_id.id==base.id and a.type_of_operation == 'withdrawal'))
-            final_balance = base.opening_bal + inc - withdrawal  
+#             inc = sum(x.opening_balance for x in requests.filtered(lambda a:a.bases_collaboration_id.id==base.id and a.type_of_operation == 'increase'))
+#             withdrawal = sum(x.opening_balance for x in requests.filtered(lambda a:a.bases_collaboration_id.id==base.id and a.type_of_operation == 'withdrawal'))
+            inc = 0
+            withdrawal = 0
+            
+  
 #             vals.append([0, 0, 
 #                         {'fund_id':base.agreement_type_id and base.agreement_type_id.fund_id and base.agreement_type_id.fund_id.id or False,
 #                          'agreement_type_id':base.agreement_type_id and base.agreement_type_id.id or False,
@@ -80,23 +84,35 @@ class DistributionOfIncome(models.Model):
 #                          'withdrawals' : withdrawal,
 #                          'final_balance' : final_balance 
 #                          }])
-            income = (((final_balance * base.interest_rate)/100)/360)*360
-              
-            cal_vals.append([0, 0, 
-                        {
-                         'fund_id':base.agreement_type_id and base.agreement_type_id.fund_id and base.agreement_type_id.fund_id.id or False,
-                         'agreement_type_id':base.agreement_type_id and base.agreement_type_id.id or False,
-                         'base_id' : base.id,
-                         'dependency_id' : base.dependency_id and base.dependency_id.id or False,
-                         'capital' : base.opening_bal,
-                         'increments' : inc,
-                         'withdrawals' : withdrawal,
-                         'final_balance' : final_balance,
-                         'income' : income,
-                         'rounded': income,
-                         'rate' : base.interest_rate,
-                         'days':360
-                         }]) 
+
+            
+            inv_records = self.env['investment.investment'].search([('base_collaboration_id','=',base.id)])
+            for inv in inv_records:
+                term = 0
+                if inv.is_fixed_rate:
+                    term = inv.term
+                elif inv.is_variable_rate:
+                    term = inv.term_variable
+                rate = inv.interest_rate + inv.extra_percentage 
+                    
+                final_balance = inv.amount_to_invest + inc - withdrawal
+                income = (((final_balance * rate)/100)/360)*term
+                               
+                cal_vals.append([0, 0, 
+                            {
+                             'fund_id':base.agreement_type_id and base.agreement_type_id.fund_id and base.agreement_type_id.fund_id.id or False,
+                             'agreement_type_id':base.agreement_type_id and base.agreement_type_id.id or False,
+                             'base_id' : base.id,
+                             'dependency_id' : inv.dependency_id and inv.dependency_id.id or False,
+                             'capital' : inv.amount_to_invest,
+                             'increments' : inc,
+                             'withdrawals' : withdrawal,
+                             'final_balance' : final_balance,
+                             'income' : income,
+                             'rounded': income,
+                             'rate' : rate,
+                             'days': term
+                             }]) 
  
 #         self.line_ids = vals
         self.calculation_line_ids = cal_vals 

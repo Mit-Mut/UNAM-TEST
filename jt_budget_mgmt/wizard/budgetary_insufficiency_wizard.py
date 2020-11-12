@@ -49,15 +49,15 @@ class BudegtInsufficiencWiz(models.TransientModel):
             if line.program_code_id and line.price_total != 0:
                 amount =  0
                 if line.debit:
-                    amount = line.debit
+                    amount = line.debit + line.tax_price_cr
                 else: 
-                    amount = line.credit
+                    amount = line.credit + line.tax_price_cr
                 
                 control_amount = 0
                 if line.debit:
-                    control_amount = line.debit
+                    control_amount = line.debit + line.tax_price_cr
                 else: 
-                    control_amount = line.credit
+                    control_amount = line.credit + line.tax_price_cr
                 
                 budget_lines = self.env['expenditure.budget.line'].sudo().search(
                 [('program_code_id', '=', line.program_code_id.id),
@@ -141,15 +141,15 @@ class BudegtInsufficiencWiz(models.TransientModel):
                     if line.program_code_id and line.price_total != 0:
                         amount = 0
                         if line.debit:
-                            amount = line.debit
+                            amount = line.debit + line.tax_price_cr
                         else:
-                            amount = line.credit
+                            amount = line.credit + line.tax_price_cr
 
                         control_amount = 0
                         if line.debit:
-                            control_amount = line.debit
+                            control_amount = line.debit + line.tax_price_cr
                         else:
-                            control_amount = line.credit
+                            control_amount = line.credit + line.tax_price_cr
 
                         budget_lines = self.env['expenditure.budget.line'].sudo().search(
                             [('program_code_id', '=', line.program_code_id.id),

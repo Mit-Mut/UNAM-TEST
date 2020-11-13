@@ -88,8 +88,21 @@ class AccumulatedVerficationRecorded(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+
+        lines.append({
+            'id': 'hierarchy_3',
+            'name': 'Concept',
+            'columns': [{'name': 'Accumulated [Start month-End month Stages]'},
+                        {'name': 'Stage [N of Stage] Accumulated [Months consultation] of'},
+                        {'name': 'Total [Vertical]'},
+                        {'name': 'Total checked [Horizontal]'},
+                        ],
+            'level': 6,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+
         return lines
-        
 
     def _get_report_name(self):
         return _("Accumulated verification recorded in Income / Expense")

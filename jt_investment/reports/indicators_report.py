@@ -97,21 +97,37 @@ class IndicatorsReport(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         lines = []
+
+        # if options.get('all_entries') is False:
+        #     domain=[('state','=','confirmed')]
+        # else:
+        #     domain=[('state','not in',('rejected','canceled'))]
+            
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
-        cetes_rate = self.env['investment.period.rate'].search([('product_type','=','CETES')])
-        bonds_rate = self.env['investment.period.rate'].search([('product_type','=','BONUS')])
-        udibonos_rate = self.env['investment.period.rate'].search([('product_type','=','UDIBONOS')])
-        TIIE = self.env['investment.period.rate'].search([('product_type','=','TIIE')])
-
-        for rec in cetes_rate:
-            current_month_start_date = rec.rate_date.replace(day=1)
-            current_month_end_date = rec.rate_date.replace(day=1) + relativedelta(months=1) - timedelta(days=1)
-            highest_rate = rec.rate_date
-
+        cetes_rate = self.env['investment.period.rate'].search([('rate_date','>=',start),('rate_date','<=',end),('product_type','=','CETES')])
+        bonds_rate = self.env['investment.period.rate'].search([('rate_date','>=',start),('rate_date','<=',end),('product_type','=','BONUS')])
+        udibonos_rate = self.env['investment.period.rate'].search([('rate_date','>=',start),('rate_date','<=',end),('product_type','=','UDIBONOS')])
+        TIIE = self.env['investment.period.rate'].search([('rate_date','>=',start),('rate_date','<=',end),('product_type','=','PAGARE')])
+        
+        #==================== CETES Rate ======================#
+        if cetes_rate:
+            start_month_date = min(x.rate_date for x in cetes_rate)
+            end_month_date = max(x.rate_date for x in cetes_rate)
+            start_month_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_date==start_month_date))
+            end_month_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_date==end_month_date))
+            
+            max_high_rate_28 = max(x.rate_days_28 for x in cetes_rate)
+            min_high_rate_28 = min(x.rate_days_28 for x in cetes_rate)
+            max_rate_28_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_days_28==max_high_rate_28))
+            min_rate_28_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_days_28==min_high_rate_28))
+            total_rate = sum(x.rate_days_28 for x in cetes_rate)           
+            total_rec = len(cetes_rate)
+            avg = total_rate/total_rec
+             
             lines.append({
                 'id': 'hierarchy_cetes',
                 'name': 'A) CETES',
@@ -127,100 +143,103 @@ class IndicatorsReport(models.AbstractModel):
                 'unfoldable': False,
                 'unfolded': True,
             })
-
-            days28_rate,days28_end_rate = 0,0
-            if current_month_start_date == rec.rate_date:
-                days28_rate += rec.rate_days_28
-            elif current_month_end_date == rec.rate_date:
-                days28_end_rate += rec.rate_days_28
             
             lines.append({
                 'id': 'hierarchy_cetes_28_days',
                 'name': '28 DAYS',
-                'columns': [{'name':days28_rate}, 
-                            {'name': days28_end_rate}, 
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
+                'columns': [self._format({'name': start_month_rec.rate_days_28},figure_type='float'),
+                            self._format({'name': end_month_rec.rate_days_28},figure_type='float'),
+                            {'name': max_rate_28_rec.rate_date},
+                            self._format({'name': max_rate_28_rec.rate_days_28},figure_type='float'),
+                            {'name': min_rate_28_rec.rate_date},
+                            self._format({'name': min_rate_28_rec.rate_days_28},figure_type='float'),
+                            self._format({'name': avg},figure_type='float'),
                             ],
-                'level': 1,
+                'level': 3,
                 'unfoldable': False,
                 'unfolded': True,
             })
 
-            days91_rate , days91_end_rate = 0,0
-            if current_month_start_date == rec.rate_date:
-                days91_rate += rec.rate_days_91
-            elif current_month_end_date == rec.rate_date:
-                days91_end_rate += rec.rate_days_91
-
+            max_high_rate_91 = max(x.rate_days_91 for x in cetes_rate)
+            min_high_rate_91 = min(x.rate_days_91 for x in cetes_rate)
+            max_rate_91_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_days_91==max_high_rate_91))
+            min_rate_91_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_days_91==min_high_rate_91))
+            total_rate = sum(x.rate_days_91 for x in cetes_rate)           
+            total_rec = len(cetes_rate)
+            avg = total_rate/total_rec
 
             lines.append({
                 'id': 'hierarchy_cetes_91_days',
                 'name': '91 DAYS',
-                'columns': [{'name':days91_rate}, 
-                            {'name': days91_end_rate}, 
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
+                'columns': [self._format({'name': start_month_rec.rate_days_91},figure_type='float'),
+                            self._format({'name': end_month_rec.rate_days_91},figure_type='float'),
+                            {'name': max_rate_91_rec.rate_date},
+                            self._format({'name': max_rate_91_rec.rate_days_91},figure_type='float'),
+                            {'name': min_rate_91_rec.rate_date},
+                            self._format({'name': min_rate_91_rec.rate_days_91},figure_type='float'),
+                            self._format({'name': avg},figure_type='float'),
                             ],
-                'level': 1,
+                'level': 3,
                 'unfoldable': False,
                 'unfolded': True,
             })
 
-            days182_rate , days182_end_rate = 0,0
-            if current_month_start_date == rec.rate_date:
-                days182_rate += rec.rate_days_182
-            elif current_month_end_date == rec.rate_date:
-                days182_end_rate += rec.rate_days_182
+            max_high_rate_182 = max(x.rate_days_182 for x in cetes_rate)
+            min_high_rate_182 = min(x.rate_days_182 for x in cetes_rate)
+            max_rate_182_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_days_182==max_high_rate_182))
+            min_rate_182_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_days_182==min_high_rate_182))
+            total_rate = sum(x.rate_days_182 for x in cetes_rate)           
+            total_rec = len(cetes_rate)
+            avg = total_rate/total_rec
 
             lines.append({
                 'id': 'hierarchy_cetes_182_days',
                 'name': '182 DAYS',
-                'columns': [{'name': days182_rate}, 
-                            {'name': days182_end_rate}, 
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
+                'columns': [self._format({'name': start_month_rec.rate_days_182},figure_type='float'),
+                            self._format({'name': end_month_rec.rate_days_182},figure_type='float'),
+                            {'name': max_rate_182_rec.rate_date},
+                            self._format({'name': max_rate_182_rec.rate_days_182},figure_type='float'),
+                            {'name': min_rate_182_rec.rate_date},
+                            self._format({'name': min_rate_182_rec.rate_days_182},figure_type='float'),
+                            self._format({'name': avg},figure_type='float'),
                             ],
-                'level': 1,
+                'level': 3,
                 'unfoldable': False,
                 'unfolded': True,
             })
 
-            days364_rate , days364_end_rate = 0,0
-            if current_month_start_date == rec.rate_date:
-                days364_rate += rec.rate_days_364
-            elif current_month_end_date == rec.rate_date:
-                days364_end_rate += rec.rate_days_364
+            max_high_rate_364 = max(x.rate_days_364 for x in cetes_rate)
+            min_high_rate_364 = min(x.rate_days_364 for x in cetes_rate)
+            max_rate_364_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_days_364==max_high_rate_364))
+            min_rate_364_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_days_364==min_high_rate_364))
+            total_rate = sum(x.rate_days_364 for x in cetes_rate)           
+            total_rec = len(cetes_rate)
+            avg = total_rate/total_rec
 
             lines.append({
                 'id': 'hierarchy_cetes_364_days',
                 'name': '364 DAYS',
-                'columns': [{'name': days364_rate}, 
-                            {'name': days364_end_rate}, 
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
+                'columns': [self._format({'name': start_month_rec.rate_days_364},figure_type='float'),
+                            self._format({'name': end_month_rec.rate_days_364},figure_type='float'),
+                            {'name': max_rate_364_rec.rate_date},
+                            self._format({'name': max_rate_364_rec.rate_days_364},figure_type='float'),
+                            {'name': min_rate_364_rec.rate_date},
+                            self._format({'name': min_rate_364_rec.rate_days_364},figure_type='float'),
+                            self._format({'name': avg},figure_type='float'),
                             ],
-                'level': 1,
+                'level': 3,
                 'unfoldable': False,
                 'unfolded': True,
             })
+            
 
+        #==================== Bonds Rate ======================#
+        if bonds_rate:
+            start_month_date = min(x.rate_date for x in bonds_rate)
+            end_month_date = max(x.rate_date for x in bonds_rate)
+            start_month_rec = max(x for x in bonds_rate.filtered(lambda x:x.rate_date==start_month_date))
+            end_month_rec = max(x for x in bonds_rate.filtered(lambda x:x.rate_date==end_month_date))
 
-        for rec in bonds_rate:
-            current_month_start_date = rec.rate_date.replace(day=1)
-            current_month_end_date = rec.rate_date.replace(day=1) + relativedelta(months=1) - timedelta(days=1)
             lines.append({
                 'id': 'hierarchy_bonds',
                 'name': 'B) BONDS',
@@ -236,144 +255,166 @@ class IndicatorsReport(models.AbstractModel):
                 'unfoldable': False,
                 'unfolded': True,
             })
-
-            years3_rate , years3_end_rate = 0,0
-            if current_month_start_date == rec.rate_date:
-                years3_rate += rec.rate_year_3
-            elif current_month_end_date == rec.rate_date:
-                years3_end_rate += rec.rate_year_3
-           
+            #====== bonds 3 Years ========
+            max_high_rate_3 = max(x.rate_year_3 for x in bonds_rate)
+            min_high_rate_3 = min(x.rate_year_3 for x in bonds_rate)
+            max_rate_3_rec = max(x for x in bonds_rate.filtered(lambda x:x.rate_year_3==max_high_rate_3))
+            min_rate_3_rec = max(x for x in bonds_rate.filtered(lambda x:x.rate_year_3==min_high_rate_3))
+            total_rate = sum(x.rate_year_3 for x in bonds_rate)           
+            total_rec = len(bonds_rate)
+            avg = total_rate/total_rec
+                         
             lines.append({
-                'id': 'hierarchy_bonds_3_years',
+                'id': 'hierarchy_bond_3_year',
                 'name': '3 YEARS',
-                'columns': [{'name': years3_rate}, 
-                            {'name': years3_end_rate}, 
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
+                'columns': [self._format({'name': start_month_rec.rate_year_3},figure_type='float'),
+                            self._format({'name': end_month_rec.rate_year_3},figure_type='float'),
+                            {'name': max_rate_3_rec.rate_date},
+                            self._format({'name': max_rate_3_rec.rate_year_3},figure_type='float'),
+                            {'name': min_rate_3_rec.rate_date},
+                            self._format({'name': min_rate_3_rec.rate_year_3},figure_type='float'),
+                            self._format({'name': avg},figure_type='float'),
                             ],
-                'level': 1,
+                'level': 3,
                 'unfoldable': False,
                 'unfolded': True,
             })
 
-            years5_rate , years5_end_rate = 0,0
-            if current_month_start_date == rec.rate_date:
-                years5_rate += rec.rate_year_5
-            elif current_month_end_date == rec.rate_date:
-                years5_end_rate += rec.rate_year_5
-
+            #====== bonds 5 Years ========
+            max_high_rate_5 = max(x.rate_year_5 for x in bonds_rate)
+            min_high_rate_5 = min(x.rate_year_5 for x in bonds_rate)
+            max_rate_5_rec = max(x for x in bonds_rate.filtered(lambda x:x.rate_year_5==max_high_rate_5))
+            min_rate_5_rec = max(x for x in bonds_rate.filtered(lambda x:x.rate_year_5==min_high_rate_5))
+            total_rate = sum(x.rate_year_5 for x in bonds_rate)           
+            total_rec = len(bonds_rate)
+            avg = total_rate/total_rec
+                         
             lines.append({
-                'id': 'hierarchy_bonds_5_years',
+                'id': 'hierarchy_bond_5_year',
                 'name': '5 YEARS',
-                'columns': [{'name': years5_rate}, 
-                            {'name': years5_end_rate}, 
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
+                'columns': [self._format({'name': start_month_rec.rate_year_5},figure_type='float'),
+                            self._format({'name': end_month_rec.rate_year_5},figure_type='float'),
+                            {'name': max_rate_5_rec.rate_date},
+                            self._format({'name': max_rate_5_rec.rate_year_5},figure_type='float'),
+                            {'name': min_rate_5_rec.rate_date},
+                            self._format({'name': min_rate_5_rec.rate_year_5},figure_type='float'),
+                            self._format({'name': avg},figure_type='float'),
                             ],
-                'level': 1,
+                'level': 3,
                 'unfoldable': False,
                 'unfolded': True,
             })
 
-            years7_rate , years7_end_rate = 0,0
-            if current_month_start_date == rec.rate_date:
-                years7_rate += rec.rate_year_7
-            elif current_month_end_date == rec.rate_date:
-                years7_end_rate += rec.rate_year_7
-
+            #====== bonds 7 Years ========
+            max_high_rate_7 = max(x.rate_year_7 for x in bonds_rate)
+            min_high_rate_7 = min(x.rate_year_7 for x in bonds_rate)
+            max_rate_7_rec = max(x for x in bonds_rate.filtered(lambda x:x.rate_year_7==max_high_rate_7))
+            min_rate_7_rec = max(x for x in bonds_rate.filtered(lambda x:x.rate_year_7==min_high_rate_7))
+            total_rate = sum(x.rate_year_7 for x in bonds_rate)           
+            total_rec = len(bonds_rate)
+            avg = total_rate/total_rec
+                         
             lines.append({
-                'id': 'hierarchy_bonds_7_years',
+                'id': 'hierarchy_bond_7_year',
                 'name': '7 YEARS',
-                'columns': [{'name': years7_rate}, 
-                            {'name': years7_end_rate}, 
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
+                'columns': [self._format({'name': start_month_rec.rate_year_7},figure_type='float'),
+                            self._format({'name': end_month_rec.rate_year_7},figure_type='float'),
+                            {'name': max_rate_7_rec.rate_date},
+                            self._format({'name': max_rate_7_rec.rate_year_7},figure_type='float'),
+                            {'name': min_rate_7_rec.rate_date},
+                            self._format({'name': min_rate_7_rec.rate_year_7},figure_type='float'),
+                            self._format({'name': avg},figure_type='float'),
                             ],
-                'level': 1,
+                'level': 3,
                 'unfoldable': False,
                 'unfolded': True,
             })
 
-            years10_rate , years10_end_rate = 0,0
-            if current_month_start_date == rec.rate_date:
-                years10_rate += rec.rate_year_10
-            elif current_month_end_date == rec.rate_date:
-                years10_end_rate += rec.rate_year_10
-
+            #====== bonds 10 Years ========
+            max_high_rate_10 = max(x.rate_year_10 for x in bonds_rate)
+            min_high_rate_10 = min(x.rate_year_10 for x in bonds_rate)
+            max_rate_10_rec = max(x for x in bonds_rate.filtered(lambda x:x.rate_year_10==max_high_rate_10))
+            min_rate_10_rec = max(x for x in bonds_rate.filtered(lambda x:x.rate_year_10==min_high_rate_10))
+            total_rate = sum(x.rate_year_10 for x in bonds_rate)           
+            total_rec = len(bonds_rate)
+            avg = total_rate/total_rec
+                         
             lines.append({
-                'id': 'hierarchy_bonds_10_years',
+                'id': 'hierarchy_bond_10_year',
                 'name': '10 YEARS',
-                'columns': [{'name': years10_rate}, 
-                            {'name': years10_end_rate}, 
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
+                'columns': [self._format({'name': start_month_rec.rate_year_10},figure_type='float'),
+                            self._format({'name': end_month_rec.rate_year_10},figure_type='float'),
+                            {'name': max_rate_10_rec.rate_date},
+                            self._format({'name': max_rate_10_rec.rate_year_10},figure_type='float'),
+                            {'name': min_rate_10_rec.rate_date},
+                            self._format({'name': min_rate_10_rec.rate_year_10},figure_type='float'),
+                            self._format({'name': avg},figure_type='float'),
                             ],
-                'level': 1,
+                'level': 3,
                 'unfoldable': False,
                 'unfolded': True,
             })
 
-            years20_rate , years20_end_rate = 0,0
-            if current_month_start_date == rec.rate_date:
-                years20_rate += rec.rate_year_20
-            elif current_month_end_date == rec.rate_date:
-                years20_end_rate += rec.rate_year_20
-
+            #====== bonds 20 Years ========
+            max_high_rate_20 = max(x.rate_year_20 for x in bonds_rate)
+            min_high_rate_20 = min(x.rate_year_20 for x in bonds_rate)
+            max_rate_20_rec = max(x for x in bonds_rate.filtered(lambda x:x.rate_year_20==max_high_rate_20))
+            min_rate_20_rec = max(x for x in bonds_rate.filtered(lambda x:x.rate_year_20==min_high_rate_20))
+            total_rate = sum(x.rate_year_20 for x in bonds_rate)           
+            total_rec = len(bonds_rate)
+            avg = total_rate/total_rec
+                         
             lines.append({
-                'id': 'hierarchy_bonds_20_years',
+                'id': 'hierarchy_bond_20_year',
                 'name': '20 YEARS',
-                'columns': [{'name': years20_rate}, 
-                            {'name': years20_end_rate}, 
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
+                'columns': [self._format({'name': start_month_rec.rate_year_20},figure_type='float'),
+                            self._format({'name': end_month_rec.rate_year_20},figure_type='float'),
+                            {'name': max_rate_20_rec.rate_date},
+                            self._format({'name': max_rate_20_rec.rate_year_20},figure_type='float'),
+                            {'name': min_rate_20_rec.rate_date},
+                            self._format({'name': min_rate_20_rec.rate_year_20},figure_type='float'),
+                            self._format({'name': avg},figure_type='float'),
                             ],
-                'level': 1,
+                'level': 3,
                 'unfoldable': False,
                 'unfolded': True,
             })
 
-            years30_rate , years30_end_rate = 0,0
-            if current_month_start_date == rec.rate_date:
-                years30_rate += rec.rate_year_30
-            elif current_month_end_date == rec.rate_date:
-                years30_end_rate += rec.rate_year_30
-
+            #====== bonds 30 Years ========
+            max_high_rate_30 = max(x.rate_year_30 for x in bonds_rate)
+            min_high_rate_30 = min(x.rate_year_30 for x in bonds_rate)
+            max_rate_30_rec = max(x for x in bonds_rate.filtered(lambda x:x.rate_year_30==max_high_rate_30))
+            min_rate_30_rec = max(x for x in bonds_rate.filtered(lambda x:x.rate_year_30==min_high_rate_30))
+            total_rate = sum(x.rate_year_30 for x in bonds_rate)           
+            total_rec = len(bonds_rate)
+            avg = total_rate/total_rec
+                         
             lines.append({
-                'id': 'hierarchy_bonds_30_years',
+                'id': 'hierarchy_bond_30_year',
                 'name': '30 YEARS',
-                'columns': [{'name': years30_rate}, 
-                            {'name': years30_end_rate}, 
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
+                'columns': [self._format({'name': start_month_rec.rate_year_30},figure_type='float'),
+                            self._format({'name': end_month_rec.rate_year_30},figure_type='float'),
+                            {'name': max_rate_20_rec.rate_date},
+                            self._format({'name': max_rate_30_rec.rate_year_30},figure_type='float'),
+                            {'name': min_rate_30_rec.rate_date},
+                            self._format({'name': min_rate_30_rec.rate_year_30},figure_type='float'),
+                            self._format({'name': avg},figure_type='float'),
                             ],
-                'level': 1,
+                'level': 3,
                 'unfoldable': False,
                 'unfolded': True,
             })
 
-        for rec in udibonos_rate:
-            current_month_start_date = rec.rate_date.replace(day=1)
-            current_month_end_date = rec.rate_date.replace(day=1) + relativedelta(months=1) - timedelta(days=1)
+
+        #==================== UdiBonds Rate ======================#
+        if udibonos_rate:
+            start_month_date = min(x.rate_date for x in udibonos_rate)
+            end_month_date = max(x.rate_date for x in udibonos_rate)
+            start_month_rec = max(x for x in udibonos_rate.filtered(lambda x:x.rate_date==start_month_date))
+            end_month_rec = max(x for x in udibonos_rate.filtered(lambda x:x.rate_date==end_month_date))
+
             lines.append({
-                'id': 'hierarchy_udibonos',
+                'id': 'hierarchy_bonds',
                 'name': 'C) UDIBONOS',
                 'columns': [{'name': ''}, 
                             {'name': ''}, 
@@ -387,125 +428,140 @@ class IndicatorsReport(models.AbstractModel):
                 'unfoldable': False,
                 'unfolded': True,
             })
-
-            udi_year3_rate , udi_year3_end_rate = 0,0
-            if current_month_start_date == rec.rate_date:
-                udi_year3_rate += rec.rate_year_3
-            elif current_month_end_date == rec.rate_date:
-                udi_year3_end_rate += rec.rate_year_3
-
-
+            #====== bonds 3 Years ========
+            max_high_rate_3 = max(x.rate_year_3 for x in udibonos_rate)
+            min_high_rate_3 = min(x.rate_year_3 for x in udibonos_rate)
+            max_rate_3_rec = max(x for x in udibonos_rate.filtered(lambda x:x.rate_year_3==max_high_rate_3))
+            min_rate_3_rec = max(x for x in udibonos_rate.filtered(lambda x:x.rate_year_3==min_high_rate_3))
+            total_rate = sum(x.rate_year_3 for x in udibonos_rate)           
+            total_rec = len(udibonos_rate)
+            avg = total_rate/total_rec
+                         
             lines.append({
-                'id': 'hierarchy_udibonos_3_years',
+                'id': 'hierarchy_udibond_3_year',
                 'name': '3 YEARS',
-                'columns': [{'name': udi_year3_rate}, 
-                            {'name': udi_year3_end_rate}, 
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
+                'columns': [self._format({'name': start_month_rec.rate_year_3},figure_type='float'),
+                            self._format({'name': end_month_rec.rate_year_3},figure_type='float'),
+                            {'name': max_rate_3_rec.rate_date},
+                            self._format({'name': max_rate_3_rec.rate_year_3},figure_type='float'),
+                            {'name': min_rate_3_rec.rate_date},
+                            self._format({'name': min_rate_3_rec.rate_year_3},figure_type='float'),
+                            self._format({'name': avg},figure_type='float'),
                             ],
-                'level': 1,
+                'level': 3,
                 'unfoldable': False,
                 'unfolded': True,
             })
 
-            udi_year5_rate , udi_year5_end_rate = 0,0
-            if current_month_start_date == rec.rate_date:
-                udi_year5_rate += rec.rate_year_5
-            elif current_month_end_date == rec.rate_date:
-                udi_year5_end_rate += rec.rate_year_5
-
+            #====== bonds 5 Years ========
+            max_high_rate_5 = max(x.rate_year_5 for x in udibonos_rate)
+            min_high_rate_5 = min(x.rate_year_5 for x in udibonos_rate)
+            max_rate_5_rec = max(x for x in udibonos_rate.filtered(lambda x:x.rate_year_5==max_high_rate_5))
+            min_rate_5_rec = max(x for x in udibonos_rate.filtered(lambda x:x.rate_year_5==min_high_rate_5))
+            total_rate = sum(x.rate_year_5 for x in udibonos_rate)           
+            total_rec = len(udibonos_rate)
+            avg = total_rate/total_rec
+                         
             lines.append({
-                'id': 'hierarchy_udibonos_5_years',
+                'id': 'hierarchy_udibond_5_year',
                 'name': '5 YEARS',
-                'columns': [{'name': udi_year5_rate}, 
-                            {'name': udi_year5_end_rate}, 
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
+                'columns': [self._format({'name': start_month_rec.rate_year_5},figure_type='float'),
+                            self._format({'name': end_month_rec.rate_year_5},figure_type='float'),
+                            {'name': max_rate_5_rec.rate_date},
+                            self._format({'name': max_rate_5_rec.rate_year_5},figure_type='float'),
+                            {'name': min_rate_5_rec.rate_date},
+                            self._format({'name': min_rate_5_rec.rate_year_5},figure_type='float'),
+                            self._format({'name': avg},figure_type='float'),
                             ],
-                'level': 1,
+                'level': 3,
                 'unfoldable': False,
                 'unfolded': True,
             })
 
-            udi_year10_rate , udi_year10_end_rate = 0,0
-            if current_month_start_date == rec.rate_date:
-                udi_year10_rate += rec.rate_year_10
-            elif current_month_end_date == rec.rate_date:
-                udi_year10_end_rate += rec.rate_year_10
-
-
+            #====== bonds 10 Years ========
+            max_high_rate_10 = max(x.rate_year_10 for x in udibonos_rate)
+            min_high_rate_10 = min(x.rate_year_10 for x in udibonos_rate)
+            max_rate_10_rec = max(x for x in udibonos_rate.filtered(lambda x:x.rate_year_10==max_high_rate_10))
+            min_rate_10_rec = max(x for x in udibonos_rate.filtered(lambda x:x.rate_year_10==min_high_rate_10))
+            total_rate = sum(x.rate_year_10 for x in udibonos_rate)           
+            total_rec = len(udibonos_rate)
+            avg = total_rate/total_rec
+                         
             lines.append({
-                'id': 'hierarchy_udibonos_10_years',
+                'id': 'hierarchy_udibond_10_year',
                 'name': '10 YEARS',
-                'columns': [{'name': udi_year10_rate}, 
-                            {'name': udi_year10_end_rate}, 
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
+                'columns': [self._format({'name': start_month_rec.rate_year_10},figure_type='float'),
+                            self._format({'name': end_month_rec.rate_year_10},figure_type='float'),
+                            {'name': max_rate_10_rec.rate_date},
+                            self._format({'name': max_rate_10_rec.rate_year_10},figure_type='float'),
+                            {'name': min_rate_10_rec.rate_date},
+                            self._format({'name': min_rate_10_rec.rate_year_10},figure_type='float'),
+                            self._format({'name': avg},figure_type='float'),
                             ],
-                'level': 1,
+                'level': 3,
                 'unfoldable': False,
                 'unfolded': True,
             })
 
-            udi_year20_rate , udi_year20_end_rate = 0,0
-            if current_month_start_date == rec.rate_date:
-                udi_year20_rate += rec.rate_year_20
-            elif current_month_end_date == rec.rate_date:
-                udi_year20_end_rate += rec.rate_year_20
-
+            #====== Udibonds 20 Years ========
+            max_high_rate_20 = max(x.rate_year_20 for x in udibonos_rate)
+            min_high_rate_20 = min(x.rate_year_20 for x in udibonos_rate)
+            max_rate_20_rec = max(x for x in udibonos_rate.filtered(lambda x:x.rate_year_20==max_high_rate_20))
+            min_rate_20_rec = max(x for x in udibonos_rate.filtered(lambda x:x.rate_year_20==min_high_rate_20))
+            total_rate = sum(x.rate_year_20 for x in udibonos_rate)           
+            total_rec = len(udibonos_rate)
+            avg = total_rate/total_rec
+                         
             lines.append({
-                'id': 'hierarchy_udibonos_20_years',
+                'id': 'hierarchy_udibond_20_year',
                 'name': '20 YEARS',
-                'columns': [{'name': udi_year20_rate}, 
-                            {'name': udi_year20_end_rate}, 
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
+                'columns': [self._format({'name': start_month_rec.rate_year_20},figure_type='float'),
+                            self._format({'name': end_month_rec.rate_year_20},figure_type='float'),
+                            {'name': max_rate_20_rec.rate_date},
+                            self._format({'name': max_rate_20_rec.rate_year_20},figure_type='float'),
+                            {'name': min_rate_20_rec.rate_date},
+                            self._format({'name': min_rate_20_rec.rate_year_20},figure_type='float'),
+                            self._format({'name': avg},figure_type='float'),
                             ],
-                'level': 1,
+                'level': 3,
                 'unfoldable': False,
                 'unfolded': True,
             })
 
-            udi_year30_rate , udi_year30_end_rate = 0,0
-            if current_month_start_date == rec.rate_date:
-                udi_year30_rate += rec.rate_year_30
-            elif current_month_end_date == rec.rate_date:
-                udi_year30_end_rate += rec.rate_year_30
-
-
+            #====== Udibonds 30 Years ========
+            max_high_rate_30 = max(x.rate_year_30 for x in udibonos_rate)
+            min_high_rate_30 = min(x.rate_year_30 for x in udibonos_rate)
+            max_rate_30_rec = max(x for x in udibonos_rate.filtered(lambda x:x.rate_year_30==max_high_rate_30))
+            min_rate_30_rec = max(x for x in udibonos_rate.filtered(lambda x:x.rate_year_30==min_high_rate_30))
+            total_rate = sum(x.rate_year_30 for x in udibonos_rate)           
+            total_rec = len(udibonos_rate)
+            avg = total_rate/total_rec
+                         
             lines.append({
-                'id': 'hierarchy_udibonos_30_years',
+                'id': 'hierarchy_udibond_30_year',
                 'name': '30 YEARS',
-                'columns': [{'name': udi_year30_rate}, 
-                            {'name': udi_year30_end_rate}, 
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
+                'columns': [self._format({'name': start_month_rec.rate_year_30},figure_type='float'),
+                            self._format({'name': end_month_rec.rate_year_30},figure_type='float'),
+                            {'name': max_rate_20_rec.rate_date},
+                            self._format({'name': max_rate_30_rec.rate_year_30},figure_type='float'),
+                            {'name': min_rate_30_rec.rate_date},
+                            self._format({'name': min_rate_30_rec.rate_year_30},figure_type='float'),
+                            self._format({'name': avg},figure_type='float'),
                             ],
-                'level': 1,
+                'level': 3,
                 'unfoldable': False,
                 'unfolded': True,
             })
 
-        for rec in TIIE:
-            current_month_start_date = rec.rate_date.replace(day=1) 
-            current_month_end_date = rec.rate_date.replace(day=1) + relativedelta(months=1) - timedelta(days=1)
+        #==================== TIIE Rate ======================#
+        if TIIE:
+            start_month_date = min(x.rate_date for x in TIIE)
+            end_month_date = max(x.rate_date for x in TIIE)
+            start_month_rec = max(x for x in TIIE.filtered(lambda x:x.rate_date==start_month_date))
+            end_month_rec = max(x for x in TIIE.filtered(lambda x:x.rate_date==end_month_date))
+
             lines.append({
-                'id': 'hierarchy_titles',
+                'id': 'hierarchy_cetes',
                 'name': 'D) TIIE',
                 'columns': [{'name': ''}, 
                             {'name': ''}, 
@@ -519,95 +575,153 @@ class IndicatorsReport(models.AbstractModel):
                 'unfoldable': False,
                 'unfolded': True,
             })
+            
+            max_high_rate_364 = max(x.rate_daily for x in TIIE)
+            min_high_rate_364 = min(x.rate_daily for x in TIIE)
+            max_rate_364_rec = max(x for x in TIIE.filtered(lambda x:x.rate_daily==max_high_rate_364))
+            min_rate_364_rec = max(x for x in TIIE.filtered(lambda x:x.rate_daily==min_high_rate_364))
+            total_rate = sum(x.rate_daily for x in TIIE)           
+            total_rec = len(TIIE)
+            avg = total_rate/total_rec
 
-            day1_rate , day1_end_rate = 0,0
-            if current_month_start_date == rec.rate_date:
-                day1_rate += rec.rate_daily
-            elif current_month_end_date == rec.rate_date:
-                day1_end_rate += rec.rate_daily
+            lines.append({
+                'id': 'hierarchy_tiie_daily_days',
+                'name': 'Daily',
+                'columns': [self._format({'name': start_month_rec.rate_daily},figure_type='float'),
+                            self._format({'name': end_month_rec.rate_daily},figure_type='float'),
+                            {'name': max_rate_364_rec.rate_date},
+                            self._format({'name': max_rate_91_rec.rate_daily},figure_type='float'),
+                            {'name': min_rate_364_rec.rate_date},
+                            self._format({'name': min_rate_364_rec.rate_daily},figure_type='float'),
+                            self._format({'name': avg},figure_type='float'),
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+            
+            max_high_rate_28 = max(x.rate_days_28 for x in TIIE)
+            min_high_rate_28 = min(x.rate_days_28 for x in TIIE)
+            max_rate_28_rec = max(x for x in TIIE.filtered(lambda x:x.rate_days_28==max_high_rate_28))
+            min_rate_28_rec = max(x for x in TIIE.filtered(lambda x:x.rate_days_28==min_high_rate_28))
+            total_rate = sum(x.rate_days_28 for x in TIIE)           
+            total_rec = len(TIIE)
+            avg = total_rate/total_rec
             
             lines.append({
-                'id': 'hierarchy_titles_1_day',
-                'name': '1 DAY',
-                'columns': [{'name': day1_rate}, 
-                            {'name': day1_end_rate}, 
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            ],
-                'level': 1,
-                'unfoldable': False,
-                'unfolded': True,
-            })
-
-            t_day28_rate , t_day28_end_rate = 0,0
-            if current_month_start_date == rec.rate_date:
-                t_day28_rate += rec.rate_days_28
-            elif current_month_end_date == rec.rate_date:
-                t_day28_end_rate += rec.rate_days_28
-
-            lines.append({
-                'id': 'hierarchy_titles_28_days',
+                'id': 'hierarchy_TIIE_28_days',
                 'name': '28 DAYS',
-                'columns': [{'name':t_day28_rate}, 
-                            {'name': t_day28_end_rate}, 
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
+                'columns': [self._format({'name': start_month_rec.rate_days_28},figure_type='float'),
+                            self._format({'name': end_month_rec.rate_days_28},figure_type='float'),
+                            {'name': max_rate_28_rec.rate_date},
+                            self._format({'name': max_rate_28_rec.rate_days_28},figure_type='float'),
+                            {'name': min_rate_28_rec.rate_date},
+                            self._format({'name': min_rate_28_rec.rate_days_28},figure_type='float'),
+                            self._format({'name': avg},figure_type='float'),
                             ],
-                'level': 1,
+                'level': 3,
                 'unfoldable': False,
                 'unfolded': True,
             })
 
-            t_day91_rate , t_day91_end_rate = 0,0
-            if current_month_start_date == rec.rate_date:
-                t_day91_rate += rec.rate_days_91
-            elif current_month_end_date == rec.rate_date:
-                t_day91_end_rate += rec.rate_days_91
+            max_high_rate_91 = max(x.rate_days_91 for x in cetes_rate)
+            min_high_rate_91 = min(x.rate_days_91 for x in cetes_rate)
+            max_rate_91_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_days_91==max_high_rate_91))
+            min_rate_91_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_days_91==min_high_rate_91))
+            total_rate = sum(x.rate_days_91 for x in cetes_rate)           
+            total_rec = len(cetes_rate)
+            avg = total_rate/total_rec
 
             lines.append({
-                'id': 'hierarchy_titles_91_days',
+                'id': 'hierarchy_TIIE_91_days',
                 'name': '91 DAYS',
-                'columns': [{'name': t_day91_rate}, 
-                            {'name': t_day91_end_rate}, 
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
+                'columns': [self._format({'name': start_month_rec.rate_days_91},figure_type='float'),
+                            self._format({'name': end_month_rec.rate_days_91},figure_type='float'),
+                            {'name': max_rate_91_rec.rate_date},
+                            self._format({'name': max_rate_91_rec.rate_days_91},figure_type='float'),
+                            {'name': min_rate_91_rec.rate_date},
+                            self._format({'name': min_rate_91_rec.rate_days_91},figure_type='float'),
+                            self._format({'name': avg},figure_type='float'),
                             ],
-                'level': 1,
+                'level': 3,
                 'unfoldable': False,
                 'unfolded': True,
             })
 
-            t_day182_rate , t_day182_end_rate = 0,0
-            if current_month_start_date == rec.rate_date:
-                t_day182_rate += rec.rate_days_182
-            elif current_month_end_date == rec.rate_date:
-                t_day182_end_rate += rec.rate_days_182
+            max_high_rate_182 = max(x.rate_days_182 for x in cetes_rate)
+            min_high_rate_182 = min(x.rate_days_182 for x in cetes_rate)
+            max_rate_182_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_days_182==max_high_rate_182))
+            min_rate_182_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_days_182==min_high_rate_182))
+            total_rate = sum(x.rate_days_182 for x in cetes_rate)           
+            total_rec = len(cetes_rate)
+            avg = total_rate/total_rec
 
             lines.append({
-                'id': 'hierarchy_titles_182_days',
+                'id': 'hierarchy_TIIE_182_days',
                 'name': '182 DAYS',
-                'columns': [{'name': t_day182_rate}, 
-                            {'name': t_day182_end_rate}, 
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
+                'columns': [self._format({'name': start_month_rec.rate_days_182},figure_type='float'),
+                            self._format({'name': end_month_rec.rate_days_182},figure_type='float'),
+                            {'name': max_rate_182_rec.rate_date},
+                            self._format({'name': max_rate_182_rec.rate_days_182},figure_type='float'),
+                            {'name': min_rate_182_rec.rate_date},
+                            self._format({'name': min_rate_182_rec.rate_days_182},figure_type='float'),
+                            self._format({'name': avg},figure_type='float'),
                             ],
-                'level': 1,
+                'level': 3,
                 'unfoldable': False,
                 'unfolded': True,
             })
-                    
+        currency_ids = self.env['res.currency'].search([('id','!=',self.env.user.company_id.currency_id.id)])
+        
+        for currency in currency_ids:
+            currency_rates = self.env['res.currency.rate'].search([('currency_id','=',currency.id)])
+            
+            if currency_rates:
+                start_month_date = min(x.name for x in currency_rates)
+                end_month_date = max(x.name for x in currency_rates)
+                start_month_rec = max(x for x in currency_rates.filtered(lambda x:x.name==start_month_date))
+                end_month_rec = max(x for x in currency_rates.filtered(lambda x:x.name==end_month_date))
+    
+                lines.append({
+                    'id': 'hierarchy_cetes',
+                    'name': currency.name,
+                    'columns': [{'name': ''}, 
+                                {'name': ''}, 
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                ],
+                    'level': 1,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+                
+                max_high_rate_364 = max(x.rate for x in currency_rates)
+                min_high_rate_364 = min(x.rate for x in currency_rates)
+                max_rate_364_rec = max(x for x in currency_rates.filtered(lambda x:x.rate==max_high_rate_364))
+                min_rate_364_rec = max(x for x in currency_rates.filtered(lambda x:x.rate==min_high_rate_364))
+                total_rate = sum(x.rate for x in currency_rates)           
+                total_rec = len(currency_rates)
+                avg = total_rate/total_rec
+    
+                lines.append({
+                    'id': 'hierarchy_tiie_daily_days',
+                    'name': 'Daily',
+                    'columns': [self._format({'name': start_month_rec.rate},figure_type='float'),
+                                self._format({'name': end_month_rec.rate},figure_type='float'),
+                                {'name': max_rate_364_rec.name},
+                                self._format({'name': max_rate_364_rec.rate},figure_type='float'),
+                                {'name': min_rate_364_rec.name},
+                                self._format({'name': min_rate_364_rec.rate},figure_type='float'),
+                                self._format({'name': avg},figure_type='float'),
+                                ],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+            
         return lines
 
     def _get_report_name(self):

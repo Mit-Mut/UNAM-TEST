@@ -72,6 +72,89 @@ class CumulativeComparison(models.AbstractModel):
             options['date'].get('date_to'), '%Y-%m-%d').date()
         project_records = self.env['project.project'].search(
             [('proj_start_date', '>=', start), ('proj_end_date', '<=', end)])
+        for record in project_records:
+            name = str(record.stage_identifier or '') + \
+                '/' + str(record.proj_start_date.year)
+            lines.append({
+                'id': 'hierarchy_1' + str(record.id),
+                'name': name,
+                'columns': [{'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+        lines.append({
+            'id': 'hierarchy_2' + str(record.id),
+            'name': 'Number of projects',
+            'columns': [{'name': 'Overdue projects'},
+                        {'name': 'Current projects'},
+                        {'name': 'Subtotal'},
+                        {'name': 'Projects checked with zero bank balance'},
+                        {'name': 'Projects checked with bank balance'},
+                        {'name': 'CONACYT projects'},
+                        {'name': 'Countable balance'},
+                        {'name': 'Account balance'},
+                        {'name': '%'},
+                        {'name': 'Number of projects'},
+                        {'name': 'Overdue projects'},
+                        {'name': 'Current projects'},
+                        # {'name': 'Subtotal'},
+                        # {'name': 'Projects checked with zero bank balance'},
+                        # {'name': 'Projects checked with bank balance'},
+                        # {'name': 'CONACYT projects'},
+                        # {'name': 'Countable balance'},
+                        # {'name': 'Account balance'},
+                        # {'name': '%'},
+                        # {'name': 'Number of projects'},
+                        # {'name': 'Overdue projects'},
+                        # {'name': 'Current projects'},
+                        # {'name': 'Subtotal'},
+                        # {'name': 'Projects checked with zero bank balance'},
+                        # {'name': 'Projects checked with bank balance'},
+                        # {'name': 'CONACYT projects'},
+                        # {'name': 'Countable balance'},
+                        # {'name': 'Account balance'},
+                        ],
+            'level': 5,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+
+        lines.append({
+            'id': 'hierarchy_3',
+            'name': 'No.',
+            'columns': [
+                {'name': 'Entity'},
+                {'name': 'Name'},
+                {'name': 'Bank account'},
+                {'name': 'Draft'},
+                {'name': 'Validity'},
+                {'name': 'Of the'},
+                {'name': 'To the'},
+                {'name': 'Stage / Year'},
+                {'name': 'Grand Total'},
+                {'name': 'Account balance'},
+                {'name': 'Effective difference to check'},
+                {'name': 'Total'},
+
+            ],
+            'level': 7,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+
         count = 0
         for record in project_records:
             count = count + 1
@@ -93,28 +176,21 @@ class CumulativeComparison(models.AbstractModel):
 
 
                             ],
-                'level': 3,
+                'level': 8,
                 'unfoldable': False,
                 'unfolded': True,
+
             })
 
         return lines
 
     def _get_columns_name(self, options):
         return [
-            {'name': _('No.')},
-            {'name': _('Entity')},
-            {'name': _('Name')},
-            {'name': _('Bank account')},
-            {'name': _('Draft')},
-            {'name': _('Validity')},
-            {'name': _('Of the')},
-            {'name': _('To the')},
             {'name': _('Stage / Year')},
-            {'name': _('Grand Total')},
-            {'name': _('Account balance')},
-            {'name': _('Effective difference to check')},
-            {'name': _('Total ')},
+            {'name': _('CONACYT research projects')},
+            {'name': _('Special Research Projects')},
+            {'name': _('TOTAL')},
+
         ]
 
     def _get_report_name(self):

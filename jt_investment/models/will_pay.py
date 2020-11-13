@@ -6,7 +6,10 @@ class WillPay(models.Model):
 
     _name = 'investment.will.pay'
     _description = "Investment Will Pay"
-    _rec_name = 'folio' 
+    _rec_name = 'first_number' 
+
+    first_number = fields.Char('First Number:')
+    new_journal_id = fields.Many2one("account.journal", 'Journal')
  
     folio = fields.Integer("Folio")
     date_time = fields.Datetime("Date Time")
@@ -72,7 +75,7 @@ class WillPay(models.Model):
     base_collaboration_id = fields.Many2one('bases.collaboration','Name Of Agreements')
     investment_fund_id = fields.Many2one('investment.funds','Investment Funds',copy=False)
     expiry_date = fields.Date(string="Expiration Date")
-
+    yield_id = fields.Many2one('yield.destination','Yield Destination')
 
     def unlink(self):
         for rec in self:
@@ -169,7 +172,11 @@ class WillPay(models.Model):
     @api.model
     def create(self,vals):
         vals['folio'] = self.env['ir.sequence'].next_by_code('folio.will.pay')
-        return super(WillPay,self).create(vals)
+        res = super(WillPay,self).create(vals)
+        first_number = self.env['ir.sequence'].next_by_code('PAG.number')
+        res.first_number = first_number
+        
+        return res
     
     def action_confirm(self):
         today = datetime.today().date()

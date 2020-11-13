@@ -73,8 +73,6 @@
                                 <field name="project_key"/>
                                 <field name="invoice_vault_folio"/>
                                 <field name="line"/>
-                               
-
                             </group>
                             <group>
                                 <field name="project_number_id"/>

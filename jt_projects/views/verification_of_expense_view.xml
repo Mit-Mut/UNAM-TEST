@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
-         <record id="verification_expense_tree_view" model="ir.ui.view">
+        <record id="verification_expense_tree_view" model="ir.ui.view">
             <field name="name">Verification Of Expense List view</field>
             <field name="model">expense.verification</field>
             <field name="arch" type="xml">
@@ -23,9 +22,9 @@
                 <form>
                     <header>
                         <button name="action_approve" string="Approve" class="oe_highlight"
-                                type="object" attrs="{'invisible': [('status', '=', 'approve')]}"/>
+                                type="object" attrs="{'invisible': [('status', '!=', 'eraser')]}"/>
                         <button name="%(jt_projects.action_reason_for_rejection)d" string="Reject" class="oe_highlight"
-                                type="action" attrs="{'invisible': [('status', '=', 'reject')]}"/>
+                                type="action" attrs="{'invisible': [('status', '!=', 'eraser')]}"/>
                         <field name="status" widget="statusbar" />
                     </header>
                     <sheet>
@@ -49,8 +48,6 @@
                                 <field name="observation" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                  <field name="Vouchers" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="administrative_forum" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                             
-
                             </group>
                             <group>
                                 <field name="reg_date" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>

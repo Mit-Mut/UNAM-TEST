@@ -103,6 +103,12 @@ class PatrimonialResources(models.Model):
                                                   res.no_beneficiary_allowed < len(res.beneficiary_ids)):
                 raise ValidationError(_("You can add only %s Beneficiaries which is mentined in "
                                         "'Number of allowed beneficiaries'" % res.no_beneficiary_allowed))
+
+        no = 0
+        for ben in res.beneficiary_ids:
+            no = no + 1
+            ben.sequence = no
+                
         return res
 
     def write(self, vals):
@@ -113,6 +119,14 @@ class PatrimonialResources(models.Model):
                                                       rec.no_beneficiary_allowed < len(rec.beneficiary_ids)):
                     raise ValidationError(_("You can add only %s Beneficiaries which is mentined in "
                                             "'Number of allowed beneficiaries'" % rec.no_beneficiary_allowed))
+
+        if vals.get('beneficiary_ids'):
+            for rec in self:
+                no = 0
+                for ben in rec.beneficiary_ids:
+                    no = no + 1
+                    ben.sequence = no
+                    
         return res
     
     @api.constrains('key')

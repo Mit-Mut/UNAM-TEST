@@ -10,6 +10,21 @@
             <field name="company_id" eval="False"/>
         </record>
         
+        <record id="seq_Funds_number" model="ir.sequence">
+            <field name="name">Funds Number</field>
+            <field name="code">funds.number</field>
+            <field name="prefix">FOND/%(range_year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_IRF_number" model="ir.sequence">
+            <field name="name">IRF Number</field>
+            <field name="code">IRF.number</field>
+            <field name="prefix">IRF/%(range_year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
 
     </data>
 </odoo>

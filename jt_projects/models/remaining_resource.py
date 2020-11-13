@@ -4,6 +4,7 @@ from odoo import models, fields
 class RemainingResource(models.Model):
     _name = 'remaining.resource'
     _description = "Integration of remaining resources"
+    _rec_name = 'concept'
 
     concept = fields.Char('Concept')
     stage = fields.Integer("Stage")

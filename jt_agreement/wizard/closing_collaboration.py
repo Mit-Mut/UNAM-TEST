@@ -29,14 +29,10 @@ class ClosingCollaboration(models.TransientModel):
 
     start_date = fields.Date("Start Date of Period")
     end_date = fields.Date("End Date of Period")
-
-    def confirm(self):
-        active_ids = self._context.get('active_ids')
-        collaborations = self.env['bases.collaboration'].browse(active_ids)
-        req_obj = self.env['request.open.balance']
-        for collab in collaborations:
-            if collab.fund_name_transfer_id and \
-                    collab.closing_amt != 0 and collab.available_bal != 0 and \
+    
+    #====================================
+    '''
+    and \
                     collab.fund_name_transfer_id.name in ('Special Chairs Faculty of Engineering',
                     'Fund for payment to beneficiaries Special Chairs Faculty of Engineering',
                     'Special Chairs Faculty of Law',
@@ -46,6 +42,16 @@ class ClosingCollaboration(models.TransientModel):
                     'Extraordinary Chairs Faculty of Law',
                     'Regulatory Fund Extraordinary Chairs Faculty of Law'
                     ):
+    '''
+    #=================================#
+
+    def confirm(self):
+        active_ids = self._context.get('active_ids')
+        collaborations = self.env['bases.collaboration'].browse(active_ids)
+        req_obj = self.env['request.open.balance']
+        for collab in collaborations.filtered(lambda x:x.state == 'valid' and not x.is_specific):
+            if collab.fund_name_transfer_id and \
+                    collab.closing_amt != 0 and collab.available_bal != 0 :
                 req_obj.create({
                     'bases_collaboration_id': collab.id,
                     'name': collab.name,

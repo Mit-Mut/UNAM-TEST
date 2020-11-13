@@ -29,23 +29,35 @@
                 <form>
                 	<header>
                 		<button name="action_confirm" states="draft" string="Confirm" class="oe_highlight" type="object" />
+                		<button name="action_confirm" states="confirmed" string="Investment Settlement" class="oe_highlight" type="object" />
+                		<button name="action_confirm" states="confirmed" string="Returns" class="oe_highlight" type="object" />
+                		<button name="action_confirm" states="confirmed" string="Commissions" class="oe_highlight" type="object" />
+                		
                 		<!-- <button name="action_reject" states="draft" string="Reject" class="oe_highlight" type="object" attrs="{'invisible': [('state', '=', 'draft')]}"/> -->
                 		<field name="state" widget="statusbar"/>
                 	</header>
                 
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" string="Rate History" type="object" name="get_rate_history" icon="fa-money" widget="statinfo"/>
+                        </div>
+                    
                         <group>
                         	<group>
-			                    <field name="invesment_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                          <field name="expiry_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-			               		<field name="journal_id" attrs="{'readonly': [('state', '!=', 'draft')]}" domain="[('type','=','bank')]"/>
+
+                            	<field name="first_number" readonly="1"/>
+                            	<field name="new_journal_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        	
+			                    <field name="invesment_date" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+		                          <field name="expiry_date" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			               		<field name="journal_id" required="1"  attrs="{'readonly': [('state', '!=', 'draft')]}" domain="[('type','=','bank')]"/>
 			               		<field name="investment_fund_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			               		<field name="contract_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-			               		<field name="amount_to_invest" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-			               		<field name="is_fixed_rate" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			               		<field name="amount_to_invest" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			               		<field name="is_fixed_rate"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			               		<field name="is_variable_rate" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-			               		<field name="interest_rate" digits="[12,6]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-			               		<field name="extra_percentage" digits="[12,6]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			               		<field name="interest_rate" required="1" digits="[12,6]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			               		<field name="extra_percentage" required="1" digits="[12,6]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 
 			            		<field name="fund_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			            		<field name="fund_key" readonly="1"/>
@@ -58,9 +70,9 @@
                         	<group>
 			               		<field name="term" attrs="{'invisible':[('is_fixed_rate','=',False)],'readonly': [('state', '!=', 'draft')]}"/>
 			               		<field name="term_variable" attrs="{'invisible':[('is_variable_rate','=',False)],'readonly': [('state', '!=', 'draft')]}"/>
-			               		<field name="capitalizable" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			               		<field name="capitalizable" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			               		<field name="frequency" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-			               		<field name="currency_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			               		<field name="currency_id" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			               		<field name="currency_rate" readonly="1" digits="[12,12]"/>
                             <field name="sub_origin_resource"/>
                         		<field name="observations" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
@@ -69,7 +81,7 @@
 
                                 <field name="dependency_id" context="{'show_for_supplier_payment':1}" readonly="1"/>
                                 <field name="sub_dependency_id" domain="[('dependency_id','=',dependency_id)]" context="{'show_for_supplier_payment':1}" readonly="1"/>
-                        		
+                        		<field name="yield_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         	</group>
                         </group>
                     <notebook>

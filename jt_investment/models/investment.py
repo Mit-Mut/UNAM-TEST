@@ -6,7 +6,10 @@ class Investment(models.Model):
 
     _name = 'investment.investment'
     _description = "Productive Accounts Investment"
-    _rec_name = 'contract_id'
+    _rec_name = 'first_number'
+    
+    first_number = fields.Char('First Number:')
+    new_journal_id = fields.Many2one("account.journal", 'Journal')
      
     invesment_date = fields.Datetime("Investment Date")
     journal_id = fields.Many2one("account.journal","Bank")
@@ -59,7 +62,45 @@ class Investment(models.Model):
     return_price_diff_account_id = fields.Many2one('account.account','Price Difference Account')    
     sub_origin_resource = fields.Many2one('sub.origin.resource', "Origin of the resource")
     expiry_date = fields.Date(string="Expiration Date")
+    yield_id = fields.Many2one('yield.destination','Yield Destination')
 
+    @api.model
+    def create(self,vals):
+        res = super(Investment,self).create(vals)
+        first_number = self.env['ir.sequence'].next_by_code('CPRO.number')
+        res.first_number = first_number
+        
+        return res
+
+    @api.constrains('amount_to_invest')
+    def check_min_balance(self):
+        if self.amount_to_invest == 0:
+            raise UserError(_('Please add amount invest'))
+
+    @api.constrains('capitalizable')
+    def check_capitalizable(self):
+        if self.capitalizable == 0:
+            raise UserError(_('Please Add Days of capitalization'))
+
+    @api.constrains('interest_rate')
+    def check_interest_rate(self):
+        if self.interest_rate == 0:
+            raise UserError(_('Please Add Interest Rate'))
+
+    @api.constrains('extra_percentage')
+    def check_extra_percentage(self):
+        if self.extra_percentage == 0:
+            raise UserError(_('Please Add Extra Percentage'))
+
+    @api.constrains('is_fixed_rate','term')
+    def check_is_fixed_rate(self):
+        if self.term == 0 and self.is_fixed_rate:
+            raise UserError(_('Please Add Fixed Term'))
+
+    @api.constrains('is_variable_rate','term_variable')
+    def check_is_variable_rate(self):
+        if self.term_variable == 0 and self.is_variable_rate:
+            raise UserError(_('Please Add Term Variable'))
 
     def unlink(self):
         for rec in self:
@@ -132,6 +173,23 @@ class Investment(models.Model):
                 'default_base_collabaration_id' : self.base_collaboration_id and self.base_collaboration_id.id or False,
                 'default_fund_id' : self.fund_id and self.fund_id.id or False,
                 
+            }
+        }
+
+    def get_rate_history(self):
+        currency = self.currency_id and self.currency_id.id or False
+        
+        return {
+            'name': 'Rate',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'view_id': False,
+            'res_model': 'res.currency.rate',
+            'type': 'ir.actions.act_window',
+#            'target': 'new',
+            'domain' : [('currency_id','=',currency)],
+            'context': {
+                'default_currency_id': currency,
             }
         }
 

@@ -29,7 +29,7 @@ import io
 import base64
 from odoo.tools import config, date_utils, get_lang
 import lxml.html
-
+from datetime import datetime ,timedelta,date
 
 class InvestmentFundsinProductiveAccounts(models.AbstractModel):
     _name = "jt_investment.investment.funds.productive.accounts"
@@ -38,7 +38,7 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
 
     filter_date = {'mode': 'range', 'filter': 'this_month'}
     filter_comparison = {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
-    filter_all_entries = None
+    filter_all_entries = True
     filter_journals = None
     filter_analytic = None
     filter_unfold_all = None
@@ -69,13 +69,7 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
             {'name': _('TIIE 28')},
             {'name': _('Capital')},
             {'name': _('Entradas')},
-            {'name': _('F.A.P.C.L.')},
-            {'name': _('F.A.P.R.P.A.')},
-            {'name': _('F.A.N.D.C.R.J.P')},
-            {'name': _('F.M.M.')},
-            {'name': _('FFyPPU')},
-            {'name': _('FFAC')},
-            {'name': _('FC')},
+            {'name': _('Fund Key')},
             {'name': _('Salidas')},
             {'name': _('Saldo Final')},
             {'name': _('Promedio Diario')},
@@ -133,16 +127,59 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         lines = []
+
+        if options.get('all_entries') is False:
+            domain=[('state','=','confirmed')]
+        else:
+            domain=[('state','not in',('rejected','canceled'))]
+            
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
         
+        domain = domain + [('fund_key','!=',False),('invesment_date','>=',start),('invesment_date','<=',end)]
         
-        records = self.env['investment.investment'].search([('state','=','confirmed'),('invesment_date','>=',start),('invesment_date','<=',end)])
+        records = self.env['investment.investment'].search(domain)
         #records = self.env['investment.investment'].search([('invesment_date','>=',start),('invesment_date','<=',end)],order='invesment_date')
+        
+        capital = 0
+        pre_day = 0
+        rate = 0.0
+        pre_date = False
+        count = 0
         for rec in records:
             month_name = self.get_month_name(rec.invesment_date.month)
+            
+            if pre_day !=0 and pre_date and pre_day != rec.invesment_date.day:
+                
+                next_date = pre_date +  timedelta(days=1)
+                next_month_name = self.get_month_name(next_date.month)
+                lines.append({
+                    'id': 'hierarchy_1' + str(rec.id),
+                    'name': next_date.day,
+                    'columns': [{'name': next_month_name}, 
+                                {'name': next_date.day},
+                                self._format({'name': rate/count},figure_type='float',digit=4),
+                                self._format({'name': capital},figure_type='float',digit=2),
+                                self._format({'name': 0.0},figure_type='float',digit=2),
+                                {'name': ''},
+                                self._format({'name': 0.0},figure_type='float',digit=2),
+                                self._format({'name': capital},figure_type='float',digit=2),
+                                self._format({'name': capital},figure_type='float',digit=2),
+                                ],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+                count = 0
+                rate = 0
+                capital = 0
+            
+            pre_day = rec.invesment_date.day
+            pre_date = rec.invesment_date
+            count += 1
+            rate += rec.currency_rate
             
             lines.append({
                 'id': 'hierarchy' + str(rec.id),
@@ -150,13 +187,40 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                 'columns': [{'name': month_name}, 
                             {'name': rec.invesment_date.day},
                             self._format({'name': rec.currency_rate},figure_type='float',digit=4),
+                            self._format({'name': capital},figure_type='float',digit=2),
+                            self._format({'name': rec.amount_to_invest},figure_type='float',digit=2),
+                            {'name': rec.fund_key},
+                            self._format({'name': 0.0},figure_type='float',digit=2),
+                            self._format({'name': rec.amount_to_invest},figure_type='float',digit=2),
                             self._format({'name': rec.amount_to_invest},figure_type='float',digit=2),
                             ],
                 'level': 3,
                 'unfoldable': False,
                 'unfolded': True,
             })
-    
+            capital += rec.amount_to_invest 
+
+        if pre_day !=0 and pre_date:
+            
+            next_date = pre_date +  timedelta(days=1)
+            next_month_name = self.get_month_name(next_date.month)
+            lines.append({
+                'id': 'hierarchy_1' + str(rec.id),
+                'name': next_date.day,
+                'columns': [{'name': next_month_name}, 
+                            {'name': next_date.day},
+                            self._format({'name': rate/count},figure_type='float',digit=4),
+                            self._format({'name': capital},figure_type='float',digit=2),
+                            self._format({'name': 0.0},figure_type='float',digit=2),
+                            {'name': ''},
+                            self._format({'name': 0.0},figure_type='float',digit=2),
+                            self._format({'name': capital},figure_type='float',digit=2),
+                            self._format({'name': capital},figure_type='float',digit=2),
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
                     
         return lines
 

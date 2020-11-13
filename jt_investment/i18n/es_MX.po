@@ -400,8 +400,8 @@ msgstr "Quien realiza el pago"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__fund_type
-msgid "Background"
-msgstr "Fondo"
+msgid "Type Of Funds"
+msgstr "Type Of Funds"
 
 #. module: jt_investment
 #: code:addons/jt_investment/reports/indicators_report.py:0

@@ -95,6 +95,16 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         lines = []
+
+        # if options.get('all_entries') is False:
+        #     domain=[('state','=','confirmed')]
+        # else:
+        #     domain=[('state','not in',('rejected','canceled'))]
+        
+        # journal = self._get_options_journals_domain(options)
+        # if journal:
+        #     domain+=journal
+            
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(

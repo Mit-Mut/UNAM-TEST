@@ -32,6 +32,7 @@
                             	<field name="agreement_type_ids" widget="many2many_tags" attrs="{'invisible':[('all_types_of_Agreements','=',True)]}"/>
                             	<field name="start_date"/>
 			                	<field name="end_date"/>
+			                	<field name="journal_id" domain="[('type','=','bank')]"/>
 			                	<field name="reason_rejection" readonly="1" attrs="{'invisible': [('state', '!=', 'rejected')]}"/>
                             </group>
                             <group>
@@ -42,7 +43,21 @@
                             </group>
                         </group>
                         <group>
-                            
+                        	<group col="6" colspan="2">
+    							<field name="if_fixed" />
+    							<field name="fixed_rate" attrs="{'invisible':[('if_fixed','=',False)]}"/>
+    							<field name="fixed_extra" attrs="{'invisible':[('if_fixed','=',False)]}"/>
+							</group>
+                        	<group col="6" colspan="2">
+    							<field name="if_average" />
+    							<field name="average_rate" attrs="{'invisible':[('if_average','=',False)]}"/>
+    							<field name="average_extra" attrs="{'invisible':[('if_average','=',False)]}"/>
+							</group>
+                        	<group col="6" colspan="2">
+    							<field name="if_variable" />
+    							<field name="variable_rate" attrs="{'invisible':[('if_variable','=',False)]}"/>
+    							<field name="variable_extra" attrs="{'invisible':[('if_variable','=',False)]}"/>
+							</group>
                         </group>
                         <notebook>
                         	<page string="Calculation">

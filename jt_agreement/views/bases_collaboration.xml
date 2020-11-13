@@ -285,6 +285,7 @@
                                         <field name="beneficiary_ids" nolabel="1"
                                                attrs="{'readonly': [('state', 'not in', ('draft','valid'))]}">
                                             <tree>
+                                            	<field name="sequence" widget="handle"/>
                                                 <field name="employee_id" required="1"/>
                                                 <field name="bank_id" context="{'from_agreement':1}"
                                                   domain="[('employee_id', '=', employee_id)]" required="1"/>
@@ -425,6 +426,10 @@
                              attrs="{'invisible': [('hide_is_manually','=',True)]}" context="{'from_investment':1}"/>
                         <button name="approve_investment" type="object" string="Approve" class="oe_highlight"
                              attrs="{'invisible': [('hide_is_manually','=',True)]}"/>
+
+                		<button name="approve_investment" states="confirmed" string="Investment Settlement" class="oe_highlight" type="object" />
+                		<button name="approve_investment" states="confirmed" string="Returns" class="oe_highlight" type="object" />
+                		<button name="approve_investment" states="confirmed" string="Commissions" class="oe_highlight" type="object" />
                              
                         <field name="state" widget="statusbar"/>
                     </header>
@@ -435,6 +440,9 @@
                             	<field name="trust_id" invisible="1"/>
                             	<field name="patrimonial_id" invisible="1"/>
                             	<field name="is_manually" invisible="1"/>
+                            	<field name="first_number" readonly="1"/>
+                            	<field name="new_journal_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            	
                                 <field name="name" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
                                 <field name="operation_number" attrs="{'readonly': [('state', '!=', 'draft')]}" required="not context.get('from_fund_view',False)"/>
 
@@ -464,6 +472,7 @@
                                 <field name="permanent_instructions" attrs="{'readonly': [('state', '!=', 'draft')]}"  required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)"/>
                                 <field name="fund_observation" attrs="{'readonly': [('state', '!=', 'draft')]}"  required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)"/>
                                 
+                                <field name="yield_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
                         </group>
                         <group>

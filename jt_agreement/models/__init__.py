@@ -10,4 +10,5 @@ from . import specific_projects
 from . import fund
 from . import patrimonial_resources
 from . import investment_funds
+from . import yield_destination
 

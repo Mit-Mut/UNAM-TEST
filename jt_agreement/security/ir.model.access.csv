@@ -18,4 +18,4 @@ access_agreement_fund,agreement_fund,model_agreement_fund,base.group_user,1,1,1,
 access_background_project,background.project,model_background_project,base.group_user,1,1,1,1
 access_specific_project,specific.project,model_specific_project,base.group_user,1,1,1,1
 access_patrimonial_resources,patrimonial.resources,model_patrimonial_resources,base.group_user,1,1,1,1
-
+access_yield_destination,yield.destination,model_yield_destination,base.group_user,1,1,1,1

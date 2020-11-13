@@ -7,8 +7,11 @@ class CETES(models.Model):
 
     _name = 'investment.cetes'
     _description = "Investment CETES"
-    _rec_name = 'folio'
-
+    _rec_name = 'first_number'
+    
+    first_number = fields.Char('First Number:')
+    new_journal_id = fields.Many2one("account.journal", 'Journal')
+    
     folio = fields.Integer("Folio")
     date_time = fields.Datetime("Date Time")
     journal_id = fields.Many2one("account.journal", 'Bank Account')
@@ -91,7 +94,13 @@ class CETES(models.Model):
     base_collaboration_id = fields.Many2one('bases.collaboration','Name Of Agreements')
     investment_fund_id = fields.Many2one('investment.funds','Investment Funds',copy=False)
     expiry_date = fields.Date(string="Expiration Date")
+    yield_id = fields.Many2one('yield.destination','Yield Destination')
 
+    @api.constrains('amount_invest')
+    def check_min_balance(self):
+        if self.amount_invest == 0:
+            raise UserError(_('Please add amount invest'))
+    
     def unlink(self):
         for rec in self:
             if rec.state not in ['draft']:
@@ -163,7 +172,11 @@ class CETES(models.Model):
     @api.model
     def create(self, vals):
         vals['folio'] = self.env['ir.sequence'].next_by_code('folio.cetes')
-        return super(CETES, self).create(vals)
+        res = super(CETES, self).create(vals)
+        first_number = self.env['ir.sequence'].next_by_code('CETES.number')
+        res.first_number = first_number
+        
+        return res
 
     def action_confirm(self):
         today = datetime.today().date()

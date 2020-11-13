@@ -39,8 +39,8 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
     filter_date = {'mode': 'range', 'filter': 'this_month'}
     #filter_comparison = {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
     filter_comparison = None
-    filter_all_entries = None
-    filter_journals = None
+    filter_all_entries = True
+    filter_journals = True
     filter_analytic = None
     filter_unfold_all = None
     filter_cash_basis = None
@@ -97,15 +97,30 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         lines = []
+
+        if options.get('all_entries') is False:
+            domain=[('state','=','confirmed')]
+        else:
+            domain=[('state','not in',('rejected','canceled'))]
+        
+        journal = self._get_options_journals_domain(options)
+        if journal:
+            domain+=journal
+            
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+
+        cetes_domain = domain + [('date_time','>=',start),('date_time','<=',end)]
+        udibonos_domain = domain + [('date_time','>=',start),('date_time','<=',end)]
+        bonds_domain = domain + [('date_time','>=',start),('date_time','<=',end)]
+        will_pay_domain = domain + [('date_time','>=',start),('date_time','<=',end)]
         
-        cetes_records = self.env['investment.cetes'].search([('state','=','confirmed'),('date_time','>=',start),('date_time','<=',end)])
-        udibonos_records = self.env['investment.udibonos'].search([('state','=','confirmed'),('date_time','>=',start),('date_time','<=',end)])
-        bonds_records = self.env['investment.bonds'].search([('state','=','confirmed'),('date_time','>=',start),('date_time','<=',end)])
-        will_pay_records = self.env['investment.will.pay'].search([('state','=','confirmed'),('date_time','>=',start),('date_time','<=',end)])
+        cetes_records = self.env['investment.cetes'].search(cetes_domain)
+        udibonos_records = self.env['investment.udibonos'].search(udibonos_domain)
+        bonds_records = self.env['investment.bonds'].search(bonds_domain)
+        will_pay_records = self.env['investment.will.pay'].search(will_pay_domain)
         
 #         cetes_records = self.env['investment.cetes'].search([('date_time','>=',start),('date_time','<=',end)])
 #         udibonos_records = self.env['investment.udibonos'].search([('date_time','>=',start),('date_time','<=',end)])
@@ -177,6 +192,13 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
         for pay in will_pay_records:
             total_investment += pay.amount
             resouce_name = pay.fund_id and pay.fund_id.name or ''
+            term = 0
+            if pay.annual_term:
+                term += pay.annual_term * 360
+            if pay.monthly_term:
+                term += pay.monthly_term * 30
+            if pay.term_days:
+                term += pay.term_days
             
             lines.append({
                 'id': 'hierarchy_bonds' + str(pay.id),
@@ -186,7 +208,7 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
                             {'name': pay.journal_id and pay.journal_id.bank_account_id and pay.journal_id.bank_account_id.acc_number or ''},
                             self._format({'name': pay.amount},figure_type='float'),
                             {'name': 'PAGARE'},
-                            {'name': pay.term_days},
+                            {'name': term},
                             self._format({'name': pay.interest_rate},figure_type='float'),
                             ],
                 'level': 3,

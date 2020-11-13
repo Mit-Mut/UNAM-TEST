@@ -86,6 +86,32 @@ class InegrationOfExpAndCurrProject(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+        count = 0
+        project_records = self.env['project.project'].search(
+            [('proj_start_date', '>=', start), ('proj_end_date', '<=', end)])
+        for record in project_records:
+            expense_ids = self.env['expense.verification'].search(
+                [('project_id', '=', record.name)])
+            count = count + 1
+            lines.append({
+                'id': 'projects' + str(record.id),
+                'name': count,
+                'columns': [{'name': str(expense_ids[0].dependence.dependency or '') + str(expense_ids[0].subdependence.sub_dependency or '') if expense_ids else ''},
+                            {'name': record.name},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''}, ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
         return lines
 
     def _get_report_name(self):

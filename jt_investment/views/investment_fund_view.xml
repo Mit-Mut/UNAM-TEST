@@ -36,6 +36,9 @@
                     <sheet>
                         <group>
                             <group>
+                            	<field name="first_number" readonly="1"/>
+                            	<field name="new_journal_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            
 								<field name="fund_id" string="Fund Name" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 								<field name="fund_key" string="Fund Code" readonly="1"/>                            	
                                 <field name="fund_request_date" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>

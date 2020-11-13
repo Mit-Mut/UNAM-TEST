@@ -53,7 +53,7 @@ class InvestmentStockQuotation(models.Model):
     def get_daily_variation(self):
         for rec in self:
             if rec.date and rec.price_id:
-                previous_rec = self.env['stock.quote.price'].search([('date','<',rec.date)],limit=1,order='date desc')
+                previous_rec = self.env['stock.quote.price'].search([('journal_id','=',self.journal_id.id),('date','<',rec.date)],limit=1,order='date desc')
                 if previous_rec:
                     rec.daily_nominal = rec.price - previous_rec.price
                     if previous_rec.price > 0:
@@ -76,7 +76,7 @@ class InvestmentStockQuotation(models.Model):
         for rec in self:
             if rec.date and rec.price_id:
                 previos_week_date = rec.date - timedelta(days=7)
-                previous_rec = self.env['stock.quote.price'].search([('date','<=',previos_week_date)],limit=1,order='date desc')
+                previous_rec = self.env['stock.quote.price'].search([('journal_id','=',self.journal_id.id),('date','<=',previos_week_date)],limit=1,order='date desc')
                 if previous_rec:
                     rec.weekly_nominal = rec.price - previous_rec.price
                     if previous_rec.price > 0:
@@ -99,7 +99,7 @@ class InvestmentStockQuotation(models.Model):
         for rec in self:
             if rec.date and rec.price_id:
                 previos_week_date = rec.date - timedelta(days=30)
-                previous_rec = self.env['stock.quote.price'].search([('date','<=',previos_week_date)],limit=1,order='date desc')
+                previous_rec = self.env['stock.quote.price'].search([('journal_id','=',self.journal_id.id),('date','<=',previos_week_date)],limit=1,order='date desc')
                 if previous_rec:
                     rec.last_30_days_nominal = rec.price - previous_rec.price
                     if previous_rec.price > 0:
@@ -125,7 +125,7 @@ class InvestmentStockQuotation(models.Model):
                 day_diff = rec.date - previos_week_date
                 day_diff = day_diff.days
                 
-                previous_rec = self.env['stock.quote.price'].search([('date','<=',previos_week_date)],limit=1,order='date desc')
+                previous_rec = self.env['stock.quote.price'].search([('journal_id','=',self.journal_id.id),('date','<=',previos_week_date)],limit=1,order='date desc')
                 if previous_rec:
                     rec.current_month_nominal = rec.price - previous_rec.price
                     if previous_rec.price > 0:
@@ -153,7 +153,7 @@ class InvestmentStockQuotation(models.Model):
                 previos_week_date = rec.date.replace(day=1,month=1) - timedelta(days=1)
                 day_diff = rec.date - previos_week_date
                 day_diff = day_diff.days
-                previous_rec = self.env['stock.quote.price'].search([('date','<=',previos_week_date)],limit=1,order='date desc')
+                previous_rec = self.env['stock.quote.price'].search([('journal_id','=',self.journal_id.id),('date','<=',previos_week_date)],limit=1,order='date desc')
                 if previous_rec:
                     rec.current_year_nominal = rec.price - previous_rec.price
                     if previous_rec.price > 0:

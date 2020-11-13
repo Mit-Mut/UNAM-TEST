@@ -38,8 +38,8 @@ class InvestmentCommittee(models.AbstractModel):
 
     filter_date = {'mode': 'range', 'filter': 'this_month'}
     filter_comparison = {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
-    filter_all_entries = None
-    filter_journals = None
+    filter_all_entries = True
+    filter_journals = True
     filter_analytic = None
     filter_unfold_all = None
     filter_cash_basis = None
@@ -94,17 +94,34 @@ class InvestmentCommittee(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         lines = []
+
+        if options.get('all_entries') is False:
+            domain=[('state','=','confirmed')]
+        else:
+            domain=[('state','not in',('rejected','canceled'))]
+        
+        journal = self._get_options_journals_domain(options)
+        if journal:
+            domain+=journal
+
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+
+        cetes_domain = domain + [('date_time','>=',start),('date_time','<=',end)]
+        udibonos_domain = domain + [('date_time','>=',start),('date_time','<=',end)]
+        bonds_domain = domain + [('date_time','>=',start),('date_time','<=',end)]
+        will_pay_domain = domain + [('date_time','>=',start),('date_time','<=',end)]
+        sale_domain = domain + [('invesment_date','>=',start),('invesment_date','<=',end)]
+        productive_domain = domain + [('invesment_date','>=',start),('invesment_date','<=',end)]
         
-        cetes_records = self.env['investment.cetes'].search([('state','=','confirmed'),('date_time','>=',start),('date_time','<=',end)])
-        udibonos_records = self.env['investment.udibonos'].search([('state','=','confirmed'),('date_time','>=',start),('date_time','<=',end)])
-        bonds_records = self.env['investment.bonds'].search([('state','=','confirmed'),('date_time','>=',start),('date_time','<=',end)])
-        will_pay_records = self.env['investment.will.pay'].search([('state','=','confirmed'),('date_time','>=',start),('date_time','<=',end)])
-        sale_security_ids = self.env['purchase.sale.security'].search([('state','in',('confirmed','done')),('invesment_date','>=',start),('invesment_date','<=',end)])
-        productive_ids = self.env['investment.investment'].search([('state','in',('confirmed','done')),('invesment_date','>=',start),('invesment_date','<=',end)])
+        cetes_records = self.env['investment.cetes'].search(cetes_domain)
+        udibonos_records = self.env['investment.udibonos'].search(udibonos_domain)
+        bonds_records = self.env['investment.bonds'].search(bonds_domain)
+        will_pay_records = self.env['investment.will.pay'].search(will_pay_domain)
+        sale_security_ids = self.env['purchase.sale.security'].search(sale_domain)
+        productive_ids = self.env['investment.investment'].search(productive_domain)
 
 #         lines.append({
 #             'id': 'hierarchy_cash_flow',
@@ -150,7 +167,7 @@ class InvestmentCommittee(models.AbstractModel):
                             self._format({'name': account.amount_to_invest},figure_type='float'),
                             {'name': 'Accounts Productivas'},
                             {'name': account.interest_rate or ''},
-                            {'name': ''},
+                            {'name': account.yield_id and account.yield_id.name or ''},
                             ],
                 'level': 3,
                 'unfoldable': False,
@@ -214,7 +231,7 @@ class InvestmentCommittee(models.AbstractModel):
                             self._format({'name': cetes.nominal_value},figure_type='float'),
                             {'name': 'CETES'},
                             {'name': cetes.yield_rate or ''},
-                            {'name': ''},
+                            {'name': cetes.yield_id and cetes.yield_id.name or ''},
                             ],
                 'level': 3,
                 'unfoldable': False,
@@ -264,7 +281,7 @@ class InvestmentCommittee(models.AbstractModel):
                             self._format({'name': udibonos.nominal_value},figure_type='float'),
                             {'name': 'UDIBONOS'},
                             {'name': udibonos.interest_rate or ''},
-                            {'name': ''},
+                            {'name': udibonos.yield_id and udibonos.yield_id.name or ''},
                             ],
                 'level': 3,
                 'unfoldable': False,
@@ -314,7 +331,7 @@ class InvestmentCommittee(models.AbstractModel):
                             self._format({'name': bonds.nominal_value},figure_type='float'),
                             {'name': 'BONDS'},
                             {'name': bonds.interest_rate or ''},
-                           {'name': ''},
+                           {'name': bonds.yield_id and bonds.yield_id.name or ''},
                             ],
                 'level': 3,
                 'unfoldable': False,
@@ -361,7 +378,7 @@ class InvestmentCommittee(models.AbstractModel):
                             self._format({'name': pay.amount},figure_type='float'),
                             {'name': 'Promissory'},
                             {'name': pay.interest_rate or ''},
-                            {'name': ''},
+                            {'name': pay.yield_id and pay.yield_id.name or ''},
                             ],
                 'level': 3,
                 'unfoldable': False,
@@ -424,7 +441,7 @@ class InvestmentCommittee(models.AbstractModel):
                             self._format({'name': sale.amount},figure_type='float'),
                             {'name': 'TITLES'},
                             {'name': sale.price or ''},
-                            {'name': ''},
+                            {'name': sale.yield_id and sale.yield_id.name or ''},
                             ],
                 'level': 3,
                 'unfoldable': False,

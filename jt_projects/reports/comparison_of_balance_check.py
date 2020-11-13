@@ -47,6 +47,7 @@ class ComparisonOfBalanceCheck(models.AbstractModel):
     filter_hierarchy = None
     filter_unposted_in_period = None
     MAX_LINES = None
+    filter_project_type = {'filter': 'CONACYT'}
 
     def _get_reports_buttons(self):
         return [
@@ -92,6 +93,33 @@ class ComparisonOfBalanceCheck(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+        project_records = self.env['project.project'].search(
+            [('proj_start_date', '>=', start), ('proj_end_date', '<=', end)])
+        for record in project_records:
+            name = str(record.stage_identifier or '') + \
+                '/' + str(record.proj_start_date.year)
+            lines.append({
+                'id': 'projects' + str(record.id),
+                'name': name,
+                'columns': [{'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+
+                            ],
+                'level': 2,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
         return lines
 
     def _get_report_name(self):

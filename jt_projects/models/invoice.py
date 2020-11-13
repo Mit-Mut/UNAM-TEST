@@ -59,15 +59,6 @@ class AccountMove(models.Model):
     responsible_job_position = fields.Many2one(
         'hr.job', 'Responsible job position')
 
-    # def generate_folio(self):
-    #     folio = ''
-    #     if self.upa_key and self.upa_key.organization:
-    #         folio += self.upa_key.organization + "/"
-    #     if self.upa_document_type and self.upa_document_type.document_number:
-    #         folio += self.upa_document_type.document_number + "/"
-    #     folio += self.env['ir.sequence'].next_by_code('payment.folio')
-    #     self.folio = folio
-
     def action_cancel_budget(self):
         self.ensure_one()
         self.payment_state = 'cancel'

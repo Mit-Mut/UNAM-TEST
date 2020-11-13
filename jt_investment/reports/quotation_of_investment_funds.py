@@ -39,8 +39,8 @@ class ReportonthequotationofInvestmentFunds(models.AbstractModel):
     filter_date = {'mode': 'range', 'filter': 'this_month'}
     #filter_comparison = {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
     filter_comparison = None
-    filter_all_entries = None
-    filter_journals = None
+    filter_all_entries = True
+    filter_journals = True
     filter_analytic = None
     filter_unfold_all = None
     filter_cash_basis = None
@@ -108,6 +108,16 @@ class ReportonthequotationofInvestmentFunds(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         lines = []
+
+        if options.get('all_entries') is False:
+            domain=[('state','=','confirmed')]
+        else:
+            domain=[('state','not in',('rejected','canceled'))]
+        
+        journal = self._get_options_journals_domain(options)
+        if journal:
+            domain+=journal
+            
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(

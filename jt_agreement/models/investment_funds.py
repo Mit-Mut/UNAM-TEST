@@ -28,7 +28,19 @@ class InvestmentFunds(models.Model):
 
     _name = 'investment.funds'
     _description = "Investment Funds"
-    _rec_name = 'fund_id'
+    _rec_name = 'first_number'
+    
+    first_number = fields.Char('First Number:')
+    new_journal_id = fields.Many2one("account.journal", 'Journal')
+
      
     fund_id = fields.Many2one('agreement.fund','Fund Name')
     fund_key = fields.Char(related='fund_id.fund_key',string="Fund Code")
+
+
+    @api.model
+    def create(self, vals):
+        res = super(InvestmentFunds, self).create(vals)
+        first_number = self.env['ir.sequence'].next_by_code('funds.number')
+        res.first_number = first_number
+        return res

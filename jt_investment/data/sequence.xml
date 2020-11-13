@@ -34,5 +34,56 @@
             <field name="company_id" eval="False"/>
         </record>
 
+	<!-- Sequence -->
+
+        <record id="seq_purchase_sale_security_number" model="ir.sequence">
+            <field name="name">Purchase Sale Security Number</field>
+            <field name="code">purchase.sale.security.number</field>
+            <field name="prefix">TIT/%(range_year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_CETES_number" model="ir.sequence">
+            <field name="name">CETES Number</field>
+            <field name="code">CETES.number</field>
+            <field name="prefix">CETE/%(range_year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_UDIB_number" model="ir.sequence">
+            <field name="name">UDIB Number</field>
+            <field name="code">UDIB.number</field>
+            <field name="prefix">UDIB/%(range_year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+
+        <record id="seq_BONUS_number" model="ir.sequence">
+            <field name="name">BONUS Number</field>
+            <field name="code">BONUS.number</field>
+            <field name="prefix">BONUS/%(range_year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_PAG_number" model="ir.sequence">
+            <field name="name">PAG Number</field>
+            <field name="code">PAG.number</field>
+            <field name="prefix">PAG/%(range_year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_CPRO_number" model="ir.sequence">
+            <field name="name">CPRO Number</field>
+            <field name="code">CPRO.number</field>
+            <field name="prefix">CPRO/%(range_year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+	
     </data>
 </odoo>

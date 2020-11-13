@@ -8,9 +8,12 @@ class PurchaseSaleSecurity(models.Model):
 
     _name = 'purchase.sale.security'
     _description = "Purchase Sale Security"
-    
+    _rec_name = 'first_number' 
     
     name = fields.Char("Reference")
+
+    first_number = fields.Char('First Number:')
+    new_journal_id = fields.Many2one("account.journal", 'Journal')
 
     last_quote_id = fields.Many2one('investment.stock.quotation','Last Quote')
     last_quote_price = fields.Float(related='last_quote_id.price',string="Last Quote Price")
@@ -32,7 +35,7 @@ class PurchaseSaleSecurity(models.Model):
     file_name = fields.Char("File Name")
     
     bank_id = fields.Many2one('account.journal','Bank')
-    journal_id = fields.Many2one("account.journal","Bank")
+    journal_id = fields.Many2one(related="bank_id")
     bank_account_id = fields.Many2one(related='journal_id.bank_account_id')
     account_balance = fields.Float("Account Balance",compute="get_account_balance",store=True)
     movement_price = fields.Float(related='last_quote_id.price',string="Price")
@@ -69,7 +72,8 @@ class PurchaseSaleSecurity(models.Model):
     profit_variation = fields.Float(string="Estimated vs Real Profit Variation",compute="get_profit_variation",store=True)
     investment_fund_id = fields.Many2one('investment.funds','Investment Funds',copy=False)
     sub_origin_resource = fields.Many2one('sub.origin.resource', "Origin of the resource")
-
+    yield_id = fields.Many2one('yield.destination','Yield Destination')
+    
     def unlink(self):
         for rec in self:
             if rec.state not in ['draft']:
@@ -147,6 +151,14 @@ class PurchaseSaleSecurity(models.Model):
 #     def create(self,vals):
 #         vals['name'] = self.env['ir.sequence'].next_by_code('purchase.sale.security')
 #         return super(PurchaseSaleSecurity,self).create(vals)
+
+    @api.model
+    def create(self,vals):
+        res = super(PurchaseSaleSecurity,self).create(vals)
+        first_number = self.env['ir.sequence'].next_by_code('purchase.sale.security.number')
+        res.first_number = first_number
+        
+        return res
     
     def action_confirm(self):
         today = datetime.today().date()

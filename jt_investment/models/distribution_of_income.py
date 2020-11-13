@@ -34,6 +34,19 @@ class DistributionOfIncome(models.Model):
                                ('canceled', 'Canceled')], string="Status", default="draft")
     
 
+    journal_id = fields.Many2one('account.journal','Bank')
+    if_fixed = fields.Boolean("Fixed")
+    if_average = fields.Boolean("Average")
+    if_variable = fields.Boolean("Variable")
+
+    fixed_rate = fields.Float("Rate")
+    average_rate = fields.Float("Rate")
+    variable_rate = fields.Float("Rate")
+
+    fixed_extra = fields.Float("Extra Percentage")
+    average_extra = fields.Float("Extra Percentage")
+    variable_extra = fields.Float("Extra Percentage")
+    
     #@api.onchange('start_date','end_date','dependency_ids','agreement_type_ids','base_ids','fund_ids')
 
 
@@ -69,10 +82,12 @@ class DistributionOfIncome(models.Model):
 
         
         for base in base_ids:
-#             inc = sum(x.opening_balance for x in requests.filtered(lambda a:a.bases_collaboration_id.id==base.id and a.type_of_operation == 'increase'))
-#             withdrawal = sum(x.opening_balance for x in requests.filtered(lambda a:a.bases_collaboration_id.id==base.id and a.type_of_operation == 'withdrawal'))
-            inc = 0
-            withdrawal = 0
+            requests = self.env['request.open.balance'].search([('bases_collaboration_id','=',base.id),('state','=','confirmed')])
+            inc = sum(x.opening_balance for x in requests.filtered(lambda a:a.bases_collaboration_id.id==base.id and a.type_of_operation == 'increase'))
+            withdrawal = sum(x.opening_balance for x in requests.filtered(lambda a:a.bases_collaboration_id.id==base.id and a.type_of_operation == 'withdrawal'))
+            
+#             inc = 0
+#             withdrawal = 0
             
   
 #             vals.append([0, 0, 

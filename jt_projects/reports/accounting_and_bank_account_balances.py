@@ -75,10 +75,12 @@ class BankAccountingBalance(models.AbstractModel):
 
         for record in project_records:
             name = record.stage_identifier or ''
+            expense_ids = self.env['expense.verification'].search(
+                [('project_id', '=', record.name)])
             lines.append({
                 'id': 'projects' + str(record.id),
                 'name': name,
-                'columns': [{'name': ''},
+                'columns': [{'name': expense_ids[0].dependence.dependency or ''},
                             {'name': record.number or ''},
                             {'name': record.status},
                             {'name': record.bank_account_id.name or ''},

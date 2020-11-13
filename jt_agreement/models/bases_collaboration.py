@@ -183,7 +183,6 @@ class BasesCollabration(models.Model):
     
     def get_report_lines(self): 
         lines = self.env['request.open.balance'].search([('bases_collaboration_id','=',self.id),('request_date','>=',self.report_start_date),('request_date','<=',self.report_end_date)])
-        print ("===",lines)
         return lines
     
     @api.model
@@ -194,6 +193,10 @@ class BasesCollabration(models.Model):
                                                   res.no_beneficiary_allowed < len(res.beneficiary_ids)):
                 raise ValidationError(_("You can add only %s Beneficiaries which is mentined in "
                                         "'Number of allowed beneficiaries'" % res.no_beneficiary_allowed))
+        no = 0
+        for ben in res.beneficiary_ids:
+            no = no + 1
+            ben.sequence = no
         return res
 
     def write(self, vals):
@@ -204,6 +207,13 @@ class BasesCollabration(models.Model):
                                                       rec.no_beneficiary_allowed < len(rec.beneficiary_ids)):
                     raise ValidationError(_("You can add only %s Beneficiaries which is mentined in "
                                             "'Number of allowed beneficiaries'" % rec.no_beneficiary_allowed))
+        if vals.get('beneficiary_ids'):
+            for rec in self:
+                no = 0
+                for ben in rec.beneficiary_ids:
+                    no = no + 1
+                    ben.sequence = no
+                
         return res
 
     def compute_operations(self):
@@ -496,7 +506,8 @@ class Beneficiary(models.Model):
     validity_start = fields.Date("Validity of the beneficiary start")
     validity_final_beneficiary = fields.Date("Validity of the Final Beneficiary")
     withdrawal_sch_date = fields.Date("Withdrawal scheduling date")
-
+    sequence = fields.Integer()
+    
     @api.onchange('bank_id')
     def onchage_bank(self):
         if self.bank_id:
@@ -851,6 +862,11 @@ class RequestOpenBalanceInvestment(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Request to Open Balance Investment"
 
+    _rec_name = 'first_number'
+    
+    first_number = fields.Char('First Number:')
+    new_journal_id = fields.Many2one("account.journal", 'Journal')
+
     name = fields.Char("Name")
     balance_req_id = fields.Many2one('request.open.balance', "Opening Balance Request")
     operation_number = fields.Char("Operation Number")
@@ -914,7 +930,8 @@ class RequestOpenBalanceInvestment(models.Model):
     
     reason_rejection = fields.Text("Reason for Rejection")
     is_cancel_collaboration = fields.Boolean("Operation of cancel collaboration", default=False)
-
+    yield_id = fields.Many2one('yield.destination','Yield Destination')
+    
     #====== fields for the Investment Funds View   ====>
 
     fund_id = fields.Many2one('agreement.fund','Fund')
@@ -961,6 +978,10 @@ class RequestOpenBalanceInvestment(models.Model):
         if res and not res.is_cancel_collaboration and res.type_of_operation == 'withdrawal_cancellation':
             raise ValidationError(
                 _("Can't create Operation with 'Withdrawal Due to Cancellation' Type of Operation manually!"))
+
+        first_number = self.env['ir.sequence'].next_by_code('IRF.number')
+        res.first_number = first_number
+            
         return res
 
     def write(self, vals):

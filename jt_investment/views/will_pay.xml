@@ -36,22 +36,28 @@
                 <form>
                 	<header>
                 		<button name="action_confirm" states="draft" string="Confirm" class="oe_highlight" type="object" />
+                		<button name="action_confirm" states="confirmed" string="Investment Settlement" class="oe_highlight" type="object" />
+                		<button name="action_confirm" states="confirmed" string="Returns" class="oe_highlight" type="object" />
+                		<button name="action_confirm" states="confirmed" string="Commissions" class="oe_highlight" type="object" />
+                		
                 		<!-- <button name="action_reset_to_draft" attrs="{'invisible':[('state','in',('draft','requested','approved'))]}" string="Reset To Draft" class="oe_highlight" type="object"/> -->
-                		<button name="action_reinvestment" states="draft" string="Reinvestment" class="oe_highlight" type="object" />                		
+                		<!-- <button name="action_reinvestment" states="draft" string="Reinvestment" class="oe_highlight" type="object" /> -->                		
                 		<field name="state" widget="statusbar"/>
                 	</header>
                 
                     <sheet>
-                         <div class="oe_button_box" name="button_box">
-<!--                             <button name="action_published_entries" string="Published Entries" type="object" class="oe_stat_button" icon="fa-random" attrs="{'invisible': [('state', '=', 'draft')]}">
-                            </button>
- -->                        </div>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" string="Rate History" type="action" name="%(action_investment_period_PAGARE_rate)d" icon="fa-money" widget="statinfo"/>
+                        </div>
                     
                         <group>
                             <group>
+                            	<field name="first_number" readonly="1"/>
+                            	<field name="new_journal_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            
                                 <field name="folio" readonly="1"/>
                                 <field name="date_time" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="expiry_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="expiry_date" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="investment_fund_id"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="journal_id" domain="[('type','=','bank')]" options="{'no_create': True}" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="bank_id"/>
@@ -85,6 +91,7 @@
                                 <field name="is_federal_subsidy_resources" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="origin_resource_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="observations" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="yield_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
                         </group>
                         <notebook>

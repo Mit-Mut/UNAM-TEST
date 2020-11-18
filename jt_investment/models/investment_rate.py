@@ -11,6 +11,7 @@ class InvestmentPeriodRate(models.Model):
     _name = 'investment.period.rate'
     _description = "Investment Rate"
     _rec_name = 'rate_date'
+    _order = 'rate_date'
     
     rate_date = fields.Date(string='Date',default=datetime.today())
     product_type = fields.Selection([('TIIE','TIIE'),('CETES','CETES'),('UDIBONOS','UDIBONOS'),('BONUS','BONUS'),('PAGARE','PAGARE')],string="Product Type")

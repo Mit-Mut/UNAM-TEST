@@ -37,8 +37,7 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
     _description = "Summary of Operation - Money Market Investments"
 
     filter_date = {'mode': 'range', 'filter': 'this_month'}
-    #filter_comparison = {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
-    filter_comparison = None
+    filter_comparison = {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
     filter_all_entries = True
     filter_journals = True
     filter_analytic = None
@@ -68,6 +67,7 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
             {'name': _('Institución financiera')},
             {'name': _('Contrato')},
             {'name': _('cuenta bancaria')},
+            {'name':_('moneda')},
             {'name': _('Inversión')},
             {'name': _('Producto')},
             {'name': _('Plazo')},
@@ -138,6 +138,7 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
                 'columns': [{'name': cetes.bank_id and cetes.bank_id.name or ''}, 
                             {'name': cetes.contract_id and cetes.contract_id.name or ''}, 
                             {'name': cetes.journal_id and cetes.journal_id.bank_account_id and cetes.journal_id.bank_account_id.acc_number or ''},
+                            {'name':cetes.currency_id.name},
                             self._format({'name': cetes.nominal_value},figure_type='float'),
                             {'name': 'CETES'},
                             {'name': cetes.term},
@@ -158,6 +159,7 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
                 'columns': [{'name': udibonos.bank_id and udibonos.bank_id.name or ''}, 
                             {'name': udibonos.contract_id and udibonos.contract_id.name or ''}, 
                             {'name': udibonos.journal_id and udibonos.journal_id.bank_account_id and udibonos.journal_id.bank_account_id.acc_number or ''},
+                            {'name':udibonos.currency_id.name},
                             self._format({'name': udibonos.nominal_value},figure_type='float'),
                             {'name': 'UDIBONOS'},
                             {'name': udibonos.time_for_each_cash_flow},
@@ -178,6 +180,7 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
                 'columns': [{'name': bonds.bank_id and bonds.bank_id.name or ''}, 
                             {'name': bonds.contract_id and bonds.contract_id.name or ''}, 
                             {'name': bonds.journal_id and bonds.journal_id.bank_account_id and bonds.journal_id.bank_account_id.acc_number or ''},
+                            {'name':bonds.currency_id.name},
                             self._format({'name': bonds.nominal_value},figure_type='float'),
                             {'name': 'BONOS'},
                             {'name': bonds.time_for_each_cash_flow},
@@ -206,6 +209,7 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
                 'columns': [{'name': pay.bank_id and pay.bank_id.name or ''}, 
                             {'name': pay.contract_id and pay.contract_id.name or ''}, 
                             {'name': pay.journal_id and pay.journal_id.bank_account_id and pay.journal_id.bank_account_id.acc_number or ''},
+                            {'name':pay.currency_id.name},
                             self._format({'name': pay.amount},figure_type='float'),
                             {'name': 'PAGARE'},
                             {'name': term},
@@ -226,6 +230,8 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
                         self._format({'name': total_investment},figure_type='float'),
                         {'name': ''},
                         {'name': ''},
+                        {'name':''},
+                        {'name':''},
                         ],
             'level': 1,
             'unfoldable': False,
@@ -248,6 +254,8 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
             'name': '',
             'columns': [{'name': 'Institución'}, 
                         {'name': ''}, 
+                        {'name': ''},
+                        {'name': ''},
                         {'name': ''},
                         {'name': ''},
                         {'name': ''},
@@ -276,6 +284,8 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
                             self._format({'name': amount},figure_type='float'),
                             {'name': ''},
                             {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
                             ],
                 'level': 3,
                 'unfoldable': False,
@@ -289,6 +299,8 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
                         {'name': ''}, 
                         {'name': ''},
                         self._format({'name': total_ins},figure_type='float'),
+                        {'name': ''},
+                        {'name': ''},
                         {'name': ''},
                         {'name': ''},
                         ],
@@ -318,6 +330,8 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
                         {'name': ''},
                         {'name': ''},
                         {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
                         ],
             'level': 1,
             'unfoldable': False,
@@ -342,6 +356,8 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
                             self._format({'name': amount},figure_type='float'),
                             {'name': ''},
                             {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
                             ],
                 'level': 3,
                 'unfoldable': False,
@@ -355,6 +371,8 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
                         {'name': ''}, 
                         {'name': ''},
                         self._format({'name': total_ins},figure_type='float'),
+                        {'name': ''},
+                        {'name': ''},
                         {'name': ''},
                         {'name': ''},
                         ],

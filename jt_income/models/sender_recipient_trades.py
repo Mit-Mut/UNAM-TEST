@@ -25,4 +25,25 @@ class SenderRecipientTrades(models.Model):
     
     employee_ids = fields.Many2many('hr.employee','rel_employee_sender_recipient_trades','sender_id','emp_id','EMPLOYEES COPIED')
     
-    
+    def name_get(self):
+        result = []
+        for rec in self:
+            name = rec.template or ''
+            if rec.template: 
+                name = dict(rec._fields['template'].selection).get(rec.template)
+                if self.env.user.lang == 'es_MX':
+                    if name=='Application form 20%':
+                        name = 'Formato de aplicación 20%'
+                    elif name=='Format Forgiveness':
+                        name = 'Formato de condonación'
+                    elif name=='Format notice change form of payment to transfer':
+                        name = 'Formato de aviso cambio forma de cobro a transferencia'
+                    elif name=='2nd Application form 20%':
+                        name = '2° formato de aplicación 20%'
+                    elif name=='Format remission 20%':
+                        name = 'Formato de condonación 20%'
+                    elif name=='Reporting format returned check':
+                        name = 'Formato de notificación de cheque devuelto'
+                        
+            result.append((rec.id, name))
+        return result        

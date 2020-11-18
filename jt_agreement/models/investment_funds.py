@@ -27,6 +27,7 @@ from datetime import datetime
 class InvestmentFunds(models.Model):
 
     _name = 'investment.funds'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Investment Funds"
     _rec_name = 'first_number'
     

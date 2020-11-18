@@ -5,6 +5,7 @@ from odoo.exceptions import UserError
 class Bonds(models.Model):
 
     _name = 'investment.bonds'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Investment Bonds"
     _rec_name = 'first_number'
      

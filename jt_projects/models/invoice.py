@@ -45,65 +45,14 @@ class AccountMove(models.Model):
     invoice_vault_folio = fields.Char('Invoice vault folio')
     status = fields.Selection(
         [('accept', 'Accepted'), ('reject', 'Rejected')], string='Status')
-    is_project_payment = fields.Boolean('Is Project Payment', default=True)
-    line = fields.Integer("Line")
+    is_project_payment = fields.Boolean('Is Project Payment', default=False)
+    line = fields.Integer("Header")
     previous = fields.Monetary('Previous')
 
     # More info Tab
-    zone = fields.Integer("Zone")
-    rate = fields.Monetary("Rate")
-    days = fields.Integer("Days")
     responsible_category_key = fields.Char("Responsible category key")
-    responsible_rfc = fields.Char(
-        'VAT', related='responsible_id.rfc', store=True)
     responsible_job_position = fields.Many2one(
         'hr.job', 'Responsible job position')
-
-    def action_cancel_budget(self):
-        self.ensure_one()
-        self.payment_state = 'cancel'
-        self.button_cancel()
-
-    def button_cancel(self):
-        for record in self:
-            if record.is_payment_request or record.is_payroll_payment_request:
-                if record.payment_state == 'cancel':
-                    record.cancel_payment_revers_entry()
-                    record.add_budget_available_amount()
-        return super(AccountMove, self).button_cancel()
-
-    def action_draft_budget(self):
-        self.ensure_one()
-        self.payment_state = 'draft'
-        self.button_draft()
-        conac_move = self.line_ids.filtered(lambda x: x.conac_move)
-        conac_move.sudo().unlink()
-        for line in self.line_ids:
-            line.coa_conac_id = False
-
-        self.add_budget_available_amount()
-
-    def cancel_payment_revers_entry(self):
-        revers_list = []
-        for line in self.line_ids:
-            revers_list.append((0, 0, {
-                'account_id': line.account_id.id,
-                'coa_conac_id': line.coa_conac_id and line.coa_conac_id.id or False,
-                'credit': line.debit,
-                'debit': line.credit,
-                'exclude_from_invoice_tab': True,
-                'conac_move': line.conac_move,
-                'name': 'Reversa',
-                'currency_id': line.currency_id and line.currency_id.id or False,
-                'amount_currency': line.amount_currency,
-            }))
-        self.line_ids = revers_list
-
-    def action_register(self):
-        for move in self:
-            move.generate_folio()
-            move.payment_state = 'registered'
-
 
 class AccountMoveLine(models.Model):
 
@@ -111,12 +60,8 @@ class AccountMoveLine(models.Model):
 
     concept = fields.Char('Concept')
     bill = fields.Many2one('account.account')
-    programatic_code_id = fields.Many2one(
-        'program.code', string='Programmatic Code')
-    egress_key_id = fields.Many2one("egress.keys", string="Egress Key")
-    type_of_bussiness_line = fields.Char("Type Of Bussiness Line")
     vat = fields.Char('Vat')
     retIVA = fields.Char('RetIVA')
-    turn_type = fields.Char("Turn type")
-    other_amounts = fields.Monetary("Other Amounts")
+    line = fields.Integer("Line")
+    #other_amounts = fields.Monetary("Other Amounts")
     # price_payment = fields.Monetary("Price")

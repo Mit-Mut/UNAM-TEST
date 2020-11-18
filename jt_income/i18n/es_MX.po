@@ -229,7 +229,7 @@ msgid ""
 "                                <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'out_receipt'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Draft Sales Receipt</span>\n"
 "                                <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'in_receipt'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Draft Purchase Receipt</span>"
 msgstr ""
-"<span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'out_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Proyecto de factura</span>\n"
+"<span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'out_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Factura Borrador</span>\n"
 "                                <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'out_refund'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Draft Credit Note</span>\n"
 "                                <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'in_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Draft Bill</span>\n"
 "                                <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'in_refund'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Draft Refund</span>\n"
@@ -1977,7 +1977,7 @@ msgstr "Observaciones"
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.sender_recipient_trades_from
 msgid "Occupation Compensation"
-msgstr ""
+msgstr "Compensacion de Ocupacion"
 
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_income_annual_report__october
@@ -2145,7 +2145,7 @@ msgstr "Pago en una sola exhibición PUE"
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
 msgid "Payment of"
-msgstr ""
+msgstr "Producto"
 
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_account_move__income_payment_ref
@@ -2202,7 +2202,7 @@ msgstr "Previsualizar"
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
 msgid "Price"
-msgstr ""
+msgstr "Precio"
 
 #. module: jt_income
 #: code:addons/jt_income/reports/new_annual_income_report.py:0 code:addons/jt_income/reports/new_income_annual_report.py:0
@@ -2303,7 +2303,7 @@ msgstr ""
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view model_terms:ir.ui.view,arch_db:jt_income.sender_recipient_trades_from
 msgid "RECIPIENT"
-msgstr ""
+msgstr "Remitente"
 
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_account_move__manual_rfc
@@ -2437,7 +2437,7 @@ msgstr "Clave de Unidad SAT"
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view model_terms:ir.ui.view,arch_db:jt_income.sender_recipient_trades_from
 msgid "SENDER"
-msgstr ""
+msgstr "Destinatario"
 
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.income_annual_report

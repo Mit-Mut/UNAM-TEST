@@ -7,6 +7,8 @@
             <field name="model">purchase.sale.security</field>
             <field name="arch" type="xml">
                 <tree>
+                  <field name="first_number"/>
+                  <field name="new_journal_id"/>
                 	<field name="name"/>
                 	<field name="invesment_date"/>
                 	<field name="expiry_date"/>
@@ -47,7 +49,7 @@
                             <group>
                                 <field name="name" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             	<field name="first_number" readonly="1"/>
-                            	<field name="new_journal_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            	<field name="new_journal_id" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 
                             </group>
                             <group>
@@ -84,7 +86,8 @@
                         		<field name="file_data" filename="file_name" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="dependency_id" context="{'show_for_supplier_payment':1}" readonly="1"/>
                                 <field name="sub_dependency_id" domain="[('dependency_id','=',dependency_id)]" context="{'show_for_supplier_payment':1}" readonly="1"/>
-                        		<field name="yield_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="currency_id" options="{'no_create': True}" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        		<field name="yield_id" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         	</group>
                         </group>
                     <notebook>
@@ -130,7 +133,7 @@
 									<field name="estimated_profit" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 								</group>
 								<group>
-									<field name="real_interest" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+									<field name="real_interest" attrs="{'readonly': [('state', 'not in', ('draft','confirmed'))]}"/>
 									<field name="real_profit" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 									<field name="profit_variation"/>
 								</group>	
@@ -139,6 +142,11 @@
                     </notebook>
                         
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>

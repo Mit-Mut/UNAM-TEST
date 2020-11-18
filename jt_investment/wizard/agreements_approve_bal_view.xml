@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+         <record model="ir.ui.view" id="approve_open_balance_req_operation_inherit">
+            <field name="name">approve.investment.bal.req.inherit</field>
+            <field name="model">approve.investment.bal.req</field>
+            <field name="inherit_id" ref="jt_agreement.approve_open_balance_req_operation"/>
+            <field name="arch" type="xml">
+	            	<field name="invoice" position="before">
+	            		<field name="investment_id" required="1"/>
+	            	</field>
+			</field>
+		</record>
+
+	</data>
+</odoo>

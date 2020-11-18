@@ -7,6 +7,7 @@ from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessE
 class PurchaseSaleSecurity(models.Model):
 
     _name = 'purchase.sale.security'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Purchase Sale Security"
     _rec_name = 'first_number' 
     
@@ -73,6 +74,13 @@ class PurchaseSaleSecurity(models.Model):
     investment_fund_id = fields.Many2one('investment.funds','Investment Funds',copy=False)
     sub_origin_resource = fields.Many2one('sub.origin.resource', "Origin of the resource")
     yield_id = fields.Many2one('yield.destination','Yield Destination')
+    currency_id = fields.Many2one(
+        'res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
+
+    @api.constrains('term')
+    def check_term(self):
+        if self.term == 0:
+            raise UserError(_('Please add Investment Term'))
     
     def unlink(self):
         for rec in self:

@@ -48,6 +48,14 @@ class ApproveInvestmentBalReq(models.TransientModel):
     base_collabaration_id = fields.Many2one('bases.collaboration','Name Of Agreements')
     investment_fund_id = fields.Many2one('investment.funds','Fund')
     
+    type_of_operation = fields.Selection([('open_bal', 'Opening Balance'),
+                                          ('increase', 'Increase'),
+                                          ('retirement', 'Retirement'),
+                                          ('withdrawal', 'Withdrawal for settlement'),
+                                          ('withdrawal_cancellation', 'Withdrawal Due to Cancellation')],
+                                            string="Type of Operation")
+    origin_resource_id = fields.Many2one('sub.origin.resource', "Origin of the resource")
+    
     @api.onchange('base_collabaration_id')
     def onchange_base_collabaration_id(self):
         if self.base_collabaration_id:
@@ -61,15 +69,8 @@ class ApproveInvestmentBalReq(models.TransientModel):
         res.update({'invoice': name})
         return res
 
-    def approve(self):
-        request = self.env['request.open.balance.invest'].browse(self.env.context.get('active_id'))
-        if request:
-            if request.is_manually:
-                request.state = 'requested'
-            else:
-                request.state = 'approved'
-            self.env['request.open.balance.finance'].create(
-                {
+    def get_open_balance_vals(self,request):
+        vals =  {
                     'invoice': self.invoice,
                     'operation_number': self.operation_number,
                     'agreement_number': self.agreement_number,
@@ -90,7 +91,17 @@ class ApproveInvestmentBalReq(models.TransientModel):
                     'dependency_id' : self.dependency_id and self.dependency_id.id or False,
                     'sub_dependency_id' : self.sub_dependency_id and self.sub_dependency_id.id or False,
                 }
-            )
+        return vals
+    
+    def approve(self):
+        request = self.env['request.open.balance.invest'].browse(self.env.context.get('active_id'))
+        if request:
+            vals = self.get_open_balance_vals(request)
+            if request.is_manually:
+                request.state = 'requested'
+            else:
+                request.state = 'approved'
+            self.env['request.open.balance.finance'].create(vals)
             if request.balance_req_id:
                 request.balance_req_id.state = 'approved'
 

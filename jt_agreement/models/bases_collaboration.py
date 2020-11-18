@@ -63,13 +63,17 @@ class BasesCollabration(models.Model):
     request_open_balance_ids = fields.One2many('request.open.balance','bases_collaboration_id')
     
     employee_id = fields.Many2one('hr.employee', 'Holder of the unit')
-    job_id = fields.Many2one('hr.job', "Market Stall")
-    phone = fields.Char("Telephone of the unit holder")
+    job_id = fields.Many2one(related="employee_id.job_id", string="Market Stall")
+    phone = fields.Char(related="employee_id.work_phone", string="Telephone of the unit holder")
+    holder_email = fields.Char(related="employee_id.work_email", string="Email")
+
     administrative_secretary_id = fields.Many2one('hr.employee', "Administrative Secretary")
-    administrative_secretary_phone = fields.Char("Administrative Secretary Telephone")
+    administrative_secretary_phone = fields.Char(related="administrative_secretary_id.work_phone", string="Administrative Secretary Telephone")
+    administrative_secretary_email = fields.Char(related="administrative_secretary_id.work_email", string="Administrative Secretary Email")
+    
     direct_manager_cbc_id = fields.Many2one("hr.employee", "Direct manager of CBC")
-    cbc_responsible_phone = fields.Char("CBC responsible phone number")
-    email = fields.Char("Email")
+    cbc_responsible_phone = fields.Char(related="direct_manager_cbc_id.work_phone", string="CBC responsible phone number")
+    email = fields.Char(related="direct_manager_cbc_id.work_email", string="Email")
     unit_address = fields.Text("Unit Address")
     additional_observation = fields.Text("Additional observations of the agency")
     cbc_format = fields.Binary("CBC Format")
@@ -94,8 +98,6 @@ class BasesCollabration(models.Model):
     report_start_date = fields.Date("Report Start Date")
     report_end_date = fields.Date("Report End Date")
     n_report = fields.Char(string="N° para reporte")
-    holder_email = fields.Char("Email")
-    administrative_secretary_email = fields.Char("Administrative Secretary Email")
     next_no = fields.Integer(string="Next Number")
 
     
@@ -405,31 +407,6 @@ class BasesCollabration(models.Model):
 #                     else False
 #                 })
 
-    @api.onchange('direct_manager_cbc_id')
-    def onchange_direct_manager_cbc(self):
-        if self.direct_manager_cbc_id:
-            if self.direct_manager_cbc_id.work_phone:
-                self.cbc_responsible_phone = self.direct_manager_cbc_id.work_phone
-            if self.direct_manager_cbc_id.work_email:
-                self.email = self.direct_manager_cbc_id.work_email
-
-    @api.onchange('administrative_secretary_id')
-    def onchange_administrative_secretary(self):
-        if self.administrative_secretary_id and self.administrative_secretary_id.work_phone:
-            self.administrative_secretary_phone = self.administrative_secretary_id.work_phone
-        if self.administrative_secretary_id and self.administrative_secretary_id.work_email:
-            self.administrative_secretary_email = self.administrative_secretary_id.work_email
-
-    @api.onchange('employee_id')
-    def onchange_emp_id(self):
-        if self.employee_id:
-            emp = self.employee_id
-            if emp.job_id:
-                self.job_id = emp.job_id.id
-            if emp.work_phone:
-                self.phone = emp.work_phone
-            if emp.work_email:
-                self.holder_email = emp.work_email
 
     @api.constrains('convention_no')
     def _check_convention_no(self):
@@ -723,6 +700,11 @@ class RequestOpenBalance(models.Model):
             raise ValidationError(_("Type of Operation must be 'Withdrawal Due to Cancellation' for this operation!"))
         if res and not res.is_cancel_collaboration and res.type_of_operation == 'withdrawal_cancellation':
             raise ValidationError(_("Can't create Operation with 'Withdrawal Due to Cancellation' Type of Operation manually!"))
+        if self.env.context and not self.env.context.get('call_from_closing',False) and res.type_of_operation == 'withdrawal_closure':
+            raise ValidationError(_("Can't create Operation with 'Withdrawal due to closure' Type of Operation manually!"))
+        if self.env.context and not self.env.context.get('call_from_closing',False) and res.type_of_operation == 'increase_by_closing':
+            raise ValidationError(_("Can't create Operation with 'Increase by closing' Type of Operation manually!"))
+        
         # name = self.env['ir.sequence'].next_by_code('agreement.operation')
         if res.bases_collaboration_id:
             res.bases_collaboration_id.next_no += 1   
@@ -1042,7 +1024,8 @@ class RequestOpenBalanceInvestment(models.Model):
                 'default_fund_id' : self.fund_id and self.fund_id.id or False,
                 'default_agreement_type_id' : self.type_of_agreement_id and self.type_of_agreement_id.id or False,
                 'default_base_collabaration_id' : self.bases_collaboration_id and self.bases_collaboration_id.id or False,
-                
+                'default_type_of_operation' : self.type_of_operation,
+                'default_origin_resource_id' : self.origin_resource_id and self.origin_resource_id.id or False,
             }
         }
 

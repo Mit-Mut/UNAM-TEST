@@ -27,6 +27,7 @@ from datetime import datetime
 class InvestmentFunds(models.Model):
 
     _inherit = 'investment.funds'
+    
          
     fund_type_id = fields.Many2one('fund.type','Type of Fund')
     type_of_agreement_id = fields.Many2one('agreement.agreement.type','Type of Agreement')
@@ -91,9 +92,9 @@ class InvestmentFunds(models.Model):
     bonds_ids = fields.One2many('investment.bonds','investment_fund_id')
     will_pay_ids = fields.One2many('investment.will.pay','investment_fund_id')
     productive_ids = fields.One2many('investment.investment','investment_fund_id')
-
     request_finance_ids = fields.One2many(
         'request.open.balance.finance', 'investment_fund_id')
+    yield_id = fields.Many2one('yield.destination',string="Yield Destination")
 
 
     def unlink(self):

@@ -140,7 +140,7 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
         
         domain = domain + [('fund_key','!=',False),('invesment_date','>=',start),('invesment_date','<=',end)]
         
-        records = self.env['investment.investment'].search(domain)
+        records = self.env['investment.investment'].search(domain,order='currency_id')
         #records = self.env['investment.investment'].search([('invesment_date','>=',start),('invesment_date','<=',end)],order='invesment_date')
         
         capital = 0

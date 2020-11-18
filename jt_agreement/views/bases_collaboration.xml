@@ -285,7 +285,7 @@
                                         <field name="beneficiary_ids" nolabel="1"
                                                attrs="{'readonly': [('state', 'not in', ('draft','valid'))]}">
                                             <tree>
-                                            	<field name="sequence" widget="handle"/>
+                                            	<field name="sequence"/>
                                                 <field name="employee_id" required="1"/>
                                                 <field name="bank_id" context="{'from_agreement':1}"
                                                   domain="[('employee_id', '=', employee_id)]" required="1"/>

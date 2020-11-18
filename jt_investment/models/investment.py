@@ -5,6 +5,7 @@ from odoo.exceptions import UserError
 class Investment(models.Model):
 
     _name = 'investment.investment'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Productive Accounts Investment"
     _rec_name = 'first_number'
     
@@ -64,6 +65,17 @@ class Investment(models.Model):
     expiry_date = fields.Date(string="Expiration Date")
     yield_id = fields.Many2one('yield.destination','Yield Destination')
 
+    line_ids = fields.One2many('investment.operation','investment_id',copy=False)
+    actual_amount = fields.Float(string="Actual amount",compute="get_actual_amount",store=True)
+    
+    @api.depends('line_ids','line_ids.type_of_operation','line_ids.amount')
+    def get_actual_amount(self):
+        for rec in self:
+            amount = 0
+            amount += sum(a.amount for a in rec.line_ids.filtered(lambda x:x.type_of_operation in ('open_bal','increase','increase_by_closing')))
+            amount -= sum(a.amount for a in rec.line_ids.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure')))
+            rec.actual_amount = amount
+
     @api.model
     def create(self,vals):
         res = super(Investment,self).create(vals)
@@ -108,18 +120,18 @@ class Investment(models.Model):
                 raise UserError(_('You can delete only draft status data.'))
         return super(Investment, self).unlink()
 
-    @api.onchange('contract_id')
-    def onchange_contract_id(self):
-        if self.contract_id:
-            self.fund_type_id = self.contract_id.fund_type_id and self.contract_id.fund_type_id.id or False 
-            self.agreement_type_id = self.contract_id.agreement_type_id and self.contract_id.agreement_type_id.id or False
-            self.fund_id = self.contract_id.fund_id and self.contract_id.fund_id.id or False
-            self.base_collaboration_id = self.contract_id.base_collabaration_id and self.contract_id.base_collabaration_id.id or False
-        else:
-            self.fund_type_id = False
-            self.agreement_type_id = False
-            self.fund_id = False
-            self.base_collaboration_id = False
+#     @api.onchange('contract_id')
+#     def onchange_contract_id(self):
+#         if self.contract_id:
+#             self.fund_type_id = self.contract_id.fund_type_id and self.contract_id.fund_type_id.id or False 
+#             self.agreement_type_id = self.contract_id.agreement_type_id and self.contract_id.agreement_type_id.id or False
+#             self.fund_id = self.contract_id.fund_id and self.contract_id.fund_id.id or False
+#             self.base_collaboration_id = self.contract_id.base_collabaration_id and self.contract_id.base_collabaration_id.id or False
+#         else:
+#             self.fund_type_id = False
+#             self.agreement_type_id = False
+#             self.fund_id = False
+#             self.base_collaboration_id = False
         
     @api.depends('estimated_profit','real_profit')
     def get_profit_variation(self):
@@ -218,4 +230,100 @@ class Investment(models.Model):
         self.state = 'canceled'
         if self.investment_fund_id and self.investment_fund_id.state != 'canceled':
             self.investment_fund_id.with_context(call_from_product=True).action_canceled()
-        
+
+class InvestmentOperation(models.Model):
+
+    _name = 'investment.operation'
+    _description = "Investment Operation"
+    
+    investment_id = fields.Many2one('investment.investment','First Number:')
+    invoice = fields.Char("Folio")
+    operation_number = fields.Char("Operation Number")
+    agreement_number = fields.Char("Agreement Number")
+    bank_account_id = fields.Many2one('account.journal', "Bank and Origin Account")
+    desti_bank_account_id = fields.Many2one('account.journal', "Destination Bank and Account")
+    currency_id = fields.Many2one(
+        'res.currency', default=lambda self: self.env.user.company_id.currency_id)
+    amount = fields.Monetary("Amount")
+    dependency_id = fields.Many2one('dependency', "Dependency")
+    sub_dependency_id = fields.Many2one('sub.dependency', "Subdependency")
+    user_id = fields.Many2one('res.users', default=lambda self: self.env.user.id, string="Applicant")
+    unit_req_transfer_id = fields.Many2one('dependency', string="Unit requesting the transfer")
+    date_required = fields.Date("Date Required")
+    fund_type = fields.Many2one('fund.type', "Type Of Fund")
+    agreement_type_id = fields.Many2one('agreement.agreement.type', 'Agreement Type')
+    base_collabaration_id = fields.Many2one('bases.collaboration','Name Of Agreements')
+    investment_fund_id = fields.Many2one('investment.funds','Fund')
+    inc_id = fields.Many2one('request.open.balance.invest','    Increases and Withdrawals',copy=False)
+
+    type_of_operation = fields.Selection([('open_bal', 'Opening Balance'),
+                                          ('increase', 'Increase'),
+                                          ('retirement', 'Retirement'),
+                                          ('withdrawal', 'Withdrawal for settlement'),
+                                          ('withdrawal_cancellation', 'Withdrawal Due to Cancellation'),
+                                          ('withdrawal_closure', 'Withdrawal due to closure'),
+                                          ('increase_by_closing', 'Increase by closing')],
+                                         string="Type of Operation")
+    
+    origin_resource_id = fields.Many2one('sub.origin.resource', "Origin of the resource")
+    line_state = fields.Selection([('draft','Draft'),('requested','Requested')],default='draft',string="Status",copy=False)
+    record_type = fields.Selection([('manually','Manually'),('automatically','Automatically')],string="Record Type",copy=False)
+    seq = fields.Integer(string='Sequence',compute="get_line_seq",copy=False,store=True)
+    
+    @api.model
+    def create(self,vals):
+        res = super(InvestmentOperation,self).create(vals)
+        if res.type_of_operation and res.type_of_operation == 'open_bal' and res.investment_id:
+            res.investment_id.amount_to_invest = res.amount  
+        return res
+    
+    def write(self,vals):
+        result = super(InvestmentOperation,self).write(vals)
+        if 'amount' in vals or 'type_of_operation' in vals:
+            for res in self:
+                if res.type_of_operation and res.type_of_operation == 'open_bal' and res.investment_id:
+                    res.investment_id.amount_to_invest = res.amount  
+        return result
+    
+    @api.depends('type_of_operation')
+    def get_line_seq(self):
+        for rec in self:
+            seq = 100
+            if rec.type_of_operation == 'open_bal':
+                seq = 1
+            elif rec.type_of_operation == 'increase':
+                seq = 2
+            elif rec.type_of_operation == 'increase_by_closing':
+                seq = 3
+            elif rec.type_of_operation == 'retirement':
+                seq = 4
+            elif rec.type_of_operation == 'withdrawal_cancellation':
+                seq = 5
+            elif rec.type_of_operation == 'withdrawal':
+                seq = 6
+            elif rec.type_of_operation == 'withdrawal_closure':
+                seq = 7
+            rec.seq = seq
+            
+    def action_requested(self):
+        vals =  {
+            'invoice': self.invoice,
+            'operation_number': self.operation_number,
+            'agreement_number': self.agreement_number,
+            'bank_account_id': self.bank_account_id.id if self.bank_account_id else False,
+            'desti_bank_account_id': self.desti_bank_account_id.id if self.desti_bank_account_id else False,
+            'amount': self.amount,
+            'unit_req_transfer_id': self.unit_req_transfer_id.id if self.unit_req_transfer_id else False,
+            'date_required': self.date_required,
+            'fund_type': self.fund_type.id if self.fund_type else False,
+            'agreement_type_id' : self.agreement_type_id and self.agreement_type_id.id or False,
+            'investment_fund_id' : self.investment_fund_id and self.investment_fund_id.id or False,
+            'base_collabaration_id' : self.base_collabaration_id and self.base_collabaration_id.id or False,
+            'investment_operation_id': self.id,
+            'state': 'requested',
+            'dependency_id' : self.dependency_id and self.dependency_id.id or False,
+            'sub_dependency_id' : self.sub_dependency_id and self.sub_dependency_id.id or False,            
+        }
+
+        self.env['request.open.balance.finance'].create(vals)
+        self.line_state = 'requested'         

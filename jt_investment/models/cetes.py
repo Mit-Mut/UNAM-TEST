@@ -6,6 +6,7 @@ from odoo.exceptions import UserError
 class CETES(models.Model):
 
     _name = 'investment.cetes'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Investment CETES"
     _rec_name = 'first_number'
     
@@ -251,3 +252,20 @@ class CETES(models.Model):
             'type': 'ir.actions.act_window',
             'context': {'default_cetes_id': self.id}
         }
+    def action_rate_history(self):
+
+        token = 'fccfd1e45c7e54ef7a6896f25f7dcf01d51cfa033424abd345707b6a8d2b59c3'
+        url = 'https://www.banxico.org.mx/SieAPIRest/service/v1/series/'
+        
+        # url +=  series_str+"/datos/oportuno?token=%s"%token
+        pre_date = '2020-01-01'
+        date_range = datetime.now()
+        date_range = datetime.strftime(date_range,'%Y-%m-%d')
+        date_range = pre_date+"/"+date_range
+        
+        self.env['investment.period.rate'].get_investment_product_rate(token,url,date_range)
+        self.env['investment.period.rate'].get_cetes_product_rate(token,url,date_range)
+        self.env['investment.period.rate'].get_UDIBONOS_product_rate(token,url,date_range)
+        self.env['investment.period.rate'].get_BONUS_product_rate(token,url,date_range)
+        self.env['investment.period.rate'].get_PAGARE_product_rate(token,url,date_range)
+        

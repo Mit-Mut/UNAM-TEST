@@ -67,7 +67,8 @@ class ReportProductiveAccounts(models.AbstractModel):
         return [
             {'name': _('Recurso')},
             {'name': _('Institución financiera')},
-            {'name': _('Contrato')},            
+            {'name': _('Contrato')},
+            {'name':_('moneda')},            
             {'name': _('Capital')},
             {'name': _('Tasa')},
             {'name': _('Plazo Dies')},
@@ -137,9 +138,9 @@ class ReportProductiveAccounts(models.AbstractModel):
         else:
             domain=[('state','not in',('rejected','canceled'))]
         
-        journal = self._get_options_journals_domain(options)
-        if journal:
-            domain+=journal
+#         journal = self._get_options_journals_domain(options)
+#         if journal:
+#             domain+=journal
 
         
         start = datetime.strptime(
@@ -147,8 +148,10 @@ class ReportProductiveAccounts(models.AbstractModel):
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
-        records = self.env['investment.investment'].search([('state','=','confirmed'),('invesment_date','>=',start),('invesment_date','<=',end)])
-        records = self.env['investment.investment'].search([('invesment_date','>=',start),('invesment_date','<=',end)],order='invesment_date')
+        domain = domain + [('fund_key','!=',False),('invesment_date','>=',start),('invesment_date','<=',end)]
+        
+        #records = self.env['investment.investment'].search([('invesment_date','>=',start),('invesment_date','<=',end)])
+        records = self.env['investment.investment'].search(domain,order='currency_id,invesment_date')
         
         month_list = {1:[],2:[],3:[],4:[],5:[],6:[],
                       7:[],8:[],9:[],10:[],11:[],12:[]
@@ -189,6 +192,7 @@ class ReportProductiveAccounts(models.AbstractModel):
                 'columns': [
                             {'name': rec.journal_id and rec.journal_id.bank_id and rec.journal_id.bank_id.name or ''}, 
                             {'name': rec.contract_id and rec.contract_id.name or ''},
+                            {'name':rec.currency_id.name},
                             self._format({'name': rec.amount_to_invest},figure_type='float',digit=2),
                             self._format({'name': total_rate},figure_type='float',digit=6),
                             {'name': term},
@@ -232,6 +236,7 @@ class ReportProductiveAccounts(models.AbstractModel):
                 'name': resouce_name,
                 'columns': [{'name': rec.journal_id and rec.journal_id.bank_id and rec.journal_id.bank_id.name or ''}, 
                             {'name': rec.contract_id and rec.contract_id.name or ''},
+                            {'name':rec.currency_id.name},
                             self._format({'name': rec.amount_to_invest},figure_type='float',digit=2),
                             self._format({'name': total_rate},figure_type='float',digit=6),
                             {'name': day_diff},
@@ -262,6 +267,7 @@ class ReportProductiveAccounts(models.AbstractModel):
                         
                         self._format({'name': total_extra_amount},figure_type='float',digit=2),
                         self._format({'name': total_diff_amount},figure_type='float',digit=2),
+                        {'name':''},
                         ],
             'level': 1,
             'unfoldable': False,
@@ -283,6 +289,7 @@ class ReportProductiveAccounts(models.AbstractModel):
                             {'name': ''},
                             {'name': ''},
                             {'name': ''},
+                            {'name': ''},
                             ],
                 'level': 1,
                 'unfoldable': False,
@@ -293,6 +300,7 @@ class ReportProductiveAccounts(models.AbstractModel):
                 'id': 'hierarchy_month_' + str(current_month_start_date.month),
                 'name': 'INVERSION '+self.get_month_name(month),
                 'columns': [{'name': ''},
+                            {'name': ''},
                             {'name': ''},
                             {'name': ''},
                             {'name': ''},
@@ -352,6 +360,7 @@ class ReportProductiveAccounts(models.AbstractModel):
                                     {'name': ''},
                                     self._format({'name': total_month_extra},figure_type='float',digit=2),
                                     self._format({'name': total_month_diff},figure_type='float',digit=2),
+                                    {'name': ''},
                                     ],
                         'level': 1,
                         'unfoldable': False,

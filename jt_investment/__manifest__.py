@@ -51,8 +51,10 @@
         'views/investment_fund_view.xml',
         'views/distribution_of_income.xml',
         'wizard/approve_inv_bal_req_view.xml',
+        'wizard/agreements_approve_bal_view.xml',
         'reports/header_template.xml',
         'reports/menu_report.xml',
+        # 'reports/filter_template.xml',
         
     ],
     'application': True,

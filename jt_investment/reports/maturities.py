@@ -37,7 +37,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
     _description = "Summary of Operation - Maturities"
 
     filter_date = {'mode': 'range', 'filter': 'this_month'}
-    filter_comparison = None
+    filter_comparison = {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
     filter_all_entries = True
     filter_journals = True
     filter_analytic = None
@@ -70,6 +70,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
             {'name': _('Fecha de caducidad')},
             {'name': _('Cta Bancaria')},
             {'name': _('Inversión')},
+            {'name':_('moneda')},
             {'name': _('Producto')},
             {'name': _('Plazo')},
             {'name': _('Tasa Interés')},
@@ -87,8 +88,9 @@ class SummaryOfOperationMaturities(models.AbstractModel):
             return value
         value['no_format_name'] = value['name']
         
+        currency_id = self.env.company.currency_id
         if figure_type == 'float':
-            currency_id = self.env.company.currency_id
+            
             if currency_id.is_zero(value['name']):
                 # don't print -0.0 in reports
                 value['name'] = abs(value['name'])
@@ -127,12 +129,12 @@ class SummaryOfOperationMaturities(models.AbstractModel):
         sale_domain = domain + [('invesment_date','>=',start),('invesment_date','<=',end)]
         productive_domain = domain + [('invesment_date','>=',start),('invesment_date','<=',end)]
         
-        cetes_records = self.env['investment.cetes'].search(cetes_domain)
-        udibonos_records = self.env['investment.udibonos'].search(udibonos_domain)
-        bonds_records = self.env['investment.bonds'].search(bonds_domain)
-        will_pay_records = self.env['investment.will.pay'].search(will_pay_domain)
-        sale_security_ids = self.env['purchase.sale.security'].search(sale_domain)
-        productive_ids = self.env['investment.investment'].search(productive_domain)
+        cetes_records = self.env['investment.cetes'].search(cetes_domain,order='currency_id')
+        udibonos_records = self.env['investment.udibonos'].search(udibonos_domain,order='currency_id')
+        bonds_records = self.env['investment.bonds'].search(bonds_domain,order='currency_id')
+        will_pay_records = self.env['investment.will.pay'].search(will_pay_domain,order='currency_id')
+        sale_security_ids = self.env['purchase.sale.security'].search(sale_domain,order='currency_id')
+        productive_ids = self.env['investment.investment'].search(productive_domain,order='currency_id')
                 
         total_investment = 0
 
@@ -153,7 +155,8 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                             {'name': sale.expiry_date}, 
                             {'name': sale.journal_id and sale.journal_id.bank_account_id and sale.journal_id.bank_account_id.acc_number or ''},
                             self._format({'name': sale.amount},figure_type='float'),
-                            {'name': 'Securities'},
+                            {'name':sale.currency_id and sale.currency_id.name or ''},
+                            {'name': 'Títulos'},
                             {'name': term},
                             self._format({'name': sale.price},figure_type='float'),
                             self._format({'name': interest},figure_type='float'),
@@ -185,6 +188,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                             {'name': cetes.expiry_date},  
                             {'name': cetes.journal_id and cetes.journal_id.bank_account_id and cetes.journal_id.bank_account_id.acc_number or ''},
                             self._format({'name': cetes.nominal_value},figure_type='float'),
+                            {'name':cetes.currency_id and cetes.currency_id.name or ''},
                             {'name': 'CETES'},
                             {'name': cetes.term},
                             self._format({'name': cetes.yield_rate},figure_type='float'),
@@ -214,6 +218,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                             {'name': udibonos.expiry_date},                               
                             {'name': udibonos.journal_id and udibonos.journal_id.bank_account_id and udibonos.journal_id.bank_account_id.acc_number or ''},
                             self._format({'name': udibonos.nominal_value},figure_type='float'),
+                            {'name':udibonos.currency_id and udibonos.currency_id.name or ''},
                             {'name': 'UDIBONOS'},
                             {'name': udibonos.time_for_each_cash_flow},
                             self._format({'name': udibonos.interest_rate},figure_type='float'),
@@ -244,6 +249,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                             {'name': bonds.expiry_date},                               
                             {'name': bonds.journal_id and bonds.journal_id.bank_account_id and bonds.journal_id.bank_account_id.acc_number or ''},
                             self._format({'name': bonds.nominal_value},figure_type='float'),
+                            {'name':bonds.currency_id and bonds.currency_id.name or ''},
                             {'name': 'BONOS'},
                             {'name': bonds.time_for_each_cash_flow},
                             self._format({'name': bonds.interest_rate},figure_type='float'),
@@ -281,7 +287,8 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                             {'name': pay.expiry_date},                               
                             {'name': pay.journal_id and pay.journal_id.bank_account_id and pay.journal_id.bank_account_id.acc_number or ''},
                             self._format({'name': pay.amount},figure_type='float'),
-                            {'name': 'PAGARE'},
+                            {'name':pay.currency_id and pay.currency_id.name or ''},
+                            {'name': 'Pagaré'},
                             {'name': term},
                             self._format({'name': pay.interest_rate},figure_type='float'),
                             self._format({'name': interest},figure_type='float'),
@@ -317,7 +324,8 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                             {'name': pro.expiry_date},                               
                             {'name': pro.journal_id and pro.journal_id.bank_account_id and pro.journal_id.bank_account_id.acc_number or ''},
                             self._format({'name': pro.amount_to_invest},figure_type='float'),
-                            {'name': 'Productive Accounts'},
+                            {'name':pro.currency_id and pro.currency_id.name or ''},
+                            {'name': 'Cuentas Productivas'},
                             {'name': term},
                             self._format({'name': pro.interest_rate},figure_type='float'),
                             self._format({'name': interest},figure_type='float'),
@@ -334,6 +342,11 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                         {'name': ''}, 
                         {'name': ''},
                         self._format({'name': total_investment},figure_type='float'),
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
                         {'name': ''},
                         {'name': ''},
                         ],
@@ -365,6 +378,11 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                         {'name': ''},
                         {'name': ''},
                         {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
                         ],
             'level': 1,
             'unfoldable': False,
@@ -391,6 +409,11 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                             self._format({'name': amount},figure_type='float'),
                             {'name': ''},
                             {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
                             ],
                 'level': 3,
                 'unfoldable': False,
@@ -404,6 +427,11 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                         {'name': ''}, 
                         {'name': ''},
                         self._format({'name': total_ins},figure_type='float'),
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
                         {'name': ''},
                         {'name': ''},
                         ],
@@ -435,6 +463,11 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                         {'name': ''},
                         {'name': ''},
                         {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
                         ],
             'level': 1,
             'unfoldable': False,
@@ -462,6 +495,11 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                             self._format({'name': amount},figure_type='float'),
                             {'name': ''},
                             {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
                             ],
                 'level': 3,
                 'unfoldable': False,
@@ -475,6 +513,11 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                         {'name': ''}, 
                         {'name': ''},
                         self._format({'name': total_ins},figure_type='float'),
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
                         {'name': ''},
                         {'name': ''},
                         ],

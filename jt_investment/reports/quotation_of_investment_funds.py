@@ -37,8 +37,7 @@ class ReportonthequotationofInvestmentFunds(models.AbstractModel):
     _description = "Report on the quotation of Investment Funds"
 
     filter_date = {'mode': 'range', 'filter': 'this_month'}
-    #filter_comparison = {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
-    filter_comparison = None
+    filter_comparison = {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
     filter_all_entries = True
     filter_journals = True
     filter_analytic = None

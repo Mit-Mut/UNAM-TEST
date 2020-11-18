@@ -165,6 +165,9 @@
             sequence="22"
             action="action_investment_committee_new"
         />
+
+
+        
                
 	</data>
 </odoo>

@@ -14,7 +14,9 @@ class BasesCollabration(models.Model):
     investment_id = fields.Many2one('investment.investment','Investment',copy=False)
     investment_fund_id = fields.Many2one('investment.funds','Investment Funds',copy=False)
     distribution_id = fields.Many2one('distribution.of.income','Distribution Income',copy=False)
-    
+    investment_link_id = fields.Many2one('investment.investment','Investment',copy=False)
+    investment_operation_id = fields.Many2one('investment.operation','Operation',copy=False)
+        
     def approve_finance(self):
         result = super(BasesCollabration,self).approve_finance()
         if self.purchase_sale_security_id:

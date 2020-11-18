@@ -37,7 +37,7 @@ class SummaryofOperationInvestmentFundsBalances(models.AbstractModel):
     _description = "Summary of Operation - Investment Fund Balances"
 
     filter_date = {'mode': 'range', 'filter': 'this_month'}
-    filter_comparison = None 
+    filter_comparison = {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
     filter_all_entries = True
     filter_journals = None
     filter_analytic = None
@@ -47,7 +47,33 @@ class SummaryofOperationInvestmentFundsBalances(models.AbstractModel):
     filter_unposted_in_period = None
     MAX_LINES = None
 
+    # filter_fund_id = True
+
     # {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
+
+    # @api.model
+    # def _get_filter_fund_method(self):
+    #     return self.env['purchase.sale.security'].search([])
+
+    # @api.model
+    # def _init_filter_payment_method(self, options, previous_options=None):
+    #     if self.filter_fund_id is None:
+    #         return
+    #     if previous_options and previous_options.get('fund_id'):
+    #         journal_map = dict((opt['id'], opt['selected']) for opt in previous_options['fund_id'] if opt['id'] != 'divider' and 'selected' in opt)
+    #     else:
+    #         journal_map = {}
+    #     options['fund_id'] = []
+
+    #     default_group_ids = []
+
+    #     for j in self._get_filter_fund_method():
+    #         options['fund_id'].append({
+    #             'id': j.id,
+    #             'name': j.fund_id,
+    #             'code': j.fund_id,
+    #             'selected': journal_map.get(j.id, j.id in default_group_ids),
+    #         })
     
     def _get_reports_buttons(self):
         return [
@@ -98,6 +124,18 @@ class SummaryofOperationInvestmentFundsBalances(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         lines = []
+        fund_list = []
+        
+        # for fund in options.get('fund_id'):
+        #     if fund.get('selected',False)==True:
+        #         fund_list.append(fund.get('id',0))
+        
+        # if not fund_list:
+        #     fund_ids = self._get_filter_fund_method()
+        #     fund_list = fund_ids.ids
+        
+        # if not fund_list:
+        #     fund_list = [0]
 
         if options.get('all_entries') is False:
             domain=[('state','=','confirmed')]

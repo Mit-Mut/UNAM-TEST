@@ -5,6 +5,7 @@ from odoo.exceptions import UserError
 class UDIBONOS(models.Model):
 
     _name = 'investment.udibonos'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Investment UDIBONOS"
     _rec_name = 'first_number'
      

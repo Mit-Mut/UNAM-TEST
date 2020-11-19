@@ -31,6 +31,29 @@ class ProjectRegistry(models.Model):
     check_project_expire = fields.Boolean(
         "Check Project expire", default=True, compute="get_project_due", store=True)
 
+    is_papiit_project = fields.Boolean('PAPIIT project',default=False,copy=False)
+    
+    is_related_agreement = fields.Boolean('Is It related to agreement?',default=False)
+    base_id = fields.Many2one('bases.collaboration','Agreement Name')
+    base_number = fields.Char(related='base_id.convention_no',string='Agreement number')
+    agreement_type_id = fields.Many2one(related='base_id.agreement_type_id')
+    resource_type = fields.Selection([('R','R (Remnant)'),('P','P (Budget)')],string="Resource Type")
+    pre_account_id = fields.Many2one('account.account','Previous')
+    PAPIIT_project_type = fields.Selection([('PAPIIT','PAPIIT'),('PAPIME','PAPIME'),('INFOCAB','INFOCAB')],string="PAPIIT Project Type")
+    dependency_id = fields.Many2one('dependency', "Dependency")
+    subdependency_id = fields.Many2one('sub.dependency', "Sub Dependency")
+    technical_support_id = fields.Many2one('hr.employee','Technical support')
+    administrative_manager_id = fields.Many2one('hr.employee','Administrative Manager')
+    exercised_amount = fields.Monetary("Amount exercised")
+    final_amount = fields.Monetary(string="Final amount",compute='get_final_amount',store=True)
+    co_responsible_id = fields.Many2one('hr.employee','Co-responsible Name')
+    co_responsible_rfc = fields.Char(related='co_responsible_id.rfc',string='Co-responsible RFC')
+    
+    @api.depends('exercised_amount','allocated_amount')
+    def get_final_amount(self):
+        for rec in self:
+            rec.final_amount = rec.allocated_amount - rec.exercised_amount
+            
     def compute_count(self):
         for record in self:
             record.check_counts = self.env['expense.verification'].search_count(

@@ -47,6 +47,57 @@ class SummaryofOperationInvestmentFunds(models.AbstractModel):
     filter_unposted_in_period = None
     MAX_LINES = None
 
+    filter_funds = True
+    filter_contract = True
+
+    @api.model
+    def _get_filter_funds(self):
+        return self.env['agreement.fund'].search([])
+
+    @api.model
+    def _init_filter_funds(self, options, previous_options=None):
+        if self.filter_funds is None:
+            return
+        if previous_options and previous_options.get('funds'):
+            journal_map = dict((opt['id'], opt['selected']) for opt in previous_options['funds'] if opt['id'] != 'divider' and 'selected' in opt)
+        else:
+            journal_map = {}
+        options['funds'] = []
+
+        default_group_ids = []
+
+        for j in self._get_filter_funds():
+            options['funds'].append({
+                'id': j.id,
+                'name': j.name,
+                'code': j.name,
+                'selected': journal_map.get(j.id, j.id in default_group_ids),
+            })
+
+    @api.model
+    def _get_filter_contract(self):
+        return self.env['investment.contract'].search([])
+
+    @api.model
+    def _init_filter_contract(self, options, previous_options=None):
+        if self.filter_contract is None:
+            return
+        if previous_options and previous_options.get('contract'):
+            journal_map = dict((opt['id'], opt['selected']) for opt in previous_options['contract'] if opt['id'] != 'divider' and 'selected' in opt)
+        else:
+            journal_map = {}
+        options['contract'] = []
+
+        default_group_ids = []
+
+        for j in self._get_filter_contract():
+            options['contract'].append({
+                'id': j.id,
+                'name': j.name,
+                'code': j.name,
+                'selected': journal_map.get(j.id, j.id in default_group_ids),
+            })
+
     def _get_reports_buttons(self):
         return [
             {'name': _('Print Preview'), 'sequence': 1, 'action': 'print_pdf', 'file_export_type': _('PDF')},
@@ -94,18 +145,43 @@ class SummaryofOperationInvestmentFunds(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         lines = []
+        fund_list = []
+        contract_list = []
+
+        for fund in options.get('funds'):
+            if fund.get('selected',False)==True:
+                fund_list.append(fund.get('id',0))
+        
+        if not fund_list:
+            fund_ids = self._get_filter_funds()
+            fund_list = fund_ids.ids
+        
+        if not fund_list:
+            fund_list = [0]
+
+        for contract in options.get('funds'):
+            if contract.get('selected',False)==True:
+                contract_list.append(contract.get('id',0))
+        
+        if not contract_list:
+            fund_ids = self._get_filter_contract()
+            contract_list = fund_ids.ids
+        
+        if not contract_list:
+            contract_list = [0]
 
         if options.get('all_entries') is False:
-            domain=[('state','=','confirmed')]
+            domain=('state','=','confirmed')
         else:
-            domain=[('state','not in',('rejected','canceled'))]
+            domain=('state','not in',('rejected','canceled'))
         
         
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
-        records = self.env['purchase.sale.security'].search([('state','=','confirmed'),('invesment_date','>=',start),('invesment_date','<=',end)])
+
+        records = self.env['purchase.sale.security'].search([('fund_id','in',fund_list),('contract_id','in',contract_list),domain,('invesment_date','>=',start),('invesment_date','<=',end)])
         #records = self.env['purchase.sale.security'].search([('invesment_date','>=',start),('invesment_date','<=',end),('state','=','draft')])
         total_amount = 0
         total_titel = 0

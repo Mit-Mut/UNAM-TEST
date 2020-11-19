@@ -8,6 +8,15 @@
             <field name="arch" type="xml">
 	            	<field name="invoice" position="before">
 	            		<field name="investment_id" required="1"/>
+	            		<field name="journal_id" invisible="1"/>
+	            		<field name="source_ids" invisible="1"/>
+	            		<field name="dest_ids" invisible="1"/>
+	            	</field>
+	            	<field name="bank_account_id" position="attributes">
+	            		<attribute name="domain">[('id', 'in', source_ids)]</attribute>
+	            	</field>
+	            	<field name="desti_bank_account_id" position="attributes">
+	            		<attribute name="domain">[('id', 'in', dest_ids)]</attribute>
 	            	</field>
 			</field>
 		</record>

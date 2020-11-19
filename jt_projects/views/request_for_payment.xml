@@ -455,7 +455,7 @@
 
         <menuitem id="supplier_payment_request_menu" name="Payment Request"
                   action="project_project_supplier_payment_action"
-                  parent="jt_projects.supplier_payment_request_main_menu" sequence="1"/>
+                  parent="jt_projects.supplier_payment_request_main_menu" sequence="5"/>
     </data>
 
 </odoo>

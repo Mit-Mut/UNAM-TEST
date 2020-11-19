@@ -583,7 +583,7 @@ class AccountMoveLine(models.Model):
     def get_ie_accounts_ids(self):
         self.get_account_list()
 
-    @api.onchange('quantity','fixed_discount' ,'discount', 'price_unit', 'tax_ids')
+    @api.onchange('quantity','fixed_discount' ,'discount', 'price_unit', 'tax_ids','other_amounts')
     def _onchange_price_subtotal(self):
         for line in self:
             if not line.move_id.is_invoice(include_receipts=True):
@@ -615,10 +615,11 @@ class AccountMoveLine(models.Model):
         price_unit_wo_discount = price_unit * (1 - (discount / 100.0))
         if self and self[0].fixed_discount:
             price_unit_wo_discount = price_unit - self[0].fixed_discount 
-            
+
+        if self and self[0].other_amounts and quantity:
+            price_unit_wo_discount  += self[0].other_amounts/quantity
+        
         subtotal = quantity * price_unit_wo_discount
-#         if self and self[0].other_amounts:
-#             subtotal = subtotal+ self[0].other_amounts
         # Compute 'price_total'.
         if taxes:
             taxes_res = taxes._origin.compute_all(price_unit_wo_discount,

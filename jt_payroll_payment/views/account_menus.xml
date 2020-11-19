@@ -34,7 +34,7 @@
                   action="operation_type_action"/>
 
         <!-- menu for policy keys -->
-        <menuitem id="policy_keys_menu" name="Policy Keys" parent="menu_payroll_payment_config"
+        <menuitem id="policy_keys_menu" name="UPA Catalog" parent="menu_payroll_payment_config"
                   sequence="8" action="policy_keys_action"/>
 
         <!-- menu for UPA Catalog 

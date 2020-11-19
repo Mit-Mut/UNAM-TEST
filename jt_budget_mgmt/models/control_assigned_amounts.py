@@ -37,6 +37,7 @@ class ControlAssignedAmounts(models.Model):
     _description = 'Control of Assigned Amounts'
     _rec_name = 'folio'
 
+    @api.depends('success_line_ids','success_line_ids.imported','success_line_ids.state','state')
     def _get_count(self):
         for record in self:
             record.record_number = len(record.success_line_ids)
@@ -46,9 +47,9 @@ class ControlAssignedAmounts(models.Model):
     name = fields.Char(string="Name", tracking=True)
     cron_running = fields.Boolean(string='Running CRON?')
     record_number = fields.Integer(
-        string='Number of records', compute='_get_count')
+        string='Number of records', compute='_get_count',store=True)
     import_record_number = fields.Integer(
-        string='Number of imported records', readonly=True, compute='_get_count')
+        string='Number of imported records', readonly=True, compute='_get_count',store=True)
 
     folio = fields.Char(string='Folio', states={'validated': [('readonly', True)], 'rejected': [
                         ('readonly', True)], 'canceled': [('readonly', True)]}, tracking=True)
@@ -71,6 +72,7 @@ class ControlAssignedAmounts(models.Model):
         'control.assigned.amounts.lines', 'assigned_amount_id',
         string='Assigned amount lines', domain=[('state', '=', 'success')], states={'validated': [('readonly', True)], 'rejected': [('readonly', True)], 'canceled': [('readonly', True)]})
 
+    @api.depends('line_ids','line_ids.state','success_line_ids','success_line_ids.state','state')
     def _compute_total_rows(self):
         for assigned_amount in self:
             assigned_amount.draft_rows = self.env['control.assigned.amounts.lines'].search_count(
@@ -91,13 +93,13 @@ class ControlAssignedAmounts(models.Model):
     fialed_row_filename = fields.Char(
         string='File name', default="Failed_Rows.txt")
     draft_rows = fields.Integer(
-        string='Failed Rows', compute="_compute_total_rows")
+        string='Failed Rows', compute="_compute_total_rows",store=True)
     failed_rows = fields.Integer(
-        string='Failed Rows', compute="_compute_total_rows")
+        string='Failed Rows', compute="_compute_total_rows",store=True)
     success_rows = fields.Integer(
-        string='Success Rows', compute="_compute_total_rows")
+        string='Success Rows', compute="_compute_total_rows",store=True)
     total_rows = fields.Integer(
-        string="Total Rows", compute="_compute_total_rows")
+        string="Total Rows", compute="_compute_total_rows",store=True)
     assigned_total = fields.Float(
         string="Total Assigned", compute="_compute_amt_total", store=True)
 

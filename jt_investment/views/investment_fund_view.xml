@@ -66,12 +66,12 @@
                             
                         </group>
                         <notebook>
-                        	<page string="Title">
+                        	<page string="Title" invisible="1">
 								<field name="purchase_sale_ids" eval="[(5,0,0),
                           						(0,0,{'view_mode':'tree','view_id': ref('jt_investment.purchase_sale_security_tree')}),
                           						(0,0,{'view_mode':'form', 'view_id': ref('jt_investment.purchase_sale_security_form')})]"/>                        		
                         	</page>
-                        	<page string="Money Market">
+                        	<page string="Money Market" invisible="1">
                         		<group string="CETES">
 									<field nolabel="1" name="cetes_ids" eval="[(5,0,0),
 	                          						(0,0,{'view_mode':'tree','view_id': ref('jt_investment.investment_cetes_tree')}),
@@ -94,21 +94,80 @@
 	                          	</group>                        		
                         	</page>
                         	<page string="Investment">
-								<field name="productive_ids" eval="[(5,0,0),
+                        		<field name="inv_operation_ids">
+                    			<tree>
+                    				<field name="investment_fund_id" invisible="1"/>
+                    				<field name="investment_id"/>
+                    				<field name="type_of_operation"/>
+                    				<field name="agreement_number"/>
+                    				<field name="base_collabaration_id"/>
+                    				<field name="agreement_type_id"/>
+                    				<field name="fund_type"/>
+                    				<field name="dependency_id"/>
+                    				<field name="sub_dependency_id"/>
+                    				<field name="origin_resource_id"/>
+                    				<field name="amount"/>
+                    				<field name="line_state" readonly="1"/>
+                    				<field name="inc_id" invisible="1"/>
+                    				<field name="seq" invisible="1"/>
+                    				<field name="record_type" invisible="1"/>
+                    				<field name="invoice" invisible="1"/>
+                    				<field name="journal_id" invisible="1"/>
+                    				<field name="source_ids" invisible="1"/>
+                    				<field name="dest_ids" invisible="1"/>
+                    			</tree>
+                    			<form>
+				                	<group>
+			                            <group>
+			                            	<field name="source_ids" invisible="1"/>
+                    						<field name="dest_ids" invisible="1"/>
+			                                <field name="invoice" readonly="1"/>
+			                                <field name="operation_number" />
+			                                <field name="investment_fund_id" invisible="1"/>
+			                                <field name="type_of_operation" />
+			                                <field name="agreement_number" />
+			                                <field name="base_collabaration_id" />
+			                                <field name="agreement_type_id" />
+			                                <field name="fund_type" />
+			                                <field name="bank_account_id" domain="[('id', 'in', source_ids)]"
+			                                    required="1"/>
+			                            </group>
+			                            <group>
+			                            	<field name="user_id"/>
+			                                <field name="unit_req_transfer_id" context="{'bal_user_id': user_id,
+			                                    'show_for_agreement':1}" />
+			                                <field name="dependency_id" />
+			                                <field name="sub_dependency_id" domain="[('dependency_id','=',dependency_id)]"/>
+			                            	<field name="origin_resource_id" />
+			                            	<field name="amount" required="1"/>
+			                                <field name="date_required"/>
+			                                <field name="desti_bank_account_id" domain="[('id', 'in', dest_ids)]"
+			                                    required="1"/>
+		                    				<field name="line_state" readonly="1"/>
+		                    				<field name="inc_id" invisible="1"/>
+		                    				<field name="seq" invisible="1"/>
+		                    				<field name="record_type" invisible="1"/>
+		                    				<field name="journal_id" invisible="1"/>
+			                            </group>
+			                        </group>
+                    			</form>
+                        			
+                        		</field>
+								<field invisible="1" name="productive_ids" eval="[(5,0,0),
                           						(0,0,{'view_mode':'tree','view_id': ref('jt_investment.investment_investment_tree')}),
                           						(0,0,{'view_mode':'form', 'view_id': ref('jt_investment.investment_investment_form')})]"/>                        		
                         	</page>
                         	
                         	
-                            <page string="Operation" name="operation">
+                            <page string="Operation" name="operation" invisible="1">
                                 <group>
                                     <group>
-                                        <field name="request_date" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
-                                        <field name="trade_number" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
-                                        <field name="opening_balance" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
+                                        <field name="request_date" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                                        <field name="trade_number" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                                        <field name="opening_balance" attrs="{'readonly': [('state', '!=', 'draft')]}" />
                                     </group>
                                     <group>
-                                        <field name="observations" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
+                                        <field name="observations" attrs="{'readonly': [('state', '!=', 'draft')]}" />
                                         <field name="user_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     </group>
                                 </group>

@@ -28,6 +28,23 @@ class ApproveInvestmentBalReq(models.TransientModel):
     
     investment_id = fields.Many2one('investment.investment','First Number:')
 
+    journal_id = fields.Many2one(related='investment_id.journal_id')
+    source_ids = fields.Many2many('account.journal','rel_journal_inv_src_approve','journal_id','opt_id',compute="get_journal_ids")
+    dest_ids = fields.Many2many('account.journal','rel_journal_inv_dest_approve','journal_id','opt_id',compute="get_journal_ids")
+
+    @api.depends('journal_id','type_of_operation','investment_id.journal_id','investment_id')
+    def get_journal_ids(self):
+        for rec in self:
+            if rec.type_of_operation in ('open_bal','increase','increase_by_closing') :
+                rec.source_ids = [(6,0,rec.journal_id.ids)]
+            else:
+                rec.source_ids = [(6,0,self.env['account.journal'].search([('type','=','bank')]).ids)]
+
+            if rec.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure'):
+                rec.dest_ids = [(6,0,rec.journal_id.ids)]
+            else:
+                rec.dest_ids = [(6,0,self.env['account.journal'].search([('type','=','bank')]).ids)]
+
     def get_open_balance_vals(self,request):
         vals = super(ApproveInvestmentBalReq,self).get_open_balance_vals(request)
         vals.update({'investment_link_id':self.investment_id and self.investment_id.id or False})

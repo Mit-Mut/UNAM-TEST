@@ -75,8 +75,14 @@ class AccountMove(models.Model):
             raise ValidationError("Only allowed to validate registered payment")
         
         str_msg = "Budgetary Insufficiency For Program Code\n\n"
+        if self.env.user.lang == 'es_MX':
+            str_msg = "Insuficiencia Presupuesto para el código del programa\n\n"
+        
         is_check = False
         budget_msg = "Budget sufficiency"
+        if self.env.user.lang == 'es_MX':
+            budget_msg = "Suficiencia Presupuesto"
+        
         insufficient_move_ids = []
         sufficient_move_ids = []
         budget_line_obj = self.env['expenditure.budget.line']
@@ -88,6 +94,9 @@ class AccountMove(models.Model):
         for request in self:
             if request.payment_state == 'registered':
                 move_str_msg = "Budgetary Insufficiency For Program Code\n\n"
+                if self.env.user.lang == 'es_MX':
+                    move_str_msg = "Insuficiencia Presupuesto para el código del programa\n\n"
+                
                 sufficient_move_ids.append(request.id)
                 for line in request.invoice_line_ids:
                     total_available_budget = 0
@@ -139,8 +148,12 @@ class AccountMove(models.Model):
                         program_name = ''
                         if line.program_code_id:
                             program_name = line.program_code_id.program_code
-                            str_msg += program_name + " Available Amount Is " + str(total_available_budget) + "\n\n"
-                            move_str_msg += program_name + " Available Amount Is " + str(total_available_budget) + "\n\n"
+                            avl_amount = " Available Amount Is "
+                            if self.env.user.lang == 'es_MX':
+                                avl_amount = " Disponible Monto "
+                            
+                            str_msg += program_name + avl_amount + str(total_available_budget) + "\n\n"
+                            move_str_msg += program_name + avl_amount + str(total_available_budget) + "\n\n"
                             insufficient_move_ids.append(request.id)
                 if request.id in insufficient_move_ids:
                     move_str_msg_dict.update({request.id: move_str_msg})
@@ -173,8 +186,13 @@ class AccountMove(models.Model):
     def action_validate_budget(self):
         self.ensure_one()
         str_msg = "Budgetary Insufficiency For Program Code\n\n"
+        if self.env.user.lang == 'es_MX':
+            str_msg = "Insuficiencia Presupuesto para el código del programa\n\n"
         is_check = False
         budget_msg = "Budget sufficiency"
+        if self.env.user.lang == 'es_MX':
+            budget_msg = "Suficiencia Presupuesto"
+            
         for line in self.invoice_line_ids:
             total_available_budget = 0
             if line.program_code_id:
@@ -230,7 +248,10 @@ class AccountMove(models.Model):
                 program_name = ''
                 if line.program_code_id:
                     program_name = line.program_code_id.program_code
-                    str_msg += program_name+" Available Amount Is "+str(total_available_budget)+"\n\n"
+                    avl_amount = " Available Amount Is "
+                    if self.env.user.lang == 'es_MX':
+                        avl_amount = " Disponible Monto "
+                    str_msg += program_name+avl_amount+str(total_available_budget)+"\n\n"
                     
         if is_check:
             return {

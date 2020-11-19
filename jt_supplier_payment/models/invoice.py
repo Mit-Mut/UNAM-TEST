@@ -478,7 +478,7 @@ class AccountMoveLine(models.Model):
             
     tax_price_cr = fields.Monetary(string='Tax Price', store=True, readonly=True,
         currency_field='always_set_currency_id',compute="get_price_tax_cr")
- 
+    
     @api.model_create_multi
     def create(self, vals_list):
         lines = super(AccountMoveLine, self).create(vals_list)
@@ -490,7 +490,7 @@ class AccountMoveLine(models.Model):
     def write(self,vals):
         result = super(AccountMoveLine,self).write(vals)
         if 'egress_key_id' in vals:
-            if any(self.filtered(lambda x:x.move_id.is_payment_request and not x.egress_key_id and x.move_id.payment_state=='draft')):
+            if any(self.filtered(lambda x:x.move_id.is_payment_request and not x.egress_key_id and x.move_id.payment_state=='draft' and not x.exclude_from_invoice_tab)):
                 raise ValidationError(_("Please add Egress Key into lines"))
              
             

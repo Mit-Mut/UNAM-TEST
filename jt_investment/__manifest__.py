@@ -54,7 +54,7 @@
         'wizard/agreements_approve_bal_view.xml',
         'reports/header_template.xml',
         'reports/menu_report.xml',
-        # 'reports/filter_template.xml',
+        'reports/filter_template.xml',
         
     ],
     'application': True,

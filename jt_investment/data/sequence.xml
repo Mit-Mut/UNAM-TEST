@@ -84,6 +84,12 @@
             <field name="padding">4</field>
             <field name="company_id" eval="False"/>
         </record>
+
+        <record id="seq_folio_inv_operation" model="ir.sequence">
+            <field name="name">folio_inv_operation</field>
+            <field name="code">folio.inv.operation</field>
+            <field name="company_id" eval="False"/>
+        </record>
 	
     </data>
 </odoo>

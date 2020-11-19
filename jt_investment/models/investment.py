@@ -1,6 +1,6 @@
 from odoo import models, fields, api , _
 from datetime import datetime
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError,ValidationError,UserError
 
 class Investment(models.Model):
 
@@ -32,7 +32,8 @@ class Investment(models.Model):
     file_data = fields.Binary("Supporting document")
     file_name = fields.Char("File Name")
     
-    state = fields.Selection([('draft','Draft'),('requested','Requested'),('rejected','Rejected'),('approved','Approved'),('confirmed','Confirmed'),('done','Done'),('canceled','Canceled')],string="Status",default='draft')
+    #state = fields.Selection([('draft','Draft'),('requested','Requested'),('rejected','Rejected'),('approved','Approved'),('confirmed','Confirmed'),('done','Done'),('canceled','Canceled')],string="Status",default='draft')
+    state = fields.Selection([('draft','Draft'),('confirmed','Confirmed'),('canceled','Canceled')],string="Status",default='draft')
 
     fund_type_id = fields.Many2one('fund.type', "Type Of Fund")
     agreement_type_id = fields.Many2one('agreement.agreement.type', 'Agreement Type')
@@ -67,6 +68,9 @@ class Investment(models.Model):
 
     line_ids = fields.One2many('investment.operation','investment_id',copy=False)
     actual_amount = fields.Float(string="Actual amount",compute="get_actual_amount",store=True)
+    update_line_id = fields.Many2one('investment.operation','Amount Update Line',copy=False)
+    
+    
     
     @api.depends('line_ids','line_ids.type_of_operation','line_ids.amount')
     def get_actual_amount(self):
@@ -138,7 +142,7 @@ class Investment(models.Model):
         for rec in self:
             rec.profit_variation =  rec.real_profit - rec.estimated_profit
 
-    @api.depends('is_fixed_rate','is_variable_rate','amount_to_invest','interest_rate','extra_percentage','term_variable','term')
+    @api.depends('is_fixed_rate','is_variable_rate','actual_amount','interest_rate','extra_percentage','term_variable','term')
     def get_estimated_interest(self):
         for rec in self:
             term = 0
@@ -147,12 +151,12 @@ class Investment(models.Model):
             elif rec.is_variable_rate:
                 term = rec.term_variable
             
-            rec.estimated_interest =  (((rec.amount_to_invest*(rec.interest_rate+rec.extra_percentage))/100)/360)*term
+            rec.estimated_interest =  (((rec.actual_amount*(rec.interest_rate+rec.extra_percentage))/100)/360)*term
 
-    @api.depends('estimated_interest','amount_to_invest')
+    @api.depends('estimated_interest','actual_amount')
     def get_estimated_profit(self):
         for rec in self:
-            rec.estimated_profit =  rec.estimated_interest + rec.amount_to_invest
+            rec.estimated_profit =  rec.estimated_interest + rec.actual_amount
 
     @api.onchange('is_fixed_rate')
     def onchange_is_fixed_rate(self):
@@ -163,7 +167,10 @@ class Investment(models.Model):
     def onchange_is_variable_rate(self):
         if self.is_variable_rate:
             self.is_fixed_rate = False
-                
+    
+    def action_confirm_inv(self):
+        self.state = 'confirmed'
+                    
     def action_confirm(self):
         today = datetime.today().date()
         return {
@@ -184,7 +191,7 @@ class Investment(models.Model):
                 'default_agreement_type' : self.agreement_type_id and self.agreement_type_id.id or False,
                 'default_base_collabaration_id' : self.base_collaboration_id and self.base_collaboration_id.id or False,
                 'default_fund_id' : self.fund_id and self.fund_id.id or False,
-                
+                 
             }
         }
 
@@ -207,29 +214,32 @@ class Investment(models.Model):
 
 
     def action_reject(self):
-        self.state = 'rejected'
+        print ("===")
+        #self.state = 'rejected'
 
 
     def action_requested(self):
-        self.state = 'requested'
-        if self.investment_fund_id and self.investment_fund_id.state != 'requested':
-            self.investment_fund_id.with_context(call_from_product=True).action_requested()
+        print ("===")
+        #self.state = 'requested'
+#         if self.investment_fund_id and self.investment_fund_id.state != 'requested':
+#             self.investment_fund_id.with_context(call_from_product=True).action_requested()
 
     def action_approved(self):
-        self.state = 'approved'
-        if self.investment_fund_id and self.investment_fund_id.state != 'approved':
-            self.investment_fund_id.with_context(call_from_product=True).action_approved()
+        print ("===")
+        #self.state = 'approved'
+#         if self.investment_fund_id and self.investment_fund_id.state != 'approved':
+#             self.investment_fund_id.with_context(call_from_product=True).action_approved()
 
     def action_confirmed(self):
         self.state = 'confirmed'
-        if self.investment_fund_id and self.investment_fund_id.state != 'confirmed':
-            self.investment_fund_id.with_context(call_from_product=True).action_confirmed()
+#         if self.investment_fund_id and self.investment_fund_id.state != 'confirmed':
+#             self.investment_fund_id.with_context(call_from_product=True).action_confirmed()
 
  
     def action_canceled(self):
         self.state = 'canceled'
-        if self.investment_fund_id and self.investment_fund_id.state != 'canceled':
-            self.investment_fund_id.with_context(call_from_product=True).action_canceled()
+#         if self.investment_fund_id and self.investment_fund_id.state != 'canceled':
+#             self.investment_fund_id.with_context(call_from_product=True).action_canceled()
 
 class InvestmentOperation(models.Model):
 
@@ -254,7 +264,7 @@ class InvestmentOperation(models.Model):
     agreement_type_id = fields.Many2one('agreement.agreement.type', 'Agreement Type')
     base_collabaration_id = fields.Many2one('bases.collaboration','Name Of Agreements')
     investment_fund_id = fields.Many2one('investment.funds','Fund')
-    inc_id = fields.Many2one('request.open.balance.invest','    Increases and Withdrawals',copy=False)
+    inc_id = fields.Many2one('request.open.balance.invest','Increases and Withdrawals',copy=False)
 
     type_of_operation = fields.Selection([('open_bal', 'Opening Balance'),
                                           ('increase', 'Increase'),
@@ -266,15 +276,75 @@ class InvestmentOperation(models.Model):
                                          string="Type of Operation")
     
     origin_resource_id = fields.Many2one('sub.origin.resource', "Origin of the resource")
-    line_state = fields.Selection([('draft','Draft'),('requested','Requested')],default='draft',string="Status",copy=False)
+    line_state = fields.Selection([('draft', 'Draft'),
+                               ('requested', 'Requested'),
+                               ('rejected', 'Rejected'),
+                               ('approved', 'Approved'),
+                               ('confirmed', 'Confirmed'),
+                              ('done', 'Done'),
+                               ('canceled', 'Canceled')],default='draft',string="Status",copy=False)
+    
     record_type = fields.Selection([('manually','Manually'),('automatically','Automatically')],string="Record Type",copy=False)
     seq = fields.Integer(string='Sequence',compute="get_line_seq",copy=False,store=True)
+    journal_id = fields.Many2one(related='investment_id.journal_id')
+    source_ids = fields.Many2many('account.journal','rel_journal_inv_src_operation','journal_id','opt_id',compute="get_journal_ids")
+    dest_ids = fields.Many2many('account.journal','rel_journal_inv_dest_operation','journal_id','opt_id',compute="get_journal_ids")
+
+    @api.depends('journal_id','type_of_operation','investment_id.journal_id')
+    def get_journal_ids(self):
+        for rec in self:
+            if rec.type_of_operation in ('open_bal','increase','increase_by_closing') :
+                rec.source_ids = [(6,0,rec.journal_id.ids)]
+            else:
+                rec.source_ids = [(6,0,self.env['account.journal'].search([('type','=','bank')]).ids)]
+
+            if rec.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure'):
+                rec.dest_ids = [(6,0,rec.journal_id.ids)]
+            else:
+                rec.dest_ids = [(6,0,self.env['account.journal'].search([('type','=','bank')]).ids)]
+
+    @api.onchange('type_of_operation')
+    def onchange_type_of_operation(self):
+        self.bank_account_id = False
+        self.desti_bank_account_id = False
+        
+    @api.constrains('operation_number')
+    def _check_operation_number(self):
+        if self.operation_number and not self.operation_number.isnumeric():
+            raise ValidationError(_('Operation Number must be Numeric.'))
+
+    def action_approved(self):
+        self.line_state = 'approved'
+
+    def action_done(self):
+        self.line_state = 'done'
+ 
+    def action_canceled(self):
+        self.line_state = 'canceled'
+    
+    @api.model
+    def default_get(self, fields):
+        res = super(InvestmentOperation, self).default_get(fields)
+        seq_ids = self.env['ir.sequence'].search([('code', '=', 'folio.inv.operation')], order='company_id')
+        number_next = 0
+        if seq_ids:
+            number_next = seq_ids[0].number_next_actual 
+        res.update({
+            'invoice': str(number_next)
+        })
+        return res
     
     @api.model
     def create(self,vals):
         res = super(InvestmentOperation,self).create(vals)
-        if res.type_of_operation and res.type_of_operation == 'open_bal' and res.investment_id:
-            res.investment_id.amount_to_invest = res.amount  
+        if res.record_type == 'manually':
+            invoice = self.env['ir.sequence'].next_by_code('folio.inv.operation')
+            res.invoice = invoice
+        
+        if res.type_of_operation and res.type_of_operation == 'open_bal' and res.investment_id and not res.investment_id.update_line_id:
+            res.investment_id.amount_to_invest = res.amount
+            res.investment_id.update_line_id = res.id  
+            
         return res
     
     def write(self,vals):
@@ -282,7 +352,11 @@ class InvestmentOperation(models.Model):
         if 'amount' in vals or 'type_of_operation' in vals:
             for res in self:
                 if res.type_of_operation and res.type_of_operation == 'open_bal' and res.investment_id:
-                    res.investment_id.amount_to_invest = res.amount  
+                    if not res.investment_id.update_line_id: 
+                        res.investment_id.amount_to_invest = res.amount
+                        res.investment_id.update_line_id = res.id
+                    elif res.investment_id.update_line_id.id == res.id:
+                        res.investment_id.amount_to_invest = res.amount
         return result
     
     @api.depends('type_of_operation')
@@ -326,4 +400,4 @@ class InvestmentOperation(models.Model):
         }
 
         self.env['request.open.balance.finance'].create(vals)
-        self.line_state = 'requested'         
+        self.line_state = 'approved'         

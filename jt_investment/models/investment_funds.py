@@ -92,6 +92,8 @@ class InvestmentFunds(models.Model):
     bonds_ids = fields.One2many('investment.bonds','investment_fund_id')
     will_pay_ids = fields.One2many('investment.will.pay','investment_fund_id')
     productive_ids = fields.One2many('investment.investment','investment_fund_id')
+    inv_operation_ids = fields.One2many('investment.operation','investment_fund_id')
+    
     request_finance_ids = fields.One2many(
         'request.open.balance.finance', 'investment_fund_id')
     yield_id = fields.Many2one('yield.destination',string="Yield Destination")

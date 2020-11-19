@@ -12,6 +12,9 @@ class BasesCollabrationModification(models.Model):
     @api.model
     def create(self, vals):
         res = super(BasesCollabrationModification, self).create(vals)
+        if res.bases_collaboration_id and res.bases_collaboration_id.state in ('cancelled','to_be_cancelled'):
+            raise ValidationError(_("Can't create Modifications for Cancelled Bases of Collabration!"))
+        
         name = self.env['ir.sequence'].next_by_code('collaboration.modification')
         res.folio = name
         return res

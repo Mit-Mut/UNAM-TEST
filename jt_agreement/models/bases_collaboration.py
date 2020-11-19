@@ -704,6 +704,12 @@ class RequestOpenBalance(models.Model):
             raise ValidationError(_("Can't create Operation with 'Withdrawal due to closure' Type of Operation manually!"))
         if self.env.context and not self.env.context.get('call_from_closing',False) and res.type_of_operation == 'increase_by_closing':
             raise ValidationError(_("Can't create Operation with 'Increase by closing' Type of Operation manually!"))
+        if res.bases_collaboration_id and res.bases_collaboration_id.state in ('cancelled','to_be_cancelled'):
+            raise ValidationError(_("Can't create Operation for Cancelled Bases of Collabration!"))
+        if res.trust_id and res.trust_id.state in ('cancelled','to_be_cancelled'):
+            raise ValidationError(_("Can't create Operation for Cancelled Trust!"))
+        if res.patrimonial_resources_id and res.patrimonial_resources_id.state in ('cancelled','to_be_cancelled'):
+            raise ValidationError(_("Can't create Operation for Cancelled Patrimonial resources!"))
         
         # name = self.env['ir.sequence'].next_by_code('agreement.operation')
         if res.bases_collaboration_id:

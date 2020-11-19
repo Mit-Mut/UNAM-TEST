@@ -55,6 +55,7 @@
                         </div>
                         <group>
                             <group>
+                            	<field name="is_papiit_project" invisible="1"/>
                                 <field name="project_type"/>
                                 <field name="stage_identifier"/>
                                 <field name="desc_stage"/>
@@ -63,16 +64,32 @@
                                 <field name="program_code"/>
                                 <field name="user_id" string="Responsible name"/>
                                 <field name="rfc"/>
+                                <field name="is_related_agreement" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
+                                <field name="base_id" attrs="{'invisible':[('is_related_agreement','=',False)]}"/>
+                                <field name="base_number" readonly="1" attrs="{'invisible':[('is_related_agreement','=',False)]}"/>
+                                <field name="agreement_type_id" readonly="1" attrs="{'invisible':[('is_related_agreement','=',False)]}"/>
+                                <field name="PAPIIT_project_type"  attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
+                                <field name="technical_support_id" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
+                                <field name="administrative_manager_id" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
+                                <field name="co_responsible_id" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
+                                <field name="co_responsible_rfc" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
                             </group>
                             <group>
                                 <field name="proj_start_date"/>
                                 <field name="proj_end_date"/>
                                 <field name="allocated_amount"/>
-                                <field name="approved_amount"/>
+                                <field name="approved_amount" attrs="{'invisible':[('is_papiit_project','=',True)]}"/>
+                                <field name="exercised_amount" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
+                                <field name="final_amount" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
                                 <field name="bank_account_id" domain="[('type', '=', 'bank')]"/>
                                 <field name="bank_acc_number_id"/>
                                 <field name="branch_office"/>
                                 <field name="trade_number"/>
+                                <field name="resource_type" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
+                                <field name="pre_account_id" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
+                                <field name="dependency_id" context="{'show_for_agreement':1}" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
+                                <field name="subdependency_id" context="{'show_for_agreement':1}" domain="[('dependency_id','=',dependency_id)]" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
+                                
                             </group>
                         </group>
                         <notebook>

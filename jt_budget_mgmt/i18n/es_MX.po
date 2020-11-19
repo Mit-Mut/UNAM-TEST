@@ -4311,3 +4311,37 @@ msgstr "Reporte Detallado de Presupuesto"
 msgid "Detailed Budget Reports"
 msgstr "Reporte Detallado de Presupuesto"
 
+#. module: jt_budget_mgmt
+#: model_terms:ir.ui.view,arch_db:jt_budget_mgmt.different_payment_req_form_inherit
+#: model_terms:ir.ui.view,arch_db:jt_budget_mgmt.supplier_payment_req_form_inherit
+msgid "Validate budget"
+msgstr "Validar Presupuesto"
+
+
+#. module: jt_budget_mgmt
+#: code:addons/jt_budget_mgmt/models/account.py:0
+#: code:addons/jt_budget_mgmt/models/account.py:0
+#, python-format
+msgid "Budget sufficiency"
+msgstr "Suficiencia Presupuesto"
+
+#. module: jt_budget_mgmt
+#: model:ir.model,name:jt_budget_mgmt.model_budget_insufficien_wiz
+msgid "Budgetary Insufficienc"
+msgstr "Insuficiencia Presupuesto"
+
+#. module: jt_budget_mgmt
+#: code:addons/jt_budget_mgmt/models/account.py:0
+#: code:addons/jt_budget_mgmt/models/account.py:0
+#: model:ir.actions.act_window,name:jt_budget_mgmt.action_budget_insufficiency
+#, python-format
+msgid "Budgetary Insufficiency"
+msgstr "Insuficiencia Presupuesto"
+
+#. module: jt_budget_mgmt
+#: model_terms:ir.ui.view,arch_db:jt_budget_mgmt.budget_insufficien_view
+msgid "Budget Allocation"
+msgstr "Asignación Presupuesto"
+
+
+

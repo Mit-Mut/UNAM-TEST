@@ -44,6 +44,7 @@
         'wizard/request_confirm_view.xml',
         'wizard/request_reject_view.xml',
         'views/request_account_views.xml',
+        'views/papiit_project.xml',
         'reports/travel_request.xml',
         'reports/menu_view.xml',
         'reports/supplier_request.xml',

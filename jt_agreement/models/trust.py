@@ -363,6 +363,9 @@ class AgreementTrustModification(models.Model):
     @api.model
     def create(self, vals):
         res = super(AgreementTrustModification, self).create(vals)
+        if res.trust_id and res.trust_id.state in ('cancelled','to_be_cancelled'):
+            raise ValidationError(_("Can't create Modifications for Cancelled Trust!"))
+        
         name = self.env['ir.sequence'].next_by_code('trust.modification')
         res.folio = name
         return res

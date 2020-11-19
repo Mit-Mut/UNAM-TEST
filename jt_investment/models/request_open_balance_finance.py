@@ -70,7 +70,9 @@ class BasesCollabration(models.Model):
 
         if self.distribution_id:
             self.distribution_id.action_confirmed()
-
+        
+        if self.investment_operation_id:
+            self.investment_operation_id.action_done()
         return result 
     
     def reject_finance(self):
@@ -132,6 +134,9 @@ class BasesCollabration(models.Model):
             
         if self.distribution_id:
             self.distribution_id.action_approved()
+        
+        if self.investment_operation_id:
+            self.investment_operation_id.action_approved()
 
     def canceled_finance(self):
         result = super(BasesCollabration,self).canceled_finance()
@@ -159,6 +164,9 @@ class BasesCollabration(models.Model):
  
         if self.distribution_id:
             self.distribution_id.action_canceled()
+
+        if self.investment_operation_id:
+            self.investment_operation_id.action_canceled()
  
         return result
     

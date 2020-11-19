@@ -719,8 +719,8 @@ msgstr "Fin del periodo"
 #: model:ir.actions.act_window,name:jt_payroll_payment.policy_keys_action
 #: model:ir.model,name:jt_payroll_payment.model_policy_keys
 #: model:ir.ui.menu,name:jt_payroll_payment.policy_keys_menu
-msgid "Policy Keys"
-msgstr "Claves de Pólizas"
+msgid "UPA Catalog"
+msgstr "Catálogo UPA"
 
 #. module: jt_payroll_payment
 #: model:ir.actions.act_window,name:jt_payroll_payment.preception_action

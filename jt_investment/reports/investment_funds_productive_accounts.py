@@ -144,6 +144,9 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
         #records = self.env['investment.investment'].search([('invesment_date','>=',start),('invesment_date','<=',end)],order='invesment_date')
         
         capital = 0
+        final_amount = 0
+        entradas = 0
+        salidas  = 0
         pre_day = 0
         rate = 0.0
         pre_date = False
@@ -162,10 +165,10 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                                 {'name': next_date.day},
                                 self._format({'name': rate/count},figure_type='float',digit=4),
                                 self._format({'name': capital},figure_type='float',digit=2),
-                                self._format({'name': 0.0},figure_type='float',digit=2),
+                                self._format({'name': entradas},figure_type='float',digit=2),
                                 {'name': ''},
-                                self._format({'name': 0.0},figure_type='float',digit=2),
-                                self._format({'name': capital},figure_type='float',digit=2),
+                                self._format({'name': salidas},figure_type='float',digit=2),
+                                self._format({'name': final_amount},figure_type='float',digit=2),
                                 self._format({'name': capital},figure_type='float',digit=2),
                                 ],
                     'level': 3,
@@ -175,11 +178,16 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                 count = 0
                 rate = 0
                 capital = 0
-            
+                final_amount = 0
+                entradas = 0
+                salidas = 0
+                
             pre_day = rec.invesment_date.day
             pre_date = rec.invesment_date
             count += 1
             rate += rec.currency_rate
+            rec_entradas = sum(a.amount for a in rec.line_ids.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing')))
+            rec_salidas =  sum(a.amount for a in rec.line_ids.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure')))
             
             lines.append({
                 'id': 'hierarchy' + str(rec.id),
@@ -188,10 +196,10 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                             {'name': rec.invesment_date.day},
                             self._format({'name': rec.currency_rate},figure_type='float',digit=4),
                             self._format({'name': capital},figure_type='float',digit=2),
-                            self._format({'name': rec.amount_to_invest},figure_type='float',digit=2),
+                            self._format({'name': rec_entradas},figure_type='float',digit=2),
                             {'name': rec.fund_key},
-                            self._format({'name': 0.0},figure_type='float',digit=2),
-                            self._format({'name': rec.amount_to_invest},figure_type='float',digit=2),
+                            self._format({'name': rec_salidas},figure_type='float',digit=2),
+                            self._format({'name': rec.actual_amount},figure_type='float',digit=2),
                             self._format({'name': rec.amount_to_invest},figure_type='float',digit=2),
                             ],
                 'level': 3,
@@ -199,7 +207,10 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                 'unfolded': True,
             })
             capital += rec.amount_to_invest 
-
+            final_amount += rec.actual_amount
+            entradas += rec_entradas
+            salidas += rec_salidas
+            
         if pre_day !=0 and pre_date:
             
             next_date = pre_date +  timedelta(days=1)
@@ -211,10 +222,10 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                             {'name': next_date.day},
                             self._format({'name': rate/count},figure_type='float',digit=4),
                             self._format({'name': capital},figure_type='float',digit=2),
-                            self._format({'name': 0.0},figure_type='float',digit=2),
+                            self._format({'name': entradas},figure_type='float',digit=2),
                             {'name': ''},
-                            self._format({'name': 0.0},figure_type='float',digit=2),
-                            self._format({'name': capital},figure_type='float',digit=2),
+                            self._format({'name': salidas},figure_type='float',digit=2),
+                            self._format({'name': final_amount},figure_type='float',digit=2),
                             self._format({'name': capital},figure_type='float',digit=2),
                             ],
                 'level': 3,

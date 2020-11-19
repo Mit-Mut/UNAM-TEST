@@ -38,7 +38,7 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
 
     filter_date = {'mode': 'range', 'filter': 'this_month'}
     filter_comparison = {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
-    filter_all_entries = None
+    filter_all_entries = True
     filter_journals = None
     filter_analytic = None
     filter_unfold_all = None
@@ -72,7 +72,7 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
             {'name': _('SALDO FINAL')},
         ]
 
-    def _format(self, value,figure_type):
+    def _format(self, value,figure_type,digit):
         if self.env.context.get('no_format'):
             return value
         value['no_format_name'] = value['name']
@@ -83,7 +83,7 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
                 # don't print -0.0 in reports
                 value['name'] = abs(value['name'])
                 value['class'] = 'number text-muted'
-            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id)
+            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id,digits=digit)
             value['class'] = 'number'
             return value
         if figure_type == 'percents':
@@ -93,13 +93,42 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
         value['name'] = round(value['name'], 1)
         return value
 
+    def get_month_name(self,month):
+        month_name = ''
+        if month==1:
+            month_name = 'Enero'
+        elif month==2:
+            month_name = 'Febrero'
+        elif month==3:
+            month_name = 'Marzo'
+        elif month==4:
+            month_name = 'Abril'
+        elif month==5:
+            month_name = 'Mayo'
+        elif month==6:
+            month_name = 'Junio'
+        elif month==7:
+            month_name = 'Julio'
+        elif month==8:
+            month_name = 'Agosto'
+        elif month==9:
+            month_name = 'Septiembre'
+        elif month==10:
+            month_name = 'Octubre'
+        elif month==11:
+            month_name = 'Noviembre'
+        elif month==12:
+            month_name = 'Diciembre'
+            
+        return month_name.upper()
+
     def _get_lines(self, options, line_id=None):
         lines = []
 
-        # if options.get('all_entries') is False:
-        #     domain=[('state','=','confirmed')]
-        # else:
-        #     domain=[('state','not in',('rejected','canceled'))]
+        if options.get('all_entries') is False:
+            domain=[('state','=','confirmed')]
+        else:
+            domain=[('state','not in',('rejected','canceled'))]
         
         # journal = self._get_options_journals_domain(options)
         # if journal:
@@ -109,6 +138,30 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+        
+        domain += [('invesment_date','>=',start),('invesment_date','<=',end)]
+        
+        records = self.env['investment.investment'].search(domain,order='invesment_date')
+
+        for rec in records:
+            month_name = self.get_month_name(rec.invesment_date.month)
+            rec_entradas = sum(a.amount for a in rec.line_ids.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing')))
+            rec_salidas =  sum(a.amount for a in rec.line_ids.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure')))
+            
+            lines.append({
+                'id': 'hierarchy' + str(rec.id),
+                'name': rec.invesment_date.day,
+                'columns': [{'name': month_name}, 
+                            self._format({'name': rec.currency_rate},figure_type='float',digit=4),
+                            self._format({'name': rec.amount_to_invest},figure_type='float',digit=2),
+                            self._format({'name': rec_entradas},figure_type='float',digit=2),
+                            self._format({'name': rec_salidas},figure_type='float',digit=2),
+                            self._format({'name': rec.actual_amount},figure_type='float',digit=2),
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
                     
         return lines
 

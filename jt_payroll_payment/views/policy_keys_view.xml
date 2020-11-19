@@ -45,7 +45,7 @@
 
         <!-- action for policy keys views -->
         <record id="policy_keys_action" model="ir.actions.act_window">
-            <field name="name">Policy Keys</field>
+            <field name="name">UPA Catalog</field>
             <field name="res_model">policy.keys</field>
             <field name="view_mode">tree,form,search</field>
             <field name="view_id" ref="policy_keys_tree_view"/>

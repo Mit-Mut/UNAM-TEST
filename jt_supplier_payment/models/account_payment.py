@@ -225,8 +225,11 @@ class AccountPayment(models.Model):
 #             payment_issuing_bank_id = record_ids.mapped('payment_issuing_bank_id')
 #             if len(payment_issuing_bank_id) != 1 :
 #                 raise UserError(_("You can not register payment for multiple Payment issuing Bank"))
-            
-            amount = self._compute_payment_amount(record_ids, record_ids[0].currency_id, record_ids[0].journal_id,fields.Date.today())
+            amount = 0
+            for r in record_ids: 
+                amount1 = self._compute_payment_amount(r, r.currency_id, r.journal_id,fields.Date.today())
+                amount += abs(amount1)
+                
             if abs(amount) == 0 :
                 raise UserError(_("You can not register payment with 0 amount"))
             

@@ -69,6 +69,7 @@
                                 <field name="base_number" readonly="1" attrs="{'invisible':[('is_related_agreement','=',False)]}"/>
                                 <field name="agreement_type_id" readonly="1" attrs="{'invisible':[('is_related_agreement','=',False)]}"/>
                                 <field name="PAPIIT_project_type"  attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
+                                <field name="project_status"  attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
                                 <field name="technical_support_id" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
                                 <field name="administrative_manager_id" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
                                 <field name="co_responsible_id" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>

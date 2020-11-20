@@ -716,13 +716,6 @@ msgid "Period End"
 msgstr "Fin del periodo"
 
 #. module: jt_payroll_payment
-#: model:ir.actions.act_window,name:jt_payroll_payment.policy_keys_action
-#: model:ir.model,name:jt_payroll_payment.model_policy_keys
-#: model:ir.ui.menu,name:jt_payroll_payment.policy_keys_menu
-msgid "UPA Catalog"
-msgstr "Catálogo UPA"
-
-#. module: jt_payroll_payment
 #: model:ir.actions.act_window,name:jt_payroll_payment.preception_action
 #: model:ir.model,name:jt_payroll_payment.model_preception
 #: model:ir.ui.menu,name:jt_payroll_payment.menu_preception
@@ -894,14 +887,6 @@ msgid "UNAM"
 msgstr "UNAM"
 
 #. module: jt_payroll_payment
-#: model:ir.actions.act_window,name:jt_payroll_payment.upa_catalog_action
-#: model:ir.model,name:jt_payroll_payment.model_upa_catalog
-#: model:ir.model.fields,field_description:jt_payroll_payment.field_operation_type__upa_catalog_id
-#: model:ir.ui.menu,name:jt_payroll_payment.upa_catalog_menu
-msgid "UPA Catalog"
-msgstr "Catálogo UPA"
-
-#. module: jt_payroll_payment
 #: model:ir.model,name:jt_payroll_payment.model_upa_document_type
 msgid "UPA Document Type"
 msgstr "Tipo de documento UPA"
@@ -932,3 +917,17 @@ msgstr "Retiro del trabajador universitario"
 msgid "Reports"
 msgstr "Reportes"
 
+#. module: jt_payroll_payment
+#: model:ir.actions.act_window,name:jt_payroll_payment.policy_keys_action
+#: model:ir.actions.act_window,name:jt_payroll_payment.upa_catalog_action
+#: model:ir.model,name:jt_payroll_payment.model_upa_catalog
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_operation_type__upa_catalog_policy_id
+#: model:ir.ui.menu,name:jt_payroll_payment.policy_keys_menu
+#: model:ir.ui.menu,name:jt_payroll_payment.upa_catalog_menu
+msgid "UPA Catalog"
+msgstr "Catálogo UPA"
+
+#. module: jt_payroll_payment
+#: model:ir.model,name:jt_payroll_payment.model_policy_keys
+msgid "Policy Keys"
+msgstr "Catálogo UPA"

@@ -967,8 +967,15 @@ class RequestOpenBalanceInvestment(models.Model):
             raise ValidationError(
                 _("Can't create Operation with 'Withdrawal Due to Cancellation' Type of Operation manually!"))
 
-        first_number = self.env['ir.sequence'].next_by_code('IRF.number')
-        res.first_number = first_number
+        if res.new_journal_id:
+            sequence = res.new_journal_id and res.new_journal_id.sequence_id or False 
+            if not sequence:
+                raise UserError(_('Please define a sequence on your journal.'))
+
+            res.first_number = sequence.with_context(ir_sequence_date=res.request_date).next_by_id()
+
+#         first_number = self.env['ir.sequence'].next_by_code('IRF.number')
+#         res.first_number = first_number
             
         return res
 

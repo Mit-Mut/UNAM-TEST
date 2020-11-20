@@ -83,15 +83,22 @@ class Investment(models.Model):
     @api.model
     def create(self,vals):
         res = super(Investment,self).create(vals)
-        first_number = self.env['ir.sequence'].next_by_code('CPRO.number')
-        res.first_number = first_number
+
+        sequence = res.new_journal_id and res.new_journal_id.sequence_id or False 
+        if not sequence:
+            raise UserError(_('Please define a sequence on your journal.'))
+
+        res.first_number = sequence.with_context(ir_sequence_date=res.invesment_date).next_by_id()
+        
+#         first_number = self.env['ir.sequence'].next_by_code('CPRO.number')
+#         res.first_number = first_number
         
         return res
 
-    @api.constrains('amount_to_invest')
-    def check_min_balance(self):
-        if self.amount_to_invest == 0:
-            raise UserError(_('Please add amount invest'))
+#     @api.constrains('amount_to_invest')
+#     def check_min_balance(self):
+#         if self.amount_to_invest == 0:
+#             raise UserError(_('Please add amount invest'))
 
     @api.constrains('capitalizable')
     def check_capitalizable(self):
@@ -294,14 +301,14 @@ class InvestmentOperation(models.Model):
     def get_journal_ids(self):
         for rec in self:
             if rec.type_of_operation in ('open_bal','increase','increase_by_closing') :
-                rec.source_ids = [(6,0,rec.journal_id.ids)]
-            else:
-                rec.source_ids = [(6,0,self.env['account.journal'].search([('type','=','bank')]).ids)]
-
-            if rec.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure'):
                 rec.dest_ids = [(6,0,rec.journal_id.ids)]
             else:
                 rec.dest_ids = [(6,0,self.env['account.journal'].search([('type','=','bank')]).ids)]
+                
+            if rec.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure'):
+                rec.source_ids = [(6,0,rec.journal_id.ids)]
+            else:
+                rec.source_ids = [(6,0,self.env['account.journal'].search([('type','=','bank')]).ids)]
 
     @api.onchange('type_of_operation')
     def onchange_type_of_operation(self):

@@ -155,25 +155,37 @@ class PurchaseSaleSecurity(models.Model):
         for rec in self:
             rec.amount = rec.movement_price * rec.number_of_titles
             
-#     @api.model
-#     def create(self,vals):
-#         vals['name'] = self.env['ir.sequence'].next_by_code('purchase.sale.security')
-#         return super(PurchaseSaleSecurity,self).create(vals)
 
     @api.model
     def create(self,vals):
         res = super(PurchaseSaleSecurity,self).create(vals)
-        first_number = self.env['ir.sequence'].next_by_code('purchase.sale.security.number')
-        res.first_number = first_number
+
+        sequence = res.new_journal_id and res.new_journal_id.sequence_id or False 
+        if not sequence:
+            raise UserError(_('Please define a sequence on your journal.'))
+
+        res.first_number = sequence.with_context(ir_sequence_date=res.invesment_date).next_by_id()
+        
+#         first_number = self.env['ir.sequence'].next_by_code('purchase.sale.security.number')
+#         res.first_number = first_number
         
         return res
     
     def action_confirm(self):
         today = datetime.today().date()
         fund_type = False
-        if self.amount ==0 or self.movement_price==0 or self.number_of_titles==0 or self.account_balance==0:
-            raise ValidationError(_("Please add mandatory data to approve"))
-        
+        if self.amount == 0:
+            raise ValidationError(_("Please Add Investment amount to approve"))
+
+        if self.movement_price == 0:
+            raise ValidationError(_("Please Add Price to approve"))
+
+        if self.number_of_titles==0:
+            raise ValidationError(_("Please Add Quantity of Securities to approve"))
+
+        if self.account_balance==0:
+            raise ValidationError(_("Please Add Account Balance to approve"))
+                
         return {
             'name': 'Approve Request',
             'view_type': 'form',

@@ -122,7 +122,9 @@ class ReportonthequotationofInvestmentFunds(models.AbstractModel):
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
-        records = self.env['investment.stock.quotation'].search([('state','=','confirmed'),('date','>=',start),('date','<=',end)])
+        investment_domain = domain + [('date','>=',start),('date','<=',end)]
+        records = self.env['investment.stock.quotation'].search(investment_domain)
+        # records = self.env['investment.stock.quotation'].search([('state','=','confirmed'),('date','>=',start),('date','<=',end)])
         #records = self.env['investment.stock.quotation'].search([('date','>=',start),('date','<=',end)])
         total_amount = 0
 

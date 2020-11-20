@@ -48,6 +48,83 @@ class ReportProductiveAccounts(models.AbstractModel):
     filter_unposted_in_period = None
     MAX_LINES = None
 
+    filter_contract = True
+    filter_currency = True
+    filter_funds = True
+
+    @api.model
+    def _get_filter_funds(self):
+        return self.env['agreement.fund'].search([])
+
+    @api.model
+    def _init_filter_funds(self, options, previous_options=None):
+        if self.filter_funds is None:
+            return
+        if previous_options and previous_options.get('funds'):
+            journal_map = dict((opt['id'], opt['selected']) for opt in previous_options['funds'] if opt['id'] != 'divider' and 'selected' in opt)
+        else:
+            journal_map = {}
+        options['funds'] = []
+
+        default_group_ids = []
+
+        for j in self._get_filter_funds():
+            options['funds'].append({
+                'id': j.id,
+                'name': j.name,
+                'code': j.name,
+                'selected': journal_map.get(j.id, j.id in default_group_ids),
+            })
+
+    @api.model
+    def _get_filter_currency(self):
+        return self.env['res.currency'].search([])
+
+    @api.model
+    def _init_filter_currency(self, options, previous_options=None):
+        if self.filter_currency is None:
+            return
+        if previous_options and previous_options.get('currency'):
+            journal_map = dict((opt['id'], opt['selected']) for opt in previous_options['currency'] if opt['id'] != 'divider' and 'selected' in opt)
+        else:
+            journal_map = {}
+        options['currency'] = []
+
+        default_group_ids = []
+
+        for j in self._get_filter_currency():
+            options['currency'].append({
+                'id': j.id,
+                'name': j.name,
+                'code': j.name,
+                'selected': journal_map.get(j.id, j.id in default_group_ids),
+            })
+
+    @api.model
+    def _get_filter_contract(self):
+        return self.env['investment.contract'].search([])
+
+    @api.model
+    def _init_filter_contract(self, options, previous_options=None):
+        if self.filter_contract is None:
+            return
+        if previous_options and previous_options.get('contract'):
+            journal_map = dict((opt['id'], opt['selected']) for opt in previous_options['contract'] if opt['id'] != 'divider' and 'selected' in opt)
+        else:
+            journal_map = {}
+        options['contract'] = []
+
+        default_group_ids = []
+
+        for j in self._get_filter_contract():
+            options['contract'].append({
+                'id': j.id,
+                'name': j.name,
+                'code': j.name,
+                'selected': journal_map.get(j.id, j.id in default_group_ids),
+            })
+
+
 
     def _get_reports_buttons(self):
         return [
@@ -132,6 +209,9 @@ class ReportProductiveAccounts(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         lines = []
+        contract_list = []
+        currency_list = []
+        fund_list = []
 
         if options.get('all_entries') is False:
             domain=[('state','=','confirmed')]
@@ -142,13 +222,45 @@ class ReportProductiveAccounts(models.AbstractModel):
 #         if journal:
 #             domain+=journal
 
+        for fund in options.get('funds'):
+            if fund.get('selected',False)==True:
+                fund_list.append(fund.get('id',0))
+        
+        if not fund_list:
+            fund_ids = self._get_filter_funds()
+            fund_list = fund_ids.ids
+        
+        if not fund_list:
+            fund_list = [0]
+
+        for select_curreny in options.get('currency'):
+            if select_curreny.get('selected',False)==True:
+                currency_list.append(select_curreny.get('id',0))
+
+        if not currency_list:
+            currency_id = self._get_filter_currency()
+            currency_list = currency_id.ids
+        
+        if not currency_list:
+            currency_list = [0]
+        
+        for contract in options.get('contract'):
+            if contract.get('selected',False)==True:
+                contract_list.append(contract.get('id',0))
+        
+        if not contract_list:
+            contract_id = self._get_filter_contract()
+            contract_list = contract_id.ids
+        
+        if not contract_list:
+            contract_list = [0]
         
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
-        domain = domain + [('fund_key','!=',False),('invesment_date','>=',start),('invesment_date','<=',end)]
+        domain = domain + [('fund_id','in',fund_list),('currency_id','in',currency_list),('contract_id','in',contract_list),('fund_key','!=',False),('invesment_date','>=',start),('invesment_date','<=',end)]
         
         #records = self.env['investment.investment'].search([('invesment_date','>=',start),('invesment_date','<=',end)])
         records = self.env['investment.investment'].search(domain,order='currency_id,invesment_date')

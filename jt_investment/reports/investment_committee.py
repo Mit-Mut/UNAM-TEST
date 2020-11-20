@@ -47,6 +47,57 @@ class InvestmentCommittee(models.AbstractModel):
     filter_unposted_in_period = None
     MAX_LINES = None
 
+    filter_bank = True
+    filter_currency = True
+
+    @api.model
+    def _get_filter_currency(self):
+        return self.env['res.currency'].search([])
+
+    @api.model
+    def _init_filter_currency(self, options, previous_options=None):
+        if self.filter_currency is None:
+            return
+        if previous_options and previous_options.get('currency'):
+            journal_map = dict((opt['id'], opt['selected']) for opt in previous_options['currency'] if opt['id'] != 'divider' and 'selected' in opt)
+        else:
+            journal_map = {}
+        options['currency'] = []
+
+        default_group_ids = []
+
+        for j in self._get_filter_currency():
+            options['currency'].append({
+                'id': j.id,
+                'name': j.name,
+                'code': j.name,
+                'selected': journal_map.get(j.id, j.id in default_group_ids),
+            })
+
+    @api.model
+    def _get_filter_bank(self):
+        return self.env['res.bank'].search([])
+
+    @api.model
+    def _init_filter_bank(self, options, previous_options=None):
+        if self.filter_bank is None:
+            return
+        if previous_options and previous_options.get('bank'):
+            journal_map = dict((opt['id'], opt['selected']) for opt in previous_options['bank'] if opt['id'] != 'divider' and 'selected' in opt)
+        else:
+            journal_map = {}
+        options['bank'] = []
+
+        default_group_ids = []
+
+        for j in self._get_filter_bank():
+            options['bank'].append({
+                'id': j.id,
+                'name': j.name,
+                'code': j.name,
+                'selected': journal_map.get(j.id, j.id in default_group_ids),
+            })
+
     
 
     def _get_reports_buttons(self):
@@ -97,6 +148,30 @@ class InvestmentCommittee(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         lines = []
+        bank_list = []
+        currency_list = []
+
+        for bank in options.get('bank'):
+            if bank.get('selected',False)==True:
+                bank_list.append(bank.get('id',0))
+        
+        if not bank_list:
+            bank_ids = self._get_filter_bank()
+            bank_list = bank_ids.ids
+        
+        if not bank_list:
+            bank_list = [0]
+
+        for select_curreny in options.get('currency'):
+            if select_curreny.get('selected',False)==True:
+                currency_list.append(select_curreny.get('id',0))
+
+        if not currency_list:
+            currency_id = self._get_filter_currency()
+            currency_list = currency_id.ids
+        
+        if not currency_list:
+            currency_list = [0]
 
         if options.get('all_entries') is False:
             domain=[('state','=','confirmed')]
@@ -112,12 +187,12 @@ class InvestmentCommittee(models.AbstractModel):
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
-        cetes_domain = domain + [('date_time','>=',start),('date_time','<=',end)]
-        udibonos_domain = domain + [('date_time','>=',start),('date_time','<=',end)]
-        bonds_domain = domain + [('date_time','>=',start),('date_time','<=',end)]
-        will_pay_domain = domain + [('date_time','>=',start),('date_time','<=',end)]
-        sale_domain = domain + [('invesment_date','>=',start),('invesment_date','<=',end)]
-        productive_domain = domain + [('invesment_date','>=',start),('invesment_date','<=',end)]
+        cetes_domain = domain + [('currency_id','in',currency_list),('bank_id','in',bank_list),('date_time','>=',start),('date_time','<=',end)]
+        udibonos_domain = domain + [('currency_id','in',currency_list),('bank_id','in',bank_list),('date_time','>=',start),('date_time','<=',end)]
+        bonds_domain = domain + [('currency_id','in',currency_list),('bank_id','in',bank_list),('date_time','>=',start),('date_time','<=',end)]
+        will_pay_domain = domain + [('currency_id','in',currency_list),('bank_id','in',bank_list),('date_time','>=',start),('date_time','<=',end)]
+        sale_domain = domain + [('currency_id','in',currency_list),('bank_id','in',bank_list),('invesment_date','>=',start),('invesment_date','<=',end)]
+        productive_domain = domain + [('currency_id','in',currency_list),('journal_id.bank_id','in',bank_list),('invesment_date','>=',start),('invesment_date','<=',end)]
         
         cetes_records = self.env['investment.cetes'].search(cetes_domain,order='currency_id')
         udibonos_records = self.env['investment.udibonos'].search(udibonos_domain,order='currency_id')

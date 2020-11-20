@@ -63,17 +63,34 @@ class IndicatorsReport(models.AbstractModel):
         return templates
 
     def _get_columns_name(self, options):
-        return [
-            {'name': _('Indicadores')},
-            {'name': _('Inicio Mes')},
-            {'name': _('Fin Mes')},
-            {'name': _('Dia')},
-            {'name': _('Alto Mes')},
-            {'name': _('Dia')},
-            {'name': _('Bajo Mes')},
-            {'name': _('Promedio')},
-        ]
-
+        columns = [{'name': _('Indicadores')}]
+        if options.get('comparison') and options['comparison'].get('periods'):
+            comparison = options.get('comparison')
+            period_list = comparison.get('periods')
+            period_list.reverse()
+            columns += [
+                        {'name': _('Inicio Mes')},
+                        {'name': _('Fin Mes')},
+                        {'name': _('Dia')},
+                        {'name': _('Alto Mes')},
+                        {'name': _('Dia')},
+                        {'name': _('Bajo Mes')},
+                        {'name': _('Promedio')},
+                       ] * (len(period_list) + 1)
+        else:
+        
+            columns =  [
+                {'name': _('Indicadores')},
+                {'name': _('Inicio Mes')},
+                {'name': _('Fin Mes')},
+                {'name': _('Dia')},
+                {'name': _('Alto Mes')},
+                {'name': _('Dia')},
+                {'name': _('Bajo Mes')},
+                {'name': _('Promedio')},
+            ]
+        return columns
+    
     def _format(self, value,figure_type):
         if self.env.context.get('no_format'):
             return value
@@ -98,141 +115,161 @@ class IndicatorsReport(models.AbstractModel):
     def _get_lines(self, options, line_id=None):
         lines = []
 
-        # if options.get('all_entries') is False:
-        #     domain=[('state','=','confirmed')]
-        # else:
-        #     domain=[('state','not in',('rejected','canceled'))]
-            
+        comparison = options.get('comparison')
+        periods = []
+        if comparison and comparison.get('filter') != 'no_comparison':
+            period_list = comparison.get('periods')
+            period_list.reverse()
+            periods = [period for period in period_list]
+        periods.append(options.get('date'))
+
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
-        cetes_rate = self.env['investment.period.rate'].search([('rate_date','>=',start),('rate_date','<=',end),('product_type','=','CETES')])
+        
         bonds_rate = self.env['investment.period.rate'].search([('rate_date','>=',start),('rate_date','<=',end),('product_type','=','BONUS')])
         udibonos_rate = self.env['investment.period.rate'].search([('rate_date','>=',start),('rate_date','<=',end),('product_type','=','UDIBONOS')])
         TIIE = self.env['investment.period.rate'].search([('rate_date','>=',start),('rate_date','<=',end),('product_type','=','PAGARE')])
         
         #==================== CETES Rate ======================#
-        if cetes_rate:
-            start_month_date = min(x.rate_date for x in cetes_rate)
-            end_month_date = max(x.rate_date for x in cetes_rate)
-            start_month_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_date==start_month_date))
-            end_month_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_date==end_month_date))
+        CETES_columns_28 = []
+        CETES_columns_91 = []
+        CETES_columns_182 = []
+        CETES_columns_364 = []
+        for period in periods:
+            date_start = datetime.strptime(str(period.get('date_from')),
+                                           DEFAULT_SERVER_DATE_FORMAT).date()
+            date_end = datetime.strptime(str(period.get('date_to')),
+                                         DEFAULT_SERVER_DATE_FORMAT).date()
             
-            max_high_rate_28 = max(x.rate_days_28 for x in cetes_rate)
-            min_high_rate_28 = min(x.rate_days_28 for x in cetes_rate)
-            max_rate_28_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_days_28==max_high_rate_28))
-            min_rate_28_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_days_28==min_high_rate_28))
-            total_rate = sum(x.rate_days_28 for x in cetes_rate)           
-            total_rec = len(cetes_rate)
-            avg = total_rate/total_rec
-             
-            lines.append({
-                'id': 'hierarchy_cetes',
-                'name': 'A) CETES',
-                'columns': [{'name': ''}, 
-                            {'name': ''}, 
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            ],
-                'level': 1,
-                'unfoldable': False,
-                'unfolded': True,
-            })
+            cetes_rate = self.env['investment.period.rate'].search([('rate_date','>=',date_start),('rate_date','<=',date_end),('product_type','=','CETES')])
+            if cetes_rate:
+                start_month_date = min(x.rate_date for x in cetes_rate)
+                end_month_date = max(x.rate_date for x in cetes_rate)
+                start_month_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_date==start_month_date))
+                end_month_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_date==end_month_date))
+                
+                max_high_rate_28 = max(x.rate_days_28 for x in cetes_rate)
+                min_high_rate_28 = min(x.rate_days_28 for x in cetes_rate)
+                max_rate_28_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_days_28==max_high_rate_28))
+                min_rate_28_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_days_28==min_high_rate_28))
+                total_rate = sum(x.rate_days_28 for x in cetes_rate)           
+                total_rec = len(cetes_rate)
+                avg = total_rate/total_rec
+                 
+                CETES_columns_28 += [self._format({'name': start_month_rec.rate_days_28},figure_type='float'),
+                                self._format({'name': end_month_rec.rate_days_28},figure_type='float'),
+                                {'name': max_rate_28_rec.rate_date},
+                                self._format({'name': max_rate_28_rec.rate_days_28},figure_type='float'),
+                                {'name': min_rate_28_rec.rate_date},
+                                self._format({'name': min_rate_28_rec.rate_days_28},figure_type='float'),
+                                self._format({'name': avg},figure_type='float'),
+                                ]
+                 
+                max_high_rate_91 = max(x.rate_days_91 for x in cetes_rate)
+                min_high_rate_91 = min(x.rate_days_91 for x in cetes_rate)
+                max_rate_91_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_days_91==max_high_rate_91))
+                min_rate_91_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_days_91==min_high_rate_91))
+                total_rate = sum(x.rate_days_91 for x in cetes_rate)           
+                total_rec = len(cetes_rate)
+                avg = total_rate/total_rec
+    
+                CETES_columns_91 += [self._format({'name': start_month_rec.rate_days_91},figure_type='float'),
+                                self._format({'name': end_month_rec.rate_days_91},figure_type='float'),
+                                {'name': max_rate_91_rec.rate_date},
+                                self._format({'name': max_rate_91_rec.rate_days_91},figure_type='float'),
+                                {'name': min_rate_91_rec.rate_date},
+                                self._format({'name': min_rate_91_rec.rate_days_91},figure_type='float'),
+                                self._format({'name': avg},figure_type='float'),
+                                ]
+                
+                max_high_rate_182 = max(x.rate_days_182 for x in cetes_rate)
+                min_high_rate_182 = min(x.rate_days_182 for x in cetes_rate)
+                max_rate_182_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_days_182==max_high_rate_182))
+                min_rate_182_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_days_182==min_high_rate_182))
+                total_rate = sum(x.rate_days_182 for x in cetes_rate)           
+                total_rec = len(cetes_rate)
+                avg = total_rate/total_rec
+                
+                CETES_columns_182 += [self._format({'name': start_month_rec.rate_days_182},figure_type='float'),
+                                self._format({'name': end_month_rec.rate_days_182},figure_type='float'),
+                                {'name': max_rate_182_rec.rate_date},
+                                self._format({'name': max_rate_182_rec.rate_days_182},figure_type='float'),
+                                {'name': min_rate_182_rec.rate_date},
+                                self._format({'name': min_rate_182_rec.rate_days_182},figure_type='float'),
+                                self._format({'name': avg},figure_type='float'),
+                                ] 
+                    
+                max_high_rate_364 = max(x.rate_days_364 for x in cetes_rate)
+                min_high_rate_364 = min(x.rate_days_364 for x in cetes_rate)
+                max_rate_364_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_days_364==max_high_rate_364))
+                min_rate_364_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_days_364==min_high_rate_364))
+                total_rate = sum(x.rate_days_364 for x in cetes_rate)           
+                total_rec = len(cetes_rate)
+                avg = total_rate/total_rec
+    
+                CETES_columns_364 += [self._format({'name': start_month_rec.rate_days_364},figure_type='float'),
+                                self._format({'name': end_month_rec.rate_days_364},figure_type='float'),
+                                {'name': max_rate_364_rec.rate_date},
+                                self._format({'name': max_rate_364_rec.rate_days_364},figure_type='float'),
+                                {'name': min_rate_364_rec.rate_date},
+                                self._format({'name': min_rate_364_rec.rate_days_364},figure_type='float'),
+                                self._format({'name': avg},figure_type='float'),
+                                ]
+                                 
+        lines.append({
+            'id': 'hierarchy_cetes',
+            'name': 'A) CETES',
+            'columns': [{'name': ''}, 
+                        {'name': ''}, 
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+        
+        lines.append({
+            'id': 'hierarchy_cetes_28_days',
+            'name': '28 DAYS',
+            'columns': CETES_columns_28,
+            'level': 3,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+        lines.append({
+            'id': 'hierarchy_cetes_91_days',
+            'name': '91 DAYS',
+            'columns': CETES_columns_91,
+            'level': 3,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+        lines.append({
+            'id': 'hierarchy_cetes_182_days',
+            'name': '182 DAYS',
+            'columns': CETES_columns_182,
+            'level': 3,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+
+        lines.append({
+            'id': 'hierarchy_cetes_364_days',
+            'name': '364 DAYS',
+            'columns': CETES_columns_364,
+            'level': 3,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+
             
-            lines.append({
-                'id': 'hierarchy_cetes_28_days',
-                'name': '28 DAYS',
-                'columns': [self._format({'name': start_month_rec.rate_days_28},figure_type='float'),
-                            self._format({'name': end_month_rec.rate_days_28},figure_type='float'),
-                            {'name': max_rate_28_rec.rate_date},
-                            self._format({'name': max_rate_28_rec.rate_days_28},figure_type='float'),
-                            {'name': min_rate_28_rec.rate_date},
-                            self._format({'name': min_rate_28_rec.rate_days_28},figure_type='float'),
-                            self._format({'name': avg},figure_type='float'),
-                            ],
-                'level': 3,
-                'unfoldable': False,
-                'unfolded': True,
-            })
-
-            max_high_rate_91 = max(x.rate_days_91 for x in cetes_rate)
-            min_high_rate_91 = min(x.rate_days_91 for x in cetes_rate)
-            max_rate_91_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_days_91==max_high_rate_91))
-            min_rate_91_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_days_91==min_high_rate_91))
-            total_rate = sum(x.rate_days_91 for x in cetes_rate)           
-            total_rec = len(cetes_rate)
-            avg = total_rate/total_rec
-
-            lines.append({
-                'id': 'hierarchy_cetes_91_days',
-                'name': '91 DAYS',
-                'columns': [self._format({'name': start_month_rec.rate_days_91},figure_type='float'),
-                            self._format({'name': end_month_rec.rate_days_91},figure_type='float'),
-                            {'name': max_rate_91_rec.rate_date},
-                            self._format({'name': max_rate_91_rec.rate_days_91},figure_type='float'),
-                            {'name': min_rate_91_rec.rate_date},
-                            self._format({'name': min_rate_91_rec.rate_days_91},figure_type='float'),
-                            self._format({'name': avg},figure_type='float'),
-                            ],
-                'level': 3,
-                'unfoldable': False,
-                'unfolded': True,
-            })
-
-            max_high_rate_182 = max(x.rate_days_182 for x in cetes_rate)
-            min_high_rate_182 = min(x.rate_days_182 for x in cetes_rate)
-            max_rate_182_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_days_182==max_high_rate_182))
-            min_rate_182_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_days_182==min_high_rate_182))
-            total_rate = sum(x.rate_days_182 for x in cetes_rate)           
-            total_rec = len(cetes_rate)
-            avg = total_rate/total_rec
-
-            lines.append({
-                'id': 'hierarchy_cetes_182_days',
-                'name': '182 DAYS',
-                'columns': [self._format({'name': start_month_rec.rate_days_182},figure_type='float'),
-                            self._format({'name': end_month_rec.rate_days_182},figure_type='float'),
-                            {'name': max_rate_182_rec.rate_date},
-                            self._format({'name': max_rate_182_rec.rate_days_182},figure_type='float'),
-                            {'name': min_rate_182_rec.rate_date},
-                            self._format({'name': min_rate_182_rec.rate_days_182},figure_type='float'),
-                            self._format({'name': avg},figure_type='float'),
-                            ],
-                'level': 3,
-                'unfoldable': False,
-                'unfolded': True,
-            })
-
-            max_high_rate_364 = max(x.rate_days_364 for x in cetes_rate)
-            min_high_rate_364 = min(x.rate_days_364 for x in cetes_rate)
-            max_rate_364_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_days_364==max_high_rate_364))
-            min_rate_364_rec = max(x for x in cetes_rate.filtered(lambda x:x.rate_days_364==min_high_rate_364))
-            total_rate = sum(x.rate_days_364 for x in cetes_rate)           
-            total_rec = len(cetes_rate)
-            avg = total_rate/total_rec
-
-            lines.append({
-                'id': 'hierarchy_cetes_364_days',
-                'name': '364 DAYS',
-                'columns': [self._format({'name': start_month_rec.rate_days_364},figure_type='float'),
-                            self._format({'name': end_month_rec.rate_days_364},figure_type='float'),
-                            {'name': max_rate_364_rec.rate_date},
-                            self._format({'name': max_rate_364_rec.rate_days_364},figure_type='float'),
-                            {'name': min_rate_364_rec.rate_date},
-                            self._format({'name': min_rate_364_rec.rate_days_364},figure_type='float'),
-                            self._format({'name': avg},figure_type='float'),
-                            ],
-                'level': 3,
-                'unfoldable': False,
-                'unfolded': True,
-            })
-            
-
         #==================== Bonds Rate ======================#
         if bonds_rate:
             start_month_date = min(x.rate_date for x in bonds_rate)

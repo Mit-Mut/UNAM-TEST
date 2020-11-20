@@ -42,6 +42,10 @@ class BasesCollabration(models.Model):
             
         if self.distribution_id:
             self.distribution_id.action_approved()
+
+        if self.investment_operation_id:
+            self.investment_operation_id.action_approved()
+            
         return result
      
     def confirmed_finance(self):

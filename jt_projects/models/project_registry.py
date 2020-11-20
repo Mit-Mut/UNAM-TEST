@@ -48,6 +48,9 @@ class ProjectRegistry(models.Model):
     final_amount = fields.Monetary(string="Final amount",compute='get_final_amount',store=True)
     co_responsible_id = fields.Many2one('hr.employee','Co-responsible Name')
     co_responsible_rfc = fields.Char(related='co_responsible_id.rfc',string='Co-responsible RFC')
+    project_status = fields.Selection([('accepted', 'Accepted'),
+                               ('rejected', 'Rejected')], "UPA PAPIIT Status",copy=False)
+    
     
     @api.depends('exercised_amount','allocated_amount')
     def get_final_amount(self):

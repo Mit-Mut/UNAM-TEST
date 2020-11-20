@@ -544,6 +544,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:jt_budget_mgmt.reject_standardization_line_form_view
 #: model_terms:ir.ui.view,arch_db:jt_budget_mgmt.standardization_form_view
 #: model_terms:ir.ui.view,arch_db:jt_budget_mgmt.summary_report_download_form_view
+#: model_terms:ir.ui.view,arch_db:jt_budget_mgmt.different_payment_req_form_inherit
+#: model_terms:ir.ui.view,arch_db:jt_budget_mgmt.supplier_payment_req_form_inherit
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -1219,6 +1221,8 @@ msgstr "Descargar Formato Simple"
 #: model:ir.model.fields.selection,name:jt_budget_mgmt.selection__summary_report_download__state__draft
 #: model_terms:ir.ui.view,arch_db:jt_budget_mgmt.standardization_form_view
 #: model_terms:ir.ui.view,arch_db:jt_budget_mgmt.standardization_line_search_view
+#: model_terms:ir.ui.view,arch_db:jt_budget_mgmt.different_payment_req_form_inherit
+#: model_terms:ir.ui.view,arch_db:jt_budget_mgmt.supplier_payment_req_form_inherit
 msgid "Draft"
 msgstr "Borrador"
 
@@ -4323,12 +4327,12 @@ msgstr "Validar Presupuesto"
 #: code:addons/jt_budget_mgmt/models/account.py:0
 #, python-format
 msgid "Budget sufficiency"
-msgstr "Suficiencia Presupuesto"
+msgstr "Suficiencia Presupuestal"
 
 #. module: jt_budget_mgmt
 #: model:ir.model,name:jt_budget_mgmt.model_budget_insufficien_wiz
 msgid "Budgetary Insufficienc"
-msgstr "Insuficiencia Presupuesto"
+msgstr "Insuficiencia Presupuestal"
 
 #. module: jt_budget_mgmt
 #: code:addons/jt_budget_mgmt/models/account.py:0
@@ -4336,7 +4340,7 @@ msgstr "Insuficiencia Presupuesto"
 #: model:ir.actions.act_window,name:jt_budget_mgmt.action_budget_insufficiency
 #, python-format
 msgid "Budgetary Insufficiency"
-msgstr "Insuficiencia Presupuesto"
+msgstr "Insuficiencia Presupuestal"
 
 #. module: jt_budget_mgmt
 #: model_terms:ir.ui.view,arch_db:jt_budget_mgmt.budget_insufficien_view

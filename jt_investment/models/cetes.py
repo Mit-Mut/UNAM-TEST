@@ -174,8 +174,15 @@ class CETES(models.Model):
     def create(self, vals):
         vals['folio'] = self.env['ir.sequence'].next_by_code('folio.cetes')
         res = super(CETES, self).create(vals)
-        first_number = self.env['ir.sequence'].next_by_code('CETES.number')
-        res.first_number = first_number
+        
+        sequence = res.new_journal_id and res.new_journal_id.sequence_id or False 
+        if not sequence:
+            raise UserError(_('Please define a sequence on your journal.'))
+
+        res.first_number = sequence.with_context(ir_sequence_date=res.date_time).next_by_id()
+        
+#         first_number = self.env['ir.sequence'].next_by_code('CETES.number')
+#         res.first_number = first_number
         
         return res
 

@@ -33,15 +33,21 @@ class InvestmentFunds(models.Model):
     
     first_number = fields.Char('First Number:')
     new_journal_id = fields.Many2one("account.journal", 'Journal')
-
      
     fund_id = fields.Many2one('agreement.fund','Fund Name')
     fund_key = fields.Char(related='fund_id.fund_key',string="Fund Code")
-
+    fund_request_date = fields.Date('Request')
 
     @api.model
     def create(self, vals):
         res = super(InvestmentFunds, self).create(vals)
-        first_number = self.env['ir.sequence'].next_by_code('funds.number')
-        res.first_number = first_number
+
+        sequence = res.new_journal_id and res.new_journal_id.sequence_id or False 
+        if not sequence:
+            raise UserError(_('Please define a sequence on your journal.'))
+
+        res.first_number = sequence.with_context(ir_sequence_date=res.fund_request_date).next_by_id()
+        
+#         first_number = self.env['ir.sequence'].next_by_code('funds.number')
+#         res.first_number = first_number
         return res

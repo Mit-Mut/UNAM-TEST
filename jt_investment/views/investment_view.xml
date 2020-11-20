@@ -97,7 +97,7 @@
                         </group>
                     <notebook>
                     	<page string="Operation" name="operation">
-                    		<field name="line_ids" attrs="{'readonly': [('state', '!=', 'draft')]}" context="{'default_record_type':'manually','default_journal_id':journal_id}">
+                    		<field name="line_ids" attrs="{'readonly': [('state', '=', 'canceled')]}" context="{'default_record_type':'manually','default_journal_id':journal_id}">
                     			<tree>
                     				<field name="investment_fund_id"/>
                     				<field name="type_of_operation"/>
@@ -120,33 +120,35 @@
                     				<field name="dest_ids" invisible="1"/>
                     			</tree>
                     			<form>
+				                	<header>
+				                		<field name="line_state" widget="statusbar"/>
+				                	</header>
 				                	<group>
 			                            <group>
 			                            	<field name="source_ids" invisible="1"/>
                     						<field name="dest_ids" invisible="1"/>
 			                                <field name="invoice" readonly="1"/>
-			                                <field name="operation_number" />
-			                                <field name="investment_fund_id" required="1"/>
-			                                <field name="type_of_operation" />
-			                                <field name="agreement_number" />
-			                                <field name="base_collabaration_id" />
-			                                <field name="agreement_type_id" />
-			                                <field name="fund_type" />
+			                                <field name="operation_number" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
+			                                <field name="investment_fund_id" required="1" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
+			                                <field name="type_of_operation" required="1" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
+			                                <field name="agreement_number" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
+			                                <field name="base_collabaration_id" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
+			                                <field name="agreement_type_id" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
+			                                <field name="fund_type" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
 			                                <field name="bank_account_id" domain="[('id', 'in', source_ids)]"
-			                                    required="1"/>
+			                                    required="1" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
 			                            </group>
 			                            <group>
-			                            	<field name="user_id"/>
+			                            	<field name="user_id" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
 			                                <field name="unit_req_transfer_id" context="{'bal_user_id': user_id,
-			                                    'show_for_agreement':1}" />
-			                                <field name="dependency_id" />
-			                                <field name="sub_dependency_id" domain="[('dependency_id','=',dependency_id)]"/>
-			                            	<field name="origin_resource_id" />
-			                            	<field name="amount" required="1"/>
-			                                <field name="date_required"/>
+			                                    'show_for_agreement':1}" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
+			                                <field name="dependency_id" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
+			                                <field name="sub_dependency_id" domain="[('dependency_id','=',dependency_id)]" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
+			                            	<field name="origin_resource_id" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
+			                            	<field name="amount" required="1" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
+			                                <field name="date_required" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
 			                                <field name="desti_bank_account_id" domain="[('id', 'in', dest_ids)]"
-			                                    required="1"/>
-		                    				<field name="line_state" readonly="1"/>
+			                                    required="1" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
 		                    				<field name="inc_id" invisible="1"/>
 		                    				<field name="seq" invisible="1"/>
 		                    				<field name="record_type" invisible="1"/>

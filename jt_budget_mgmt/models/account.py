@@ -76,12 +76,12 @@ class AccountMove(models.Model):
         
         str_msg = "Budgetary Insufficiency For Program Code\n\n"
         if self.env.user.lang == 'es_MX':
-            str_msg = "Insuficiencia Presupuesto para el código del programa\n\n"
+            str_msg = "Insuficiencia Presupuestal para el código del programa\n\n"
         
         is_check = False
         budget_msg = "Budget sufficiency"
         if self.env.user.lang == 'es_MX':
-            budget_msg = "Suficiencia Presupuesto"
+            budget_msg = "Suficiencia Presupuestal"
         
         insufficient_move_ids = []
         sufficient_move_ids = []
@@ -95,7 +95,7 @@ class AccountMove(models.Model):
             if request.payment_state == 'registered':
                 move_str_msg = "Budgetary Insufficiency For Program Code\n\n"
                 if self.env.user.lang == 'es_MX':
-                    move_str_msg = "Insuficiencia Presupuesto para el código del programa\n\n"
+                    move_str_msg = "Insuficiencia Presupuestal para el código del programa\n\n"
                 
                 sufficient_move_ids.append(request.id)
                 for line in request.invoice_line_ids:
@@ -187,11 +187,11 @@ class AccountMove(models.Model):
         self.ensure_one()
         str_msg = "Budgetary Insufficiency For Program Code\n\n"
         if self.env.user.lang == 'es_MX':
-            str_msg = "Insuficiencia Presupuesto para el código del programa\n\n"
+            str_msg = "Insuficiencia Presupuestal para el código del programa\n\n"
         is_check = False
         budget_msg = "Budget sufficiency"
         if self.env.user.lang == 'es_MX':
-            budget_msg = "Suficiencia Presupuesto"
+            budget_msg = "Suficiencia Presupuestal"
             
         for line in self.invoice_line_ids:
             total_available_budget = 0

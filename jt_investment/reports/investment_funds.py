@@ -159,13 +159,13 @@ class SummaryofOperationInvestmentFunds(models.AbstractModel):
         if not fund_list:
             fund_list = [0]
 
-        for contract in options.get('funds'):
+        for contract in options.get('contract'):
             if contract.get('selected',False)==True:
                 contract_list.append(contract.get('id',0))
         
         if not contract_list:
-            fund_ids = self._get_filter_contract()
-            contract_list = fund_ids.ids
+            contract_ids = self._get_filter_contract()
+            contract_list = contract_ids.ids
         
         if not contract_list:
             contract_list = [0]

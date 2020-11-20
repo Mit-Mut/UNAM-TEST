@@ -6,6 +6,7 @@ from odoo.exceptions import UserError
 class DistributionOfIncome(models.Model):
 
     _name = 'distribution.of.income'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Distribution Of Income"
     
     start_date = fields.Date("Start Date")

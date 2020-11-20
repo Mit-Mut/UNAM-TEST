@@ -42,7 +42,7 @@ class InvestmentFunds(models.Model):
                                ('canceled', 'Canceled')], string="Status", default="draft")
 
 
-    fund_request_date = fields.Date('Request')
+    
     dependency_id = fields.Many2one('dependency', "Dependency")
     subdependency_id = fields.Many2one('sub.dependency', "Sub Dependency")
     dependency_holder = fields.Char("Dependency Holder")

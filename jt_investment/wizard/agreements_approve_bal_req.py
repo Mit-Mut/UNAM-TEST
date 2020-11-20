@@ -36,14 +36,15 @@ class ApproveInvestmentBalReq(models.TransientModel):
     def get_journal_ids(self):
         for rec in self:
             if rec.type_of_operation in ('open_bal','increase','increase_by_closing') :
-                rec.source_ids = [(6,0,rec.journal_id.ids)]
-            else:
-                rec.source_ids = [(6,0,self.env['account.journal'].search([('type','=','bank')]).ids)]
-
-            if rec.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure'):
                 rec.dest_ids = [(6,0,rec.journal_id.ids)]
             else:
                 rec.dest_ids = [(6,0,self.env['account.journal'].search([('type','=','bank')]).ids)]
+
+            if rec.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure'):
+                rec.source_ids = [(6,0,rec.journal_id.ids)]
+            else:
+                rec.source_ids = [(6,0,self.env['account.journal'].search([('type','=','bank')]).ids)]
+                
 
     def get_open_balance_vals(self,request):
         vals = super(ApproveInvestmentBalReq,self).get_open_balance_vals(request)
@@ -78,12 +79,15 @@ class ApproveInvestmentBalReq(models.TransientModel):
     
     def create_investment_line(self,request):
         vals = self.get_investment_line(request)
-        self.env['investment.operation'].create(vals)
+        opt_id = self.env['investment.operation'].create(vals)
+        return opt_id
         
     def approve(self):
         res = super(ApproveInvestmentBalReq,self).approve()
         request = self.env['request.open.balance.invest'].browse(self.env.context.get('active_id'))
         if request:
             if self.investment_id:
-                self.create_investment_line(request)
+                opt_id = self.create_investment_line(request)
+                if res:
+                    res.investment_operation_id = opt_id.id 
         return res

@@ -12,8 +12,11 @@
                 	<field name="folio" invisible="1"/>
        				<field name="kind_of_product" invisible="1"/>
        				<field name="key"/>
-       				<field name="start_date"/>
-       				<field name="due_date"/>	
+                    <field name="date_time"/>
+                    <field name="expiry_date"/>
+       				
+       				<field name="start_date" invisible="1"/>
+       				<field name="due_date" invisible="1"/>	
        				<field name="nominal_value"/>
        				<field name="yield_rate"/>
        				<field name="term"/>

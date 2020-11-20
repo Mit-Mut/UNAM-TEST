@@ -163,13 +163,13 @@ class SummaryofOperationInvestmentFundsBalances(models.AbstractModel):
         if not fund_list:
             fund_list = [0]
 
-        for contract in options.get('funds'):
+        for contract in options.get('contract'):
             if contract.get('selected',False)==True:
                 contract_list.append(contract.get('id',0))
         
         if not contract_list:
-            fund_ids = self._get_filter_contract()
-            contract_list = fund_ids.ids
+            contract_ids = self._get_filter_contract()
+            contract_list = contract_ids.ids
         
         if not contract_list:
             contract_list = [0]
@@ -183,6 +183,7 @@ class SummaryofOperationInvestmentFundsBalances(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+
 
         records = self.env['purchase.sale.security'].search([('fund_id','in',fund_list),('contract_id','in',contract_list),domain,('invesment_date','>=',start),('invesment_date','<=',end)])
         # records = self.env['purchase.sale.security'].search([('state','=','confirmed'),('invesment_date','>=',start),('invesment_date','<=',end)])

@@ -110,8 +110,9 @@ class ReportOfInvestmentFunds(models.AbstractModel):
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
-        records = self.env['purchase.sale.security'].search([('state','=','confirmed'),('invesment_date','>=',start),('invesment_date','<=',end)])
-        #records = self.env['purchase.sale.security'].search([('invesment_date','>=',start),('invesment_date','<=',end),('state','=','draft')])
+        sale_domain = domain + [('state','=','confirmed'),('invesment_date','>=',start),('invesment_date','<=',end)]
+        records = self.env['purchase.sale.security'].search(sale_domain)
+        # records = self.env['purchase.sale.security'].search([('invesment_date','>=',start),('invesment_date','<=',end),('state','=','draft')])
         total_amount = 0
         total_title = 0
         total_val = 0

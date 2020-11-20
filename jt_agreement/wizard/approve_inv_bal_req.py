@@ -95,16 +95,18 @@ class ApproveInvestmentBalReq(models.TransientModel):
     
     def approve(self):
         request = self.env['request.open.balance.invest'].browse(self.env.context.get('active_id'))
+        res = False
         if request:
             vals = self.get_open_balance_vals(request)
             if request.is_manually:
                 request.state = 'requested'
             else:
                 request.state = 'approved'
-            self.env['request.open.balance.finance'].create(vals)
+            res = self.env['request.open.balance.finance'].create(vals)
             if request.balance_req_id:
                 request.balance_req_id.state = 'approved'
-
+        return res
+    
 class Dependency(models.Model):
 
     _inherit = 'dependency'

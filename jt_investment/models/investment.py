@@ -177,7 +177,38 @@ class Investment(models.Model):
     
     def action_confirm_inv(self):
         self.state = 'confirmed'
+
+    def transfer_request(self):
+
+        today = datetime.today().date()
+        fund_ids = self.line_ids.mapped('investment_fund_id')
+        opt_lines = []
+        for fund in fund_ids:
+            base_ids = self.line_ids.filtered(lambda x:x.investment_fund_id.id==fund.id).mapped('base_collabaration_id')
+            for base in base_ids:
+                lines = self.line_ids.filtered(lambda x:x.investment_fund_id.id==fund.id and x.base_collabaration_id.id == base.id)
+                inc = sum(a.amount for a in lines.filtered(lambda x:x.type_of_operation in ('open_bal','increase')))
+                ret = sum(a.amount for a in lines.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure','increase_by_closing')))
+                balance = inc - ret
+                if balance > 0:
+                    opt_lines.append((0,0,{'investment_fund_id':fund.id,'base_collabaration_id':base.id,'agreement_number':base.convention_no,'amount':balance}))
                     
+        return {
+            'name': 'Approve Request',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': False,
+            'res_model': 'inv.transfer.request',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+                'default_date': today,
+                'default_bank_account_id' : self.journal_id and self.journal_id.id or False,
+                'default_line_ids' : opt_lines,
+                'show_for_agreement' : True,
+            }
+        }
+                            
     def action_confirm(self):
         today = datetime.today().date()
         return {
@@ -297,6 +328,12 @@ class InvestmentOperation(models.Model):
     source_ids = fields.Many2many('account.journal','rel_journal_inv_src_operation','journal_id','opt_id',compute="get_journal_ids")
     dest_ids = fields.Many2many('account.journal','rel_journal_inv_dest_operation','journal_id','opt_id',compute="get_journal_ids")
 
+    def unlink(self):
+        for rec in self:
+            if rec.line_state not in ['draft']:
+                raise UserError(_('You can delete only draft status Operation.'))
+        return super(InvestmentOperation, self).unlink()
+
     @api.depends('journal_id','type_of_operation','investment_id.journal_id')
     def get_journal_ids(self):
         for rec in self:
@@ -310,6 +347,46 @@ class InvestmentOperation(models.Model):
             else:
                 rec.source_ids = [(6,0,self.env['account.journal'].search([('type','=','bank')]).ids)]
 
+    @api.onchange('amount')
+    def onchange_check_balance_amount(self):
+        if self.type_of_operation and self.base_collabaration_id and self.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure','increase_by_closing'):
+            #opt_lines = self.env['investment.operation'].search([('investment_id','=',self.investment_id.id),('type_of_operation','in',('open_bal','increase')),('base_collabaration_id','=',self.base_collabaration_id.id),('line_state','=','done')])
+            opt_lines = self.investment_id.line_ids.filtered(lambda x:x.type_of_operation in ('open_bal','increase') and x.base_collabaration_id.id==self.base_collabaration_id.id)
+            inc = sum(a.amount for a in opt_lines.filtered(lambda x:x.type_of_operation in ('open_bal','increase')))
+            ret = sum(a.amount for a in opt_lines.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure','increase_by_closing')))
+            
+            balance = inc - ret
+            if balance <= self.amount:
+                self.amount = 0
+                return {'warning': {'title': _("Warning"), 'message': 'Available balance is less then amount!!!'}}
+
+    @api.onchange('type_of_operation')
+    def onchange_check_balance_type_of_operation(self):
+        if self.type_of_operation and self.base_collabaration_id and self.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure','increase_by_closing'):
+            #opt_lines = self.env['investment.operation'].search([('investment_id','=',self.investment_id.id),('type_of_operation','in',('open_bal','increase')),('base_collabaration_id','=',self.base_collabaration_id.id),('line_state','=','done')])
+            opt_lines = self.investment_id.line_ids.filtered(lambda x:x.type_of_operation in ('open_bal','increase') and x.base_collabaration_id.id==self.base_collabaration_id.id)
+            inc = sum(a.amount for a in opt_lines.filtered(lambda x:x.type_of_operation in ('open_bal','increase')))
+            ret = sum(a.amount for a in opt_lines.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure','increase_by_closing')))
+            
+            balance = inc - ret
+            if balance <= self.amount:
+                self.type_of_operation = False
+                return {'warning': {'title': _("Warning"), 'message': 'Available balance is less then amount!!!'}}
+
+    @api.onchange('base_collabaration_id')
+    def onchange_check_balance_base_collabaration_id(self):
+        if self.type_of_operation and self.base_collabaration_id and self.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure','increase_by_closing'):
+            #opt_lines = self.env['investment.operation'].search([('investment_id','=',self.investment_id.id),('type_of_operation','in',('open_bal','increase')),('base_collabaration_id','=',self.base_collabaration_id.id),('line_state','=','done')])
+            opt_lines = self.investment_id.line_ids.filtered(lambda x:x.type_of_operation in ('open_bal','increase') and x.base_collabaration_id.id==self.base_collabaration_id.id)
+            inc = sum(a.amount for a in opt_lines.filtered(lambda x:x.type_of_operation in ('open_bal','increase')))
+            ret = sum(a.amount for a in opt_lines.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure','increase_by_closing')))
+            
+            balance = inc - ret
+            if balance <= self.amount:
+                self.base_collabaration_id = False
+                return {'warning': {'title': _("Warning"), 'message': 'Available balance is less then amount!!!'}}
+                
+            
     @api.onchange('type_of_operation')
     def onchange_type_of_operation(self):
         self.bank_account_id = False

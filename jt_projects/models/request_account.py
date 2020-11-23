@@ -13,14 +13,16 @@ class RequestAccounts(models.Model):
     project_no = fields.Many2one('project.project', "Project Number")
     project_name = fields.Char("Project Name")
     user_id = fields.Many2one('res.users', "Project Manager")
-    project_type_identifier = fields.Char("Project Type Identifier")
-    project_stage_identifier = fields.Char("Of Stages")
+    project_type_identifier = fields.Selection([('conacyt', 'CONACYT'),
+                                                ('concurrent', 'Concurrent'),
+                                                ('other', 'Other projects with checkbook')], "Project Type Identifier")
+    project_stage_identifier = fields.Char("Number of stages")
     ministrations_amount = fields.Float("Amount of ministrations")
     authorized_amount = fields.Float("Authorized Amount")
     observations = fields.Text("Observations")
     bank_account_id = fields.Many2one(
-        "account.journal", "Bank Accounts", domain=[('type', '=', 'bank')])
-    bank_acc_number_id = fields.Many2one("res.partner.bank", "Bank")
+        "account.journal", "Bank", domain=[('type', '=', 'bank')])
+    bank_acc_number_id = fields.Char("Bank Account")
     no_contract = fields.Char('No. Contract')
     customer_number = fields.Char("Contact No.")
     supporting_documentation = fields.Binary("Supporting Documentation")
@@ -47,7 +49,7 @@ class RequestAccounts(models.Model):
             project = self.project_no
             self.project_name = project.name
             self.user_id = project.user_id if project.user_id else False
-            self.project_type_identifier = project.project_type_identifier
+            self.project_type_identifier = project.project_type
             self.project_stage_identifier = project.stage_identifier
 
     def approve_account(self):

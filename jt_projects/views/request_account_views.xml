@@ -45,7 +45,7 @@
                                 <field name="bank_acc_number_id" readonly="1"/>
                                 <field name="customer_number" readonly="1"/>
                                 <field name="supporting_documentation" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="reason_rejection" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="reason_rejection" attrs="{'readonly': [('status', '!=', 'eraser')],'invisible': [('status', '!=', 'rejected')]}"/>
                                 <field name="rejection_observations" readonly="1" attrs="{'invisible': [('status', '!=', 'rejected')]}"/>
                             </group>
                         </group>
@@ -102,7 +102,7 @@
                                 <field name="no_contract" readonly="1"/>
                                 <field name="customer_number" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="supporting_documentation"  attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="reason_rejection" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="reason_rejection" attrs="{'invisible': [('status', '!=', 'rejected')]}"/>
                                 <field name="rejection_observations" readonly="1" attrs="{'invisible': [('status', '!=', 'rejected')]}"/>
                             </group>
                         </group>
@@ -123,7 +123,7 @@
         </record>
 
         <menuitem id="main_menu_open_request_account" name="Bank Account Management"
-                  parent="jt_payroll_payment.menu_payment_finance_setting" sequence="6"/>
+                  parent="jt_payroll_payment.menu_payment_finance" sequence="6"/>
 
         <menuitem id="menu_open_request_account" name="Opening Requests"
                   action="open_request_accounts_action"

@@ -35,6 +35,7 @@
                 		<button name="action_confirm" states="confirmed" string="Investment Settlement" class="oe_highlight" type="object" />
                 		<button name="action_confirm" states="confirmed" string="Returns" class="oe_highlight" type="object" />
                 		<button name="action_confirm" states="confirmed" string="Commissions" class="oe_highlight" type="object" />
+                		<button name="transfer_request" states="confirmed" string="Transfer" class="oe_highlight" type="object" />
                 		
                 		<!-- <button name="action_reject" states="draft" string="Reject" class="oe_highlight" type="object" attrs="{'invisible': [('state', '=', 'draft')]}"/> -->
                 		<field name="state" widget="statusbar"/>
@@ -60,6 +61,11 @@
 			               		<field name="actual_amount" readonly="1"/>
 			               		<field name="is_fixed_rate"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			               		<field name="is_variable_rate" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        		<field name="investment_rate_id" domain="[('product_type','=','PAGARE')]" context="{'default_product_type':'PAGARE',
+                                    'search_view_ref':'jt_investment.investment_period_rate_PAGARE_search',
+                                    'tree_view_ref': 'jt_investment.investment_period_rate_PAGARE_tree',
+                                    'form_view_ref': 'jt_investment.investment_period_rate_PAGARE_form'
+                                    }"  attrs="{'readonly': [('state', '!=', 'draft')],'invisible':[('is_variable_rate','=',False)],'required':[('is_variable_rate','=',True)]}"/>
 			               		<field name="interest_rate" required="1" digits="[12,6]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			               		<field name="extra_percentage" required="1" digits="[12,6]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 
@@ -99,7 +105,7 @@
                     	<page string="Operation" name="operation">
                     		<field name="line_ids" attrs="{'readonly': [('state', '=', 'canceled')]}" context="{'default_record_type':'manually','default_journal_id':journal_id}">
                     			<tree>
-                    				<field name="investment_fund_id"/>
+                    				<field name="investment_fund_id" context="{'show_for_agreement':True}" domain="[('state','=','confirmed')]"/>
                     				<field name="type_of_operation"/>
                     				<field name="agreement_number"/>
                     				<field name="base_collabaration_id"/>
@@ -129,7 +135,7 @@
                     						<field name="dest_ids" invisible="1"/>
 			                                <field name="invoice" readonly="1"/>
 			                                <field name="operation_number" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
-			                                <field name="investment_fund_id" required="1" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
+			                                <field name="investment_fund_id" context="{'show_for_agreement':True}" domain="[('state','=','confirmed')]" required="1" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
 			                                <field name="type_of_operation" required="1" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
 			                                <field name="agreement_number" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
 			                                <field name="base_collabaration_id" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>

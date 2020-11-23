@@ -55,6 +55,7 @@ class ApproveInvestmentBalReq(models.TransientModel):
                                           ('withdrawal_cancellation', 'Withdrawal Due to Cancellation')],
                                             string="Type of Operation")
     origin_resource_id = fields.Many2one('sub.origin.resource', "Origin of the resource")
+    is_balance = fields.Boolean('Is Balance',default=False)
     
     @api.onchange('base_collabaration_id')
     def onchange_base_collabaration_id(self):

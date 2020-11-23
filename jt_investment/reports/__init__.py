@@ -9,3 +9,6 @@ from . import report_productive_accounts
 from . import increases_and_withdrawals_report
 from . import indicators_report
 from . import investment_committee
+from . import account_statement
+from . import titles_account_statement
+from . import money_market_account_statement

@@ -7,7 +7,8 @@
             <field name="inherit_id" ref="jt_agreement.approve_open_balance_req_operation"/>
             <field name="arch" type="xml">
 	            	<field name="invoice" position="before">
-	            		<field name="investment_id" required="1"/>
+	            		<field name="investment_avl_ids" invisible="1"/>
+	            		<field name="investment_id" required="1" domain="[('id','in',investment_avl_ids)]"/>
 	            		<field name="journal_id" invisible="1"/>
 	            		<field name="source_ids" invisible="1"/>
 	            		<field name="dest_ids" invisible="1"/>
@@ -18,6 +19,9 @@
 	            	<field name="desti_bank_account_id" position="attributes">
 	            		<attribute name="domain">[('id', 'in', dest_ids)]</attribute>
 	            	</field>
+	            	<button name="approve" position="after">
+	            		<button string="Validate Balance" attrs="{'invisible':[('is_balance','=',True)]}" name="validate_balance" type="object" class="oe_highlight"/>
+	            	</button>
 			</field>
 		</record>
 

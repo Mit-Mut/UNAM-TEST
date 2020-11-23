@@ -7,6 +7,7 @@
             <field name="model">investment.funds</field>
             <field name="arch" type="xml">
                 <tree>
+                    <field name="first_number"/>
                     <field name="new_journal_id" invisible="1"/>
                 	<field name="contract_id"/>
                 	<field name="fund_id"/>
@@ -17,8 +18,6 @@
                 	<field name="dependency_holder"/>
                 	<field name="responsible_user_id"/>
                 	<field name="type_of_resource"/>
-                	<field name="journal_id"/>
-                	<field name="bank_account_id"/>
                 	<field name="request_office"/>
                 	<field name="state"/>
 				</tree>
@@ -50,8 +49,8 @@
                                 <field name="origin_resource_id" attrs="{'readonly': [('state', '!=', 'draft')]}"
                                        domain="[('is_it_enabled_for_agreement', '=',  True)]" required="1"/>
                                
-                                <field name="journal_id" required="1" domain="[('type','=','bank')]"/>
-                                <field name="bank_account_id" readonly="1"/>
+                                <!-- <field name="journal_id" required="1" domain="[('type','=','bank')]"/>
+                                <field name="bank_account_id" readonly="1"/> -->
                                 <field name="request_office" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
                             </group>
                             <group>

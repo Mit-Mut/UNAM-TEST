@@ -77,6 +77,11 @@ class PurchaseSaleSecurity(models.Model):
     currency_id = fields.Many2one(
         'res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
 
+#     @api.constrains('account_balance')
+#     def check_min_balance(self):
+#         if self.account_balance == 0:
+#             raise UserError(_('Please add Account Balance'))
+
     @api.constrains('term')
     def check_term(self):
         if self.term == 0:
@@ -183,8 +188,8 @@ class PurchaseSaleSecurity(models.Model):
         if self.number_of_titles==0:
             raise ValidationError(_("Please Add Quantity of Securities to approve"))
 
-        if self.account_balance==0:
-            raise ValidationError(_("Please Add Account Balance to approve"))
+#         if self.account_balance==0:
+#             raise ValidationError(_("Please Add Account Balance to approve"))
                 
         return {
             'name': 'Approve Request',

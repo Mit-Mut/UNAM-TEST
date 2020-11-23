@@ -32,6 +32,7 @@
     'depends': ['jt_finance', 'jt_payroll_payment', 'jt_agreement', 'project'],
     'data': [
         'data/ir_cron.xml',
+        'security/project_security.xml',
         'views/rejection_checks_views.xml',
         'views/project_registry_views.xml',
         'views/request_trasfer_view.xml',
@@ -45,6 +46,8 @@
         'wizard/request_reject_view.xml',
         'views/request_account_views.xml',
         'views/papiit_project.xml',
+        'views/menu_view.xml',
+        'views/base_menu_view.xml',
         'reports/travel_request.xml',
         'reports/menu_view.xml',
         'reports/supplier_request.xml',
@@ -54,6 +57,7 @@
         'reports/school_internship_request.xml',
         'reports/exchange_request.xml',
         'security/ir.model.access.csv',
+
     ],
     'application': False,
     'installable': True,

@@ -27,9 +27,9 @@ class RequestConfirm(models.TransientModel):
     _name = 'request.confirm'
 
     bank_account_id = fields.Many2one(
-        'account.journal', string='Bank Account', domain=[('type', '=', 'bank')])
+        'account.journal', string='Bank', domain=[('type', '=', 'bank')])
     bank_acc_number_id = fields.Many2one(
-        related='bank_account_id.bank_account_id', string="Bank")
+        related='bank_account_id.bank_account_id', string="Bank Account")
     no_contract = fields.Char('No. contract')
 
     def apply(self):
@@ -39,5 +39,6 @@ class RequestConfirm(models.TransientModel):
             request_account_id = self.env['request.accounts'].browse(active_id)
             request_account_id.status = 'confirmed'
             request_account_id.bank_account_id = self.bank_account_id
-            request_account_id.bank_acc_number_id = self.bank_acc_number_id
+            request_account_id.bank_acc_number_id = self.bank_acc_number_id.acc_number
             request_account_id.no_contract = self.no_contract
+            request_account_id.customer_number = self.bank_account_id.customer_number

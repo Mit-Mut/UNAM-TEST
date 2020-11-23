@@ -95,10 +95,19 @@
                         </group>
                         <notebook>
                             <page name="ministrations" string="Ministrations">
-                                <group>
+                                <!-- <group>
                                     <field name="ministrations"/>
                                     <field name="ministering_amount"/>
-                                </group>
+                                </group> -->
+                                    <div class="oe_title">
+                                        <label for="ministrations" class="oe_edit_only" string="Ministrations"/>
+                                        <field name="ministrations"/>
+                                    
+                                    </div>
+                                    <div class="oe_title">
+                                        <label for="ministering_amount" class="oe_edit_only" string="Ministrations Amount"/>
+                                        <field name="ministering_amount"/>
+                                    </div>
                             </page>
                         </notebook>
                     </sheet>
@@ -157,8 +166,5 @@
 
         <menuitem id="menu_project_registry" name="Projects" action="project_registry_action_conacyt"
                   parent="menu_conacyt" sequence="1"/>
-
-
-
     </data>
 </odoo>

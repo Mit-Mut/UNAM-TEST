@@ -11,7 +11,7 @@
                             <group>
                                 <field name="invoice"/>
                                 <field name="operation_number" readonly="1"/>
-                                <field name="investment_fund_id" required="1"/>
+                                <field name="investment_fund_id" context="{'show_for_agreement':True}" required="1" domain="[('state','=','confirmed')]"/>
                                 <field name="type_of_operation" readonly="1"/>
                                 <field name="agreement_number" readonly="1"/>
                                 <field name="base_collabaration_id" />
@@ -37,14 +37,14 @@
                                 <field name="concept" invisible="1"/>
                                 <field name="date" invisible="1"/>                                
                                 <field name="fund_id" invisible="1"/>
-                                
+                        		<field name="is_balance" invisible="1"/>         
                                 
                                 
                                 
                             </group>
                         </group>
                 	<footer>
-                        <button string="Approve" name="approve" type="object" class="oe_highlight"/>
+                        <button string="Approve" attrs="{'invisible':[('is_balance','=',False)]}" name="approve" type="object" class="oe_highlight"/>
                         <button string="Cancel" class="btn btn-default" special="cancel"/>
                     </footer>
                 </form>

@@ -31,7 +31,57 @@ class ApproveInvestmentBalReq(models.TransientModel):
     journal_id = fields.Many2one(related='investment_id.journal_id')
     source_ids = fields.Many2many('account.journal','rel_journal_inv_src_approve','journal_id','opt_id',compute="get_journal_ids")
     dest_ids = fields.Many2many('account.journal','rel_journal_inv_dest_approve','journal_id','opt_id',compute="get_journal_ids")
+    investment_avl_ids = fields.Many2many('investment.investment','rel_investment_inv_approve','inv_id','opt_id',compute="get_inv_ids")
 
+    @api.onchange('investment_id','type_of_operation')
+    def onchange_check_balance(self):
+        if self.type_of_operation and self.type_of_operation in ('open_bal','increase'):
+            self.is_balance = True
+        else:
+            self.is_balance = False
+            
+    def validate_balance(self):
+        if self.investment_id and self.base_collabaration_id:
+            opt_lines = self.env['investment.operation'].search([('investment_id','=',self.investment_id.id),('type_of_operation','in',('open_bal','increase')),('base_collabaration_id','=',self.base_collabaration_id.id),('line_state','=','done')])
+            inc = sum(a.amount for a in opt_lines.filtered(lambda x:x.type_of_operation in ('open_bal','increase')))
+            ret = sum(a.amount for a in opt_lines.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure','increase_by_closing')))
+            balance = inc - ret
+            if balance >= self.amount:    
+                self.is_balance = True
+            else:
+                self.is_balance = False
+        else:
+            self.is_balance = False
+        
+        return {
+            'name': 'Approve Request',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': False,
+            'res_model': 'approve.investment.bal.req',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'res_id':self.id,
+            'context':self.env.context,
+        }
+            
+    @api.onchange('base_collabaration_id')
+    def onchange_base_collabaration_investment(self):
+        self.investment_id = False
+        
+    @api.depends('base_collabaration_id','type_of_operation')
+    def get_inv_ids(self):
+        for rec in self:
+            if rec.type_of_operation and rec.base_collabaration_id and rec.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation'):
+                inv_ids = []
+                opt_lines = self.env['investment.operation'].search([('type_of_operation','in',('open_bal','increase')),('base_collabaration_id','=',rec.base_collabaration_id.id),('line_state','=','done')])
+                if opt_lines:
+                    exist_inv_ids = opt_lines.mapped('investment_id')
+                    inv_ids = exist_inv_ids.ids
+                rec.investment_avl_ids = [(6,0,inv_ids)]
+            else:
+                rec.investment_avl_ids = [(6,0,self.env['investment.investment'].search([('state','=','confirmed')]).ids)]
+    
     @api.depends('journal_id','type_of_operation','investment_id.journal_id','investment_id')
     def get_journal_ids(self):
         for rec in self:

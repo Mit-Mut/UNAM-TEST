@@ -645,6 +645,7 @@
                         <group>
                             <field name="reason_rejection" readonly="1"/>
                         </group>
+                        <notebook></notebook>
 <!--                        <notebook>-->
 <!--                            <page string="Operation" name="operation">-->
 <!--                                <group>-->

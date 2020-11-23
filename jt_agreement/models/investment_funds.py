@@ -38,6 +38,18 @@ class InvestmentFunds(models.Model):
     fund_key = fields.Char(related='fund_id.fund_key',string="Fund Code")
     fund_request_date = fields.Date('Request')
 
+    def name_get(self):
+        if 'show_for_agreement' in self._context:
+            res = []
+            for fund in self:
+                fund_name = ''
+                if fund.fund_id:
+                    fund_name = fund.fund_id.name 
+                res.append((fund.id, fund_name))
+        else:
+            res = super(InvestmentFunds, self).name_get()
+        return res
+
     @api.model
     def create(self, vals):
         res = super(InvestmentFunds, self).create(vals)

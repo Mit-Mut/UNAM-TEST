@@ -31,14 +31,14 @@ from odoo.tools import config, date_utils, get_lang
 import lxml.html
 
 
-class ReportOfInvestmentFunds(models.AbstractModel):
-    _name = "jt_investment.report.of.investment.funds"
+class InvestmentAccountStatement(models.AbstractModel):
+    _name = "jt_investment.account.statement"
     _inherit = "account.coa.report"
-    _description = "Report Of Investment Funds"
+    _description = "Account Statement"
 
     filter_date = {'mode': 'range', 'filter': 'this_month'}
-    filter_comparison = {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
-    filter_all_entries = True
+    filter_comparison = None
+    filter_all_entries = None
     filter_journals = None
     filter_analytic = None
     filter_unfold_all = None
@@ -47,41 +47,17 @@ class ReportOfInvestmentFunds(models.AbstractModel):
     filter_unposted_in_period = None
     MAX_LINES = None
 
-    filter_funds = True
-
-    @api.model
-    def _get_filter_funds(self):
-        return self.env['agreement.fund'].search([])
-
-    @api.model
-    def _init_filter_funds(self, options, previous_options=None):
-        if self.filter_funds is None:
-            return
-        if previous_options and previous_options.get('funds'):
-            journal_map = dict((opt['id'], opt['selected']) for opt in previous_options['funds'] if opt['id'] != 'divider' and 'selected' in opt)
-        else:
-            journal_map = {}
-        options['funds'] = []
-
-        default_group_ids = []
-
-        for j in self._get_filter_funds():
-            options['funds'].append({
-                'id': j.id,
-                'name': j.name,
-                'code': j.name,
-                'selected': journal_map.get(j.id, j.id in default_group_ids),
-            })
-
     def _get_reports_buttons(self):
         return [
-            {'name': _('Print Preview'), 'sequence': 1, 'action': 'print_pdf', 'file_export_type': _('PDF')},
-            {'name': _('Export (XLSX)'), 'sequence': 2, 'action': 'print_xlsx', 'file_export_type': _('XLSX')},
+            {'name': _('Print Preview'), 'sequence': 1,
+             'action': 'print_pdf', 'file_export_type': _('PDF')},
+            {'name': _('Export (XLSX)'), 'sequence': 2,
+             'action': 'print_xlsx', 'file_export_type': _('XLSX')},
         ]
 
     def _get_templates(self):
         templates = super(
-            ReportOfInvestmentFunds, self)._get_templates()
+            InvestmentAccountStatement, self)._get_templates()
         templates[
             'main_table_header_template'] = 'account_reports.main_table_header'
         templates['main_template'] = 'account_reports.main_template'
@@ -89,30 +65,27 @@ class ReportOfInvestmentFunds(models.AbstractModel):
 
     def _get_columns_name(self, options):
         return [
-            {'name': _('Recurso')},
             {'name': _('Fecha')},
-            {'name': _('Precio')},
-            {'name': _('Nominal')},
-            {'name': _('Porcentual')},
-            {'name': _('Inversión Total')},
-            {'name': _('Remanente')},
-            {'name': _('Total de Titulos')},
-            {'name': _('Valuación')},
-            {'name': _('Rentabilidad')},
+            {'name': _('Saldo Inicial')},
+            {'name': _('Referencia')},
+            {'name': _('Incrementos')},
+            {'name': _('Retiros')},
+             {'name': _('Saldo Final')},
         ]
 
-    def _format(self, value,figure_type,digit):
+    def _format(self, value, figure_type):
         if self.env.context.get('no_format'):
             return value
         value['no_format_name'] = value['name']
-        
+
         if figure_type == 'float':
             currency_id = self.env.company.currency_id
             if currency_id.is_zero(value['name']):
                 # don't print -0.0 in reports
                 value['name'] = abs(value['name'])
                 value['class'] = 'number text-muted'
-            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id,digits=digit)
+            value['name'] = formatLang(
+                self.env, value['name'], currency_obj=currency_id)
             value['class'] = 'number'
             return value
         if figure_type == 'percents':
@@ -124,101 +97,24 @@ class ReportOfInvestmentFunds(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         lines = []
-        fund_list = []
-
-        for fund in options.get('funds'):
-            if fund.get('selected',False)==True:
-                fund_list.append(fund.get('id',0))
-        
-        if not fund_list:
-            fund_ids = self._get_filter_funds()
-            fund_list = fund_ids.ids
-        
-        if not fund_list:
-            fund_list = [0]
-
-
-        if options.get('all_entries') is False:
-            domain=[('state','=','confirmed')]
-        else:
-            domain=[('state','not in',('rejected','canceled'))]
-        
-        
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
-        sale_domain = domain + [('fund_id','in',fund_list),('state','=','confirmed'),('invesment_date','>=',start),('invesment_date','<=',end)]
-        records = self.env['purchase.sale.security'].search(sale_domain)
-        # records = self.env['purchase.sale.security'].search([('invesment_date','>=',start),('invesment_date','<=',end),('state','=','draft')])
-        total_amount = 0
-        total_title = 0
-        total_val = 0
-        for rec in records:
-            valuation = rec.title * rec.movement_price
-            total_val += valuation
-            nominal = rec.price - rec.price_previous_day
-            percentage = 0.0
-            if rec.price_previous_day:
-                percentage = nominal*100/rec.price_previous_day
-
-            if rec.movement == 'sell':
-                total_title -= rec.title
-                total_amount -= rec.amount
-            elif rec.movement == 'buy':
-                total_title += rec.title
-                total_amount += rec.amount
-            profit =  valuation - rec.amount + total_title
-            
-            resouce_name = rec.fund_id and rec.fund_id.name or ''
-                
-            lines.append({
-                'id': 'hierarchy' + str(rec.id),
-                'name': resouce_name,
-                'columns': [{'name': rec.invesment_date}, 
-                            self._format({'name': rec.movement_price},figure_type='float',digit=6),
-                            self._format({'name': nominal},figure_type='float',digit=6),
-                            self._format({'name': percentage},figure_type='float',digit=6),
-                            self._format({'name': rec.amount},figure_type='float',digit=2),
-                            {'class':'number','name':format(total_title, ',d')},
-                            {'class':'number','name':format(rec.title, ',d')},
-                            self._format({'name': valuation},figure_type='float',digit=2),
-                            self._format({'name': profit},figure_type='float',digit=2),
-                            ],
-                'level': 3,
-                'unfoldable': False,
-                'unfolded': True,
-            })
-            
-#         lines.append({
-#             'id': 'hierarchy_total',
-#             'name': 'Total General',
-#             'columns': [{'name': ''}, 
-#                         {'name': ''}, 
-#                         self._format({'name': total_amount},figure_type='float',digit=2),
-#                         {'class':'number','name':format(total_title, ',d')},
-#                         {'class':'number','name':format(total_title, ',d')},
-#                          {'name': ''},
-#                         self._format({'name': total_val},figure_type='float',digit=2),
-#                         
-#                         ],
-#             'level': 1,
-#             'unfoldable': False,
-#             'unfolded': True,
-#         })
-                    
         return lines
+        
 
     def _get_report_name(self):
-        return _("Report on the quotation of Investment Funds")
-    
+        return _("Account Statements")
+
     @api.model
     def _get_super_columns(self, options):
         date_cols = options.get('date') and [options['date']] or []
         date_cols += (options.get('comparison') or {}).get('periods', [])
         columns = reversed(date_cols)
         return {'columns': columns, 'x_offset': 1, 'merge': 4}
+
 
 
     def get_xlsx(self, options, response=None):
@@ -262,13 +158,13 @@ class ReportOfInvestmentFunds(models.AbstractModel):
             sheet.insert_image(0,0, filename, {'image_data': image_data,'x_offset':8,'y_offset':3,'x_scale':0.6,'y_scale':0.6})
         
         col += 1
-        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICOO\nUNIVERSITY BOARD\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nINFORME DE FONDOS DE INVERSIÓN'''
-        sheet.merge_range(y_offset, col, 5, col+7, header_title,super_col_style)
+        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICOO\nUNIVERSITY BOARD\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nCOMITÉ DE INVERSIONES'''
+        sheet.merge_range(y_offset, col, 5, col+6, header_title,super_col_style)
         y_offset += 6
         col=1
         currect_time_msg = "Fecha y hora de impresión: "
         currect_time_msg += datetime.today().strftime('%d/%m/%Y %H:%M')
-        sheet.merge_range(y_offset, col, y_offset, col+7, currect_time_msg,currect_date_style)
+        sheet.merge_range(y_offset, col, y_offset, col+6, currect_time_msg,currect_date_style)
         y_offset += 1
         for row in self.get_header(options):
             x = 0
@@ -373,7 +269,7 @@ class ReportOfInvestmentFunds(models.AbstractModel):
                     'o': self.env.user,
                     'res_company': self.env.company,
                 })
-            header = self.env['ir.actions.report'].render_template("jt_investment.external_layout_report_of_investment_funds", values=rcontext)
+            header = self.env['ir.actions.report'].render_template("jt_investment.external_layout_investment_committee", values=rcontext)
             header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
             spec_paperformat_args = {}
             # Default header and footer in case the user customized web.external_layout and removed the header/footer
@@ -474,3 +370,4 @@ class ReportOfInvestmentFunds(models.AbstractModel):
             # append footnote as well
             html = html.replace(b'<div class="js_account_report_footnotes"></div>', self.get_html_footnotes(footnotes_to_render))
         return html
+

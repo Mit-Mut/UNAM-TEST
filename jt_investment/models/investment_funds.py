@@ -34,11 +34,7 @@ class InvestmentFunds(models.Model):
     bases_collaboration_id = fields.Many2one('bases.collaboration','Name of Agreement')
     is_fund = fields.Boolean(default=False,string="Fund")
     state = fields.Selection([('draft', 'Draft'),
-                               ('requested', 'Requested'),
-                               ('rejected', 'Rejected'),
-                               ('approved', 'Approved'),
                                ('confirmed', 'Confirmed'),
-                              ('done', 'Done'),
                                ('canceled', 'Canceled')], string="Status", default="draft")
 
 
@@ -106,45 +102,47 @@ class InvestmentFunds(models.Model):
         return super(InvestmentFunds, self).unlink()
 
     def approve_investment(self):
-        today = datetime.today().date()
-        user = self.env.user
-        employee = self.env['hr.employee'].search(
-            [('user_id', '=', user.id)], limit=1)
-        fund_type = False
-        if self.contract_id and self.contract_id.fund_id:
-            fund_type = self.contract_id.fund_id.id
+        self.state = 'confirmed'
         
-        amount = 0
-        
-        amount += sum(x.amount for x in self.purchase_sale_ids)
-        amount += sum(x.amount_invest for x in self.cetes_ids)
-        amount += sum(x.amount_invest for x in self.udibonos_ids)
-        amount += sum(x.amount_invest for x in self.bonds_ids)
-        amount += sum(x.amount_invest for x in self.will_pay_ids)
-        amount += sum(x.amount_to_invest for x in self.productive_ids)
-        
-        return {
-            'name': 'Approve Request',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'view_id': False,
-            'res_model': 'approve.money.market.bal.req',
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'context': {
-                'default_amount': amount,
-                'default_date': today,
-                'default_employee_id': employee.id if employee else False,
-                'default_investment_fund_id': self.id,
-                'default_fund_type': fund_type,
-                'default_bank_account_id' : self.journal_id and self.journal_id.id or False,
-                'show_for_supplier_payment': 1,
-                'default_fund_id' : self.fund_id and self.fund_id.id or False,
-            }
-        }
+#         today = datetime.today().date()
+#         user = self.env.user
+#         employee = self.env['hr.employee'].search(
+#             [('user_id', '=', user.id)], limit=1)
+#         fund_type = False
+#         if self.contract_id and self.contract_id.fund_id:
+#             fund_type = self.contract_id.fund_id.id
+#         
+#         amount = 0
+#         
+#         amount += sum(x.amount for x in self.purchase_sale_ids)
+#         amount += sum(x.amount_invest for x in self.cetes_ids)
+#         amount += sum(x.amount_invest for x in self.udibonos_ids)
+#         amount += sum(x.amount_invest for x in self.bonds_ids)
+#         amount += sum(x.amount_invest for x in self.will_pay_ids)
+#         amount += sum(x.amount_to_invest for x in self.productive_ids)
+#         
+#         return {
+#             'name': 'Approve Request',
+#             'view_type': 'form',
+#             'view_mode': 'form',
+#             'view_id': False,
+#             'res_model': 'approve.money.market.bal.req',
+#             'type': 'ir.actions.act_window',
+#             'target': 'new',
+#             'context': {
+#                 'default_amount': amount,
+#                 'default_date': today,
+#                 'default_employee_id': employee.id if employee else False,
+#                 'default_investment_fund_id': self.id,
+#                 'default_fund_type': fund_type,
+#                 'default_bank_account_id' : self.journal_id and self.journal_id.id or False,
+#                 'show_for_supplier_payment': 1,
+#                 'default_fund_id' : self.fund_id and self.fund_id.id or False,
+#             }
+#         }
 
     def action_requested(self):
-        self.state = 'requested'
+#        self.state = 'requested'
         if self.env.context and not self.env.context.get('call_from_product'):
             for rec in self.purchase_sale_ids.filtered(lambda x:x.state != 'requested'):
                 rec.dependency_id = self.dependency_id and self.dependency_id.id or False
@@ -172,7 +170,7 @@ class InvestmentFunds(models.Model):
                 rec.action_requested()
 
     def action_approved(self):
-        self.state = 'approved'
+        #self.state = 'approved'
         if self.env.context and not self.env.context.get('call_from_product'):        
             for rec in self.purchase_sale_ids.filtered(lambda x:x.state != 'approved'):
                 rec.action_approved()

@@ -14,4 +14,5 @@ access_distribution_of_income,distribution.of.income.access,model_distribution_o
 access_distribution_of_income_line,distribution.of.income.line.access,model_distribution_of_income_line,base.group_user,1,1,1,1
 access_distribution_of_income_calculation,distribution.of.income.calculation.access,model_distribution_of_income_calculation,base.group_user,1,1,1,1
 access_investment_operation,investment.operation.access,model_investment_operation,base.group_user,1,1,1,1
+access_request_open_balance_finance_operation,request.open.balance.finance.operation.access,model_request_open_balance_finance_operation,base.group_user,1,1,1,1
 

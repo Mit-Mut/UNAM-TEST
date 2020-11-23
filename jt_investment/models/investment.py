@@ -186,12 +186,12 @@ class Investment(models.Model):
         for fund in fund_ids:
             base_ids = self.line_ids.filtered(lambda x:x.investment_fund_id.id==fund.id).mapped('base_collabaration_id')
             for base in base_ids:
-                lines = self.line_ids.filtered(lambda x:x.investment_fund_id.id==fund.id and x.base_collabaration_id.id == base.id)
+                lines = self.line_ids.filtered(lambda x:x.investment_fund_id.id==fund.id and x.base_collabaration_id.id == base.id and not x.is_request_generated and x.line_state == 'done')
                 inc = sum(a.amount for a in lines.filtered(lambda x:x.type_of_operation in ('open_bal','increase')))
                 ret = sum(a.amount for a in lines.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure','increase_by_closing')))
                 balance = inc - ret
                 if balance > 0:
-                    opt_lines.append((0,0,{'investment_fund_id':fund.id,'base_collabaration_id':base.id,'agreement_number':base.convention_no,'amount':balance}))
+                    opt_lines.append((0,0,{'opt_line_ids':[(6,0,lines.ids)],'investment_fund_id':fund.id,'base_collabaration_id':base.id,'agreement_number':base.convention_no,'amount':balance}))
                     
         return {
             'name': 'Approve Request',
@@ -284,7 +284,7 @@ class InvestmentOperation(models.Model):
     _name = 'investment.operation'
     _description = "Investment Operation"
     
-    investment_id = fields.Many2one('investment.investment','First Number:')
+    investment_id = fields.Many2one('investment.investment',string='First Number:',ondelete='cascade',)
     invoice = fields.Char("Folio")
     operation_number = fields.Char("Operation Number")
     agreement_number = fields.Char("Agreement Number")
@@ -327,7 +327,8 @@ class InvestmentOperation(models.Model):
     journal_id = fields.Many2one(related='investment_id.journal_id')
     source_ids = fields.Many2many('account.journal','rel_journal_inv_src_operation','journal_id','opt_id',compute="get_journal_ids")
     dest_ids = fields.Many2many('account.journal','rel_journal_inv_dest_operation','journal_id','opt_id',compute="get_journal_ids")
-
+    is_request_generated = fields.Boolean(default=False,copy=False)
+    
     def unlink(self):
         for rec in self:
             if rec.line_state not in ['draft']:

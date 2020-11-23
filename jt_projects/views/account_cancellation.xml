@@ -21,6 +21,7 @@
                                 <field name="movement_type" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="project_no" domain="[('project_type', '=', 'conacyt')]"
                                 attrs="{'readonly': [('status', '!=', 'eraser')]}" context="{'from_conacyt':1}"/>
+                                <field name="program_code"  attrs="{'readonly': [('status', '!=', 'eraser')]}" context="{'from_conacyt':1}"/>
                                 <field name="project_name" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="user_id" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="project_type_identifier" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
@@ -34,8 +35,8 @@
                                 <field name="bank_acc_number_id" readonly="1"/>
                                 <field name="customer_number" readonly="1"/>
                                 <field name="supporting_documentation" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="reason_rejection" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="rejection_observations" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="reason_rejection" attrs="{'readonly': [('status', '!=', 'eraser')],'invisible':[('status','!=','rejected')]}"/>
+                                <field name="rejection_observations" attrs="{'readonly': [('status', '!=', 'eraser')],'invisible':[('status','!=','rejected')]}"/>
                             </group>
                         </group>
                     </sheet>
@@ -50,6 +51,9 @@
                 <tree>
                     <field name="invoice"/>
                     <field name="project_no"/>
+                    <field name="project_name"/>
+                    <field name="project_type_identifier"/>
+                    <field name="status"/>
                 </tree>
             </field>
          </record>
@@ -88,26 +92,26 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="invoice"/>
+                                <field name="invoice" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="move_type" readonly="1"/>
-                                <field name="movement_type" />
+                                <field name="movement_type" attrs="{'readonly': [('status', '!=', 'eraser')]}" />
                                 <field name="project_no" domain="[('project_type', '=', 'conacyt')]"
-                                context="{'from_conacyt':1}"/>
-                                <field name="project_name" />
-                                <field name="user_id" />
-                                <field name="project_type_identifier" />
-                                <field name="project_stage_identifier"/>
-                                <field name="ministrations_amount" />
-                                <field name="authorized_amount" />
+                                context="{'from_conacyt':1}" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="project_name" attrs="{'readonly': [('status', '!=', 'eraser')]}" />
+                                <field name="user_id" attrs="{'readonly': [('status', '!=', 'eraser')]}" />
+                                <field name="project_type_identifier" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="project_stage_identifier" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="ministrations_amount" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="authorized_amount" attrs="{'readonly': [('status', '!=', 'eraser')]}" />
                             </group>
                             <group>
-                                <field name="observations" />
-                                <field name="bank_account_id"/>
-                                <field name="bank_acc_number_id"/>
-                                <field name="customer_number"/>
-                                <field name="supporting_documentation" />
-                                <field name="reason_rejection"/>
-                                <field name="rejection_observations"/>
+                                <field name="observations" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="bank_account_id" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="bank_acc_number_id" readonly="1"/>
+                                <field name="customer_number" readonly="1"/>
+                                <field name="supporting_documentation" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="reason_rejection" attrs="{'readonly': [('status', '!=', 'eraser')],'invisible':[('status','!=','rejected')]}"/>
+                                <field name="rejection_observations" attrs="{'readonly': [('status', '!=', 'eraser')],'invisible':[('status','!=','rejected')]}"/>
                             </group>
                         </group>
                     </sheet>

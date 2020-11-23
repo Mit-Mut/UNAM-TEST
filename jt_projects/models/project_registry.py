@@ -22,8 +22,10 @@ class ProjectRegistry(models.Model):
                                ('closed', 'Closed')], "Status", default='open')
     check_counts = fields.Integer(compute='compute_count')
     bank_account_id = fields.Many2one("account.journal", "Bank Accounts")
-    bank_acc_number_id = fields.Many2one("res.partner.bank", "Bank Key")
-    branch_office = fields.Char("Square")
+    bank_acc_number_id = fields.Many2one(
+        "res.partner.bank", related='bank_account_id.bank_account_id', string="Bank Key")
+    branch_office = fields.Char(
+        related='bank_acc_number_id.branch_number', string="Square")
     ministrations = fields.Integer("Number of ministrations")
     ministering_amount = fields.Monetary("Ministering amount")
     check_project_due = fields.Boolean(
@@ -58,7 +60,22 @@ class ProjectRegistry(models.Model):
         related='co_responsible_id.rfc', string='Co-responsible RFC')
     project_status = fields.Selection([('accepted', 'Accepted'),
                                        ('rejected', 'Rejected')], "UPA PAPIIT Status", copy=False)
+    
+    responsible_name = fields.Char('Responsible name')
+    stage_identifier_id = fields.Many2one('stage',string="Stage")
+    project_type_identifier_id = fields.Many2one('project.type',string="Project Type")
+    project_ministrations_ids = fields.One2many('project.ministrations','project_id',string='Project Ministrations')
+    
+    @api.onchange('project_type_identifier_id')
+    def onchange_project_type_identifier_id(self):
+        if self.project_type_identifier_id:
+            self.number = self.project_type_identifier_id.number
 
+    @api.onchange('stage_identifier_id')
+    def onchange_stage_identifier_id(self):
+        if self.stage_identifier_id:
+            self.desc_stage = self.stage_identifier_id.desc
+        
     @api.depends('exercised_amount', 'allocated_amount')
     def get_final_amount(self):
         for rec in self:
@@ -148,7 +165,8 @@ class ProjectRegistry(models.Model):
             'default_res_model': self._name,
             'default_res_id': self.ids[0]
         }
-        action['domain'] = [('res_model', '=', 'project.project'), ('res_id', 'in', self.ids)]
+        action['domain'] = [
+            ('res_model', '=', 'project.project'), ('res_id', 'in', self.ids)]
         return action
 
     def count_expense_checks(self):
@@ -160,3 +178,13 @@ class ProjectRegistry(models.Model):
             'domain': [('project_number_id', '=', self.number)],
             'context': "{'create': False}"
         }
+class ProjectMinistrations(models.Model):
+
+    _name = 'project.ministrations'
+    _description = "Project Ministrations"
+    
+    project_id = fields.Many2one('project.project','Project')
+    ministrations = fields.Integer("Number of ministrations")
+    ministering_amount = fields.Float("Ministering amount")
+    
+    

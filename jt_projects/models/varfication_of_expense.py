@@ -15,13 +15,16 @@ class VerficationOfExpense(models.Model):
     stage_id = fields.Many2one('stage', string='Stage')
     exercise = fields.Text('Exercise')
     exchange_rate = fields.Float('Exchange Rate')
+    expense_journal_id = fields.Many2one(
+        'account.journal', string="Expense Journal")
     dependence = fields.Many2one('dependency', string="Dependency")
     subdependence = fields.Many2one('sub.dependency', string='Sub Dependence')
     upa_code = fields.Many2one('policy.keys', string='UPA Code')
     type_of_operation = fields.Many2one(
         'operation.type', string='Type Of Operation')
     doc_type = fields.Many2one('upa.document.type', string='Document Type')
-    number = fields.Text('Number')
+    number = fields.Text(
+        rejected='project_id.stage_identifier', string='Number')
     type_of_currency = fields.Selection(
         [('national', 'National Currency'),
             ('foreign', 'Foreign currency')
@@ -73,4 +76,13 @@ class VerificationOfExpenseLine(models.Model):
         [('mn_amount', 'MN amount'),
             ('amount_me', 'Amount ME')
          ], string="Amount")
-    taxes = fields.Many2one('account.tax', string="Taxes")
+    taxes = fields.Many2one('account.tax', string="Taxes",
+                            compute='_compute_tax_amount')
+    total = fields.Monetary('Total(Price)', compute='_compute_total_amount')
+
+    def _compute_tax_amount(self):
+        pass
+
+    def _compute_total_amount(self):
+
+        pass

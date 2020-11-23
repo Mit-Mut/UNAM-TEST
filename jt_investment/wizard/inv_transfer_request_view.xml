@@ -30,6 +30,7 @@
                         				<field name="base_collabaration_id" />
                         				<field name="amount" />
                         				<field name="amount_to_transfer"/>
+                        				<field name="opt_line_ids" invisible="1"/>
                         			</tree>
                         			<form>
                         				<group>
@@ -39,6 +40,7 @@
 	                        				<field name="base_collabaration_id"/>
 	                        				<field name="amount"/>
 	                        				<field name="amount_to_transfer"/>
+	                        				<field name="opt_line_ids" invisible="1"/>
                         				</group>
                         			</form>
                         		</field>

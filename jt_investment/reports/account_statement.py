@@ -37,8 +37,8 @@ class InvestmentAccountStatement(models.AbstractModel):
     _description = "Account Statement"
 
     filter_date = {'mode': 'range', 'filter': 'this_month'}
-    filter_comparison = None
-    filter_all_entries = None
+    filter_comparison = {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
+    filter_all_entries = True
     filter_journals = None
     filter_analytic = None
     filter_unfold_all = None
@@ -73,7 +73,7 @@ class InvestmentAccountStatement(models.AbstractModel):
              {'name': _('Saldo Final')},
         ]
 
-    def _format(self, value, figure_type):
+    def _format(self, value, figure_type,digit):
         if self.env.context.get('no_format'):
             return value
         value['no_format_name'] = value['name']
@@ -97,10 +97,43 @@ class InvestmentAccountStatement(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         lines = []
+
+        if options.get('all_entries') is False:
+            domain=[('state','=','confirmed')]
+        else:
+            domain=[('state','not in',('rejected','canceled'))]
+
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+
+        productive_domain = domain + [('invesment_date','>=',start),('invesment_date','<=',end)]
+        productive_ids = self.env['investment.investment'].search(productive_domain)
+        
+
+        #===== Investment =======#        
+        for rec in productive_ids:
+            invesment_date = ''
+            if rec.invesment_date:
+                invesment_date = rec.invesment_date.strftime('%Y-%m-%d') 
+            rec_entradas = sum(a.amount for a in rec.line_ids.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing')))
+            rec_salidas =  sum(a.amount for a in rec.line_ids.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure')))
+            lines.append({
+                'id': 'hierarchy_account' + str(rec.id),
+                'name' :invesment_date, 
+                'columns': [ 
+                            self._format({'name': rec.amount_to_invest},figure_type='float',digit=2),
+                            {'name': rec.observations},
+                            self._format({'name': rec_entradas},figure_type='float',digit=2),
+                            self._format({'name': rec_salidas},figure_type='float',digit=2),
+                            self._format({'name': rec.actual_amount},figure_type='float',digit=2),
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
 
         return lines
         

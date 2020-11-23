@@ -16,8 +16,9 @@ class BasesCollabration(models.Model):
     distribution_id = fields.Many2one('distribution.of.income','Distribution Income',copy=False)
     investment_link_id = fields.Many2one('investment.investment','Investment',copy=False)
     investment_operation_id = fields.Many2one('investment.operation','Operation',copy=False)
-    line_opt_ids = fields.One2many('request.open.balance.finance.operation','finance_id')
-        
+    line_opt_ids = fields.One2many('request.open.balance.finance.operation','finance_id',copy=False)
+    from_opt_transfer = fields.Boolean(default=False,copy=False)
+    
     def approve_finance(self):
         result = super(BasesCollabration,self).approve_finance()
         if self.purchase_sale_security_id:
@@ -184,7 +185,9 @@ class ReqFinanceLines(models.Model):
     base_collabaration_id = fields.Many2one('bases.collaboration','Name Of Agreements')
     agreement_number = fields.Char("Agreement Number")
     amount_to_transfer = fields.Float("Amount")
-
+    opt_line_ids = fields.Many2many('investment.operation','rel_investment_operation_finance_line','opt_id','line_id')
+    amount = fields.Float("Amount")
+    
 class AccountPayment(models.Model):
     _inherit = 'account.payment'
     

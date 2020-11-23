@@ -41,7 +41,18 @@ class InvTransferRequest(models.TransientModel):
         line_amount = sum(x.amount_to_transfer for x in self.line_ids.filtered(lambda a:a.check))
         if line_amount != self.amount:
             raise UserError(_('Sum of amount in line is not equal to header amount'))
-        
+        opt_lines = []
+        for line in self.line_ids.filtered(lambda a:a.check):
+            opt_lines.append((0,0,{'investment_fund_id':line.investment_fund_id and line.investment_fund_id.id or False,
+                                   'base_collabaration_id' : line.base_collabaration_id and line.base_collabaration_id.id or False,
+                                   'agreement_number': line.agreement_number,
+                                   'amount_to_transfer' : line.amount_to_transfer,
+                                   'amount' : line.amount,
+                                   'opt_line_ids' : line.opt_line_ids,
+                                   }))
+            for opt_line in line.opt_line_ids:
+                opt_line.is_request_generated = True
+            
         self.env['request.open.balance.finance'].create(
             {
                 'bank_account_id': self.bank_account_id.id if self.bank_account_id else False,
@@ -50,6 +61,8 @@ class InvTransferRequest(models.TransientModel):
                 'date': self.date,
                 'concept': self.concept,
                 'state': 'requested',
+                'line_opt_ids' : opt_lines,
+                'from_opt_transfer' : True
             }
         )
             
@@ -64,3 +77,5 @@ class InvTransferRequestLine(models.TransientModel):
     amount = fields.Float("Amount")
     amount_to_transfer = fields.Float("Amount To Transfer")
     check = fields.Boolean('Transfer')
+    opt_line_ids = fields.Many2many('investment.operation','rel_investment_operation_wizard_line','opt_id','line_id')
+    

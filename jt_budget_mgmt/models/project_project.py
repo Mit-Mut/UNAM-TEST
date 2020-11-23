@@ -54,12 +54,12 @@ class ProjectProject(models.Model):
 
     @api.constrains('number')
     def _check_number(self):
-        if not str(self.number).isnumeric():
+        if self.number and not str(self.number).isnumeric():
             raise ValidationError(_('The Number must be numeric value'))
 
     @api.constrains('stage_identifier')
     def _check_stage_identifier(self):
-        if not str(self.stage_identifier).isnumeric():
+        if self.stage_identifier and not str(self.stage_identifier).isnumeric():
             raise ValidationError(
                 _('The Stage Identifier must be numeric value'))
 
@@ -71,7 +71,7 @@ class ProjectProject(models.Model):
 
     @api.constrains('number_agreement')
     def _check_number_agreement(self):
-        if not str(self.number_agreement).isnumeric():
+        if self.number_agreement and not str(self.number_agreement).isnumeric():
             raise ValidationError(
                 _('The Number Agreement must be numeric value'))
 

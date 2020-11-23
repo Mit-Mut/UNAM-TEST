@@ -9,6 +9,10 @@
                 <tree>
                     <field name="invoice"/>
                     <field name="project_no"/>
+                    <field name="project_name"/>
+                    <field name="project_type_identifier"/>
+                    <field name="status"/>
+
                 </tree>
             </field>
          </record>

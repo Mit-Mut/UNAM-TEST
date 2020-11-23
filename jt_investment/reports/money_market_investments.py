@@ -178,6 +178,14 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
         bank_list = []
         currency_list = []
 
+        comparison = options.get('comparison')
+        periods = []
+        if comparison and comparison.get('filter') != 'no_comparison':
+            period_list = comparison.get('periods')
+            period_list.reverse()
+            periods = [period for period in period_list]
+        periods.append(options.get('date'))
+
         for select_curreny in options.get('currency'):
             if select_curreny.get('selected',False)==True:
                 currency_list.append(select_curreny.get('id',0))
@@ -340,8 +348,8 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
             'columns': [{'name': 'Total Recursos'}, 
                         {'name': ''}, 
                         {'name': ''},
-                        self._format({'name': total_investment},figure_type='float'),
                         {'name': ''},
+                        self._format({'name': total_investment},figure_type='float'),
                         {'name': ''},
                         {'name':''},
                         {'name':''},
@@ -351,6 +359,21 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
             'unfolded': True,
         })
         #===================== Bank Data ==========#
+        period_name = [{'name': 'Institución'}]
+        for per in periods:
+            period_name.append({'name': per.get('string')})
+        r_column = 7 - len(periods)
+        if r_column > 0:
+            for col in range(r_column):
+                period_name.append({'name': ''})
+        lines.append({
+                'id': 'hierarchy_inst',
+                'name': '',
+                'columns': period_name,
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
 
         journal_ids = self.env['res.bank']
         journal_ids += cetes_records.mapped('bank_id')
@@ -361,45 +384,39 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
         if journal_ids:
             journals = list(set(journal_ids.ids))
             journal_ids = self.env['res.bank'].browse(journals)
-            
-        lines.append({
-            'id': 'hierarchy_inst' ,
-            'name': '',
-            'columns': [{'name': 'Institución'}, 
-                        {'name': ''}, 
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        ],
-            'level': 1,
-            'unfoldable': False,
-            'unfolded': True,
-        })
+        
         
         total_ins = 0
         for journal in journal_ids:
-            amount = 0
-            amount += sum(x.nominal_value for x in cetes_records.filtered(lambda x:x.bank_id.id==journal.id))
-            amount += sum(x.nominal_value for x in udibonos_records.filtered(lambda x:x.bank_id.id==journal.id))
-            amount += sum(x.nominal_value for x in bonds_records.filtered(lambda x:x.bank_id.id==journal.id))
-            amount += sum(x.amount for x in will_pay_records.filtered(lambda x:x.bank_id.id==journal.id))                        
-            
+            columns = [{'name': journal.name}]
+            for period in periods:
+                date_start = datetime.strptime(str(period.get('date_from')),
+                                           DEFAULT_SERVER_DATE_FORMAT).date()
+                date_end = datetime.strptime(str(period.get('date_to')),
+                                         DEFAULT_SERVER_DATE_FORMAT).date()
+
+                cetes_domain_period = domain + [('currency_id','in',currency_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('date_time','>=',date_start),('date_time','<=',date_end)]
+                udibonos_domain_period = domain + [('currency_id','in',currency_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('date_time','>=',date_start),('date_time','<=',date_end)]
+                bonds_domain_period = domain + [('currency_id','in',currency_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('date_time','>=',date_start),('date_time','<=',date_end)]
+                will_pay_domain_period = domain + [('currency_id','in',currency_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('date_time','>=',date_start),('date_time','<=',date_end)]
+                
+                cetes_bank_records = self.env['investment.cetes'].search(cetes_domain_period)
+                udibonos_bank_records = self.env['investment.udibonos'].search(udibonos_domain_period)
+                bonds_bank_records = self.env['investment.bonds'].search(bonds_domain_period)
+                will_pay_bank_records = self.env['investment.will.pay'].search(will_pay_domain_period)
+
+                amount = 0
+                amount += sum(x.nominal_value for x in cetes_bank_records)
+                amount += sum(x.nominal_value for x in udibonos_bank_records)
+                amount += sum(x.nominal_value for x in bonds_bank_records)
+                amount += sum(x.amount for x in will_pay_bank_records)                        
+                columns.append(self._format({'name': amount},figure_type='float'))
+
             total_ins += amount
             lines.append({
                 'id': 'hierarchy_jr' + str(journal.id),
                 'name': '',
-                'columns': [{'name': journal.name}, 
-                            {'name': ''}, 
-                            {'name': ''},
-                            self._format({'name': amount},figure_type='float'),
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            ],
+                'columns': columns,
                 'level': 3,
                 'unfoldable': False,
                 'unfolded': True,
@@ -408,7 +425,7 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
         lines.append({
             'id': 'hierarchy_inst_total' ,
             'name': '',
-            'columns': [{'name': 'Institución'}, 
+            'columns': [{'name': 'Total'}, 
                         {'name': ''}, 
                         {'name': ''},
                         self._format({'name': total_ins},figure_type='float'),
@@ -423,8 +440,23 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
         })
 
         #================ Origin Data ====================#
-        origin_ids = self.env['agreement.fund']
+        period_name = [{'name': 'Tipo de recurso'}]
+        for per in periods:
+            period_name.append({'name': per.get('string')})
+        r_column = 7 - len(periods)
+        if r_column > 0:
+            for col in range(r_column):
+                period_name.append({'name': ''})
+        lines.append({
+                'id': 'hierarchy_original',
+                'name': '',
+                'columns': period_name,
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
 
+        origin_ids = self.env['agreement.fund']
         origin_ids += cetes_records.mapped('fund_id')        
         origin_ids += udibonos_records.mapped('fund_id')        
         origin_ids += bonds_records.mapped('fund_id')
@@ -433,49 +465,44 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
         if origin_ids:
             origins = list(set(origin_ids.ids))
             origin_ids = self.env['agreement.fund'].browse(origins)
-
-        lines.append({
-            'id': 'hierarchy_origin_total' ,
-            'name': '',
-            'columns': [{'name': 'Tipo de recurso'}, 
-                        {'name': ''}, 
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        ],
-            'level': 1,
-            'unfoldable': False,
-            'unfolded': True,
-        })
         
         total_ins = 0
         for origin in origin_ids:
-            amount = 0
-            amount += sum(x.nominal_value for x in cetes_records.filtered(lambda x:x.fund_id.id==origin.id))
-            amount += sum(x.nominal_value for x in udibonos_records.filtered(lambda x:x.fund_id.id==origin.id))
-            amount += sum(x.nominal_value for x in bonds_records.filtered(lambda x:x.fund_id.id==origin.id))
-            amount += sum(x.amount for x in will_pay_records.filtered(lambda x:x.fund_id.id==origin.id))                        
-            
+            columns = [{'name': origin.name}]
+            for period in periods:
+                date_start = datetime.strptime(str(period.get('date_from')),
+                                           DEFAULT_SERVER_DATE_FORMAT).date()
+                date_end = datetime.strptime(str(period.get('date_to')),
+                                         DEFAULT_SERVER_DATE_FORMAT).date()
+
+
+                cetes_domain_period = domain + [('currency_id','in',currency_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('date_time','>=',date_start),('date_time','<=',date_end)]
+                udibonos_domain_period = domain + [('currency_id','in',currency_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('date_time','>=',date_start),('date_time','<=',date_end)]
+                bonds_domain_period = domain + [('currency_id','in',currency_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('date_time','>=',date_start),('date_time','<=',date_end)]
+                will_pay_domain_period = domain + [('currency_id','in',currency_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('date_time','>=',date_start),('date_time','<=',date_end)]
+                
+                cetes_fund_records = self.env['investment.cetes'].search(cetes_domain_period)
+                udibonos_fund_records = self.env['investment.udibonos'].search(udibonos_domain_period)
+                bonds_fund_records = self.env['investment.bonds'].search(bonds_domain_period)
+                will_pay_fund_records = self.env['investment.will.pay'].search(will_pay_domain_period)
+
+                amount = 0
+                amount += sum(x.nominal_value for x in cetes_fund_records.filtered(lambda x:x.fund_id.id==origin.id))
+                amount += sum(x.nominal_value for x in udibonos_fund_records.filtered(lambda x:x.fund_id.id==origin.id))
+                amount += sum(x.nominal_value for x in bonds_fund_records.filtered(lambda x:x.fund_id.id==origin.id))
+                amount += sum(x.amount for x in will_pay_fund_records.filtered(lambda x:x.fund_id.id==origin.id))                        
+                columns.append(self._format({'name': amount},figure_type='float'))
+
             total_ins += amount
             lines.append({
                 'id': 'hierarchy_or' + str(origin.id),
                 'name': '',
-                'columns': [{'name': origin.name}, 
-                            {'name': ''}, 
-                            {'name': ''},
-                            self._format({'name': amount},figure_type='float'),
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            ],
+                'columns': columns,
                 'level': 3,
                 'unfoldable': False,
                 'unfolded': True,
             })
+                
 
         lines.append({
             'id': 'hierarchy_total_or' ,

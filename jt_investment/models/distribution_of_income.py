@@ -59,80 +59,116 @@ class DistributionOfIncome(models.Model):
     
     def action_calculation(self):
         #domain = [('bases_collaboration_id','!=',False)]
-        domain = []
+        domain = [('line_state','=','done'),('dependency_id','!=',False)]
+        
         self.line_ids = [(6, 0, [])]
         self.calculation_line_ids = [(6, 0, [])]
         vals = []
         cal_vals = []
         if self.start_date:
-            domain.append(('registration_date','>=',self.start_date))
+            domain.append(('date_required','>=',self.start_date))
         if self.end_date:
-            domain.append(('registration_date','<=',self.end_date))
+            domain.append(('date_required','<=',self.end_date))
+        
+        if self.journal_id:
+            domain.append(('investment_id.journal_id','<=',self.journal_id.id))
             
-        base_ids = self.env['bases.collaboration'].search(domain)
+        #base_ids = self.env['bases.collaboration'].search(domain)
         #base_ids = requests.mapped('bases_collaboration_id')
         
-        if self.dependency_ids and not self.all_dependencies:
-            base_ids = base_ids.filtered(lambda x:x.dependency_id.id in self.dependency_ids.ids)
-        if self.agreement_type_ids and not self.all_types_of_Agreements:
-            base_ids = base_ids.filtered(lambda x:x.agreement_type_id.id in self.agreement_type_ids.ids)
-        if self.base_ids and not self.all_base:
-            base_ids = base_ids.filtered(lambda x:x.id in self.base_ids.ids)
-        if self.fund_ids and not self.all_agreement:
-            base_ids = base_ids.filtered(lambda x:x.agreement_type_id.fund_id.id in self.fund_ids.ids)
-
+        opt_lines = self.env['investment.operation'].search(domain,order='dependency_id')
         
-        for base in base_ids:
-            requests = self.env['request.open.balance'].search([('bases_collaboration_id','=',base.id),('state','=','confirmed')])
-            inc = sum(x.opening_balance for x in requests.filtered(lambda a:a.bases_collaboration_id.id==base.id and a.type_of_operation == 'increase'))
-            withdrawal = sum(x.opening_balance for x in requests.filtered(lambda a:a.bases_collaboration_id.id==base.id and a.type_of_operation == 'withdrawal'))
-            
-#             inc = 0
-#             withdrawal = 0
-            
-  
-#             vals.append([0, 0, 
-#                         {'fund_id':base.agreement_type_id and base.agreement_type_id.fund_id and base.agreement_type_id.fund_id.id or False,
-#                          'agreement_type_id':base.agreement_type_id and base.agreement_type_id.id or False,
-#                          'base_id' : base.id,
-#                          'dependency_id' : base.dependency_id and base.dependency_id.id or False,
-#                          'capital' : base.opening_bal,
-#                          'increments' : inc,
-#                          'withdrawals' : withdrawal,
-#                          'final_balance' : final_balance 
-#                          }])
-
-            
-            inv_records = self.env['investment.investment'].search([('base_collaboration_id','=',base.id)])
-            for inv in inv_records:
-                term = 0
-                if inv.is_fixed_rate:
-                    term = inv.term
-                elif inv.is_variable_rate:
-                    term = inv.term_variable
-                rate = inv.interest_rate + inv.extra_percentage 
+        
+        if self.dependency_ids and not self.all_dependencies:
+            opt_lines = opt_lines.filtered(lambda x:x.dependency_id.id in self.dependency_ids.ids)
+        if self.agreement_type_ids and not self.all_types_of_Agreements:
+            opt_lines = opt_lines.filtered(lambda x:x.agreement_type_id.id in self.agreement_type_ids.ids)
+        if self.base_ids and not self.all_base:
+            opt_lines = opt_lines.filtered(lambda x:x.base_collabaration_id.id in self.base_ids.ids)
+        if self.fund_ids and not self.all_agreement:
+            opt_lines = opt_lines.filtered(lambda x:x.investment_fund_id.fund_id.id in self.fund_ids.ids)
+        
+        inv_funds = opt_lines.mapped('investment_fund_id')
+        for fund  in inv_funds:
+            dependency_ids = opt_lines.filtered(lambda x: x.investment_fund_id.id == fund.id).mapped('dependency_id')
+            for dep in dependency_ids: 
+                lines = opt_lines.filtered(lambda x:x.investment_fund_id.id == fund.id and x.dependency_id.id==dep.id)
+                capital = sum(a.amount for a  in lines.filtered(lambda x:x.type_of_operation == 'open_bal'))
+                 
+                for line in lines.filtered(lambda x:x.type_of_operation != 'open_bal'):
+                    inc = 0
+                    withdrawal = 0
+                    if line.type_of_operation in ('increase','increase_by_closing'):
+                        inc = line.amount
+                    elif line.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure'):
+                        withdrawal = line.amount
                     
-                final_balance = inv.amount_to_invest + inc - withdrawal
-                income = (((final_balance * rate)/100)/360)*term
-                               
-                cal_vals.append([0, 0, 
-                            {
-                             'fund_id':base.agreement_type_id and base.agreement_type_id.fund_id and base.agreement_type_id.fund_id.id or False,
-                             'agreement_type_id':base.agreement_type_id and base.agreement_type_id.id or False,
-                             'base_id' : base.id,
-                             'dependency_id' : inv.dependency_id and inv.dependency_id.id or False,
-                             'capital' : inv.amount_to_invest,
-                             'increments' : inc,
-                             'withdrawals' : withdrawal,
-                             'final_balance' : final_balance,
-                             'income' : income,
-                             'rounded': income,
-                             'rate' : rate,
-                             'days': term
-                             }]) 
+                    inv = line.investment_id
+                    
+                    term = 0
+                    rate = 0
+                    if inv.is_fixed_rate:
+                        term = inv.term
+                        rate = inv.interest_rate + inv.extra_percentage
+                        
+                    elif inv.is_variable_rate:
+                        v_rate = 0
+                        term = inv.term_variable
+                        if inv.investment_rate_id:
+                            other_rate_id = False
+                            if not other_rate_id: 
+                                if inv.term_variable == 28 and inv.investment_rate_id.rate_days_28:
+                                    v_rate = inv.investment_rate_id.rate_days_28
+                                    other_rate_id = True
+                                else:
+                                    other_rate_id = self.env['investment.period.rate'].search([('rate_days_28','>',0),('rate_date','<=',inv.investment_rate_id.rate_date),('product_type','=',inv.investment_rate_id.product_type)],limit=1,order='rate_date desc')
+                                    if other_rate_id:
+                                        v_rate = other_rate_id.rate_days_28
+                                    other_rate_id = True
+                                    
+                            if not other_rate_id:
+                                if inv.term_variable == 91 and inv.investment_rate_id.rate_days_91:
+                                    v_rate = inv.investment_rate_id.rate_days_91
+                                    other_rate_id = True
+                                else:
+                                    other_rate_id = self.env['investment.period.rate'].search([('rate_days_91','>',0),('rate_date','<=',inv.investment_rate_id.rate_date),('product_type','=',inv.investment_rate_id.product_type)],limit=1,order='rate_date desc')
+                                    if other_rate_id:
+                                        v_rate = other_rate_id.rate_days_91
+                                    other_rate_id = True
+                                    
+                            if not other_rate_id:                                    
+                                if inv.term_variable == 182 and inv.investment_rate_id.rate_days_182:
+                                    v_rate = inv.investment_rate_id.rate_days_182
+                                    other_rate_id = True
+                                else:
+                                    other_rate_id = self.env['investment.period.rate'].search([('rate_days_182','>',0),('rate_date','<=',inv.investment_rate_id.rate_date),('product_type','=',inv.investment_rate_id.product_type)],limit=1,order='rate_date desc')
+                                    if other_rate_id:
+                                        v_rate = other_rate_id.rate_days_182
+                                    other_rate_id = True
+                                    
+                        rate = v_rate + inv.extra_percentage
+                        
+                    final_balance = capital + inc - withdrawal
+                    income = (((final_balance * rate)/100)/360)*term
+                                   
+                    cal_vals.append([0, 0, 
+                                {
+                                 'fund_id':line.investment_fund_id and line.investment_fund_id.fund_id and line.investment_fund_id.fund_id.id or False,
+                                 'agreement_type_id':line.agreement_type_id and line.agreement_type_id.id or False,
+                                 'base_id' : line.base_collabaration_id and line.base_collabaration_id.id or False,
+                                 'dependency_id' : line.dependency_id and line.dependency_id.id or False,
+                                 'capital' : capital,
+                                 'increments' : inc,
+                                 'withdrawals' : withdrawal,
+                                 'final_balance' : final_balance,
+                                 'income' : income,
+                                 'rounded': income,
+                                 'rate' : rate,
+                                 'days': term
+                                 }]) 
  
 #         self.line_ids = vals
-        self.calculation_line_ids = cal_vals 
+            self.calculation_line_ids = cal_vals 
 
     def action_confirm(self):
         today = datetime.today().date()

@@ -84,9 +84,9 @@
                             </page>
                         </notebook>
                         <!-- Totals (only invoices / receipts) -->
-                        <!-- <group class="oe_subtotal_footer">
-                            <field name="subtotal"/>
-                            <field name="taxes" widget="tax-group-custom-field" nolabel="1" colspan="2"/>
+                      <!--   <group class="oe_subtotal_footer">
+                            <field name="untax_amount"/>
+                            <field name="tax_group_by" widget="tax-group-custom-field" nolabel="1" colspan="2"/>
                             <field name="total" class="oe_subtotal_footer_separator"/>
                             
                         </group> -->

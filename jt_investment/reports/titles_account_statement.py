@@ -38,7 +38,7 @@ class TitlesAccountStatement(models.AbstractModel):
 
     filter_date = {'mode': 'range', 'filter': 'this_month'}
     filter_comparison = None
-    filter_all_entries = None
+    filter_all_entries = True
     filter_journals = None
     filter_analytic = None
     filter_unfold_all = None
@@ -102,6 +102,70 @@ class TitlesAccountStatement(models.AbstractModel):
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
+        if options.get('all_entries') is False:
+            domain=[('state','in',('confirmed','done'))]
+        else:
+            domain=[('state','not in',('rejected','canceled'))]
+
+        start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+
+        title_domain = domain + [('invesment_date','>=',start),('invesment_date','<=',end)]
+
+        records = self.env['purchase.sale.security'].search(title_domain,order='invesment_date')
+
+        capital = 0
+        total_inc = 0
+        total_with = 0        
+        for rec in records:
+            invesment_date = ''
+            
+            inc = 0 
+            withdraw = 0
+            if rec.movement == 'buy':
+                inc = rec.amount
+                total_inc += inc
+            elif rec.movement == 'sell':
+                withdraw = rec.amount
+                total_with += withdraw
+                
+            if rec.invesment_date:
+                invesment_date = rec.invesment_date.strftime('%Y-%m-%d') 
+            final = capital + inc - withdraw
+            
+            lines.append({
+                'id': 'hierarchy_account' + str(rec.id),
+                'name' :invesment_date, 
+                'columns': [ 
+                            self._format({'name': capital},figure_type='float'),
+                            {'name': ''},
+                            self._format({'name': inc},figure_type='float'),
+                            self._format({'name': withdraw},figure_type='float'),
+                            self._format({'name': final},figure_type='float'),
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+            capital = capital + inc - withdraw
+
+        lines.append({
+            'id': 'Total',
+            'name' :'Total', 
+            'columns': [ 
+                        {'name': ''},
+                        {'name': ''},
+                        self._format({'name': total_inc},figure_type='float'),
+                        self._format({'name': total_with},figure_type='float'),
+                        {'name': ''},
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+        
         return lines
         
 

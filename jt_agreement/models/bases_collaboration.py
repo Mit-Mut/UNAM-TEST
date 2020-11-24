@@ -1060,7 +1060,7 @@ class RequestOpenBalanceFinance(models.Model):
     _name = 'request.open.balance.finance'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Request to Open Balance For Finanace"
-    _rec_name = 'invoice'
+    _rec_name = 'operation_number'
 
     request_id = fields.Many2one('request.open.balance.invest', "Request")
     invoice = fields.Char("Invoice")

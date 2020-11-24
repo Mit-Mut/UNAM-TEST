@@ -620,7 +620,7 @@
                         </div>
                         <group>
                             <group>
-                                <field name="invoice"/>
+                                <field name="invoice" invisible="1"/>
                                 <field name="operation_number" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="agreement_number"/>
                                 <field name="bank_account_id"/>
@@ -635,7 +635,7 @@
                                 <field name="user_id"/>
                                 <field name="unit_req_transfer_id" context="{'show_for_agreement':1}"/>
                                 <field name="date_required" required="1"/>
-                                <field name="fund_id"/>
+                                <field name="fund_id" invisible="1"/>
                                 <field name="investment_fund_id"/>
                                 <field name="fund_type"/>
                                 <field name="agreement_type_id"/>

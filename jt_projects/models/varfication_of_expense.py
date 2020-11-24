@@ -42,6 +42,8 @@ class VerficationOfExpense(models.Model):
     invoice_folio = fields.Text('Invoice Folio')
     type_of_aggrement = fields.Many2one(
         'agreement.agreement.type', string='Type Of Agreement')
+    currency_id = fields.Many2one(
+        'res.currency', help='The currency used to enter statement', string="Currency")
     agreement_number = fields.Many2one(
         'bases.collaboration', string='Agreement Number')
     agreement_name = fields.Char(
@@ -54,6 +56,33 @@ class VerficationOfExpense(models.Model):
     reason_for_rejection = fields.Char('Reason for rejection')
     verifcation_expense_ids = fields.One2many(
         'verification.expense.line', 'verification_expense_id', string='Verfication Expense Line')
+    # untax_amount = fields.Monetary(
+    #     'Subtotal', compute='_compute_subtotal_amount', currency_field='currency_id')
+    # tax_group_by = fields.Text('Taxes', compute='_compute_tax_amount')
+    # total = fields.Monetary(
+    #     'Total(Price)', compute='_compute_total_amount', currency_field='currency_id')
+
+    # def _compute_subtotal_amount(self):
+
+    #     subtotal = 0.0
+    #     for record in self.verifcation_expense_ids:
+    #         subtotal += record.subtotal
+    #     record.untax_amount = subtotal
+
+    # def _compute_tax_amount(self):
+
+    #     for record in self.verifcation_expense_ids:
+    #         tax_amount = 0.0
+    #         tax_amount = record.taxes.amount * record.subtotal
+    #         record.tax_group_by = tax_amount
+
+    # def _compute_total_amount(self):
+
+    #     total = 0
+    #     for record in self.verifcation_expense_ids:
+    #         tax_amount = record.taxes.amount * record.subtotal
+    #         print(tax_amount)
+    #         record.total = record.untax_amount
 
     def action_approve(self):
 
@@ -76,13 +105,4 @@ class VerificationOfExpenseLine(models.Model):
         [('mn_amount', 'MN amount'),
             ('amount_me', 'Amount ME')
          ], string="Amount")
-    taxes = fields.Many2one('account.tax', string="Taxes",
-                            compute='_compute_tax_amount')
-    total = fields.Monetary('Total(Price)', compute='_compute_total_amount')
-
-    def _compute_tax_amount(self):
-        pass
-
-    def _compute_total_amount(self):
-
-        pass
+    taxes = fields.Many2one('account.tax', string="Taxes")

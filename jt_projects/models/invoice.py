@@ -20,7 +20,7 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from odoo import models, fields
+from odoo import models, fields,api,_
 
 
 class AccountMove(models.Model):
@@ -45,7 +45,6 @@ class AccountMove(models.Model):
     invoice_vault_folio = fields.Char('Invoice vault folio')
     status = fields.Selection(
         [('accept', 'Accepted'), ('reject', 'Rejected')], string='Status')
-    is_project_payment = fields.Boolean('Is Project Payment', default=False)
     line = fields.Integer("Header")
     previous = fields.Monetary('Previous')
 
@@ -53,7 +52,7 @@ class AccountMove(models.Model):
     responsible_category_key = fields.Char("Responsible category key")
     responsible_job_position = fields.Many2one(
         'hr.job', 'Responsible job position')
-
+    
 class AccountMoveLine(models.Model):
 
     _inherit = 'account.move.line'

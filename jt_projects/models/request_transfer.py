@@ -44,7 +44,21 @@ class RequestTransfer(models.Model):
             'desti_bank_account_id': self.destination_journal_id.id,
             'date': self.application_date,
             'user_id': self.user_id.id,
-            'state': self.status
+            'state': self.status,
+            'project_request_id': self.id,
 
         }
         self.env['request.open.balance.finance'].create(record)
+    
+    def action_approved(self):
+        self.status = 'approved'
+    
+    def confirmed_finance(self):
+        self.status = 'confirmed'
+    
+    def reject_finance(self):
+        self.status = 'rejected'
+    
+    def action_canceled(self):
+        self.status = 'canceled'
+        

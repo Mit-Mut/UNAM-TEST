@@ -13,7 +13,7 @@
                         <button name="action_register" string="Register" class="oe_highlight" type="object"  attrs="{'invisible': [('payment_state', '!=', 'draft')]}"/>
                         <button name="action_draft_budget" string="Draft" class="oe_highlight"
                             type="object"
-                            attrs="{'invisible':[('payment_state', 'in', ('draft','paid','cancel'))]}"/>
+                            attrs="{'invisible':[('payment_state', 'in', ('draft','paid','cancel','approved_payment','for_payment_procedure'))]}"/>
                         <button name="action_validate_budget" invisible="context.get('hide_validate_button',False)" string="Validate budget" class="oe_highlight"
                                     type="object" attrs="{'invisible':[('payment_state', '!=', 'registered')]}"/>
                         <button name="action_cancel_budget" string="Cancel" class="oe_highlight" type="object"  attrs="{'invisible':[('payment_state', 'in', ('paid','cancel'))]}"/>
@@ -58,7 +58,7 @@
                                 <field name="no_of_document"/>
                                 <field name="vault_folio"/>
                                 <field name="currency_id" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
-                                <field name="journal_id" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                <field name="journal_id" readonly="1"/>
                                 <field name="payment_bank_id"/>
                                 <field name="payment_bank_account_id" string="Payment receipt bank account"/>
                                 <field name="payment_issuing_bank_id" string="Payment issuing Bank"/>
@@ -142,7 +142,7 @@
                                                optional="show"
                                                widget="many2many_tags"/>
 
-                                        <field name="program_code_id"/>
+                                        <field name="program_code_id" domain="[('budget_id.state','=','validate')]"/>
                                         <field name="type_of_bussiness_line"/>
                                         <field name="vat"/>
                                         <field name="retIVA"/>
@@ -303,6 +303,7 @@
                                         <field name="tag_ids" widget="many2many_tags" string="Tax Grids" optional="show" domain="[('country_id', '=', country_id), ('applicability', '=', 'taxes')]"/>
 
                                         <!-- Others fields -->
+                                        <field name="program_code_id" invisible="1"/>
                                         <field name="type_of_bussiness_line" invisible="1"/>
                                         <field name="egress_key_id" invisible="1"/>
                                         <field name="turn_type" invisible="1"/>
@@ -456,6 +457,8 @@
         <menuitem id="supplier_payment_request_menu" name="Payment Request"
                   action="project_project_supplier_payment_action"
                   parent="jt_projects.supplier_payment_request_main_menu" sequence="5"/>
+
+        
     </data>
 
 </odoo>

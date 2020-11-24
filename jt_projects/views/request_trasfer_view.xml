@@ -33,7 +33,7 @@
                                 <field name="request_area" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                                 <field name="user_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                                 <field name="destination_journal_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
-                                <field name="destination_bank_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                                <field name="destination_bank_id"/>
                                 <field name="currency_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                                 <field name="amount_req_tranfer" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                             </group>

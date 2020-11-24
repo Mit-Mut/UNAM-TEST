@@ -31,6 +31,7 @@
     'license': 'AGPL-3',
     'depends': ['account_accountant','jt_payroll_payment','jt_agreement'],
     'data': [
+        'security/ir_rules.xml',
         'data/sequence.xml',
         'data/cron.xml',
         'security/ir.model.access.csv',

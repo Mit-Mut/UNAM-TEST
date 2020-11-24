@@ -30,7 +30,7 @@
                                 <field name="sub_dependency_id" domain="[('dependency_id','=',dependency_id)]" context="{'show_for_supplier_payment':1}"/>
                             	<field name="origin_resource_id" readonly="1"/>
                             	<field name="amount" readonly="1"/>
-                                <field name="date_required"/>
+                                <field name="date_required" required="1"/>
                                 <field name="desti_bank_account_id" domain="[('type', '=', 'bank')]"
                                     required="1"/>
                                 

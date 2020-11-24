@@ -56,15 +56,15 @@
 		                          <field name="expiry_date" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			               		<field name="journal_id" required="1"  attrs="{'readonly': [('state', '!=', 'draft')]}" domain="[('type','=','bank')]"/>
 			               		<field name="investment_fund_id" invisible="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-			               		<field name="contract_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			               		<field name="contract_id" attrs="{'required':[('state', '=', 'draft')],'readonly': [('state', '!=', 'draft')]}"/>
 			               		<field name="amount_to_invest" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			               		<field name="actual_amount" readonly="1"/>
 			               		<field name="is_fixed_rate"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			               		<field name="is_variable_rate" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                        		<field name="investment_rate_id" domain="[('product_type','=','PAGARE')]" context="{'default_product_type':'PAGARE',
-                                    'search_view_ref':'jt_investment.investment_period_rate_PAGARE_search',
-                                    'tree_view_ref': 'jt_investment.investment_period_rate_PAGARE_tree',
-                                    'form_view_ref': 'jt_investment.investment_period_rate_PAGARE_form'
+                        		<field name="investment_rate_id" domain="[('product_type','=','TIIE')]" context="{'default_product_type':'TIIE',
+                                    'search_view_ref':'jt_investment.investment_period_rate_tiie_search',
+                                    'tree_view_ref': 'jt_investment.investment_period_rate_tiie_tree',
+                                    'form_view_ref': 'jt_investment.investment_period_rate_tiie_form'
                                     }"  attrs="{'readonly': [('state', '!=', 'draft')],'invisible':[('is_variable_rate','=',False)],'required':[('is_variable_rate','=',True)]}"/>
 			               		<field name="interest_rate" required="1" digits="[12,6]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			               		<field name="extra_percentage" required="1" digits="[12,6]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
@@ -152,7 +152,7 @@
 			                                <field name="sub_dependency_id" domain="[('dependency_id','=',dependency_id)]" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
 			                            	<field name="origin_resource_id" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
 			                            	<field name="amount" required="1" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
-			                                <field name="date_required" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
+			                                <field name="date_required" required="1" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
 			                                <field name="desti_bank_account_id" domain="[('id', 'in', dest_ids)]"
 			                                    required="1" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
 		                    				<field name="inc_id" invisible="1"/>

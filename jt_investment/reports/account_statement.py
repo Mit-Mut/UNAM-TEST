@@ -37,7 +37,7 @@ class InvestmentAccountStatement(models.AbstractModel):
     _description = "Account Statement"
 
     filter_date = {'mode': 'range', 'filter': 'this_month'}
-    filter_comparison = {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
+    filter_comparison = None
     filter_all_entries = True
     filter_journals = None
     filter_analytic = None
@@ -99,41 +99,69 @@ class InvestmentAccountStatement(models.AbstractModel):
         lines = []
 
         if options.get('all_entries') is False:
-            domain=[('state','=','confirmed')]
+            domain=[('line_state','in',('confirmed','done'))]
         else:
-            domain=[('state','not in',('rejected','canceled'))]
+            domain=[('line_state','not in',('rejected','canceled'))]
 
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
-        productive_domain = domain + [('invesment_date','>=',start),('invesment_date','<=',end)]
-        productive_ids = self.env['investment.investment'].search(productive_domain)
+        productive_domain = domain + [('date_required','>=',start),('date_required','<=',end)]
+        productive_ids = self.env['investment.operation'].search(productive_domain)
         
 
-        #===== Investment =======#        
+        #===== Investment =======#
+        capital = 0
+        total_inc = 0
+        total_with = 0        
         for rec in productive_ids:
             invesment_date = ''
-            if rec.invesment_date:
-                invesment_date = rec.invesment_date.strftime('%Y-%m-%d') 
-            rec_entradas = sum(a.amount for a in rec.line_ids.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing')))
-            rec_salidas =  sum(a.amount for a in rec.line_ids.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure')))
+            
+            inc = 0 
+            withdraw = 0
+            if rec.type_of_operation in ('increase','increase_by_closing','open_bal'):
+                inc = rec.amount
+                total_inc += inc
+            elif rec.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure'):
+                withdraw = rec.amount
+                total_with += withdraw
+                
+            if rec.date_required:
+                invesment_date = rec.date_required.strftime('%Y-%m-%d') 
+            final = capital + inc - withdraw
+            
             lines.append({
                 'id': 'hierarchy_account' + str(rec.id),
                 'name' :invesment_date, 
                 'columns': [ 
-                            self._format({'name': rec.amount_to_invest},figure_type='float',digit=2),
-                            {'name': rec.observations},
-                            self._format({'name': rec_entradas},figure_type='float',digit=2),
-                            self._format({'name': rec_salidas},figure_type='float',digit=2),
-                            self._format({'name': rec.actual_amount},figure_type='float',digit=2),
+                            self._format({'name': capital},figure_type='float',digit=2),
+                            {'name': ''},
+                            self._format({'name': inc},figure_type='float',digit=2),
+                            self._format({'name': withdraw},figure_type='float',digit=2),
+                            self._format({'name': final},figure_type='float',digit=2),
                             ],
                 'level': 3,
                 'unfoldable': False,
                 'unfolded': True,
             })
+            capital = capital + inc - withdraw
 
+        lines.append({
+            'id': 'Total',
+            'name' :'Total', 
+            'columns': [ 
+                        {'name': ''},
+                        {'name': ''},
+                        self._format({'name': total_inc},figure_type='float',digit=2),
+                        self._format({'name': total_with},figure_type='float',digit=2),
+                        {'name': ''},
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
 
         return lines
         

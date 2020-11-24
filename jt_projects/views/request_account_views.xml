@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="invoice"/>
-                    <field name="project_no"/>
+                    <field name="project_id"/>
                     <field name="project_name"/>
                     <field name="project_type_identifier"/>
                     <field name="status"/>
@@ -34,9 +34,9 @@
                                 <field name="invoice" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="move_type" readonly="1"/>
                                 <field name="movement_type" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="project_no" domain="[('project_type', '=', 'conacyt')]"
+                                <field name="project_id" domain="[('project_type', '=', 'conacyt')]"
                                 attrs="{'readonly': [('status', '!=', 'eraser')]}" context="{'from_conacyt':1}"/>
-                                <field name="project_name" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="project_name"/>
                                 <field name="user_id" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="project_type_identifier" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="project_stage_identifier" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
@@ -47,7 +47,7 @@
                                 <field name="observations" attrs="{'invisible': [('status', '!=', 'rejected')]}" readonly="1"/>
                                 <field name="bank_account_id" readonly="1"/>
                                 <field name="bank_acc_number_id" readonly="1"/>
-                                <field name="customer_number" readonly="1"/>
+                                <field name="customer_number" invisible="1"/>
                                 <field name="supporting_documentation" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="reason_rejection" attrs="{'readonly': [('status', '!=', 'eraser')],'invisible': [('status', '!=', 'rejected')]}"/>
                                 <field name="rejection_observations" readonly="1" attrs="{'invisible': [('status', '!=', 'rejected')]}"/>
@@ -90,7 +90,7 @@
                             <group>
                                 <field name="invoice"  attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="movement_type" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="project_no" domain="[('project_type', '=', 'conacyt')]"
+                                <field name="project_id" domain="[('project_type', '=', 'conacyt')]"
                                 context="{'from_conacyt':1}" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="project_name" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="user_id" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
@@ -104,7 +104,7 @@
                                 <field name="bank_account_id" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="bank_acc_number_id" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="no_contract" readonly="1"/>
-                                <field name="customer_number" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="customer_number" invisible="1" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="supporting_documentation"  attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="reason_rejection" attrs="{'invisible': [('status', '!=', 'rejected')]}"/>
                                 <field name="rejection_observations" readonly="1" attrs="{'invisible': [('status', '!=', 'rejected')]}"/>

@@ -21,7 +21,7 @@ class ProjectRegistry(models.Model):
     status = fields.Selection([('open', 'Open'),
                                ('closed', 'Closed')], "Status", default='open')
     check_counts = fields.Integer(compute='compute_count')
-    bank_account_id = fields.Many2one("account.journal", "Bank Accounts")
+    bank_account_id = fields.Many2one("account.journal", "Bank")
     bank_acc_number_id = fields.Many2one(
         "res.partner.bank", related='bank_account_id.bank_account_id', string="Bank Key")
     branch_office = fields.Char(
@@ -38,6 +38,7 @@ class ProjectRegistry(models.Model):
 
     is_related_agreement = fields.Boolean(
         'Is It related to agreement?', default=False)
+
     base_id = fields.Many2one('bases.collaboration', 'Agreement Name')
     base_number = fields.Char(
         related='base_id.convention_no', string='Agreement number')
@@ -60,12 +61,14 @@ class ProjectRegistry(models.Model):
         related='co_responsible_id.rfc', string='Co-responsible RFC')
     project_status = fields.Selection([('accepted', 'Accepted'),
                                        ('rejected', 'Rejected')], "UPA PAPIIT Status", copy=False)
-    
+
     responsible_name = fields.Char('Responsible name')
-    stage_identifier_id = fields.Many2one('stage',string="Stage")
-    project_type_identifier_id = fields.Many2one('project.type',string="Project Type")
-    project_ministrations_ids = fields.One2many('project.ministrations','project_id',string='Project Ministrations')
-    
+    stage_identifier_id = fields.Many2one('stage', string="Stage")
+    project_type_identifier_id = fields.Many2one(
+        'project.type', string="Project Type Identifier")
+    project_ministrations_ids = fields.One2many(
+        'project.ministrations', 'project_id', string='Project Ministrations')
+
     @api.onchange('project_type_identifier_id')
     def onchange_project_type_identifier_id(self):
         if self.project_type_identifier_id:
@@ -75,7 +78,7 @@ class ProjectRegistry(models.Model):
     def onchange_stage_identifier_id(self):
         if self.stage_identifier_id:
             self.desc_stage = self.stage_identifier_id.desc
-        
+
     @api.depends('exercised_amount', 'allocated_amount')
     def get_final_amount(self):
         for rec in self:
@@ -127,7 +130,9 @@ class ProjectRegistry(models.Model):
         result = []
         for project in self:
             if 'from_conacyt' in self._context:
-                name = project.number
+                name = ''
+                if project.number:
+                    name = project.number
             else:
                 name = project.name
             result.append((project.id, name))
@@ -178,13 +183,13 @@ class ProjectRegistry(models.Model):
             'domain': [('project_number_id', '=', self.number)],
             'context': "{'create': False}"
         }
+
+
 class ProjectMinistrations(models.Model):
 
     _name = 'project.ministrations'
     _description = "Project Ministrations"
-    
-    project_id = fields.Many2one('project.project','Project')
+
+    project_id = fields.Many2one('project.project', 'Project')
     ministrations = fields.Integer("Number of ministrations")
     ministering_amount = fields.Float("Ministering amount")
-    
-    

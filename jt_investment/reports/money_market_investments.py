@@ -385,10 +385,13 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
             journals = list(set(journal_ids.ids))
             journal_ids = self.env['res.bank'].browse(journals)
         
-        
+        amount_total = [{'name': 'Total'}]
+        total_dict = {}
         total_ins = 0
         for journal in journal_ids:
+            total_ins = 0
             columns = [{'name': journal.name}]
+            
             for period in periods:
                 date_start = datetime.strptime(str(period.get('date_from')),
                                            DEFAULT_SERVER_DATE_FORMAT).date()
@@ -412,7 +415,14 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
                 amount += sum(x.amount for x in will_pay_bank_records)                        
                 columns.append(self._format({'name': amount},figure_type='float'))
 
-            total_ins += amount
+                if total_dict.get(period.get('string')):
+                    old_amount = total_dict.get(period.get('string',0)) + amount
+                    total_dict.update({period.get('string'):old_amount})
+                else:
+                    total_dict.update({period.get('string'):amount})
+                total_ins += amount
+            amount_total.append(self._format({'name': total_ins},figure_type='float'))
+
             lines.append({
                 'id': 'hierarchy_jr' + str(journal.id),
                 'name': '',
@@ -422,22 +432,23 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
                 'unfolded': True,
             })
 
+        total_name = [{'name': 'Total'}]
+        for per in total_dict:
+            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float'))
+            
+        r_column = 7 - len(total_name)
+        if r_column > 0:
+            for col in range(r_column):
+                total_name.append({'name': ''})
+                
         lines.append({
-            'id': 'hierarchy_inst_total' ,
-            'name': '',
-            'columns': [{'name': 'Total'}, 
-                        {'name': ''}, 
-                        {'name': ''},
-                        self._format({'name': total_ins},figure_type='float'),
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        ],
-            'level': 1,
-            'unfoldable': False,
-            'unfolded': True,
-        })
+                'id': 'total_name_bank',
+                'name': '',
+                'columns': total_name,
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
 
         #================ Origin Data ====================#
         period_name = [{'name': 'Tipo de recurso'}]
@@ -466,9 +477,13 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
             origins = list(set(origin_ids.ids))
             origin_ids = self.env['agreement.fund'].browse(origins)
         
-        total_ins = 0
+        amount_total = [{'name': 'Total'}]
+        total_dict = {}
+
         for origin in origin_ids:
+            total_ins = 0
             columns = [{'name': origin.name}]
+            amount_total = [{'name':'Total'}]
             for period in periods:
                 date_start = datetime.strptime(str(period.get('date_from')),
                                            DEFAULT_SERVER_DATE_FORMAT).date()
@@ -493,7 +508,14 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
                 amount += sum(x.amount for x in will_pay_fund_records.filtered(lambda x:x.fund_id.id==origin.id))                        
                 columns.append(self._format({'name': amount},figure_type='float'))
 
-            total_ins += amount
+                if total_dict.get(period.get('string')):
+                    old_amount = total_dict.get(period.get('string',0)) + amount
+                    total_dict.update({period.get('string'):old_amount})
+                else:
+                    total_dict.update({period.get('string'):amount})
+                total_ins += amount
+            amount_total.append(self._format({'name': total_ins},figure_type='float'))
+
             lines.append({
                 'id': 'hierarchy_or' + str(origin.id),
                 'name': '',
@@ -502,25 +524,25 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
                 'unfoldable': False,
                 'unfolded': True,
             })
-                
 
+        total_name = [{'name': 'Total'}]
+        for per in total_dict:
+            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float'))
+            
+        r_column = 7 - len(total_name)
+        if r_column > 0:
+            for col in range(r_column):
+                total_name.append({'name': ''})
+                
         lines.append({
-            'id': 'hierarchy_total_or' ,
-            'name': '',
-            'columns': [{'name': 'Total'}, 
-                        {'name': ''}, 
-                        {'name': ''},
-                        self._format({'name': total_ins},figure_type='float'),
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        ],
-            'level': 1,
-            'unfoldable': False,
-            'unfolded': True,
-        })
-                    
+                'id': 'total_name_bank',
+                'name': '',
+                'columns': total_name,
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
         return lines
 
     def _get_report_name(self):

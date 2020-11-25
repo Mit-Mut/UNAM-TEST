@@ -180,11 +180,22 @@ class BasesCollabration(models.Model):
         return period_name
 
     def get_opening_balance(self):
-        opening_bal = sum(x.opening_balance for x in self.request_open_balance_ids.filtered(lambda x:x.type_of_operation=='open_bal'))
-        return opening_bal
+        deposite = sum(x.opening_balance for x in self.request_open_balance_ids.filtered(lambda x:x.state=='confirmed' and x.request_date < self.report_start_date and x.type_of_operation in ('open_bal','increase','increase_by_closing')))
+        retiros = sum(x.opening_balance for x in self.request_open_balance_ids.filtered(lambda x:x.state=='confirmed' and x.request_date < self.report_start_date and x.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure')))
+        bal = deposite - retiros 
+        return bal
+
+    def get_deposite(self):
+        deposite = sum(x.opening_balance for x in self.request_open_balance_ids.filtered(lambda x:x.state=='confirmed' and x.request_date >= self.report_start_date and x.request_date <= self.report_end_date and x.type_of_operation in ('open_bal','increase','increase_by_closing')))
+        return deposite
+
+    def get_retiros(self):
+        retiros = sum(x.opening_balance for x in self.request_open_balance_ids.filtered(lambda x:x.state=='confirmed' and x.request_date >= self.report_start_date and x.request_date <= self.report_end_date and x.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure')))
+        return retiros
+    
     
     def get_report_lines(self): 
-        lines = self.env['request.open.balance'].search([('bases_collaboration_id','=',self.id),('request_date','>=',self.report_start_date),('request_date','<=',self.report_end_date)])
+        lines = self.env['request.open.balance'].search([('bases_collaboration_id','=',self.id),('state','=','confirmed'),('request_date','>=',self.report_start_date),('request_date','<=',self.report_end_date)],order='order_seq')
         return lines
     
     @api.model
@@ -374,7 +385,7 @@ class BasesCollabration(models.Model):
                             'supporting_documentation': collaboration.cbc_format,
                             'type_of_operation': 'retirement',
                             'beneficiary_id': partner_id,
-                            'name': self.name,
+                            'name': collaboration.name,
                             'request_date' : req_date,
                             'liability_account_id': collaboration.liability_account_id.id if collaboration.liability_account_id
                             else False,
@@ -539,6 +550,26 @@ class RequestOpenBalance(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Request to Open Balance"
 
+    @api.depends('type_of_operation')
+    def get_order_seq(self):
+        for rec in self:
+            seq = 0
+            if rec.type_of_operation and rec.type_of_operation=='open_bal':
+                seq = 1
+            elif rec.type_of_operation and rec.type_of_operation=='increase':
+                seq = 2
+            elif rec.type_of_operation and rec.type_of_operation=='increase_by_closing':
+                seq = 3
+            elif rec.type_of_operation and rec.type_of_operation=='retirement':
+                seq = 4
+            elif rec.type_of_operation and rec.type_of_operation=='withdrawal_cancellation':
+                seq = 5
+            elif rec.type_of_operation and rec.type_of_operation=='withdrawal':
+                seq = 6
+            elif rec.type_of_operation and rec.type_of_operation=='withdrawal_closure':
+                seq = 7
+        rec.order_seq = seq
+         
     name = fields.Char("Name")
     bases_collaboration_id = fields.Many2one('bases.collaboration')
     operation_number = fields.Char("Operation Number")
@@ -552,6 +583,8 @@ class RequestOpenBalance(models.Model):
                                           ('increase_by_closing', 'Increase by closing')],
                                          string="Type of Operation")
     apply_to_basis_collaboration = fields.Boolean("Apply to Basis of Collaboration")
+    order_seq = fields.Integer(compute='get_order_seq',store=True,copy=False)
+    
     origin_resource_id = fields.Many2one('sub.origin.resource', "Origin of the resource")
     state = fields.Selection([('draft', 'Draft'),
                                ('requested', 'Requested'),

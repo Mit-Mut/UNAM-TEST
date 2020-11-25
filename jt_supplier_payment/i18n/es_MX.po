@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 13.0+e\n"
+"Project-Id-Version: Odoo Server 13.0+e-20201027\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-31 01:30+0000\n"
-"PO-Revision-Date: 2020-10-31 01:30+0000\n"
+"POT-Creation-Date: 2020-11-24 21:07+0000\n"
+"PO-Revision-Date: 2020-11-24 21:07+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -676,7 +676,7 @@ msgstr "Efectivo"
 #: model:ir.ui.menu,name:jt_supplier_payment.menu_cash_payment_calculation
 #, python-format
 msgid "Cash Payment Calculation"
-msgstr ""
+msgstr "Cálculos de pago en efectivo"
 
 #. module: jt_supplier_payment
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_account_move__category_key
@@ -743,8 +743,10 @@ msgid "Concept"
 msgstr "Concepto"
 
 #. module: jt_supplier_payment
-#: model_terms:ir.actions.act_window,help:jt_supplier_payment.supplier_payment_programming_action
-msgid "Crear un nuevo documento"
+#: model_terms:ir.actions.act_window,help:jt_supplier_payment.different_payroll_payment_request_action
+#: model_terms:ir.actions.act_window,help:jt_supplier_payment.in_payment_different_payroll_payment_request_action
+#: model_terms:ir.actions.act_window,help:jt_supplier_payment.payroll_payment_request_action
+msgid "Create a new document"
 msgstr ""
 
 #. module: jt_supplier_payment
@@ -863,12 +865,12 @@ msgstr ""
 #: model:ir.ui.menu,name:jt_supplier_payment.different_payroll_payment_menu_in_payment
 #: model:ir.ui.menu,name:jt_supplier_payment.different_payroll_payment_request_main_menu
 msgid "Different To Payroll"
-msgstr ""
+msgstr "Pagos Diferente a Nómina"
 
 #. module: jt_supplier_payment
 #: model:ir.ui.menu,name:jt_supplier_payment.different_payroll_payment_management_menu
 msgid "Different To Payroll Management"
-msgstr ""
+msgstr "Gestión de Pagos Diferentes a Nómina"
 
 #. module: jt_supplier_payment
 #: model_terms:ir.ui.view,arch_db:jt_supplier_payment.different_payroll_payment_req_form_view
@@ -984,7 +986,7 @@ msgstr "Clave de Egresos"
 #: model:ir.ui.menu,name:jt_supplier_payment.menu_electronic_deposits_of_salaries
 #, python-format
 msgid "Electronic Deposits Of Salaries"
-msgstr ""
+msgstr "Depósitos electrónicos de salarios"
 
 #. module: jt_supplier_payment
 #: model:ir.model.fields.selection,name:jt_supplier_payment.selection__account_move__payment_method__electronic_transfer
@@ -1107,7 +1109,7 @@ msgstr ""
 #: model:ir.ui.menu,name:jt_supplier_payment.menu_general_total_payment_amounts
 #, python-format
 msgid "General Total Payment Amounts"
-msgstr ""
+msgstr "Montos de pagos totales generales"
 
 #. module: jt_supplier_payment
 #: model_terms:ir.ui.view,arch_db:jt_supplier_payment.payroll_payment_provider_form_view
@@ -1392,7 +1394,7 @@ msgstr "Ultima actualización en"
 #: model_terms:ir.ui.view,arch_db:jt_supplier_payment.view_load_bank_layout_supplier_payment_form
 #, python-format
 msgid "Load Bank Layout"
-msgstr ""
+msgstr "Carga de Layout Bancario"
 
 #. module: jt_supplier_payment
 #: model:ir.model,name:jt_supplier_payment.model_load_bank_layout_supplier_payment
@@ -1509,12 +1511,12 @@ msgstr "Origen"
 #. module: jt_supplier_payment
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_bank_transfer_request__origin_bank_id
 msgid "Origin Bank"
-msgstr ""
+msgstr "Banco origen"
 
 #. module: jt_supplier_payment
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_bank_transfer_request__origin_bank_account_id
 msgid "Origin Bank Account"
-msgstr ""
+msgstr "Cuenta Bancaria Origen"
 
 #. module: jt_supplier_payment
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_account_move_line__other_amounts
@@ -1690,22 +1692,29 @@ msgstr "Pagos"
 #: model:ir.ui.menu,name:jt_supplier_payment.in_payment_different_payroll_payment_request_menu
 #: model:ir.ui.menu,name:jt_supplier_payment.in_payment_payroll_payment_request_menu
 msgid "Payroll"
-msgstr ""
+msgstr "Pagos"
 
 #. module: jt_supplier_payment
 #: model:ir.ui.menu,name:jt_supplier_payment.payroll_payment_management_menu
 msgid "Payroll Payment Management"
-msgstr ""
+msgstr "Gestión de pagos de nómina"
 
 #. module: jt_supplier_payment
 #: model:ir.ui.menu,name:jt_supplier_payment.payroll_payment_request_main_menu
 #: model:ir.ui.menu,name:jt_supplier_payment.payroll_payment_request_menu_in_payment
 msgid "Payroll Payment Request"
-msgstr ""
+msgstr "Solicitud de Pagos de Nómina"
 
 #. module: jt_supplier_payment
 #: model:ir.model,name:jt_supplier_payment.model_payroll_payment_provider_wizard
 msgid "PayrollPaymentProviderwizard"
+msgstr ""
+
+#. module: jt_supplier_payment
+#: code:addons/jt_supplier_payment/models/invoice.py:0
+#: code:addons/jt_supplier_payment/models/invoice.py:0
+#, python-format
+msgid "Please add Egress Key into lines"
 msgstr ""
 
 #. module: jt_supplier_payment
@@ -1881,7 +1890,7 @@ msgstr ""
 #. module: jt_supplier_payment
 #: model:ir.actions.act_window,name:jt_supplier_payment.different_payroll_payment_request_action
 msgid "Request for Different Payroll Payment"
-msgstr ""
+msgstr "Pagos Diferentes de Nómina"
 
 #. module: jt_supplier_payment
 #: model:ir.actions.act_window,name:jt_supplier_payment.supplier_payment_action
@@ -1891,7 +1900,7 @@ msgstr "Solicitud de Pago"
 #. module: jt_supplier_payment
 #: model:ir.actions.act_window,name:jt_supplier_payment.payroll_payment_request_action
 msgid "Request for Payroll Payment"
-msgstr ""
+msgstr "Solicitud de Pago de Nómina"
 
 #. module: jt_supplier_payment
 #: model:ir.actions.server,name:jt_supplier_payment.action_server_done_upload_payroll
@@ -1907,7 +1916,7 @@ msgstr "Usuario solicitante"
 #. module: jt_supplier_payment
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_bank_transfer_request__required_handover_date
 msgid "Required Handover Date"
-msgstr ""
+msgstr "Fecha de entrega requerida"
 
 #. module: jt_supplier_payment
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_bank_transfer_request__req_transfer
@@ -2086,7 +2095,7 @@ msgstr "Subtotal"
 #. module: jt_supplier_payment
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_employee_payroll_file__substate
 msgid "SubState"
-msgstr ""
+msgstr "Subestado"
 
 #. module: jt_supplier_payment
 #: model_terms:ir.ui.view,arch_db:jt_supplier_payment.different_payroll_payment_req_form_view
@@ -2239,7 +2248,7 @@ msgstr "Tipo de línea de negocio"
 #. module: jt_supplier_payment
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_bank_transfer_request__operation_type
 msgid "Type Operation"
-msgstr ""
+msgstr "Tipo de operación"
 
 #. module: jt_supplier_payment
 #: model_terms:ir.ui.view,arch_db:jt_supplier_payment.view_account_move_filter_inherit_payment
@@ -2291,6 +2300,11 @@ msgstr "RFC"
 #. module: jt_supplier_payment
 #: model_terms:ir.ui.view,arch_db:jt_supplier_payment.inherited_view_account_payment_form
 msgid "Validate"
+msgstr ""
+
+#. module: jt_supplier_payment
+#: model:ir.actions.server,name:jt_supplier_payment.validate_supplier_payment_request
+msgid "Validate Budget"
 msgstr ""
 
 #. module: jt_supplier_payment

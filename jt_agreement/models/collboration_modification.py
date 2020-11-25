@@ -1,6 +1,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from datetime import datetime
+from odoo.exceptions import ValidationError,UserError
 
 class BasesCollabrationModification(models.Model):
 
@@ -50,6 +51,13 @@ class BasesCollabrationModification(models.Model):
     bc_modification_format = fields.Binary("BC Modification Format")
     committe_ids = fields.One2many('committee', 'collaboration_modi_id', string="Committees")
     new_committe_ids = fields.One2many('committee', 'new_collaboration_modi_id', string="Committees")
+
+    def unlink(self):
+        for rec in self:
+            if rec.state not in ['draft']:
+                raise UserError(_('You cannot delete an entry which has been confirmed.'))
+        return super(BasesCollabrationModification, self).unlink()
+
 
     def confirm(self):
         if self.change_of == 'goals' and self.new_objective and self.bases_collaboration_id:

@@ -5,6 +5,7 @@
             <field name="name">Projects</field>
             <field name="res_model">project.project</field>
             <field name="view_mode">tree,kanban,form</field>
+            <field name="domain">[('is_papiit_project','=',True)]</field>
             <field name="search_view_id" ref="project.view_project_project_filter"/>
             <field name="context">{'default_is_papiit_project':True,'show_for_agreement':1}</field>
         </record>

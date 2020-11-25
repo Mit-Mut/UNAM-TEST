@@ -24,7 +24,7 @@
 
                             <tr style="width:100%;">
                                 <td>
-                                    <b><span style="font-size:17px;margin-left:5px;">ESTA DE CUENTA DE CONVENIOS BASES DE COLABORACION:</span></b>
+                                    <b><span style="font-size:17px;margin-left:5px;">ESTADO DE CUENTA DE CONVENIOS BASES DE COLABORACIÓN</span></b>
                                 </td>
                                 <td>
                                     <span style="margin-left:300px;font-size:15px;">Fecha y hora de impresión  </span><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/>
@@ -63,6 +63,10 @@
                     }
                 </style>
 				<span t-set="opening_bal" t-value="o.get_opening_balance()"/>
+				<span t-set="deposite" t-value="o.get_deposite()"/>
+				<span t-set="retiros" t-value="o.get_retiros()"/>
+				<span t-set="actual" t-value="opening_bal+deposite-retiros"/>
+				
 				<table style="width:100%">
 					<span t-set="period_name" t-value="o.get_period_name()"/>
                  	<tr style="width:100%">
@@ -75,7 +79,7 @@
                  		<th style="width:10%;text-align:left;">Convenio:</th>
                  		<td style="width:50%;text-align:left;"><span t-field="o.name"/></td>
                  		<th style="width:15%;text-align:left;">Num.de Convenio:</th>
-                 		<td style="width:35%;text-align:left;"> <span t-field="o.convention_no"/></td>
+                 		<td style="width:35%;text-align:left;"> <span t-field="o.n_report"/></td>
                  	</tr>
 
                  	<tr style="width:100%">
@@ -97,19 +101,39 @@
                 <div style="border:1px solid grey;">
                 <table style="width:100%;border-top: 1px solid black;border-bottom:1px solid black;">
                     <tr style="width:100%;" class="border">
-
-                        <hr style="width:98%;border-top: 2px solid black;margin-left:5px;"/>
-                        <hr style="width:98%;border-top: 4px solid black;margin-left:5px;"/>
-
-                        <b>
-                        <span style="margin-left:800px;">Saldo Anterior:<span t-esc="opening_bal"/></span><br/>
-                        <span style="margin-left:800px;">(+) Depositos:</span><br/>
-                        <span style="margin-left:800px;">(-) Retiros:</span><br/>
-                        <span style="margin-left:800px;">(+) Intereses:</span><br/>
-                        <span style="margin-left:800px;">(-) Recup. por Financ.:</span><br/>
-                        <span style="margin-left:800px;">(+) Dif. Por Redondeo:</span><br/>
-                        <span style="margin-left:800px;">Saldo Actual:</span><br/></b><br/>
+                        <th></th>
+                        <th></th>
+                        <th style="text-align:left;"><span>Saldo Anterior:</span></th>
+                        <th class="style1 border1" style="text-align:right;"><span t-esc="opening_bal" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></th>
                     </tr>
+                    <tr style="width:100%;" class="border">
+                        <th></th>
+                        <th></th>
+                        <th style="text-align:left;"><span>Depositos:</span></th>
+                        <th class="style1 border1" style="text-align:right;"><span t-esc="deposite" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></th>
+                    </tr>
+                    <tr style="width:100%;" class="border">
+                        <th></th>
+                        <th></th>
+                        <th style="text-align:left;"><span>Retiros:</span></th>
+                        <th class="style1 border1" style="text-align:right;"><span t-esc="retiros" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></th>
+                    </tr>
+                    <tr style="width:100%;" class="border">
+                        <th></th>
+                        <th></th>
+                        <th style="text-align:left;"><span>Intereses:</span></th>
+                        <th class="style1 border1" style="text-align:right;"></th>
+                    </tr>
+
+                    <tr style="width:100%;" class="border">
+                        <th></th>
+                        <th></th>
+                        <th style="text-align:left;"><span>Saldo Actual:</span></th>
+                        <th class="style1 border1" style="text-align:right;"><span t-esc="actual" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></th>
+                    </tr>
+                
+                </table>
+                <table style="width:100%;border-top: 1px solid black;border-bottom:1px solid black;">
 
                 	<thead>
 	                    <tr style="height:6%;text-align:center;font-size:15px;background-color:#C0C0C0;">
@@ -121,7 +145,9 @@
 	                    </tr>
                     </thead>
                     <tbody>
-                    	<t t-set="total_final" t-value="0"/>
+                    	<t t-set="total_final" t-value="opening_bal"/>
+                    	<t t-set="total_inc" t-value="0"/>
+                    	<t t-set="total_ret" t-value="0"/>
                     	<tr>
                     		<td></td>
                     		<td></td>
@@ -135,19 +161,29 @@
 	                    
 	                        <td class="style1 border1" style="text-align:left;"><span t-field="line.request_date"/></td>
 	                        <td class="style1 border1" style="text-align:left;"><span t-field="line.type_of_operation"/></td>
-	                        <t t-if="line.type_of_operation in ('withdrawal','retirement')">
+	                        <t t-if="line.type_of_operation in ('withdrawal','retirement','withdrawal_cancellation','withdrawal_closure')">
 	                        	<t t-set="credit" t-value="line.opening_balance"/>
 	                        	<t t-set="total_final" t-value="total_final - line.opening_balance"/>
+	                        	<t t-set="total_ret" t-value='total_ret + line.opening_balance'/>
+	                        	
 	                        </t>
-	                        <t t-if="line.type_of_operation in ('increase','increase_by_closing')">
+	                        <t t-if="line.type_of_operation in ('open_bal','increase','increase_by_closing')">
 	                        	<t t-set="debit" t-value="line.opening_balance"/>
 	                        	<t t-set="total_final" t-value="total_final + line.opening_balance"/>
+	                        	<t t-set="total_inc" t-value='total_inc+line.opening_balance'/>
 	                        </t>
-	                        <td class="style1 border1" style="text-align:right;"><span t-esc="debit"/></td>
-	                        <td class="style1 border1" style="text-align:right;"><span t-esc="credit"/></td>
-	                        <td class="style1 border1" style="text-align:right;"><span t-esc="total_final"/></td>
+	                        <td class="style1 border1" style="text-align:right;"><span t-esc="debit" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+	                        <td class="style1 border1" style="text-align:right;"><span t-esc="credit" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+	                        <td class="style1 border1" style="text-align:right;"><span t-esc="total_final" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
 	                    </tr>
-                        
+                        <tr>
+                        	<th></th>
+                        	<th></th>
+	                        <th class="style1 border1" style="text-align:right;"><span t-esc="total_inc" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></th>
+	                        <th class="style1 border1" style="text-align:right;"><span t-esc="total_ret" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></th>
+	                        <th class="style1 border1" style="text-align:right;"><span t-esc="total_final" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></th>
+                        	
+                        </tr>
                     </tbody>
                 </table>
                 <!-- 

@@ -385,7 +385,7 @@ class AccountMove(models.Model):
             for line in self.line_ids:
                 line.coa_conac_id = False 
             
-            move.payment_state = 'registered'        
+            move.payment_state = 'draft'
 
     def get_non_business_day(self,invoice_date,next_date):
         non_business_day = self.env['calendar.payment.regis'].search([('type_pay','=','Non Business Day'),('date','>=',invoice_date),('date','<=',next_date)])

@@ -888,7 +888,7 @@ class IncomeIncomeMoveLine(models.Model):
     account_ie_id = fields.Many2one('association.distribution.ie.accounts','Account I.E.')
     program_code_id = fields.Many2one('program.code')
     move_line_ids = fields.One2many("account.move.line","income_line_id")
-    l10n_mx_edi_product_code_sat_id = fields.Many2one(related="product_id.l10n_mx_edi_code_sat_id",string="Key Product SAT")
+    l10n_mx_edi_product_code_sat_id = fields.Many2one("l10n_mx_edi.product.sat.code", string="SAT Code")
     l10n_mx_edi_uom_code_sat_id = fields.Many2one(related="product_uom_id.l10n_mx_edi_code_sat_id",string="SAT Key Unit")
     fixed_discount = fields.Float('Discount')
     
@@ -1032,7 +1032,8 @@ class IncomeIncomeMoveLine(models.Model):
     @api.onchange('product_id')
     def get_ie_accounts_ids(self):
         self.get_account_list()
-
+        if self.product_id and self.product_id.l10n_mx_edi_code_sat_id:
+            self.l10n_mx_edi_product_code_sat_id = self.product_id.l10n_mx_edi_code_sat_id
         if self.product_id and self.product_id.ie_account_id and len(self.product_id.ie_account_id)==1:
             self.account_ie_id = self.product_id.ie_account_id[0].id
         else:

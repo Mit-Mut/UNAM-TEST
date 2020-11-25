@@ -21,7 +21,7 @@
 #
 ##############################################################################
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError,UserError
 from dateutil.relativedelta import relativedelta
 
 class Trust(models.Model):
@@ -399,4 +399,10 @@ class AgreementTrustModification(models.Model):
                 })
             self.trust_id.committe_ids = [(0, 0, val) for val in vals]
         self.state = 'confirmed'
+
+    def unlink(self):
+        for rec in self:
+            if rec.state not in ['draft']:
+                raise UserError(_('You cannot delete an entry which has been confirmed.'))
+        return super(AgreementTrustModification, self).unlink()
     

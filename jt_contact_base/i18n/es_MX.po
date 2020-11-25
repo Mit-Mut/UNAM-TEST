@@ -378,6 +378,7 @@ msgstr "Estatus"
 #. module: jt_contact_base
 #: model:ir.actions.act_window,name:jt_contact_base.supplier_registration_action
 #: model:ir.model,name:jt_contact_base.model_supplier_registration
+#: model:ir.model.fields,field_description:jt_contact_base.field_account_journal__supplier_registration_layout
 msgid "Supplier Registration"
 msgstr "Registro de proveedores"
 

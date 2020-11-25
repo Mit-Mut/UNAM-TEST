@@ -72,12 +72,12 @@ class Investment(models.Model):
     
     
     
-    @api.depends('line_ids','line_ids.type_of_operation','line_ids.amount')
+    @api.depends('line_ids','line_ids.type_of_operation','line_ids.amount','line_ids.line_state')
     def get_actual_amount(self):
         for rec in self:
             amount = 0
-            amount += sum(a.amount for a in rec.line_ids.filtered(lambda x:x.type_of_operation in ('open_bal','increase','increase_by_closing')))
-            amount -= sum(a.amount for a in rec.line_ids.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure')))
+            amount += sum(a.amount for a in rec.line_ids.filtered(lambda x:x.line_state =='done' and x.type_of_operation in ('open_bal','increase','increase_by_closing')))
+            amount -= sum(a.amount for a in rec.line_ids.filtered(lambda x:x.line_state =='done' and x.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure')))
             rec.actual_amount = amount
 
     @api.model
@@ -110,10 +110,10 @@ class Investment(models.Model):
         if self.interest_rate == 0:
             raise UserError(_('Please Add Interest Rate'))
 
-    @api.constrains('extra_percentage')
-    def check_extra_percentage(self):
-        if self.extra_percentage == 0:
-            raise UserError(_('Please Add Extra Percentage'))
+#     @api.constrains('extra_percentage')
+#     def check_extra_percentage(self):
+#         if self.extra_percentage == 0:
+#             raise UserError(_('Please Add Extra Percentage'))
 
     @api.constrains('is_fixed_rate','term')
     def check_is_fixed_rate(self):

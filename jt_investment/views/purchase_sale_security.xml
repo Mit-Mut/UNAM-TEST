@@ -36,9 +36,9 @@
                 <form>
                 	<header>
                 		<button name="action_confirm" states="draft" string="Confirm" class="oe_highlight" type="object" />
-                		<button name="action_confirm" states="confirmed" string="Investment Settlement" class="oe_highlight" type="object" />
-                		<button name="action_confirm" states="confirmed" string="Returns" class="oe_highlight" type="object" />
-                		<button name="action_confirm" states="confirmed" string="Commissions" class="oe_highlight" type="object" />
+                		<button name="action_confirm" states="confirmed" context="{'edit_amount_field':True}" string="Investment Settlement" class="oe_highlight" type="object" />
+                		<button name="action_confirm" states="confirmed" context="{'edit_amount_field':True}" string="Returns" class="oe_highlight" type="object" />
+                		<button name="action_confirm" states="confirmed" context="{'edit_amount_field':True}" string="Commissions" class="oe_highlight" type="object" />
                 		
                 		<!-- <button name="action_reject" states="draft" string="Reject" class="oe_highlight" type="object"/> -->
                 		<field name="state" widget="statusbar"/>
@@ -60,7 +60,7 @@
                         		<field name="invesment_date" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}" />
                             <field name="expiry_date" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}" />
                         		<field name="movement" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                            <field name="bank_id" required="1" attrs="{'readonly':[('state','!=','draft')]}" domain="[('type','=','bank')]"/>
+                            <field name="bank_id" required="1" attrs="{'readonly':[('state','!=','draft')]}" domain="[('type','=','bank'),('is_productive_account','=',True)]"/>
                         		<field name="last_quote_id" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}" domain="[('journal_id','=',bank_id)]"/>
                         		<field name="last_quote_price" digits="[12,6]"/>
                         		<field name="last_quote_date"/>

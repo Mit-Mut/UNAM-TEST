@@ -26,7 +26,7 @@ from odoo.exceptions import UserError
 class PolicyKeys(models.Model):
 
     _name = 'policy.keys'
-    _description = 'Policy Keys'
+    _description = 'UPA Catalog'
     _rec_name = 'organization'
 
     origin = fields.Char('Origination of the movement')

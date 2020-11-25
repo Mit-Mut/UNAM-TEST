@@ -4,192 +4,271 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 13.0+e\n"
+"Project-Id-Version: Odoo Server 13.0+e-20201027\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-08 15:45+0000\n"
-"PO-Revision-Date: 2020-08-08 11:10-0500\n"
+"POT-Creation-Date: 2020-11-24 21:25+0000\n"
+"PO-Revision-Date: 2020-11-24 21:25+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-"Language: es\n"
-"X-Generator: Poedit 2.3\n"
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__fornight__01
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__fornight__01
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__fornight_does__01
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__fornight__01
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__fornight__01
 msgid "01"
-msgstr "01"
+msgstr ""
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__fornight__02
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__fornight__02
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__fornight_does__02
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__fornight__02
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__fornight__02
 msgid "02"
-msgstr "02"
+msgstr ""
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__fornight__03
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__fornight__03
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__fornight_does__03
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__fornight__03
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__fornight__03
 msgid "03"
-msgstr "03"
+msgstr ""
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__fornight__04
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__fornight__04
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__fornight_does__04
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__fornight__04
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__fornight__04
 msgid "04"
-msgstr "04"
+msgstr ""
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__fornight__05
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__fornight__05
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__fornight_does__05
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__fornight__05
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__fornight__05
 msgid "05"
-msgstr "05"
+msgstr ""
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__fornight__06
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__fornight__06
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__fornight_does__06
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__fornight__06
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__fornight__06
 msgid "06"
-msgstr "06"
+msgstr ""
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__fornight__07
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__fornight__07
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__fornight_does__07
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__fornight__07
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__fornight__07
 msgid "07"
-msgstr "07"
+msgstr ""
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__fornight__08
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__fornight__08
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__fornight_does__08
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__fornight__08
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__fornight__08
 msgid "08"
-msgstr "08"
+msgstr ""
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__fornight__09
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__fornight__09
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__fornight_does__09
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__fornight__09
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__fornight__09
 msgid "09"
-msgstr "09"
+msgstr ""
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__fornight__10
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__fornight__10
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__fornight_does__10
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__fornight__10
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__fornight__10
 msgid "10"
-msgstr "10"
+msgstr ""
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__fornight__11
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__fornight__11
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__fornight_does__11
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__fornight__11
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__fornight__11
 msgid "11"
-msgstr "11"
+msgstr ""
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__fornight__12
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__fornight__12
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__fornight_does__12
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__fornight__12
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__fornight__12
 msgid "12"
-msgstr "12"
+msgstr ""
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__fornight__13
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__fornight__13
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__fornight_does__13
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__fornight__13
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__fornight__13
 msgid "13"
-msgstr "13"
+msgstr ""
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__fornight__14
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__fornight__14
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__fornight_does__14
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__fornight__14
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__fornight__14
 msgid "14"
-msgstr "14"
+msgstr ""
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__fornight__15
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__fornight__15
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__fornight_does__15
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__fornight__15
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__fornight__15
 msgid "15"
-msgstr "15"
+msgstr ""
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__fornight__16
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__fornight__16
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__fornight_does__16
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__fornight__16
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__fornight__16
 msgid "16"
-msgstr "16"
+msgstr ""
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__fornight__17
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__fornight__17
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__fornight_does__17
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__fornight__17
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__fornight__17
 msgid "17"
-msgstr "17"
+msgstr ""
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__fornight__18
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__fornight__18
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__fornight_does__18
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__fornight__18
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__fornight__18
 msgid "18"
-msgstr "18"
+msgstr ""
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__fornight__19
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__fornight__19
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__fornight_does__19
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__fornight__19
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__fornight__19
 msgid "19"
-msgstr "19"
+msgstr ""
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__fornight__20
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__fornight__20
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__fornight_does__20
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__fornight__20
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__fornight__20
 msgid "20"
-msgstr "20"
+msgstr ""
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__fornight__21
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__fornight__21
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__fornight_does__21
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__fornight__21
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__fornight__21
 msgid "21"
-msgstr "21"
+msgstr ""
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__fornight__22
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__fornight__22
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__fornight_does__22
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__fornight__22
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__fornight__22
 msgid "22"
-msgstr "22"
+msgstr ""
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__fornight__23
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__fornight__23
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__fornight_does__23
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__fornight__23
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__fornight__23
 msgid "23"
-msgstr "23"
+msgstr ""
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__fornight__24
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__fornight__24
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__fornight_does__24
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__fornight__24
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__fornight__24
 msgid "24"
-msgstr "24"
+msgstr ""
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__access_warning
+msgid "Access warning"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.actions.act_window,name:jt_payroll_payment.action_account_type_menu
+#: model:ir.ui.menu,name:jt_payroll_payment.menu_account_type_base
+msgid "Account Type"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__activity_ids
+msgid "Activities"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__activity_state
+msgid "Activity State"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__payroll_request_type__add_benifit
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__payroll_request_type__add_benifit
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__request_type__add_benifit
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__request_type__add_benifit
 msgid "Additional Benifit"
-msgstr "Beneficioario adicional"
+msgstr "Beneficio Adicional"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__payroll_adjustment__add_payment
@@ -215,6 +294,59 @@ msgstr "Cantidad pagable"
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_payment_request__amount
 msgid "Amount to Pay"
 msgstr "Monto a pagar"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_res_partner__workstation_id
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_res_users__workstation_id
+msgid "Appointment"
+msgstr "Puesto de Trabajo"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_journal__payroll_load_bank_format__banamex
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__generate_bank_layout_payroll_payment__bank_layout__banamex
+msgid "BANAMEX"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_journal__payroll_bank_format__banorte
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_journal__payroll_beneficiaries_bank_format__banorte
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_journal__payroll_load_bank_format__banorte
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__generate_bank_layout_payroll_payment__bank_layout__banorte
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__load_bank_layout_employee__bank_layout__banorte
+msgid "BANORTE"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_journal__payroll_bank_format__bbva_232
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__generate_bank_layout_payroll_payment__bank_layout__bbva_bancomer_dispersion_232
+msgid "BBVA BANCOMER DISPERSION 232"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_journal__payroll_load_bank_format__bbva_232
+msgid "BBVA BANCOMER DISPERSIÓN 232"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_journal__payroll_bank_format__bbva_nomina
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_journal__payroll_load_bank_format__bbva_nomina
+msgid "BBVA BANCOMER NOMINA"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__generate_bank_layout_payroll_payment__bank_layout__bbva_bancomer_payroll
+msgid "BBVA BANCOMER PAYROLL"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_journal__payroll_bank_format__banamex
+msgid "Banamex"
+msgstr ""
 
 #. module: jt_payroll_payment
 #: model:ir.ui.menu,name:jt_payroll_payment.menu_finance_bank
@@ -244,7 +376,6 @@ msgid "Bank account of payment issuance"
 msgstr "Cuenta bancaria de emisión de pago"
 
 #. module: jt_payroll_payment
-#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__batch_folio
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_payment_request__batch_folio
 msgid "Batch Folio"
 msgstr "Folio por lotes"
@@ -272,10 +403,22 @@ msgid "Calendar for payment record"
 msgstr "Calendario para registro de pagos"
 
 #. module: jt_payroll_payment
-#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__payment_method__cash
+#: model_terms:ir.ui.view,arch_db:jt_payroll_payment.view_generate_bank_layout_employee
+#: model_terms:ir.ui.view,arch_db:jt_payroll_payment.view_generate_bank_layout_payroll_payment
+#: model_terms:ir.ui.view,arch_db:jt_payroll_payment.view_load_bank_layout_employee_form
+msgid "Cancel"
+msgstr ""
+
+#. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__payment_method__cash
 msgid "Cash"
 msgstr "Efectivo"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_res_partner__category_key
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_res_users__category_key
+msgid "Category Key"
+msgstr "Clave de Categoría"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_calendar_payment_regis__cause
@@ -284,10 +427,14 @@ msgid "Cause"
 msgstr "Causa"
 
 #. module: jt_payroll_payment
-#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__payment_method__check
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__payment_method__check
 msgid "Check"
 msgstr "Cheque"
+
+#. module: jt_payroll_payment
+#: model_terms:ir.ui.view,arch_db:jt_payroll_payment.view_load_bank_layout_employee_form
+msgid "Close"
+msgstr ""
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_deduction__concept
@@ -304,6 +451,18 @@ msgstr "Consecutivo"
 #: model:ir.model,name:jt_payroll_payment.model_res_partner
 msgid "Contact"
 msgstr "Contacto"
+
+#. module: jt_payroll_payment
+#: code:addons/jt_payroll_payment/models/res_partner.py:0
+#, python-format
+msgid "Contact FOVISSSTE already exists."
+msgstr ""
+
+#. module: jt_payroll_payment
+#: code:addons/jt_payroll_payment/models/res_partner.py:0
+#, python-format
+msgid "Contact ISSSTE already exists."
+msgstr ""
 
 #. module: jt_payroll_payment
 #: model:ir.actions.act_window,name:jt_payroll_payment.action_contacts_scholarship
@@ -326,6 +485,9 @@ msgstr "Cree un nuevo proveedor en su base de direcciones"
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_deduction__create_uid
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_egress_keys__create_uid
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__create_uid
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_bank_layout_employee__create_uid
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_bank_layout_payroll_payment__create_uid
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_load_bank_layout_employee__create_uid
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_operation_type__create_uid
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_payment_request__create_uid
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_policy_keys__create_uid
@@ -340,6 +502,9 @@ msgstr "Creado por"
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_deduction__create_date
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_egress_keys__create_date
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__create_date
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_bank_layout_employee__create_date
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_bank_layout_payroll_payment__create_date
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_load_bank_layout_employee__create_date
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_operation_type__create_date
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_payment_request__create_date
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_policy_keys__create_date
@@ -360,6 +525,11 @@ msgid "Currency type of the transaction"
 msgstr "Tipo de moneda de la operación"
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields,help:jt_payroll_payment.field_employee_payroll_file__access_url
+msgid "Customer Portal URL"
+msgstr ""
+
+#. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_calendar_payment_regis__date
 #: model_terms:ir.ui.view,arch_db:jt_payroll_payment.cale_pay_reg_search_view
 msgid "Date"
@@ -368,7 +538,6 @@ msgstr "Fecha"
 #. module: jt_payroll_payment
 #: model:ir.actions.act_window,name:jt_payroll_payment.deduction_action
 #: model:ir.model,name:jt_payroll_payment.model_deduction
-#: model:ir.ui.menu,name:jt_payroll_payment.menu_deduction
 #: model:ir.ui.menu,name:jt_payroll_payment.menu_deduction_payment_of_payroll
 msgid "Deduction"
 msgstr "Deducciones"
@@ -379,10 +548,25 @@ msgid "Description"
 msgstr "Descripción"
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_account_move__is_different_payroll_request
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_account_payment__is_different_payroll_request
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__payment_request_type__different_to_payroll
+msgid "Different To Payroll"
+msgstr "Diferente de Nómina"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__payment_request_type__direct_employee
+msgid "Direct Employee"
+msgstr ""
+
+#. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_calendar_payment_regis__display_name
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_deduction__display_name
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_egress_keys__display_name
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__display_name
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_bank_layout_employee__display_name
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_bank_layout_payroll_payment__display_name
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_load_bank_layout_employee__display_name
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_operation_type__display_name
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_payment_request__display_name
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_policy_keys__display_name
@@ -409,9 +593,37 @@ msgid "Done"
 msgstr "Hecho"
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_bank_layout_employee__file_data
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_bank_layout_payroll_payment__file_data
+msgid "Download"
+msgstr ""
+
+#. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__state__draft
 msgid "Draft"
 msgstr "Borrador"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__due_to_inappropriate__due_to_change_date
+msgid ""
+"Due to change in the date of withdrawal or because it is not applicable"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__due_to_inappropriate__due_to_having_been_processed
+msgid ""
+"Due to having been processed Some payment that corresponds to the worker"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__due_to_inappropriate
+msgid "Due to inappropriate"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__due_to_inappropriate__due_to_partial
+msgid "Due to partial or intermediate"
+msgstr ""
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_egress_keys__key
@@ -431,16 +643,18 @@ msgid "Egress Name"
 msgstr "Nombre del egreso"
 
 #. module: jt_payroll_payment
-#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__payment_method__elec_trans
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__payment_method__elec_trans
 msgid "Electronic Transfer"
 msgstr "Transferencia Electrónica"
 
 #. module: jt_payroll_payment
+#: model:ir.model,name:jt_payroll_payment.model_hr_employee
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__employee_id
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_bank_layout_employee__employee_ids
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_load_bank_layout_employee__employee_ids
 #: model:ir.ui.menu,name:jt_payroll_payment.menu_finance_employee
 msgid "Employee"
-msgstr "Empleados"
+msgstr "Empleado"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__employee_number
@@ -449,9 +663,37 @@ msgid "Employee Number"
 msgstr "Numero de empleado"
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_account_move__employee_paryoll_ids
+msgid "Employee Paryoll"
+msgstr "Nómina del Empleado"
+
+#. module: jt_payroll_payment
 #: model:ir.ui.menu,name:jt_payroll_payment.menu_emp_payroll_payment_of_payroll
 msgid "Employee Payroll"
 msgstr "Nómina de empleados"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_load_bank_layout_employee__failed_file_data
+msgid "Failed File"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_load_bank_layout_employee__failed_file_name
+msgid "Failed Filename"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: code:addons/jt_payroll_payment/wizard/load_employee_response_layout.py:0
+#, python-format
+msgid "File Format not Valid!"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_bank_layout_employee__file_name
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_bank_layout_payroll_payment__file_name
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_load_bank_layout_employee__file_name
+msgid "Filename"
+msgstr ""
 
 #. module: jt_payroll_payment
 #: model:ir.ui.menu,name:jt_payroll_payment.menu_payment_finance
@@ -465,11 +707,28 @@ msgid "Financial Institution"
 msgstr "Institución Financiera"
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__message_follower_ids
+msgid "Followers"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__message_channel_ids
+msgid "Followers (Channels)"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__operation_type__currency_type__foreign
 msgid "Foreign Currency"
 msgstr "Moneda Extranjera"
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_account_move__fornight
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_account_payment__fornight
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__fornight
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_payment_request__fornight
 msgid "Fornight"
@@ -482,16 +741,67 @@ msgid "Fornight Does"
 msgstr "Quincena"
 
 #. module: jt_payroll_payment
+#: model_terms:ir.ui.view,arch_db:jt_payroll_payment.view_generate_bank_layout_employee
+#: model_terms:ir.ui.view,arch_db:jt_payroll_payment.view_generate_bank_layout_payroll_payment
+#: model_terms:ir.ui.view,arch_db:jt_payroll_payment.view_load_bank_layout_employee_form
+msgid "Generate"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: code:addons/jt_payroll_payment/wizard/bank_layout_employee.py:0
+#: code:addons/jt_payroll_payment/wizard/bank_layout_employee.py:0
+#: code:addons/jt_payroll_payment/wizard/payroll_payment_bank_format.py:0
+#: code:addons/jt_payroll_payment/wizard/payroll_payment_bank_format.py:0
+#: model:ir.actions.server,name:jt_payroll_payment.action_generate_bank_layout_payment_employee
+#: model_terms:ir.ui.view,arch_db:jt_payroll_payment.view_generate_bank_layout_employee
+#: model_terms:ir.ui.view,arch_db:jt_payroll_payment.view_generate_bank_layout_payroll_payment
+#: model_terms:ir.ui.view,arch_db:jt_payroll_payment.view_load_bank_layout_employee_form
+#, python-format
+msgid "Generate Bank Layout"
+msgstr "Generar Formato de Banco"
+
+#. module: jt_payroll_payment
+#: model:ir.model,name:jt_payroll_payment.model_generate_bank_layout_employee
+msgid "Generate Bank Layout Employee"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model,name:jt_payroll_payment.model_generate_bank_layout_payroll_payment
+msgid "Generate Bank Layout Payroll Payment"
+msgstr ""
+
+#. module: jt_payroll_payment
 #: model_terms:ir.ui.view,arch_db:jt_payroll_payment.cale_pay_reg_search_view
 #: model_terms:ir.ui.view,arch_db:jt_payroll_payment.employee_payroll_file_search
 msgid "Group By"
 msgstr "Agrupar por"
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_journal__payroll_bank_format__hsbc
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_journal__payroll_load_bank_format__hsbc
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__generate_bank_layout_payroll_payment__bank_layout__hsbc
+msgid "HSBC"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_load_bank_layout_employee__is_hide_failed
+msgid "Hide Failed"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_load_bank_layout_employee__is_hide_file_upload
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_load_bank_layout_employee__is_hide_success
+msgid "Hide Success"
+msgstr ""
+
+#. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_calendar_payment_regis__id
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_deduction__id
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_egress_keys__id
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__id
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_bank_layout_employee__id
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_bank_layout_payroll_payment__id
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_load_bank_layout_employee__id
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_operation_type__id
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_payment_request__id
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_policy_keys__id
@@ -499,12 +809,55 @@ msgstr "Agrupar por"
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_upa_catalog__id
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_upa_document_type__id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__activity_exception_icon
+msgid "Icon"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,help:jt_payroll_payment.field_employee_payroll_file__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,help:jt_payroll_payment.field_employee_payroll_file__message_needaction
+#: model:ir.model.fields,help:jt_payroll_payment.field_employee_payroll_file__message_unread
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,help:jt_payroll_payment.field_employee_payroll_file__message_has_error
+#: model:ir.model.fields,help:jt_payroll_payment.field_employee_payroll_file__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__payroll_adjustment__inappropriate
+msgid "Inappropriate"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__message_is_follower
+msgid "Is Follower"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.ui.menu,name:jt_payroll_payment.hr_job_menu_payroll_setting
+msgid "Job Positions"
+msgstr "Puestos de Trabajo"
+
+#. module: jt_payroll_payment
+#: model:ir.model,name:jt_payroll_payment.model_account_journal
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_payment_request__journal_id
 msgid "Journal"
 msgstr "Diario"
+
+#. module: jt_payroll_payment
+#: model:ir.model,name:jt_payroll_payment.model_account_move
+msgid "Journal Entries"
+msgstr "Asientos contables"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__payroll_adjustment__judical
@@ -522,6 +875,9 @@ msgstr "Clave"
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_deduction____last_update
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_egress_keys____last_update
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file____last_update
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_bank_layout_employee____last_update
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_bank_layout_payroll_payment____last_update
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_load_bank_layout_employee____last_update
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_operation_type____last_update
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_payment_request____last_update
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_policy_keys____last_update
@@ -536,6 +892,9 @@ msgstr "Última modificación el"
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_deduction__write_uid
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_egress_keys__write_uid
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__write_uid
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_bank_layout_employee__write_uid
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_bank_layout_payroll_payment__write_uid
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_load_bank_layout_employee__write_uid
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_operation_type__write_uid
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_payment_request__write_uid
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_policy_keys__write_uid
@@ -550,6 +909,9 @@ msgstr "Última actualización por"
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_deduction__write_date
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_egress_keys__write_date
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__write_date
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_bank_layout_employee__write_date
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_bank_layout_payroll_payment__write_date
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_load_bank_layout_employee__write_date
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_operation_type__write_date
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_payment_request__write_date
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_policy_keys__write_date
@@ -560,9 +922,60 @@ msgid "Last Updated on"
 msgstr "Ultima actualización en"
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_bank_layout_payroll_payment__bank_layout
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_load_bank_layout_employee__bank_layout
+msgid "Layout"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_account_bank_statement_import_journal_creation__payroll_bank_format
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_account_journal__payroll_bank_format
+msgid "Layout generation for payroll payments"
+msgstr "Generacion de Layout para Pagos de Nómina"
+
+#. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__payroll_adjustment__leave_without_pay
 msgid "Leave without Pay"
 msgstr "Irse sin pagar"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__due_to_inappropriate__leave_without_pay
+msgid "Leave without pay"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: code:addons/jt_payroll_payment/wizard/load_employee_response_layout.py:0
+#: code:addons/jt_payroll_payment/wizard/load_employee_response_layout.py:0
+#: model:ir.actions.server,name:jt_payroll_payment.action_load_bank_layout_payment_employee
+#, python-format
+msgid "Load Bank Layout"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model,name:jt_payroll_payment.model_load_bank_layout_employee
+msgid "Load Bank Layout Employee"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_account_bank_statement_import_journal_creation__payroll_load_bank_format
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_account_journal__payroll_load_bank_format
+msgid "Load bank layout for payroll"
+msgstr "Carga de Layout Bancario para Nómina"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__message_ids
+msgid "Messages"
+msgstr ""
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__name
@@ -577,20 +990,74 @@ msgid "National Currency"
 msgstr "Moneda Nacional"
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__activity_summary
+msgid "Next Activity Summary"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__due_to_inappropriate__no_check_collected
+msgid "No Check Collected"
+msgstr ""
+
+#. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__type_pay__non_business_day
 #: model_terms:ir.ui.view,arch_db:jt_payroll_payment.cale_pay_reg_search_view
 msgid "Non Business Day"
 msgstr "Día inhábil"
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__message_has_error_counter
+msgid "Number of errors"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,help:jt_payroll_payment.field_employee_payroll_file__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,help:jt_payroll_payment.field_employee_payroll_file__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,help:jt_payroll_payment.field_employee_payroll_file__message_unread_counter
+msgid "Number of unread messages"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_account_move__observations
+msgid "Observations"
+msgstr "Observaciones"
+
+#. module: jt_payroll_payment
 #: model_terms:ir.actions.act_window,help:jt_payroll_payment.res_partner_action_supplier_service_provider
 msgid "Odoo helps you easily track all activities related to a supplier."
-msgstr "Odoo le ayuda a rastrear fácilmente todas las actividades relacionadas con un proveedor."
+msgstr ""
+"Odoo le ayuda a rastrear fácilmente todas las actividades relacionadas con "
+"un proveedor."
 
 #. module: jt_payroll_payment
 #: model_terms:ir.actions.act_window,help:jt_payroll_payment.action_contacts_scholarship
 msgid "Odoo helps you to easily track all activities related to a customer."
-msgstr "Odoo le ayuda a rastrear fácilmente todas las actividades relacionadas con un cliente."
+msgstr ""
+"Odoo le ayuda a rastrear fácilmente todas las actividades relacionadas con "
+"un cliente."
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__cause__official
@@ -614,11 +1081,13 @@ msgid "Origination of the movement"
 msgstr "Origen del movimiento"
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__payroll_request_type__payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__payroll_request_type__payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__request_type__payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__request_type__payment
 #: model:ir.ui.menu,name:jt_payroll_payment.menu_payroll_payment
 msgid "Payment"
-msgstr "Pagos"
+msgstr "Pago"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__payment_issuing_bank_id
@@ -627,11 +1096,14 @@ msgid "Payment Issuing Bank"
 msgstr "Banco emisor de pagos"
 
 #. module: jt_payroll_payment
-#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__payment_method
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_payment_request__payment_method
-#: model_terms:ir.ui.view,arch_db:jt_payroll_payment.employee_payroll_file_search
 msgid "Payment Method"
 msgstr "Método de pago"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__payment_request_type__payment_provider
+msgid "Payment Provider"
+msgstr ""
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_payment_request__payment_receipt_bank_id
@@ -644,9 +1116,18 @@ msgid "Payment Request"
 msgstr "Solicitud de pago"
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_account_payment__payment_request_type
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__payment_request_type
+#: model_terms:ir.ui.view,arch_db:jt_payroll_payment.employee_payroll_file_search
+msgid "Payment Request Type"
+msgstr "Tipo de solicitud de pago"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__payroll_request_type__alimony
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__payroll_request_type__alimony
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__request_type__alimony
 msgid "Payment Special payroll"
-msgstr "Pago Nómina especial"
+msgstr "Pago Especial de Nómina"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__request_type__alimony
@@ -683,12 +1164,21 @@ msgid "Payment schedule"
 msgstr "Programación de pago"
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__payroll_request_type__university
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__payroll_request_type__university
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__request_type__university
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payment_request__request_type__university
 msgid "Payment to University Worker"
-msgstr "Pago al trabajador universitario"
+msgstr "Pago a Trabajador Universitario"
 
 #. module: jt_payroll_payment
+#: model:ir.model,name:jt_payroll_payment.model_account_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_bank_layout_payroll_payment__payment_ids
+msgid "Payments"
+msgstr "Pagos"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_account_move__is_payroll_payment_request
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__type_of_payment__payroll
 #: model_terms:ir.ui.view,arch_db:jt_payroll_payment.cale_pay_reg_search_view
 msgid "Payroll"
@@ -706,6 +1196,16 @@ msgid "Payroll Origin"
 msgstr "Origen de la Nómina"
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__payment_request_type__payroll_payment
+msgid "Payroll Payment"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__move_id
+msgid "Payroll Payments"
+msgstr ""
+
+#. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__period_start
 msgid "Period"
 msgstr "Periodo"
@@ -716,9 +1216,35 @@ msgid "Period End"
 msgstr "Fin del periodo"
 
 #. module: jt_payroll_payment
+#: model:ir.ui.menu,name:jt_payroll_payment.payment_place_menu_payroll_setting
+msgid "Place of Payment"
+msgstr "Lugar de Pago"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__payment_place_id
+msgid "Place of payment"
+msgstr "Lugar de pago"
+
+#. module: jt_payroll_payment
+#: model:ir.actions.act_window,name:jt_payroll_payment.policy_keys_action
+#: model:ir.model,name:jt_payroll_payment.model_policy_keys
+#: model:ir.ui.menu,name:jt_payroll_payment.policy_keys_menu
+msgid "Policy Keys"
+msgstr "Claves UPA"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__access_url
+msgid "Portal Access URL"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.actions.server,name:jt_payroll_payment.action_server_employee_portal_user
+msgid "Portal Users"
+msgstr ""
+
+#. module: jt_payroll_payment
 #: model:ir.actions.act_window,name:jt_payroll_payment.preception_action
 #: model:ir.model,name:jt_payroll_payment.model_preception
-#: model:ir.ui.menu,name:jt_payroll_payment.menu_preception
 #: model:ir.ui.menu,name:jt_payroll_payment.menu_preception_payment_of_payroll
 msgid "Preception"
 msgstr "Percepciones"
@@ -750,14 +1276,21 @@ msgid "Registering User"
 msgstr "Usuario Registrado"
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_account_bank_statement_import_journal_creation__payroll_beneficiaries_bank_format
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_account_journal__payroll_beneficiaries_bank_format
+msgid "Registration of Payroll beneficiaries"
+msgstr "Registro de Beneficiarios para Nómina"
+
+#. module: jt_payroll_payment
+#: model:ir.ui.menu,name:jt_payroll_payment.menu_finance_reports
+#: model:ir.ui.menu,name:jt_payroll_payment.menu_report_payment_of_payroll
+msgid "Reports"
+msgstr "Reportes"
+
+#. module: jt_payroll_payment
 #: model_terms:ir.ui.view,arch_db:jt_payroll_payment.employee_payroll_file_search
 msgid "Request Type"
 msgstr "Tipo de solicitud"
-
-#. module: jt_payroll_payment
-#: model:ir.actions.server,name:jt_payroll_payment.action_create_payment_request
-msgid "Request for payment"
-msgstr "Solicitud de pago"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_operation_type__name
@@ -765,10 +1298,37 @@ msgid "Request operation name"
 msgstr "Nombre de operación de solicitud"
 
 #. module: jt_payroll_payment
-#: model:ir.actions.server,name:jt_payroll_payment.action_revised_emp_payroll_files
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__activity_user_id
+msgid "Responsible User"
+msgstr ""
+
+#. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__state__revised
 msgid "Revised"
 msgstr "Revisado"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_journal__payroll_load_bank_format__santander
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__generate_bank_layout_payroll_payment__bank_layout__santander
+msgid "SANTANDER"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_journal__payroll_bank_format__santander
+msgid "SANTANDER:"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_journal__payroll_bank_format__scotiabank
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_journal__payroll_load_bank_format__scotiabank
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__generate_bank_layout_payroll_payment__bank_layout__scotiabank
+msgid "SCOTIABANK"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr ""
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__payroll_adjustment__salary_mod_dec
@@ -797,11 +1357,26 @@ msgid "Scholarship"
 msgstr "Becarios"
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__access_token
+msgid "Security Token"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_bank_layout_employee__journal_id
+msgid "Select the file to generate"
+msgstr ""
+
+#. module: jt_payroll_payment
 #: model:ir.ui.menu,name:jt_payroll_payment.menu_payment_finance_setting
 #: model:ir.ui.menu,name:jt_payroll_payment.menu_payroll_payment_config
 #: model:ir.ui.menu,name:jt_payroll_payment.menu_setting_payment_of_payroll
 msgid "Setting"
 msgstr "Configuración"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__due_to_inappropriate__special_cases
+msgid "Special cases"
+msgstr ""
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__state
@@ -810,15 +1385,34 @@ msgid "State"
 msgstr "Estado"
 
 #. module: jt_payroll_payment
-#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__substate
-msgid "SubState"
-msgstr "Sub estado"
+#: model:ir.model.fields,help:jt_payroll_payment.field_employee_payroll_file__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_load_bank_layout_employee__success_file_data
+msgid "Success File"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_load_bank_layout_employee__success_file_name
+msgid "Success Filename"
+msgstr ""
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__cause__sunday
 #: model_terms:ir.ui.view,arch_db:jt_payroll_payment.cale_pay_reg_search_view
 msgid "Sunday"
 msgstr "Domingo"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__payment_request_type__supplier_payment
+msgid "Supplier Payment"
+msgstr ""
 
 #. module: jt_payroll_payment
 #: model_terms:ir.ui.view,arch_db:jt_payroll_payment.payroll_supplier_partner_view_inh_search
@@ -845,17 +1439,21 @@ msgstr "El consecutivo debe ser un valor numérico"
 
 #. module: jt_payroll_payment
 #: code:addons/jt_payroll_payment/models/operation_type.py:0
+#: code:addons/jt_payroll_payment/models/operation_type.py:0
+#: code:addons/jt_payroll_payment/models/operation_type.py:0
 #, python-format
 msgid "The Operation Number must be numeric value"
 msgstr "El número de operación debe ser un valor numérico"
 
 #. module: jt_payroll_payment
 #: code:addons/jt_payroll_payment/models/policy_keys.py:0
+#: code:addons/jt_payroll_payment/models/policy_keys.py:0
 #, python-format
 msgid "The Organization and Control must be of 3 characters only."
 msgstr "La Organización y Control debe tener solo 3 caracteres."
 
 #. module: jt_payroll_payment
+#: code:addons/jt_payroll_payment/models/res_partner.py:0
 #: code:addons/jt_payroll_payment/models/res_partner.py:0
 #, python-format
 msgid "There must be only one Supplier of payment of payroll!"
@@ -875,21 +1473,50 @@ msgid "Type of Operation"
 msgstr "Tipo de Operación"
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_account_move__payroll_request_type
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_account_payment__payroll_request_type
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__request_type
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_payment_request__request_type
 msgid "Type of request for payroll payment"
 msgstr "Tipo de solicitud de pago de nómina"
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields,help:jt_payroll_payment.field_employee_payroll_file__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr ""
+
+#. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__cause__unam
 #: model_terms:ir.ui.view,arch_db:jt_payroll_payment.cale_pay_reg_search_view
 msgid "UNAM"
-msgstr "UNAM"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.actions.act_window,name:jt_payroll_payment.upa_catalog_action
+#: model:ir.model,name:jt_payroll_payment.model_upa_catalog
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_operation_type__upa_catalog_policy_id
+msgid "UPA Catalog"
+msgstr "Catálogo UPA"
 
 #. module: jt_payroll_payment
 #: model:ir.model,name:jt_payroll_payment.model_upa_document_type
 msgid "UPA Document Type"
 msgstr "Tipo de documento UPA"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__message_unread
+msgid "Unread Messages"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_load_bank_layout_employee__file_data
+msgid "Upload"
+msgstr ""
 
 #. module: jt_payroll_payment
 #: model:ir.actions.act_window,name:jt_payroll_payment.employee_payroll_file_action
@@ -908,26 +1535,32 @@ msgid "User who Sends"
 msgstr "Usuario que envía"
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_account_move__payroll_register_user_id
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__payroll_register_user_id
+msgid "User who registers"
+msgstr "Usuario quien registra"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_account_move__payroll_send_user_id
+msgid "User who sends"
+msgstr "Usuario quien envía"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,help:jt_payroll_payment.field_employee_payroll_file__website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__due_to_inappropriate__withdrawal
+msgid "Withdrawal"
+msgstr ""
+
+#. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__payroll_adjustment__withdrawal
 msgid "Withdrawal from the university worker"
 msgstr "Retiro del trabajador universitario"
-
-#. module: jt_payroll_payment
-#: model:ir.ui.menu,name:jt_payroll_payment.menu_finance_reports
-msgid "Reports"
-msgstr "Reportes"
-
-#. module: jt_payroll_payment
-#: model:ir.actions.act_window,name:jt_payroll_payment.policy_keys_action
-#: model:ir.actions.act_window,name:jt_payroll_payment.upa_catalog_action
-#: model:ir.model,name:jt_payroll_payment.model_upa_catalog
-#: model:ir.model.fields,field_description:jt_payroll_payment.field_operation_type__upa_catalog_policy_id
-#: model:ir.ui.menu,name:jt_payroll_payment.policy_keys_menu
-#: model:ir.ui.menu,name:jt_payroll_payment.upa_catalog_menu
-msgid "UPA Catalog"
-msgstr "Catálogo UPA"
-
-#. module: jt_payroll_payment
-#: model:ir.model,name:jt_payroll_payment.model_policy_keys
-msgid "Policy Keys"
-msgstr "Catálogo UPA"

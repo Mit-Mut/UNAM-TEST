@@ -56,7 +56,7 @@
                                 <field name="workstation_id"/>
                                 <field name="administrative_forms"/>
                                 <field name="no_of_document"/>
-                                <field name="vault_folio"/>
+                                <field name="vault_folio" invisible="1"/>
                                 <field name="currency_id" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 <field name="journal_id" readonly="1"/>
                                 <field name="payment_bank_id"/>
@@ -66,18 +66,20 @@
                                 <field name="responsible_id"/>
                                 <field name="administrative_secretary_id"/>
                                 <field name="holder_of_dependency_id" string="Holder of the Unit" />
-                                <field name="invoice_uuid"/>
-                                <field name="invoice_series"/>
-                                <field name="folio_invoice"/>
-                                <field name="user_id" string="User who registers"/>
+                                <field name="invoice_uuid" invisible="1"/>
+                                <field name="invoice_series" invisible="1"/>
+                                <field name="folio_invoice" invisible="1"/>
+                                <field name="user_id" string="User who registers" readonly="0"/>
                                 <field name="status"/>
-                                <field name="diary"/>
-                                <field name="excercise"/>
+                                <field name="diary" readonly="1" domain="[('code','=','PPAR')]"/>
+                                <field name="excercise" invisible="1"/>
                                 <field name="project_key"/>
-                                <field name="invoice_vault_folio"/>
+                                <field name="invoice_vault_folio" invisible="1"/>
                                 <field name="line" invisible="1"/>
                             </group>
                             <group>
+                                <field name="req_registration_date"/>
+                                <field name="invoice_date"/>
                                 <field name="project_number_id"/>
                                 <field name="agreement_number"/>
                                 <field name="stage"/>
@@ -99,9 +101,9 @@
                                 <field name="exchange_rate"/>
                                 <field name="foreign_currency_amount"/>
                                 <field name="previous"/>
-                                <field name="reason_rejection_req"/>
-                                <field name="reason_rejection"/>
-                                <field name="reason_cancellation"/>
+                                <field name="reason_rejection_req" attrs="{'invisible': [('payment_state', '!=','rejected')]}" readonly="1"/>
+                                <field name="reason_rejection" attrs="{'invisible': [('payment_state', '!=','payment_not_applied')]}" readonly="1"/>
+                                <field name="reason_cancellation" attrs="{'invisible':[('payment_state', '!=', 'cancel')],'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 
                             </group>
                         </group>
@@ -144,19 +146,27 @@
 
                                         <field name="program_code_id" domain="[('budget_id.state','=','validate')]"/>
                                         <field name="type_of_bussiness_line"/>
-                                        <field name="vat"/>
+                                        <field name="vat" invisible="1"/>
+                                        <field name="stage"/>
+                                        <field name="excercise"/>
+                                        <field name="project_key"/>
+                                        <field name="invoice_vault_folio"/>
+                                        <field name="uuid_invoice"/>
+                                        <field name="invoice_series"/>
+                                        <field name="invoice_folio"/>
                                         <field name="retIVA"/>
                                         <field name="turn_type"/>
                                         <field name="price_unit" string="Price"/>
-                                        <field name="other_amounts"/>
+                                        <field name="operation_type_id" invisible="1"/>
+                                        <field name="other_amounts" attrs="{'invisible': [('operation_type_id', 'not in',('reimbursement to third parties','plane tickets','payment to supplier'))]}"/>
                                         <field name="tax_ids" widget="many2many_tags"
                                                domain="[('type_tax_use', '=?', parent.invoice_filter_type_domain), ('company_id', '=', parent.company_id)]"
                                                context="{'append_type_to_tax_name': not parent.invoice_filter_type_domain}"
                                                options="{'no_create': True}"
                                                optional="show"/>
-                                        <field name="price_subtotal"
+                                        <!-- <field name="price_subtotal"
                                                string="Subtotal"
-                                               groups="account.group_show_line_subtotals_tax_excluded"/>
+                                               groups="account.group_show_line_subtotals_tax_excluded"/> -->
                                         <field name="price_total"
                                                string="Total"
                                                groups="account.group_show_line_subtotals_tax_included"/>

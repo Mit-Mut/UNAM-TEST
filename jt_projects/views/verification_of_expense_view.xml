@@ -33,7 +33,7 @@
                                 <field name="application_approval_date" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="project_id"  attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="project_number_id" readonly="1"/>
-                                <field name="number" readonly="1"/>
+                                <field name="number" />
                                 <field name="doc_type" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 
                                 <field name="type_of_currency" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>

@@ -9,6 +9,9 @@ class ProjectRegistry(models.Model):
     project_type = fields.Selection([('conacyt', 'CONACYT'),
                                      ('concurrent', 'Concurrent'),
                                      ('other', 'Other projects with checkbook')], "Project Type")
+    project_type_identifier_id = fields.Many2one(
+        'project.type', string="Project Type Identifier")
+
     proj_start_date = fields.Date("Start Date")
     proj_end_date = fields.Date("End Date")
     visibility = fields.Selection(
@@ -64,15 +67,14 @@ class ProjectRegistry(models.Model):
 
     responsible_name = fields.Char('Responsible name')
     stage_identifier_id = fields.Many2one('stage', string="Stage")
-    project_type_identifier_id = fields.Many2one(
-        'project.type', string="Project Type Identifier")
+
     project_ministrations_ids = fields.One2many(
         'project.ministrations', 'project_id', string='Project Ministrations')
 
-    @api.onchange('project_type_identifier_id')
-    def onchange_project_type_identifier_id(self):
-        if self.project_type_identifier_id:
-            self.number = self.project_type_identifier_id.number
+    # @api.onchange('project_type_identifier_id')
+    # def onchange_project_type_identifier_id(self):
+    #     if self.project_type_identifier_id:
+    #         self.number = self.project_type_identifier_id.number
 
     @api.onchange('stage_identifier_id')
     def onchange_stage_identifier_id(self):

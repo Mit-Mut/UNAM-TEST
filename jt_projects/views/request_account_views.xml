@@ -44,9 +44,10 @@
                                 <field name="authorized_amount" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                             </group>
                             <group>
-                                <field name="observations" attrs="{'invisible': [('status', '!=', 'rejected')]}" readonly="1"/>
+                                <field name="observations" attrs="{'invisible': [('status', '!=', 'eraser')]}"/>
                                 <field name="bank_account_id" readonly="1"/>
                                 <field name="bank_acc_number_id" readonly="1"/>
+                                <field name="no_contract" readonly="1"/>
                                 <field name="customer_number" invisible="1"/>
                                 <field name="supporting_documentation" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="reason_rejection" attrs="{'readonly': [('status', '!=', 'eraser')],'invisible': [('status', '!=', 'rejected')]}"/>
@@ -98,6 +99,7 @@
                                 <field name="project_stage_identifier" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="ministrations_amount" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="authorized_amount" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="program_code" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                             </group>
                             <group>
                                 <field name="observations" readonly="1" attrs="{'invisible': [('status', '!=', 'rejected')]}"/>

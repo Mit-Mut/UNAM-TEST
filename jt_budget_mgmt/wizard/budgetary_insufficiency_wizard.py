@@ -21,7 +21,7 @@
 #
 ##############################################################################
 from odoo import models, fields
-
+from datetime import datetime
 
 class BudegtInsufficiencWiz(models.TransientModel):
 
@@ -135,6 +135,7 @@ class BudegtInsufficiencWiz(models.TransientModel):
         if self.move_ids and not self.move_id:
             for move in self.move_ids:
                 move.payment_state = 'approved_payment'
+                move.date_approval_request = datetime.today().date()
                 move.is_from_reschedule_payment = False
                 for line in move.invoice_line_ids:
                     budget_line_links = []
@@ -248,6 +249,7 @@ class BudegtInsufficiencWiz(models.TransientModel):
                 move.create_journal_line_for_approved_payment()
         else:
             self.move_id.payment_state = 'approved_payment'
+            self.move_id.date_approval_request = datetime.today().date()
             self.move_id.is_from_reschedule_payment = False
             self.decrease_available_amount()
             self.move_id.create_journal_line_for_approved_payment()

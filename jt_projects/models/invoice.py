@@ -20,7 +20,7 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from odoo import models, fields,api,_
+from odoo import models, fields
 
 
 class AccountMove(models.Model):
@@ -37,12 +37,13 @@ class AccountMove(models.Model):
     project_number_id = fields.Many2one(
         'project.project', string='Project Number')
     agreement_number = fields.Char(
-        related='project_number_id.number_agreement', string='Agreement Number')
+        related='project_number_id.base_number', string='Agreement Number')
     stage = fields.Char(
         related='project_number_id.stage_identifier', string='Stage')
     excercise = fields.Char('excercise')
     project_key = fields.Char('Project Key')
     invoice_vault_folio = fields.Char('Invoice vault folio')
+    req_registration_date = fields.Date('Request Registration Date')
     status = fields.Selection(
         [('accept', 'Accepted'), ('reject', 'Rejected')], string='Status')
     line = fields.Integer("Header")
@@ -52,15 +53,27 @@ class AccountMove(models.Model):
     responsible_category_key = fields.Char("Responsible category key")
     responsible_job_position = fields.Many2one(
         'hr.job', 'Responsible job position')
-    
+
+
 class AccountMoveLine(models.Model):
 
     _inherit = 'account.move.line'
 
+    invoice_id = fields.Many2one
     concept = fields.Char('Concept')
     bill = fields.Many2one('account.account')
     vat = fields.Char('Vat')
     retIVA = fields.Char('RetIVA')
     line = fields.Integer("Line")
+    stage = fields.Char(related='move_id.stage', string='Stage')
+    excercise = fields.Char(related='move_id.excercise', string='excercise')
+    operation_type_id = fields.Many2one(
+        related='move_id.operation_type_id', string="Operation Type")
+    project_key = fields.Char(
+        related='move_id.project_key', string='Project Key')
+    invoice_vault_folio = fields.Char('Invoice vault folio')
+    uuid_invoice = fields.Char(string='UUID Invoice')
+    invoice_series = fields.Char(string='Invoice Series')
+    invoice_folio = fields.Char(string='Invoice Folio')
     #other_amounts = fields.Monetary("Other Amounts")
     # price_payment = fields.Monetary("Price")

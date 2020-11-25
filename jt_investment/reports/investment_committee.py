@@ -122,6 +122,7 @@ class InvestmentCommittee(models.AbstractModel):
             {'name': _('Importe')},
             {'name': _('Tipo')},
             {'name': _('Tasa Rendimiento')},
+            {'name': _('Procentual extra')},
             {'name': _('Destino Rendimiento')},
         ]
 
@@ -226,6 +227,7 @@ class InvestmentCommittee(models.AbstractModel):
                         {'name': ''},
                         {'name':''},
                         {'name':''},
+                        {'name':''},
                         ],
             'level': 1,
             'unfoldable': False,
@@ -248,6 +250,7 @@ class InvestmentCommittee(models.AbstractModel):
                             self._format({'name': account.amount_to_invest},figure_type='float'),
                             {'name': 'Accounts Productivas'},
                             {'name': account.interest_rate or ''},
+                            {'name': account.extra_percentage or ''},
                             {'name': account.yield_id and account.yield_id.name or ''},
                             ],
                 'level': 3,
@@ -259,7 +262,7 @@ class InvestmentCommittee(models.AbstractModel):
             'id': 'hierarchy_account_productivas_total',
             'name': 'Total',
             'columns': [
-                         
+                        {'name':''}, 
                         {'name': ''},
                         self._format({'name': total_amount},figure_type='float'),
                         {'name': ''},
@@ -296,6 +299,7 @@ class InvestmentCommittee(models.AbstractModel):
                         {'name': ''},
                         {'name':''},
                         {'name':''},
+                        {'name':''},
                         ],
             'level': 1,
             'unfoldable': False,
@@ -317,6 +321,7 @@ class InvestmentCommittee(models.AbstractModel):
                             self._format({'name': cetes.nominal_value},figure_type='float'),
                             {'name': 'CETES'},
                             {'name': cetes.yield_rate or ''},
+                            {'name':''},
                             {'name': cetes.yield_id and cetes.yield_id.name or ''},
                             ],
                 'level': 3,
@@ -328,7 +333,7 @@ class InvestmentCommittee(models.AbstractModel):
             'id': 'hierarchy_cetes_total',
             'name': 'Total',
             'columns': [
-                         
+                        {'name':''}, 
                         {'name': ''},
                         self._format({'name': cetes_total_amount},figure_type='float'),
                         {'name': ''},
@@ -349,6 +354,7 @@ class InvestmentCommittee(models.AbstractModel):
                         {'name': ''},
                         {'name': ''},
                         {'name': ''},
+                        {'name':''},
                         {'name':''},
                         {'name':''},
                         ],
@@ -372,6 +378,7 @@ class InvestmentCommittee(models.AbstractModel):
                             self._format({'name': udibonos.nominal_value},figure_type='float'),
                             {'name': 'UDIBONOS'},
                             {'name': udibonos.interest_rate or ''},
+                            {'name':''},
                             {'name': udibonos.yield_id and udibonos.yield_id.name or ''},
                             ],
                 'level': 3,
@@ -386,6 +393,7 @@ class InvestmentCommittee(models.AbstractModel):
             'columns': [
                          
                         {'name': ''},
+                        {'name':''},
                         self._format({'name': udibonos_total_amount},figure_type='float'),
                         {'name': ''},
                         {'name': ''},
@@ -404,6 +412,7 @@ class InvestmentCommittee(models.AbstractModel):
                         {'name': ''}, 
                         {'name': ''},
                         {'name': ''},
+                        {'name':''},
                         {'name':''},
                         {'name':''},
                         ],
@@ -427,6 +436,7 @@ class InvestmentCommittee(models.AbstractModel):
                             self._format({'name': bonds.nominal_value},figure_type='float'),
                             {'name': 'BONDS'},
                             {'name': bonds.interest_rate or ''},
+                            {'name':''},
                            {'name': bonds.yield_id and bonds.yield_id.name or ''},
                             ],
                 'level': 3,
@@ -439,6 +449,7 @@ class InvestmentCommittee(models.AbstractModel):
             'name': 'Total',
             'columns': [
                         {'name': ''},
+                        {'name':''},
                         self._format({'name': bonds_total_amount},figure_type='float'),
                         {'name': ''},
                         {'name': ''},
@@ -457,6 +468,7 @@ class InvestmentCommittee(models.AbstractModel):
                         {'name': ''}, 
                         {'name': ''},
                         {'name': ''},
+                        {'name':''},
                         {'name':''},
                         {'name':''},
                         ],
@@ -479,6 +491,7 @@ class InvestmentCommittee(models.AbstractModel):
                             self._format({'name': pay.amount},figure_type='float'),
                             {'name': 'Promissory'},
                             {'name': pay.interest_rate or ''},
+                            {'name':''},
                             {'name': pay.yield_id and pay.yield_id.name or ''},
                             ],
                 'level': 3,
@@ -491,11 +504,13 @@ class InvestmentCommittee(models.AbstractModel):
             'name': 'Total',
             'columns': [
                         {'name': ''},
+                        {'name':''},
                         self._format({'name': pay_total_amount},figure_type='float'),
                         {'name': ''},
                         {'name': ''},
                         {'name':''},
                         {'name':''},
+                        
                         ],
             'level': 1,
             'unfoldable': False,
@@ -523,7 +538,8 @@ class InvestmentCommittee(models.AbstractModel):
             'columns': [{'name': ''}, 
                         {'name': ''}, 
                         {'name': ''},
-                        {'name': ''},
+                        {'name':''},
+                        {'name':''},
                         {'name':''},
                         {'name':''},
                         ],
@@ -535,7 +551,10 @@ class InvestmentCommittee(models.AbstractModel):
         sale_total_amount = 0
         #==== Sale Security========#
         for sale in sale_security_ids:
-            sale_total_amount += sale.amount
+            if sale.movement and sale.movement=='buy':
+                sale_total_amount += sale.amount
+            if sale.movement and sale.movement=='sale':
+                sale_total_amount -= sale.amount
 
             lines.append({
                 'id': 'hierarchy_sale' + str(sale.id),
@@ -547,6 +566,7 @@ class InvestmentCommittee(models.AbstractModel):
                             self._format({'name': sale.amount},figure_type='float'),
                             {'name': 'TITLES'},
                             {'name': sale.price or ''},
+                            {'name':''},
                             {'name': sale.yield_id and sale.yield_id.name or ''},
                             ],
                 'level': 3,
@@ -558,7 +578,7 @@ class InvestmentCommittee(models.AbstractModel):
             'id': 'hierarchy_sale_total',
             'name': 'Total',
             'columns': [
-                         
+                        {'name':''}, 
                         {'name': ''},
                         self._format({'name': sale_total_amount},figure_type='float'),
                         {'name': ''},

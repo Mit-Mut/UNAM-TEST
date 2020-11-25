@@ -11,10 +11,13 @@ class RequestAccounts(models.Model):
     movement_type = fields.Selection(
         [('acc_req', 'Account Request')], "Movement Type", default='acc_req')
     project_id = fields.Many2one('project.project', "Project Number")
-    project_name = fields.Char(related='project_id.name', string="Project Name")
+    project_name = fields.Char(
+        related='project_id.name', string="Project Name")
     program_code = fields.Many2one('program.code', string='Program Code')
-    user_id = fields.Many2one(related='project_id.user_id', string="Project Manager")
-    project_type_identifier = fields.Selection(related='project_id.project_type',string="Project Type")
+    user_id = fields.Char(
+        related='project_id.responsible_name', string="Project Manager")
+    project_type_identifier = fields.Many2one(
+        related='project_id.project_type_identifier_id', string="Project Type Identifier")
     project_stage_identifier = fields.Many2one(
         related='project_id.stage_identifier_id', string="Number of stages")
     ministrations_amount = fields.Float("Amount of ministrations")
@@ -24,7 +27,8 @@ class RequestAccounts(models.Model):
         "account.journal", "Bank", domain=[('type', '=', 'bank')])
     bank_acc_number_id = fields.Many2one('res.partner.bank',
                                          related='bank_account_id.bank_account_id', string="Bank Account")
-    no_contract = fields.Char('No. Contract')
+    no_contract = fields.Char(
+        related='bank_account_id.contract_number', string='Contract No.')
     customer_number = fields.Char(
         related='bank_account_id.customer_number', string="Contact No.")
     supporting_documentation = fields.Binary("Supporting Documentation")

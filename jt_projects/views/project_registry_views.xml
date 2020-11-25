@@ -61,7 +61,7 @@
                                 <field name="project_type_identifier_id" attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="project_type_identifier" invisible="1" attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="number" attrs="{'readonly': [('status', '!=', 'open')]}"/>
-                                <field name="program_code" attrs="{'readonly': [('status', '!=', 'open')]}"/>
+                                <field name="program_code" attrs="{'readonly': [('status', '!=', 'open')]}" invisible="1"/>
                                 <field name="responsible_name" attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="rfc" attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="is_related_agreement" attrs="{'invisible':[('is_papiit_project','=',False)],'readonly': [('status', '!=', 'open')]}"/>
@@ -88,7 +88,7 @@
                                 <field name="branch_office" readonly="1" attrs="{'invisible':[('is_papiit_project','=',True)]}"/>
                                 <field name="trade_number" attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="resource_type" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
-                                <field name="is_papiit_project"/>
+                                <field name="is_papiit_project" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
                                 <field name="pre_account_id" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
                                 <field name="dependency_id" context="{'show_for_agreement':1}" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
                                 <field name="subdependency_id" context="{'show_for_agreement':1}" domain="[('dependency_id','=',dependency_id)]" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
@@ -119,7 +119,7 @@
             <field name="name">Projects</field>
             <field name="res_model">project.project</field>
             <field name="view_mode">tree,form</field>
-			 <field name="domain">[('project_type','=','conacyt')]</field>
+			<field name="domain">[('project_type','=','conacyt')]</field>
             <field name="context">{'default_project_type':'conacyt'}</field>
         </record>
 

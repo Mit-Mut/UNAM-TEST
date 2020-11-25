@@ -39,7 +39,7 @@ class InvestmentAccountStatement(models.AbstractModel):
     filter_date = {'mode': 'range', 'filter': 'this_month'}
     filter_comparison = None
     filter_all_entries = True
-    filter_journals = None
+    filter_journals = True
     filter_analytic = None
     filter_unfold_all = None
     filter_cash_basis = None
@@ -47,6 +47,7 @@ class InvestmentAccountStatement(models.AbstractModel):
     filter_unposted_in_period = None
     MAX_LINES = None
 
+    
     def _get_reports_buttons(self):
         return [
             {'name': _('Print Preview'), 'sequence': 1,
@@ -66,6 +67,7 @@ class InvestmentAccountStatement(models.AbstractModel):
     def _get_columns_name(self, options):
         return [
             {'name': _('Fecha')},
+            {'name':_('Bank')},
             {'name': _('Saldo Inicial')},
             {'name': _('Referencia')},
             {'name': _('Incrementos')},
@@ -95,6 +97,12 @@ class InvestmentAccountStatement(models.AbstractModel):
         value['name'] = round(value['name'], 1)
         return value
 
+    @api.model
+    def _get_filter_journals(self):
+        return self.env['account.journal'].search([('type','=','bank'),
+            ('company_id', 'in', self.env.user.company_ids.ids or [self.env.company.id])
+        ], order="company_id, name")
+
     def _get_lines(self, options, line_id=None):
         lines = []
 
@@ -102,6 +110,10 @@ class InvestmentAccountStatement(models.AbstractModel):
             domain=[('line_state','in',('confirmed','done'))]
         else:
             domain=[('line_state','not in',('rejected','canceled'))]
+
+        journal = self._get_options_journals_domain(options)
+        if journal:
+            domain+=journal
 
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
@@ -136,6 +148,7 @@ class InvestmentAccountStatement(models.AbstractModel):
                 'id': 'hierarchy_account' + str(rec.id),
                 'name' :invesment_date, 
                 'columns': [ 
+                            {'name': rec.investment_id and rec.investment_id.journal_id and rec.investment_id.journal_id.name or ''},
                             self._format({'name': capital},figure_type='float',digit=2),
                             {'name': ''},
                             self._format({'name': inc},figure_type='float',digit=2),
@@ -152,6 +165,7 @@ class InvestmentAccountStatement(models.AbstractModel):
             'id': 'Total',
             'name' :'Total', 
             'columns': [ 
+                        {'name': ''},
                         {'name': ''},
                         {'name': ''},
                         self._format({'name': total_inc},figure_type='float',digit=2),

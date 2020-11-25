@@ -49,7 +49,6 @@ class SummaryOfOperationMaturities(models.AbstractModel):
 
     filter_contract = True
     filter_currency = True
-    filter_bank = True
 
     @api.model
     def _get_filter_bank(self):
@@ -151,6 +150,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
             {'name': _('Producto')},
             {'name': _('Plazo')},
             {'name': _('Tasa Interés')},
+            {'name': _('Procentual extra')},
             {'name': _('Intereses')},
         ]
 
@@ -280,6 +280,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                             {'name': 'Títulos'},
                             {'name': term},
                             self._format({'name': sale.price},figure_type='float'),
+                            {'name': ''},
                             self._format({'name': interest},figure_type='float'),
                             ],
                 'level': 3,
@@ -313,6 +314,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                             {'name': 'CETES'},
                             {'name': cetes.term},
                             self._format({'name': cetes.yield_rate},figure_type='float'),
+                            {'name': ''},
                             self._format({'name': interest},figure_type='float'),
                             ],
                 'level': 3,
@@ -343,6 +345,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                             {'name': 'UDIBONOS'},
                             {'name': udibonos.time_for_each_cash_flow},
                             self._format({'name': udibonos.interest_rate},figure_type='float'),
+                            {'name': ''},
                             self._format({'name': interest},figure_type='float'),
                             ],
                 'level': 3,
@@ -374,6 +377,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                             {'name': 'BONOS'},
                             {'name': bonds.time_for_each_cash_flow},
                             self._format({'name': bonds.interest_rate},figure_type='float'),
+                            {'name': ''},
                             self._format({'name': interest},figure_type='float'),
                             ],
                 'level': 3,
@@ -412,6 +416,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                             {'name': 'Pagaré'},
                             {'name': term},
                             self._format({'name': pay.interest_rate},figure_type='float'),
+                            {'name': ''},
                             self._format({'name': interest},figure_type='float'),
                             ],
                 'level': 3,
@@ -448,6 +453,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                             {'name': 'Cuentas Productivas'},
                             {'name': term},
                             self._format({'name': pro.interest_rate},figure_type='float'),
+                            self._format({'name': pro.extra_percentage},figure_type='float'),
                             self._format({'name': interest},figure_type='float'),
                             ],
                 'level': 3,

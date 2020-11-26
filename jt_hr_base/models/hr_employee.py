@@ -158,6 +158,11 @@ class HrEmployee(models.Model):
             self.emp_partner_id =  self.user_id.partner_id.id
         else:
             self.emp_partner_id = False
+    
+    @api.onchange('job_id')
+    def onchange_job_tags(self):
+        if self.job_id and self.job_id.category_key:
+            self.category_ids = [(6,0,self.job_id.category_key.ids)]
             
     _sql_constraints = [
         ('worker_number_uniq', 'unique (worker_number)', 'The Worker Number must be unique.')]

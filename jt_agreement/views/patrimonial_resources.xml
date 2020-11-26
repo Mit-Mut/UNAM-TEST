@@ -176,8 +176,8 @@
             <field name="context">{'from_agreement':True}</field>
         </record>
 
-        <menuitem id="menu_patrimonial_resources" name="Patrimonial Resources" parent="menu_collaboration_contracts"
-                action="action_patrimonial_resources" sequence="4"/>
+        <menuitem id="menu_patrimonial_resources" name="Patrimonial Resources" parent="jt_agreement.menu_agreements"
+                action="action_patrimonial_resources" sequence="1"/>
 
 		<!-- Schedule Transfers -->
          <record id="action_schedule_transfers_patrimonial" model="ir.actions.server">

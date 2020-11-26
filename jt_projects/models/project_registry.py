@@ -62,9 +62,6 @@ class ProjectRegistry(models.Model):
     co_responsible_id = fields.Many2one('hr.employee', 'Co-responsible Name')
     co_responsible_rfc = fields.Char(
         related='co_responsible_id.rfc', string='Co-responsible RFC')
-    project_status = fields.Selection([('accepted', 'Accepted'),
-                                       ('rejected', 'Rejected')], "UPA PAPIIT Status", copy=False)
-
     responsible_name = fields.Char('Responsible name')
     stage_identifier_id = fields.Many2one('stage', string="Stage")
 

@@ -31,10 +31,10 @@ from odoo.tools import config, date_utils, get_lang
 import lxml.html
 
 
-class TitlesAccountStatement(models.AbstractModel):
-    _name = "jt_investment.titles.account.statement"
+class InvestmentAccountStatement(models.AbstractModel):
+    _name = "jt_investment.fund.account.statement"
     _inherit = "account.coa.report"
-    _description = "Account Statement"
+    _description = "Funds Account Statement"
 
     filter_date = {'mode': 'range', 'filter': 'this_month'}
     filter_comparison = None
@@ -47,6 +47,7 @@ class TitlesAccountStatement(models.AbstractModel):
     filter_unposted_in_period = None
     MAX_LINES = None
 
+    
     def _get_reports_buttons(self):
         return [
             {'name': _('Print Preview'), 'sequence': 1,
@@ -57,7 +58,7 @@ class TitlesAccountStatement(models.AbstractModel):
 
     def _get_templates(self):
         templates = super(
-            TitlesAccountStatement, self)._get_templates()
+            InvestmentAccountStatement, self)._get_templates()
         templates[
             'main_table_header_template'] = 'account_reports.main_table_header'
         templates['main_template'] = 'account_reports.main_template'
@@ -73,7 +74,7 @@ class TitlesAccountStatement(models.AbstractModel):
              {'name': _('Saldo Final')},
         ]
 
-    def _format(self, value, figure_type):
+    def _format(self, value, figure_type,digit):
         if self.env.context.get('no_format'):
             return value
         value['no_format_name'] = value['name']
@@ -95,13 +96,19 @@ class TitlesAccountStatement(models.AbstractModel):
         value['name'] = round(value['name'], 1)
         return value
 
+    @api.model
+    def _get_filter_journals(self):
+        return self.env['account.journal'].search([('type','=','bank'),
+            ('company_id', 'in', self.env.user.company_ids.ids or [self.env.company.id])
+        ], order="company_id, name")
+
     def _get_lines(self, options, line_id=None):
         lines = []
 
         if options.get('all_entries') is False:
-            domain=[('state','in',('confirmed','done'))]
+            domain=[('line_state','in',('confirmed','done'))]
         else:
-            domain=[('state','not in',('rejected','canceled'))]
+            domain=[('line_state','not in',('rejected','canceled'))]
 
         journal = self._get_options_journals_domain(options)
         if journal:
@@ -112,20 +119,20 @@ class TitlesAccountStatement(models.AbstractModel):
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
-        title_domain = domain + [('invesment_date','>=',start),('invesment_date','<=',end)]
-
-        title_ids = self.env['purchase.sale.security'].search(title_domain,order='invesment_date')
-
+        productive_domain = domain + [('date_required','>=',start),('date_required','<=',end),('investment_fund_id','!=',False)]
+        productive_ids = self.env['investment.operation'].search(productive_domain)
+        
         g_total_inc = 0
         g_total_with = 0
 
-        journal_ids = title_ids.mapped('bank_id')
+        #===== Investment =======#
+        journal_ids = productive_ids.mapped('investment_id.journal_id')
         for journal in journal_ids:
             capital = 0
             total_inc = 0
             total_with = 0
             
-            records = title_ids.filtered(lambda x:x.bank_id.id==journal.id)
+            records = productive_ids.filtered(lambda x:x.investment_id.journal_id.id == journal.id)
             lines.append({
                 'id': 'hierarchy_account' + str(journal.id),
                 'name' :journal.name, 
@@ -140,72 +147,40 @@ class TitlesAccountStatement(models.AbstractModel):
                 'unfoldable': False,
                 'unfolded': True,
             })
-                      
+                                     
             for rec in records:
                 invesment_date = ''
+                
                 inc = 0 
                 withdraw = 0
-                if rec.movement == 'buy':
+                if rec.type_of_operation in ('increase','increase_by_closing','open_bal'):
                     inc = rec.amount
                     total_inc += inc
                     g_total_inc += inc
-                elif rec.movement == 'sell':
+                elif rec.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure'):
                     withdraw = rec.amount
                     total_with += withdraw
                     g_total_with += withdraw
-                if rec.invesment_date:
-                    invesment_date = rec.invesment_date.strftime('%Y-%m-%d') 
+                    
+                if rec.date_required:
+                    invesment_date = rec.date_required.strftime('%Y-%m-%d') 
                 final = capital + inc - withdraw
-                
+                movement = dict(rec._fields['type_of_operation'].selection).get(rec.type_of_operation)
                 lines.append({
                     'id': 'hierarchy_account' + str(rec.id),
                     'name' :invesment_date, 
                     'columns': [ 
-                                self._format({'name': capital},figure_type='float'),
-                                {'name': rec.name},
-                                self._format({'name': inc},figure_type='float'),
-                                self._format({'name': withdraw},figure_type='float'),
-                                self._format({'name': final},figure_type='float'),
+                                self._format({'name': capital},figure_type='float',digit=2),
+                                {'name': movement},
+                                self._format({'name': inc},figure_type='float',digit=2),
+                                self._format({'name': withdraw},figure_type='float',digit=2),
+                                self._format({'name': final},figure_type='float',digit=2),
                                 ],
                     'level': 3,
                     'unfoldable': False,
                     'unfolded': True,
                 })
                 capital = capital + inc - withdraw
-                
-                for line in rec.request_finance_ids.filtered(lambda x:x.amount_type and x.state in ('confirmed','done')):
-                    invesment_date = ''
-                    inc = 0 
-                    withdraw = 0
-                    if line.amount_type == 'increment':
-                        inc = line.amount
-                        total_inc += inc
-                        g_total_inc += inc
-                    elif line.amount_type == 'withdrawal':
-                        withdraw = line.amount
-                        total_with += withdraw
-                        g_total_with += withdraw
-                        
-                    if line.date_required:
-                        invesment_date = line.date_required.strftime('%Y-%m-%d') 
-                    final = capital + inc - withdraw
-                    
-                    lines.append({
-                        'id': 'hierarchy_account_line' + str(line.id),
-                        'name' :invesment_date, 
-                        'columns': [ 
-                                    self._format({'name': capital},figure_type='float'),
-                                    {'name': rec.name},
-                                    self._format({'name': inc},figure_type='float'),
-                                    self._format({'name': withdraw},figure_type='float'),
-                                    self._format({'name': final},figure_type='float'),
-                                    ],
-                        'level': 3,
-                        'unfoldable': False,
-                        'unfolded': True,
-                    })
-                    capital = capital + inc - withdraw
-                
     
             lines.append({
                 'id': 'Total',
@@ -213,8 +188,8 @@ class TitlesAccountStatement(models.AbstractModel):
                 'columns': [ 
                             {'name': ''},
                             {'name': ''},
-                            self._format({'name': total_inc},figure_type='float'),
-                            self._format({'name': total_with},figure_type='float'),
+                            self._format({'name': total_inc},figure_type='float',digit=2),
+                            self._format({'name': total_with},figure_type='float',digit=2),
                             {'name': ''},
                             ],
                 'level': 1,
@@ -223,20 +198,20 @@ class TitlesAccountStatement(models.AbstractModel):
             })
 
         lines.append({
-            'id': 'GTotal',
+            'id': 'g_Total',
             'name' :'Grand Total', 
             'columns': [ 
                         {'name': ''},
                         {'name': ''},
-                        self._format({'name': g_total_inc},figure_type='float'),
-                        self._format({'name': g_total_with},figure_type='float'),
+                        self._format({'name': g_total_inc},figure_type='float',digit=2),
+                        self._format({'name': g_total_with},figure_type='float',digit=2),
                         {'name': ''},
                         ],
             'level': 1,
             'unfoldable': False,
             'unfolded': True,
         })
-        
+
         return lines
         
 

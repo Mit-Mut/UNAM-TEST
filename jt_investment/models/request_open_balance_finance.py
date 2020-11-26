@@ -18,6 +18,7 @@ class BasesCollabration(models.Model):
     investment_operation_id = fields.Many2one('investment.operation','Operation',copy=False)
     line_opt_ids = fields.One2many('request.open.balance.finance.operation','finance_id',copy=False)
     from_opt_transfer = fields.Boolean(default=False,copy=False)
+    amount_type = fields.Selection([('increment','Increment'),('withdrawal','Withdrawal')])
     
     def approve_finance(self):
         result = super(BasesCollabration,self).approve_finance()

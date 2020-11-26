@@ -60,6 +60,8 @@ class InvTransferRequest(models.TransientModel):
                 'desti_bank_account_id' : self.desti_bank_account_id.id if self.desti_bank_account_id else False,
                 'amount' : line.amount_to_transfer,
                 'investment_fund_id' : line.investment_fund_id and line.investment_fund_id.id or False,
+                'type_of_operation':'retirement',
+                'state' : 'done',
                 })    
         self.env['request.open.balance.finance'].create(
             {

@@ -27,7 +27,7 @@ class BackgroundProjects(models.Model):
     _name = 'background.project'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Background Projects"
-    _rec_name = 'key'
+    _rec_name = 'desc'
     
     key = fields.Char("Background Project Key")
     desc = fields.Text("Description of Background Project")

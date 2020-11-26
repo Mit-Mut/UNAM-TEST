@@ -32,9 +32,9 @@
                 <form>
                 	<header>
                 		<button name="action_confirm_inv" states="draft" string="Confirm" class="oe_highlight" type="object" />
-                		<button name="action_confirm" states="confirmed" context="{'edit_amount_field':True}" string="Investment Settlement" class="oe_highlight" type="object" />
-                		<button name="action_confirm" states="confirmed" context="{'edit_amount_field':True}" string="Returns" class="oe_highlight" type="object" />
-                		<button name="action_confirm" states="confirmed" context="{'edit_amount_field':True}" string="Commissions" class="oe_highlight" type="object" />
+                		<button name="action_confirm" states="confirmed" context="{'default_amount_type':'withdrawal','edit_amount_field':True}" string="Investment Settlement" class="oe_highlight" type="object" />
+                		<button name="action_confirm" states="confirmed" context="{'default_amount_type':'increment','edit_amount_field':True}" string="Returns" class="oe_highlight" type="object" />
+                		<button name="action_confirm" states="confirmed" context="{'default_amount_type':'withdrawal','edit_amount_field':True}" string="Commissions" class="oe_highlight" type="object" />
                 		<button name="transfer_request" states="confirmed" string="Transfer" class="oe_highlight" type="object" />
                 		
                 		<!-- <button name="action_reject" states="draft" string="Reject" class="oe_highlight" type="object" attrs="{'invisible': [('state', '=', 'draft')]}"/> -->
@@ -54,7 +54,7 @@
                         	
 			                    <field name="invesment_date" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 		                          <field name="expiry_date" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-			               		<field name="journal_id" required="1"  attrs="{'readonly': [('state', '!=', 'draft')]}" domain="[('type','=','bank'),('is_productive_account','=',True)]"/>
+			               		<field name="journal_id" required="1"  attrs="{'readonly': [('state', '!=', 'draft')]}" domain="[('type','=','bank')]"/>
 			               		<field name="investment_fund_id" invisible="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			               		<field name="contract_id" attrs="{'required':[('state', '=', 'draft')],'readonly': [('state', '!=', 'draft')]}"/>
 			               		<field name="amount_to_invest" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
@@ -141,7 +141,7 @@
 			                                <field name="base_collabaration_id" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
 			                                <field name="agreement_type_id" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
 			                                <field name="fund_type" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
-			                                <field name="bank_account_id" domain="[('id', 'in', source_ids)]"
+			                                <field name="bank_account_id" domain="[('id', 'in', source_ids),('is_productive_account','=',True)]"
 			                                    required="1" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
 			                            </group>
 			                            <group>
@@ -153,7 +153,7 @@
 			                            	<field name="origin_resource_id" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
 			                            	<field name="amount" required="1" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
 			                                <field name="date_required" required="1" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
-			                                <field name="desti_bank_account_id" domain="[('id', 'in', dest_ids)]"
+			                                <field name="desti_bank_account_id" domain="[('id', 'in', dest_ids),('is_productive_account','=',True)]"
 			                                    required="1" attrs="{'readonly': [('line_state', '!=', 'draft')]}"/>
 		                    				<field name="inc_id" invisible="1"/>
 		                    				<field name="seq" invisible="1"/>

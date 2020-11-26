@@ -2297,9 +2297,13 @@ msgstr "Pago en una sola exhibición PUE"
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_account_move__payment_of_id
 #: model:ir.model.fields,field_description:jt_income.field_payment_of_income__name
-#: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
 msgid "Payment of"
 msgstr "Cobro de"
+
+#. module: jt_income
+#: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
+msgid "Payment of"
+msgstr "Producto"
 
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_account_move__income_payment_ref

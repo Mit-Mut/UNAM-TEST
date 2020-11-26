@@ -20,7 +20,7 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from odoo import models, api, _
+from odoo import models, api, _ , _lt , fields
 from datetime import datetime
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tools.misc import formatLang
@@ -47,7 +47,14 @@ class ComparisonOfBalanceCheck(models.AbstractModel):
     filter_hierarchy = None
     filter_unposted_in_period = None
     MAX_LINES = None
-    filter_project_type = {'filter': 'CONACYT'}
+
+    
+    filter_project_type = [
+        {'id': 'conacyt', 'name': ('CONACYT'), 'selected': False},
+        {'id': 'concurrent', 'name': ('Concurrent'), 'selected': False},
+        {'id': 'other', 'name': ('Other'), 'selected': False},
+    ]
+
 
     def _get_reports_buttons(self):
         return [
@@ -89,10 +96,13 @@ class ComparisonOfBalanceCheck(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         lines = []
+
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+
+
         project_records = self.env['project.project'].search(
             [('proj_start_date', '>=', start), ('proj_end_date', '<=', end)])
         for record in project_records:

@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class RequestTransfer(models.Model):
@@ -7,16 +7,18 @@ class RequestTransfer(models.Model):
     _description = 'Request for transfer'
     _rec_name = 'invoice'
 
-    invoice = fields.Text('Invoice')
+    invoice = fields.Text('Invoice', readonly=True,
+                          default='New')
     application_date = fields.Date('Application Date')
     request_area = fields.Text('Area requesting the transfer')
     user_id = fields.Many2one(
         'res.users', string='Requesting User', default=lambda self: self.env.user.id)
     destination_journal_id = fields.Many2one(
         'account.journal', 'Destination Bank')
-    destination_bank_id = fields.Many2one(related="destination_journal_id.bank_account_id", string='Destination Bank Account')
+    destination_bank_id = fields.Many2one(
+        related="destination_journal_id.bank_account_id", string='Destination Bank Account')
     currency_id = fields.Many2one(
-        'res.currency', default=lambda self: self.env.user.company_id.currency_id,string="Coin")
+        'res.currency', default=lambda self: self.env.user.company_id.currency_id, string="Coin")
 
     amount_req_tranfer = fields.Monetary(
         string='Amount of the transfer requested', currency_field='currency_id')
@@ -24,7 +26,8 @@ class RequestTransfer(models.Model):
     application_concept = fields.Text('Application Concept')
     origin_journal_id = fields.Many2one(
         'account.journal', 'Origin Bank')
-    origin_bank_id = fields.Many2one(related="origin_journal_id.bank_account_id", string='Origin Bank Account')
+    origin_bank_id = fields.Many2one(
+        related="origin_journal_id.bank_account_id", string='Origin Bank Account')
     aggrement = fields.Text('Agreement or Project reference')
     status = fields.Selection([('draft', 'Draft'),
                                ('requested', 'Requested'),
@@ -46,19 +49,27 @@ class RequestTransfer(models.Model):
             'user_id': self.user_id.id,
             'state': self.status,
             'project_request_id': self.id,
+            'amount': self.amount_req_tranfer,
 
         }
         self.env['request.open.balance.finance'].create(record)
-    
+
+    @api.model
+    def create(self, vals):
+        if vals.get('invoice', 'New') == 'New':
+            vals['invoice'] = self.env['ir.sequence'].next_by_code(
+                'request.accounts') or 'New'
+        result = super(RequestTransfer, self).create(vals)
+        return result
+
     def action_approved(self):
         self.status = 'approved'
-    
+
     def confirmed_finance(self):
         self.status = 'confirmed'
-    
+
     def reject_finance(self):
         self.status = 'rejected'
-    
+
     def action_canceled(self):
         self.status = 'canceled'
-        

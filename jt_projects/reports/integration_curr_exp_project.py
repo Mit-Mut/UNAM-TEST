@@ -48,6 +48,8 @@ class InegrationOfExpAndCurrProject(models.AbstractModel):
     filter_unposted_in_period = None
     MAX_LINES = None
 
+    
+
     def _get_reports_buttons(self):
         return [
             {'name': _('Print Preview'), 'sequence': 1,
@@ -82,10 +84,13 @@ class InegrationOfExpAndCurrProject(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         lines = []
+        
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+
+        
         count = 0
         project_records = self.env['project.project'].search(
             [('proj_start_date', '>=', start), ('proj_end_date', '<=', end)])

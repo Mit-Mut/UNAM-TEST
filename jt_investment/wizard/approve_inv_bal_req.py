@@ -56,6 +56,7 @@ class ApproveInvestmentBalReq(models.TransientModel):
     
     agreement_type = fields.Many2one('agreement.agreement.type',string="Agreement Type")
     base_collabaration_id = fields.Many2one('bases.collaboration','Name Of Agreements')
+    amount_type = fields.Selection([('increment','Increment'),('withdrawal','Withdrawal')])
     
     def approve(self):
         self.env['request.open.balance.finance'].create(
@@ -82,6 +83,7 @@ class ApproveInvestmentBalReq(models.TransientModel):
                 'purchase_sale_security_id' : self.purchase_sale_security_id and self.purchase_sale_security_id.id or False,
                 'state': 'requested',
                 'fund_id' : self.fund_id and self.fund_id.id or False,
+                'amount_type' : self.amount_type,
             }
         )
         if self.bonds_id:

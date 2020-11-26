@@ -48,6 +48,12 @@ class BankAccountingBalance(models.AbstractModel):
     filter_unposted_in_period = None
     MAX_LINES = None
 
+    filter_project_type = [
+        {'id': 'conacyt', 'name': ('CONACYT'), 'selected': False},
+        {'id': 'concurrent', 'name': ('Concurrent'), 'selected': False},
+        {'id': 'other', 'name': ('Other'), 'selected': False},
+    ]
+    
     def _get_reports_buttons(self):
         return [
             {'name': _('Print Preview'), 'sequence': 1,
@@ -66,13 +72,20 @@ class BankAccountingBalance(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         lines = []
+        if options.get('project_type'):
+            domain=[('project_type','in',('conacyt','concurrent'))]
+        else:
+            domain=[('project_type','=','other')]
+
+
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
-        project_records = self.env['project.project'].search(
-            [('proj_start_date', '>=', start), ('proj_end_date', '<=', end)])
 
+        project_domain = domain +  [('proj_start_date', '>=', start), ('proj_end_date', '<=', end)]
+        # project_domain =  [('proj_start_date', '>=', start), ('proj_end_date', '<=', end)]
+        project_records = self.env['project.project'].search(project_domain)
         for record in project_records:
             name = record.stage_identifier or ''
             expense_ids = self.env['expense.verification'].search(
@@ -80,7 +93,8 @@ class BankAccountingBalance(models.AbstractModel):
             lines.append({
                 'id': 'projects' + str(record.id),
                 'name': name,
-                'columns': [{'name': expense_ids[0].dependence.dependency or ''},
+                'columns': [{'name': expense_ids[0].dependence.dependency if expense_ids else ''},
+
                             {'name': record.number or ''},
                             {'name': record.status},
                             {'name': record.bank_account_id.name or ''},
@@ -90,7 +104,8 @@ class BankAccountingBalance(models.AbstractModel):
                             {'name': ''},
                             {'name': record.proj_start_date},
                             {'name': record.proj_end_date},
-
+                            {'name':''},
+                            {'name':''}
 
                             ],
                 'level': 2,

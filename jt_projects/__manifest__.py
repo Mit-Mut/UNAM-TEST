@@ -32,6 +32,7 @@
     'depends': ['jt_finance', 'jt_payroll_payment', 'jt_agreement', 'project'],
     'data': [
         'data/ir_cron.xml',
+        'data/data.xml',
         'security/project_security.xml',
         'views/rejection_checks_views.xml',
         'views/project_registry_views.xml',
@@ -56,6 +57,7 @@
         'reports/school_internship_request.xml',
         'reports/school_internship_request.xml',
         'reports/exchange_request.xml',
+        #'reports/filter_template.xml',
         'security/ir.model.access.csv',
 
     ],

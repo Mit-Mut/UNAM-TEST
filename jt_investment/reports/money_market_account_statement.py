@@ -38,8 +38,8 @@ class MoneyMarketAccountStatement(models.AbstractModel):
 
     filter_date = {'mode': 'range', 'filter': 'this_month'}
     filter_comparison = None
-    filter_all_entries = None
-    filter_journals = None
+    filter_all_entries = True
+    filter_journals = True
     filter_analytic = None
     filter_unfold_all = None
     filter_cash_basis = None
@@ -101,6 +101,348 @@ class MoneyMarketAccountStatement(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+
+        if options.get('all_entries') is False:
+            domain=[('state','in',('confirmed','done'))]
+        else:
+            domain=[('state','not in',('rejected','canceled'))]
+
+        journal = self._get_options_journals_domain(options)
+        if journal:
+            domain+=journal
+
+        cetes_domain = domain + [('date_time','>=',start),('date_time','<=',end)]
+        udibonos_domain = domain + [('date_time','>=',start),('date_time','<=',end)]
+        bonds_domain = domain + [('date_time','>=',start),('date_time','<=',end)]
+        will_pay_domain = domain + [('date_time','>=',start),('date_time','<=',end)]
+        
+        cetes_records = self.env['investment.cetes'].search(cetes_domain)
+        udibonos_records = self.env['investment.udibonos'].search(udibonos_domain)
+        bonds_records = self.env['investment.bonds'].search(bonds_domain)
+        will_pay_records = self.env['investment.will.pay'].search(will_pay_domain)
+
+        journal_ids = self.env['account.journal']
+        journal_ids += cetes_records.mapped('journal_id')
+        journal_ids += udibonos_records.mapped('journal_id')
+        journal_ids += bonds_records.mapped('journal_id')
+        journal_ids += will_pay_records.mapped('journal_id')
+        g_total_inc = 0
+        g_total_with = 0
+
+        if journal_ids:
+            journals = list(set(journal_ids.ids))
+            journal_ids = self.env['account.journal'].browse(journals)
+
+        for journal in journal_ids:
+            capital = 0
+            total_inc = 0
+            total_with = 0
+
+            lines.append({
+                'id': 'hierarchy_account' + str(journal.id),
+                'name' :journal.name, 
+                'columns': [ 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+            #================ CETES =====================#
+            for rec in cetes_records.filtered(lambda x:x.journal_id.id==journal.id):
+                invesment_date = ''
+                inc = 0 
+                withdraw = 0
+                inc = rec.nominal_value
+                total_inc += inc
+                g_total_inc += inc
+                
+                if rec.date_time:
+                    invesment_date = rec.date_time.strftime('%Y-%m-%d') 
+                final = capital + inc - withdraw
+                
+                lines.append({
+                    'id': 'hierarchy_account' + str(rec.id),
+                    'name' :invesment_date, 
+                    'columns': [ 
+                                self._format({'name': capital},figure_type='float'),
+                                {'name': 'Opening Balance'},
+                                self._format({'name': inc},figure_type='float'),
+                                self._format({'name': withdraw},figure_type='float'),
+                                self._format({'name': final},figure_type='float'),
+                                ],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+                capital = capital + inc - withdraw
+                
+                for line in rec.request_finance_ids.filtered(lambda x:x.amount_type and x.state in ('confirmed','done')):
+                    invesment_date = ''
+                    inc = 0 
+                    withdraw = 0
+                    ref = ''
+                    if line.amount_type == 'increment':
+                        inc = line.amount
+                        total_inc += inc
+                        g_total_inc += inc
+                        ref = 'Increment'
+                    elif line.amount_type == 'withdrawal':
+                        withdraw = line.amount
+                        total_with += withdraw
+                        g_total_with += withdraw
+                        ref = 'Withdrawal'
+                        
+                    if line.date_required:
+                        invesment_date = line.date_required.strftime('%Y-%m-%d') 
+                    final = capital + inc - withdraw
+                    
+                    lines.append({
+                        'id': 'hierarchy_account_line' + str(line.id),
+                        'name' :invesment_date, 
+                        'columns': [ 
+                                    self._format({'name': capital},figure_type='float'),
+                                    {'name': ref},
+                                    self._format({'name': inc},figure_type='float'),
+                                    self._format({'name': withdraw},figure_type='float'),
+                                    self._format({'name': final},figure_type='float'),
+                                    ],
+                        'level': 3,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+                    capital = capital + inc - withdraw
+
+            #================ udibonos_records =====================#
+            for rec in udibonos_records.filtered(lambda x:x.journal_id.id==journal.id):
+                invesment_date = ''
+                inc = 0 
+                withdraw = 0
+                inc = rec.nominal_value
+                total_inc += inc
+                g_total_inc += inc
+                
+                if rec.date_time:
+                    invesment_date = rec.date_time.strftime('%Y-%m-%d') 
+                final = capital + inc - withdraw
+                
+                lines.append({
+                    'id': 'hierarchy_account' + str(rec.id),
+                    'name' :invesment_date, 
+                    'columns': [ 
+                                self._format({'name': capital},figure_type='float'),
+                                {'name': 'Opening Balance'},
+                                self._format({'name': inc},figure_type='float'),
+                                self._format({'name': withdraw},figure_type='float'),
+                                self._format({'name': final},figure_type='float'),
+                                ],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+                capital = capital + inc - withdraw
+                
+                for line in rec.request_finance_ids.filtered(lambda x:x.amount_type and x.state in ('confirmed','done')):
+                    invesment_date = ''
+                    inc = 0 
+                    withdraw = 0
+                    ref = ''
+                    if line.amount_type == 'increment':
+                        inc = line.amount
+                        total_inc += inc
+                        g_total_inc += inc
+                        ref = 'Increment'
+                    elif line.amount_type == 'withdrawal':
+                        withdraw = line.amount
+                        total_with += withdraw
+                        g_total_with += withdraw
+                        ref = 'Withdrawal'
+                        
+                    if line.date_required:
+                        invesment_date = line.date_required.strftime('%Y-%m-%d') 
+                    final = capital + inc - withdraw
+                    
+                    lines.append({
+                        'id': 'hierarchy_account_line' + str(line.id),
+                        'name' :invesment_date, 
+                        'columns': [ 
+                                    self._format({'name': capital},figure_type='float'),
+                                    {'name': ref},
+                                    self._format({'name': inc},figure_type='float'),
+                                    self._format({'name': withdraw},figure_type='float'),
+                                    self._format({'name': final},figure_type='float'),
+                                    ],
+                        'level': 3,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+                    capital = capital + inc - withdraw
+
+            #================ bonds_records =====================#
+            for rec in bonds_records.filtered(lambda x:x.journal_id.id==journal.id):
+                invesment_date = ''
+                inc = 0 
+                withdraw = 0
+                inc = rec.nominal_value
+                total_inc += inc
+                g_total_inc += inc
+                
+                if rec.date_time:
+                    invesment_date = rec.date_time.strftime('%Y-%m-%d') 
+                final = capital + inc - withdraw
+                
+                lines.append({
+                    'id': 'hierarchy_account' + str(rec.id),
+                    'name' :invesment_date, 
+                    'columns': [ 
+                                self._format({'name': capital},figure_type='float'),
+                                {'name': 'Opening Balance'},
+                                self._format({'name': inc},figure_type='float'),
+                                self._format({'name': withdraw},figure_type='float'),
+                                self._format({'name': final},figure_type='float'),
+                                ],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+                capital = capital + inc - withdraw
+                
+                for line in rec.request_finance_ids.filtered(lambda x:x.amount_type and x.state in ('confirmed','done')):
+                    invesment_date = ''
+                    inc = 0 
+                    withdraw = 0
+                    ref = ''
+                    if line.amount_type == 'increment':
+                        inc = line.amount
+                        total_inc += inc
+                        g_total_inc += inc
+                        ref = 'Increment'
+                    elif line.amount_type == 'withdrawal':
+                        withdraw = line.amount
+                        total_with += withdraw
+                        g_total_with += withdraw
+                        ref = 'Withdrawal'
+                        
+                    if line.date_required:
+                        invesment_date = line.date_required.strftime('%Y-%m-%d') 
+                    final = capital + inc - withdraw
+                    
+                    lines.append({
+                        'id': 'hierarchy_account_line' + str(line.id),
+                        'name' :invesment_date, 
+                        'columns': [ 
+                                    self._format({'name': capital},figure_type='float'),
+                                    {'name': ref},
+                                    self._format({'name': inc},figure_type='float'),
+                                    self._format({'name': withdraw},figure_type='float'),
+                                    self._format({'name': final},figure_type='float'),
+                                    ],
+                        'level': 3,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+                    capital = capital + inc - withdraw
+
+            #================ will_pay_records =====================#
+            for rec in will_pay_records.filtered(lambda x:x.journal_id.id==journal.id):
+                invesment_date = ''
+                inc = 0 
+                withdraw = 0
+                inc = rec.amount
+                total_inc += inc
+                g_total_inc += inc
+                
+                if rec.date_time:
+                    invesment_date = rec.date_time.strftime('%Y-%m-%d') 
+                final = capital + inc - withdraw
+                
+                lines.append({
+                    'id': 'hierarchy_account' + str(rec.id),
+                    'name' :invesment_date, 
+                    'columns': [ 
+                                self._format({'name': capital},figure_type='float'),
+                                {'name': 'Opening Balance'},
+                                self._format({'name': inc},figure_type='float'),
+                                self._format({'name': withdraw},figure_type='float'),
+                                self._format({'name': final},figure_type='float'),
+                                ],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+                capital = capital + inc - withdraw
+                
+                for line in rec.request_finance_ids.filtered(lambda x:x.amount_type and x.state in ('confirmed','done')):
+                    invesment_date = ''
+                    inc = 0 
+                    withdraw = 0
+                    ref = ''
+                    if line.amount_type == 'increment':
+                        inc = line.amount
+                        total_inc += inc
+                        g_total_inc += inc
+                        ref = 'Increment'
+                    elif line.amount_type == 'withdrawal':
+                        withdraw = line.amount
+                        total_with += withdraw
+                        g_total_with += withdraw
+                        ref = 'Withdrawal'
+                        
+                    if line.date_required:
+                        invesment_date = line.date_required.strftime('%Y-%m-%d') 
+                    final = capital + inc - withdraw
+                    
+                    lines.append({
+                        'id': 'hierarchy_account_line' + str(line.id),
+                        'name' :invesment_date, 
+                        'columns': [ 
+                                    self._format({'name': capital},figure_type='float'),
+                                    {'name': ref},
+                                    self._format({'name': inc},figure_type='float'),
+                                    self._format({'name': withdraw},figure_type='float'),
+                                    self._format({'name': final},figure_type='float'),
+                                    ],
+                        'level': 3,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+                    capital = capital + inc - withdraw
+
+
+            lines.append({
+                'id': 'Total',
+                'name' :'Total', 
+                'columns': [ 
+                            {'name': ''},
+                            {'name': ''},
+                            self._format({'name': total_inc},figure_type='float'),
+                            self._format({'name': total_with},figure_type='float'),
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+        lines.append({
+            'id': 'GTotal',
+            'name' :'Grand Total', 
+            'columns': [ 
+                        {'name': ''},
+                        {'name': ''},
+                        self._format({'name': g_total_inc},figure_type='float'),
+                        self._format({'name': g_total_with},figure_type='float'),
+                        {'name': ''},
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+
+                
 
         return lines
         

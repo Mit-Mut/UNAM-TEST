@@ -67,7 +67,6 @@ class InvestmentAccountStatement(models.AbstractModel):
     def _get_columns_name(self, options):
         return [
             {'name': _('Fecha')},
-            {'name':_('Bank')},
             {'name': _('Saldo Inicial')},
             {'name': _('Referencia')},
             {'name': _('Incrementos')},
@@ -123,53 +122,89 @@ class InvestmentAccountStatement(models.AbstractModel):
         productive_domain = domain + [('date_required','>=',start),('date_required','<=',end)]
         productive_ids = self.env['investment.operation'].search(productive_domain)
         
+        g_total_inc = 0
+        g_total_with = 0
 
         #===== Investment =======#
-        capital = 0
-        total_inc = 0
-        total_with = 0        
-        for rec in productive_ids:
-            invesment_date = ''
+        journal_ids = productive_ids.mapped('investment_id.journal_id')
+        for journal in journal_ids:
+            capital = 0
+            total_inc = 0
+            total_with = 0
             
-            inc = 0 
-            withdraw = 0
-            if rec.type_of_operation in ('increase','increase_by_closing','open_bal'):
-                inc = rec.amount
-                total_inc += inc
-            elif rec.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure'):
-                withdraw = rec.amount
-                total_with += withdraw
-                
-            if rec.date_required:
-                invesment_date = rec.date_required.strftime('%Y-%m-%d') 
-            final = capital + inc - withdraw
-            
+            records = productive_ids.filtered(lambda x:x.investment_id.journal_id.id == journal.id)
             lines.append({
-                'id': 'hierarchy_account' + str(rec.id),
-                'name' :invesment_date, 
+                'id': 'hierarchy_account' + str(journal.id),
+                'name' :journal.name, 
                 'columns': [ 
-                            {'name': rec.investment_id and rec.investment_id.journal_id and rec.investment_id.journal_id.name or ''},
-                            self._format({'name': capital},figure_type='float',digit=2),
                             {'name': ''},
-                            self._format({'name': inc},figure_type='float',digit=2),
-                            self._format({'name': withdraw},figure_type='float',digit=2),
-                            self._format({'name': final},figure_type='float',digit=2),
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
                             ],
-                'level': 3,
+                'level': 1,
                 'unfoldable': False,
                 'unfolded': True,
             })
-            capital = capital + inc - withdraw
+                                     
+            for rec in records:
+                invesment_date = ''
+                
+                inc = 0 
+                withdraw = 0
+                if rec.type_of_operation in ('increase','increase_by_closing','open_bal'):
+                    inc = rec.amount
+                    total_inc += inc
+                    g_total_inc += inc
+                elif rec.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure'):
+                    withdraw = rec.amount
+                    total_with += withdraw
+                    g_total_with += withdraw
+                    
+                if rec.date_required:
+                    invesment_date = rec.date_required.strftime('%Y-%m-%d') 
+                final = capital + inc - withdraw
+                movement = dict(rec._fields['type_of_operation'].selection).get(rec.type_of_operation)
+                lines.append({
+                    'id': 'hierarchy_account' + str(rec.id),
+                    'name' :invesment_date, 
+                    'columns': [ 
+                                self._format({'name': capital},figure_type='float',digit=2),
+                                {'name': movement},
+                                self._format({'name': inc},figure_type='float',digit=2),
+                                self._format({'name': withdraw},figure_type='float',digit=2),
+                                self._format({'name': final},figure_type='float',digit=2),
+                                ],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+                capital = capital + inc - withdraw
+    
+            lines.append({
+                'id': 'Total',
+                'name' :'Total', 
+                'columns': [ 
+                            {'name': ''},
+                            {'name': ''},
+                            self._format({'name': total_inc},figure_type='float',digit=2),
+                            self._format({'name': total_with},figure_type='float',digit=2),
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
 
         lines.append({
-            'id': 'Total',
-            'name' :'Total', 
+            'id': 'g_Total',
+            'name' :'Grand Total', 
             'columns': [ 
                         {'name': ''},
                         {'name': ''},
-                        {'name': ''},
-                        self._format({'name': total_inc},figure_type='float',digit=2),
-                        self._format({'name': total_with},figure_type='float',digit=2),
+                        self._format({'name': g_total_inc},figure_type='float',digit=2),
+                        self._format({'name': g_total_with},figure_type='float',digit=2),
                         {'name': ''},
                         ],
             'level': 1,

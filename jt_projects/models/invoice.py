@@ -27,7 +27,8 @@ class AccountMove(models.Model):
 
     _inherit = 'account.move'
 
-    diary = fields.Many2one('account.journal', string='Diary')
+    diary = fields.Many2one('account.journal', string='Diary',
+                            default=lambda self: self.env.ref('jt_payroll_payment.project_payment_request_jour'))
     dependence = fields.Many2one('dependency', string="Dependency")
     subdependence = fields.Many2one('sub.dependency', string='Sub Dependence')
     leaves = fields.Integer('Leaves')
@@ -41,7 +42,6 @@ class AccountMove(models.Model):
     stage = fields.Char(
         related='project_number_id.stage_identifier', string='Stage')
     excercise = fields.Char('excercise')
-    project_key = fields.Char('Project Key')
     invoice_vault_folio = fields.Char('Invoice vault folio')
     req_registration_date = fields.Date('Request Registration Date')
     status = fields.Selection(
@@ -67,10 +67,11 @@ class AccountMoveLine(models.Model):
     line = fields.Integer("Line")
     stage = fields.Char(related='move_id.stage', string='Stage')
     excercise = fields.Char(related='move_id.excercise', string='excercise')
-    operation_type_id = fields.Many2one(
-        related='move_id.operation_type_id', string="Operation Type")
-    project_key = fields.Char(
-        related='move_id.project_key', string='Project Key')
+    operation_type_id = fields.Many2one('operation.type',
+                                        related='move_id.operation_type_id', string="Operation Type")
+    operation_type_name = fields.Char(
+        related='move_id.operation_type_id.name', string='name')
+    project_key = fields.Char(string='Project Key')
     invoice_vault_folio = fields.Char('Invoice vault folio')
     uuid_invoice = fields.Char(string='UUID Invoice')
     invoice_series = fields.Char(string='Invoice Series')

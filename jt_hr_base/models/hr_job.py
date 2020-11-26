@@ -26,6 +26,6 @@ from odoo import models, fields
 class HrJob(models.Model):
     _inherit = 'hr.job'
 
-    category_key = fields.Char(string='Category key')
+    category_key = fields.Many2one('hr.employee.category',string='Category key')
 
     _sql_constraints = [('category_key_unique', 'unique(category_key)', 'Category Key must be unique.')]

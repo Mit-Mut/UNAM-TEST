@@ -7,9 +7,8 @@ class RequestAccounts(models.Model):
     _description = "Request to open account"
     _rec_name = 'invoice'
 
-    invoice = fields.Char("Invoice")
-    movement_type = fields.Selection(
-        [('acc_req', 'Account Request')], "Movement Type", default='acc_req')
+    invoice = fields.Char("Invoice", readonly=True, copy=False,
+                          default='New')
     project_id = fields.Many2one('project.project', "Project Number")
     project_name = fields.Char(
         related='project_id.name', string="Project Name")
@@ -24,14 +23,15 @@ class RequestAccounts(models.Model):
     authorized_amount = fields.Float("Authorized Amount")
     observations = fields.Text("Observations")
     bank_account_id = fields.Many2one(
-        "account.journal", "Bank", domain=[('type', '=', 'bank')])
+        "account.journal", related='project_id.bank_account_id', string="Bank", domain=[('type', '=', 'bank')])
     bank_acc_number_id = fields.Many2one('res.partner.bank',
-                                         related='bank_account_id.bank_account_id', string="Bank Account")
+                                         related='project_id.bank_acc_number_id', string="Bank Account")
     no_contract = fields.Char(
         related='bank_account_id.contract_number', string='Contract No.')
     customer_number = fields.Char(
         related='bank_account_id.customer_number', string="Contact No.")
     supporting_documentation = fields.Binary("Supporting Documentation")
+    supporting_doc_name = fields.Char('supporting documentation name')
     reason_rejection = fields.Selection([('discharge', 'Does not comply with the documentation supporting the discharge')],
                                         string="Reason for rejection")
     rejection_observations = fields.Text("Rejection observation")
@@ -48,6 +48,14 @@ class RequestAccounts(models.Model):
 
     def generate_request(self):
         self.status = 'request'
+
+    @api.model
+    def create(self, vals):
+        if vals.get('invoice', 'New') == 'New':
+            vals['invoice'] = self.env['ir.sequence'].next_by_code(
+                'request.accounts') or 'New'
+        result = super(RequestAccounts, self).create(vals)
+        return result
 
 #     @api.onchange('project_no')
 #     def onchage_project_no(self):

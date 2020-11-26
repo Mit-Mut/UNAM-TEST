@@ -12,3 +12,4 @@ from . import investment_committee
 from . import account_statement
 from . import titles_account_statement
 from . import money_market_account_statement
+from . import fund_account_statement

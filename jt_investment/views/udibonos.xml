@@ -36,9 +36,9 @@
                 <form>
                 	<header>
                 		<button name="action_confirm" states="draft" string="Confirm" class="oe_highlight" type="object" />
-                		<button name="action_confirm" states="confirmed" context="{'edit_amount_field':True}" string="Investment Settlement" class="oe_highlight" type="object" />
-                		<button name="action_confirm" states="confirmed" context="{'edit_amount_field':True}" string="Returns" class="oe_highlight" type="object" />
-                		<button name="action_confirm" states="confirmed" context="{'edit_amount_field':True}" string="Commissions" class="oe_highlight" type="object" />
+                		<button name="action_confirm" states="confirmed" context="{'default_amount_type':'withdrawal','edit_amount_field':True}" string="Investment Settlement" class="oe_highlight" type="object" />
+                		<button name="action_confirm" states="confirmed" context="{'default_amount_type':'increment','edit_amount_field':True}" string="Returns" class="oe_highlight" type="object" />
+                		<button name="action_confirm" states="confirmed" context="{'default_amount_type':'withdrawal','edit_amount_field':True}" string="Commissions" class="oe_highlight" type="object" />
                 		
                 		<!-- <button name="action_reset_to_draft" attrs="{'invisible':[('state','in',('draft','requested','approved'))]}" string="Reset To Draft" class="oe_highlight" type="object"/> -->
                 		<!-- <button name="action_reinvestment" states="draft" string="Reinvestment" class="oe_highlight" type="object" /> -->                		
@@ -59,7 +59,7 @@
                                 <field name="date_time" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="expiry_date" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="investment_fund_id"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="journal_id" domain="[('type','=','bank'),('is_productive_account','=',True)]" options="{'no_create': True}" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="journal_id" domain="[('type','=','bank')]" options="{'no_create': True}" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="bank_id"/>
                                 <field name="amount_invest" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="currency_id" options="{'no_create': True}" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>

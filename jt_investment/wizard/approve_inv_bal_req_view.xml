@@ -18,8 +18,9 @@
                                 <field name="amount" readonly="not context.get('edit_amount_field',False)"/>
                                 <field name="dependency_id" context="{'show_for_supplier_payment':1}"/>
                                 <field name="sub_dependency_id" domain="[('dependency_id','=',dependency_id)]" context="{'show_for_supplier_payment':1}" />
+                                <field name="amount_type" invisible="1"/>
                             </group>
-                            <group>
+                            <group>	
                                 <field name="date"/>
                                 <field name="concept"/>
                                 <field name="user_id"/>

@@ -20,15 +20,16 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from odoo import models, fields,api,_
+from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
+
 
 class UPADocumentType(models.Model):
 
     _name = 'upa.document.type'
     _description = 'UPA Document Type'
     _rec_name = "document_number"
-    
+
     name = fields.Char('Name')
     document_number = fields.Char('Consecutive')
 
@@ -37,17 +38,24 @@ class UPADocumentType(models.Model):
         if not str(self.document_number).isnumeric():
             raise ValidationError(_('The Consecutive must be numeric value'))
 
+    def name_get(self):
+        res = []
+        for rec in self:
+            res.append((rec.id, '%s-%s' % (rec.name, rec.document_number)))
+        return res
+
     def fill_zero(self, code):
         return str(code).zfill(2)
 
     @api.model
     def create(self, vals):
         if vals.get('document_number') and len(vals.get('document_number')) != 2:
-            vals['document_number'] = self.fill_zero(vals.get('document_number'))
+            vals['document_number'] = self.fill_zero(
+                vals.get('document_number'))
         return super(UPADocumentType, self).create(vals)
 
     def write(self, vals):
         if vals.get('document_number') and len(vals.get('document_number')) != 2:
-            vals['document_number'] = self.fill_zero(vals.get('document_number'))
+            vals['document_number'] = self.fill_zero(
+                vals.get('document_number'))
         return super(UPADocumentType, self).write(vals)
-    

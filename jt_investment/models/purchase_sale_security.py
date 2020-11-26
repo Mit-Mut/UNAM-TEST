@@ -55,6 +55,9 @@ class PurchaseSaleSecurity(models.Model):
     sub_dependency_id = fields.Many2one('sub.dependency', "Subdependency")
     expiry_date = fields.Date(string="Expiration Date")
 
+    request_finance_ids = fields.One2many(
+        'request.open.balance.finance', 'purchase_sale_security_id',copy=False)
+
     #====== Accounting Fields =========#
 
     investment_income_account_id = fields.Many2one('account.account','Income Account')

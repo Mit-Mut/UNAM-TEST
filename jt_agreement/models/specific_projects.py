@@ -27,7 +27,7 @@ class SpecificProjects(models.Model):
     _name = 'specific.project'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Specific Projects"
-    _rec_name = 'key'
+    _rec_name = 'desc'
     
     key = fields.Char("Specific Project Key")
     desc = fields.Text("Specific Project Description")

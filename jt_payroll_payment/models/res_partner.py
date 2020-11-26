@@ -29,7 +29,7 @@ class Contacts(models.Model):
 
     supplier_of_payment_payroll = fields.Boolean("Supplier of payment of payroll")
     workstation_id = fields.Many2one('hr.job', "Appointment")
-    category_key = fields.Char("Category Key", related='workstation_id.category_key', store=True)
+    category_key = fields.Many2one(string="Category Key", related='workstation_id.category_key', store=True)
     
     @api.model
     def default_get(self, fields):

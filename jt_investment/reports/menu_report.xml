@@ -165,7 +165,7 @@
             sequence="22"
             action="action_investment_committee_new"
         />
-
+		<!-- Account Statement -->
         <record id="action_account_statement" model="ir.actions.client">
             <field name="name">Account Statements</field>
             <field name="tag">account_report</field>
@@ -180,6 +180,20 @@
             action="action_account_statement"
         />
 
+        <record id="action_account_statement_funds" model="ir.actions.client">
+            <field name="name">Account Statements</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'jt_investment.fund.account.statement'}"/>
+        </record>
+
+        <menuitem
+            id="menu_account_statement_funds"
+            name=" Account Statements"
+            parent="jt_investment.submenu_menu_investment_money"
+            sequence="20"
+            action="action_account_statement_funds"
+        />
+
         <record id="action_titles_account_statement" model="ir.actions.client">
             <field name="name">Account Statements</field>
             <field name="tag">account_report</field>
@@ -189,7 +203,7 @@
         <menuitem
             id="menu_titles_account_statement"
             name=" Account Statements"
-            sequence="0"
+            sequence="50"
             parent="jt_investment.submenu_menu_investment_titles"
             action="action_titles_account_statement"
         />

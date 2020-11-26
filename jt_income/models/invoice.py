@@ -52,7 +52,9 @@ class Invoice(models.Model):
     voucher_type = fields.Selection([('income', 'Income'),
                                      ('expenditure', 'Expenditure'),
                                      ('payment_supplement', 'Payment Supplement'),
-                                     ('transfer', 'Transfer')], "Voucher Type")
+                                     ('transfer', 'Transfer'),
+                                     ('credit_note','Credit Note'),
+                                     ], "Voucher Type")
     currency_type = fields.Selection([('national', 'National Currency'), ('foreign', 'Foreign Currency')])
     exchange_rate = fields.Monetary("Exchange Rate")
     income_payment_type = fields.Selection([('single_pue', 'Payment in a singlePUE'),
@@ -910,8 +912,11 @@ class IncomeIncomeMoveLine(models.Model):
     def write(self,vals):
         res = super(IncomeIncomeMoveLine,self).write(vals)        
         for line in self:
-            if not vals.get('price_subtotal'):
-                line.price_subtotal = line._get_price_total_and_subtotal().get('price_subtotal', 0.0)
+            #print ("====",vals)
+            #if not vals.get('price_subtotal'):
+            price_subtotal = line._get_price_total_and_subtotal().get('price_subtotal', 0.0)
+            to_write = {'price_subtotal':price_subtotal}
+            res |= super(IncomeIncomeMoveLine, line).write(to_write)
         return res
     
     @api.model

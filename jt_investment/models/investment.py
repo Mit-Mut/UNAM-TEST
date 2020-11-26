@@ -352,12 +352,12 @@ class InvestmentOperation(models.Model):
     def onchange_check_balance_amount(self):
         if self.type_of_operation and self.base_collabaration_id and self.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure','increase_by_closing'):
             #opt_lines = self.env['investment.operation'].search([('investment_id','=',self.investment_id.id),('type_of_operation','in',('open_bal','increase')),('base_collabaration_id','=',self.base_collabaration_id.id),('line_state','=','done')])
-            opt_lines = self.investment_id.line_ids.filtered(lambda x:x.type_of_operation in ('open_bal','increase') and x.base_collabaration_id.id==self.base_collabaration_id.id)
+            opt_lines = self.investment_id.line_ids.filtered(lambda x:x.base_collabaration_id.id==self.base_collabaration_id.id)
             inc = sum(a.amount for a in opt_lines.filtered(lambda x:x.type_of_operation in ('open_bal','increase')))
             ret = sum(a.amount for a in opt_lines.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure','increase_by_closing')))
             
             balance = inc - ret
-            if balance <= self.amount:
+            if balance < self.amount:
                 self.amount = 0
                 return {'warning': {'title': _("Warning"), 'message': 'Available balance is less then amount!!!'}}
 
@@ -365,25 +365,25 @@ class InvestmentOperation(models.Model):
     def onchange_check_balance_type_of_operation(self):
         if self.type_of_operation and self.base_collabaration_id and self.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure','increase_by_closing'):
             #opt_lines = self.env['investment.operation'].search([('investment_id','=',self.investment_id.id),('type_of_operation','in',('open_bal','increase')),('base_collabaration_id','=',self.base_collabaration_id.id),('line_state','=','done')])
-            opt_lines = self.investment_id.line_ids.filtered(lambda x:x.type_of_operation in ('open_bal','increase') and x.base_collabaration_id.id==self.base_collabaration_id.id)
+            opt_lines = self.investment_id.line_ids.filtered(lambda x:x.base_collabaration_id.id==self.base_collabaration_id.id)
             inc = sum(a.amount for a in opt_lines.filtered(lambda x:x.type_of_operation in ('open_bal','increase')))
             ret = sum(a.amount for a in opt_lines.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure','increase_by_closing')))
             
             balance = inc - ret
-            if balance <= self.amount:
+            if balance < self.amount:
                 self.type_of_operation = False
                 return {'warning': {'title': _("Warning"), 'message': 'Available balance is less then amount!!!'}}
 
-    @api.onchange('base_collabaration_id')
+    @api.onchange('base_collabaration_id')  
     def onchange_check_balance_base_collabaration_id(self):
         if self.type_of_operation and self.base_collabaration_id and self.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure','increase_by_closing'):
             #opt_lines = self.env['investment.operation'].search([('investment_id','=',self.investment_id.id),('type_of_operation','in',('open_bal','increase')),('base_collabaration_id','=',self.base_collabaration_id.id),('line_state','=','done')])
-            opt_lines = self.investment_id.line_ids.filtered(lambda x:x.type_of_operation in ('open_bal','increase') and x.base_collabaration_id.id==self.base_collabaration_id.id)
+            opt_lines = self.investment_id.line_ids.filtered(lambda x:x.base_collabaration_id.id==self.base_collabaration_id.id)
             inc = sum(a.amount for a in opt_lines.filtered(lambda x:x.type_of_operation in ('open_bal','increase')))
             ret = sum(a.amount for a in opt_lines.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure','increase_by_closing')))
             
             balance = inc - ret
-            if balance <= self.amount:
+            if balance < self.amount:
                 self.base_collabaration_id = False
                 return {'warning': {'title': _("Warning"), 'message': 'Available balance is less then amount!!!'}}
                 

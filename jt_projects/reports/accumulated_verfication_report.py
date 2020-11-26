@@ -48,6 +48,12 @@ class AccumulatedVerficationRecorded(models.AbstractModel):
     filter_unposted_in_period = None
     MAX_LINES = None
 
+    filter_project_type = [
+        {'id': 'conacyt', 'name': ('CONACYT'), 'selected': True},
+        {'id': 'concurrent', 'name': ('Concurrent'), 'selected': True},
+        {'id': 'other', 'name': ('Other'), 'selected': True},
+    ]
+
     def _get_reports_buttons(self):
         return [
             {'name': _('Print Preview'), 'sequence': 1,
@@ -84,6 +90,7 @@ class AccumulatedVerficationRecorded(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         lines = []
+        project_type_list = []
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(

@@ -76,7 +76,7 @@
                                           <field name="row"/>
                                           <field name="program_code"/>
                                          <field name="verification_expense_id" invisible="1"/>
-                                        <field name="taxes"/>  
+                                        <field name="tax_ids" widget="many2many_tags"/>  
                                         <field name="subtotal"/>
                                         <field name="amount"/>
                                     </tree>

@@ -22,28 +22,29 @@
 ##############################################################################
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
-import re
+
 
 class OperationType(models.Model):
 
     _name = 'operation.type'
     _description = 'Type of Operation'
+    _rec_name = 'name'
 
     name = fields.Char('Request operation name')
     op_number = fields.Char('Operation Number', size=2)
     currency_type = fields.Selection([('national', 'National Currency'), (
         'foreign', 'Foreign Currency')], string='Currency type of the transaction')
-    upa_catalog_policy_id = fields.Many2one('policy.keys','UPA Catalog')
+    upa_catalog_policy_id = fields.Many2one('policy.keys', 'UPA Catalog')
 
     def name_get(self):
         result = []
         for rec in self:
             name = rec.name or ''
-            if rec.op_number and self.env.context and self.env.context.get('show_for_supplier_payment',False): 
+            if rec.op_number and self.env.context and self.env.context.get('show_for_supplier_payment', False):
                 name = rec.op_number
             result.append((rec.id, name))
         return result
-    
+
     def fill_zero(self, number):
         return str(number).zfill(2)
 
@@ -58,7 +59,8 @@ class OperationType(models.Model):
         if vals.get('op_number'):
             number = vals.get('op_number')
             if not str(number).isnumeric():
-                raise UserError(_('The Operation Number must be numeric value'))
+                raise UserError(
+                    _('The Operation Number must be numeric value'))
             if len(number) != 2:
                 new_no = self.fill_zero(vals.get('op_number'))
                 res.op_number = new_no
@@ -68,7 +70,8 @@ class OperationType(models.Model):
         for op in self:
             number = vals.get('op_number') or op.op_number
             if not str(number).isnumeric():
-                raise UserError(_('The Operation Number must be numeric value'))
+                raise UserError(
+                    _('The Operation Number must be numeric value'))
             if len(number) != 2:
                 vals.update({'op_number': self.fill_zero(number)})
         return super(OperationType, self).write(vals)

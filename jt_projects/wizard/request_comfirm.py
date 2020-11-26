@@ -30,7 +30,8 @@ class RequestConfirm(models.TransientModel):
         'account.journal', string='Bank', domain=[('type', '=', 'bank')])
     bank_acc_number_id = fields.Many2one(
         related='bank_account_id.bank_account_id', string="Bank Account")
-    no_contract = fields.Char('No. contract')
+    no_contract = fields.Char(
+        related='bank_account_id.contract_number', string='No. contract')
 
     def apply(self):
 

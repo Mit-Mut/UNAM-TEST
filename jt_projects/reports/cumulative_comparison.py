@@ -48,6 +48,12 @@ class CumulativeComparison(models.AbstractModel):
     filter_unposted_in_period = None
     MAX_LINES = None
 
+    filter_project_type = [
+        {'id': 'conacyt', 'name': ('CONACYT'), 'selected': False},
+        {'id': 'concurrent', 'name': ('Concurrent'), 'selected': False},
+        {'id': 'other', 'name': ('Other'), 'selected': False},
+    ]
+
     def _get_reports_buttons(self):
         return [
             {'name': _('Print Preview'), 'sequence': 1,
@@ -66,10 +72,13 @@ class CumulativeComparison(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         lines = []
+        # project_type_list = []
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+
+        
         project_records = self.env['project.project'].search(
             [('proj_start_date', '>=', start), ('proj_end_date', '<=', end)])
         for record in project_records:
@@ -180,6 +189,7 @@ class CumulativeComparison(models.AbstractModel):
 
         #     })
 
+        # return lines
         # return lines
 
     def _get_columns_name(self, options):

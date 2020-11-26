@@ -60,8 +60,8 @@
                                 <field name="desc_stage" attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="project_type_identifier_id" attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="project_type_identifier" invisible="1" attrs="{'readonly': [('status', '!=', 'open')]}"/>
-                                <field name="number" attrs="{'readonly': [('status', '!=', 'open')]}"/>
-                                <field name="program_code" attrs="{'readonly': [('status', '!=', 'open')]}" invisible="1"/>
+                                <field name="number" attrs="{'readonly': [('status', '!=', 'open')],'invisible':[('is_papiit_project','=',False)]}"/>
+                                <field name="program_code" attrs="{'readonly': [('status', '!=', 'open')],'invisible':[('is_papiit_project','=',False)]}" />
                                 <field name="responsible_name" attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="rfc" attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="is_related_agreement" attrs="{'invisible':[('is_papiit_project','=',False)],'readonly': [('status', '!=', 'open')]}"/>
@@ -69,7 +69,6 @@
                                 <field name="base_number" readonly="1" attrs="{'invisible':[('is_related_agreement','=',False)]}"/>
                                 <field name="agreement_type_id" readonly="1" attrs="{'invisible':[('is_related_agreement','=',False)]}"/>
                                 <field name="PAPIIT_project_type"  attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
-                                <field name="project_status"  attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
                                 <field name="technical_support_id" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
                                 <field name="administrative_manager_id" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
                                 <field name="co_responsible_id" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>

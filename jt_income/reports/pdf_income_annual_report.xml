@@ -241,8 +241,8 @@
             model="income.annual.report"
             string="Income Annual Report"
             report_type="qweb-pdf"
-            name="jt_income.pdf_income_annual_report"
-            file="jt_income.pdf_income_annual_report"
+            name="jt_income.pdf_income_annual_report_1"
+            file="jt_income.pdf_income_annual_report_1"
             paperformat="jt_income.pdf_paperformat_annual_income_report"
         />
 

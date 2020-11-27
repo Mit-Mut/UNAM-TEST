@@ -43,6 +43,7 @@
                     	<group>
 	                        <group>
 	                            <field name="name" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+	                            
 	                            <field name="bank_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <label for="street" string="Bank Address"/>
                                 <div class="o_address_format">
@@ -70,8 +71,8 @@
 	                        </group>
                         </group>
                         <notebook>
-                        	<page string="Accounts" name="accounts">
-                        		<group>
+                        	<page string="Journal Items" name="accounts">
+                         		<group>
                         			<group>
                         				<field name="patrimonial_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         				<field name="investment_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
@@ -83,7 +84,8 @@
                         				<field name="liability_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         			</group>
                         		</group>
-                        	</page>
+ 
+                         	</page>
                         	<page string="Committee" name="committee">
                                 <group string="Committe">
                                     <field name="committe_ids" attrs="{'readonly': [('state', '!=', 'draft')]}">
@@ -164,15 +166,20 @@
                                  </group>
                         	</page>
                             <page string="Interests" name="interest">
-                                <group>
-                                    <group>
+                            	<field name="interest_rate_ids">
+                            		<tree editable="bottom">
                                         <field name="yields"/>
                                         <field name="fees"/>
-                                    </group>
-                                    <group>
-                                        <field name="interest_date"/>
-                                    </group>
-                                </group>
+                            			<field name="interest_date"/>
+                            		</tree>
+                            		<form>
+                            			<group>
+	                                        <field name="yields"/>
+	                                        <field name="fees"/>
+	                            			<field name="interest_date"/>
+                            			</group>
+                            		</form>
+                            	</field>
                             </page>
                         	<page string="Supporting Documentation" name="supporting_documentation">
                         		<group>

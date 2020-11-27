@@ -25,7 +25,6 @@ from odoo.exceptions import ValidationError, UserError
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
-
 class BasesCollabration(models.Model):
 
     _name = 'bases.collaboration'
@@ -130,6 +129,18 @@ class BasesCollabration(models.Model):
 
     _sql_constraints = [
         ('folio_convention_no', 'unique(convention_no)', 'The Convention No. must be unique.')]
+
+    def name_get(self):
+        if 'show_agreement_name' in self._context:
+            res = []
+            for base in self:
+                base_name = ''
+                if base.name:
+                    base_name = base.name
+                res.append((base.id, base_name))
+        else:
+            res = super(BasesCollabration, self).name_get()
+        return res
 
     @api.model
     def default_get(self, fields):
@@ -407,6 +418,41 @@ class BasesCollabration(models.Model):
         if self.opening_bal == 0:
             raise ValidationError(_("Please add the opening balance amount"))
 
+        if self.journal_id:
+            journal = self.journal_id
+            if not journal.default_debit_account_id or not journal.default_credit_account_id \
+                    or not journal.conac_debit_account_id or not journal.conac_credit_account_id:
+                if self.env.user.lang == 'es_MX':
+                    raise ValidationError(_("Por favor configure la cuenta UNAM y CONAC en diario!"))
+                else:
+                    raise ValidationError(_("Please configure UNAM and CONAC account in journal!"))
+
+            today = datetime.today().date()
+            user = self.env.user
+            partner_id = user.partner_id.id
+            amount = self.opening_bal
+
+            unam_move_val = {'ref': self.name,  'conac_move': True,
+                             'date': today, 'journal_id': journal.id, 'company_id': self.env.user.company_id.id,
+                             'line_ids': [(0, 0, {
+                                 'account_id': journal.default_credit_account_id.id,
+                                 'coa_conac_id': journal.conac_credit_account_id.id,
+                                 'credit': amount, 
+                                 'partner_id': partner_id,
+                                 'collaboration_id': self.id,
+                                 }), 
+                                 (0, 0, {
+                                 'account_id': journal.default_debit_account_id.id,
+                                 'coa_conac_id': journal.conac_debit_account_id.id,
+                                 'debit': amount,
+                                 'partner_id': partner_id,
+                                 'collaboration_id': self.id,
+                                 }),
+                             ]}
+            move_obj = self.env['account.move']
+            unam_move = move_obj.create(unam_move_val)
+            unam_move.action_post()
+
     def action_schedule_withdrawal(self):
         req_obj = self.env['request.open.balance']
         for collaboration in self:
@@ -637,6 +683,14 @@ class RequestOpenBalance(models.Model):
                                            'Withdrawal due to closure'),
                                           ('increase_by_closing', 'Increase by closing')],
                                          string="Type of Operation")
+
+    type_of_operation_trust = fields.Selection([('open_bal', 'Opening Balance'),
+                                          ('increase', 'Increase'),
+                                          ('retirement', 'Retirement'),
+                                          ('withdrawal_cancellation','Withdrawal Due to Cancellation'),
+                                          ],
+                                         string="Type of Operation")
+    
     apply_to_basis_collaboration = fields.Boolean(
         "Apply to Basis of Collaboration")
     order_seq = fields.Integer(compute='get_order_seq', store=True, copy=False)
@@ -722,6 +776,9 @@ class RequestOpenBalance(models.Model):
     patrimonial_yield_account_id = fields.Many2one(
         'account.account', "Yield account of the productive investment account")
 
+    @api.onchange('type_of_operation_trust')
+    def type_of_operation_trust_change(self):
+        self.type_of_operation = self.type_of_operation_trust
     def unlink(self):
         for rec in self:
             if rec.state not in ['draft']:
@@ -1169,7 +1226,10 @@ class RequestOpenBalanceInvestment(models.Model):
             [('user_id', '=', user.id)], limit=1)
         if employee and employee.dependancy_id:
             unit_req_transfer_id = employee.dependancy_id.id
-
+        is_agr = True
+        if self.trust_id:
+            is_agr = False
+            
         return {
             'name': 'Approve Request',
             'view_type': 'form',
@@ -1194,6 +1254,7 @@ class RequestOpenBalanceInvestment(models.Model):
                 'default_base_collabaration_id': self.bases_collaboration_id and self.bases_collaboration_id.id or False,
                 'default_type_of_operation': self.type_of_operation,
                 'default_origin_resource_id': self.origin_resource_id and self.origin_resource_id.id or False,
+                'default_is_agr' : is_agr,
             }
         }
 
@@ -1429,3 +1490,5 @@ class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
     collaboration_id = fields.Many2one('bases.collaboration')
+    patrimonial_id = fields.Many2one('patrimonial.resources','Patrimonial Resources')
+    

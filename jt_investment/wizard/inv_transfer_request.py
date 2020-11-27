@@ -61,7 +61,7 @@ class InvTransferRequest(models.TransientModel):
                 'amount' : line.amount_to_transfer,
                 'investment_fund_id' : line.investment_fund_id and line.investment_fund_id.id or False,
                 'type_of_operation':'retirement',
-                'state' : 'done',
+                'line_state' : 'done',
                 })    
         self.env['request.open.balance.finance'].create(
             {
@@ -88,4 +88,10 @@ class InvTransferRequestLine(models.TransientModel):
     amount_to_transfer = fields.Float("Amount To Transfer")
     check = fields.Boolean('Transfer')
     opt_line_ids = fields.Many2many('investment.operation','rel_investment_operation_wizard_line','opt_id','line_id')
-    
+
+    @api.onchange('amount_to_transfer')
+    def onchange_amount_to_transfer(self):
+        if self.amount_to_transfer > self.amount:
+            self.amount_to_transfer = 0
+            return {'warning': {'title': _("Warning"), 'message': 'Not Enough Balance'}}
+            

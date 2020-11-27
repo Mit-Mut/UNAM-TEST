@@ -66,8 +66,9 @@ class TitlesAccountStatement(models.AbstractModel):
     def _get_columns_name(self, options):
         return [
             {'name': _('Fecha')},
-            {'name': _('Saldo Inicial')},
+            {'name':_('Concepto de aplicación')},
             {'name': _('Referencia')},
+            {'name': _('Saldo Inicial')},
             {'name': _('Incrementos')},
             {'name': _('Retiros')},
              {'name': _('Saldo Final')},
@@ -118,12 +119,14 @@ class TitlesAccountStatement(models.AbstractModel):
 
         g_total_inc = 0
         g_total_with = 0
+        g_total_final = 0
 
         journal_ids = title_ids.mapped('bank_id')
         for journal in journal_ids:
             capital = 0
             total_inc = 0
             total_with = 0
+            total_final = 0
             
             records = title_ids.filtered(lambda x:x.bank_id.id==journal.id)
             lines.append({
@@ -156,13 +159,15 @@ class TitlesAccountStatement(models.AbstractModel):
                 if rec.invesment_date:
                     invesment_date = rec.invesment_date.strftime('%Y-%m-%d') 
                 final = capital + inc - withdraw
-                
+                total_final += final
+                g_total_final += final
                 lines.append({
                     'id': 'hierarchy_account' + str(rec.id),
                     'name' :invesment_date, 
                     'columns': [ 
-                                self._format({'name': capital},figure_type='float'),
+                                {'name':''},
                                 {'name': rec.name},
+                                self._format({'name': capital},figure_type='float'),
                                 self._format({'name': inc},figure_type='float'),
                                 self._format({'name': withdraw},figure_type='float'),
                                 self._format({'name': final},figure_type='float'),
@@ -189,13 +194,15 @@ class TitlesAccountStatement(models.AbstractModel):
                     if line.date_required:
                         invesment_date = line.date_required.strftime('%Y-%m-%d') 
                     final = capital + inc - withdraw
-                    
+                    total_final += final
+                    g_total_final += final
                     lines.append({
                         'id': 'hierarchy_account_line' + str(line.id),
                         'name' :invesment_date, 
                         'columns': [ 
+                                    {'name':line.concept},
+                                    {'name': line.concept},
                                     self._format({'name': capital},figure_type='float'),
-                                    {'name': rec.name},
                                     self._format({'name': inc},figure_type='float'),
                                     self._format({'name': withdraw},figure_type='float'),
                                     self._format({'name': final},figure_type='float'),
@@ -211,11 +218,12 @@ class TitlesAccountStatement(models.AbstractModel):
                 'id': 'Total',
                 'name' :'Total', 
                 'columns': [ 
+                            {'name':''},
                             {'name': ''},
                             {'name': ''},
                             self._format({'name': total_inc},figure_type='float'),
                             self._format({'name': total_with},figure_type='float'),
-                            {'name': ''},
+                            self._format({'name': total_final},figure_type='float'),
                             ],
                 'level': 1,
                 'unfoldable': False,
@@ -226,11 +234,12 @@ class TitlesAccountStatement(models.AbstractModel):
             'id': 'GTotal',
             'name' :'Grand Total', 
             'columns': [ 
+                        {'name':''},
                         {'name': ''},
                         {'name': ''},
                         self._format({'name': g_total_inc},figure_type='float'),
                         self._format({'name': g_total_with},figure_type='float'),
-                        {'name': ''},
+                        self._format({'name': g_total_final},figure_type='float'),
                         ],
             'level': 1,
             'unfoldable': False,

@@ -9,14 +9,15 @@
                 <form>
                 	<group>
                             <group>
+                            	<field name="is_agr" invisible='1'/>
                                 <field name="invoice"/>
                                 <field name="operation_number" readonly="1"/>
-                                <field name="investment_fund_id" context="{'show_for_agreement':True}" required="1" domain="[('state','=','confirmed')]"/>
-                                <field name="type_of_operation" readonly="1"/>
-                                <field name="agreement_number" readonly="1"/>
-                                <field name="base_collabaration_id" />
-                                <field name="agreement_type_id"/>
-                                <field name="fund_type" />
+                                <field name="investment_fund_id" attrs="{'invisible':[('is_agr','=',False)],'required':[('is_agr','=',True)]}" context="{'show_for_agreement':True}" domain="[('state','=','confirmed')]"/>
+                                <field name="type_of_operation" readonly="1" />
+                                <field name="agreement_number" readonly="1" attrs="{'invisible':[('is_agr','=',False)]}"/>
+                                <field name="base_collabaration_id" attrs="{'invisible':[('is_agr','=',False)]}"/>
+                                <field name="agreement_type_id" attrs="{'invisible':[('is_agr','=',False)]}"/>
+                                <field name="fund_type" attrs="{'invisible':[('is_agr','=',False)]}"/>
                                 <field name="bank_account_id" domain="[('type', '=', 'bank')]"
                                     required="1"/>
                                     

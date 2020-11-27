@@ -152,6 +152,14 @@ class InvestmentCommittee(models.AbstractModel):
         bank_list = []
         currency_list = []
 
+        comparison = options.get('comparison')
+        periods = []
+        if comparison and comparison.get('filter') != 'no_comparison':
+            period_list = comparison.get('periods')
+            period_list.reverse()
+            periods = [period for period in period_list]
+        periods.append(options.get('date'))
+
         for bank in options.get('bank'):
             if bank.get('selected',False)==True:
                 bank_list.append(bank.get('id',0))
@@ -275,6 +283,87 @@ class InvestmentCommittee(models.AbstractModel):
             'unfolded': True,
         })
 
+        #=====================Investment Currency Data ==========#
+        period_name = [{'name': 'Currency'}]
+        for per in periods:
+            period_name.append({'name': per.get('string')})
+        r_column = 6 - len(periods)
+        if r_column > 0:
+            for col in range(r_column):
+                period_name.append({'name': ''})
+
+        lines.append({
+                'id': 'hierarchy_inst',
+                'name': '',
+                'columns': period_name,
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        currency_ids = self.env['res.currency']
+        currency_ids += productive_ids.mapped('currency_id')
+
+        if currency_ids:
+            currencys = list(set(currency_ids.ids))
+            currency_ids = self.env['res.currency'].browse(currencys)
+
+        amount_total = [{'name': 'Total'}]
+        total_dict = {}
+        for currency in currency_ids:
+            total_ins = 0
+            columns = [{'name': currency.name}]
+
+            for period in periods:
+                date_start = datetime.strptime(str(period.get('date_from')),
+                                           DEFAULT_SERVER_DATE_FORMAT).date()
+                date_end = datetime.strptime(str(period.get('date_to')),
+                                         DEFAULT_SERVER_DATE_FORMAT).date()
+
+                productive_records_domain = domain + [('currency_id','=',currency.id),('journal_id.bank_id','in',bank_list),('invesment_date','>=',date_start),('invesment_date','<=',date_end)]
+                productive_currency = self.env['investment.investment'].search(productive_records_domain,order='currency_id')
+            
+                amount = 0
+                amount += sum(x.amount_to_invest for x in productive_currency)
+        
+                columns.append(self._format({'name': amount},figure_type='float'))
+                
+                if total_dict.get(period.get('string')):
+                    old_amount = total_dict.get(period.get('string',0)) + amount
+                    total_dict.update({period.get('string'):old_amount})
+                else:
+                    total_dict.update({period.get('string'):amount})
+                total_ins += amount
+            amount_total.append(self._format({'name': total_ins},figure_type='float'))
+            
+            lines.append({
+                'id': 'hierarchy_jr' + str(currency.id),
+                'name': '',
+                'columns': columns,
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        total_name = [{'name': 'Total'}]
+        for per in total_dict:
+            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float'))
+            
+        r_column = 7 - len(total_name)
+        if r_column > 0:
+            for col in range(r_column):
+                total_name.append({'name': ''})
+                
+        lines.append({
+                'id': 'total_name_currency',
+                'name': '',
+                'columns': total_name,
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+
 #         lines.append({
 #             'id': 'hierarchy_money_market',
 #             'name': 'Money Market',
@@ -347,6 +436,86 @@ class InvestmentCommittee(models.AbstractModel):
         })
 
 
+        #=====================CETES Currency Data ==========#
+        period_name = [{'name': 'Currency'}]
+        for per in periods:
+            period_name.append({'name': per.get('string')})
+        r_column = 6 - len(periods)
+        if r_column > 0:
+            for col in range(r_column):
+                period_name.append({'name': ''})
+
+        lines.append({
+                'id': 'hierarchy_inst',
+                'name': '',
+                'columns': period_name,
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        currency_ids = self.env['res.currency']
+        currency_ids += cetes_records.mapped('currency_id')
+
+        if currency_ids:
+            currencys = list(set(currency_ids.ids))
+            currency_ids = self.env['res.currency'].browse(currencys)
+
+        amount_total = [{'name': 'Total'}]
+        total_dict = {}
+        for currency in currency_ids:
+            total_ins = 0
+            columns = [{'name': currency.name}]
+
+            for period in periods:
+                date_start = datetime.strptime(str(period.get('date_from')),
+                                           DEFAULT_SERVER_DATE_FORMAT).date()
+                date_end = datetime.strptime(str(period.get('date_to')),
+                                         DEFAULT_SERVER_DATE_FORMAT).date()
+
+                cetes_records_domain = domain + [('currency_id','=',currency.id),('bank_id','in',bank_list),('date_time','>=',date_start),('date_time','<=',date_end)]
+                cetes_currency = self.env['investment.cetes'].search(cetes_records_domain,order='currency_id')
+            
+                amount = 0
+                amount += sum(x.nominal_value for x in cetes_currency)
+        
+                columns.append(self._format({'name': amount},figure_type='float'))
+                
+                if total_dict.get(period.get('string')):
+                    old_amount = total_dict.get(period.get('string',0)) + amount
+                    total_dict.update({period.get('string'):old_amount})
+                else:
+                    total_dict.update({period.get('string'):amount})
+                total_ins += amount
+            amount_total.append(self._format({'name': total_ins},figure_type='float'))
+            
+            lines.append({
+                'id': 'hierarchy_jr' + str(currency.id),
+                'name': '',
+                'columns': columns,
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        total_name = [{'name': 'Total'}]
+        for per in total_dict:
+            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float'))
+            
+        r_column = 7 - len(total_name)
+        if r_column > 0:
+            for col in range(r_column):
+                total_name.append({'name': ''})
+                
+        lines.append({
+                'id': 'total_name_currency',
+                'name': '',
+                'columns': total_name,
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
         lines.append({
             'id': 'hierarchy_udibonos_main',
             'name': 'UDIBONOS',
@@ -405,6 +574,87 @@ class InvestmentCommittee(models.AbstractModel):
             'unfolded': True,
         })
 
+
+        #=====================Udibonos Currency Data ==========#
+        period_name = [{'name': 'Currency'}]
+        for per in periods:
+            period_name.append({'name': per.get('string')})
+        r_column = 6 - len(periods)
+        if r_column > 0:
+            for col in range(r_column):
+                period_name.append({'name': ''})
+
+        lines.append({
+                'id': 'hierarchy_inst',
+                'name': '',
+                'columns': period_name,
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        currency_ids = self.env['res.currency']
+        currency_ids += udibonos_records.mapped('currency_id')
+
+        if currency_ids:
+            currencys = list(set(currency_ids.ids))
+            currency_ids = self.env['res.currency'].browse(currencys)
+
+        amount_total = [{'name': 'Total'}]
+        total_dict = {}
+        for currency in currency_ids:
+            total_ins = 0
+            columns = [{'name': currency.name}]
+
+            for period in periods:
+                date_start = datetime.strptime(str(period.get('date_from')),
+                                           DEFAULT_SERVER_DATE_FORMAT).date()
+                date_end = datetime.strptime(str(period.get('date_to')),
+                                         DEFAULT_SERVER_DATE_FORMAT).date()
+
+                udibonos_records_domain = domain + [('currency_id','=',currency.id),('bank_id','in',bank_list),('date_time','>=',date_start),('date_time','<=',date_end)]
+                udibonos_currency = self.env['investment.udibonos'].search(udibonos_records_domain,order='currency_id')
+            
+                amount = 0
+                amount += sum(x.nominal_value for x in udibonos_currency)
+        
+                columns.append(self._format({'name': amount},figure_type='float'))
+                
+                if total_dict.get(period.get('string')):
+                    old_amount = total_dict.get(period.get('string',0)) + amount
+                    total_dict.update({period.get('string'):old_amount})
+                else:
+                    total_dict.update({period.get('string'):amount})
+                total_ins += amount
+            amount_total.append(self._format({'name': total_ins},figure_type='float'))
+            
+            lines.append({
+                'id': 'hierarchy_jr' + str(currency.id),
+                'name': '',
+                'columns': columns,
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        total_name = [{'name': 'Total'}]
+        for per in total_dict:
+            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float'))
+            
+        r_column = 7 - len(total_name)
+        if r_column > 0:
+            for col in range(r_column):
+                total_name.append({'name': ''})
+                
+        lines.append({
+                'id': 'total_name_currency',
+                'name': '',
+                'columns': total_name,
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
         lines.append({
             'id': 'hierarchy_bonds_main',
             'name': 'Bonds',
@@ -461,6 +711,87 @@ class InvestmentCommittee(models.AbstractModel):
             'unfolded': True,
         })
 
+        #=====================bonds Currency Data ==========#
+        period_name = [{'name': 'Currency'}]
+        for per in periods:
+            period_name.append({'name': per.get('string')})
+        r_column = 6 - len(periods)
+        if r_column > 0:
+            for col in range(r_column):
+                period_name.append({'name': ''})
+
+        lines.append({
+                'id': 'hierarchy_inst',
+                'name': '',
+                'columns': period_name,
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        currency_ids = self.env['res.currency']
+        currency_ids += bonds_records.mapped('currency_id')
+
+        if currency_ids:
+            currencys = list(set(currency_ids.ids))
+            currency_ids = self.env['res.currency'].browse(currencys)
+
+        amount_total = [{'name': 'Total'}]
+        total_dict = {}
+        for currency in currency_ids:
+            total_ins = 0
+            columns = [{'name': currency.name}]
+
+            for period in periods:
+                date_start = datetime.strptime(str(period.get('date_from')),
+                                           DEFAULT_SERVER_DATE_FORMAT).date()
+                date_end = datetime.strptime(str(period.get('date_to')),
+                                         DEFAULT_SERVER_DATE_FORMAT).date()
+
+                bonds_records_domain = domain + [('currency_id','=',currency.id),('bank_id','in',bank_list),('date_time','>=',date_start),('date_time','<=',date_end)]
+                bonds_currency = self.env['investment.bonds'].search(bonds_records_domain,order='currency_id')
+            
+                amount = 0
+                amount += sum(x.nominal_value for x in bonds_currency)
+        
+                columns.append(self._format({'name': amount},figure_type='float'))
+                
+                if total_dict.get(period.get('string')):
+                    old_amount = total_dict.get(period.get('string',0)) + amount
+                    total_dict.update({period.get('string'):old_amount})
+                else:
+                    total_dict.update({period.get('string'):amount})
+                total_ins += amount
+            amount_total.append(self._format({'name': total_ins},figure_type='float'))
+            
+            lines.append({
+                'id': 'hierarchy_jr' + str(currency.id),
+                'name': '',
+                'columns': columns,
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        total_name = [{'name': 'Total'}]
+        for per in total_dict:
+            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float'))
+            
+        r_column = 7 - len(total_name)
+        if r_column > 0:
+            for col in range(r_column):
+                total_name.append({'name': ''})
+                
+        lines.append({
+                'id': 'total_name_currency',
+                'name': '',
+                'columns': total_name,
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+
         lines.append({
             'id': 'hierarchy_pay_main',
             'name': 'Pay',
@@ -516,6 +847,86 @@ class InvestmentCommittee(models.AbstractModel):
             'unfoldable': False,
             'unfolded': True,
         })
+
+        #=====================pay Currency Data ==========#
+        period_name = [{'name': 'Currency'}]
+        for per in periods:
+            period_name.append({'name': per.get('string')})
+        r_column = 6 - len(periods)
+        if r_column > 0:
+            for col in range(r_column):
+                period_name.append({'name': ''})
+
+        lines.append({
+                'id': 'hierarchy_inst',
+                'name': '',
+                'columns': period_name,
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        currency_ids = self.env['res.currency']
+        currency_ids += will_pay_records.mapped('currency_id')
+
+        if currency_ids:
+            currencys = list(set(currency_ids.ids))
+            currency_ids = self.env['res.currency'].browse(currencys)
+
+        amount_total = [{'name': 'Total'}]
+        total_dict = {}
+        for currency in currency_ids:
+            total_ins = 0
+            columns = [{'name': currency.name}]
+
+            for period in periods:
+                date_start = datetime.strptime(str(period.get('date_from')),
+                                           DEFAULT_SERVER_DATE_FORMAT).date()
+                date_end = datetime.strptime(str(period.get('date_to')),
+                                         DEFAULT_SERVER_DATE_FORMAT).date()
+
+                pay_records_domain = domain + [('currency_id','=',currency.id),('bank_id','in',bank_list),('date_time','>=',date_start),('date_time','<=',date_end)]
+                pay_currency = self.env['investment.will.pay'].search(pay_records_domain,order='currency_id')
+    
+                amount = 0
+                amount += sum(x.amount for x in pay_currency)
+        
+                columns.append(self._format({'name': amount},figure_type='float'))
+                
+                if total_dict.get(period.get('string')):
+                    old_amount = total_dict.get(period.get('string',0)) + amount
+                    total_dict.update({period.get('string'):old_amount})
+                else:
+                    total_dict.update({period.get('string'):amount})
+                total_ins += amount
+            amount_total.append(self._format({'name': total_ins},figure_type='float'))
+            
+            lines.append({
+                'id': 'hierarchy_jr' + str(currency.id),
+                'name': '',
+                'columns': columns,
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        total_name = [{'name': 'Total'}]
+        for per in total_dict:
+            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float'))
+            
+        r_column = 7 - len(total_name)
+        if r_column > 0:
+            for col in range(r_column):
+                total_name.append({'name': ''})
+                
+        lines.append({
+                'id': 'total_name_currency',
+                'name': '',
+                'columns': total_name,
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
 
 #         lines.append({
 #             'id': 'hierarchy_funds',
@@ -590,6 +1001,86 @@ class InvestmentCommittee(models.AbstractModel):
             'unfoldable': False,
             'unfolded': True,
         })
+
+        #=====================Security Currency Data ==========#
+        period_name = [{'name': 'Currency'}]
+        for per in periods:
+            period_name.append({'name': per.get('string')})
+        r_column = 6 - len(periods)
+        if r_column > 0:
+            for col in range(r_column):
+                period_name.append({'name': ''})
+
+        lines.append({
+                'id': 'hierarchy_inst',
+                'name': '',
+                'columns': period_name,
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        currency_ids = self.env['res.currency']
+        currency_ids += sale_security_ids.mapped('currency_id')
+
+        if currency_ids:
+            currencys = list(set(currency_ids.ids))
+            currency_ids = self.env['res.currency'].browse(currencys)
+
+        amount_total = [{'name': 'Total'}]
+        total_dict = {}
+        for currency in currency_ids:
+            total_ins = 0
+            columns = [{'name': currency.name}]
+
+            for period in periods:
+                date_start = datetime.strptime(str(period.get('date_from')),
+                                           DEFAULT_SERVER_DATE_FORMAT).date()
+                date_end = datetime.strptime(str(period.get('date_to')),
+                                         DEFAULT_SERVER_DATE_FORMAT).date()
+
+                sale_records_domain = domain + [('currency_id','in',currency_list),('bank_id','in',bank_list),('invesment_date','>=',date_start),('invesment_date','<=',date_end)]
+                sale_currency = self.env['purchase.sale.security'].search(sale_records_domain,order='currency_id')
+    
+                amount = 0
+                amount += sum(x.amount for x in sale_currency)
+        
+                columns.append(self._format({'name': amount},figure_type='float'))
+                
+                if total_dict.get(period.get('string')):
+                    old_amount = total_dict.get(period.get('string',0)) + amount
+                    total_dict.update({period.get('string'):old_amount})
+                else:
+                    total_dict.update({period.get('string'):amount})
+                total_ins += amount
+            amount_total.append(self._format({'name': total_ins},figure_type='float'))
+            
+            lines.append({
+                'id': 'hierarchy_jr' + str(currency.id),
+                'name': '',
+                'columns': columns,
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        total_name = [{'name': 'Total'}]
+        for per in total_dict:
+            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float'))
+            
+        r_column = 7 - len(total_name)
+        if r_column > 0:
+            for col in range(r_column):
+                total_name.append({'name': ''})
+                
+        lines.append({
+                'id': 'total_name_currency',
+                'name': '',
+                'columns': total_name,
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
                     
         return lines
 

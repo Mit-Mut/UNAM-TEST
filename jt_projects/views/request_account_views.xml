@@ -41,6 +41,7 @@
                                 <field name="project_stage_identifier" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="ministrations_amount" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="authorized_amount" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="program_code" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                             </group>
                             <group>
                                 <field name="observations" attrs="{'invisible': [('status', '!=', 'eraser')]}"/>

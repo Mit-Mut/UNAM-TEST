@@ -149,47 +149,67 @@ class ReportOfInvestmentFunds(models.AbstractModel):
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
-        sale_domain = domain + [('fund_id','in',fund_list),('state','=','confirmed'),('invesment_date','>=',start),('invesment_date','<=',end)]
+
+        sale_domain = domain + [('fund_id','in',fund_list),('invesment_date','>=',start),('invesment_date','<=',end)]
         records = self.env['purchase.sale.security'].search(sale_domain)
-        # records = self.env['purchase.sale.security'].search([('invesment_date','>=',start),('invesment_date','<=',end),('state','=','draft')])
         total_amount = 0
         total_title = 0
         total_val = 0
-        for rec in records:
-            valuation = rec.title * rec.movement_price
-            total_val += valuation
-            nominal = rec.price - rec.price_previous_day
-            percentage = 0.0
-            if rec.price_previous_day:
-                percentage = nominal*100/rec.price_previous_day
-
-            if rec.movement == 'sell':
-                total_title -= rec.title
-                total_amount -= rec.amount
-            elif rec.movement == 'buy':
-                total_title += rec.title
-                total_amount += rec.amount
-            profit =  valuation - rec.amount + total_title
-            
-            resouce_name = rec.fund_id and rec.fund_id.name or ''
-                
+        fund_ids = records.mapped('fund_id')
+        for fund in fund_ids:
             lines.append({
-                'id': 'hierarchy' + str(rec.id),
-                'name': resouce_name,
-                'columns': [{'name': rec.invesment_date}, 
-                            self._format({'name': rec.movement_price},figure_type='float',digit=6),
-                            self._format({'name': nominal},figure_type='float',digit=6),
-                            self._format({'name': percentage},figure_type='float',digit=6),
-                            self._format({'name': rec.amount},figure_type='float',digit=2),
-                            {'class':'number','name':format(total_title, ',d')},
-                            {'class':'number','name':format(rec.title, ',d')},
-                            self._format({'name': valuation},figure_type='float',digit=2),
-                            self._format({'name': profit},figure_type='float',digit=2),
+                'id': 'hierarchy_fund' + str(fund.id),
+                'name': fund.name,
+                'columns': [{'name': ''}, 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
                             ],
-                'level': 3,
+                'level': 1,
                 'unfoldable': False,
                 'unfolded': True,
             })
+              
+            for rec in records.filtered(lambda x:x.fund_id.id==fund.id):
+                valuation = rec.title * rec.movement_price
+                total_val += valuation
+                nominal = rec.price - rec.price_previous_day
+                percentage = 0.0
+                if rec.price_previous_day:
+                    percentage = nominal*100/rec.price_previous_day
+    
+                if rec.movement == 'sell':
+                    total_title -= rec.title
+                    total_amount -= rec.amount
+                elif rec.movement == 'buy':
+                    total_title += rec.title
+                    total_amount += rec.amount
+                profit =  valuation - rec.amount + total_title
+                
+                resouce_name = rec.fund_id and rec.fund_id.name or ''
+                    
+                lines.append({
+                    'id': 'hierarchy' + str(rec.id),
+                    'name': resouce_name,
+                    'columns': [{'name': rec.invesment_date}, 
+                                self._format({'name': rec.movement_price},figure_type='float',digit=6),
+                                self._format({'name': nominal},figure_type='float',digit=6),
+                                self._format({'name': percentage},figure_type='float',digit=6),
+                                self._format({'name': rec.amount},figure_type='float',digit=2),
+                                {'class':'number','name':format(total_title, ',d')},
+                                {'class':'number','name':format(rec.title, ',d')},
+                                self._format({'name': valuation},figure_type='float',digit=2),
+                                self._format({'name': profit},figure_type='float',digit=2),
+                                ],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
             
 #         lines.append({
 #             'id': 'hierarchy_total',

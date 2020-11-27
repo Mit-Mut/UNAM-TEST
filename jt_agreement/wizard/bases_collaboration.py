@@ -59,6 +59,7 @@ class AgreementBasesCollabration(models.TransientModel):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'res_id': pdf_rec.id,
+            'context':{'active_ids':self.env.context.get('active_ids')}
         }
 
 

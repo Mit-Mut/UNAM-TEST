@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    <menuitem
+        id="menu_control_assigned_amounts_project"
+        name="Budget Adjustments"
+        parent="supplier_payment_request_main_menu"
+        action="jt_budget_mgmt.action_control_assigned_amounts"
+        sequence="20"
+    />
+    </data>
+ </odoo>

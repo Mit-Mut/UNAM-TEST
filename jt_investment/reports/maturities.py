@@ -49,6 +49,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
 
     filter_contract = True
     filter_currency = True
+    filter_bank = True
 
     @api.model
     def _get_filter_bank(self):
@@ -475,6 +476,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                         {'name': ''},
                         {'name': ''},
                         {'name': ''},
+                        {'name':''},
                         ],
             'level': 1,
             'unfoldable': False,
@@ -485,7 +487,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
         period_name = [{'name': 'Institución'}]
         for per in periods:
             period_name.append({'name': per.get('string')})
-        r_column = 10 - len(periods)
+        r_column = 11 - len(periods)
         if r_column > 0:
             for col in range(r_column):
                 period_name.append({'name': ''})
@@ -567,7 +569,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
         for per in total_dict:
             total_name.append(self._format({'name': total_dict.get(per)},figure_type='float'))
             
-        r_column = 10 - len(total_name)
+        r_column = 12 - len(total_name)
         if r_column > 0:
             for col in range(r_column):
                 total_name.append({'name': ''})
@@ -585,7 +587,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
         period_name = [{'name': 'Tipo de recurso'}]
         for per in periods:
             period_name.append({'name': per.get('string')})
-        r_column = 10 - len(periods)
+        r_column = 11 - len(periods)
         if r_column > 0:
             for col in range(r_column):
                 period_name.append({'name': ''})
@@ -668,7 +670,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
         for per in total_dict:
             total_name.append(self._format({'name': total_dict.get(per)},figure_type='float'))
             
-        r_column = 10 - len(total_name)
+        r_column = 12 - len(total_name)
         if r_column > 0:
             for col in range(r_column):
                 total_name.append({'name': ''})
@@ -686,7 +688,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
         period_name = [{'name': 'Currency'}]
         for per in periods:
             period_name.append({'name': per.get('string')})
-        r_column = 10 - len(periods)
+        r_column = 11 - len(periods)
         if r_column > 0:
             for col in range(r_column):
                 period_name.append({'name': ''})
@@ -767,7 +769,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
         for per in total_dict:
             total_name.append(self._format({'name': total_dict.get(per)},figure_type='float'))
             
-        r_column = 10 - len(total_name)
+        r_column = 12 - len(total_name)
         if r_column > 0:
             for col in range(r_column):
                 total_name.append({'name': ''})

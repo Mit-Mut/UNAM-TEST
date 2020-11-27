@@ -37,7 +37,7 @@
          
         </template>
 
-        <template id="pdf_income_annual_report">
+        <template id="pdf_income_annual_report_1">
         	<t t-call="web.html_container">
         	<t t-call="jt_income.pdf_external_layout_income_annual_report">
                 <div class="page">

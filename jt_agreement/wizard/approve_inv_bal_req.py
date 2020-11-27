@@ -58,6 +58,7 @@ class ApproveInvestmentBalReq(models.TransientModel):
     is_balance = fields.Boolean('Is Balance',default=False)
     trust_id = fields.Many2one('agreement.trust','Trust')
     patrimonial_id = fields.Many2one('patrimonial.resources','Patrimonial')
+    is_agr = fields.Boolean(string='Agreements',default=False)
     
     @api.onchange('base_collabaration_id')
     def onchange_base_collabaration_id(self):

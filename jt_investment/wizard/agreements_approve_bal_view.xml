@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
 	            	<field name="invoice" position="before">
 	            		<field name="investment_avl_ids" invisible="1"/>
-	            		<field name="investment_id" required="1" domain="[('id','in',investment_avl_ids)]"/>
+	            		<field name="investment_id" attrs="{'invisible':[('is_agr','=',False)],'required':[('is_agr','=',True)]}" domain="[('id','in',investment_avl_ids)]"/>
 	            		<field name="journal_id" invisible="1"/>
 	            		<field name="source_ids" invisible="1"/>
 	            		<field name="dest_ids" invisible="1"/>

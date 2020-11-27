@@ -49,6 +49,7 @@
         'views/papiit_project.xml',
         'views/base_menu_view.xml',
         'views/project_payment_management_view.xml',
+        'views/budget_adjustments.xml',
         'reports/travel_request.xml',
         'reports/menu_view.xml',
         'reports/supplier_request.xml',

@@ -22,7 +22,9 @@
 ##############################################################################
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError,UserError
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+
 
 class Trust(models.Model):
 
@@ -89,12 +91,17 @@ class Trust(models.Model):
     fees = fields.Monetary(string="Fees")
     yields = fields.Monetary(string="Yields")
     next_no = fields.Integer(string="Next Number")
-         
+    interest_rate_ids= fields.One2many('interest.rate.operation','trust_id')
+    
+    report_start_date = fields.Date("report_start_date")
+    report_end_date = fields.Date("report_end_date")
+
+    
     def compute_operations(self):
         for rec in self:
             operations = len(rec.request_open_balance_ids)
             rec.total_operations =operations
-
+            
     def compute_modifications(self):
         modification_obj = self.env['agreement.trust.modification']
         for rec in self:
@@ -300,24 +307,106 @@ class Trust(models.Model):
                             'liability_account_id' : trust.liability_account_id and trust.liability_account_id.id or False,
                         })
 
-            for beneficiary in trust.provider_ids:
-                partner_id = beneficiary.partner_id and beneficiary.partner_id.id or False    
-                req_obj.create({
-                    'trust_id': trust.id,
-                    'apply_to_basis_collaboration': True,
-                    #'agreement_number': collaboration.convention_no,
-                    'opening_balance': trust.opening_balance,
-                    'supporting_documentation': trust.trust_office_file,
-                    'type_of_operation': 'retirement',
-                    'provider_id': partner_id,
-                    'name': self.name,
-                    'patrimonial_account_id' : trust.patrimonial_account_id and trust.patrimonial_account_id.id or False,
-                    'investment_account_id' : trust.investment_account_id and trust.investment_account_id.id or False,
-                    'interest_account_id' : trust.interest_account_id and trust.interest_account_id.id or False,
-                    'honorary_account_id' : trust.honorary_account_id and trust.honorary_account_id.id or False,
-                    'availability_account_id' : trust.availability_account_id and trust.availability_account_id.id or False,
-                    'liability_account_id' : trust.liability_account_id and trust.liability_account_id.id or False,
-                })
+#             for beneficiary in trust.provider_ids:
+#                 partner_id = beneficiary.partner_id and beneficiary.partner_id.id or False    
+#                 req_obj.create({
+#                     'trust_id': trust.id,
+#                     'apply_to_basis_collaboration': True,
+#                     #'agreement_number': collaboration.convention_no,
+#                     'opening_balance': trust.opening_balance,
+#                     'supporting_documentation': trust.trust_office_file,
+#                     'type_of_operation': 'retirement',
+#                     'provider_id': partner_id,
+#                     'name': self.name,
+#                     'patrimonial_account_id' : trust.patrimonial_account_id and trust.patrimonial_account_id.id or False,
+#                     'investment_account_id' : trust.investment_account_id and trust.investment_account_id.id or False,
+#                     'interest_account_id' : trust.interest_account_id and trust.interest_account_id.id or False,
+#                     'honorary_account_id' : trust.honorary_account_id and trust.honorary_account_id.id or False,
+#                     'availability_account_id' : trust.availability_account_id and trust.availability_account_id.id or False,
+#                     'liability_account_id' : trust.liability_account_id and trust.liability_account_id.id or False,
+#                 })
+
+    def get_report_lines(self):
+        lines = []
+        folio=1
+        final = 0
+        opt_lines = self.request_open_balance_ids.filtered(lambda x:x.type_of_operation == 'open_bal' and  x.request_date >= self.report_start_date and x.request_date <= self.report_end_date)
+        for line in opt_lines:
+            final += line.opening_balance
+            lines.append({'folio':folio,
+                          'date':line.request_date,
+                          'opt':'Opening Balance',
+                          'debit':line.opening_balance,
+                          'credit' : 0.0,
+                          'final' : final
+                          })
+            folio += 1
+            
+        opt_lines = self.request_open_balance_ids.filtered(lambda x:x.type_of_operation == 'increase' and  x.request_date >= self.report_start_date and x.request_date <= self.report_end_date)
+        for line in opt_lines:
+            final += line.opening_balance
+            lines.append({'folio':folio,
+                          'date':line.request_date,
+                          'opt':'Increase',
+                          'debit':line.opening_balance,
+                          'credit' : 0.0,
+                          'final' : final
+                          })
+            folio += 1
+        for line in self.interest_rate_ids.filtered(lambda x:x.interest_date >= self.report_start_date and x.interest_date <= self.report_end_date):
+            final += line.yields
+            lines.append({'folio':folio,
+                          'date':line.interest_date,
+                          'opt':'Yields',
+                          'debit':line.yields,
+                          'credit' : 0.0,
+                          'final' : final
+                          })
+            folio += 1
+
+            final -= line.fees
+            lines.append({'folio':folio,
+                          'date':line.interest_date,
+                          'opt':'Fees',
+                          'debit':0.0,
+                          'credit' : line.fees,
+                          'final' : final
+                          })
+            folio += 1
+        opt_lines = self.request_open_balance_ids.filtered(lambda x:x.type_of_operation == 'retirement' and  x.request_date >= self.report_start_date and x.request_date <= self.report_end_date)
+        for line in opt_lines:
+            final -= line.opening_balance
+            lines.append({'folio':folio,
+                          'date':line.request_date,
+                          'opt':'Retirement',
+                          'debit':0.0,
+                          'credit' : line.opening_balance,
+                          'final' : final
+                          })
+            folio += 1
+
+        opt_lines = self.request_open_balance_ids.filtered(lambda x:x.type_of_operation == 'withdrawal_cancellation' and  x.request_date >= self.report_start_date and x.request_date <= self.report_end_date)
+        for line in opt_lines:
+            final -= line.opening_balance
+            lines.append({'folio':folio,
+                          'date':line.request_date,
+                          'opt':'Withdrawal due to cancellation',
+                          'debit':0.0,
+                          'credit' : line.opening_balance,
+                          'final' : final
+                          })
+            folio += 1
+            
+        return lines
+        
+class InterestRateOperation(models.Model):
+    _name = 'interest.rate.operation'
+    _rec_name = 'interest_date'
+    
+    interest_date = fields.Date('Interest Date')
+    fees = fields.Float('Fees')
+    yields = fields.Float('Yields')
+    trust_id = fields.Many2one('agreement.trust','Trust')
     
 class Beneficiary(models.Model):
     _inherit = 'collaboration.beneficiary'

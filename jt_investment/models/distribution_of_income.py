@@ -51,6 +51,45 @@ class DistributionOfIncome(models.Model):
     #@api.onchange('start_date','end_date','dependency_ids','agreement_type_ids','base_ids','fund_ids')
 
 
+    def transfer_request(self):
+
+        today = datetime.today().date()
+        # fund_ids = self.line_ids.mapped('fund_id')
+        # opt_lines = []
+        # for fund in fund_ids:
+        #     base_ids = self.line_ids.filtered(lambda x:x.fund_id.id==fund.id).mapped('base_collabaration_id')
+        #     for base in base_ids:
+        #         lines = self.line_ids.filtered(lambda x:x.investment_fund_id.id==fund.id and x.base_collabaration_id.id == base.id and not x.is_request_generated and x.line_state == 'done')
+        #         inc = sum(a.amount for a in lines.filtered(lambda x:x.type_of_operation in ('open_bal','increase')))
+        #         ret = sum(a.amount for a in lines.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure','increase_by_closing')))
+        #         balance = inc - ret
+        #         if balance > 0:
+        #             opt_lines.append((0,0,{'opt_line_ids':[(6,0,lines.ids)],'investment_fund_id':fund.id,'base_collabaration_id':base.id,'agreement_number':base.convention_no,'amount':balance}))
+
+            # lines = self.line_ids.filtered(lambda x:x.investment_fund_id.id==fund.id and not x.base_collabaration_id and x.line_state == 'done')
+            # inc = sum(a.amount for a in lines.filtered(lambda x:x.type_of_operation in ('open_bal','increase')))
+            # ret = sum(a.amount for a in lines.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure','increase_by_closing')))
+            # balance = inc - ret
+            # if balance > 0:
+            #     opt_lines.append((0,0,{'opt_line_ids':[(6,0,lines.ids)],'investment_fund_id':fund.id,'amount':balance}))
+                    
+        return {
+            'name': 'Approve Request',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': False,
+            'res_model': 'inv.transfer.request',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+                'default_date': today,
+                'default_bank_account_id' : self.journal_id and self.journal_id.id or False,
+                # 'default_line_ids' : opt_lines,
+                'show_for_agreement' : True,
+            }
+        }
+
+
     def unlink(self):
         for rec in self:
             if rec.state not in ['draft']:

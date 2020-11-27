@@ -14,7 +14,7 @@
                                 <field name="date"/>
                             </group>
                             <group>
-                                <field name="desti_bank_account_id" domain="[('type', '=', 'bank')]"
+                                <field name="desti_bank_account_id" domain="[('type', '=', 'bank'),('is_productive_account','=',True)]"
                                     required="1"/>
                             	<field name="user_id"/>
                                 <field name="concept"/>

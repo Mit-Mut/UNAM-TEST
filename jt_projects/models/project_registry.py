@@ -42,10 +42,9 @@ class ProjectRegistry(models.Model):
     is_related_agreement = fields.Boolean(
         'Is It related to agreement?', default=False)
 
-    base_id = fields.Many2one('bases.collaboration', 'Agreement Name')
-    base_number = fields.Char(
-        related='base_id.convention_no', string='Agreement number')
-    agreement_type_id = fields.Many2one(related='base_id.agreement_type_id')
+    base_number = fields.Many2one('bases.collaboration', 'Agreement Number')
+    base_name = fields.Char(related='base_number.name', string='Agreement Name')
+    agreement_type_id = fields.Many2one(related='base_number.agreement_type_id')
     resource_type = fields.Selection(
         [('R', 'R (Remnant)'), ('P', 'P (Budget)')], string="Resource Type")
     pre_account_id = fields.Many2one('account.account', 'Previous')
@@ -62,7 +61,7 @@ class ProjectRegistry(models.Model):
     co_responsible_id = fields.Many2one('hr.employee', 'Co-responsible Name')
     co_responsible_rfc = fields.Char(
         related='co_responsible_id.rfc', string='Co-responsible RFC')
-    responsible_name = fields.Char('Responsible name')
+    responsible_name = fields.Many2one('hr.employee', 'Responsible name')
     stage_identifier_id = fields.Many2one('stage', string="Stage")
 
     project_ministrations_ids = fields.One2many(

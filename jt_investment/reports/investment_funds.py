@@ -182,45 +182,61 @@ class SummaryofOperationInvestmentFunds(models.AbstractModel):
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
         records = self.env['purchase.sale.security'].search([('fund_id','in',fund_list),('contract_id','in',contract_list),domain,('invesment_date','>=',start),('invesment_date','<=',end)])
-        #records = self.env['purchase.sale.security'].search([('invesment_date','>=',start),('invesment_date','<=',end),('state','=','draft')])
-        total_amount = 0
-        total_titel = 0
-        for rec in records:
-            if rec.movement:
-                total_amount += rec.amount
-                if rec.movement == 'sell':
-                    total_titel -= rec.title
-                elif rec.movement == 'buy':
-                    total_titel += rec.title
-                    
-                movement = dict(rec._fields['movement'].selection).get(rec.movement)
-                lines.append({
-                    'id': 'hierarchy' + str(rec.id),
-                    'name': rec.fund_id and rec.fund_id.name or '',
-                    'columns': [{'name': rec.contract_id and rec.contract_id.name or ''}, 
-                                {'name': rec.fund_key}, 
-                                {'name': movement},
-                                {'class':'number','name':format(rec.title, ',d')},
-                                self._format({'name': rec.amount},figure_type='float'),
-                                ],
-                    'level': 3,
-                    'unfoldable': False,
-                    'unfolded': True,
-                })
+        fund_ids = records.mapped('fund_id')
+        for fund in fund_ids:
+            total_amount = 0
+            total_titel = 0
 
-        lines.append({
-            'id': 'hierarchy_total',
-            'name': 'Total',
-            'columns': [{'name': ''}, 
-                        {'name': ''}, 
-                        {'name': ''},
-                        {'class':'number','name':format(total_titel, ',d')},
-                        self._format({'name': total_amount},figure_type='float'),
-                        ],
-            'level': 1,
-            'unfoldable': False,
-            'unfolded': True,
-        })
+            lines.append({
+                'id': 'hierarchy_FUND' + str(fund.id),
+                'name': fund.name,
+                'columns': [{'name': ''}, 
+                            {'name': ''}, 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+            
+            for rec in records.filtered(lambda x:x.fund_id.id==fund.id):
+                if rec.movement:
+                    total_amount += rec.amount
+                    if rec.movement == 'sell':
+                        total_titel -= rec.title
+                    elif rec.movement == 'buy':
+                        total_titel += rec.title
+                        
+                    movement = dict(rec._fields['movement'].selection).get(rec.movement)
+                    lines.append({
+                        'id': 'hierarchy' + str(rec.id),
+                        'name': rec.fund_id and rec.fund_id.name or '',
+                        'columns': [{'name': rec.contract_id and rec.contract_id.name or ''}, 
+                                    {'name': rec.fund_key}, 
+                                    {'name': movement},
+                                    {'class':'number','name':format(rec.title, ',d')},
+                                    self._format({'name': rec.amount},figure_type='float'),
+                                    ],
+                        'level': 3,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+    
+            lines.append({
+                'id': 'hierarchy_total',
+                'name': 'Total',
+                'columns': [{'name': ''}, 
+                            {'name': ''}, 
+                            {'name': ''},
+                            {'class':'number','name':format(total_titel, ',d')},
+                            self._format({'name': total_amount},figure_type='float'),
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
                         
         return lines
 

@@ -37,16 +37,14 @@
                                 <field name="doc_type" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 
                                 <field name="type_of_currency" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="expense_journal_id" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="expense_journal_id" required="1" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                   <field name="exchange_rate" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="stage_id" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                  <field name="dependence" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="subdependence" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                               <field name="beneficiary_name" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="type_of_aggrement" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="agreement_number" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="agreement_name" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="ext_sponsor" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="type_of_operation" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="rfc" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                               
                                 <field name="observation" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                  <field name="Vouchers" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="administrative_forum" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
@@ -56,12 +54,16 @@
                                  <field name="exercise" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                
                                 <field name="upa_code" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="type_of_operation" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="rfc" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                              
                                 <field name="invoice_vault_folio" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="uuid_invoice" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="invoice_series" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="invoice_folio" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="beneficiary_name" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="type_of_aggrement" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="agreement_number" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="agreement_name" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="ext_sponsor" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="tech_support" invisible="1" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="admin_manager" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="reason_for_rejection" attrs="{'readonly': [('status', '!=', 'eraser')],'invisible':[('status','!=','reject')]}"/>                                                                
@@ -76,20 +78,24 @@
                                           <field name="row"/>
                                           <field name="program_code"/>
                                          <field name="verification_expense_id" invisible="1"/>
+                                         <field name="price"/>
+                                         <field name="amount"/>
                                         <field name="tax_ids" widget="many2many_tags"/>  
-                                        <field name="subtotal"/>
-                                        <field name="amount"/>
+                                         <field name="subtotal"/>
+                                          <field name="amount_tax" invisible="1"/> 
                                     </tree>
                             </field>
+                                <group class="oe_subtotal_footer">
+                                    <field name="amount_untaxed"/>
+                                    <field name="amount_tax" widget="tax-group-custom-field" nolabel="1" colspan="2"/>
+                                    <field name="amount_total" class="oe_subtotal_footer_separator"/>
+                                </group>
+                            
+                            </page>
+                            <page string="Journal Items" name="accounts">
+                                <field name="move_line_ids" readonly="1"/>
                             </page>
                         </notebook>
-                        <!-- Totals (only invoices / receipts) -->
-                      <!--   <group class="oe_subtotal_footer">
-                            <field name="untax_amount"/>
-                            <field name="tax_group_by" widget="tax-group-custom-field" nolabel="1" colspan="2"/>
-                            <field name="total" class="oe_subtotal_footer_separator"/>
-                            
-                        </group> -->
                     </sheet>
                 </form>
             </field>

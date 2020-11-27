@@ -14,8 +14,7 @@
                         <button name="action_draft_budget" string="Draft" class="oe_highlight"
                             type="object"
                             attrs="{'invisible':[('payment_state', 'in', ('draft','paid','cancel','approved_payment','for_payment_procedure'))]}"/>
-                        <button name="action_validate_budget" invisible="context.get('hide_validate_button',False)" string="Validate budget" class="oe_highlight"
-                                    type="object" attrs="{'invisible':[('payment_state', '!=', 'registered')]}"/>
+                        <button name="action_validate_budget" string="Validate budget" class="oe_highlight" type="object" attrs="{'invisible':[('payment_state', '!=', 'registered')]}" invisible="1"/>
                         <button name="action_cancel_budget" string="Cancel" class="oe_highlight" type="object"  attrs="{'invisible':[('payment_state', 'in', ('paid','cancel'))]}"/>
                         <field name="payment_state" widget="statusbar" statusbar_visible="draft,registered,approved_payment,for_payment_procedure,paid,payment_not_applied,rejected,cancel"/>
                     </header>
@@ -59,7 +58,6 @@
                                 <field name="vault_folio" invisible="1"/>
                                 <field name="currency_id" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 <field name="journal_id" readonly="1"/>
-                                <field name="diary" readonly="1"/>
                                 <field name="payment_bank_id" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                 <field name="payment_bank_account_id" string="Payment receipt bank account" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                 <field name="payment_issuing_bank_id" string="Payment issuing Bank" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
@@ -82,8 +80,8 @@
                                 <field name="responsible_id" attrs="{'invisible': [('operation_type_id', 'not in',('REIMBURSEMENT TO THIRD PARTIES','PLANE TICKETS','PAYMENT TO SUPPLIER'))]}"/>
 
                                 <field name="project_code" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
-                                <field name="agreement_number" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
-                                <field name="stage" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="agreement_number" readonly="1"/>
+                                <field name="stage" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}" invisible="1"/>
                                 <field name="dependence" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                 <field name="subdependence" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                 <field name="folio_dependency" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
@@ -392,7 +390,7 @@
                                         <field name="destination" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/> <!-- 'invisible':[('is_show_destination','=',False)], -->
                                         <field name="is_show_origin" invisible="1"/>
                                         <field name="origin_payment" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/> <!-- 'invisible':[('is_show_origin','=',False)], -->
-                                        <field name="rf_person" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                        <field name="rf_person" attrs="{'readonly': [('payment_state', '!=', 'draft')]}" invisible="1"/>
                                     </group>
 
 	                                <group name="responsible" string="Responsible">

@@ -350,7 +350,7 @@
                             </page>
                             <page name="closing_info" string="Information for Closing" attrs="{'invisible':[('is_specific','=',True)]}">
                                 <group>
-                                    <field name="fund_name_transfer_id"/>
+                                    <field name="fund_name_transfer_id" context="{'show_agreement_name':True}"/>
                                     <field name="closing_amt"/>
                                 </group>
                             </page>
@@ -376,7 +376,7 @@
             <field name="name">Bases of Collabration</field>
             <field name="res_model">bases.collaboration</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'from_agreement':True}</field>
+            <field name="context">{'from_agreement':True,'show_agreement_name':True}</field>
         </record>
 
           <record id="view_req_open_balance_tree_invest" model="ir.ui.view">
@@ -648,7 +648,7 @@
                             </group>
                         </group>
                         <group>
-                            <field name="reason_rejection" readonly="1"/>
+                            <field name="reason_rejection" readonly="1" attrs="{'invisible': [('state', '!=', 'rejected')]}"/>
                         </group>
                         <notebook></notebook>
 <!--                        <notebook>-->

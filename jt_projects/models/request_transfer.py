@@ -48,8 +48,12 @@ class RequestTransfer(models.Model):
             'date': self.application_date,
             'user_id': self.user_id.id,
             'state': self.status,
+            'unit_req_transfer_id': self.request_area,
             'project_request_id': self.id,
             'amount': self.amount_req_tranfer,
+            'date_required': self.handover_date,
+            'concept': self.application_concept,
+            'agreement_number': self.aggrement,
 
         }
         self.env['request.open.balance.finance'].create(record)
@@ -58,7 +62,7 @@ class RequestTransfer(models.Model):
     def create(self, vals):
         if vals.get('invoice', 'New') == 'New':
             vals['invoice'] = self.env['ir.sequence'].next_by_code(
-                'request.accounts') or 'New'
+                'request.transfer') or 'New'
         result = super(RequestTransfer, self).create(vals)
         return result
 

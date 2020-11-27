@@ -1,4 +1,6 @@
-from odoo import models, fields, api
+from odoo import models, fields, api,_
+from odoo.exceptions import ValidationError
+from datetime import datetime
 
 
 class VerficationOfExpense(models.Model):
@@ -44,7 +46,7 @@ class VerficationOfExpense(models.Model):
     type_of_aggrement = fields.Many2one(
         'agreement.agreement.type', string='Type Of Agreement')
     currency_id = fields.Many2one(
-        'res.currency', help='The currency used to enter statement', string="Currency")
+        'res.currency', help='The currency used to enter statement', string="Currency",default=lambda self: self.env.user.company_id.currency_id)
     agreement_number = fields.Many2one(
         'bases.collaboration', string='Agreement Number')
     agreement_name = fields.Char(
@@ -54,41 +56,69 @@ class VerficationOfExpense(models.Model):
         'hr.employee', string='Administrative manager')
     ext_sponsor = fields.Text('External sponsor')
     observation = fields.Text('Observations')
+    move_line_ids = fields.One2many(
+        'account.move.line', 'expense_id', string="Journal Items")
     reason_for_rejection = fields.Char('Reason for rejection')
     verifcation_expense_ids = fields.One2many(
         'verification.expense.line', 'verification_expense_id', string='Verfication Expense Line')
 
-    # untax_amount = fields.Monetary(
-    #     'Subtotal', compute='_compute_subtotal_amount', currency_field='currency_id')
-    # tax_group_by = fields.Text('Taxes', compute='_compute_tax_amount')
-    # total = fields.Monetary(
-    #     'Total(Price)', compute='_compute_total_amount', currency_field='currency_id')
+    amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True,
+        compute='_compute_amount')
+    amount_tax = fields.Monetary(string='Tax', store=True, readonly=True,
+        compute='_compute_amount')
+    amount_total = fields.Monetary(string='Total', store=True, readonly=True,
+        compute='_compute_amount',)
 
-    # def _compute_subtotal_amount(self):
-
-    #     subtotal = 0.0
-    #     for record in self.verifcation_expense_ids:
-    #         subtotal += record.subtotal
-    #     record.untax_amount = subtotal
-
-    # def _compute_tax_amount(self):
-
-    #     for record in self.verifcation_expense_ids:
-    #         tax_amount = 0.0
-    #         tax_amount = record.taxes.amount * record.subtotal
-    #         record.tax_group_by = tax_amount
-
-    # def _compute_total_amount(self):
-
-    #     total = 0
-    #     for record in self.verifcation_expense_ids:
-    #         tax_amount = record.taxes.amount * record.subtotal
-    #         print(tax_amount)
-    #         record.total = record.untax_amount
+    @api.depends('verifcation_expense_ids','verifcation_expense_ids.price','verifcation_expense_ids.tax_ids')
+    def _compute_amount(self):
+        for rec in self:
+            rec.amount_untaxed = sum(x.price for x in rec.verifcation_expense_ids)
+            rec.amount_tax = sum(x.amount_tax for x in rec.verifcation_expense_ids)
+            rec.amount_total = rec.amount_untaxed + rec.amount_tax 
+            
 
     def action_approve(self):
 
         self.status = 'approve'
+        if self.expense_journal_id:
+            journal = self.expense_journal_id
+            if not journal.default_debit_account_id or not journal.default_credit_account_id \
+                    or not journal.conac_debit_account_id or not journal.conac_credit_account_id:
+                if self.env.user.lang == 'es_MX':
+                    raise ValidationError(
+                        _("Por favor configure la cuenta UNAM y CONAC en diario!"))
+                else:
+                    raise ValidationError(
+                        _("Please configure UNAM and CONAC account in journal!"))
+
+            today = datetime.today().date()
+            user = self.env.user
+            partner_id = user.partner_id.id
+            if self.beneficiary_name:
+                partner_id = self.beneficiary_name.id
+                
+            amount = self.amount_total
+
+            unam_move_val = {'ref': self.display_name,  'conac_move': True,
+                             'date': today, 'journal_id': journal.id, 'company_id': self.env.user.company_id.id,
+                             'line_ids': [(0, 0, {
+                                 'account_id': journal.default_credit_account_id.id,
+                                 'coa_conac_id': journal.conac_credit_account_id.id,
+                                 'credit': amount,
+                                 'partner_id': partner_id,
+                                 'expense_id': self.id,
+                             }),
+                                 (0, 0, {
+                                     'account_id': journal.default_debit_account_id.id,
+                                     'coa_conac_id': journal.conac_debit_account_id.id,
+                                     'debit': amount,
+                                     'partner_id': partner_id,
+                                     'expense_id': self.id,
+                                 }),
+                             ]}
+            move_obj = self.env['account.move']
+            unam_move = move_obj.create(unam_move_val)
+            unam_move.action_post()
 
 
 class VerificationOfExpenseLine(models.Model):
@@ -98,9 +128,11 @@ class VerificationOfExpenseLine(models.Model):
 
     row = fields.Text('Row')
     verification_expense_id = fields.Many2one(
-        'verification.expense', string='Verification Expense')
+        'expense.verification', string='Verification Expense')
     program_code = fields.Many2one('program.code', string='Program Code')
-    subtotal = fields.Monetary('Subtotal(Price)')
+    price = fields.Monetary('Price')
+    subtotal = fields.Monetary(string='Subtotal',compute='get_price_subtotal',store=True)
+    amount_tax = fields.Monetary(string='Tax Amount',compute='get_tax_amount',store=True)
     currency_id = fields.Many2one(
         'res.currency', default=lambda self: self.env.user.company_id.currency_id)
     amount = fields.Selection(
@@ -108,3 +140,19 @@ class VerificationOfExpenseLine(models.Model):
             ('amount_me', 'Amount ME')
          ], string="Amount")
     tax_ids = fields.Many2many('account.tax', string="Taxes")
+
+    @api.depends('price','tax_ids','amount_tax')
+    def get_price_subtotal(self):
+        for rec in self:
+            rec.subtotal = rec.price + rec.amount_tax
+  
+    @api.depends('price','tax_ids')
+    def get_tax_amount(self):
+        for rec in self:
+            rec.amount_tax = 0.0 
+
+class AccountMoveLine(models.Model):
+
+    _inherit = 'account.move.line'
+
+    expense_id = fields.Many2one('expense.verification')

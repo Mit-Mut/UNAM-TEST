@@ -66,8 +66,9 @@ class MoneyMarketAccountStatement(models.AbstractModel):
     def _get_columns_name(self, options):
         return [
             {'name': _('Fecha')},
-            {'name': _('Saldo Inicial')},
+            {'name':_('Concepto de aplicación')},
             {'name': _('Referencia')},
+            {'name': _('Saldo Inicial')},
             {'name': _('Incrementos')},
             {'name': _('Retiros')},
              {'name': _('Saldo Final')},
@@ -128,6 +129,7 @@ class MoneyMarketAccountStatement(models.AbstractModel):
         journal_ids += will_pay_records.mapped('journal_id')
         g_total_inc = 0
         g_total_with = 0
+        g_total_final = 0
 
         if journal_ids:
             journals = list(set(journal_ids.ids))
@@ -137,6 +139,7 @@ class MoneyMarketAccountStatement(models.AbstractModel):
             capital = 0
             total_inc = 0
             total_with = 0
+            total_final = 0
 
             lines.append({
                 'id': 'hierarchy_account' + str(journal.id),
@@ -164,13 +167,16 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                 if rec.date_time:
                     invesment_date = rec.date_time.strftime('%Y-%m-%d') 
                 final = capital + inc - withdraw
-                
+                total_final += final
+                g_total_final += final
+
                 lines.append({
                     'id': 'hierarchy_account' + str(rec.id),
                     'name' :invesment_date, 
                     'columns': [ 
-                                self._format({'name': capital},figure_type='float'),
+                                {'name':''},
                                 {'name': 'Opening Balance'},
+                                self._format({'name': capital},figure_type='float'),
                                 self._format({'name': inc},figure_type='float'),
                                 self._format({'name': withdraw},figure_type='float'),
                                 self._format({'name': final},figure_type='float'),
@@ -185,28 +191,31 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                     invesment_date = ''
                     inc = 0 
                     withdraw = 0
-                    ref = ''
+                    ref = line.concept
                     if line.amount_type == 'increment':
                         inc = line.amount
                         total_inc += inc
                         g_total_inc += inc
-                        ref = 'Increment'
+                        #ref = 'Increment'
                     elif line.amount_type == 'withdrawal':
                         withdraw = line.amount
                         total_with += withdraw
                         g_total_with += withdraw
-                        ref = 'Withdrawal'
+                        #ref = 'Withdrawal'
                         
                     if line.date_required:
                         invesment_date = line.date_required.strftime('%Y-%m-%d') 
                     final = capital + inc - withdraw
-                    
+                    total_final += final
+                    g_total_final += final
+
                     lines.append({
                         'id': 'hierarchy_account_line' + str(line.id),
                         'name' :invesment_date, 
                         'columns': [ 
-                                    self._format({'name': capital},figure_type='float'),
+                                    {'name':ref},
                                     {'name': ref},
+                                    self._format({'name': capital},figure_type='float'),
                                     self._format({'name': inc},figure_type='float'),
                                     self._format({'name': withdraw},figure_type='float'),
                                     self._format({'name': final},figure_type='float'),
@@ -229,13 +238,16 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                 if rec.date_time:
                     invesment_date = rec.date_time.strftime('%Y-%m-%d') 
                 final = capital + inc - withdraw
-                
+                total_final += final
+                g_total_final += final
+
                 lines.append({
                     'id': 'hierarchy_account' + str(rec.id),
                     'name' :invesment_date, 
                     'columns': [ 
-                                self._format({'name': capital},figure_type='float'),
+                                {'name':''},
                                 {'name': 'Opening Balance'},
+                                self._format({'name': capital},figure_type='float'),
                                 self._format({'name': inc},figure_type='float'),
                                 self._format({'name': withdraw},figure_type='float'),
                                 self._format({'name': final},figure_type='float'),
@@ -250,28 +262,31 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                     invesment_date = ''
                     inc = 0 
                     withdraw = 0
-                    ref = ''
+                    ref = line.concept
                     if line.amount_type == 'increment':
                         inc = line.amount
                         total_inc += inc
                         g_total_inc += inc
-                        ref = 'Increment'
+                        #ref = 'Increment'
                     elif line.amount_type == 'withdrawal':
                         withdraw = line.amount
                         total_with += withdraw
                         g_total_with += withdraw
-                        ref = 'Withdrawal'
+                        #ref = 'Withdrawal'
                         
                     if line.date_required:
                         invesment_date = line.date_required.strftime('%Y-%m-%d') 
                     final = capital + inc - withdraw
-                    
+                    total_final += final
+                    g_total_final += final
+
                     lines.append({
                         'id': 'hierarchy_account_line' + str(line.id),
                         'name' :invesment_date, 
                         'columns': [ 
-                                    self._format({'name': capital},figure_type='float'),
+                                    {'name':ref},
                                     {'name': ref},
+                                    self._format({'name': capital},figure_type='float'),
                                     self._format({'name': inc},figure_type='float'),
                                     self._format({'name': withdraw},figure_type='float'),
                                     self._format({'name': final},figure_type='float'),
@@ -294,13 +309,16 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                 if rec.date_time:
                     invesment_date = rec.date_time.strftime('%Y-%m-%d') 
                 final = capital + inc - withdraw
-                
+                total_final += final
+                g_total_final += final
+
                 lines.append({
                     'id': 'hierarchy_account' + str(rec.id),
                     'name' :invesment_date, 
                     'columns': [ 
-                                self._format({'name': capital},figure_type='float'),
+                                {'name':''},
                                 {'name': 'Opening Balance'},
+                                self._format({'name': capital},figure_type='float'),
                                 self._format({'name': inc},figure_type='float'),
                                 self._format({'name': withdraw},figure_type='float'),
                                 self._format({'name': final},figure_type='float'),
@@ -315,28 +333,31 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                     invesment_date = ''
                     inc = 0 
                     withdraw = 0
-                    ref = ''
+                    ref = line.concept
                     if line.amount_type == 'increment':
                         inc = line.amount
                         total_inc += inc
                         g_total_inc += inc
-                        ref = 'Increment'
+                        #ref = 'Increment'
                     elif line.amount_type == 'withdrawal':
                         withdraw = line.amount
                         total_with += withdraw
                         g_total_with += withdraw
-                        ref = 'Withdrawal'
+                        #ref = 'Withdrawal'
                         
                     if line.date_required:
                         invesment_date = line.date_required.strftime('%Y-%m-%d') 
                     final = capital + inc - withdraw
-                    
+                    total_final += final
+                    g_total_final += final
+
                     lines.append({
                         'id': 'hierarchy_account_line' + str(line.id),
                         'name' :invesment_date, 
                         'columns': [ 
-                                    self._format({'name': capital},figure_type='float'),
+                                    {'name':''},
                                     {'name': ref},
+                                    self._format({'name': capital},figure_type='float'),
                                     self._format({'name': inc},figure_type='float'),
                                     self._format({'name': withdraw},figure_type='float'),
                                     self._format({'name': final},figure_type='float'),
@@ -359,13 +380,16 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                 if rec.date_time:
                     invesment_date = rec.date_time.strftime('%Y-%m-%d') 
                 final = capital + inc - withdraw
-                
+                total_final += final
+                g_total_final += final
+
                 lines.append({
                     'id': 'hierarchy_account' + str(rec.id),
                     'name' :invesment_date, 
                     'columns': [ 
-                                self._format({'name': capital},figure_type='float'),
+                                {'name':''},
                                 {'name': 'Opening Balance'},
+                                self._format({'name': capital},figure_type='float'),
                                 self._format({'name': inc},figure_type='float'),
                                 self._format({'name': withdraw},figure_type='float'),
                                 self._format({'name': final},figure_type='float'),
@@ -380,28 +404,31 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                     invesment_date = ''
                     inc = 0 
                     withdraw = 0
-                    ref = ''
+                    ref = line.concept
                     if line.amount_type == 'increment':
                         inc = line.amount
                         total_inc += inc
                         g_total_inc += inc
-                        ref = 'Increment'
+                        #ref = 'Increment'
                     elif line.amount_type == 'withdrawal':
                         withdraw = line.amount
                         total_with += withdraw
                         g_total_with += withdraw
-                        ref = 'Withdrawal'
+                        #ref = 'Withdrawal'
                         
                     if line.date_required:
                         invesment_date = line.date_required.strftime('%Y-%m-%d') 
                     final = capital + inc - withdraw
-                    
+                    total_final += final
+                    g_total_final += final
+
                     lines.append({
                         'id': 'hierarchy_account_line' + str(line.id),
                         'name' :invesment_date, 
                         'columns': [ 
-                                    self._format({'name': capital},figure_type='float'),
+                                    {'name':ref},
                                     {'name': ref},
+                                    self._format({'name': capital},figure_type='float'),
                                     self._format({'name': inc},figure_type='float'),
                                     self._format({'name': withdraw},figure_type='float'),
                                     self._format({'name': final},figure_type='float'),
@@ -417,11 +444,12 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                 'id': 'Total',
                 'name' :'Total', 
                 'columns': [ 
+                            {'name':''},
                             {'name': ''},
                             {'name': ''},
                             self._format({'name': total_inc},figure_type='float'),
                             self._format({'name': total_with},figure_type='float'),
-                            {'name': ''},
+                            self._format({'name': total_final},figure_type='float'),
                             ],
                 'level': 1,
                 'unfoldable': False,
@@ -431,11 +459,12 @@ class MoneyMarketAccountStatement(models.AbstractModel):
             'id': 'GTotal',
             'name' :'Grand Total', 
             'columns': [ 
+                        {'name':''},
                         {'name': ''},
                         {'name': ''},
                         self._format({'name': g_total_inc},figure_type='float'),
                         self._format({'name': g_total_with},figure_type='float'),
-                        {'name': ''},
+                        self._format({'name': g_total_final},figure_type='float'),
                         ],
             'level': 1,
             'unfoldable': False,

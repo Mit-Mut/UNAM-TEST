@@ -41,7 +41,8 @@
                                 <field name="operation_number" readonly="1"
                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="type_of_operation"
-                                       attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
+                                       attrs="{'readonly': [('state', '!=', 'draft')]}" invisible="1"/>
+                                <field name="type_of_operation_trust" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
                             </group>
                             <group>
                                 <field name="apply_to_basis_collaboration" readonly="1" string="Apply to Trusts"/>

@@ -27,8 +27,6 @@ class AccountMove(models.Model):
 
     _inherit = 'account.move'
 
-    diary = fields.Many2one('account.journal', string='Diary',
-                            default=lambda self: self.env.ref('jt_payroll_payment.project_payment_request_jour'))
     dependence = fields.Many2one('dependency', string="Dependency")
     subdependence = fields.Many2one('sub.dependency', string='Sub Dependence')
     leaves = fields.Integer('Leaves')
@@ -37,7 +35,7 @@ class AccountMove(models.Model):
     foreign_currency_amount = fields.Monetary('Foreign currency amount')
     project_number_id = fields.Many2one(
         'project.project', string='Project Number')
-    agreement_number = fields.Char(
+    agreement_number = fields.Many2one(
         related='project_number_id.base_number', string='Agreement Number')
     stage = fields.Char(
         related='project_number_id.stage_identifier', string='Stage')

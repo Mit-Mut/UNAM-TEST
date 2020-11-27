@@ -21,6 +21,13 @@
 	        <field name="currency_id" ref="base.MXN"/>
 	        <field name="type">purchase</field>
 	    </record>
+
+        <record id="project_verfication_expense_jour" model="account.journal">
+            <field name="name">Project Payment Request Journal</field>
+            <field name="code">PPAR</field>
+            <field name="currency_id" ref="base.MXN"/>
+            <field name="type">purchase</field>
+        </record>
  
          <record id="action_server_employee_portal_user" model="ir.actions.server">
             <field name="name">Portal Users</field>

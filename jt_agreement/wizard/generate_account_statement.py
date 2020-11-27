@@ -37,6 +37,11 @@ class AccountStatement(models.TransientModel):
         lines = []
         pdf_rec = self.env['trust.account.statement'].create({'start_date':self.start_date,'end_date':self.end_date})
         for rec in self.env.context.get('active_ids'):
+            base_records = self.env['agreement.trust'].browse(rec)
+            
+            base_records.report_start_date = self.start_date
+            base_records.report_end_date = self.end_date
+            
             qr_pdf = self.env.ref('jt_agreement.account_statement_report').render_qweb_pdf([rec])[0]
             qr_pdf = base64.b64encode(qr_pdf)
             lines.append((0,0,{'trust_id':rec,'file':qr_pdf,'filename':'account_statement.pdf'}))
@@ -53,6 +58,7 @@ class AccountStatement(models.TransientModel):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'res_id': pdf_rec.id,
+            'context':{'active_ids':self.env.context.get('active_ids')}
         }
 
 

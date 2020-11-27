@@ -93,10 +93,14 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
             {'name': _('Dias')},
             {'name': _('Mes')},
             {'name': _('Fecha')},
+            {'name': _('Bank')},
+            {'name': _('Fund')},
+            {'name': _('Type of Fund')},
+            {'name': _('Agreement Type')},
+            {'name': _('Name Of Agreements')},
             {'name': _('TIIE 28')},
             {'name': _('Capital')},
             {'name': _('Entradas')},
-            {'name': _('Fund Key')},
             {'name': _('Salidas')},
             {'name': _('Saldo Final')},
             {'name': _('Promedio Diario')},
@@ -155,122 +159,105 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
     def _get_lines(self, options, line_id=None):
         lines = []
         fund_list = []
-
+        domain =[]
         for fund in options.get('funds'):
             if fund.get('selected',False)==True:
                 fund_list.append(fund.get('id',0))
         
-        if not fund_list:
-            fund_ids = self._get_filter_funds()
-            fund_list = fund_ids.ids
-        
-        if not fund_list:
-            fund_list = [0]
-
+        if fund_list:
+            domain.append(('investment_fund_id.fund_id','in',fund_list))
+            
         if options.get('all_entries') is False:
-            domain=[('state','=','confirmed')]
+            domain+=[('line_state','in',('confirmed','done'))]
         else:
-            domain=[('state','not in',('rejected','canceled'))]
+            domain+=[('line_state','not in',('rejected','canceled'))]
             
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
         
-        domain = domain + [('fund_id','in',fund_list),('fund_key','!=',False),('invesment_date','>=',start),('invesment_date','<=',end)]
+        domain = domain + [('date_required','>=',start),('date_required','<=',end)]
         
-        records = self.env['investment.investment'].search(domain,order='currency_id')
-        # records = self.env['investment.investment'].search([('fund_id','in',fund_list),('invesment_date','>=',start),('invesment_date','<=',end)],order='invesment_date')
+        records = self.env['investment.operation'].search(domain)
         
-        capital = 0
+        opt_lines = self.env['investment.operation']
+        opt_lines += records.filtered(lambda x:x.type_of_operation == 'open_bal')
+        opt_lines += records.filtered(lambda x:x.type_of_operation == 'increase')
+        opt_lines += records.filtered(lambda x:x.type_of_operation == 'increase_by_closing')
+        opt_lines += records.filtered(lambda x:x.type_of_operation == 'retirement')
+        opt_lines += records.filtered(lambda x:x.type_of_operation == 'withdrawal')
+        opt_lines += records.filtered(lambda x:x.type_of_operation == 'withdrawal_cancellation')
+        opt_lines += records.filtered(lambda x:x.type_of_operation == 'withdrawal_closure')
+         
+        
+        total_capital = 0
         final_amount = 0
-        entradas = 0
-        salidas  = 0
-        pre_day = 0
-        rate = 0.0
-        pre_date = False
-        count = 0
-        for rec in records:
-            month_name = self.get_month_name(rec.invesment_date.month)
+        total_entradas = 0
+        total_salidas  = 0
+        for rec in opt_lines:
+            capital = 0
+            entradas = 0
+            salidas  = 0
             
-            if pre_day !=0 and pre_date and pre_day != rec.invesment_date.day:
-                
-                next_date = pre_date +  timedelta(days=1)
-                next_month_name = self.get_month_name(next_date.month)
-                lines.append({
-                    'id': 'hierarchy_1' + str(rec.id),
-                    'name': next_date.day,
-                    'columns': [{'name': next_month_name}, 
-                                {'name': next_date.day},
-                                self._format({'name': rate/count},figure_type='float',digit=4),
-                                self._format({'name': capital},figure_type='float',digit=2),
-                                self._format({'name': entradas},figure_type='float',digit=2),
-                                {'name': ''},
-                                self._format({'name': salidas},figure_type='float',digit=2),
-                                self._format({'name': final_amount},figure_type='float',digit=2),
-                                self._format({'name': capital},figure_type='float',digit=2),
-                                ],
-                    'level': 3,
-                    'unfoldable': False,
-                    'unfolded': True,
-                })
-                count = 0
-                rate = 0
-                capital = 0
-                final_amount = 0
-                entradas = 0
-                salidas = 0
-                
-            pre_day = rec.invesment_date.day
-            pre_date = rec.invesment_date
-            count += 1
-            rate += rec.currency_rate
-            rec_entradas = sum(a.amount for a in rec.line_ids.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing')))
-            rec_salidas =  sum(a.amount for a in rec.line_ids.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure')))
+            month_name = self.get_month_name(rec.date_required.month)
+            if rec.type_of_operation == 'open_bal':
+                capital = rec.amount
+                final_amount += rec.amount
+                total_capital += rec.amount
+            if rec.type_of_operation in ('increase','increase_by_closing'):
+                entradas = rec.amount
+                total_entradas += rec.amount
+                final_amount += rec.amount
+            if rec.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure'):
+                salidas = rec.amount
+                total_salidas += rec.amount
+                final_amount -= rec.amount
             
             lines.append({
                 'id': 'hierarchy' + str(rec.id),
-                'name': rec.invesment_date.day,
+                'name': rec.date_required.day,
                 'columns': [{'name': month_name}, 
-                            {'name': rec.invesment_date.day},
-                            self._format({'name': rec.currency_rate},figure_type='float',digit=4),
-                            self._format({'name': capital},figure_type='float',digit=2),
-                            self._format({'name': rec_entradas},figure_type='float',digit=2),
-                            {'name': rec.fund_key},
-                            self._format({'name': rec_salidas},figure_type='float',digit=2),
-                            self._format({'name': rec.actual_amount},figure_type='float',digit=2),
-                            self._format({'name': rec.amount_to_invest},figure_type='float',digit=2),
-                            ],
-                'level': 3,
-                'unfoldable': False,
-                'unfolded': True,
-            })
-            capital += rec.amount_to_invest 
-            final_amount += rec.actual_amount
-            entradas += rec_entradas
-            salidas += rec_salidas
-            
-        if pre_day !=0 and pre_date:
-            
-            next_date = pre_date +  timedelta(days=1)
-            next_month_name = self.get_month_name(next_date.month)
-            lines.append({
-                'id': 'hierarchy_1' + str(rec.id),
-                'name': next_date.day,
-                'columns': [{'name': next_month_name}, 
-                            {'name': next_date.day},
-                            self._format({'name': rate/count},figure_type='float',digit=4),
+                            {'name': rec.date_required.day},
+                            {'name': rec.bank_account_id and rec.bank_account_id.name or ''},
+                            {'name': rec.investment_fund_id and rec.investment_fund_id.fund_id and rec.investment_fund_id.fund_id.name or ''},
+                            {'name': rec.fund_type and rec.fund_type.name or ''},
+                            {'name': rec.agreement_type_id and rec.agreement_type_id.name or ''},
+                            {'name': rec.base_collabaration_id and rec.base_collabaration_id.name or ''},
+                            self._format({'name': rec.investment_id.currency_rate},figure_type='float',digit=4),
                             self._format({'name': capital},figure_type='float',digit=2),
                             self._format({'name': entradas},figure_type='float',digit=2),
-                            {'name': ''},
                             self._format({'name': salidas},figure_type='float',digit=2),
                             self._format({'name': final_amount},figure_type='float',digit=2),
-                            self._format({'name': capital},figure_type='float',digit=2),
+                            self._format({'name': 0.0},figure_type='float',digit=2),
                             ],
                 'level': 3,
                 'unfoldable': False,
                 'unfolded': True,
             })
+
+        lines.append({
+            'id': 'hierarchy_total',
+            'name': 'Total',
+            'columns': [{'name': ''}, 
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        self._format({'name': total_capital},figure_type='float',digit=2),
+                        self._format({'name': total_entradas},figure_type='float',digit=2),
+                        self._format({'name': total_salidas},figure_type='float',digit=2),
+                        self._format({'name': final_amount},figure_type='float',digit=2),
+                        self._format({'name': 0.0},figure_type='float',digit=2),
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+            
                     
         return lines
 

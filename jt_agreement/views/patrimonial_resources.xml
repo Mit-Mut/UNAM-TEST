@@ -40,6 +40,7 @@
                     	<group>
 	                        <group>
 	                            <field name="name" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+	                            <field name="journal_id" readonly="1"/>
 	                            <field name="key" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 	                            <field name="opening_balance" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 	                            <field name="available_bal" readonly="1"/>
@@ -60,8 +61,10 @@
 	                        </group>
                         </group>
                         <notebook>
-                        	<page string="Accounts" name="accounts">
-                        		<group>
+                        	<page string="Journal Items" name="accounts">
+                        		<field name="move_line_ids"/>
+                        		
+<!--                         		<group>
                         			<group>
 		                        		<field name="patrimonial_equity_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 		                        		<field name="patrimonial_liability_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
@@ -70,7 +73,8 @@
 	                        			<field name="patrimonial_yield_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 	                        		</group>
                         		</group>
-                        	</page>
+ -->                        
+ 							</page>
                         	<page string="Collaboration Base Contacts" name="collaboration_base_contacts">
                         		<group>
                         			<group>

@@ -113,7 +113,7 @@ class AccountMove(models.Model):
     category_key = fields.Many2one(
         string="Category Key", related='partner_id.category_key', store=True)
     workstation_id = fields.Many2one(
-        'hr.job', "Appointment", related='partner_id.workstation_id')
+        'hr.job', "Appointment", related='partner_id.workstation_id',readonly=False)
     folio = fields.Char("Folio against Receipt")
     folio_dependency = fields.Char("Folio Dependency")
     operation_type_id = fields.Many2one('operation.type', "Operation Type")
@@ -156,7 +156,7 @@ class AccountMove(models.Model):
     folio_invoice = fields.Char("Folio Invoice")
     user_registering_id = fields.Many2one('res.users')
     commitment_date = fields.Date("Commitment Date")
-
+    
     # @api.depends('payment_state')
     # def _compute_rejection_message(self):
 

@@ -148,6 +148,14 @@ class SummaryofOperationInvestmentFunds(models.AbstractModel):
         fund_list = []
         contract_list = []
 
+        comparison = options.get('comparison')
+        periods = []
+        if comparison and comparison.get('filter') != 'no_comparison':
+            period_list = comparison.get('periods')
+            period_list.reverse()
+            periods = [period for period in period_list]
+        periods.append(options.get('date'))
+
         for fund in options.get('funds'):
             if fund.get('selected',False)==True:
                 fund_list.append(fund.get('id',0))
@@ -233,6 +241,165 @@ class SummaryofOperationInvestmentFunds(models.AbstractModel):
                             {'class':'number','name':format(total_titel, ',d')},
                             self._format({'name': total_amount},figure_type='float'),
                             ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+
+        #================ Origin Data ====================#
+        period_name = [{'name': 'Tipo de recurso'}]
+        for per in periods:
+            period_name.append({'name': per.get('string')})
+        r_column = 4 - len(periods)
+        if r_column > 0:
+            for col in range(r_column):
+                period_name.append({'name': ''})
+        lines.append({
+                'id': 'hierarchy_or_inst',
+                'name': '',
+                'columns': period_name,
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        origin_ids = self.env['agreement.fund']
+        origin_ids += records.mapped('fund_id')        
+
+        if origin_ids:
+            origins = list(set(origin_ids.ids))
+            origin_ids = self.env['agreement.fund'].browse(origins)
+
+        amount_total = [{'name': 'Total'}]
+        total_dict = {}
+        for origin in origin_ids:
+            total_ins = 0
+            columns = [{'name': origin.name}]
+            amount_total = [{'name': 'Total'}]
+            for period in periods:
+                date_start = datetime.strptime(str(period.get('date_from')),
+                                           DEFAULT_SERVER_DATE_FORMAT).date()
+                date_end = datetime.strptime(str(period.get('date_to')),
+                                         DEFAULT_SERVER_DATE_FORMAT).date()
+
+                sale_fund_record = self.env['purchase.sale.security'].search([('fund_id','=',origin.id),('contract_id','in',contract_list),domain,('invesment_date','>=',date_start),('invesment_date','<=',date_end)])
+
+                amount = 0
+                amount += sum(x.amount for x in sale_fund_record)
+                columns.append(self._format({'name': amount},figure_type='float'))
+
+                if total_dict.get(period.get('string')):
+                    old_amount = total_dict.get(period.get('string',0)) + amount
+                    total_dict.update({period.get('string'):old_amount})
+                else:
+                    total_dict.update({period.get('string'):amount})
+                total_ins += amount
+            amount_total.append(self._format({'name': total_ins},figure_type='float'))
+
+            
+            lines.append({
+                'id': 'hierarchy_or' + str(origin.id),
+                'name': '',
+                'columns': columns,
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        total_name = [{'name': 'Total'}]
+        for per in total_dict:
+            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float'))
+            
+        r_column = 5 - len(total_name)
+        if r_column > 0:
+            for col in range(r_column):
+                total_name.append({'name': ''})
+                
+        lines.append({
+                'id': 'total_name_bank',
+                'name': '',
+                'columns': total_name,
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+
+        #===================== Currency Data ==========#
+        period_name = [{'name': 'Currency'}]
+        for per in periods:
+            period_name.append({'name': per.get('string')})
+        r_column = 4 - len(periods)
+        if r_column > 0:
+            for col in range(r_column):
+                period_name.append({'name': ''})
+                
+        lines.append({
+                'id': 'hierarchy_inst',
+                'name': '',
+                'columns': period_name,
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+        currency_ids = self.env['res.currency']
+        currency_ids += records.mapped('currency_id')
+        
+                
+        if currency_ids:
+            currencys = list(set(currency_ids.ids))
+            currency_ids = self.env['res.currency'].browse(currencys)
+            
+        
+        amount_total = [{'name': 'Total'}]
+        total_dict = {}
+        for currency in currency_ids:
+            total_ins = 0
+            columns = [{'name': currency.name}]
+            
+            for period in periods:
+                date_start = datetime.strptime(str(period.get('date_from')),
+                                           DEFAULT_SERVER_DATE_FORMAT).date()
+                date_end = datetime.strptime(str(period.get('date_to')),
+                                         DEFAULT_SERVER_DATE_FORMAT).date()
+
+                sale_currency_record = self.env['purchase.sale.security'].search([('currency_id','=',currency.id),('fund_id','=',origin.id),('contract_id','in',contract_list),domain,('invesment_date','>=',date_start),('invesment_date','<=',date_end)])
+
+                amount = 0
+                amount += sum(x.amount for x in sale_currency_record)
+                columns.append(self._format({'name': amount},figure_type='float'))
+                
+                if total_dict.get(period.get('string')):
+                    old_amount = total_dict.get(period.get('string',0)) + amount
+                    total_dict.update({period.get('string'):old_amount})
+                else:
+                    total_dict.update({period.get('string'):amount})
+                total_ins += amount
+            amount_total.append(self._format({'name': total_ins},figure_type='float'))
+            
+            lines.append({
+                'id': 'hierarchy_jr' + str(currency.id),
+                'name': '',
+                'columns': columns,
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        total_name = [{'name': 'Total'}]
+        for per in total_dict:
+            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float'))
+            
+        r_column = 5 - len(total_name)
+        if r_column > 0:
+            for col in range(r_column):
+                total_name.append({'name': ''})
+                
+        lines.append({
+                'id': 'total_name_currency',
+                'name': '',
+                'columns': total_name,
                 'level': 1,
                 'unfoldable': False,
                 'unfolded': True,

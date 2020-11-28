@@ -50,6 +50,32 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
     filter_contract = True
     filter_bank = True
     filter_currency = True
+    filter_funds = True
+
+
+    @api.model
+    def _get_filter_funds(self):
+        return self.env['agreement.fund'].search([])
+
+    @api.model
+    def _init_filter_funds(self, options, previous_options=None):
+        if self.filter_funds is None:
+            return
+        if previous_options and previous_options.get('funds'):
+            journal_map = dict((opt['id'], opt['selected']) for opt in previous_options['funds'] if opt['id'] != 'divider' and 'selected' in opt)
+        else:
+            journal_map = {}
+        options['funds'] = []
+
+        default_group_ids = []
+
+        for j in self._get_filter_funds():
+            options['funds'].append({
+                'id': j.id,
+                'name': j.name,
+                'code': j.name,
+                'selected': journal_map.get(j.id, j.id in default_group_ids),
+            })
 
     @api.model
     def _get_filter_currency(self):
@@ -177,6 +203,7 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
         contract_list = []
         bank_list = []
         currency_list = []
+        fund_list = []
 
         comparison = options.get('comparison')
         periods = []
@@ -185,6 +212,18 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
             period_list.reverse()
             periods = [period for period in period_list]
         periods.append(options.get('date'))
+
+
+        for fund in options.get('funds'):
+            if fund.get('selected',False)==True:
+                fund_list.append(fund.get('id',0))
+        
+        if not fund_list:
+            fund_ids = self._get_filter_funds()
+            fund_list = fund_ids.ids
+        
+        if not fund_list:
+            fund_list = [0]
 
         for select_curreny in options.get('currency'):
             if select_curreny.get('selected',False)==True:
@@ -233,10 +272,10 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
-        cetes_domain = domain + [('currency_id','in',currency_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('date_time','>=',start),('date_time','<=',end)]
-        udibonos_domain = domain + [('currency_id','in',currency_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('date_time','>=',start),('date_time','<=',end)]
-        bonds_domain = domain + [('currency_id','in',currency_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('date_time','>=',start),('date_time','<=',end)]
-        will_pay_domain = domain + [('currency_id','in',currency_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('date_time','>=',start),('date_time','<=',end)]
+        cetes_domain = domain + [('fund_id','in',fund_list),('currency_id','in',currency_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('date_time','>=',start),('date_time','<=',end)]
+        udibonos_domain = domain + [('fund_id','in',fund_list),('currency_id','in',currency_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('date_time','>=',start),('date_time','<=',end)]
+        bonds_domain = domain + [('fund_id','in',fund_list),('currency_id','in',currency_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('date_time','>=',start),('date_time','<=',end)]
+        will_pay_domain = domain + [('fund_id','in',fund_list),('currency_id','in',currency_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('date_time','>=',start),('date_time','<=',end)]
         
         cetes_records = self.env['investment.cetes'].search(cetes_domain)
         udibonos_records = self.env['investment.udibonos'].search(udibonos_domain)
@@ -398,10 +437,10 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
                 date_end = datetime.strptime(str(period.get('date_to')),
                                          DEFAULT_SERVER_DATE_FORMAT).date()
 
-                cetes_domain_period = domain + [('currency_id','in',currency_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('date_time','>=',date_start),('date_time','<=',date_end)]
-                udibonos_domain_period = domain + [('currency_id','in',currency_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('date_time','>=',date_start),('date_time','<=',date_end)]
-                bonds_domain_period = domain + [('currency_id','in',currency_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('date_time','>=',date_start),('date_time','<=',date_end)]
-                will_pay_domain_period = domain + [('currency_id','in',currency_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('date_time','>=',date_start),('date_time','<=',date_end)]
+                cetes_domain_period = domain + [('fund_id','in',fund_list),('currency_id','in',currency_list),('bank_id','=',journal.id),('contract_id','in',contract_list),('date_time','>=',date_start),('date_time','<=',date_end)]
+                udibonos_domain_period = domain + [('fund_id','in',fund_list),('currency_id','in',currency_list),('bank_id','=',journal.id),('contract_id','in',contract_list),('date_time','>=',date_start),('date_time','<=',date_end)]
+                bonds_domain_period = domain + [('fund_id','in',fund_list),('currency_id','in',currency_list),('bank_id','=',journal.id),('contract_id','in',contract_list),('date_time','>=',date_start),('date_time','<=',date_end)]
+                will_pay_domain_period = domain + [('fund_id','in',fund_list),('currency_id','in',currency_list),('bank_id','=',journal.id),('contract_id','in',contract_list),('date_time','>=',date_start),('date_time','<=',date_end)]
                 
                 cetes_bank_records = self.env['investment.cetes'].search(cetes_domain_period)
                 udibonos_bank_records = self.env['investment.udibonos'].search(udibonos_domain_period)
@@ -491,10 +530,10 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
                                          DEFAULT_SERVER_DATE_FORMAT).date()
 
 
-                cetes_domain_period = domain + [('currency_id','in',currency_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('date_time','>=',date_start),('date_time','<=',date_end)]
-                udibonos_domain_period = domain + [('currency_id','in',currency_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('date_time','>=',date_start),('date_time','<=',date_end)]
-                bonds_domain_period = domain + [('currency_id','in',currency_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('date_time','>=',date_start),('date_time','<=',date_end)]
-                will_pay_domain_period = domain + [('currency_id','in',currency_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('date_time','>=',date_start),('date_time','<=',date_end)]
+                cetes_domain_period = domain + [('fund_id','=',origin.id),('currency_id','in',currency_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('date_time','>=',date_start),('date_time','<=',date_end)]
+                udibonos_domain_period = domain + [('fund_id','=',origin.id),('currency_id','in',currency_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('date_time','>=',date_start),('date_time','<=',date_end)]
+                bonds_domain_period = domain + [('fund_id','=',origin.id),('currency_id','in',currency_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('date_time','>=',date_start),('date_time','<=',date_end)]
+                will_pay_domain_period = domain + [('fund_id','=',origin.id),('currency_id','in',currency_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('date_time','>=',date_start),('date_time','<=',date_end)]
                 
                 cetes_fund_records = self.env['investment.cetes'].search(cetes_domain_period)
                 udibonos_fund_records = self.env['investment.udibonos'].search(udibonos_domain_period)
@@ -502,10 +541,15 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
                 will_pay_fund_records = self.env['investment.will.pay'].search(will_pay_domain_period)
 
                 amount = 0
-                amount += sum(x.nominal_value for x in cetes_fund_records.filtered(lambda x:x.fund_id.id==origin.id))
-                amount += sum(x.nominal_value for x in udibonos_fund_records.filtered(lambda x:x.fund_id.id==origin.id))
-                amount += sum(x.nominal_value for x in bonds_fund_records.filtered(lambda x:x.fund_id.id==origin.id))
-                amount += sum(x.amount for x in will_pay_fund_records.filtered(lambda x:x.fund_id.id==origin.id))                        
+                # amount += sum(x.nominal_value for x in cetes_fund_records.filtered(lambda x:x.fund_id.id==origin.id))
+                # amount += sum(x.nominal_value for x in udibonos_fund_records.filtered(lambda x:x.fund_id.id==origin.id))
+                # amount += sum(x.nominal_value for x in bonds_fund_records.filtered(lambda x:x.fund_id.id==origin.id))
+                # amount += sum(x.amount for x in will_pay_fund_records.filtered(lambda x:x.fund_id.id==origin.id))
+
+                amount += sum(x.nominal_value for x in cetes_fund_records)
+                amount += sum(x.nominal_value for x in udibonos_fund_records)
+                amount += sum(x.nominal_value for x in bonds_fund_records)
+                amount += sum(x.amount for x in will_pay_fund_records)                        
                 columns.append(self._format({'name': amount},figure_type='float'))
 
                 if total_dict.get(period.get('string')):

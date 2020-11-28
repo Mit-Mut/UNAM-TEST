@@ -66,12 +66,12 @@ class DistributionOfIncome(models.Model):
         #         if balance > 0:
         #             opt_lines.append((0,0,{'opt_line_ids':[(6,0,lines.ids)],'investment_fund_id':fund.id,'base_collabaration_id':base.id,'agreement_number':base.convention_no,'amount':balance}))
 
-            # lines = self.line_ids.filtered(lambda x:x.investment_fund_id.id==fund.id and not x.base_collabaration_id and x.line_state == 'done')
-            # inc = sum(a.amount for a in lines.filtered(lambda x:x.type_of_operation in ('open_bal','increase')))
-            # ret = sum(a.amount for a in lines.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure','increase_by_closing')))
-            # balance = inc - ret
-            # if balance > 0:
-            #     opt_lines.append((0,0,{'opt_line_ids':[(6,0,lines.ids)],'investment_fund_id':fund.id,'amount':balance}))
+        #     lines = self.line_ids.filtered(lambda x:x.investment_fund_id.id==fund.id and not x.base_collabaration_id and x.line_state == 'done')
+        #     inc = sum(a.amount for a in lines.filtered(lambda x:x.type_of_operation in ('open_bal','increase')))
+        #     ret = sum(a.amount for a in lines.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure','increase_by_closing')))
+        #     balance = inc - ret
+        #     if balance > 0:
+        #         opt_lines.append((0,0,{'opt_line_ids':[(6,0,lines.ids)],'investment_fund_id':fund.id,'amount':balance}))
                     
         return {
             'name': 'Approve Request',

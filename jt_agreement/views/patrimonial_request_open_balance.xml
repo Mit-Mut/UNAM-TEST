@@ -42,6 +42,7 @@
                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="type_of_operation"
                                        attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
+                                <field name="journal_id" readonly="1"/>
                             </group>
                             <group>
                             	<field name="patrimonial_resources_id" invisible="1"/>
@@ -96,8 +97,10 @@
                                 </group>
                         		
                             </page>
-                             <page string="Accounts" name="accounts">
-                        		<group>
+                             <page string="Journal Items" name="accounts">
+                             	<field name="move_line_ids"/>
+                             	
+<!--                         		<group>
                         			<group>
                         				<field name="patrimonial_equity_account_id" readonly="1"/>
                         				<field name="liability_account_id" readonly="1"/>
@@ -106,7 +109,8 @@
                         				<field name="patrimonial_yield_account_id" readonly="1"/>
                         			</group>
                         		</group>
-                            </page>
+ -->                           
+ 							</page>
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">

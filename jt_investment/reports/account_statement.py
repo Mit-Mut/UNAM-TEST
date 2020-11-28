@@ -29,7 +29,7 @@ import io
 import base64
 from odoo.tools import config, date_utils, get_lang
 import lxml.html
-
+from datetime import timedelta
 
 class InvestmentAccountStatement(models.AbstractModel):
     _name = "jt_investment.account.statement"
@@ -135,7 +135,8 @@ class InvestmentAccountStatement(models.AbstractModel):
             total_with = 0
             total_final = 0
             
-            records = productive_ids.filtered(lambda x:x.investment_id.journal_id.id == journal.id)
+            
+            records = productive_ids.filtered(lambda x:x.investment_id.journal_id.id == journal.id).sorted(key='date_required')
             lines.append({
                 'id': 'hierarchy_account' + str(journal.id),
                 'name' :journal.name, 
@@ -150,9 +151,30 @@ class InvestmentAccountStatement(models.AbstractModel):
                 'unfoldable': False,
                 'unfolded': True,
             })
-                                     
+            pre_date = start
             for rec in records:
                 invesment_date = ''
+                if pre_date != rec.date_required:
+                    day_diff = rec.date_required - pre_date
+                    day_diff = day_diff.days + 1
+                    for r in range(1,day_diff):
+                        lines.append({
+                            'id': 'hierarchy_account_date' + str(r),
+                            'name' :pre_date, 
+                            'columns': [
+                                        {'name':''},
+                                        {'name': ''},
+                                        self._format({'name': capital},figure_type='float',digit=2),
+                                        self._format({'name': 0.0},figure_type='float',digit=2),
+                                        self._format({'name': 0.0},figure_type='float',digit=2),
+                                        self._format({'name': 0.0},figure_type='float',digit=2),
+                                        ],
+                            'level': 3,
+                            'unfoldable': False,
+                            'unfolded': True,
+                        })
+                         
+                        pre_date = pre_date + timedelta(days=1)
                 
                 inc = 0 
                 withdraw = 0
@@ -188,7 +210,33 @@ class InvestmentAccountStatement(models.AbstractModel):
                     'unfolded': True,
                 })
                 capital = capital + inc - withdraw
-    
+                pre_date = rec.date_required + timedelta(days=1)
+            
+#             if pre_date != start:
+#                 pre_date = pre_date + timedelta(days=1)
+#             if pre_date == start and records:
+#                 pre_date = pre_date + timedelta(days=1)
+            if pre_date != end:
+                day_diff = end - pre_date
+                day_diff = day_diff.days + 2
+                for r in range(1,day_diff):
+                    lines.append({
+                        'id': 'hierarchy_account_date' + str(r),
+                        'name' :pre_date, 
+                        'columns': [
+                                    {'name':''},
+                                    {'name': ''},
+                                    self._format({'name': capital},figure_type='float',digit=2),
+                                    self._format({'name': 0.0},figure_type='float',digit=2),
+                                    self._format({'name': 0.0},figure_type='float',digit=2),
+                                    self._format({'name': 0.0},figure_type='float',digit=2),
+                                    ],
+                        'level': 3,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+                    pre_date = pre_date + timedelta(days=1)
+             
             lines.append({
                 'id': 'Total',
                 'name' :'Total', 

@@ -330,73 +330,85 @@ class Trust(models.Model):
         lines = []
         folio=1
         final = 0
-        opt_lines = self.request_open_balance_ids.filtered(lambda x:x.type_of_operation == 'open_bal' and  x.request_date >= self.report_start_date and x.request_date <= self.report_end_date)
-        for line in opt_lines:
-            final += line.opening_balance
-            lines.append({'folio':folio,
-                          'date':line.request_date,
-                          'opt':'Opening Balance',
-                          'debit':line.opening_balance,
-                          'credit' : 0.0,
-                          'final' : final
-                          })
-            folio += 1
             
-        opt_lines = self.request_open_balance_ids.filtered(lambda x:x.type_of_operation == 'increase' and  x.request_date >= self.report_start_date and x.request_date <= self.report_end_date)
-        for line in opt_lines:
-            final += line.opening_balance
-            lines.append({'folio':folio,
-                          'date':line.request_date,
-                          'opt':'Increase',
-                          'debit':line.opening_balance,
-                          'credit' : 0.0,
-                          'final' : final
-                          })
-            folio += 1
-        for line in self.interest_rate_ids.filtered(lambda x:x.interest_date >= self.report_start_date and x.interest_date <= self.report_end_date):
-            final += line.yields
-            lines.append({'folio':folio,
-                          'date':line.interest_date,
-                          'opt':'Yields',
-                          'debit':line.yields,
-                          'credit' : 0.0,
-                          'final' : final
-                          })
-            folio += 1
-
-            final -= line.fees
-            lines.append({'folio':folio,
-                          'date':line.interest_date,
-                          'opt':'Fees',
-                          'debit':0.0,
-                          'credit' : line.fees,
-                          'final' : final
-                          })
-            folio += 1
-        opt_lines = self.request_open_balance_ids.filtered(lambda x:x.type_of_operation == 'retirement' and  x.request_date >= self.report_start_date and x.request_date <= self.report_end_date)
-        for line in opt_lines:
-            final -= line.opening_balance
-            lines.append({'folio':folio,
-                          'date':line.request_date,
-                          'opt':'Retirement',
-                          'debit':0.0,
-                          'credit' : line.opening_balance,
-                          'final' : final
-                          })
-            folio += 1
-
-        opt_lines = self.request_open_balance_ids.filtered(lambda x:x.type_of_operation == 'withdrawal_cancellation' and  x.request_date >= self.report_start_date and x.request_date <= self.report_end_date)
-        for line in opt_lines:
-            final -= line.opening_balance
-            lines.append({'folio':folio,
-                          'date':line.request_date,
-                          'opt':'Withdrawal due to cancellation',
-                          'debit':0.0,
-                          'credit' : line.opening_balance,
-                          'final' : final
-                          })
-            folio += 1
-            
+        req_date = self.request_open_balance_ids.filtered(lambda x:x.request_date >= self.report_start_date and x.request_date <= self.report_end_date).mapped('request_date')
+        req_date += self.interest_rate_ids.filtered(lambda x:x.interest_date >= self.report_start_date and x.interest_date <= self.report_end_date).mapped('interest_date')
+        
+        print ("=====Req===",req_date)
+        if req_date:
+            req_date = list(set(req_date))
+            req_date =  sorted(req_date)
+        
+        print ("=====111Req===",req_date)    
+        for req in req_date:
+            print ('======',req)       
+            opt_lines = self.request_open_balance_ids.filtered(lambda x:x.type_of_operation == 'open_bal' and  x.request_date == req)
+            for line in opt_lines:
+                final += line.opening_balance
+                lines.append({'folio':folio,
+                              'date':line.request_date,
+                              'opt':'Opening Balance',
+                              'debit':line.opening_balance,
+                              'credit' : 0.0,
+                              'final' : final
+                              })
+                folio += 1
+                
+            opt_lines = self.request_open_balance_ids.filtered(lambda x:x.type_of_operation == 'increase' and  x.request_date == req)
+            for line in opt_lines:
+                final += line.opening_balance
+                lines.append({'folio':folio,
+                              'date':line.request_date,
+                              'opt':'Increase',
+                              'debit':line.opening_balance,
+                              'credit' : 0.0,
+                              'final' : final
+                              })
+                folio += 1
+            for line in self.interest_rate_ids.filtered(lambda x:x.interest_date == req):
+                final += line.yields
+                lines.append({'folio':folio,
+                              'date':line.interest_date,
+                              'opt':'Yields',
+                              'debit':line.yields,
+                              'credit' : 0.0,
+                              'final' : final
+                              })
+                folio += 1
+    
+                final -= line.fees
+                lines.append({'folio':folio,
+                              'date':line.interest_date,
+                              'opt':'Fees',
+                              'debit':0.0,
+                              'credit' : line.fees,
+                              'final' : final
+                              })
+                folio += 1
+            opt_lines = self.request_open_balance_ids.filtered(lambda x:x.type_of_operation == 'retirement' and  x.request_date == req)
+            for line in opt_lines:
+                final -= line.opening_balance
+                lines.append({'folio':folio,
+                              'date':line.request_date,
+                              'opt':'Retirement',
+                              'debit':0.0,
+                              'credit' : line.opening_balance,
+                              'final' : final
+                              })
+                folio += 1
+    
+            opt_lines = self.request_open_balance_ids.filtered(lambda x:x.type_of_operation == 'withdrawal_cancellation' and  x.request_date == req)
+            for line in opt_lines:
+                final -= line.opening_balance
+                lines.append({'folio':folio,
+                              'date':line.request_date,
+                              'opt':'Withdrawal due to cancellation',
+                              'debit':0.0,
+                              'credit' : line.opening_balance,
+                              'final' : final
+                              })
+                folio += 1
+                
         return lines
         
 class InterestRateOperation(models.Model):

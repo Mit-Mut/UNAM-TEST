@@ -142,13 +142,13 @@ class BasesCollabration(models.Model):
             res = super(BasesCollabration, self).name_get()
         return res
 
-    @api.model
-    def default_get(self, fields):
-        res = super(BasesCollabration, self).default_get(fields)
-        collaboration_jou = self.env.ref('jt_agreement.collaboration_jou_id')
-        if collaboration_jou:
-            res.update({'journal_id': collaboration_jou.id})
-        return res
+#     @api.model
+#     def default_get(self, fields):
+#         res = super(BasesCollabration, self).default_get(fields)
+#         collaboration_jou = self.env.ref('jt_agreement.collaboration_jou_id')
+#         if collaboration_jou:
+#             res.update({'journal_id': collaboration_jou.id})
+#         return res
 
     def unlink(self):
         for rec in self:
@@ -319,6 +319,12 @@ class BasesCollabration(models.Model):
         }
 
     def action_operations(self):
+        journal_id = False
+         
+        collaboration_jou = self.env.ref('jt_agreement.collaboration_jou_id')
+        if collaboration_jou:
+            journal_id =  collaboration_jou.id
+        
         operation_obj = self.env['request.open.balance']
         operations = operation_obj.search(
             [('bases_collaboration_id', '=', self.id)])
@@ -347,7 +353,8 @@ class BasesCollabration(models.Model):
                             'default_investment_account_id': self.investment_account_id.id if self.investment_account_id
                             else False,
                             'default_availability_account_id': self.availability_account_id.id if self.availability_account_id
-                            else False
+                            else False,
+                            'default_journal_id' : journal_id,
                             }
             }
         else:
@@ -376,7 +383,8 @@ class BasesCollabration(models.Model):
                             'default_investment_account_id': self.investment_account_id.id if self.investment_account_id
                             else False,
                             'default_availability_account_id': self.availability_account_id.id if self.availability_account_id
-                            else False
+                            else False,
+                            'default_journal_id' : journal_id,
                             }
             }
 
@@ -418,40 +426,40 @@ class BasesCollabration(models.Model):
         if self.opening_bal == 0:
             raise ValidationError(_("Please add the opening balance amount"))
 
-        if self.journal_id:
-            journal = self.journal_id
-            if not journal.default_debit_account_id or not journal.default_credit_account_id \
-                    or not journal.conac_debit_account_id or not journal.conac_credit_account_id:
-                if self.env.user.lang == 'es_MX':
-                    raise ValidationError(_("Por favor configure la cuenta UNAM y CONAC en diario!"))
-                else:
-                    raise ValidationError(_("Please configure UNAM and CONAC account in journal!"))
-
-            today = datetime.today().date()
-            user = self.env.user
-            partner_id = user.partner_id.id
-            amount = self.opening_bal
-
-            unam_move_val = {'ref': self.name,  'conac_move': True,
-                             'date': today, 'journal_id': journal.id, 'company_id': self.env.user.company_id.id,
-                             'line_ids': [(0, 0, {
-                                 'account_id': journal.default_credit_account_id.id,
-                                 'coa_conac_id': journal.conac_credit_account_id.id,
-                                 'credit': amount, 
-                                 'partner_id': partner_id,
-                                 'collaboration_id': self.id,
-                                 }), 
-                                 (0, 0, {
-                                 'account_id': journal.default_debit_account_id.id,
-                                 'coa_conac_id': journal.conac_debit_account_id.id,
-                                 'debit': amount,
-                                 'partner_id': partner_id,
-                                 'collaboration_id': self.id,
-                                 }),
-                             ]}
-            move_obj = self.env['account.move']
-            unam_move = move_obj.create(unam_move_val)
-            unam_move.action_post()
+#         if self.journal_id:
+#             journal = self.journal_id
+#             if not journal.default_debit_account_id or not journal.default_credit_account_id \
+#                     or not journal.conac_debit_account_id or not journal.conac_credit_account_id:
+#                 if self.env.user.lang == 'es_MX':
+#                     raise ValidationError(_("Por favor configure la cuenta UNAM y CONAC en diario!"))
+#                 else:
+#                     raise ValidationError(_("Please configure UNAM and CONAC account in journal!"))
+# 
+#             today = datetime.today().date()
+#             user = self.env.user
+#             partner_id = user.partner_id.id
+#             amount = self.opening_bal
+# 
+#             unam_move_val = {'ref': self.name,  'conac_move': True,
+#                              'date': today, 'journal_id': journal.id, 'company_id': self.env.user.company_id.id,
+#                              'line_ids': [(0, 0, {
+#                                  'account_id': journal.default_credit_account_id.id,
+#                                  'coa_conac_id': journal.conac_credit_account_id.id,
+#                                  'credit': amount, 
+#                                  'partner_id': partner_id,
+#                                  'collaboration_id': self.id,
+#                                  }), 
+#                                  (0, 0, {
+#                                  'account_id': journal.default_debit_account_id.id,
+#                                  'coa_conac_id': journal.conac_debit_account_id.id,
+#                                  'debit': amount,
+#                                  'partner_id': partner_id,
+#                                  'collaboration_id': self.id,
+#                                  }),
+#                              ]}
+#             move_obj = self.env['account.move']
+#             unam_move = move_obj.create(unam_move_val)
+#             unam_move.action_post()
 
     def action_schedule_withdrawal(self):
         req_obj = self.env['request.open.balance']
@@ -690,6 +698,10 @@ class RequestOpenBalance(models.Model):
                                           ('withdrawal_cancellation','Withdrawal Due to Cancellation'),
                                           ],
                                          string="Type of Operation")
+
+    journal_id = fields.Many2one('account.journal')
+    move_line_ids = fields.One2many(
+        'account.move.line', 'request_id', string="Journal Items")
     
     apply_to_basis_collaboration = fields.Boolean(
         "Apply to Basis of Collaboration")
@@ -776,6 +788,7 @@ class RequestOpenBalance(models.Model):
     patrimonial_yield_account_id = fields.Many2one(
         'account.account', "Yield account of the productive investment account")
 
+
     @api.onchange('type_of_operation_trust')
     def type_of_operation_trust_change(self):
         self.type_of_operation = self.type_of_operation_trust
@@ -829,6 +842,7 @@ class RequestOpenBalance(models.Model):
     def default_get(self, fields):
         res = super(RequestOpenBalance, self).default_get(fields)
         if res.get('bases_collaboration_id', False):
+            
             base_id = self.env['bases.collaboration'].browse(
                 res.get('bases_collaboration_id'))
             number = 0
@@ -838,6 +852,10 @@ class RequestOpenBalance(models.Model):
             res.update({
                 'operation_number': str(number)
             })
+            collaboration_jou = self.env.ref('jt_agreement.collaboration_jou_id')
+            if collaboration_jou:
+                res.update({'journal_id': collaboration_jou.id})
+            
         elif res.get('trust_id', False):
             trust_id = self.env['agreement.trust'].browse(res.get('trust_id'))
             number = 0
@@ -857,6 +875,10 @@ class RequestOpenBalance(models.Model):
             res.update({
                 'operation_number': str(number)
             })
+            collaboration_jou = self.env.ref('jt_agreement.collaboration_jou_id')
+            if collaboration_jou:
+                res.update({'journal_id': collaboration_jou.id})
+            
         else:
             res.update({
                 'operation_number': str(0)
@@ -901,7 +923,14 @@ class RequestOpenBalance(models.Model):
         if res.patrimonial_resources_id:
             res.patrimonial_resources_id.next_no += 1
             res.operation_number = res.patrimonial_resources_id.next_no
-
+        if not res.journal_id:
+            collaboration_jou = self.env.ref('jt_agreement.collaboration_jou_id')
+            if collaboration_jou:
+                res.journal_id =  collaboration_jou.id
+        if not res.type_of_operation_trust and res.type_of_operation and res.trust_id:
+            if res.type_of_operation in ('open_bal','increase','retirement','withdrawal_cancellation'):
+                res.type_of_operation_trust = res.type_of_operation
+            
         # res.operation_number = name
         return res
 
@@ -1026,6 +1055,69 @@ class RequestOpenBalance(models.Model):
         elif self.type_of_operation == 'retirement':
             self.create_payment_request = True
 
+        if self.patrimonial_resources_id or self.bases_collaboration_id:
+            if self.journal_id:
+                journal = self.journal_id
+                if not journal.default_debit_account_id or not journal.default_credit_account_id \
+                        or not journal.conac_debit_account_id or not journal.conac_credit_account_id:
+                    if self.env.user.lang == 'es_MX':
+                        raise ValidationError(_("Por favor configure la cuenta UNAM y CONAC en diario!"))
+                    else:
+                        raise ValidationError(_("Please configure UNAM and CONAC account in journal!"))
+    
+                today = datetime.today().date()
+                user = self.env.user
+                partner_id = user.partner_id.id
+                amount = self.opening_balance
+                name = ''
+                if self.name:
+                    name += self.name
+                if self.operation_number:
+                    name += "-" + self.operation_number
+                    
+                if self.type_of_operation in ('open_bal','increase','increase_by_closing'): 
+                    unam_move_val = {'name':name,'ref': name,  'conac_move': True,
+                                     'date': today, 'journal_id': journal.id, 'company_id': self.env.user.company_id.id,
+                                     'line_ids': [(0, 0, {
+                                         'account_id': journal.default_credit_account_id.id,
+                                         'coa_conac_id': journal.conac_credit_account_id.id,
+                                         'credit': amount, 
+                                         'partner_id': partner_id,
+                                         'request_id': self.id,
+                                         }), 
+                                         (0, 0, {
+                                         'account_id': journal.default_debit_account_id.id,
+                                         'coa_conac_id': journal.conac_debit_account_id.id,
+                                         'debit': amount,
+                                         'partner_id': partner_id,
+                                         'request_id': self.id,
+                                         }),
+                                     ]}
+                    move_obj = self.env['account.move']
+                    unam_move = move_obj.create(unam_move_val)
+                    unam_move.action_post()
+                elif self.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure'): 
+                    unam_move_val = {'name':name,'ref': name,  'conac_move': True,
+                                     'date': today, 'journal_id': journal.id, 'company_id': self.env.user.company_id.id,
+                                     'line_ids': [(0, 0, {
+                                         'account_id': journal.default_debit_account_id.id,
+                                         'coa_conac_id': journal.conac_debit_account_id.id,
+                                         'credit': amount, 
+                                         'partner_id': partner_id,
+                                         'request_id': self.id,
+                                         }), 
+                                         (0, 0, {
+                                         'account_id': journal.default_credit_account_id.id,
+                                         'coa_conac_id': journal.conac_credit_account_id.id,
+                                         'debit': amount,
+                                         'partner_id': partner_id,
+                                         'request_id': self.id,
+                                         }),
+                                     ]}
+                    move_obj = self.env['account.move']
+                    unam_move = move_obj.create(unam_move_val)
+                    unam_move.action_post()
+                
 
 class RequestOpenBalanceInvestment(models.Model):
 
@@ -1227,8 +1319,10 @@ class RequestOpenBalanceInvestment(models.Model):
         if employee and employee.dependancy_id:
             unit_req_transfer_id = employee.dependancy_id.id
         is_agr = True
+        dependency_id = False
         if self.trust_id:
             is_agr = False
+            dependency_id = self.trust_id and self.trust_id.dependency_id and self.trust_id.dependency_id.id or False  
             
         return {
             'name': 'Approve Request',
@@ -1255,6 +1349,7 @@ class RequestOpenBalanceInvestment(models.Model):
                 'default_type_of_operation': self.type_of_operation,
                 'default_origin_resource_id': self.origin_resource_id and self.origin_resource_id.id or False,
                 'default_is_agr' : is_agr,
+                'default_dependency_id' : dependency_id,
             }
         }
 
@@ -1491,4 +1586,4 @@ class AccountMoveLine(models.Model):
 
     collaboration_id = fields.Many2one('bases.collaboration')
     patrimonial_id = fields.Many2one('patrimonial.resources','Patrimonial Resources')
-    
+    request_id = fields.Many2one('request.open.balance','Operation Request')

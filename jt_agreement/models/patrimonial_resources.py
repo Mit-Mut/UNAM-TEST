@@ -95,13 +95,13 @@ class PatrimonialResources(models.Model):
     move_line_ids = fields.One2many(
         'account.move.line', 'patrimonial_id', string="Journal Items")
 
-    @api.model
-    def default_get(self, fields):
-        res = super(PatrimonialResources, self).default_get(fields)
-        collaboration_jou = self.env.ref('jt_agreement.collaboration_jou_id')
-        if collaboration_jou:
-            res.update({'journal_id': collaboration_jou.id})
-        return res
+#     @api.model
+#     def default_get(self, fields):
+#         res = super(PatrimonialResources, self).default_get(fields)
+#         collaboration_jou = self.env.ref('jt_agreement.collaboration_jou_id')
+#         if collaboration_jou:
+#             res.update({'journal_id': collaboration_jou.id})
+#         return res
     
     def compute_operations(self):
         for rec in self:
@@ -173,40 +173,40 @@ class PatrimonialResources(models.Model):
         if self.opening_balance==0:
             raise ValidationError(_("Please add the opening balance amount"))
 
-        if self.journal_id:
-            journal = self.journal_id
-            if not journal.default_debit_account_id or not journal.default_credit_account_id \
-                    or not journal.conac_debit_account_id or not journal.conac_credit_account_id:
-                if self.env.user.lang == 'es_MX':
-                    raise ValidationError(_("Por favor configure la cuenta UNAM y CONAC en diario!"))
-                else:
-                    raise ValidationError(_("Please configure UNAM and CONAC account in journal!"))
-
-            today = datetime.today().date()
-            user = self.env.user
-            partner_id = user.partner_id.id
-            amount = self.opening_balance
-
-            unam_move_val = {'ref': self.name,  'conac_move': True,
-                             'date': today, 'journal_id': journal.id, 'company_id': self.env.user.company_id.id,
-                             'line_ids': [(0, 0, {
-                                 'account_id': journal.default_credit_account_id.id,
-                                 'coa_conac_id': journal.conac_credit_account_id.id,
-                                 'credit': amount, 
-                                 'partner_id': partner_id,
-                                 'patrimonial_id': self.id,
-                                 }), 
-                                 (0, 0, {
-                                 'account_id': journal.default_debit_account_id.id,
-                                 'coa_conac_id': journal.conac_debit_account_id.id,
-                                 'debit': amount,
-                                 'partner_id': partner_id,
-                                 'patrimonial_id': self.id,
-                                 }),
-                             ]}
-            move_obj = self.env['account.move']
-            unam_move = move_obj.create(unam_move_val)
-            unam_move.action_post()
+#         if self.journal_id:
+#             journal = self.journal_id
+#             if not journal.default_debit_account_id or not journal.default_credit_account_id \
+#                     or not journal.conac_debit_account_id or not journal.conac_credit_account_id:
+#                 if self.env.user.lang == 'es_MX':
+#                     raise ValidationError(_("Por favor configure la cuenta UNAM y CONAC en diario!"))
+#                 else:
+#                     raise ValidationError(_("Please configure UNAM and CONAC account in journal!"))
+# 
+#             today = datetime.today().date()
+#             user = self.env.user
+#             partner_id = user.partner_id.id
+#             amount = self.opening_balance
+# 
+#             unam_move_val = {'ref': self.name,  'conac_move': True,
+#                              'date': today, 'journal_id': journal.id, 'company_id': self.env.user.company_id.id,
+#                              'line_ids': [(0, 0, {
+#                                  'account_id': journal.default_credit_account_id.id,
+#                                  'coa_conac_id': journal.conac_credit_account_id.id,
+#                                  'credit': amount, 
+#                                  'partner_id': partner_id,
+#                                  'patrimonial_id': self.id,
+#                                  }), 
+#                                  (0, 0, {
+#                                  'account_id': journal.default_debit_account_id.id,
+#                                  'coa_conac_id': journal.conac_debit_account_id.id,
+#                                  'debit': amount,
+#                                  'partner_id': partner_id,
+#                                  'patrimonial_id': self.id,
+#                                  }),
+#                              ]}
+#             move_obj = self.env['account.move']
+#             unam_move = move_obj.create(unam_move_val)
+#             unam_move.action_post()
         
     def in_force(self):
         self.state = 'in_force'
@@ -228,6 +228,12 @@ class PatrimonialResources(models.Model):
         }
 
     def action_operations(self):
+        journal_id = False
+         
+        collaboration_jou = self.env.ref('jt_agreement.collaboration_jou_id')
+        if collaboration_jou:
+            journal_id =  collaboration_jou.id
+         
         if self.request_open_balance_ids:
             return {
                 'name': 'Operations',
@@ -250,7 +256,8 @@ class PatrimonialResources(models.Model):
                             'default_name': self.name,
                             'default_patrimonial_equity_account_id': self.patrimonial_equity_account_id and  self.patrimonial_equity_account_id.id or False,
                             'default_liability_account_id': self.patrimonial_liability_account_id and self.patrimonial_liability_account_id.id or False,
-                            'default_patrimonial_yield_account_id': self.patrimonial_yield_account_id.id and self.patrimonial_yield_account_id.id or False
+                            'default_patrimonial_yield_account_id': self.patrimonial_yield_account_id.id and self.patrimonial_yield_account_id.id or False,
+                            'default_journal_id' : journal_id,
                             }
             }
         else:
@@ -275,7 +282,8 @@ class PatrimonialResources(models.Model):
                             'default_name': self.name,
                             'default_patrimonial_equity_account_id': self.patrimonial_equity_account_id and  self.patrimonial_equity_account_id.id or False,
                             'default_liability_account_id': self.patrimonial_liability_account_id and self.patrimonial_liability_account_id.id or False,
-                            'default_patrimonial_yield_account_id': self.patrimonial_yield_account_id.id and self.patrimonial_yield_account_id.id or False
+                            'default_patrimonial_yield_account_id': self.patrimonial_yield_account_id.id and self.patrimonial_yield_account_id.id or False,
+                            'default_journal_id' : journal_id,
                             }
             }
 

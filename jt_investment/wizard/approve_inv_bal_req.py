@@ -89,24 +89,40 @@ class ApproveInvestmentBalReq(models.TransientModel):
         if self.bonds_id:
             self.bonds_id.dependency_id = self.dependency_id and self.dependency_id.id or False
             self.bonds_id.sub_dependency_id = self.sub_dependency_id and self.sub_dependency_id.id or False
+            if self.env.context and not self.env.context.get('edit_amount_field'):
+                self.bonds_id.concept = self.concept 
             self.bonds_id.action_requested()
+            
         if self.cetes_id:
             self.cetes_id.dependency_id = self.dependency_id and self.dependency_id.id or False
             self.cetes_id.sub_dependency_id = self.sub_dependency_id and self.sub_dependency_id.id or False
+            if self.env.context and not self.env.context.get('edit_amount_field'):
+                self.cetes_id.concept = self.concept 
+            
             self.cetes_id.action_requested()
         if self.udibonos_id:
+            if self.env.context and not self.env.context.get('edit_amount_field'):
+                self.udibonos_id.concept = self.concept 
+            
             self.udibonos_id.action_requested()
             self.udibonos_id.dependency_id = self.dependency_id and self.dependency_id.id or False
             self.udibonos_id.sub_dependency_id = self.sub_dependency_id and self.sub_dependency_id.id or False
+            
         if self.will_pay_id:
             self.will_pay_id.dependency_id = self.dependency_id and self.dependency_id.id or False
             self.will_pay_id.sub_dependency_id = self.sub_dependency_id and self.sub_dependency_id.id or False
+            if self.env.context and not self.env.context.get('edit_amount_field'):
+                self.will_pay_id.concept = self.concept 
             self.will_pay_id.action_requested()
+            
         if self.purchase_sale_security_id:
             self.purchase_sale_security_id.dependency_id = self.dependency_id and self.dependency_id.id or False
             self.purchase_sale_security_id.sub_dependency_id = self.sub_dependency_id and self.sub_dependency_id.id or False
             self.purchase_sale_security_id.journal_id = self.bank_account_id and self.bank_account_id.id or False
+            if self.env.context and not self.env.context.get('edit_amount_field'):
+                self.purchase_sale_security_id.concept = self.concept 
             self.purchase_sale_security_id.action_requested()
+            
         if self.investment_id:
             self.investment_id.dependency_id = self.dependency_id and self.dependency_id.id or False
             self.investment_id.sub_dependency_id = self.sub_dependency_id and self.sub_dependency_id.id or False

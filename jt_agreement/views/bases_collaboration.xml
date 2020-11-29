@@ -94,7 +94,7 @@
                                     </group>
                                 </group>
                             </page>
-                             <page string="Accounts" name="accounts">
+                             <page string="Journal Items" name="accounts">
                              	<field name="move_line_ids"/>
 <!--                                 <group>
                                     <group>
@@ -195,7 +195,7 @@
                             	<field name="is_specific" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="convention_no" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="n_report" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="journal_id" readonly="1"/>
+                                <field name="journal_id" invisible="1"/>
                                 <field name="opening_bal" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="available_bal" readonly="1"/>
                                 <field name="origin_resource_id" attrs="{'readonly': [('state', '!=', 'draft')]}"
@@ -470,8 +470,9 @@
                                 <field name="request_office" attrs="{'readonly': [('state', '!=', 'draft')]}" required="context.get('from_fund_view',False)" invisible="not context.get('from_fund_view',False)"/>
                             </group>
                             <group>
-                                <field name="apply_to_basis_collaboration" attrs="{'invisible':[('trust_id','!=',False)],'readonly': [('state', '!=', 'draft')]}" />
+                                <field name="apply_to_basis_collaboration" attrs="{'invisible':['|',('trust_id','!=',False),('patrimonial_id','!=',False)],'readonly': [('state', '!=', 'draft')]}" />
                                 <field name="apply_to_trust" attrs="{'invisible':[('trust_id','=',False)],'readonly': [('state', '!=', 'draft')]}" />
+                                <field name="apply_to_patrimonial" attrs="{'invisible':[('patrimonial_id','=',False)],'readonly': [('state', '!=', 'draft')]}" />
                                 
                                 <field name="origin_journal_id" domain="[('type','=','bank')]" attrs="{'required':[('trust_id','!=',False)],'invisible':[('trust_id','=',False)],'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="destination_journal_id" domain="[('type','=','bank')]" attrs="{'required':[('trust_id','!=',False)],'invisible':[('trust_id','=',False)],'readonly': [('state', '!=', 'draft')]}"/>
@@ -482,6 +483,8 @@
                                 <field name="yield_id" attrs="{'required':[('state', '=', 'draft')],'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="beneficiary_id" attrs="{'invisible': [('type_of_operation', 'not in', ('withdrawal', 'retirement'))]}"/>
                                 <field name="provider_id" attrs="{'invisible': [('type_of_operation', 'not in', ('withdrawal', 'retirement'))]}"/>
+                                <field name="specifics_project_id" attrs="{'invisible': [('patrimonial_id', '=', False)],'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="background_project_id" attrs="{'invisible': [('patrimonial_id', '=', False)],'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
                         </group>
                         <group>
@@ -533,7 +536,7 @@
                         		</group>
                             </page>
                             
-                             <page string="Accounts" name="accounts">
+                             <page string="Accounts" name="accounts" invisible="1">
                                 <group>
                                     <group>
                                     	<field name="patrimonial_equity_account_id" attrs="{'invisible': [('patrimonial_id', '=', False)],'readonly': [('state', '!=', 'draft')]}"/>

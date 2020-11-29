@@ -258,6 +258,7 @@ class PatrimonialResources(models.Model):
                             'default_liability_account_id': self.patrimonial_liability_account_id and self.patrimonial_liability_account_id.id or False,
                             'default_patrimonial_yield_account_id': self.patrimonial_yield_account_id.id and self.patrimonial_yield_account_id.id or False,
                             'default_journal_id' : journal_id,
+                            'default_specifics_project_id' : self.specifics_project_id and self.specifics_project_id.id or False,
                             }
             }
         else:
@@ -284,6 +285,7 @@ class PatrimonialResources(models.Model):
                             'default_liability_account_id': self.patrimonial_liability_account_id and self.patrimonial_liability_account_id.id or False,
                             'default_patrimonial_yield_account_id': self.patrimonial_yield_account_id.id and self.patrimonial_yield_account_id.id or False,
                             'default_journal_id' : journal_id,
+                            'default_specifics_project_id' : self.specifics_project_id and self.specifics_project_id.id or False,                            
                             }
             }
 
@@ -291,16 +293,37 @@ class PatrimonialResources(models.Model):
         req_obj = self.env['request.open.balance']
         for patimonial in self:
             for beneficiary in patimonial.beneficiary_ids:
-                if beneficiary.validity_start and beneficiary.validity_final_beneficiary and beneficiary.withdrawal_sch_date:
+                if beneficiary.validity_start and beneficiary.validity_final_beneficiary and beneficiary.withdrawal_sch_date and beneficiary.payment_rule_id:
                     
                     total_month = (beneficiary.validity_final_beneficiary.year - beneficiary.validity_start.year) * 12 +  (beneficiary.validity_final_beneficiary.month - beneficiary.validity_start.month)
                     start_date = beneficiary.validity_start
                     req_date = start_date.replace(day=beneficiary.withdrawal_sch_date.day)
-                    
+                    need_skip = 1
+                    if beneficiary.payment_rule_id.payment_period == 'bimonthly':
+                        need_skip = 2
+                    elif beneficiary.payment_rule_id.payment_period == 'quarterly':
+                        need_skip = 3
+                    elif beneficiary.payment_rule_id.payment_period == 'biquarterly':
+                        need_skip = 6
+                    elif beneficiary.payment_rule_id.payment_period == 'annual':
+                        need_skip = 12
+                    elif beneficiary.payment_rule_id.payment_period == 'biannual':
+                        need_skip = 24
+                        
+                    count = 0    
                     for month in range(total_month+1):
                         if month != 0:
                             req_date = req_date + relativedelta(months=1)
-                
+                        if count != 0:
+                            count += 1
+                            if count==need_skip:
+                                count = 0
+                            continue
+                        
+                        count += 1
+                        if count==need_skip:
+                            count = 0
+                        
                         partner_id = beneficiary.employee_id and beneficiary.employee_id.user_id and beneficiary.employee_id.user_id.partner_id and beneficiary.employee_id.user_id.partner_id.id or False   
                         req_obj.create({
                             'patrimonial_resources_id': patimonial.id,
@@ -314,7 +337,8 @@ class PatrimonialResources(models.Model):
                             'request_date' : req_date,
                             'patrimonial_equity_account_id': patimonial.patrimonial_equity_account_id and  patimonial.patrimonial_equity_account_id.id or False,
                             'liability_account_id': patimonial.patrimonial_liability_account_id and patimonial.patrimonial_liability_account_id.id or False,
-                            'patrimonial_yield_account_id': patimonial.patrimonial_yield_account_id.id and patimonial.patrimonial_yield_account_id.id or False
+                            'patrimonial_yield_account_id': patimonial.patrimonial_yield_account_id.id and patimonial.patrimonial_yield_account_id.id or False,
+                            'specifics_project_id' : patimonial.specifics_project_id and patimonial.specifics_project_id.id or False,
                             
                         })
             

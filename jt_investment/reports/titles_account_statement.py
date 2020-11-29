@@ -127,8 +127,8 @@ class TitlesAccountStatement(models.AbstractModel):
             total_inc = 0
             total_with = 0
             total_final = 0
+            final = 0
             
-            records = title_ids.filtered(lambda x:x.bank_id.id==journal.id)
             lines.append({
                 'id': 'hierarchy_account' + str(journal.id),
                 'name' :journal.name, 
@@ -143,42 +143,51 @@ class TitlesAccountStatement(models.AbstractModel):
                 'unfoldable': False,
                 'unfolded': True,
             })
-                      
-            for rec in records:
-                invesment_date = ''
-                inc = 0 
-                withdraw = 0
-                if rec.movement == 'buy':
-                    inc = rec.amount
-                    total_inc += inc
-                    g_total_inc += inc
-                elif rec.movement == 'sell':
-                    withdraw = rec.amount
-                    total_with += withdraw
-                    g_total_with += withdraw
-                if rec.invesment_date:
-                    invesment_date = rec.invesment_date.strftime('%Y-%m-%d') 
-                final = capital + inc - withdraw
-                total_final += final
-                g_total_final += final
-                lines.append({
-                    'id': 'hierarchy_account' + str(rec.id),
-                    'name' :invesment_date, 
-                    'columns': [ 
-                                {'name':''},
-                                {'name': rec.name},
-                                self._format({'name': capital},figure_type='float'),
-                                self._format({'name': inc},figure_type='float'),
-                                self._format({'name': withdraw},figure_type='float'),
-                                self._format({'name': final},figure_type='float'),
-                                ],
-                    'level': 3,
-                    'unfoldable': False,
-                    'unfolded': True,
-                })
-                capital = capital + inc - withdraw
+            records = title_ids.filtered(lambda x:x.bank_id.id==journal.id)
+            other_lines = self.env['request.open.balance.finance'].search([('date_required','>=',start),('date_required','<=',end),('amount_type','!=',False),('state','in',('confirmed','done')),('purchase_sale_security_id','in',records.ids)])
+            req_date = records.mapped('invesment_date')
+            req_date += other_lines.mapped('date_required')
+
+            if req_date:
+                req_date = list(set(req_date))
+                req_date =  sorted(req_date)
+            
+            for req in req_date:
+               
+                for rec in records.filtered(lambda x:x.invesment_date == req):
+                    invesment_date = ''
+                    inc = 0 
+                    withdraw = 0
+                    if rec.movement == 'buy':
+                        inc = rec.amount
+                        total_inc += inc
+                        g_total_inc += inc
+                    elif rec.movement == 'sell':
+                        withdraw = rec.amount
+                        total_with += withdraw
+                        g_total_with += withdraw
+                    if rec.invesment_date:
+                        invesment_date = rec.invesment_date.strftime('%Y-%m-%d') 
+                    final = capital + inc - withdraw
+                    total_final = final
+                    lines.append({
+                        'id': 'hierarchy_account' + str(rec.id),
+                        'name' :invesment_date, 
+                        'columns': [ 
+                                    {'name':rec.concept},
+                                    {'name': rec.name},
+                                    self._format({'name': capital},figure_type='float'),
+                                    self._format({'name': inc},figure_type='float'),
+                                    self._format({'name': withdraw},figure_type='float'),
+                                    self._format({'name': final},figure_type='float'),
+                                    ],
+                        'level': 3,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+                    capital = capital + inc - withdraw
                 
-                for line in rec.request_finance_ids.filtered(lambda x:x.amount_type and x.state in ('confirmed','done')):
+                for line in other_lines.filtered(lambda x:x.date_required==req):
                     invesment_date = ''
                     inc = 0 
                     withdraw = 0
@@ -194,8 +203,6 @@ class TitlesAccountStatement(models.AbstractModel):
                     if line.date_required:
                         invesment_date = line.date_required.strftime('%Y-%m-%d') 
                     final = capital + inc - withdraw
-                    total_final += final
-                    g_total_final += final
                     lines.append({
                         'id': 'hierarchy_account_line' + str(line.id),
                         'name' :invesment_date, 
@@ -223,7 +230,7 @@ class TitlesAccountStatement(models.AbstractModel):
                             {'name': ''},
                             self._format({'name': total_inc},figure_type='float'),
                             self._format({'name': total_with},figure_type='float'),
-                            self._format({'name': total_final},figure_type='float'),
+                            self._format({'name': total_inc - total_with},figure_type='float'),
                             ],
                 'level': 1,
                 'unfoldable': False,
@@ -239,7 +246,7 @@ class TitlesAccountStatement(models.AbstractModel):
                         {'name': ''},
                         self._format({'name': g_total_inc},figure_type='float'),
                         self._format({'name': g_total_with},figure_type='float'),
-                        self._format({'name': g_total_final},figure_type='float'),
+                        self._format({'name': g_total_inc - g_total_with},figure_type='float'),
                         ],
             'level': 1,
             'unfoldable': False,

@@ -126,7 +126,7 @@ class InvestmentAccountStatement(models.AbstractModel):
         g_total_inc = 0
         g_total_with = 0
         g_total_final = 0
-
+        
         #===== Investment =======#
         journal_ids = productive_ids.mapped('investment_id.journal_id')
         for journal in journal_ids:
@@ -134,7 +134,7 @@ class InvestmentAccountStatement(models.AbstractModel):
             total_inc = 0
             total_with = 0
             total_final = 0
-            
+            final = 0
             
             records = productive_ids.filtered(lambda x:x.investment_id.journal_id.id == journal.id).sorted(key='date_required')
             lines.append({
@@ -167,7 +167,7 @@ class InvestmentAccountStatement(models.AbstractModel):
                                         self._format({'name': capital},figure_type='float',digit=2),
                                         self._format({'name': 0.0},figure_type='float',digit=2),
                                         self._format({'name': 0.0},figure_type='float',digit=2),
-                                        self._format({'name': 0.0},figure_type='float',digit=2),
+                                        self._format({'name': final},figure_type='float',digit=2),
                                         ],
                             'level': 3,
                             'unfoldable': False,
@@ -191,7 +191,6 @@ class InvestmentAccountStatement(models.AbstractModel):
                     invesment_date = rec.date_required.strftime('%Y-%m-%d') 
                 final = capital + inc - withdraw
                 total_final += final
-                g_total_final += final
 
                 movement = dict(rec._fields['type_of_operation'].selection).get(rec.type_of_operation)
                 lines.append({
@@ -229,7 +228,7 @@ class InvestmentAccountStatement(models.AbstractModel):
                                     self._format({'name': capital},figure_type='float',digit=2),
                                     self._format({'name': 0.0},figure_type='float',digit=2),
                                     self._format({'name': 0.0},figure_type='float',digit=2),
-                                    self._format({'name': 0.0},figure_type='float',digit=2),
+                                    self._format({'name': final},figure_type='float',digit=2),
                                     ],
                         'level': 3,
                         'unfoldable': False,
@@ -246,13 +245,13 @@ class InvestmentAccountStatement(models.AbstractModel):
                             {'name': ''},
                             self._format({'name': total_inc},figure_type='float',digit=2),
                             self._format({'name': total_with},figure_type='float',digit=2),
-                            self._format({'name': total_final},figure_type='float',digit=2),
+                            self._format({'name': final},figure_type='float',digit=2),
                             ],
                 'level': 1,
                 'unfoldable': False,
                 'unfolded': True,
             })
-
+            g_total_final += final
         lines.append({
             'id': 'g_Total',
             'name' :'Grand Total', 

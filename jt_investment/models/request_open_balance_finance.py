@@ -149,7 +149,7 @@ class BasesCollabration(models.Model):
         result = super(BasesCollabration,self).canceled_finance()
 
         if self.purchase_sale_security_id:
-            self.purchase_sale_security_id.action_canceled()
+            self.purchase_sale_security_id.action_draft()
          
         if self.investment_id:
             self.investment_id.action_canceled()

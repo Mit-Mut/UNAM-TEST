@@ -250,7 +250,7 @@ class SummaryofOperationInvestmentFunds(models.AbstractModel):
         #================ Origin Data ====================#
         period_name = [{'name': 'Tipo de recurso'}]
         for per in periods:
-            period_name.append({'name': per.get('string')})
+            period_name.append({'name': per.get('string'),'class':'number'})
         r_column = 4 - len(periods)
         if r_column > 0:
             for col in range(r_column):
@@ -329,7 +329,7 @@ class SummaryofOperationInvestmentFunds(models.AbstractModel):
         #===================== Currency Data ==========#
         period_name = [{'name': 'Currency'}]
         for per in periods:
-            period_name.append({'name': per.get('string')})
+            period_name.append({'name': per.get('string'),'class':'number'})
         r_column = 4 - len(periods)
         if r_column > 0:
             for col in range(r_column):

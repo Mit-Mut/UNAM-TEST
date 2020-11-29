@@ -54,7 +54,8 @@ class PurchaseSaleSecurity(models.Model):
     dependency_id = fields.Many2one('dependency', "Dependency")
     sub_dependency_id = fields.Many2one('sub.dependency', "Subdependency")
     expiry_date = fields.Date(string="Expiration Date")
-
+    concept = fields.Text("Application Concept")
+    
     request_finance_ids = fields.One2many(
         'request.open.balance.finance', 'purchase_sale_security_id',copy=False)
 
@@ -215,6 +216,8 @@ class PurchaseSaleSecurity(models.Model):
             }
         }
 
+    def action_draft(self):
+        self.state = 'draft'
 
     def action_reject(self):
         self.state = 'rejected'
@@ -224,21 +227,21 @@ class PurchaseSaleSecurity(models.Model):
      
     def action_requested(self):
         self.state = 'requested'
-        if self.investment_fund_id and self.investment_fund_id.state != 'requested':
-            self.investment_fund_id.with_context(call_from_product=True).action_requested()
+#         if self.investment_fund_id and self.investment_fund_id.state != 'requested':
+#             self.investment_fund_id.with_context(call_from_product=True).action_requested()
 
     def action_approved(self):
         self.state = 'approved'
-        if self.investment_fund_id and self.investment_fund_id.state != 'approved':
-            self.investment_fund_id.with_context(call_from_product=True).action_approved()
+#         if self.investment_fund_id and self.investment_fund_id.state != 'approved':
+#             self.investment_fund_id.with_context(call_from_product=True).action_approved()
 
     def action_confirmed(self):
         self.state = 'confirmed'
-        if self.investment_fund_id and self.investment_fund_id.state != 'confirmed':
-            self.investment_fund_id.with_context(call_from_product=True).action_confirmed()
+#         if self.investment_fund_id and self.investment_fund_id.state != 'confirmed':
+#             self.investment_fund_id.with_context(call_from_product=True).action_confirmed()
 
     def action_canceled(self):
         self.state = 'canceled'
-        if self.investment_fund_id and self.investment_fund_id.state != 'canceled':
-            self.investment_fund_id.with_context(call_from_product=True).action_canceled()
+#         if self.investment_fund_id and self.investment_fund_id.state != 'canceled':
+#             self.investment_fund_id.with_context(call_from_product=True).action_canceled()
     

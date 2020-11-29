@@ -286,7 +286,7 @@ class InvestmentCommittee(models.AbstractModel):
         #=====================Investment Currency Data ==========#
         period_name = [{'name': 'Currency'}]
         for per in periods:
-            period_name.append({'name': per.get('string')})
+            period_name.append({'name': per.get('string'),'class':'number'})
         r_column = 6 - len(periods)
         if r_column > 0:
             for col in range(r_column):
@@ -439,7 +439,7 @@ class InvestmentCommittee(models.AbstractModel):
         #=====================CETES Currency Data ==========#
         period_name = [{'name': 'Currency'}]
         for per in periods:
-            period_name.append({'name': per.get('string')})
+            period_name.append({'name': per.get('string'),'class':'number'})
         r_column = 6 - len(periods)
         if r_column > 0:
             for col in range(r_column):
@@ -578,7 +578,7 @@ class InvestmentCommittee(models.AbstractModel):
         #=====================Udibonos Currency Data ==========#
         period_name = [{'name': 'Currency'}]
         for per in periods:
-            period_name.append({'name': per.get('string')})
+            period_name.append({'name': per.get('string'),'class':'number'})
         r_column = 6 - len(periods)
         if r_column > 0:
             for col in range(r_column):
@@ -714,7 +714,7 @@ class InvestmentCommittee(models.AbstractModel):
         #=====================bonds Currency Data ==========#
         period_name = [{'name': 'Currency'}]
         for per in periods:
-            period_name.append({'name': per.get('string')})
+            period_name.append({'name': per.get('string'),'class':'number'})
         r_column = 6 - len(periods)
         if r_column > 0:
             for col in range(r_column):
@@ -851,7 +851,7 @@ class InvestmentCommittee(models.AbstractModel):
         #=====================pay Currency Data ==========#
         period_name = [{'name': 'Currency'}]
         for per in periods:
-            period_name.append({'name': per.get('string')})
+            period_name.append({'name': per.get('string'),'class':'number'})
         r_column = 6 - len(periods)
         if r_column > 0:
             for col in range(r_column):
@@ -1005,7 +1005,7 @@ class InvestmentCommittee(models.AbstractModel):
         #=====================Security Currency Data ==========#
         period_name = [{'name': 'Currency'}]
         for per in periods:
-            period_name.append({'name': per.get('string')})
+            period_name.append({'name': per.get('string'),'class':'number'})
         r_column = 6 - len(periods)
         if r_column > 0:
             for col in range(r_column):

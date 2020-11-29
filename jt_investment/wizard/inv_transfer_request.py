@@ -36,32 +36,32 @@ class InvTransferRequest(models.TransientModel):
     user_id = fields.Many2one('res.users', default=lambda self: self.env.user.id, string="Applicant")
     line_ids = fields.One2many('inv.transfer.request.line','wizard_id')
     
-    @api.onchange('bank_account_id')
-    def onchange_bank_account_id(self):
-        self.line_ids = False
-        opt_lines = []    
-        if self.env.context and self.env.context.get('active_id') and self.env.context.get('active_model')=='investment.investment':
-            inv_id = self.env['investment.investment'].browse(self.env.context.get('active_id'))
-            
-            fund_ids = inv_id.line_ids.mapped('investment_fund_id')
-            opt_lines = []
-            for fund in fund_ids:
-                base_ids = inv_id.line_ids.filtered(lambda x:x.bank_account_id.id == self.bank_account_id.id and x.investment_fund_id.id==fund.id).mapped('base_collabaration_id')
-                for base in base_ids:
-                    lines = inv_id.line_ids.filtered(lambda x:x.bank_account_id.id == self.bank_account_id.id and x.investment_fund_id.id==fund.id and x.base_collabaration_id.id == base.id and x.line_state == 'done')
-                    inc = sum(a.amount for a in lines.filtered(lambda x:x.type_of_operation in ('open_bal','increase')))
-                    ret = sum(a.amount for a in lines.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure','increase_by_closing')))
-                    balance = inc - ret
-                    if balance > 0:
-                        opt_lines.append((0,0,{'opt_line_ids':[(6,0,lines.ids)],'investment_fund_id':fund.id,'base_collabaration_id':base.id,'agreement_number':base.convention_no,'amount':balance}))
-    
-                lines = inv_id.line_ids.filtered(lambda x:x.bank_account_id.id == self.bank_account_id.id and x.investment_fund_id.id==fund.id and not x.base_collabaration_id and x.line_state == 'done')
-                inc = sum(a.amount for a in lines.filtered(lambda x:x.type_of_operation in ('open_bal','increase')))
-                ret = sum(a.amount for a in lines.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure','increase_by_closing')))
-                balance = inc - ret
-                if balance > 0:
-                    opt_lines.append((0,0,{'opt_line_ids':[(6,0,lines.ids)],'investment_fund_id':fund.id,'amount':balance}))
-        self.line_ids = opt_lines
+#     @api.onchange('bank_account_id')
+#     def onchange_bank_account_id(self):
+#         self.line_ids = False
+#         opt_lines = []    
+#         if self.env.context and self.env.context.get('active_id') and self.env.context.get('active_model')=='investment.investment':
+#             inv_id = self.env['investment.investment'].browse(self.env.context.get('active_id'))
+#             
+#             fund_ids = inv_id.line_ids.mapped('investment_fund_id')
+#             opt_lines = []
+#             for fund in fund_ids:
+#                 base_ids = inv_id.line_ids.filtered(lambda x:x.bank_account_id.id == self.bank_account_id.id and x.investment_fund_id.id==fund.id).mapped('base_collabaration_id')
+#                 for base in base_ids:
+#                     lines = inv_id.line_ids.filtered(lambda x:x.bank_account_id.id == self.bank_account_id.id and x.investment_fund_id.id==fund.id and x.base_collabaration_id.id == base.id and x.line_state == 'done')
+#                     inc = sum(a.amount for a in lines.filtered(lambda x:x.type_of_operation in ('open_bal','increase')))
+#                     ret = sum(a.amount for a in lines.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure','increase_by_closing')))
+#                     balance = inc - ret
+#                     if balance > 0:
+#                         opt_lines.append((0,0,{'opt_line_ids':[(6,0,lines.ids)],'investment_fund_id':fund.id,'base_collabaration_id':base.id,'agreement_number':base.convention_no,'amount':balance}))
+#     
+#                 lines = inv_id.line_ids.filtered(lambda x:x.bank_account_id.id == self.bank_account_id.id and x.investment_fund_id.id==fund.id and not x.base_collabaration_id and x.line_state == 'done')
+#                 inc = sum(a.amount for a in lines.filtered(lambda x:x.type_of_operation in ('open_bal','increase')))
+#                 ret = sum(a.amount for a in lines.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure','increase_by_closing')))
+#                 balance = inc - ret
+#                 if balance > 0:
+#                     opt_lines.append((0,0,{'opt_line_ids':[(6,0,lines.ids)],'investment_fund_id':fund.id,'amount':balance}))
+#         self.line_ids = opt_lines
                
     def approve(self):
         line_amount = sum(x.amount_to_transfer for x in self.line_ids.filtered(lambda a:a.check))

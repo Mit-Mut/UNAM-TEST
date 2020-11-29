@@ -43,14 +43,16 @@
                                 <field name="type_of_operation"
                                        attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
                                 <field name="journal_id" readonly="1"/>
+                                <field name="specifics_project_id"/>
+                                <field name="background_project_id" readonly="1"/>
                             </group>
                             <group>
                             	<field name="patrimonial_resources_id" invisible="1"/>
                                 <field name="apply_to_basis_collaboration" readonly="1"/>
                                 <field name="origin_resource_id" domain="[('is_it_enabled_for_agreement', '=',  True)]"
                                 attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
-                                <field name="origin_journal_id" domain="[('type','=','bank')]" attrs="{'readonly': [('state', '!=', 'draft')]}" />
-                                <field name="destination_journal_id" domain="[('type','=','bank')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="origin_journal_id" invisible="1" />
+                                <field name="destination_journal_id" invisible="1"/>
                                 <field name="bases_collaboration_id"  invisible="1"/>
                                 <field name="trust_id" invisible="1"/>
                                 <field name="trust_beneficiary_ids" invisible="1"/>

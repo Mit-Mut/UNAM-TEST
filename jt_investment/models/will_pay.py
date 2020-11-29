@@ -31,7 +31,7 @@ class WillPay(models.Model):
     dependency_id = fields.Many2one('dependency', "Dependency")
     sub_dependency_id = fields.Many2one('sub.dependency', "Subdependency")
     reason_rejection = fields.Text("Reason Rejection")
-    
+    concept = fields.Text("Application Concept")
     kind_of_product = fields.Selection([('investment','Investment')],string="Kind Of Product",default="investment")
     key = fields.Char("Identification Key")
     investment_date = fields.Date('Investment Date')
@@ -225,26 +225,26 @@ class WillPay(models.Model):
 
     def action_requested(self):
         self.state = 'requested'
-        if self.investment_fund_id and self.investment_fund_id.state != 'requested':
-            self.investment_fund_id.with_context(call_from_product=True).action_requested()
+#         if self.investment_fund_id and self.investment_fund_id.state != 'requested':
+#             self.investment_fund_id.with_context(call_from_product=True).action_requested()
 
     def action_approved(self):
         self.state = 'approved'
-        if self.investment_fund_id and self.investment_fund_id.state != 'approved':
-            self.investment_fund_id.with_context(call_from_product=True).action_approved()
+#         if self.investment_fund_id and self.investment_fund_id.state != 'approved':
+#             self.investment_fund_id.with_context(call_from_product=True).action_approved()
 
     def action_confirmed(self):
         self.state = 'confirmed'
-        if self.investment_fund_id and self.investment_fund_id.state != 'confirmed':
-            self.investment_fund_id.with_context(call_from_product=True).action_confirmed()
+#         if self.investment_fund_id and self.investment_fund_id.state != 'confirmed':
+#             self.investment_fund_id.with_context(call_from_product=True).action_confirmed()
 
     def action_reject(self):
         self.state = 'rejected'
 
     def action_canceled(self):
         self.state = 'canceled'
-        if self.investment_fund_id and self.investment_fund_id.state != 'canceled':
-            self.investment_fund_id.with_context(call_from_product=True).action_canceled()
+#         if self.investment_fund_id and self.investment_fund_id.state != 'canceled':
+#             self.investment_fund_id.with_context(call_from_product=True).action_canceled()
     
     def action_calculation(self):
         return 

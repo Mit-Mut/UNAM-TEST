@@ -135,7 +135,7 @@ class InvestmentAccountStatement(models.AbstractModel):
             total_with = 0
             total_final = 0
             
-            records = productive_ids.filtered(lambda x:x.investment_id.journal_id.id == journal.id)
+            records = productive_ids.filtered(lambda x:x.investment_id.journal_id.id == journal.id).sorted('date_required')
             lines.append({
                 'id': 'hierarchy_account' + str(journal.id),
                 'name' :journal.name, 
@@ -168,15 +168,15 @@ class InvestmentAccountStatement(models.AbstractModel):
                 if rec.date_required:
                     invesment_date = rec.date_required.strftime('%Y-%m-%d') 
                 final = capital + inc - withdraw
-                total_final += final
-                g_total_final += final
+                total_final  = final
+                
 
                 movement = dict(rec._fields['type_of_operation'].selection).get(rec.type_of_operation)
                 lines.append({
                     'id': 'hierarchy_account' + str(rec.id),
                     'name' :invesment_date, 
                     'columns': [ 
-                                {'name':''},
+                                {'name':rec.concept},
                                 {'name': movement},
                                 self._format({'name': capital},figure_type='float',digit=2),
                                 self._format({'name': inc},figure_type='float',digit=2),
@@ -204,7 +204,8 @@ class InvestmentAccountStatement(models.AbstractModel):
                 'unfoldable': False,
                 'unfolded': True,
             })
-
+            g_total_final += total_final
+            
         lines.append({
             'id': 'g_Total',
             'name' :'Grand Total', 

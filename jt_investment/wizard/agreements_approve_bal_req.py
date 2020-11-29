@@ -38,6 +38,8 @@ class ApproveInvestmentBalReq(models.TransientModel):
     def onchange_check_balance(self):
         if self.type_of_operation and self.type_of_operation in ('open_bal','increase'):
             self.is_balance = True
+        elif not self.is_agr:
+            self.is_balance = True
         else:
             self.is_balance = False
             

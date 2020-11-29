@@ -278,15 +278,36 @@ class Trust(models.Model):
         req_obj = self.env['request.open.balance']
         for trust in self:
             for beneficiary in trust.beneficiary_ids:
-                if beneficiary.validity_start and beneficiary.validity_final_beneficiary and beneficiary.withdrawal_sch_date:
+                if beneficiary.validity_start and beneficiary.validity_final_beneficiary and beneficiary.withdrawal_sch_date and beneficiary.payment_rule_id:
                     
                     total_month = (beneficiary.validity_final_beneficiary.year - beneficiary.validity_start.year) * 12 +  (beneficiary.validity_final_beneficiary.month - beneficiary.validity_start.month)
                     start_date = beneficiary.validity_start
                     req_date = start_date.replace(day=beneficiary.withdrawal_sch_date.day)
-                    
+
+                    need_skip = 1
+                    if beneficiary.payment_rule_id.payment_period == 'bimonthly':
+                        need_skip = 2
+                    elif beneficiary.payment_rule_id.payment_period == 'quarterly':
+                        need_skip = 3
+                    elif beneficiary.payment_rule_id.payment_period == 'biquarterly':
+                        need_skip = 6
+                    elif beneficiary.payment_rule_id.payment_period == 'annual':
+                        need_skip = 12
+                    elif beneficiary.payment_rule_id.payment_period == 'biannual':
+                        need_skip = 24
+                    count = 0
                     for month in range(total_month+1):
                         if month != 0:
                             req_date = req_date + relativedelta(months=1)
+                        if count != 0:
+                            count += 1
+                            if count==need_skip:
+                                count = 0
+                            continue
+                        
+                        count += 1
+                        if count==need_skip:
+                            count = 0
                 
                         partner_id = beneficiary.employee_id and beneficiary.employee_id.user_id and beneficiary.employee_id.user_id.partner_id and beneficiary.employee_id.user_id.partner_id.id or False   
                         req_obj.create({
@@ -331,18 +352,15 @@ class Trust(models.Model):
         folio=1
         final = 0
             
-        req_date = self.request_open_balance_ids.filtered(lambda x:x.request_date >= self.report_start_date and x.request_date <= self.report_end_date).mapped('request_date')
+        req_date = self.request_open_balance_ids.filtered(lambda x:x.state=='confirmed' and x.request_date >= self.report_start_date and x.request_date <= self.report_end_date).mapped('request_date')
         req_date += self.interest_rate_ids.filtered(lambda x:x.interest_date >= self.report_start_date and x.interest_date <= self.report_end_date).mapped('interest_date')
         
-        print ("=====Req===",req_date)
         if req_date:
             req_date = list(set(req_date))
             req_date =  sorted(req_date)
         
-        print ("=====111Req===",req_date)    
         for req in req_date:
-            print ('======',req)       
-            opt_lines = self.request_open_balance_ids.filtered(lambda x:x.type_of_operation == 'open_bal' and  x.request_date == req)
+            opt_lines = self.request_open_balance_ids.filtered(lambda x:x.state=='confirmed' and x.type_of_operation == 'open_bal' and  x.request_date == req)
             for line in opt_lines:
                 final += line.opening_balance
                 lines.append({'folio':folio,
@@ -354,7 +372,7 @@ class Trust(models.Model):
                               })
                 folio += 1
                 
-            opt_lines = self.request_open_balance_ids.filtered(lambda x:x.type_of_operation == 'increase' and  x.request_date == req)
+            opt_lines = self.request_open_balance_ids.filtered(lambda x:x.state=='confirmed' and x.type_of_operation == 'increase' and  x.request_date == req)
             for line in opt_lines:
                 final += line.opening_balance
                 lines.append({'folio':folio,
@@ -385,7 +403,7 @@ class Trust(models.Model):
                               'final' : final
                               })
                 folio += 1
-            opt_lines = self.request_open_balance_ids.filtered(lambda x:x.type_of_operation == 'retirement' and  x.request_date == req)
+            opt_lines = self.request_open_balance_ids.filtered(lambda x:x.state=='confirmed' and x.type_of_operation == 'retirement' and  x.request_date == req)
             for line in opt_lines:
                 final -= line.opening_balance
                 lines.append({'folio':folio,
@@ -397,7 +415,7 @@ class Trust(models.Model):
                               })
                 folio += 1
     
-            opt_lines = self.request_open_balance_ids.filtered(lambda x:x.type_of_operation == 'withdrawal_cancellation' and  x.request_date == req)
+            opt_lines = self.request_open_balance_ids.filtered(lambda x:x.state=='confirmed' and x.type_of_operation == 'withdrawal_cancellation' and  x.request_date == req)
             for line in opt_lines:
                 final -= line.opening_balance
                 lines.append({'folio':folio,

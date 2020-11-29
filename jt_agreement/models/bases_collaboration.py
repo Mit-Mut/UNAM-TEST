@@ -465,7 +465,7 @@ class BasesCollabration(models.Model):
         req_obj = self.env['request.open.balance']
         for collaboration in self:
             for beneficiary in collaboration.beneficiary_ids:
-                if beneficiary.validity_start and beneficiary.validity_final_beneficiary and beneficiary.withdrawal_sch_date:
+                if beneficiary.validity_start and beneficiary.validity_final_beneficiary and beneficiary.withdrawal_sch_date and beneficiary.payment_rule_id:
 
                     total_month = (beneficiary.validity_final_beneficiary.year - beneficiary.validity_start.year) * 12 + (
                         beneficiary.validity_final_beneficiary.month - beneficiary.validity_start.month)
@@ -473,9 +473,34 @@ class BasesCollabration(models.Model):
                     req_date = start_date.replace(
                         day=beneficiary.withdrawal_sch_date.day)
 
+                    need_skip = 1
+                    if beneficiary.payment_rule_id.payment_period == 'bimonthly':
+                        need_skip = 2
+                    elif beneficiary.payment_rule_id.payment_period == 'quarterly':
+                        need_skip = 3
+                    elif beneficiary.payment_rule_id.payment_period == 'biquarterly':
+                        need_skip = 6
+                    elif beneficiary.payment_rule_id.payment_period == 'annual':
+                        need_skip = 12
+                    elif beneficiary.payment_rule_id.payment_period == 'biannual':
+                        need_skip = 24
+                        
+                    count = 0    
+
                     for month in range(total_month + 1):
                         if month != 0:
                             req_date = req_date + relativedelta(months=1)
+
+                        if count != 0:
+                            count += 1
+                            if count==need_skip:
+                                count = 0
+                            continue
+                        
+                        count += 1
+                        if count==need_skip:
+                            count = 0
+                            
                         partner_id = beneficiary.employee_id and beneficiary.employee_id.user_id and beneficiary.employee_id.user_id.partner_id and beneficiary.employee_id.user_id.partner_id.id or False
                         req_obj.create({
                             'bases_collaboration_id': collaboration.id,
@@ -788,6 +813,10 @@ class RequestOpenBalance(models.Model):
     patrimonial_yield_account_id = fields.Many2one(
         'account.account', "Yield account of the productive investment account")
 
+    specifics_project_id = fields.Many2one('specific.project','Specific project')    
+    background_project_id = fields.Many2one('background.project','Background Project',related="specifics_project_id.backgound_project_id")
+
+
 
     @api.onchange('type_of_operation_trust')
     def type_of_operation_trust_change(self):
@@ -1002,59 +1031,8 @@ class RequestOpenBalance(models.Model):
         if self.operation_number and not self.operation_number.isnumeric():
             raise ValidationError(_('Operation Number must be Numeric.'))
 
-    def request(self):
-        self.env['request.open.balance.invest'].create({
-            'name': self.name,
-            'operation_number': self.operation_number,
-            'agreement_number': self.agreement_number,
-            'is_cancel_collaboration': True if self.type_of_operation == 'withdrawal_cancellation' else False,
-            'type_of_operation': self.type_of_operation,
-            'apply_to_basis_collaboration': self.apply_to_basis_collaboration,
-            'origin_resource_id': self.origin_resource_id and self.origin_resource_id.id or False,
-            'state': 'requested',
-            'request_date': self.request_date,
-            'trade_number': self.trade_number,
-            'currency_id': self.currency_id and self.currency_id.id or False,
-            'opening_balance': self.opening_balance,
-            'observations': self.observations,
-            'user_id': self.user_id and self.user_id.id or False,
-            'cbc_format': self.cbc_format,
-            'cbc_shipping_office': self.cbc_shipping_office,
-            'liability_account_id': self.liability_account_id and self.liability_account_id.id or False,
-            'investment_account_id': self.investment_account_id and self.investment_account_id.id or False,
-            'interest_account_id': self.interest_account_id and self.interest_account_id.id or False,
-            'availability_account_id': self.availability_account_id and self.availability_account_id.id or False,
-            'balance_req_id': self.id,
-            'patrimonial_account_id': self.patrimonial_account_id and self.patrimonial_account_id.id or False,
-            'interest_account_id': self.interest_account_id and self.interest_account_id.id or False,
-            'honorary_account_id': self.honorary_account_id and self.honorary_account_id.id or False,
-            'trust_agreement_file': self.trust_agreement_file,
-            'trust_agreement_file_name': self.trust_agreement_file_name,
-            'trust_office_file': self.trust_office_file,
-            'trust_office_file_name': self.trust_office_file_name,
-            'trust_id': self.trust_id and self.trust_id.id or False,
-            'origin_journal_id': self.origin_journal_id and self.origin_journal_id.id or False,
-            "destination_journal_id": self.destination_journal_id and self.destination_journal_id.id or False,
-            'patrimonial_id': self.patrimonial_resources_id and self.patrimonial_resources_id.id or False,
-            'patrimonial_yield_account_id': self.patrimonial_yield_account_id and self.patrimonial_yield_account_id.id or False,
-            'patrimonial_equity_account_id': self.patrimonial_equity_account_id and self.patrimonial_equity_account_id.id or False,
-            'bases_collaboration_id': self.bases_collaboration_id and self.bases_collaboration_id.id or False,
-            'fund_type_id': self.bases_collaboration_id and self.bases_collaboration_id.fund_type_id and self.bases_collaboration_id.fund_type_id.id or False,
-            'type_of_agreement_id': self.bases_collaboration_id and self.bases_collaboration_id.agreement_type_id and self.bases_collaboration_id.agreement_type_id.id or False,
-            'fund_id':  self.bases_collaboration_id and self.bases_collaboration_id.fund_id and self.bases_collaboration_id.fund_id.id or False,
-            'beneficiary_id': self.beneficiary_id.id,
-            'provider_id': self.provider_id.id,
-        })
-        self.state = 'requested'
-        if self.type_of_operation == 'withdrawal_cancellation' and self.bases_collaboration_id:
-            self.bases_collaboration_id.state = 'to_be_cancelled'
-        if self.type_of_operation == 'withdrawal_cancellation' and self.trust_id:
-            self.trust_id.action_to_be_cancelled()
-        if self.type_of_operation == 'withdrawal_cancellation' and self.patrimonial_resources_id:
-            self.patrimonial_resources_id.action_to_be_cancelled()
-        elif self.type_of_operation == 'retirement':
-            self.create_payment_request = True
-
+    def action_confirmed(self):
+        self.state = 'confirmed'
         if self.patrimonial_resources_id or self.bases_collaboration_id:
             if self.journal_id:
                 journal = self.journal_id
@@ -1117,6 +1095,61 @@ class RequestOpenBalance(models.Model):
                     move_obj = self.env['account.move']
                     unam_move = move_obj.create(unam_move_val)
                     unam_move.action_post()
+        
+    def request(self):
+        self.env['request.open.balance.invest'].create({
+            'name': self.name,
+            'operation_number': self.operation_number,
+            'agreement_number': self.agreement_number,
+            'is_cancel_collaboration': True if self.type_of_operation == 'withdrawal_cancellation' else False,
+            'type_of_operation': self.type_of_operation,
+            'apply_to_basis_collaboration': self.apply_to_basis_collaboration,
+            'origin_resource_id': self.origin_resource_id and self.origin_resource_id.id or False,
+            'state': 'requested',
+            'request_date': self.request_date,
+            'trade_number': self.trade_number,
+            'currency_id': self.currency_id and self.currency_id.id or False,
+            'opening_balance': self.opening_balance,
+            'observations': self.observations,
+            'user_id': self.user_id and self.user_id.id or False,
+            'cbc_format': self.cbc_format,
+            'cbc_shipping_office': self.cbc_shipping_office,
+            'liability_account_id': self.liability_account_id and self.liability_account_id.id or False,
+            'investment_account_id': self.investment_account_id and self.investment_account_id.id or False,
+            'interest_account_id': self.interest_account_id and self.interest_account_id.id or False,
+            'availability_account_id': self.availability_account_id and self.availability_account_id.id or False,
+            'balance_req_id': self.id,
+            'patrimonial_account_id': self.patrimonial_account_id and self.patrimonial_account_id.id or False,
+            'interest_account_id': self.interest_account_id and self.interest_account_id.id or False,
+            'honorary_account_id': self.honorary_account_id and self.honorary_account_id.id or False,
+            'trust_agreement_file': self.trust_agreement_file,
+            'trust_agreement_file_name': self.trust_agreement_file_name,
+            'trust_office_file': self.trust_office_file,
+            'trust_office_file_name': self.trust_office_file_name,
+            'trust_id': self.trust_id and self.trust_id.id or False,
+            'origin_journal_id': self.origin_journal_id and self.origin_journal_id.id or False,
+            "destination_journal_id": self.destination_journal_id and self.destination_journal_id.id or False,
+            'patrimonial_id': self.patrimonial_resources_id and self.patrimonial_resources_id.id or False,
+            'patrimonial_yield_account_id': self.patrimonial_yield_account_id and self.patrimonial_yield_account_id.id or False,
+            'patrimonial_equity_account_id': self.patrimonial_equity_account_id and self.patrimonial_equity_account_id.id or False,
+            'bases_collaboration_id': self.bases_collaboration_id and self.bases_collaboration_id.id or False,
+            'fund_type_id': self.bases_collaboration_id and self.bases_collaboration_id.fund_type_id and self.bases_collaboration_id.fund_type_id.id or False,
+            'type_of_agreement_id': self.bases_collaboration_id and self.bases_collaboration_id.agreement_type_id and self.bases_collaboration_id.agreement_type_id.id or False,
+            'fund_id':  self.bases_collaboration_id and self.bases_collaboration_id.fund_id and self.bases_collaboration_id.fund_id.id or False,
+            'beneficiary_id': self.beneficiary_id.id,
+            'provider_id': self.provider_id.id,
+            'specifics_project_id' : self.specifics_project_id and self.specifics_project_id.id or False,
+        })
+        self.state = 'requested'
+        if self.type_of_operation == 'withdrawal_cancellation' and self.bases_collaboration_id:
+            self.bases_collaboration_id.state = 'to_be_cancelled'
+        if self.type_of_operation == 'withdrawal_cancellation' and self.trust_id:
+            self.trust_id.action_to_be_cancelled()
+        if self.type_of_operation == 'withdrawal_cancellation' and self.patrimonial_resources_id:
+            self.patrimonial_resources_id.action_to_be_cancelled()
+        elif self.type_of_operation == 'retirement':
+            self.create_payment_request = True
+
                 
 
 class RequestOpenBalanceInvestment(models.Model):
@@ -1145,6 +1178,9 @@ class RequestOpenBalanceInvestment(models.Model):
         "Apply to Basis of Collaboration")
     apply_to_trust = fields.Boolean(
         related='apply_to_basis_collaboration', string="Apply to Trust")
+
+    apply_to_patrimonial = fields.Boolean(
+        related='apply_to_basis_collaboration', string="Apply to patrimonial resources")
 
     origin_resource_id = fields.Many2one(
         'sub.origin.resource', "Origin of the resource")
@@ -1209,6 +1245,10 @@ class RequestOpenBalanceInvestment(models.Model):
     patrimonial_equity_account_id = fields.Many2one(
         'account.account', "Equity accounting account")
 
+    
+    specifics_project_id = fields.Many2one('specific.project','Specific project')
+    background_project_id = fields.Many2one('background.project','Background Project',related="specifics_project_id.backgound_project_id")
+    
     reason_rejection = fields.Text("Reason for Rejection")
     is_cancel_collaboration = fields.Boolean(
         "Operation of cancel collaboration", default=False)
@@ -1319,11 +1359,12 @@ class RequestOpenBalanceInvestment(models.Model):
         if employee and employee.dependancy_id:
             unit_req_transfer_id = employee.dependancy_id.id
         is_agr = True
+        is_balance = False
         dependency_id = False
         if self.trust_id:
             is_agr = False
+            is_balance = True
             dependency_id = self.trust_id and self.trust_id.dependency_id and self.trust_id.dependency_id.id or False  
-            
         return {
             'name': 'Approve Request',
             'view_type': 'form',
@@ -1349,6 +1390,7 @@ class RequestOpenBalanceInvestment(models.Model):
                 'default_type_of_operation': self.type_of_operation,
                 'default_origin_resource_id': self.origin_resource_id and self.origin_resource_id.id or False,
                 'default_is_agr' : is_agr,
+                'default_is_balance':is_balance,
                 'default_dependency_id' : dependency_id,
             }
         }
@@ -1537,7 +1579,8 @@ class AccountPayment(models.Model):
                     fin_req.request_id.state = 'done'
                     if fin_req.request_id.balance_req_id:
                         balance_req = fin_req.request_id.balance_req_id
-                        balance_req.state = 'confirmed'
+                        balance_req.action_confirmed()
+                        #balance_req.state = 'confirmed'
                         if balance_req.bases_collaboration_id:
                             if balance_req.type_of_operation == 'withdrawal_cancellation':
                                 balance_req.bases_collaboration_id.available_bal = 0

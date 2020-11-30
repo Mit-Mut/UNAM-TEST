@@ -3,7 +3,7 @@
     <data>
         <menuitem 
             id="menu_payment_programming" 
-            name="Payment Programming" 
+            name="UPA PAPIIT" 
             parent="jt_payroll_payment.menu_payment_finance" 
             sequence="3"/>
 

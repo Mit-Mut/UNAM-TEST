@@ -118,7 +118,7 @@
         />
 
 
-         <!--Remnant Resource Integration Configuration-->
+        <!--Remnant Resource Integration Configuration-->
         <record id="action_resource_remaining_config" model="ir.actions.client">
             <field name="name">Integration of remaining resources</field>
             <field name="tag">account_report</field>
@@ -134,5 +134,84 @@
             action="action_resource_remaining_config"
             sequence="8"
         />
+
+        <menuitem
+            id="upa_submenu"
+            name="UPA PAPIIT"
+            parent="project.menu_project_report"
+            sequence="9"
+            
+        />
+
+
+        <record id="action_upa_resource_remaining_config" model="ir.actions.client">
+            <field name="name">Integration of remaining resources</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model':'jt_projects.upa.papiit.remaining.resources'}"/>
+        </record>
+
+        <menuitem
+            id="menu_integration_of_remaining_resource_upa"
+            name="Integration of Remaining Resources"
+            parent="jt_projects.upa_submenu"
+            action="action_upa_resource_remaining_config"
+            sequence="10"
+        />
+
+        <record id="action_budget_resources" model="ir.actions.client">
+            <field name="name">Integration of projects with budget resources</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model':'jt_projects.budget.resources'}"/>
+        </record>
+
+
+        <menuitem
+            id="menu_integration_of_project_budget_resource"
+            name="Integration of projects with budget resources"
+            parent="jt_projects.upa_submenu"
+            action="action_budget_resources"
+            sequence="11"
+        />
+
+        <menuitem
+            id="menu_integration_of_budgetary_resources_remnants"
+            name="Integration by program of budgetary resources and remnants"
+            parent="jt_projects.upa_submenu"
+            action="action_resource_remaining_config"
+            sequence="12"
+        />
+
+        <menuitem
+            id="menu_integration_of_remnants_papiit_papime_infocab"
+            name="Integration of remnants by PAPIIT, PAPIME, INFOCAB Stage"
+            parent="jt_projects.upa_submenu"
+            action="action_resource_remaining_config"
+            sequence="13"
+        />
+
+        <menuitem
+            id="menu_integration_airplane_tickets_papiit"
+            name="Integration airplane tickets PAPIIT"
+            parent="jt_projects.upa_submenu"
+            action="action_resource_remaining_config"
+            sequence="14"
+        />
+
+        <menuitem
+            id="menu_integration_of_papiit_papime_infocab_iacod"
+            name="Integration of PAPIIT, PAPIME, INFOCAB, IACOD editions resources"
+            parent="jt_projects.upa_submenu"
+            action="action_resource_remaining_config"
+            sequence="15"
+        />
+
+        <menuitem
+            id="menu_integration_of_remaining_resource_papiit_pime_infocab"
+            name="Integration of remaining resources by program PAPIIT, PAPIME, INFOCAB"
+            parent="jt_projects.upa_submenu"
+            action="action_resource_remaining_config"
+            sequence="16"
+        />
+
     </data>
 </odoo>

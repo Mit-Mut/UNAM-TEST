@@ -212,7 +212,8 @@ class ReportProductiveAccounts(models.AbstractModel):
         contract_list = []
         currency_list = []
         fund_list = []
-
+        journal_list = []
+        
         comparison = options.get('comparison')
         periods = []
         if comparison and comparison.get('filter') != 'no_comparison':
@@ -251,6 +252,13 @@ class ReportProductiveAccounts(models.AbstractModel):
         
         if contract_list:
             domain.append(('investment_id.contract_id','in',currency_list))
+
+        for journal in options.get('journals'):
+            if journal.get('selected',False)==True:
+                journal_list.append(journal.get('id',0))
+
+        if journal_list:
+            domain += [('investment_id.new_journal_id','in',journal_list)]
         
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
@@ -371,12 +379,11 @@ class ReportProductiveAccounts(models.AbstractModel):
                         {'name': ''},
                         {'name': ''},
                         {'name': ''},
-                        self._format({'name': total_p_amount},figure_type='float',digit=2),
                         {'name': ''},
-                        
+                        self._format({'name': total_p_amount},figure_type='float',digit=2),
+                        {'name':''},
                         self._format({'name': total_extra_amount},figure_type='float',digit=2),
                         self._format({'name': total_diff_amount},figure_type='float',digit=2),
-                        {'name':''},
                         ],
             'level': 1,
             'unfoldable': False,
@@ -433,9 +440,9 @@ class ReportProductiveAccounts(models.AbstractModel):
                 for m_dict in month_list.get(month):
                     count += 1
                     col = m_dict.get('columns')
-                    a= col[5]
-                    b = col[7]
-                    c = col[8]
+                    a= col[6]
+                    b = col[8]
+                    c = col[9]
                     
                     if 'no_format_name' in a:
                         total_month_amount += a.get('no_format_name',0) 
@@ -465,11 +472,12 @@ class ReportProductiveAccounts(models.AbstractModel):
                                     {'name': ''},
                                     {'name': ''},
                                     {'name': ''},
+                                    {'name': ''},
                                     self._format({'name': total_month_amount},figure_type='float',digit=2),
                                     {'name': ''},
                                     self._format({'name': total_month_extra},figure_type='float',digit=2),
                                     self._format({'name': total_month_diff},figure_type='float',digit=2),
-                                    {'name': ''},
+                                    
                                     ],
                         'level': 1,
                         'unfoldable': False,

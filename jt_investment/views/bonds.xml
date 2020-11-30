@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="first_number"/>
-                    <field name="journal_id"/>
+                    <field name="bank_id"/>
                     <field name="folio" invisible="1"/>
        				<field name="kind_of_product" invisible="1"/>
        				<field name="key"/>

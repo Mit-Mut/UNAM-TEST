@@ -41,7 +41,7 @@
                                 <field name="handover_date" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                                 <field name="application_concept" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                                 <field name="origin_journal_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
-                                <field name="origin_bank_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                                <field name="origin_bank_id" readonly="1"/>
                                 <field name="aggrement" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                             </group>
                         </group>

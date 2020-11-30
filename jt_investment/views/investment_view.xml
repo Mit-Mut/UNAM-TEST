@@ -43,7 +43,7 @@
                 
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" string="Rate History" type="object" name="get_rate_history" icon="fa-money" widget="statinfo"/>
+                            <button class="oe_stat_button" string="Rate History" type="action" name="%(action_investment_period_tiie_rate)d" icon="fa-money" widget="statinfo"/>
                         </div>
                     
                         <group>

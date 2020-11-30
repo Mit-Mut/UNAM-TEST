@@ -16,7 +16,8 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="invoice" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <!-- <field name="invoice" attrs="{'readonly': [('status', '!=', 'eraser')]}"/> -->
+                                <field name="invoice_cancel" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="move_type" readonly="1"/>
                                 <field name="project_id" domain="[('project_type', '=', 'conacyt')]"
                                 attrs="{'readonly': [('status', '!=', 'eraser')]}" />
@@ -35,7 +36,8 @@
                                 <field name="bank_acc_number_id" readonly="1"/>
                                 <field name="no_contract" readonly="1"/>
                                 <field name="customer_number" invisible="1"/>
-                                <field name="supporting_documentation" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="supporting_doc_name" invisible="1"/>
+                                <field name="supporting_documentation" attrs="{'readonly': [('status', '!=', 'eraser')]}" filename="supporting_doc_name"/>
                                 <field name="reason_rejection" attrs="{'readonly': [('status', '!=', 'eraser')],'invisible':[('status','!=','rejected')]}"/>
                                 <field name="rejection_observations" attrs="{'readonly': [('status', '!=', 'eraser')],'invisible':[('status','!=','rejected')]}"/>
                             </group>
@@ -50,7 +52,8 @@
             <field name="model">request.accounts</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="invoice"/>
+                    <!-- <field name="invoice"/> -->
+                    <field name="invoice_cancel"/>
                     <field name="project_id"/>
                     <field name="project_name"/>
                     <field name="project_type_identifier"/>

@@ -9,6 +9,8 @@ class RequestAccounts(models.Model):
 
     invoice = fields.Char("Invoice", readonly=True, copy=False,
                           default='New')
+    invoice_cancel = fields.Char("Invoice", readonly=True, copy=False,
+                          default='New')
     project_id = fields.Many2one('project.project', "Project Number")
     project_name = fields.Char(
         related='project_id.name', string="Project Name")
@@ -46,16 +48,35 @@ class RequestAccounts(models.Model):
         ('account open', 'Account Open'),
     ], 'Move Type')
 
+
+
+
     def generate_request(self):
         self.status = 'request'
 
+    # @api.model
+    # def create(self, vals):
+    #     if vals.get('invoice', 'New') == 'New':
+    #         vals['invoice'] = self.env['ir.sequence'].next_by_code(
+    #             'request.accounts') or 'New'
+    #     result = super(RequestAccounts, self).create(vals)
+    #     return result
+
+
     @api.model
     def create(self, vals):
-        if vals.get('invoice', 'New') == 'New':
-            vals['invoice'] = self.env['ir.sequence'].next_by_code(
-                'request.accounts') or 'New'
         result = super(RequestAccounts, self).create(vals)
+        if result.move_type == 'account open':
+            invoice = self.env['ir.sequence'].next_by_code('request.accounts')
+            result.invoice = invoice
+
+        elif result.move_type == 'account cancel':
+            cancel = self.env['ir.sequence'].next_by_code('request.accounts.cancel') or 'New'
+            result.invoice_cancel = cancel
+    
+        print("***",vals)
         return result
+
 
 #     @api.onchange('project_no')
 #     def onchage_project_no(self):

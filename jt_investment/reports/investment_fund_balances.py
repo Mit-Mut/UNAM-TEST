@@ -159,90 +159,110 @@ class SummaryofOperationInvestmentFundsBalances(models.AbstractModel):
             period_list.reverse()
             periods = [period for period in period_list]
         periods.append(options.get('date'))
+
+        if options.get('all_entries') is False:
+            domain = [('state','=','confirmed')]
+        else:
+            domain=[('state','not in',('rejected','canceled'))]
         
         for fund in options.get('funds'):
             if fund.get('selected',False)==True:
                 fund_list.append(fund.get('id',0))
         
-        if not fund_list:
-            fund_ids = self._get_filter_funds()
-            fund_list = fund_ids.ids
-        
-        if not fund_list:
-            fund_list = [0]
-
+        if fund_list:
+            domain += [('fund_id','in',fund_list)]
+            
         for contract in options.get('contract'):
             if contract.get('selected',False)==True:
                 contract_list.append(contract.get('id',0))
-        
-        if not contract_list:
-            contract_ids = self._get_filter_contract()
-            contract_list = contract_ids.ids
-        
-        if not contract_list:
-            contract_list = [0]
-
-        if options.get('all_entries') is False:
-            domain = ('state','=','confirmed')
-        else:
-            domain=('state','not in',('rejected','canceled'))
-        
+        if contract_list:
+            domain += [('contract_id','in',contract_list)]
+                    
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
-
-        records = self.env['purchase.sale.security'].search([('fund_id','in',fund_list),('contract_id','in',contract_list),domain,('invesment_date','>=',start),('invesment_date','<=',end)])
+        sale_domain = domain + [('invesment_date','>=',start),('invesment_date','<=',end)]
+        records = self.env['purchase.sale.security'].search(sale_domain)
+        
         # records = self.env['purchase.sale.security'].search([('state','=','confirmed'),('invesment_date','>=',start),('invesment_date','<=',end)])
         #records = self.env['purchase.sale.security'].search([('invesment_date','>=',start),('invesment_date','<=',end)])
+
         total_amount = 0
         total_title = 0
         total_val = 0
-        for rec in records:
-            if rec.movement:
-                if rec.movement == 'sell':
-                    total_title -= rec.title
-                    total_amount -= rec.amount
-                elif rec.movement == 'buy':
-                    total_title += rec.title
-                    total_amount += rec.amount
-                    
-                valuation = rec.title * rec.movement_price
-                total_val += valuation
-                 
-                lines.append({
-                    'id': 'hierarchy' + str(rec.id),
-                    'name': rec.fund_id and rec.fund_id.name or '',
-                    'columns': [{'name': rec.contract_id and rec.contract_id.name or ''}, 
-                                {'name': rec.fund_key}, 
-                                self._format({'name': rec.amount},figure_type='float',digit=2),
-                                {'class':'number','name':format(rec.title, ',d')},
-                                {'name': ''},
-                                self._format({'name': rec.movement_price},figure_type='float',digit=6),
-                                self._format({'name': valuation},figure_type='float',digit=2),
-                                ],
-                    'level': 3,
-                    'unfoldable': False,
-                    'unfolded': True,
-                })
-    
-                lines.append({
-                    'id': 'hierarchy_total' + str(rec.id),
-                    'name': '',
-                    'columns': [{'name': ''}, 
-                                {'name': 'Total'}, 
-                                self._format({'name': rec.amount},figure_type='float',digit=2),
-                                {'class':'number','name':format(rec.title, ',d')},
-                                {'class':'number','name':format(total_title, ',d')},
-                                {'name': ''},
-                                {'name': ''},
-                                ],
-                    'level': 1,
-                    'unfoldable': False,
-                    'unfolded': True,
-                })
 
+        fund_ids = records.mapped('fund_id')
+        for fund in fund_ids:
+            fund_total_amount = 0
+            fund_total_title = 0
+            fund_total_val = 0
+
+            lines.append({
+                'id': 'hierarchy_FUND' + str(fund.id),
+                'name': fund.name,
+                'columns': [{'name': ''}, 
+                            {'name': ''}, 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+        
+            for rec in records.filtered(lambda x:x.fund_id.id==fund.id):
+                if rec.movement:
+                    if rec.movement == 'sell':
+                        total_title -= rec.title
+                        total_amount -= rec.amount
+                        fund_total_title -= rec.title
+                        fund_total_amount -= rec.amount
+                        
+                    elif rec.movement == 'buy':
+                        total_title += rec.title
+                        total_amount += rec.amount
+                        fund_total_title += rec.title
+                        fund_total_amount += rec.amount
+                        
+                    valuation = rec.title * rec.movement_price
+                    total_val += valuation
+                    fund_total_val += valuation
+                    
+                    lines.append({
+                        'id': 'hierarchy' + str(rec.id),
+                        'name': rec.fund_id and rec.fund_id.name or '',
+                        'columns': [{'name': rec.contract_id and rec.contract_id.name or ''}, 
+                                    {'name': rec.fund_key}, 
+                                    self._format({'name': rec.amount},figure_type='float',digit=2),
+                                    {'class':'number','name':format(rec.title, ',d')},
+                                    {'name': ''},
+                                    self._format({'name': rec.movement_price},figure_type='float',digit=6),
+                                    self._format({'name': valuation},figure_type='float',digit=2),
+                                    ],
+                        'level': 3,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+        
+            lines.append({
+                'id': 'hierarchy_fund_total' + str(fund.id),
+                'name': 'Total',
+                'columns': [{'name': ''}, 
+                            {'name': ''}, 
+                            self._format({'name': fund_total_amount},figure_type='float',digit=2),
+                            {'class':'number','name':format(fund_total_title, ',d')},
+                            {'class':'number','name':format(fund_total_title, ',d')},
+                            {'name': ''},
+                            self._format({'name': fund_total_val},figure_type='float',digit=2),
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+    
         lines.append({
             'id': 'hierarchy_total',
             'name': 'Total General',
@@ -298,7 +318,8 @@ class SummaryofOperationInvestmentFundsBalances(models.AbstractModel):
                 date_end = datetime.strptime(str(period.get('date_to')),
                                          DEFAULT_SERVER_DATE_FORMAT).date()
 
-                records_fund = self.env['purchase.sale.security'].search([('fund_id','=',origin.id),('contract_id','in',contract_list),domain,('invesment_date','>=',date_start),('invesment_date','<=',date_end)])
+                origin_domain = domain + [('fund_id','=',origin.id),('invesment_date','>=',date_start),('invesment_date','<=',date_end)]
+                records_fund = self.env['purchase.sale.security'].search(origin_domain)
 
                 amount = 0
                 amount += sum(x.amount for x in records_fund)
@@ -379,7 +400,9 @@ class SummaryofOperationInvestmentFundsBalances(models.AbstractModel):
                 date_end = datetime.strptime(str(period.get('date_to')),
                                          DEFAULT_SERVER_DATE_FORMAT).date()
 
-                sale_currency_record = self.env['purchase.sale.security'].search([('currency_id','=',currency.id),('fund_id','in',fund_list),('contract_id','in',contract_list),domain,('invesment_date','>=',date_start),('invesment_date','<=',date_end)])
+                currency_domain = domain + [('currency_id','=',currency.id),('invesment_date','>=',date_start),('invesment_date','<=',date_end)]
+                
+                sale_currency_record = self.env['purchase.sale.security'].search(currency_domain)
 
                 amount = 0
                 amount += sum(x.amount for x in sale_currency_record)

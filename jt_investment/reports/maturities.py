@@ -180,11 +180,11 @@ class SummaryOfOperationMaturities(models.AbstractModel):
             {'name': _('Intereses')},
         ]
 
-    @api.model
-    def _get_filter_journals(self):
-        return self.env['account.journal'].search([('type','=','bank'),
-            ('company_id', 'in', self.env.user.company_ids.ids or [self.env.company.id])
-        ], order="company_id, name")
+#     @api.model
+#     def _get_filter_journals(self):
+#         return self.env['account.journal'].search([('type','=','bank'),
+#             ('company_id', 'in', self.env.user.company_ids.ids or [self.env.company.id])
+#         ], order="company_id, name")
 
     def _format(self, value,figure_type):
         if self.env.context.get('no_format'):
@@ -214,7 +214,8 @@ class SummaryOfOperationMaturities(models.AbstractModel):
         contract_list = []
         bank_list = []
         fund_list = []
-
+        journal_list = []
+        
         comparison = options.get('comparison')
         periods = []
         if comparison and comparison.get('filter') != 'no_comparison':
@@ -223,79 +224,114 @@ class SummaryOfOperationMaturities(models.AbstractModel):
             periods = [period for period in period_list]
         periods.append(options.get('date'))
 
+        if options.get('all_entries') is False:
+            cetes_domain=[('state','=','confirmed')]
+            udibonos_domain = [('state','=','confirmed')]
+            bonds_domain = [('state','=','confirmed')]
+            will_pay_domain = [('state','=','confirmed')]
+            sale_domain = [('state','=','confirmed')]
+            productive_domain = [('state','=','confirmed')]
+        else:
+            cetes_domain=[('state','not in',('rejected','canceled'))]
+            udibonos_domain = [('state','not in',('rejected','canceled'))]
+            bonds_domain = [('state','not in',('rejected','canceled'))]
+            will_pay_domain = [('state','not in',('rejected','canceled'))]
+            sale_domain = [('state','not in',('rejected','canceled'))]
+            productive_domain = [('state','not in',('rejected','canceled'))]
 
+        start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+        
         for fund in options.get('funds'):
             if fund.get('selected',False)==True:
                 fund_list.append(fund.get('id',0))
-        
-        if not fund_list:
-            fund_ids = self._get_filter_funds()
-            fund_list = fund_ids.ids
-        
-        if not fund_list:
-            fund_list = [0]
+        if fund_list:
+            cetes_domain += [('fund_id','in',fund_list)]
+            udibonos_domain += [('fund_id','in',fund_list)]
+            bonds_domain += [('fund_id','in',fund_list)]
+            will_pay_domain += [('fund_id','in',fund_list)]
+            sale_domain += [('fund_id','in',fund_list)]
+            productive_domain += [('fund_id','in',fund_list)]
+            
+#         if not fund_list:
+#             fund_ids = self._get_filter_funds()
+#             fund_list = fund_ids.ids
+#         
+#         if not fund_list:
+#             fund_list = [0]
 
         for bank in options.get('bank'):
             if bank.get('selected',False)==True:
                 bank_list.append(bank.get('id',0))
         
-        if not bank_list:
-            bank_ids = self._get_filter_bank()
-            bank_list = bank_ids.ids
-        
-        if not bank_list:
-            bank_list = [0]
+        if bank_list:
+            cetes_domain += [('bank_id','in',bank_list)]
+            udibonos_domain += [('bank_id','in',bank_list)]
+            bonds_domain += [('bank_id','in',bank_list)]
+            will_pay_domain += [('bank_id','in',bank_list)]
+            sale_domain += [('journal_id.bank_id','in',bank_list)]
+            productive_domain += [('journal_id.bank_id','in',bank_list)]
+            
+#         if not bank_list:
+#             bank_ids = self._get_filter_bank()
+#             bank_list = bank_ids.ids
+#         
+#         if not bank_list:
+#             bank_list = [0]
 
         for select_curreny in options.get('currency'):
             if select_curreny.get('selected',False)==True:
                 currency_list.append(select_curreny.get('id',0))
 
-        if not currency_list:
-            currency_id = self._get_filter_currency()
-            currency_list = currency_id.ids
-        
-        if not currency_list:
-            currency_list = [0]
+        if currency_list:
+            cetes_domain += [('currency_id','in',currency_list)]
+            udibonos_domain += [('currency_id','in',currency_list)]
+            bonds_domain += [('currency_id','in',currency_list)]
+            will_pay_domain += [('currency_id','in',currency_list)]
+            sale_domain += [('currency_id','in',currency_list)]
+            productive_domain += [('currency_id','in',currency_list)]
+            
 
         for contract in options.get('contract'):
             if contract.get('selected',False)==True:
                 contract_list.append(contract.get('id',0))
-        
-        if not contract_list:
-            contract_id = self._get_filter_contract()
-            contract_list = contract_id.ids
-        
-        if not contract_list:
-            contract_list = [0]
-
-        if options.get('all_entries') is False:
-            domain=[('state','=','confirmed')]
-        else:
-            domain=[('state','not in',('rejected','canceled'))]
-        
-        journal = self._get_options_journals_domain(options)
-        if journal:
-            domain+=journal
+        if contract_list:
+            cetes_domain += [('contract_id','in',contract_list)]
+            udibonos_domain += [('contract_id','in',contract_list)]
+            bonds_domain += [('contract_id','in',contract_list)]
+            will_pay_domain += [('contract_id','in',contract_list)]
+            sale_domain += [('contract_id','in',contract_list)]
+            productive_domain += [('contract_id','in',contract_list)]
             
-        start = datetime.strptime(
-            str(options['date'].get('date_from')), '%Y-%m-%d').date()
-        end = datetime.strptime(
-            options['date'].get('date_to'), '%Y-%m-%d').date()
 
-        cetes_domain = domain + [('fund_id','in',fund_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('currency_id','in',currency_list),('date_time','>=',start),('date_time','<=',end)]
-        udibonos_domain = domain + [('fund_id','in',fund_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('currency_id','in',currency_list),('date_time','>=',start),('date_time','<=',end)]
-        bonds_domain = domain + [('fund_id','in',fund_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('currency_id','in',currency_list),('date_time','>=',start),('date_time','<=',end)]
-        will_pay_domain = domain + [('fund_id','in',fund_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('currency_id','in',currency_list),('date_time','>=',start),('date_time','<=',end)]
-        sale_domain = domain + [('fund_id','in',fund_list),('journal_id.bank_id','in',bank_list),('contract_id','in',contract_list),('currency_id','in',currency_list),('invesment_date','>=',start),('invesment_date','<=',end)]
-        productive_domain = domain + [('fund_id','in',fund_list),('journal_id.bank_id','in',bank_list),('contract_id','in',contract_list),('currency_id','in',currency_list),('invesment_date','>=',start),('invesment_date','<=',end)]
+        for journal in options.get('journals'):
+            if journal.get('selected',False)==True:
+                journal_list.append(journal.get('id',0))
+        if journal_list:
+            cetes_domain += [('new_journal_id','in',journal_list)]
+            udibonos_domain += [('new_journal_id','in',journal_list)]
+            bonds_domain += [('new_journal_id','in',journal_list)]
+            will_pay_domain += [('new_journal_id','in',journal_list)]
+            sale_domain += [('new_journal_id','in',journal_list)]
+            productive_domain += [('new_journal_id','in',journal_list)]
+            
+
+        cetes_domain_1 =cetes_domain + [('date_time','>=',start),('date_time','<=',end)]
+        udibonos_domain_1 = udibonos_domain + [('date_time','>=',start),('date_time','<=',end)]
+        bonds_domain_1 =bonds_domain + [('date_time','>=',start),('date_time','<=',end)]
+        will_pay_domain_1 =will_pay_domain + [('date_time','>=',start),('date_time','<=',end)]
+        sale_domain_1 =sale_domain + [('invesment_date','>=',start),('invesment_date','<=',end)]
+        productive_domain_1 =productive_domain + [('invesment_date','>=',start),('invesment_date','<=',end)]
+                    
+        cetes_records = self.env['investment.cetes'].search(cetes_domain_1,order='currency_id')
+        udibonos_records = self.env['investment.udibonos'].search(udibonos_domain_1,order='currency_id')
+        bonds_records = self.env['investment.bonds'].search(bonds_domain_1,order='currency_id')
+        will_pay_records = self.env['investment.will.pay'].search(will_pay_domain_1,order='currency_id')
+        sale_security_ids = self.env['purchase.sale.security'].search(sale_domain_1,order='currency_id')
+        productive_ids = self.env['investment.investment'].search(productive_domain_1,order='currency_id')
         
-        cetes_records = self.env['investment.cetes'].search(cetes_domain,order='currency_id')
-        udibonos_records = self.env['investment.udibonos'].search(udibonos_domain,order='currency_id')
-        bonds_records = self.env['investment.bonds'].search(bonds_domain,order='currency_id')
-        will_pay_records = self.env['investment.will.pay'].search(will_pay_domain,order='currency_id')
-        sale_security_ids = self.env['purchase.sale.security'].search(sale_domain,order='currency_id')
-        productive_ids = self.env['investment.investment'].search(productive_domain,order='currency_id')
-                
         total_investment = 0
 
         #==== Sale Security========#        
@@ -563,12 +599,12 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                 date_end = datetime.strptime(str(period.get('date_to')),
                                          DEFAULT_SERVER_DATE_FORMAT).date()
 
-                cetes_domain_period = domain + [('fund_id','in',fund_list),('bank_id','=',journal.id),('contract_id','in',contract_list),('currency_id','in',currency_list),('date_time','>=',date_start),('date_time','<=',date_end)]
-                udibonos_domain_period = domain + [('fund_id','in',fund_list),('bank_id','=',journal.id),('contract_id','in',contract_list),('currency_id','in',currency_list),('date_time','>=',date_start),('date_time','<=',date_end)]
-                bonds_domain_period = domain + [('fund_id','in',fund_list),('bank_id','=',journal.id),('contract_id','in',contract_list),('currency_id','in',currency_list),('date_time','>=',date_start),('date_time','<=',date_end)]
-                will_pay_domain_period = domain + [('fund_id','in',fund_list),('bank_id','=',journal.id),('contract_id','in',contract_list),('currency_id','in',currency_list),('date_time','>=',date_start),('date_time','<=',date_end)]
-                sale_domain_period = domain + [('fund_id','in',fund_list),('journal_id.bank_id','=',journal.id),('contract_id','in',contract_list),('currency_id','in',currency_list),('invesment_date','>=',date_start),('invesment_date','<=',date_end)]
-                productive_domain_period = domain + [('fund_id','in',fund_list),('journal_id.bank_id','=',journal.id),('contract_id','in',contract_list),('currency_id','in',currency_list),('invesment_date','>=',date_start),('invesment_date','<=',date_end)]
+                cetes_domain_period = cetes_domain + [('bank_id','=',journal.id),('date_time','>=',date_start),('date_time','<=',date_end)]
+                udibonos_domain_period = udibonos_domain + [('bank_id','=',journal.id),('date_time','>=',date_start),('date_time','<=',date_end)]
+                bonds_domain_period =bonds_domain + [('bank_id','=',journal.id),('date_time','>=',date_start),('date_time','<=',date_end)]
+                will_pay_domain_period =will_pay_domain + [('bank_id','=',journal.id),('date_time','>=',date_start),('date_time','<=',date_end)]
+                sale_domain_period =sale_domain + [('journal_id.bank_id','=',journal.id),('invesment_date','>=',date_start),('invesment_date','<=',date_end)]
+                productive_domain_period =productive_domain + [('journal_id.bank_id','=',journal.id),('invesment_date','>=',date_start),('invesment_date','<=',date_end)]
                 
                 cetes_bank_records = self.env['investment.cetes'].search(cetes_domain_period,order='currency_id')
                 udibonos_bank_records = self.env['investment.udibonos'].search(udibonos_domain_period,order='currency_id')
@@ -643,8 +679,8 @@ class SummaryOfOperationMaturities(models.AbstractModel):
         origin_ids += udibonos_records.mapped('fund_id')        
         origin_ids += bonds_records.mapped('fund_id')
         origin_ids += will_pay_records.mapped('fund_id')
-        origin_ids += will_pay_records.mapped('fund_id')
-        origin_ids += will_pay_records.mapped('fund_id')
+        origin_ids += sale_security_ids.mapped('fund_id')
+        origin_ids += productive_ids.mapped('fund_id')
 
         if origin_ids:
             origins = list(set(origin_ids.ids))
@@ -662,13 +698,12 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                 date_end = datetime.strptime(str(period.get('date_to')),
                                          DEFAULT_SERVER_DATE_FORMAT).date()
 
-
-                cetes_fund_domain = domain + [('fund_id','=',origin.id),('bank_id','in',bank_list),('contract_id','in',contract_list),('currency_id','in',currency_list),('date_time','>=',date_start),('date_time','<=',date_end)]
-                udibonos_fund_domain = domain + [('fund_id','=',origin.id),('bank_id','in',bank_list),('contract_id','in',contract_list),('currency_id','in',currency_list),('date_time','>=',date_start),('date_time','<=',date_end)]
-                bonds_fund_domain = domain + [('fund_id','=',origin.id),('bank_id','in',bank_list),('contract_id','in',contract_list),('currency_id','in',currency_list),('date_time','>=',date_start),('date_time','<=',date_end)]
-                will_pay_fund_domain = domain + [('fund_id','=',origin.id),('bank_id','in',bank_list),('contract_id','in',contract_list),('currency_id','in',currency_list),('date_time','>=',date_start),('date_time','<=',date_end)]
-                sale_fund_domain = domain + [('fund_id','=',origin.id),('journal_id.bank_id','in',bank_list),('contract_id','in',contract_list),('currency_id','in',currency_list),('invesment_date','>=',date_start),('invesment_date','<=',date_end)]
-                productive_fund_domain = domain + [('fund_id','=',origin.id),('journal_id.bank_id','in',bank_list),('contract_id','in',contract_list),('currency_id','in',currency_list),('invesment_date','>=',date_start),('invesment_date','<=',date_end)]
+                cetes_fund_domain = cetes_domain + [('fund_id','=',origin.id),('date_time','>=',date_start),('date_time','<=',date_end)]
+                udibonos_fund_domain = udibonos_domain + [('fund_id','=',origin.id),('date_time','>=',date_start),('date_time','<=',date_end)]
+                bonds_fund_domain =bonds_domain + [('fund_id','=',origin.id),('date_time','>=',date_start),('date_time','<=',date_end)]
+                will_pay_fund_domain =will_pay_domain + [('fund_id','=',origin.id),('date_time','>=',date_start),('date_time','<=',date_end)]
+                sale_fund_domain =sale_domain + [('fund_id','=',origin.id),('invesment_date','>=',date_start),('invesment_date','<=',date_end)]
+                productive_fund_domain =productive_domain + [('fund_id','=',origin.id),('invesment_date','>=',date_start),('invesment_date','<=',date_end)]
                 
                 cetes_fund_records = self.env['investment.cetes'].search(cetes_fund_domain,order='currency_id')
                 udibonos_fund_records = self.env['investment.udibonos'].search(udibonos_fund_domain,order='currency_id')
@@ -771,12 +806,13 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                 date_end = datetime.strptime(str(period.get('date_to')),
                                          DEFAULT_SERVER_DATE_FORMAT).date()
 
-                cetes_domain_period = domain + [('fund_id','in',fund_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('currency_id','=',currency.id),('date_time','>=',date_start),('date_time','<=',date_end)]
-                udibonos_domain_period = domain + [('fund_id','in',fund_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('currency_id','=',currency.id),('date_time','>=',date_start),('date_time','<=',date_end)]
-                bonds_domain_period = domain + [('fund_id','in',fund_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('currency_id','=',currency.id),('date_time','>=',date_start),('date_time','<=',date_end)]
-                will_pay_domain_period = domain + [('fund_id','in',fund_list),('bank_id','in',bank_list),('contract_id','in',contract_list),('currency_id','=',currency.id),('date_time','>=',date_start),('date_time','<=',date_end)]
-                sale_domain_period = domain + [('fund_id','in',fund_list),('journal_id.bank_id','in',bank_list),('contract_id','in',contract_list),('currency_id','=',currency.id),('invesment_date','>=',date_start),('invesment_date','<=',date_end)]
-                productive_domain_period = domain + [('fund_id','in',fund_list),('journal_id.bank_id','in',bank_list),('contract_id','in',contract_list),('currency_id','=',currency.id),('invesment_date','>=',date_start),('invesment_date','<=',date_end)]
+                cetes_domain_period = cetes_domain + [('currency_id','=',currency.id),('date_time','>=',date_start),('date_time','<=',date_end)]
+                udibonos_domain_period = udibonos_domain + [('currency_id','=',currency.id),('date_time','>=',date_start),('date_time','<=',date_end)]
+                bonds_domain_period =bonds_domain + [('currency_id','=',currency.id),('date_time','>=',date_start),('date_time','<=',date_end)]
+                will_pay_domain_period =will_pay_domain + [('currency_id','=',currency.id),('date_time','>=',date_start),('date_time','<=',date_end)]
+                sale_domain_period =sale_domain + [('currency_id','=',currency.id),('invesment_date','>=',date_start),('invesment_date','<=',date_end)]
+                productive_domain_period =productive_domain + [('currency_id','=',currency.id),('invesment_date','>=',date_start),('invesment_date','<=',date_end)]
+
                 cetes_bank_records = self.env['investment.cetes'].search(cetes_domain_period,order='currency_id')
                 udibonos_bank_records = self.env['investment.udibonos'].search(udibonos_domain_period,order='currency_id')
                 bonds_bank_records = self.env['investment.bonds'].search(bonds_domain_period,order='currency_id')

@@ -159,12 +159,13 @@ class ReportOfInvestmentFunds(models.AbstractModel):
 
 
         sale_domain = domain + [('fund_id','in',fund_list),('invesment_date','>=',start),('invesment_date','<=',end)]
-        records = self.env['purchase.sale.security'].search(sale_domain)
-        total_amount = 0
-        total_title = 0
-        total_val = 0
+        records = self.env['purchase.sale.security'].search(sale_domain,order='invesment_date')
         fund_ids = records.mapped('fund_id')
         for fund in fund_ids:
+            total_amount = 0
+            total_title = 0
+            total_val = 0
+            
             lines.append({
                 'id': 'hierarchy_fund' + str(fund.id),
                 'name': fund.name,
@@ -219,22 +220,23 @@ class ReportOfInvestmentFunds(models.AbstractModel):
                     'unfolded': True,
                 })
             
-#         lines.append({
-#             'id': 'hierarchy_total',
-#             'name': 'Total General',
-#             'columns': [{'name': ''}, 
-#                         {'name': ''}, 
-#                         self._format({'name': total_amount},figure_type='float',digit=2),
-#                         {'class':'number','name':format(total_title, ',d')},
-#                         {'class':'number','name':format(total_title, ',d')},
-#                          {'name': ''},
-#                         self._format({'name': total_val},figure_type='float',digit=2),
-#                         
-#                         ],
-#             'level': 1,
-#             'unfoldable': False,
-#             'unfolded': True,
-#         })
+            lines.append({
+                'id': 'hierarchy_total',
+                'name': 'Total General',
+                'columns': [{'name': ''}, 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''}, 
+                            self._format({'name': total_amount},figure_type='float',digit=2),
+                            {'class':'number','name':format(total_title, ',d')},
+                            {'class':'number','name':format(total_title, ',d')},
+                            self._format({'name': total_val},figure_type='float',digit=2),
+                            {'name': ''},                             
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
 
         #================ Origin Data ====================#
         period_name = [{'name': 'Tipo de recurso'}]

@@ -200,74 +200,105 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
         opt_lines += records.filtered(lambda x:x.type_of_operation == 'withdrawal_cancellation')
         opt_lines += records.filtered(lambda x:x.type_of_operation == 'withdrawal_closure')
          
-        
+        opt_lines.sorted('date_required')
         total_capital = 0
         final_amount = 0
         total_entradas = 0
         total_salidas  = 0
-        for rec in opt_lines:
-            capital = 0
-            entradas = 0
-            salidas  = 0
-            
-            month_name = self.get_month_name(rec.date_required.month)
-            if rec.type_of_operation == 'open_bal':
-                capital = rec.amount
-                final_amount += rec.amount
-                total_capital += rec.amount
-            if rec.type_of_operation in ('increase','increase_by_closing'):
-                entradas = rec.amount
-                total_entradas += rec.amount
-                final_amount += rec.amount
-            if rec.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure'):
-                salidas = rec.amount
-                total_salidas += rec.amount
-                final_amount -= rec.amount
-            
+        
+        bank_account_ids = opt_lines.mapped('bank_account_id')
+        for bank in bank_account_ids:
+            total_avg_final = 0
             lines.append({
-                'id': 'hierarchy' + str(rec.id),
-                'name': rec.date_required.day,
-                'columns': [{'name': month_name}, 
-                            {'name': rec.date_required.day},
-                            {'name': rec.bank_account_id and rec.bank_account_id.name or ''},
-                            {'name': rec.investment_fund_id and rec.investment_fund_id.fund_id and rec.investment_fund_id.fund_id.name or ''},
-                            {'name': rec.fund_type and rec.fund_type.name or ''},
-                            {'name': rec.agreement_type_id and rec.agreement_type_id.name or ''},
-                            {'name': rec.base_collabaration_id and rec.base_collabaration_id.name or ''},
-                            self._format({'name': rec.investment_id.currency_rate},figure_type='float',digit=4),
-                            self._format({'name': capital},figure_type='float',digit=2),
-                            self._format({'name': entradas},figure_type='float',digit=2),
-                            self._format({'name': salidas},figure_type='float',digit=2),
-                            self._format({'name': final_amount},figure_type='float',digit=2),
-                            self._format({'name': 0.0},figure_type='float',digit=2),
+                'id': 'hierarchy_total',
+                'name': bank.name,
+                'columns': [{'name': ''}, 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
                             ],
-                'level': 3,
+                'level': 1,
                 'unfoldable': False,
                 'unfolded': True,
             })
-
-        lines.append({
-            'id': 'hierarchy_total',
-            'name': 'Total',
-            'columns': [{'name': ''}, 
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        self._format({'name': total_capital},figure_type='float',digit=2),
-                        self._format({'name': total_entradas},figure_type='float',digit=2),
-                        self._format({'name': total_salidas},figure_type='float',digit=2),
-                        self._format({'name': final_amount},figure_type='float',digit=2),
-                        self._format({'name': 0.0},figure_type='float',digit=2),
-                        ],
-            'level': 1,
-            'unfoldable': False,
-            'unfolded': True,
-        })
-
+              
+            for rec in opt_lines.filtered(lambda x:x.bank_account_id.id == bank.id).sorted('date_required'):
+                capital = 0
+                entradas = 0
+                salidas  = 0
+                
+                month_name = self.get_month_name(rec.date_required.month)
+                if rec.type_of_operation == 'open_bal':
+                    capital = rec.amount
+                    final_amount += rec.amount
+                    total_capital += rec.amount
+                if rec.type_of_operation in ('increase','increase_by_closing'):
+                    entradas = rec.amount
+                    total_entradas += rec.amount
+                    final_amount += rec.amount
+                if rec.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure'):
+                    salidas = rec.amount
+                    total_salidas += rec.amount
+                    final_amount -= rec.amount
+                p_rate = 0
+                if rec.date_required:
+                    period_rate_id = self.env['investment.period.rate'].search([('rate_date','=',rec.date_required),('product_type','=','TIIE')],limit=1)
+                    if period_rate_id:
+                        p_rate = period_rate_id.rate_days_28
+                total_avg_final += final_amount
+                
+                lines.append({
+                    'id': 'hierarchy' + str(rec.id),
+                    'name': rec.date_required.day,
+                    'columns': [{'name': month_name}, 
+                                {'name': rec.date_required.day},
+                                {'name': rec.bank_account_id and rec.bank_account_id.name or ''},
+                                {'name': rec.investment_fund_id and rec.investment_fund_id.fund_id and rec.investment_fund_id.fund_id.name or ''},
+                                {'name': rec.fund_type and rec.fund_type.name or ''},
+                                {'name': rec.agreement_type_id and rec.agreement_type_id.name or ''},
+                                {'name': rec.base_collabaration_id and rec.base_collabaration_id.name or ''},
+                                self._format({'name': p_rate},figure_type='float',digit=4),
+                                self._format({'name': capital},figure_type='float',digit=2),
+                                self._format({'name': entradas},figure_type='float',digit=2),
+                                self._format({'name': salidas},figure_type='float',digit=2),
+                                self._format({'name': final_amount},figure_type='float',digit=2),
+                                self._format({'name': total_avg_final/rec.date_required.day},figure_type='float',digit=2),
+                                ],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+    
+            lines.append({
+                'id': 'hierarchy_total',
+                'name': 'Total',
+                'columns': [{'name': ''}, 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            self._format({'name': total_capital},figure_type='float',digit=2),
+                            self._format({'name': total_entradas},figure_type='float',digit=2),
+                            self._format({'name': total_salidas},figure_type='float',digit=2),
+                            self._format({'name': final_amount},figure_type='float',digit=2),
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
 
         #===================== Bank Data ==========#
         period_name = [{'name': 'Institución'}]

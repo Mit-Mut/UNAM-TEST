@@ -17,7 +17,7 @@ class ProjectRegistry(models.Model):
     visibility = fields.Selection(
         [('due', 'due'), ('expire', 'expire')], 'visibility')
     program_code = fields.Many2one('program.code', string='Program Code')
-    rfc = fields.Char("RFC of the person in charge")
+    rfc = fields.Char("RFC of the person in charge",related="responsible_name.rfc")
     allocated_amount = fields.Monetary("Allocated Amount")
     approved_amount = fields.Monetary("Approved Amount")
     trade_number = fields.Char("Trade Number")
@@ -136,10 +136,10 @@ class ProjectRegistry(models.Model):
             result.append((project.id, name))
         return result
 
-    @api.onchange('user_id')
-    def onchnage_user_id(self):
-        if self.user_id:
-            self.rfc = self.user_id.partner_id.vat
+    # @api.onchange('user_id')
+    # def onchnage_user_id(self):
+    #     if self.user_id:
+    #         self.rfc = self.user_id.partner_id.vat
 
     @api.onchange('bank_account_id')
     def onchnage_bank_account_id(self):

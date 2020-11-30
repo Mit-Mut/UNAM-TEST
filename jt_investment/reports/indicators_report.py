@@ -802,12 +802,27 @@ class IndicatorsReport(models.AbstractModel):
                     total_rate = sum(x.rate for x in currency_rates)           
                     total_rec = len(currency_rates)
                     avg = total_rate/total_rec
-                    currency_col += [self._format({'name': start_month_rec.rate},figure_type='float'),
-                                    self._format({'name': end_month_rec.rate},figure_type='float'),
+                    if avg != 0:
+                        avg = 1/avg
+                    im = start_month_rec.rate
+                    if start_month_rec.rate != 0:
+                        im = 1/im
+                    em = end_month_rec.rate
+                    if end_month_rec.rate != 0:
+                        em = 1/em
+                    maxr = max_rate_364_rec.rate
+                    if max_rate_364_rec.rate != 0:
+                        maxr = 1/maxr
+                    minr = min_rate_364_rec.rate
+                    if min_rate_364_rec.rate != 0:
+                        minr = 1/minr
+                        
+                    currency_col += [self._format({'name': im},figure_type='float'),
+                                    self._format({'name': em},figure_type='float'),
                                     {'name': max_rate_364_rec.name},
-                                    self._format({'name': max_rate_364_rec.rate},figure_type='float'),
+                                    self._format({'name': maxr},figure_type='float'),
                                     {'name': min_rate_364_rec.name},
-                                    self._format({'name': min_rate_364_rec.rate},figure_type='float'),
+                                    self._format({'name': minr},figure_type='float'),
                                     self._format({'name': avg},figure_type='float'),
                                     ]
                      

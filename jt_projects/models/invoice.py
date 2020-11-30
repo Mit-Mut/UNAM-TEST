@@ -35,10 +35,12 @@ class AccountMove(models.Model):
     foreign_currency_amount = fields.Monetary('Foreign currency amount')
     project_number_id = fields.Many2one(
         'project.project', string='Project Number')
+    is_papiit_project = fields.Boolean(
+        related='project_number_id.is_papiit_project', string='Is Papiit Project')
     agreement_number = fields.Many2one(
         related='project_number_id.base_number', string='Agreement Number')
     stage = fields.Char(
-        related='project_number_id.stage_identifier', string='Stage')
+        related='project_number_id.stage_identifier', string='Stage',readonly=False)
     excercise = fields.Char('excercise')
     invoice_vault_folio = fields.Char('Invoice vault folio')
     req_registration_date = fields.Date('Request Registration Date')
@@ -46,9 +48,10 @@ class AccountMove(models.Model):
         [('accept', 'Accepted'), ('reject', 'Rejected')], string='Status')
     line = fields.Integer("Header")
     previous = fields.Monetary('Previous')
+    agreement_type_id = fields.Many2one('agreement.type',string="Agreement Type")
 
     # More info Tab
-    responsible_category_key = fields.Char("Responsible category key")
+    # responsible_category_key = fields.Char("Responsible category key")
     responsible_job_position = fields.Many2one(
         'hr.job', 'Responsible job position')
 
@@ -64,7 +67,7 @@ class AccountMoveLine(models.Model):
     retIVA = fields.Char('RetIVA')
     line = fields.Integer("Line")
     stage = fields.Char(related='move_id.stage', string='Stage')
-    excercise = fields.Char(related='move_id.excercise', string='excercise')
+    excercise = fields.Char(related='move_id.excercise', string='excercise',readonly=False)
     operation_type_id = fields.Many2one('operation.type',
                                         related='move_id.operation_type_id', string="Operation Type")
     operation_type_name = fields.Char(

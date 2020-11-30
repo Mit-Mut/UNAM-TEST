@@ -28,3 +28,5 @@ from . import cumulative_comparison
 from . import accounting_and_bank_account_balances
 from . import integration_curr_exp_project
 from . import remaining_resources
+from . import upa_remaining_resources
+from . import integration_of_project_budget_resources

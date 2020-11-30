@@ -64,7 +64,7 @@
                                 <field name="agreement_number" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="agreement_name" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="ext_sponsor" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="tech_support" invisible="1" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="tech_support"  attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="admin_manager" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="reason_for_rejection" attrs="{'readonly': [('status', '!=', 'eraser')],'invisible':[('status','!=','reject')]}"/>                                                                
                             </group>

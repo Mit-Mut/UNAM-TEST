@@ -119,21 +119,21 @@
 
 
         <!--Remnant Resource Integration Configuration-->
-        <record id="action_resource_remaining_config" model="ir.actions.client">
+        <!-- <record id="action_resource_remaining_config" model="ir.actions.client">
             <field name="name">Integration of remaining resources</field>
             <field name="tag">account_report</field>
             <field name="context" eval="{'model':'jt_projects.integration.remaining.resources'}" />
-        </record>
+        </record> -->
 
 
         <!--Remnant Resource Integration Configuration -->
-        <menuitem
+        <!-- <menuitem
             id="menu_integration_of_remaining_resource"
             name="Integration of remaining resources "
             parent="jt_projects.conacyt_submenu"
             action="action_resource_remaining_config"
             sequence="8"
-        />
+        /> -->
 
         <menuitem
             id="upa_submenu"
@@ -173,43 +173,74 @@
             sequence="11"
         />
 
+
+        <record id="action_budget_resources_remnants" model="ir.actions.client">
+            <field name="name">Integration by program of budgetary resources and remnants</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model':'jt_projects.budget.resources.remanats'}"/>
+        </record>
+
         <menuitem
             id="menu_integration_of_budgetary_resources_remnants"
             name="Integration by program of budgetary resources and remnants"
             parent="jt_projects.upa_submenu"
-            action="action_resource_remaining_config"
+            action="action_budget_resources_remnants"
             sequence="12"
         />
+
+        <record id="action_integration_of_remnants" model="ir.actions.client">
+            <field name="name">Integration of remnants by PAPIIT, PAPIME, INFOCAB Stage</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model':'jt_projects.integration.remnants'}"/>
+        </record>
 
         <menuitem
             id="menu_integration_of_remnants_papiit_papime_infocab"
             name="Integration of remnants by PAPIIT, PAPIME, INFOCAB Stage"
             parent="jt_projects.upa_submenu"
-            action="action_resource_remaining_config"
+            action="action_integration_of_remnants"
             sequence="13"
         />
+
+        <record id="action_airplane_ticket_papiit" model="ir.actions.client">
+            <field name="name">Integration airplane tickets PAPIIT</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model':'jt_projects.integration.airplane.ticket'}"/>
+        </record>
 
         <menuitem
             id="menu_integration_airplane_tickets_papiit"
             name="Integration airplane tickets PAPIIT"
             parent="jt_projects.upa_submenu"
-            action="action_resource_remaining_config"
+            action="action_airplane_ticket_papiit"
             sequence="14"
         />
+
+        <record id="action_integration_papiit_pime_infocab_iacod" model="ir.actions.client">
+            <field name="name">Integration of PAPIIT, PAPIME, INFOCAB, IACOD editions resources</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model':'jt_projects.integration.papiit.papime.infocab.iacod'}"/>
+        </record>
 
         <menuitem
             id="menu_integration_of_papiit_papime_infocab_iacod"
             name="Integration of PAPIIT, PAPIME, INFOCAB, IACOD editions resources"
             parent="jt_projects.upa_submenu"
-            action="action_resource_remaining_config"
+            action="action_integration_papiit_pime_infocab_iacod"
             sequence="15"
         />
+
+        <record id="action_integration_of_remaining_resources_by_program" model="ir.actions.client">
+            <field name="name">Integration of remaining resources by program PAPIIT, PAPIME, INFOCAB</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model':'jt_projects.integration.remaining.resources.program'}"/>
+        </record>
 
         <menuitem
             id="menu_integration_of_remaining_resource_papiit_pime_infocab"
             name="Integration of remaining resources by program PAPIIT, PAPIME, INFOCAB"
             parent="jt_projects.upa_submenu"
-            action="action_resource_remaining_config"
+            action="action_integration_of_remaining_resources_by_program"
             sequence="16"
         />
 

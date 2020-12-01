@@ -36,6 +36,7 @@ class BasesCollabration(models.Model):
         result = super(BasesCollabration, self).reject_finance()
         if self.project_request_id:
             self.project_request_id.reject_finance()
+            self.project_request_id.reason_rejection = self.reason_rejection
 
         return result
 

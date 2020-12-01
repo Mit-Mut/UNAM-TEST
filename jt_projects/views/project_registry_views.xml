@@ -49,11 +49,11 @@
 
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only" string="Project Name"/>
-                            <h1><field name="name"/></h1>
+                            <h1><field name="name" attrs="{'readonly': [('status', '!=', 'open')]}"/></h1>
                         </div>
                         <group>
                             <group>
-                            	
+                            	<field name="program_code" attrs="{'readonly': [('status', '!=', 'open')],'invisible':[('is_papiit_project','=',False)]}" />
                                 <field name="project_type" attrs="{'readonly': [('status', '!=', 'open')],'invisible':[('is_papiit_project','=',True)]}"/>
                                 <field name="stage_identifier_id" attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="stage_identifier" invisible="1" attrs="{'readonly': [('status', '!=', 'open')]}"/>
@@ -61,7 +61,6 @@
                                 <field name="project_type_identifier_id" attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="project_type_identifier" invisible="1" attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="number" attrs="{'readonly': [('status', '!=', 'open')]}"/>
-                                <field name="program_code" attrs="{'readonly': [('status', '!=', 'open')],'invisible':[('is_papiit_project','=',False)]}" />
                                 <field name="responsible_name" attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="rfc" attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="is_related_agreement" attrs="{'invisible':[('is_papiit_project','=',False)],'readonly': [('status', '!=', 'open')]}"/>

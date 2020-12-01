@@ -30,3 +30,8 @@ from . import integration_curr_exp_project
 from . import remaining_resources
 from . import upa_remaining_resources
 from . import integration_of_project_budget_resources
+from . import integration_program_budgetary_resource_remanants
+from . import integration_of_remnants
+from . import integration_airplan_ticket_papiit
+from . import Integration_of_papiit_papime_infocab_iacod_resource
+from . import Integration_of_remaining_resources_by_program

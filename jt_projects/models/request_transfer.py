@@ -10,8 +10,8 @@ class RequestTransfer(models.Model):
     invoice = fields.Text('Invoice', readonly=True,
                           default='New')
     application_date = fields.Date('Application Date')
-    # request_area = fields.Text('Area requesting the transfer')
-    request_area = fields.Many2one('dependency')
+    request_area = fields.Text('Area requesting the transfer')
+    # request_area = fields.Many2one('dependency')
     user_id = fields.Many2one(
         'res.users', string='Requesting User', default=lambda self: self.env.user.id)
     destination_journal_id = fields.Many2one(
@@ -39,6 +39,9 @@ class RequestTransfer(models.Model):
                                ('done', 'Done'),
                                ('canceled', 'Canceled')], string="Status", default="draft")
 
+
+    reason_rejection = fields.Text("Reason for Rejection")
+
     def generate_request(self):
         self.status = 'requested'
         record = {
@@ -50,7 +53,7 @@ class RequestTransfer(models.Model):
             'date': self.application_date,
             'user_id': self.user_id.id,
             'state': self.status,
-            'unit_req_transfer_id': self.request_area.id,
+            # 'unit_req_transfer_id': self.request_area.id,
             'project_request_id': self.id,
             'amount': self.amount_req_tranfer,
             'date_required': self.handover_date,

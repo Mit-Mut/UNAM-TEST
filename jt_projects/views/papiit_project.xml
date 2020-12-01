@@ -7,7 +7,8 @@
             <field name="view_mode">tree,kanban,form</field>
             <field name="domain">[('is_papiit_project','=',True)]</field>
             <field name="search_view_id" ref="project.view_project_project_filter"/>
-            <field name="context">{'default_is_papiit_project':True,'show_for_agreement':1}</field>
+            <field name="context">{'default_is_papiit_project':True,
+                'default_is_related_agreement':True,'show_for_agreement':1}</field>
         </record>
 
         <record id="project_registry_papiit_action_tree" model="ir.actions.act_window.view">

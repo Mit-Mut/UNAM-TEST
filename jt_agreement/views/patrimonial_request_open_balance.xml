@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
-
         <record id="view_req_open_balance_patrimonial_tree" model="ir.ui.view">
             <field name="name">Opening Balance patrimonial List view</field>
             <field name="model">request.open.balance</field>
@@ -54,11 +52,10 @@
                                 <field name="origin_journal_id" invisible="1" />
                                 <field name="destination_journal_id" invisible="1"/>
                                 <field name="bases_collaboration_id"  invisible="1"/>
-                                <field name="trust_id" invisible="1"/>
-                                <field name="trust_beneficiary_ids" invisible="1"/>
-                                <field name="beneficiary_id" domain="[('id','in',trust_beneficiary_ids)]"/>
+                                <field name="patrimonial_beneficiary_ids" invisible="1"/>
+                                <field name="beneficiary_id" domain="[('id','in',patrimonial_beneficiary_ids)]"/>
                                 <field name="trust_provider_ids" invisible="1"/>
-                                <field name="provider_id" domain="[('id','in',trust_provider_ids)]"/>
+                                <field name="provider_id" domain="[('id','in',trust_provider_ids)]" invisible="1"/>
                             </group>
                         </group>
                         <group>

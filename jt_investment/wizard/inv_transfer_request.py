@@ -35,6 +35,7 @@ class InvTransferRequest(models.TransientModel):
     concept = fields.Text("Application Concept")
     user_id = fields.Many2one('res.users', default=lambda self: self.env.user.id, string="Applicant")
     line_ids = fields.One2many('inv.transfer.request.line','wizard_id')
+    destination_investment_id = fields.Many2one('investment.investment', "Destination Investment")
     
 #     @api.onchange('bank_account_id')
 #     def onchange_bank_account_id(self):
@@ -90,23 +91,41 @@ class InvTransferRequest(models.TransientModel):
                 'type_of_operation':'retirement',
                 'line_state' : 'done',
                 'base_collabaration_id' : line.base_collabaration_id and line.base_collabaration_id.id or False,
-                'agreement_number': line.agreement_number,
-                
+                'fund_type': line.base_collabaration_id.fund_type_id.id if line.base_collabaration_id and \
+                        line.base_collabaration_id.fund_type_id else False,
+                'agreement_type_id': line.base_collabaration_id.agreement_type_id.id if \
+                       line.base_collabaration_id and line.base_collabaration_id.agreement_type_id else False,
+                'dependency_id': line.base_collabaration_id.dependency_id.id if \
+                    line.base_collabaration_id and line.base_collabaration_id.dependency_id else False,
+                'sub_dependency_id': line.base_collabaration_id.subdependency_id.id if \
+                    line.base_collabaration_id and line.base_collabaration_id.subdependency_id else False,
+                'origin_resource_id': line.base_collabaration_id.origin_rsource_id.id if \
+                    line.base_collabaration_id and line.base_collabaration_id.origin_rsource_id else False,
+                'user_id': self.user_id.id if self.user_id else False
                 })
 
             self.env['investment.operation'].create({
-                'investment_id':self.env.context.get('active_id',0),
+                'investment_id': self.destination_investment_id.id,
                 'agreement_number': line.agreement_number,
-                'bank_account_id' :  self.desti_bank_account_id.id if self.desti_bank_account_id else False,
-                'desti_bank_account_id' : self.bank_account_id.id if self.bank_account_id else False,
+                'bank_account_id' :  self.bank_account_id.id if self.bank_account_id else False,
+                'desti_bank_account_id' : self.desti_bank_account_id.id if self.desti_bank_account_id else False,
                 'amount' : line.amount_to_transfer,
                 'investment_fund_id' : line.investment_fund_id and line.investment_fund_id.id or False,
-                'type_of_operation':'increase',
+                'type_of_operation':'open_bal',
                 'line_state' : 'done',
                 'base_collabaration_id' : line.base_collabaration_id and line.base_collabaration_id.id or False,
-                'agreement_number': line.agreement_number,
-                
-                })                
+                'fund_type': line.base_collabaration_id.fund_type_id.id if line.base_collabaration_id and \
+                                                              line.base_collabaration_id.fund_type_id else False,
+                'agreement_type_id': line.base_collabaration_id.agreement_type_id.id if \
+                    line.base_collabaration_id and line.base_collabaration_id.agreement_type_id else False,
+                'dependency_id': line.base_collabaration_id.dependency_id.id if line.base_collabaration_id and \
+                            line.base_collabaration_id.dependency_id else False,
+                'sub_dependency_id': line.base_collabaration_id.subdependency_id.id if \
+                   line.base_collabaration_id and line.base_collabaration_id.subdependency_id else False,
+                'origin_resource_id': line.base_collabaration_id.origin_rsource_id.id if \
+                line.base_collabaration_id and line.base_collabaration_id.origin_rsource_id else False,
+                'user_id': self.user_id.id if self.user_id else False
+                })
         self.env['request.open.balance.finance'].create(
             {
                 'bank_account_id': self.bank_account_id.id if self.bank_account_id else False,

@@ -62,7 +62,7 @@ class ProjectRegistry(models.Model):
     co_responsible_rfc = fields.Char(
         related='co_responsible_id.rfc', string='Co-responsible RFC')
     responsible_name = fields.Many2one('hr.employee', 'Responsible name')
-    stage_identifier_id = fields.Many2one('stage', string="Stage")
+    stage_identifier_id = fields.Many2one('stage', string="Stage",related="program_code.stage_id")
 
     project_ministrations_ids = fields.One2many(
         'project.ministrations', 'project_id', string='Project Ministrations')
@@ -72,10 +72,23 @@ class ProjectRegistry(models.Model):
     #     if self.project_type_identifier_id:
     #         self.number = self.project_type_identifier_id.number
 
-    @api.onchange('stage_identifier_id')
-    def onchange_stage_identifier_id(self):
-        if self.stage_identifier_id:
-            self.desc_stage = self.stage_identifier_id.desc
+    # @api.onchange('stage_identifier_id')
+    # def onchange_stage_identifier_id(self):
+    #     if self.stage_identifier_id:
+    #         self.desc_stage = self.stage_identifier_id.desc
+
+    @api.onchange('program_code')
+    def onchange_program_code(self):
+        if self.program_code:
+            self.desc_stage = self.program_code.desc_stage
+            self.number = self.program_code.project_number
+            self.project_type_identifier_id = self.program_code.project_type_id
+            self.agreement_type_id = self.program_code.agreement_type_id.id
+            self.base_name = self.program_code.name_agreement
+            # self.base_number = self.program_code.number_agreement
+            self.dependency_id = self.program_code.dependency_id.id
+            self.subdependency_id = self.program_code.sub_dependency_id
+
 
     @api.depends('exercised_amount', 'allocated_amount')
     def get_final_amount(self):
@@ -168,8 +181,8 @@ class ProjectRegistry(models.Model):
             'default_res_model': self._name,
             'default_res_id': self.ids[0]
         }
-        action['domain'] = [
-            ('res_model', '=', 'project.project'), ('res_id', 'in', self.ids)]
+        # action['domain'] = [
+        #     ('res_model', '=', 'project.project'), ('res_id', 'in', self.ids)]
         return action
 
     def count_expense_checks(self):

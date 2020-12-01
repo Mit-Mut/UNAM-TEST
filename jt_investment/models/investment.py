@@ -213,6 +213,7 @@ class Investment(models.Model):
                 'default_bank_account_id' : self.journal_id and self.journal_id.id or False,
                 'default_line_ids' : opt_lines,
                 'show_for_agreement' : True,
+                'show_agreement_name': True
             }
         }
                             

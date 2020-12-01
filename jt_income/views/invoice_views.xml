@@ -147,7 +147,8 @@
                                        domain="[('type', '=?', invoice_filter_type_domain)]"
                                        attrs="{'readonly': [('name', '!=', '/')]}"/>
 							
-								<field name="income_bank_journal_id" domain="[('type','=','bank')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+								<field name="income_bank_journal_id"
+                                       domain="[('type','=','bank'), ('for_income', '=', True)]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 								<field name="income_bank_account" />
                                 <field name="currency_id"
                                        groups="base.group_multi_currency"

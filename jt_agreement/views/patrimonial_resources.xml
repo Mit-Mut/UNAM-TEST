@@ -40,17 +40,24 @@
                     	<group>
 	                        <group>
 	                            <field name="name" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="opening_balance" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="available_bal" readonly="1"/>
+                                <field name="dependency_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="desc_dependency" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="subdependency_id" domain="[('dependency_id','=',dependency_id)]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="desc_subdependency" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                
 	                            <!-- <field name="journal_id" readonly="1"/> -->
-	                            <field name="key" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-	                            <field name="opening_balance" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-	                            <field name="available_bal" readonly="1"/>
 	                            
-	                            <field name="dependency_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-	                            <field name="desc_dependency" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+	                            
+	                            
+	                            
+	                            
+	                            
 	                        </group>
 	                        <group>
-	                            <field name="subdependency_id" domain="[('dependency_id','=',dependency_id)]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-	                            <field name="desc_subdependency" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="key" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+	                           
 	                            <field name="origin_resource_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 	                            <field name="goals" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 	                        	<field name="registration_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>

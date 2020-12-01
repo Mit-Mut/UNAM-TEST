@@ -38,7 +38,7 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
     _description = "Integration of remaining resources"
 
     filter_date = {'mode': 'range', 'filter': 'this_month'}
-    filter_comparison = None
+    filter_comparison = {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
     filter_all_entries = None
     filter_journals = None
     filter_analytic = None

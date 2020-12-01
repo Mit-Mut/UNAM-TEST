@@ -95,6 +95,10 @@
             <field name="mode">primary</field>
             <field name="priority">100</field>            
             <field name="arch" type="xml">
+                <xpath expr="//form" position="attributes">
+                    <attribute name="create">false</attribute>
+                    <attribute name="edit">false</attribute>
+                </xpath>
             	<field name="bank_account_id" position="after">
             		<field name="for_income" invisible="1"/>
             	</field>
@@ -103,17 +107,30 @@
             	</field>
 			</field>
 		</record>
+
+       <record id="view_income_account_bank_journal_tree" model="ir.ui.view">
+            <field name="name">Bank Accounts Tree View</field>
+            <field name="model">account.journal</field>
+            <field name="arch" type="xml">
+                <tree create="false" import="false">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="bank_acc_number"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+       </record>
 		
        <record id="action_account_bank_journal_income" model="ir.actions.act_window">
             <field name="name">Bank Accounts</field>
             <field name="res_model">account.journal</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_ids" eval="[(5, 0, 0),
-                (0, 0, {'view_mode': 'tree', 'view_id': ref('account.view_account_bank_journal_tree')}),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('jt_income.view_income_account_bank_journal_tree')}),
                 (0, 0, {'view_mode': 'kanban', 'view_id': ref('account.account_bank_journal_view_kanban')}),
                 (0, 0, {'view_mode': 'form', 'view_id': ref('jt_income.account_bank_journal_form_view_income')})]"/>
             <field name="domain">[('type', '=', 'bank'),('for_income','=',True)]</field>
-            <field name="context">{'default_type': 'bank','default_for_income':True}</field>
+            <field name="context">{'default_type': 'bank','default_for_income':1}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a bank account

@@ -31,11 +31,11 @@ from datetime import datetime
 # import lxml.html
 
 
-class IntegrationOfBudgetResource(models.AbstractModel):
+class IntegrationAirplaneTicket(models.AbstractModel):
 
-    _name = "jt_projects.budget.resources"
+    _name = "jt_projects.integration.airplane.ticket"
     _inherit = "account.coa.report"
-    _description = "Integration of projects with budget resources"
+    _description = "Integration airplane tickets PAPIIT"
 
     filter_date = {'mode': 'range', 'filter': 'this_month'}
     filter_comparison = {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
@@ -58,7 +58,7 @@ class IntegrationOfBudgetResource(models.AbstractModel):
 
     def _get_templates(self):
         templates = super(
-            IntegrationOfBudgetResource, self)._get_templates()
+            IntegrationAirplaneTicket, self)._get_templates()
         templates[
             'main_table_header_template'] = 'account_reports.main_table_header'
         templates['main_template'] = 'account_reports.main_template'
@@ -69,38 +69,20 @@ class IntegrationOfBudgetResource(models.AbstractModel):
 
         return[
             
-            [
+            #  [
                 
-                {'name': ''},
-                {'name': _('RECURSOS PRESUPUESTALES PENDIENTES DE EJERCER'),
-                 'colspan': 3},
-                {'name':''},
-                {'name': _('RECURSOS ASIGNADOS A PROYECTOS DE INVESTIGACION DE LA DGAPA EN EL SIATEMA DE CONTROL  DE PROYECTOS PAPIIT'),
-                 'colspan': 3},
+            #     {'name': _('INTEGRATION BOLETOS DE AVION PAPIIT'),'colspan':2},
+                
 
-            ],
+            # ],
 
             [
-                {'name': 'SUBPROGRAMS'},
-                {'name': _('ASIGNADOS Y AUTORIZADOS ETAPA 30')},
-                {'name': _('DISTRIBUIDOS ETAPA')},
-                {'name': _('POR EJERCER ETAPA 30')},
-                {'name': _('PROYECTOS')},
-                {'name': _('DISTRIBUIDOS')},
-                {'name': _('EJERCIDOS')},
-                {'name': _('POR EJERCER')},
+                {'name': _('SALDO MES ANTERIOR JUNIO')},
+                {'name': _('CUENTA DE PESIVO:221.006.001.005')},
+
             ]
         ]
 
-
-    # def _get_columns_name(self, options):
-    #     return [
-    #         {'name': _('SUBPROGRAMS')},
-    #         {'name': _('RECURSOS PRESUPUESTALES PENDIENTES DE EJERCER')},
-    #         {'name': _('Poyectos de Sistemas de pagos')},
-    #         {'name': _('Recursos etapa 29(2018)')},
-
-    #     ]
 
     def _get_lines(self, options, line_id=None):
         lines = []

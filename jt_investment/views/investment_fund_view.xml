@@ -29,8 +29,10 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        <button name="approve_investment" type="object" string="Approve" class="oe_highlight"
+                        <button name="approve_fund" type="object" string="Approve" class="oe_highlight"
                              attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                         <button name="reset_fund" type="object" string="Reset" class="oe_highlight"
+                             attrs="{'invisible': [('state', '!=', 'confirmed')]}"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>

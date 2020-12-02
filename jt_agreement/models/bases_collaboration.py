@@ -1400,6 +1400,7 @@ class RequestOpenBalanceInvestment(models.Model):
                 'default_is_agr': is_agr,
                 'default_is_balance': is_balance,
                 'default_dependency_id': dependency_id,
+                'default_patrimonial_id': self.patrimonial_id.id if self.patrimonial_id else False
             }
         }
 

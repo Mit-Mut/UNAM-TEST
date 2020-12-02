@@ -76,7 +76,7 @@
                             <group>
                                 <field name="req_registration_date" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                 <field name="invoice_date" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
-                                <field name="project_number_id" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}" context="{'from_conacyt':1}"/>
+                                <field name="project_number_id" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}" context="{'from_conacyt':1}" domain="[('is_papiit_project','=',True)]"/>
                                 <!-- <field name="responsible_id" attrs="{'invisible': [('operation_type_id', 'not in',('REIMBURSEMENT TO THIRD PARTIES','PLANE TICKETS','PAYMENT TO SUPPLIER'))]}"/> -->
                                 <field name="responsible_id"/>
                                 <field name="project_code" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>

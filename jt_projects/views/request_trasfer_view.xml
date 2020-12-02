@@ -43,7 +43,7 @@
                                 <field name="origin_journal_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                                 <field name="origin_bank_id" readonly="1"/>
                                 <field name="aggrement" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
-                                <field name="reason_rejection"/>
+                                <field name="reason_rejection" readonly="1" attrs="{'invisible': [('status', '!=', 'rejected')]}"/>
                             </group>
                         </group>
                     </sheet>

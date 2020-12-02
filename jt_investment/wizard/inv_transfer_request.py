@@ -79,7 +79,9 @@ class InvTransferRequest(models.TransientModel):
                                    }))
             for opt_line in line.opt_line_ids:
                 opt_line.is_request_generated = True
-        
+
+        origin_resource_id = self.env.ref('jt_agreement.acc_transfer_fund_origin_res').id if \
+            self.env.ref('jt_agreement.acc_transfer_fund_origin_res') else False
         for line in self.line_ids.filtered(lambda a:a.check):
             self.env['investment.operation'].create({
                 'investment_id':self.env.context.get('active_id',0),
@@ -99,8 +101,7 @@ class InvTransferRequest(models.TransientModel):
                     line.base_collabaration_id and line.base_collabaration_id.dependency_id else False,
                 'sub_dependency_id': line.base_collabaration_id.subdependency_id.id if \
                     line.base_collabaration_id and line.base_collabaration_id.subdependency_id else False,
-                'origin_resource_id': line.base_collabaration_id.origin_resource_id.id if \
-                    line.base_collabaration_id and line.base_collabaration_id.origin_resource_id else False,
+                'origin_resource_id': origin_resource_id,
                 'user_id': self.user_id.id if self.user_id else False
                 })
 
@@ -122,8 +123,7 @@ class InvTransferRequest(models.TransientModel):
                             line.base_collabaration_id.dependency_id else False,
                 'sub_dependency_id': line.base_collabaration_id.subdependency_id.id if \
                    line.base_collabaration_id and line.base_collabaration_id.subdependency_id else False,
-                'origin_resource_id': line.base_collabaration_id.origin_resource_id.id if \
-                line.base_collabaration_id and line.base_collabaration_id.origin_resource_id else False,
+                'origin_resource_id': origin_resource_id,
                 'user_id': self.user_id.id if self.user_id else False
                 })
         self.env['request.open.balance.finance'].create(

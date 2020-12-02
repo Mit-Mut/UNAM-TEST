@@ -667,7 +667,7 @@ class IndicatorsReport(models.AbstractModel):
                 TIIE_columns_1 += [self._format({'name': start_month_rec.rate_daily},figure_type='float'),
                                 self._format({'name': end_month_rec.rate_daily},figure_type='float'),
                                 {'name': max_rate_364_rec.rate_date},
-                                self._format({'name': max_rate_91_rec.rate_daily},figure_type='float'),
+                                self._format({'name': max_rate_364_rec.rate_daily},figure_type='float'),
                                 {'name': min_rate_364_rec.rate_date},
                                 self._format({'name': min_rate_364_rec.rate_daily},figure_type='float'),
                                 self._format({'name': avg},figure_type='float'),

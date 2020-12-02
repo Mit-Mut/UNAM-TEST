@@ -86,7 +86,8 @@
                                 <field name="branch_office" readonly="1" attrs="{'invisible':[('is_papiit_project','=',True)]}"/>
                                 <field name="trade_number" attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="resource_type" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
-                                <field name="is_papiit_project" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
+                                <!-- <field name="is_papiit_project" attrs="{'invisible':[('is_papiit_project','=',False)]}"/> -->
+                                <field name="is_papiit_project" invisible="1"/>
                                 <field name="pre_account_id" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
                                 <field name="dependency_id" context="{'show_for_agreement':1}" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
                                 <field name="subdependency_id" context="{'show_for_agreement':1}" domain="[('dependency_id','=',dependency_id)]" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>

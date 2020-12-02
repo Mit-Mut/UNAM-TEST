@@ -33,7 +33,8 @@ class ProgramCode(models.Model):
 
     budget_id = fields.Many2one('expenditure.budget')
 
-    year = fields.Many2one('year.configuration', string='Year (YEAR)', states={'validated': [('readonly', True)]})
+    year = fields.Many2one('year.configuration', string='Year (YEAR)', states={
+                           'validated': [('readonly', True)]})
 
     # Program Relations
     program_id = fields.Many2one('program', string='Program')
@@ -41,7 +42,8 @@ class ProgramCode(models.Model):
         string='Description KEY UNAM', related="program_id.desc_key_unam")
 
     # Sub Program Relation
-    sub_program_id = fields.Many2one('sub.program', string='Sub program', states={'validated': [('readonly', True)]})
+    sub_program_id = fields.Many2one('sub.program', string='Sub program', states={
+                                     'validated': [('readonly', True)]})
     desc_sub_program = fields.Text(
         string='Sub Program Description', related="sub_program_id.desc")
 
@@ -62,11 +64,11 @@ class ProgramCode(models.Model):
     desc_item = fields.Text(string='Description of Item',
                             related="item_id.description")
 
-    @api.depends('program_id','program_id.key_unam',
-                 'sub_program_id','sub_program_id.sub_program',
-                 'dependency_id','dependency_id.dependency',
-                 'sub_dependency_id','sub_dependency_id.sub_dependency',
-                 'item_id','item_id.item'
+    @api.depends('program_id', 'program_id.key_unam',
+                 'sub_program_id', 'sub_program_id.sub_program',
+                 'dependency_id', 'dependency_id.dependency',
+                 'sub_dependency_id', 'sub_dependency_id.sub_dependency',
+                 'item_id', 'item_id.item'
                  )
     def _compute_check_digit(self):
         dv_obj = self.env['verifying.digit']
@@ -78,7 +80,7 @@ class ProgramCode(models.Model):
                 pc.check_digit = vd
 
     check_digit = fields.Char(
-        string='Check Digit (DV)', size=2, compute="_compute_check_digit",store=True)
+        string='Check Digit (DV)', size=2, compute="_compute_check_digit", store=True)
 
     # Resource Origin Relation
     resource_origin_id = fields.Many2one(
@@ -119,32 +121,49 @@ class ProgramCode(models.Model):
     # Geographic Location Relation
     location_id = fields.Many2one(
         'geographic.location', string='Geographic Location', states={'validated': [('readonly', True)]})
-    desc_location = fields.Text(string='Name of Geographic Location', related="location_id.state_name")
+    desc_location = fields.Text(
+        string='Name of Geographic Location', related="location_id.state_name")
 
     # Wallet Password Relation
-    portfolio_id = fields.Many2one('key.wallet', string='Key portfolio', states={'validated': [('readonly', True)]})
-    name_portfolio = fields.Text(string='Name of Portfolio Key', related="portfolio_id.wallet_password_name")
+    portfolio_id = fields.Many2one('key.wallet', string='Key portfolio', states={
+                                   'validated': [('readonly', True)]})
+    name_portfolio = fields.Text(
+        string='Name of Portfolio Key', related="portfolio_id.wallet_password_name")
 
     # Project Type Relation
-    project_type_id = fields.Many2one('project.type', string='Type of Project', states={'validated': [('readonly', True)]})
-    desc_project_type = fields.Char(string='Description Type of Project', related="project_type_id.desc_stage")
-    project_number = fields.Char(string='Project Number', related='project_type_id.number')
+    project_type_id = fields.Many2one('project.type', string='Type of Project', states={
+                                      'validated': [('readonly', True)]})
+    desc_project_type = fields.Char(
+        string='Description Type of Project', related="project_type_id.desc_stage")
+    project_number = fields.Char(
+        string='Project Number', related='project_type_id.number')
 
     # Stage Relation
-    stage_id = fields.Many2one('stage', string='Stage', states={'validated': [('readonly', True)]})
-    desc_stage = fields.Text(string='Stage Description', related='stage_id.desc_stage')
+    stage_id = fields.Many2one('stage', string='Stage', states={
+                               'validated': [('readonly', True)]})
+    desc_stage = fields.Text(string='Stage Description',
+                             related='stage_id.desc_stage')
 
     # Agreement Relation
-    agreement_type_id = fields.Many2one('agreement.type', string='Type of Agreement', states={'validated': [('readonly', True)]})
-    name_agreement = fields.Text(string='Name type of Agreement', related='agreement_type_id.name_agreement')
-    number_agreement = fields.Char(string='Agreement number', related='agreement_type_id.number_agreement')
+    agreement_type_id = fields.Many2one('agreement.type', string='Type of Agreement', states={
+                                        'validated': [('readonly', True)]})
+    name_agreement = fields.Text(
+        string='Name type of Agreement', related='agreement_type_id.name_agreement')
+    number_agreement = fields.Char(
+        string='Agreement number', related='agreement_type_id.number_agreement')
 
-    total_assigned_amt = fields.Float(string="Assigned Total Annual", compute="_compute_amt")
-    total_1_assigned_amt = fields.Float(string="Assigned 1st Annual", compute="_compute_amt")
-    total_2_assigned_amt = fields.Float(string="Assigned 2nd Annual", compute="_compute_amt")
-    total_3_assigned_amt = fields.Float(string="Assigned 3rd Annual", compute="_compute_amt")
-    total_4_assigned_amt = fields.Float(string="Assigned 4th Annual", compute="_compute_amt")
-    total_authorized_amt = fields.Float(string="Authorized", compute="_compute_amt")
+    total_assigned_amt = fields.Float(
+        string="Assigned Total Annual", compute="_compute_amt")
+    total_1_assigned_amt = fields.Float(
+        string="Assigned 1st Annual", compute="_compute_amt")
+    total_2_assigned_amt = fields.Float(
+        string="Assigned 2nd Annual", compute="_compute_amt")
+    total_3_assigned_amt = fields.Float(
+        string="Assigned 3rd Annual", compute="_compute_amt")
+    total_4_assigned_amt = fields.Float(
+        string="Assigned 4th Annual", compute="_compute_amt")
+    total_authorized_amt = fields.Float(
+        string="Authorized", compute="_compute_amt")
 
     def _compute_amt(self):
         bud_line_obj = self.env['expenditure.budget.line']
@@ -157,16 +176,16 @@ class ProgramCode(models.Model):
                     authorized += line.authorized
                 assigned += line.assigned
                 if line.start_date and line.end_date and line.start_date.month == 1 and \
-                    line.start_date.day == 1 and line.end_date.month == 3 and line.end_date.day == 31:
+                        line.start_date.day == 1 and line.end_date.month == 3 and line.end_date.day == 31:
                     st_ass += line.assigned
                 elif line.start_date and line.end_date and line.start_date and line.end_date and line.start_date.month == 4 and \
-                    line.start_date.day == 1 and line.end_date.month == 6 and line.end_date.day == 30 :
+                        line.start_date.day == 1 and line.end_date.month == 6 and line.end_date.day == 30:
                     nd_ass += line.assigned
                 elif line.start_date and line.end_date and line.start_date.month == 7 and \
-                    line.start_date.day == 1 and line.end_date.month == 9 and line.end_date.day == 30:
+                        line.start_date.day == 1 and line.end_date.month == 9 and line.end_date.day == 30:
                     rd_ass += line.assigned
                 elif line.start_date and line.end_date and line.start_date.month == 10 and \
-                    line.start_date.day == 1 and line.end_date.month == 12 and line.end_date.day == 31:
+                        line.start_date.day == 1 and line.end_date.month == 12 and line.end_date.day == 31:
                     th_ass += line.assigned
             code.total_assigned_amt = assigned
             code.total_authorized_amt = authorized
@@ -177,25 +196,25 @@ class ProgramCode(models.Model):
 
     @api.constrains('program_code')
     def _check_program_code(self):
-        for record in self: 
-            if len(record.program_code) != 60:
+        for record in self:
+            if len(record.program_code) == 60:
                 raise ValidationError('Program code must be 60 characters!')
- 
-    @api.depends('year','year.name','program_id','program_id.key_unam',
-                 'sub_program_id','sub_program_id.sub_program',
-                 'dependency_id','dependency_id.dependency',
-                 'sub_dependency_id','sub_dependency_id.sub_dependency',
-                 'item_id','item_id.item','check_digit',
-                 'resource_origin_id','resource_origin_id.key_origin',             
-                 'institutional_activity_id','institutional_activity_id.number',
-                 'budget_program_conversion_id','budget_program_conversion_id.shcp','budget_program_conversion_id.shcp.name',
-                 'conversion_item_id','conversion_item_id.federal_part',
-                 'expense_type_id','expense_type_id.key_expenditure_type',
-                 'location_id','location_id.state_key',
-                 'portfolio_id','portfolio_id.wallet_password',
-                 'project_type_id','project_type_id.project_type_identifier','project_type_id.number',
-                 'stage_id','stage_id.stage_identifier',
-                 'agreement_type_id','agreement_type_id.agreement_type','agreement_type_id.number_agreement',
+
+    @api.depends('year', 'year.name', 'program_id', 'program_id.key_unam',
+                 'sub_program_id', 'sub_program_id.sub_program',
+                 'dependency_id', 'dependency_id.dependency',
+                 'sub_dependency_id', 'sub_dependency_id.sub_dependency',
+                 'item_id', 'item_id.item', 'check_digit',
+                 'resource_origin_id', 'resource_origin_id.key_origin',
+                 'institutional_activity_id', 'institutional_activity_id.number',
+                 'budget_program_conversion_id', 'budget_program_conversion_id.shcp', 'budget_program_conversion_id.shcp.name',
+                 'conversion_item_id', 'conversion_item_id.federal_part',
+                 'expense_type_id', 'expense_type_id.key_expenditure_type',
+                 'location_id', 'location_id.state_key',
+                 'portfolio_id', 'portfolio_id.wallet_password',
+                 'project_type_id', 'project_type_id.project_type_identifier', 'project_type_id.number',
+                 'stage_id', 'stage_id.stage_identifier',
+                 'agreement_type_id', 'agreement_type_id.agreement_type', 'agreement_type_id.number_agreement',
                  )
     def _compute_program_code(self):
         for pc in self:
@@ -248,10 +267,12 @@ class ProgramCode(models.Model):
             pc.program_code = program_code
             pc.program_code_copy = program_code
 
-    program_code = fields.Text(string='Programmatic Code', compute="_compute_program_code",store=True)
+    program_code = fields.Text(
+        string='Programmatic Code', compute="_compute_program_code", store=True)
     program_code_copy = fields.Text(string='Programmatic Code')
 
-    search_key = fields.Text(string='Search Key', index=True, store=True, compute="_compute_program_search_key")
+    search_key = fields.Text(string='Search Key', index=True,
+                             store=True, compute="_compute_program_search_key")
 
     @api.depends('year', 'program_id', 'sub_program_id', 'dependency_id', 'sub_dependency_id',
                  'item_id', 'resource_origin_id', 'institutional_activity_id', 'budget_program_conversion_id',
@@ -263,8 +284,8 @@ class ProgramCode(models.Model):
                           'item_id', 'resource_origin_id', 'institutional_activity_id', 'budget_program_conversion_id',
                           'conversion_item_id', 'expense_type_id', 'location_id', 'portfolio_id', 'project_type_id',
                           'stage_id', 'agreement_type_id')
-            record.search_key = ';'.join([str(record[fld].id) if fld in record else '' for fld in key_fields])
-
+            record.search_key = ';'.join(
+                [str(record[fld].id) if fld in record else '' for fld in key_fields])
 
     state = fields.Selection(
         [('draft', 'Draft'), ('validated', 'Validated')], default='draft', string='Status')
@@ -273,9 +294,11 @@ class ProgramCode(models.Model):
     def default_get(self, fields):
         res = super(ProgramCode, self).default_get(fields)
         year_str = str(datetime.today().year)
-        year = self.env['year.configuration'].sudo().search([('name', '=', year_str)], limit=1)
+        year = self.env['year.configuration'].sudo().search(
+            [('name', '=', year_str)], limit=1)
         if not year:
-            year = self.env['year.configuration'].sudo().create({'name': year_str})
+            year = self.env['year.configuration'].sudo().create({
+                'name': year_str})
         if year:
             res['year'] = year.id
         return res
@@ -334,7 +357,8 @@ class ProgramCode(models.Model):
     def create(self, vals):
         res = super(ProgramCode, self).create(vals)
         code = res.verify_program_code()
-        program_code = self.search([('program_code_copy', '=', code), ('id', '!=', res.id)], limit=1)
+        program_code = self.search(
+            [('program_code_copy', '=', code), ('id', '!=', res.id)], limit=1)
         if program_code:
             raise ValidationError("Program code must be unique")
         res.program_code_copy = res
@@ -351,8 +375,11 @@ class ProgramCode(models.Model):
     def unlink(self):
         for code in self:
             if code.state == 'validated':
-                raise ValidationError('You can not delete validated program code!')
-            line = self.env['expenditure.budget.line'].search([('program_code_id', '=', code.id)], limit=1)
+                raise ValidationError(
+                    'You can not delete validated program code!')
+            line = self.env['expenditure.budget.line'].search(
+                [('program_code_id', '=', code.id)], limit=1)
             if line:
-                raise ValidationError('You can not delete program code which are mapped with expenditure budgets!')
+                raise ValidationError(
+                    'You can not delete program code which are mapped with expenditure budgets!')
         return super(ProgramCode, self).unlink()

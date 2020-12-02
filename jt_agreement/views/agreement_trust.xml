@@ -71,7 +71,7 @@
 	                        </group>
                         </group>
                         <notebook>
-                        	<page string="Journal Items" name="accounts">
+                        	<page string="Journal Items" name="accounts" invisible="1">
                          		<group>
                         			<group>
                         				<field name="patrimonial_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>

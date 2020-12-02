@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
-
         <record id="view_req_open_balance_trust_tree" model="ir.ui.view">
             <field name="name">Opening Balance trust List view</field>
             <field name="model">request.open.balance</field>
@@ -99,7 +97,7 @@
                                 </group>
                         		
                             </page>
-                             <page string="Accounts" name="accounts">
+                             <page string="Accounts" name="accounts" invisible="1">
                         		<group>
                         			<group>
                         				<field name="patrimonial_account_id" readonly="1"/>

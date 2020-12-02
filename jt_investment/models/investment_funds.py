@@ -101,8 +101,11 @@ class InvestmentFunds(models.Model):
                 raise UserError(_('You can delete only draft status data.'))
         return super(InvestmentFunds, self).unlink()
 
-    def approve_investment(self):
+    def approve_fund(self):
         self.state = 'confirmed'
+
+    def reset_fund(self):
+        self.state = 'draft'
         
 #         today = datetime.today().date()
 #         user = self.env.user

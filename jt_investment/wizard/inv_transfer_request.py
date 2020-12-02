@@ -99,8 +99,8 @@ class InvTransferRequest(models.TransientModel):
                     line.base_collabaration_id and line.base_collabaration_id.dependency_id else False,
                 'sub_dependency_id': line.base_collabaration_id.subdependency_id.id if \
                     line.base_collabaration_id and line.base_collabaration_id.subdependency_id else False,
-                'origin_resource_id': line.base_collabaration_id.origin_rsource_id.id if \
-                    line.base_collabaration_id and line.base_collabaration_id.origin_rsource_id else False,
+                'origin_resource_id': line.base_collabaration_id.origin_resource_id.id if \
+                    line.base_collabaration_id and line.base_collabaration_id.origin_resource_id else False,
                 'user_id': self.user_id.id if self.user_id else False
                 })
 

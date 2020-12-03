@@ -60,7 +60,7 @@
                                 <field name="investment_fund_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="journal_id" domain="[('type','=','bank')]" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="bank_id"/>
-                                <field name="amount_invest"/>
+                                <field name="amount_invest" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="currency_id" options="{'no_create': True}" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="investment_rate_id" domain="[('product_type','=','BONUS')]" context="{'default_product_type':'BONUS',
                                 		'search_view_ref': 'jt_investment.investment_period_rate_BONUS_search',
@@ -125,7 +125,7 @@
                         		</group>
                         		
                         	</page>
-                        	<page string="Accounting" name="account">
+                        	<page string="Accounting" name="account" invisible="1">
                         		<group string="Investment">
                         			<group>
                         				<field name="investment_income_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>

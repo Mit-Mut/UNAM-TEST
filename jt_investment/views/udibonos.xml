@@ -126,7 +126,7 @@
                         			</group>
                         		</group>
                         	</page>
-                        	<page string="Accounting" name="account">
+                        	<page string="Accounting" name="account" invisible="1">
                         		<group string="Investment">
                         			<group>
                         				<field name="investment_income_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>

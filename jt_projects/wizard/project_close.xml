@@ -8,6 +8,7 @@
                 <form>
                     <group>
                         <field name="close_letter"/>
+                        <field name="current_id" invisible="1"/>
                     </group>
                     <footer>
                         <button string="Apply" name="apply_document" type="object" class="oe_highlight"/>

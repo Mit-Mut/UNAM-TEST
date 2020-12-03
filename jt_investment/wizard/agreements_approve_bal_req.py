@@ -50,9 +50,23 @@ class ApproveInvestmentBalReq(models.TransientModel):
     def validate_balance(self):
         if self.investment_id and self.base_collabaration_id:
             opt_lines = self.env['investment.operation'].search([('investment_id', '=', self.investment_id.id),
-                                                                 ('line_state', '=', 'done'), '|', (
-                                                                     'investment_fund_id', '=', self.investment_fund_id.id),
-                                                                 ('base_collabaration_id', '=', self.base_collabaration_id.id)])
+                                                                 ('line_state', '=', 'done'), '|',
+                                                ('investment_fund_id', '=', self.investment_fund_id.id),
+                                                ('base_collabaration_id', '=', self.base_collabaration_id.id)])
+            inc = sum(a.amount for a in opt_lines.filtered(
+                lambda x: x.type_of_operation in ('open_bal', 'increase')))
+            ret = sum(a.amount for a in opt_lines.filtered(lambda x: x.type_of_operation in (
+                'retirement', 'withdrawal', 'withdrawal_cancellation', 'withdrawal_closure', 'increase_by_closing')))
+            balance = inc - ret
+            if balance >= self.amount:
+                self.is_balance = True
+            else:
+                self.is_balance = False
+                self.msg = "Available balance is not enough"
+        if self.investment_id and self.patrimonial_id:
+            opt_lines = self.env['investment.operation'].search([('investment_id', '=', self.investment_id.id),
+                    ('line_state', '=', 'done'), '|', ('investment_fund_id', '=', self.investment_fund_id.id),
+                    ('patrimonial_id', '=', self.patrimonial_id.id)])
             inc = sum(a.amount for a in opt_lines.filtered(
                 lambda x: x.type_of_operation in ('open_bal', 'increase')))
             ret = sum(a.amount for a in opt_lines.filtered(lambda x: x.type_of_operation in (
@@ -66,7 +80,6 @@ class ApproveInvestmentBalReq(models.TransientModel):
         else:
             self.is_balance = False
             self.msg = "Available balance is not enough"
-
         return {
             'name': 'Approve Request',
             'view_type': 'form',
@@ -135,6 +148,7 @@ class ApproveInvestmentBalReq(models.TransientModel):
             'fund_type': self.fund_type and self.fund_type.id or False,
             'agreement_type_id': self.agreement_type_id and self.agreement_type_id.id or False,
             'base_collabaration_id': self.base_collabaration_id and self.base_collabaration_id.id or False,
+            'patrimonial_id': self.patrimonial_id and self.patrimonial_id.id or False,
             'investment_fund_id': self.investment_fund_id and self.investment_fund_id.id or False,
             'inc_id': request.id,
             'type_of_operation': self.type_of_operation,

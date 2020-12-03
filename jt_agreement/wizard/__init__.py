@@ -6,4 +6,4 @@ from . import cancel_trust
 from . import cancel_patrimonial_resources
 from . import generate_account_statement
 from . import bases_collaboration
-
+from . import amounts_to_invest

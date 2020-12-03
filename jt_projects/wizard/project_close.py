@@ -26,11 +26,14 @@ class ProjectClose(models.TransientModel):
 	_name = 'project.close'
 
 	close_letter = fields.Binary(string='Closing Official Letter',attachment=True)
+	current_id = fields.Integer(string="Current Id")
 
 	def apply_document(self):
 		res = self.env['ir.attachment'].create({
 			'name':"Closing Official Letter",
 			'datas':self.close_letter,
+			'res_model':"project.project",
+			'res_id':self.current_id,
 			})
 		return res
 		

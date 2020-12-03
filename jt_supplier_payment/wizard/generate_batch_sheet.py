@@ -29,7 +29,7 @@ class GenerateBatchSheet(models.TransientModel):
     _description = 'Generate Batch Sheet'
     
     batch_line_ids = fields.One2many('generate.batch.sheet.line','batch_sheet_id','Folio')
-    payment_type = fields.Selection([('supplier','Suppier'),('payroll','Payroll'),('different_payroll','Different Payroll')],string="Payent Type") 
+    payment_type = fields.Selection([('supplier','Suppier'),('payroll','Payroll'),('different_payroll','Different Payroll'),('project_payment','Project Payment')],string="Payent Type") 
     
     def action_generate_batch(self):
         active_ids = self.env.context.get('active_ids')
@@ -49,6 +49,9 @@ class GenerateBatchSheet(models.TransientModel):
         elif active_records.filtered(lambda x:x.is_different_payroll_request):
             seq_ids = self.env['ir.sequence'].search([('code', '=', 'different.payroll.payment.batch.sheet.folio')], order='company_id')
             payment_type = 'different_payroll'
+        elif active_records.filtered(lambda x:x.is_project_payment):
+            seq_ids = self.env['ir.sequence'].search([('code', '=', 'project.payroll.payment.batch.sheet.folio')], order='company_id')
+            payment_type = 'project_payment'
             
         number_next = 0
         if seq_ids:
@@ -85,6 +88,9 @@ class GenerateBatchSheet(models.TransientModel):
             folio = self.env['ir.sequence'].next_by_code('payroll.payment.batch.sheet.folio')
         elif self.payment_type == 'different_payroll':
             folio = self.env['ir.sequence'].next_by_code('different.payroll.payment.batch.sheet.folio')
+        elif self.payment_type == 'project_payment':
+            folio = self.env['ir.sequence'].next_by_code('project.payroll.payment.batch.sheet.folio')
+            
         for line in line_recs:
             line.account_move_id.batch_folio = line.batch_folio
             

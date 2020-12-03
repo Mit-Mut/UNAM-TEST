@@ -38,7 +38,7 @@
                                 <field name="project_name"/>
                                 <field name="user_id" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="project_type_identifier" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="project_stage_identifier" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="project_stage_identifier" readonly="1"/>
                                 <field name="ministrations_amount" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="authorized_amount" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="program_code" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>

@@ -60,6 +60,7 @@
         'reports/exchange_request.xml',
         #'reports/filter_template.xml',
         'security/ir.model.access.csv',
+        'views/upa_payment_request.xml',
 
     ],
     'application': False,

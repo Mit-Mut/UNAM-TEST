@@ -227,7 +227,7 @@ class ReportProductiveAccounts(models.AbstractModel):
             
         else:
             domain=[('line_state','not in',('rejected','canceled'))]
-        
+
 #         journal = self._get_options_journals_domain(options)
 #         if journal:
 #             domain+=journal
@@ -258,7 +258,7 @@ class ReportProductiveAccounts(models.AbstractModel):
                 journal_list.append(journal.get('id',0))
 
         if journal_list:
-            domain += [('investment_id.new_journal_id','in',journal_list)]
+            domain += [('investment_id.journal_id','in',journal_list)]
         
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
@@ -268,7 +268,9 @@ class ReportProductiveAccounts(models.AbstractModel):
         main_domain = domain + [('date_required','>=',start),('date_required','<=',end)]
         
         #records = self.env['investment.investment'].search([('invesment_date','>=',start),('invesment_date','<=',end)])
+        print ("Domain =-=-=", domain)
         records = self.env['investment.operation'].search(main_domain)
+        print ("Records -=-=", records)
         
         month_list = {1:[],2:[],3:[],4:[],5:[],6:[],
                       7:[],8:[],9:[],10:[],11:[],12:[]
@@ -307,10 +309,10 @@ class ReportProductiveAccounts(models.AbstractModel):
                 'id': 'hierarchy' + str(rec.id),
                 'name': resouce_name,
                 'columns': [
-                            {'name': rec.bank_account_id and rec.bank_account_id.name or ''}, 
+                            {'name': rec.investment_id.journal_id and rec.investment_id.journal_id.name or ''},
                             {'name': rec.investment_id and rec.investment_id.contract_id and rec.investment_id.contract_id.name or ''},
                             {'name':rec.investment_id.currency_id.name},
-                            self._format({'name': rec.amount},figure_type='float',digit=2),
+                            self._format({'name': rec.investment_id.actual_amount},figure_type='float',digit=2),
                             self._format({'name': total_rate},figure_type='float',digit=6),
                             {'name': term},
                             self._format({'name': days},figure_type='float',digit=2),
@@ -351,7 +353,7 @@ class ReportProductiveAccounts(models.AbstractModel):
                 month_vals={
                 'id': 'hierarchy_' + str(rec.id) + str(current_month_start_date.month),
                 'name': resouce_name,
-                'columns': [{'name': rec.bank_account_id and rec.bank_account_id.name or ''}, 
+                'columns': [{'name': rec.investment_id.journal_id and rec.investment_id.journal_id.name or ''},
                             {'name': rec.investment_id and rec.investment_id.contract_id and rec.investment_id.contract_id.name or ''},
                             {'name':rec.investment_id.currency_id.name},
                             self._format({'name': rec.amount},figure_type='float',digit=2),
@@ -522,9 +524,8 @@ class ReportProductiveAccounts(models.AbstractModel):
                 date_end = datetime.strptime(str(period.get('date_to')),
                                          DEFAULT_SERVER_DATE_FORMAT).date()
 
-                records_domain_period = domain + [('currency_id','=',currency.id),('date_required','>=',date_start),('date_required','<=',date_end)]
+                records_domain_period = domain + [('investment_id.currency_id','=',currency.id),('date_required','>=',date_start),('date_required','<=',date_end)]
                 productive_currency_records = self.env['investment.operation'].search(records_domain_period,order='currency_id')
-            
                 amount = 0
                 amount += sum(x.amount for x in productive_currency_records)
         

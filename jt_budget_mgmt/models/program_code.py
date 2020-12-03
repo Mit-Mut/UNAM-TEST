@@ -197,7 +197,7 @@ class ProgramCode(models.Model):
     @api.constrains('program_code')
     def _check_program_code(self):
         for record in self:
-            if len(record.program_code) == 60:
+            if len(record.program_code) != 60:
                 raise ValidationError('Program code must be 60 characters!')
 
     @api.depends('year', 'year.name', 'program_id', 'program_id.key_unam',

@@ -17,10 +17,16 @@
                                        context="{'show_for_agreement':True}" domain="[('state','=','confirmed')]"/>
                                 <field name="type_of_operation" readonly="1" />
                                 <field name="patrimonial_id" invisible="1"/>
-                                <field name="agreement_number" readonly="1" attrs="{'invisible':[('patrimonial_id','!=',False)]}"/>
-                                <field name="base_collabaration_id" attrs="{'invisible':[('patrimonial_id','!=',False)]}"/>
-                                <field name="agreement_type_id" attrs="{'invisible':[('patrimonial_id','!=',False)]}"/>
-                                <field name="fund_type" attrs="{'invisible':[('patrimonial_id','!=',False)]}"/>
+                                <field name="trust_id" invisible="1"/>
+                                <field name="agreement_number" readonly="1"
+                                 attrs="{'invisible':['|', ('patrimonial_id','!=',False),('trust_id', '!=', False)]}"/>
+                                <field name="base_collabaration_id"
+                                        context="{'show_agreement_name': True}"
+                                 attrs="{'invisible':['|', ('patrimonial_id','!=',False),('trust_id', '!=', False)]}"/>
+                                <field name="agreement_type_id"
+                                 attrs="{'invisible':['|', ('patrimonial_id','!=',False),('trust_id', '!=', False)]}"/>
+                                <field name="fund_type"
+                                 attrs="{'invisible':['|', ('patrimonial_id','!=',False),('trust_id', '!=', False)]}"/>
                                 <field name="bank_account_id" domain="[('type', '=', 'bank')]"
                                     required="1"/>
                                     
@@ -48,7 +54,8 @@
                             </group>
                         </group>
                 	<footer>
-                        <button string="Approve" attrs="{'invisible':[('is_balance','=',False)]}" name="approve" type="object" class="oe_highlight"/>
+                        <button string="Approve" attrs="{'invisible':[('is_balance','=',False)]}"
+                                name="approve" type="object" class="oe_highlight"/>
                         <button string="Cancel" class="btn btn-default" special="cancel"/>
                     </footer>
                 </form>

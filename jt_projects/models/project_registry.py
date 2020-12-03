@@ -174,7 +174,8 @@ class ProjectRegistry(models.Model):
             'domain': [],
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'context': {'default_current_id': self.id}
+            'context': {'default_current_id': self.id,
+                        'active_ids': self.ids}
         }
 
     def show_attachment(self):
@@ -183,9 +184,11 @@ class ProjectRegistry(models.Model):
         action['context'] = {
             'default_res_model': self._name,
             'default_res_id': self.ids[0]
+        
         }
-        # action['domain'] = [
-        #     ('res_model', '=', 'project.project'), ('res_id', 'in', self.ids)]
+        action['domain'] = [
+            ('res_model', '=', 'project.project'),('res_id', 'in', self.ids)]
+
         return action
 
     def count_expense_checks(self):

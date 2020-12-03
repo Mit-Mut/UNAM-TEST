@@ -49,11 +49,13 @@
     							<field name="fixed_rate" attrs="{'invisible':[('if_fixed','=',False)]}"/>
     							<field name="fixed_extra" attrs="{'invisible':[('if_fixed','=',False)]}"/>
 							</group>
+							<!-- 
                         	<group col="6" colspan="2">
     							<field name="if_average" />
     							<field name="average_rate" attrs="{'invisible':[('if_average','=',False)]}"/>
     							<field name="average_extra" attrs="{'invisible':[('if_average','=',False)]}"/>
 							</group>
+							 -->
                         	<group col="6" colspan="2">
     							<field name="if_variable" />
     							<field name="variable_rate" attrs="{'invisible':[('if_variable','=',False)]}"/>

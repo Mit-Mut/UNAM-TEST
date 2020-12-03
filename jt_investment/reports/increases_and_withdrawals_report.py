@@ -251,7 +251,7 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
         g_total_entradas = 0
         g_total_salidas  = 0
 
-        bank_account_ids = opt_lines.mapped('bank_account_id')
+        bank_account_ids = opt_lines.mapped('investment_id.journal_id')
         for bank in bank_account_ids:
             final_amount = 0
             total_entradas = 0
@@ -274,7 +274,7 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
                 'unfolded': True,
             })
         
-            for rec in opt_lines.filtered(lambda x:x.bank_account_id.id == bank.id):
+            for rec in opt_lines.filtered(lambda x:x.investment_id.journal_id.id == bank.id):
                 month_name = self.get_month_name(rec.date_required.month)
                 entradas = 0
                 salidas  = 0
@@ -293,7 +293,7 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
                     'id': 'hierarchy' + str(rec.id),
                     'name': rec.date_required.day,
                     'columns': [{'name': month_name},
-                                {'name':rec.bank_account_id and rec.bank_account_id.bank_id and rec.bank_account_id.bank_id.name or ''},
+                                {'name':rec.investment_id.journal_id and rec.investment_id.journal_id.bank_id and rec.investment_id.journal_id.bank_id.name or ''},
                                 {'name':rec.investment_id and rec.investment_id.currency_id and rec.investment_id.currency_id.name or ''},
                                 self._format({'name': rec.investment_id and rec.investment_id.currency_rate or False},figure_type='float',digit=4),
                                 self._format({'name': inc_balance},figure_type='float',digit=2),
@@ -363,7 +363,7 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
                 'unfolded': True,
             })
         journal_ids = self.env['res.bank']
-        journal_ids += records.mapped('bank_account_id.bank_id')
+        journal_ids += records.mapped('investment_id.journal_id.bank_id')
 
         if journal_ids:
             journals = list(set(journal_ids.ids))

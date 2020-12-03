@@ -53,7 +53,7 @@ class ClosingCollaboration(models.TransientModel):
         for collab in collaborations.filtered(lambda x:x.state == 'valid' and not x.is_specific):
             if collab.fund_name_transfer_id and \
                     collab.closing_amt != 0 and collab.available_bal != 0 :
-                req_obj.with_context(call_from_closing=True).create({
+                withdrawal_req = req_obj.with_context(call_from_closing=True).create({
                     'bases_collaboration_id': collab.id,
                     'name': collab.name,
                     'opening_balance': collab.closing_amt,
@@ -70,7 +70,8 @@ class ClosingCollaboration(models.TransientModel):
                     'availability_account_id':collab.availability_account_id.id,
                 })
                 collab.available_bal -= collab.closing_amt
-                req_obj.with_context(call_from_closing=True).create({
+                withdrawal_req.action_confirmed()
+                increase_req = req_obj.with_context(call_from_closing=True).create({
                     'bases_collaboration_id': collab.fund_name_transfer_id.id,
                     'name': collab.fund_name_transfer_id.name,
                     'opening_balance': collab.closing_amt,
@@ -87,3 +88,4 @@ class ClosingCollaboration(models.TransientModel):
                     'availability_account_id':collab.availability_account_id.id,
                 })
                 collab.fund_name_transfer_id.available_bal += collab.closing_amt
+                increase_req.action_confirmed()

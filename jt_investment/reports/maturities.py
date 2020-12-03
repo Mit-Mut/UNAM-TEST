@@ -502,7 +502,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
         #==== Productive Accounts ========#
         
         for pro in productive_ids:
-            total_investment += pro.amount_to_invest
+            total_investment += pro.actual_amount
             term = 0
             if pro.is_fixed_rate:
                 term = pro.term
@@ -511,7 +511,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
             
             resouce_name = pro.fund_id and pro.fund_id.name or ''
             
-            interest = ((pro.amount_to_invest * pro.interest_rate/100)*term/360)
+            interest = ((pro.actual_amount * pro.interest_rate/100)*term/360)
             invesment_date = ''
             if pro.invesment_date:
                 invesment_date = pro.invesment_date.strftime('%Y-%m-%d') 
@@ -523,7 +523,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                             {'name': invesment_date},
                             {'name': pro.expiry_date},                               
                             {'name': pro.journal_id and pro.journal_id.bank_account_id and pro.journal_id.bank_account_id.acc_number or ''},
-                            self._format({'name': pro.amount_to_invest},figure_type='float'),
+                            self._format({'name': pro.actual_amount},figure_type='float'),
                             {'name':pro.currency_id and pro.currency_id.name or ''},
                             {'name': 'Cuentas Productivas'},
                             {'name': term},
@@ -619,7 +619,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                 amount += sum(x.nominal_value for x in bonds_bank_records)
                 amount += sum(x.amount for x in will_pay_bank_records)
                 amount += sum(x.amount for x in sale_bank_records)
-                amount += sum(x.amount_to_invest for x in productive_bank_records)                        
+                amount += sum(x.actual_amount for x in productive_bank_records)                        
                 columns.append(self._format({'name': amount},figure_type='float'))
                 
                 if total_dict.get(period.get('string')):
@@ -725,7 +725,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                 amount += sum(x.nominal_value for x in bonds_fund_records)
                 amount += sum(x.amount for x in will_pay_fund_records)
                 amount += sum(x.amount for x in sale_fund_records)
-                amount += sum(x.amount_to_invest for x in productive_fund_records)                                      
+                amount += sum(x.actual_amount for x in productive_fund_records)                                      
                 columns.append(self._format({'name': amount},figure_type='float'))
 
                 if total_dict.get(period.get('string')):
@@ -826,7 +826,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                 amount += sum(x.nominal_value for x in bonds_bank_records)
                 amount += sum(x.amount for x in will_pay_bank_records)
                 amount += sum(x.amount for x in sale_bank_records)
-                amount += sum(x.amount_to_invest for x in productive_bank_records)                        
+                amount += sum(x.actual_amount for x in productive_bank_records)                        
                 columns.append(self._format({'name': amount},figure_type='float'))
                 
                 if total_dict.get(period.get('string')):

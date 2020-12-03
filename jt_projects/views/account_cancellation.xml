@@ -21,12 +21,11 @@
                                 <field name="move_type" readonly="1"/>
                                 <field name="project_id" domain="[('project_type', '=', 'conacyt')]"
                                 attrs="{'readonly': [('status', '!=', 'eraser')]}" />
-                                
                                 <field name="project_name" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="program_code"  attrs="{'readonly': [('status', '!=', 'eraser')]}" context="{'from_conacyt':1}"/>
                                 <field name="user_id" readonly="1"/>
                                 <field name="project_type_identifier" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="project_stage_identifier" attrs="{'readonly': [('status', '!=', 'eraser')]}" string="Project Type"/>
+                                <field name="project_stage_identifier" readonly="1" string="Project Type"/>
                                 <field name="ministrations_amount" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="authorized_amount" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                             </group>

@@ -16,7 +16,7 @@ class Investment(models.Model):
     invesment_date = fields.Datetime("Investment Date")
     journal_id = fields.Many2one("account.journal", "Bank")
     contract_id = fields.Many2one('investment.contract', 'Contract')
-    amount_to_invest = fields.Float("Amount to invest")
+    amount_to_invest = fields.Float("Initial Amount")
     is_fixed_rate = fields.Boolean('Fixed Rate', default=False)
     is_variable_rate = fields.Boolean('Variable Rate', default=False)
     interest_rate = fields.Float("Interest rate")
@@ -345,10 +345,9 @@ class InvestmentOperation(models.Model):
         'dependency', string="Unit requesting the transfer")
     date_required = fields.Date("Date Required")
     fund_type = fields.Many2one('fund.type', "Type Of Fund")
-    agreement_type_id = fields.Many2one(
-        'agreement.agreement.type', 'Agreement Type')
-    base_collabaration_id = fields.Many2one(
-        'bases.collaboration', 'Name Of Agreements')
+    agreement_type_id = fields.Many2one('agreement.agreement.type', 'Agreement Type')
+    base_collabaration_id = fields.Many2one('bases.collaboration', 'Name Of Agreements')
+    patrimonial_id = fields.Many2one('patrimonial.resources', "Patrimonial Resource")
     investment_fund_id = fields.Many2one('investment.funds', 'Fund')
     inc_id = fields.Many2one(
         'request.open.balance.invest', 'Increases and Withdrawals', copy=False)

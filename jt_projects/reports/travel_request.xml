@@ -131,7 +131,7 @@
                                 <td style="text-align:center;border-bottom: 1px solid grey;"><span t-field="line.egress_key_id"/></td>
 
                                 <td style="text-align:center;border-bottom: 1px solid grey;">
-                                <span t-field="line.bill"/>/<span t-field="line.programatic_code_id"/></td>
+                                <span t-field="line.bill"/>/<br/><span t-field="line.program_code_id"/></td>
 
                                 <td style="text-align:center;border-bottom: 1px solid grey;"><span t-field="line.price_unit"/></td>
                                 <td style="text-align:center;border-bottom: 1px solid grey;"><span t-field="line.other_amounts"/></td>
@@ -155,7 +155,7 @@
                                 <th style="border: 1px solid grey;border-top-right-radius:10px;">UNIDAD DE PROCESO ADMINISTRATIVO/MODULO</th>
                             </tr>
                             <tr>
-                                <td style="text-align:center;height:85px;border: 1px solid grey;border-bottom-left-radius:10px;"><span t-field="o.holder_of_unit_id"/></td>
+                                <td style="text-align:center;height:85px;border: 1px solid grey;border-bottom-left-radius:10px;"><span t-field="o.holder_of_dependency_id"/></td>
 
                                 <td style="text-align:center;border: 1px solid grey;"><span t-field="o.administrative_secretary_id"/></td>
 

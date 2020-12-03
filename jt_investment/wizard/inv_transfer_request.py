@@ -102,7 +102,8 @@ class InvTransferRequest(models.TransientModel):
                 'sub_dependency_id': line.base_collabaration_id.subdependency_id.id if \
                     line.base_collabaration_id and line.base_collabaration_id.subdependency_id else False,
                 'origin_resource_id': origin_resource_id,
-                'user_id': self.user_id.id if self.user_id else False
+                'user_id': self.user_id.id if self.user_id else False,
+                'date_required' : self.date,
                 })
 
             self.env['investment.operation'].create({
@@ -124,7 +125,8 @@ class InvTransferRequest(models.TransientModel):
                 'sub_dependency_id': line.base_collabaration_id.subdependency_id.id if \
                    line.base_collabaration_id and line.base_collabaration_id.subdependency_id else False,
                 'origin_resource_id': origin_resource_id,
-                'user_id': self.user_id.id if self.user_id else False
+                'user_id': self.user_id.id if self.user_id else False,
+                'date_required' : self.date,
                 })
         self.env['request.open.balance.finance'].create(
             {

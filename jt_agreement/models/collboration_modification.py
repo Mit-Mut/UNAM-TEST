@@ -73,8 +73,7 @@ class BasesCollabrationModification(models.Model):
             self.bases_collaboration_id.committe_ids = [(0, 0, val) for val in vals]
         if self.change_of == 'dependency' and self.bases_collaboration_id:
             collaboration = self.bases_collaboration_id
-            collaboration.state = 'to_be_cancelled'
-            self.env['request.open.balance'].create({
+            withdrawal_req = self.env['request.open.balance'].create({
                 'name': collaboration.name,
                 'bases_collaboration_id': collaboration.id,
                 'agreement_number':collaboration.convention_no,
@@ -92,8 +91,9 @@ class BasesCollabrationModification(models.Model):
                 else False,
                 'availability_account_id': collaboration.availability_account_id.id if collaboration.availability_account_id
                 else False
-
             })
+            withdrawal_req.action_confirmed()
+            collaboration.state = 'to_be_cancelled'
         self.state = 'confirmed'
 
 class Committee(models.Model):

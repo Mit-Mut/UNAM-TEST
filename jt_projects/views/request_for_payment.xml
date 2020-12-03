@@ -14,7 +14,8 @@
                         <button name="action_draft_budget" string="Draft" class="oe_highlight"
                             type="object"
                             attrs="{'invisible':[('payment_state', 'in', ('draft','paid','cancel','approved_payment','for_payment_procedure'))]}"/>
-                        <button name="action_validate_budget" string="Validate budget" class="oe_highlight" type="object" attrs="{'invisible':[('payment_state', '!=', 'registered')]}" invisible="1"/>
+                        <button name="action_validate_budget" string="Validate budget" class="oe_highlight" type="object" attrs="{'invisible':[('payment_state', '!=', 'registered')]}" invisible="context.get('hide_validate_button',False)"/>
+
                         <button name="action_cancel_budget" string="Cancel" class="oe_highlight" type="object"  attrs="{'invisible':[('payment_state', 'in', ('paid','cancel'))]}"/>
                         <field name="payment_state" widget="statusbar" statusbar_visible="draft,registered,approved_payment,for_payment_procedure,paid,payment_not_applied,rejected,cancel"/>
                     </header>
@@ -316,6 +317,11 @@
                                         <field name="tag_ids" widget="many2many_tags" string="Tax Grids" optional="show" domain="[('country_id', '=', country_id), ('applicability', '=', 'taxes')]"/>
 
                                         <!-- Others fields -->
+                                        <field name="uuid_invoice" invisible="1"/>
+                                        <field name="invoice_vault_folio" invisible="1"/>
+                                        <field name="excercise" invisible="1"/>
+                                        <field name="project_key" invisible="1"/>
+                                        <field name="invoice_folio" invisible="1"/>
                                         <field name="program_code_id" invisible="1"/>
                                         <field name="type_of_bussiness_line" invisible="1"/>
                                         <field name="egress_key_id" invisible="1"/>
@@ -443,7 +449,7 @@
             <field name="name">Request for Payment</field>
             <field name="res_model">account.move</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'show_for_supplier_payment':True,'default_type': 'in_invoice', 'default_is_project_payment': 1,'from_move': 1,'from_conacyt':1}</field>
+            <field name="context">{'hide_validate_button':True,'show_for_supplier_payment':True,'default_type': 'in_invoice', 'default_is_project_payment': 1,'from_move': 1,'from_conacyt':1}</field>
             <field name="domain">[('type', '=', 'in_invoice'), ('is_project_payment', '=', True)]</field>
         </record>
 

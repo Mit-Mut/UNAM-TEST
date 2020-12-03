@@ -206,7 +206,7 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
         total_entradas = 0
         total_salidas  = 0
         
-        bank_account_ids = opt_lines.mapped('bank_account_id')
+        bank_account_ids = opt_lines.mapped('investment_id.journal_id')
         for bank in bank_account_ids:
             total_avg_final = 0
             lines.append({
@@ -231,7 +231,7 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                 'unfolded': True,
             })
               
-            for rec in opt_lines.filtered(lambda x:x.bank_account_id.id == bank.id).sorted('date_required'):
+            for rec in opt_lines.filtered(lambda x:x.investment_id.journal_id.id == bank.id).sorted('date_required'):
                 capital = 0
                 entradas = 0
                 salidas  = 0
@@ -254,6 +254,9 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                     period_rate_id = self.env['investment.period.rate'].search([('rate_date','=',rec.date_required),('product_type','=','TIIE')],limit=1)
                     if period_rate_id:
                         p_rate = period_rate_id.rate_days_28
+                    else:
+                        period_rate_id = self.env['investment.period.rate'].search([('rate_date','<',rec.date_required),('product_type','=','TIIE')],limit=1,order='rate_date desc')
+                        p_rate = period_rate_id.rate_days_28
                 total_avg_final += final_amount
                 
                 lines.append({
@@ -261,7 +264,7 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                     'name': rec.date_required.day,
                     'columns': [{'name': month_name}, 
                                 {'name': rec.date_required.day},
-                                {'name': rec.bank_account_id and rec.bank_account_id.name or ''},
+                                {'name': rec.investment_id.journal_id and rec.investment_id.journal_id.name or ''},
                                 {'name': rec.investment_fund_id and rec.investment_fund_id.fund_id and rec.investment_fund_id.fund_id.name or ''},
                                 {'name': rec.fund_type and rec.fund_type.name or ''},
                                 {'name': rec.agreement_type_id and rec.agreement_type_id.name or ''},
@@ -318,7 +321,7 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                 'unfolded': True,
             })
         journal_ids = self.env['res.bank']
-        journal_ids += records.mapped('bank_account_id.bank_id')
+        journal_ids += records.mapped('investment_id.journal_id.bank_id')
 
         if journal_ids:
             journals = list(set(journal_ids.ids))

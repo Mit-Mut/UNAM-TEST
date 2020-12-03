@@ -20,10 +20,12 @@
 	            		<attribute name="domain">[('id', 'in', dest_ids)]</attribute>
 	            	</field>
 	            	<button name="approve" position="after">
-	            		<button string="Validate Balance" attrs="{'invisible':[('is_balance','=',True)]}" name="validate_balance" type="object" class="oe_highlight"/>
+	            		<button string="Validate Balance" attrs="{'invisible':[('is_balance','=',True)]}"
+								name="validate_balance" type="object" class="oe_highlight"/>
 	            	</button>
 	            	<field name="bank_account_id" position="after">
-	            		<field name="msg" attrs="{'invisible':[('is_balance','=',True)]}" nolable="1" readonly="1"/>
+	            		<field name="msg" attrs="{'invisible':[('is_balance','=',True)]}" nolable="1"
+							   readonly="1"/>
 	            	</field>
 			</field>
 		</record>

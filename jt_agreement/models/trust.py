@@ -351,9 +351,13 @@ class Trust(models.Model):
         lines = []
         folio=1
         final = 0
-            
-        req_date = self.request_open_balance_ids.filtered(lambda x:x.state=='confirmed' and x.request_date >= self.report_start_date and x.request_date <= self.report_end_date).mapped('request_date')
-        req_date += self.interest_rate_ids.filtered(lambda x:x.interest_date >= self.report_start_date and x.interest_date <= self.report_end_date).mapped('interest_date')
+
+        lang = self.env.user.lang
+        req_date = self.request_open_balance_ids.filtered(lambda x: x.request_date and x.state=='confirmed' and \
+            x.request_date >= self.report_start_date and x.request_date <= self.report_end_date).mapped('request_date')
+        req_date += self.interest_rate_ids.filtered(lambda x:x.request_date and \
+            x.interest_date >= self.report_start_date and \
+           x.interest_date <= self.report_end_date).mapped('interest_date')
         
         if req_date:
             req_date = list(set(req_date))
@@ -365,7 +369,7 @@ class Trust(models.Model):
                 final += line.opening_balance
                 lines.append({'folio':folio,
                               'date':line.request_date,
-                              'opt':'Opening Balance',
+                              'opt': 'Apertura de saldo' if lang == 'es_MX' else 'Opening Balance',
                               'debit':line.opening_balance,
                               'credit' : 0.0,
                               'final' : final
@@ -377,7 +381,7 @@ class Trust(models.Model):
                 final += line.opening_balance
                 lines.append({'folio':folio,
                               'date':line.request_date,
-                              'opt':'Increase',
+                              'opt': 'Incremento' if lang == 'es_MX' else 'Increase',
                               'debit':line.opening_balance,
                               'credit' : 0.0,
                               'final' : final
@@ -387,7 +391,7 @@ class Trust(models.Model):
                 final += line.yields
                 lines.append({'folio':folio,
                               'date':line.interest_date,
-                              'opt':'Yields',
+                              'opt': 'Rendimientos' if lang == 'es_MX' else 'Yields',
                               'debit':line.yields,
                               'credit' : 0.0,
                               'final' : final
@@ -397,7 +401,7 @@ class Trust(models.Model):
                 final -= line.fees
                 lines.append({'folio':folio,
                               'date':line.interest_date,
-                              'opt':'Fees',
+                              'opt': 'Intereses' if lang == 'es_MX' else 'Fees',
                               'debit':0.0,
                               'credit' : line.fees,
                               'final' : final
@@ -408,7 +412,7 @@ class Trust(models.Model):
                 final -= line.opening_balance
                 lines.append({'folio':folio,
                               'date':line.request_date,
-                              'opt':'Retirement',
+                              'opt': 'Retiro' if lang == 'es_MX' else 'Retirement',
                               'debit':0.0,
                               'credit' : line.opening_balance,
                               'final' : final
@@ -420,7 +424,7 @@ class Trust(models.Model):
                 final -= line.opening_balance
                 lines.append({'folio':folio,
                               'date':line.request_date,
-                              'opt':'Withdrawal due to cancellation',
+                              'opt': 'Retiro por cancelación' if lang == 'es_MX' else 'Withdrawal due to cancellation',
                               'debit':0.0,
                               'credit' : line.opening_balance,
                               'final' : final

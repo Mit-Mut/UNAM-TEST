@@ -60,7 +60,9 @@
         'reports/bases_collaboration_report.xml',
         'wizard/bases_collaboration.xml',
         'data/data.xml',
-        'security/ir.model.access.csv'
+        'security/ir.model.access.csv',
+        'wizard/amounts_to_invest.xml',
+        'reports/bases_collaboration_amounts_to_invest.xml',
     ],
     'application': False,
     'installable': True,

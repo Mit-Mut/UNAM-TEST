@@ -255,7 +255,7 @@ class InvestmentCommittee(models.AbstractModel):
 
         #===== Investment =======#        
         for account in productive_ids:
-            total_amount += account.amount_to_invest
+            total_amount += account.actual_amount
 
             lines.append({
                 'id': 'hierarchy_account' + str(account.id),
@@ -264,7 +264,7 @@ class InvestmentCommittee(models.AbstractModel):
                              
                             {'name':  account.journal_id and account.journal_id.bank_id and account.journal_id.bank_id.name or ''},
                             {'name':account.currency_id.name},
-                            self._format({'name': account.amount_to_invest},figure_type='float'),
+                            self._format({'name': account.actual_amount},figure_type='float'),
                             {'name': 'Accounts Productivas'},
                             {'name': account.interest_rate or ''},
                             {'name': account.extra_percentage or ''},
@@ -333,7 +333,7 @@ class InvestmentCommittee(models.AbstractModel):
                 productive_currency = self.env['investment.investment'].search(productive_records_domain,order='currency_id')
             
                 amount = 0
-                amount += sum(x.amount_to_invest for x in productive_currency)
+                amount += sum(x.actual_amount for x in productive_currency)
         
                 columns.append(self._format({'name': amount},figure_type='float'))
                 
@@ -957,7 +957,7 @@ class InvestmentCommittee(models.AbstractModel):
         for sale in sale_security_ids:
             if sale.movement and sale.movement=='buy':
                 sale_total_amount += sale.amount
-            if sale.movement and sale.movement=='sale':
+            if sale.movement and sale.movement=='sell':
                 sale_total_amount -= sale.amount
 
             lines.append({
@@ -1034,10 +1034,18 @@ class InvestmentCommittee(models.AbstractModel):
 
                 sale_records_domain = sale_domain + [('currency_id','=',currency.id),('invesment_date','>=',date_start),('invesment_date','<=',date_end)]
                 sale_currency = self.env['purchase.sale.security'].search(sale_records_domain,order='currency_id')
-    
+                
                 amount = 0
-                amount += sum(x.amount for x in sale_currency)
-        
+                for x in sale_currency:
+                    print ("====Move====",x.movement)
+                    if x.movement and x.movement=='buy':
+                        amount += x.amount
+                    if x.movement and x.movement=='sell':
+                        amount -= x.amount
+                #amount += sum(x.amount for x in sale_currency)
+                print ("Cu====",currency)
+                print ("====",sale_currency)
+                print ("amount====",amount)
                 columns.append(self._format({'name': amount},figure_type='float'))
                 
                 if total_dict.get(period.get('string')):

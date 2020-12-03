@@ -186,7 +186,7 @@ class ReportOfInvestmentFunds(models.AbstractModel):
               
             for rec in records.filtered(lambda x:x.fund_id.id==fund.id):
                 valuation = rec.title * rec.movement_price
-                total_val += valuation
+                
                 nominal = rec.price - rec.price_previous_day
                 percentage = 0.0
                 if rec.price_previous_day:
@@ -195,9 +195,12 @@ class ReportOfInvestmentFunds(models.AbstractModel):
                 if rec.movement == 'sell':
                     total_title -= rec.title
                     total_amount -= rec.amount
+                    total_val -= valuation
                 elif rec.movement == 'buy':
                     total_title += rec.title
                     total_amount += rec.amount
+                    total_val += valuation
+                    
                 profit =  valuation - rec.amount + total_title
                 
                 resouce_name = rec.fund_id and rec.fund_id.name or ''

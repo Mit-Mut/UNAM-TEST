@@ -6,3 +6,4 @@ from . import varfication_of_expense
 from . import invoice
 from . import remaining_resource
 from . import request_transfer_finance
+from . import adequacies

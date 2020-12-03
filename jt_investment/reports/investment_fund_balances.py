@@ -214,22 +214,23 @@ class SummaryofOperationInvestmentFundsBalances(models.AbstractModel):
             })
         
             for rec in records.filtered(lambda x:x.fund_id.id==fund.id):
+                valuation = rec.title * rec.movement_price
                 if rec.movement:
                     if rec.movement == 'sell':
                         total_title -= rec.title
                         total_amount -= rec.amount
                         fund_total_title -= rec.title
                         fund_total_amount -= rec.amount
+                        total_val -= valuation
+                        fund_total_val -= valuation
                         
                     elif rec.movement == 'buy':
                         total_title += rec.title
                         total_amount += rec.amount
                         fund_total_title += rec.title
                         fund_total_amount += rec.amount
-                        
-                    valuation = rec.title * rec.movement_price
-                    total_val += valuation
-                    fund_total_val += valuation
+                        total_val += valuation
+                        fund_total_val += valuation
                     
                     lines.append({
                         'id': 'hierarchy' + str(rec.id),

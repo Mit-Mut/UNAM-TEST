@@ -21,7 +21,7 @@
                     <header>
                     	<button name="action_calculation" states="draft" string="Calculation" class="oe_highlight" type="object"/>
                     	<button name="action_confirm" states="draft" string="Confirm" class="oe_highlight" type="object"/>
-                        <button name="transfer_request" states="confirmed" string="Transfer" class="oe_highlight" type="object" />
+                        <button name="transfer_request" states="draft" string="Transfer" class="oe_highlight" type="object"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
@@ -66,19 +66,20 @@
                         	<page string="Calculation">
                         		<field name="calculation_line_ids" >
                         			<tree create="0" edit="0" delete="0">
-                        				<field name="fund_id"/>
+                        				<field name="fund_id" invisible="1"/>
+                        				<field name="investment_fund_id"/>
                         				<field name="agreement_type_id"/>
                         				<field name="base_id"/>
                         				<field name="dependency_id" invisible="1"/>
                         				<field name="dependency_name"/>
                         				<field name="dependency_description" invisible="1"/>
-                        				<field name="capital" digits="[12,4]" sum="total"/>
-                        				<field name="increments" digits="[12,4]" sum="total"/>
-                        				<field name="withdrawals" digits="[12,4]" sum="total"/>
-                        				<field name="final_balance" digits="[12,4]" sum="total"/>
-                        				<field name="income" digits="[12,4]" sum="total"/>
-                        				<field name="rounded" digits="[12,3]" sum="total"/>
-                        				<field name="rate" digits="[12,4]"/>
+                        				<field name="capital" digits="[12,2]"/>
+                        				<field name="increments" digits="[12,2]"/>
+                        				<field name="withdrawals" digits="[12,2]"/>
+                        				<field name="final_balance" digits="[12,2]"/>
+                        				<field name="income" digits="[12,5]" sum="total"/>
+                        				<field name="rounded" digits="[12,2]" sum="total"/>
+                        				<field name="rate" digits="[12,2]"/>
                         				<field name="days"/>
                         			</tree>
                         		</field>

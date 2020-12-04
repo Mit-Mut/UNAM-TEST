@@ -33,6 +33,7 @@
     'data': [
         'security/ir_rules.xml',
         'data/sequence.xml',
+        'data/data.xml',
         'data/cron.xml',
         'security/ir.model.access.csv',
         'views/account_journal_view.xml',
@@ -56,6 +57,7 @@
         'wizard/approve_inv_bal_req_view.xml',
         'wizard/agreements_approve_bal_view.xml',
         'wizard/inv_transfer_request_view.xml',
+        'wizard/distribution_transfer_request_view.xml',
         'reports/header_template.xml',
         'reports/menu_report.xml',
         'reports/filter_template.xml',

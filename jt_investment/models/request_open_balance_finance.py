@@ -19,6 +19,7 @@ class BasesCollabration(models.Model):
     line_opt_ids = fields.One2many('request.open.balance.finance.operation','finance_id',copy=False)
     from_opt_transfer = fields.Boolean(default=False,copy=False)
     amount_type = fields.Selection([('increment','Increment'),('withdrawal','Withdrawal')])
+    investment_operation_ids = fields.Many2many('investment.operation','rel_operation_finance_dis','line_id','opt_id',copy=False)
     
     def approve_finance(self):
         result = super(BasesCollabration,self).approve_finance()
@@ -49,6 +50,8 @@ class BasesCollabration(models.Model):
         if self.investment_operation_id:
             self.investment_operation_id.action_approved()
             
+        for line in self.investment_operation_ids:
+            line.action_approved()
         return result
      
     def confirmed_finance(self):
@@ -80,6 +83,10 @@ class BasesCollabration(models.Model):
         
         if self.investment_operation_id:
             self.investment_operation_id.action_done()
+
+        for line in self.investment_operation_ids:
+            line.action_done()
+            
         return result 
     
     def reject_finance(self):
@@ -145,6 +152,9 @@ class BasesCollabration(models.Model):
         if self.investment_operation_id:
             self.investment_operation_id.action_approved()
 
+        for line in self.investment_operation_ids:
+            line.action_approved()
+
     def canceled_finance(self):
         result = super(BasesCollabration,self).canceled_finance()
 
@@ -174,6 +184,9 @@ class BasesCollabration(models.Model):
 
         if self.investment_operation_id:
             self.investment_operation_id.action_canceled()
+
+        for line in self.investment_operation_ids:
+            line.action_canceled()
  
         return result
     

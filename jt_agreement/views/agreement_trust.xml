@@ -170,13 +170,13 @@
                             		<tree editable="bottom">
                                         <field name="yields"/>
                                         <field name="fees"/>
-                            			<field name="interest_date"/>
+                            			<field name="interest_date" required="1"/>
                             		</tree>
                             		<form>
                             			<group>
 	                                        <field name="yields"/>
 	                                        <field name="fees"/>
-	                            			<field name="interest_date"/>
+	                            			<field name="interest_date" required="1"/>
                             			</group>
                             		</form>
                             	</field>

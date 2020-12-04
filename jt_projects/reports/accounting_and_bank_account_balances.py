@@ -48,11 +48,63 @@ class BankAccountingBalance(models.AbstractModel):
     filter_unposted_in_period = None
     MAX_LINES = None
 
+    filter_dependancy = True
+    filter_subdepenancy = True
+
     filter_project_type = [
         {'id': 'conacyt', 'name': ('CONACYT'), 'selected': False},
         {'id': 'concurrent', 'name': ('Concurrent'), 'selected': False},
         {'id': 'other', 'name': ('Other'), 'selected': False},
     ]
+
+    @api.model
+    def _get_filter_subdepenancy(self):
+        return self.env['sub.dependency'].search([])
+
+    @api.model
+    def _init_filter_subdepenancy(self, options, previous_options=None):
+        if self.filter_subdepenancy is None:
+            return
+        if previous_options and previous_options.get('subdependancy'):
+            journal_map = dict((opt['id'], opt['selected']) for opt in previous_options['subdependancy'] if opt['id'] != 'divider' and 'selected' in opt)
+        else:
+            journal_map = {}
+        options['subdependancy'] = []
+
+        default_group_ids = []
+
+        for j in self._get_filter_subdepenancy():
+            options['subdependancy'].append({
+                'id': j.id,
+                'name': j.sub_dependency,
+                'code': j.sub_dependency,
+                'selected': journal_map.get(j.id, j.id in default_group_ids),
+            })
+
+    
+    @api.model
+    def _get_filter_dependancy(self):
+        return self.env['dependency'].search([])
+
+    @api.model
+    def _init_filter_dependancy(self, options, previous_options=None):
+        if self.filter_dependancy is None:
+            return
+        if previous_options and previous_options.get('dependancy'):
+            journal_map = dict((opt['id'], opt['selected']) for opt in previous_options['dependancy'] if opt['id'] != 'divider' and 'selected' in opt)
+        else:
+            journal_map = {}
+        options['dependancy'] = []
+
+        default_group_ids = []
+
+        for j in self._get_filter_dependancy():
+            options['dependancy'].append({
+                'id': j.id,
+                'name': j.dependency,
+                'code': j.dependency,
+                'selected': journal_map.get(j.id, j.id in default_group_ids),
+            })
     
     def _get_reports_buttons(self):
         return [

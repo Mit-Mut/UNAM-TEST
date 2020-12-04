@@ -134,6 +134,23 @@ class IntegrationOfCurrentResearchProjects(models.AbstractModel):
                 'unfolded': True,
             })
 
+        lines.append({
+            'id': 'project_id',
+            'name': 'Concept',
+            'columns': [
+                        {'name':'Project With Bank Accounts'},
+                        {'name': 'Accounting Balance'},
+                        {'name':'Number Of Bank Accounts'},
+                        {'name': 'Difference Of Expenses Pending Verification'},
+                        {'name': 'Total'},
+                        {'name': ''},
+
+                        ],
+            'level': 2,
+            'unfoldable': False,
+            'unfolded': True,
+            })
+
         return lines
 
     def get_header(self, options):

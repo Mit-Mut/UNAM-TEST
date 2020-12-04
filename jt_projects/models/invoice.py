@@ -39,8 +39,10 @@ class AccountMove(models.Model):
         related='project_number_id.is_papiit_project', string='Is Papiit Project')
     agreement_number = fields.Many2one(
         related='project_number_id.base_number', string='Agreement Number')
-    stage = fields.Char(
-        related='project_number_id.stage_identifier', string='Stage',readonly=False)
+    # stage = fields.Char(
+    #     related='project_number_id.stage_identifier', string='Stage',readonly=False)
+    stage = fields.Many2one(
+        related='project_number_id.stage_identifier_id', string='Stage',readonly=False)
     excercise = fields.Char('excercise')
     invoice_vault_folio = fields.Char('Invoice vault folio')
     req_registration_date = fields.Date('Request Registration Date')
@@ -66,7 +68,8 @@ class AccountMoveLine(models.Model):
     vat = fields.Char('Vat')
     retIVA = fields.Char('RetIVA')
     line = fields.Integer("Line")
-    stage = fields.Char(related='move_id.stage', string='Stage')
+    # stage = fields.Char(related='move_id.stage', string='Stage')
+    stage = fields.Many2one(related='move_id.stage', string='Stage',readonly=False)
     excercise = fields.Char(related='move_id.excercise', string='excercise',readonly=False)
     operation_type_id = fields.Many2one('operation.type',
                                         related='move_id.operation_type_id', string="Operation Type")

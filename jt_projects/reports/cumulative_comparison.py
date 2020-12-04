@@ -114,11 +114,6 @@ class CumulativeComparison(models.AbstractModel):
                             {'name': ''},
                             {'name': ''},
                             {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
 
                             ],
                 'level': 3,
@@ -162,53 +157,53 @@ class CumulativeComparison(models.AbstractModel):
         #     'unfolded': True,
         # })
 
-        # lines.append({
-        #     'id': 'hierarchy_3',
-        #     'name': 'No.',
-        #     'columns': [
-        #         {'name': 'Entity'},
-        #         {'name': 'Name'},
-        #         {'name': 'Bank account'},
-        #         {'name': 'Draft'},
-        #         {'name': 'Validity'},
-        #         {'name': 'Of the'},
-        #         {'name': 'To the'},
-        #         {'name': 'Stage / Year'},
-        #         {'name': 'Grand Total'},
-        #         {'name': 'Account balance'},
-        #         {'name': 'Effective difference to check'},
-        #         {'name': 'Total'},
+        lines.append({
+            'id': 'hierarchy_3',
+            'name': 'No.',
+            'columns': [
+                {'name': 'Entity'},
+                {'name': 'Name'},
+                {'name': 'Bank account'},
+                {'name': 'Draft'},
+                {'name': 'Validity'},
+                {'name': 'Of the'},
+                {'name': 'To the'},
+                {'name': 'Stage / Year'},
+                {'name': 'Grand Total'},
+                {'name': 'Account balance'},
+                {'name': 'Effective difference to check'},
+                {'name': 'Total'},
 
-        #     ],
-        #     'level': 7,
-        #     'unfoldable': False,
-        #     'unfolded': True,
-        # })
+            ],
+            'level': 2,
+            'unfoldable': False,
+            'unfolded': True,
+        })
 
-        # count = 0
-        # for record in project_records:
-        #     count = count + 1
-        #     lines.append({
-        #         'id': 'projects' + str(record.id),
-        #         'name': count,
-        #         'columns': [{'name': ''},
-        #                     {'name': ''},
-        #                     {'name': record.bank_account_id.name or ''},
-        #                     {'name': record.number or ''},
-        #                     {'name': record.proj_start_date or ''},
-        #                     {'name': record.proj_end_date or ''},
-        #                     {'name': record.stage_identifier or ''},
-        #                     {'name': record.ministering_amount or 0.00},
-        #                     {'name': ''},
-        #                     {'name': ''},
-        #                     {'name': ''},
+        count = 0
+        for record in project_records:
+            count = count + 1
+            lines.append({
+                'id': 'projects' + str(record.id),
+                'name': count,
+                'columns': [{'name': ''},
+                            {'name': ''},
+                            {'name': record.bank_account_id.name or ''},
+                            {'name': record.number or ''},
+                            {'name': record.proj_start_date or ''},
+                            {'name': record.proj_end_date or ''},
+                            {'name': record.stage_identifier or ''},
+                            {'name': record.ministering_amount or 0.00},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
 
-        #                     ],
-        #         'level': 8,
-        #         'unfoldable': False,
-        #         'unfolded': True,
+                            ],
+                'level': 8,
+                'unfoldable': False,
+                'unfolded': True,
 
-        #     })
+            })
         
         return lines
 
@@ -219,6 +214,12 @@ class CumulativeComparison(models.AbstractModel):
             {'name': _('CONACYT research projects')},
             {'name': _('Special Research Projects')},
             {'name': _('TOTAL')},
+            {'name': _('')},
+            {'name': _('')},
+            {'name': _('')},
+            {'name': _('')},
+            {'name': _('')},
+            {'name': _('')},
             {'name': _('')},
             {'name': _('')},
             {'name': _('')},

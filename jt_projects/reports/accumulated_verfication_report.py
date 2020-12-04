@@ -125,7 +125,7 @@ class AccumulatedVerficationRecorded(models.AbstractModel):
                         {'name': 'Total [Vertical]'},
                         {'name': 'Total checked [Horizontal]'},
                         ],
-            'level': 6,
+            'level': 2,
             'unfoldable': False,
             'unfolded': True,
         })

@@ -634,24 +634,24 @@
                             <group>
                                 <field name="invoice" invisible="1"/>
                                 <field name="operation_number" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="agreement_number"/>
-                                <field name="bank_account_id"/>
-                                <field name="desti_bank_account_id"/>
-                                <field name="amount"/>
-                                <field name="dependency_id" context="{'show_for_agreement':1}"/>
-                                <field name="sub_dependency_id" context="{'show_for_agreement':1}"/>
+                                <field name="agreement_number" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="bank_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="desti_bank_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="amount" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="dependency_id" context="{'show_for_agreement':1}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="sub_dependency_id" context="{'show_for_agreement':1}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
                             <group>
-                                <field name="date"/>
-                                <field name="concept"/>
-                                <field name="user_id"/>
-                                <field name="unit_req_transfer_id" context="{'show_for_agreement':1}"/>
-                                <field name="date_required" required="1"/>
-                                <field name="fund_id" invisible="1"/>
-                                <field name="investment_fund_id"/>
-                                <field name="fund_type"/>
-                                <field name="agreement_type_id"/>
-                                <field name="base_collabaration_id"/>
+                                <field name="date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="concept" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="user_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="unit_req_transfer_id" context="{'show_for_agreement':1}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="date_required" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="fund_id" invisible="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="investment_fund_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="fund_type" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="agreement_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="base_collabaration_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
                         </group>
                         <group>

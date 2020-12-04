@@ -58,7 +58,7 @@
         'reports/school_internship_request.xml',
         'reports/school_internship_request.xml',
         'reports/exchange_request.xml',
-        #'reports/filter_template.xml',
+        'reports/filter_template.xml',
         'security/ir.model.access.csv',
         'views/upa_payment_request.xml',
 

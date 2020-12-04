@@ -646,7 +646,7 @@
                                 <field name="concept" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="user_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="unit_req_transfer_id" context="{'show_for_agreement':1}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="date_required" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="date_required" required="1" />
                                 <field name="fund_id" invisible="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="investment_fund_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="fund_type" attrs="{'readonly': [('state', '!=', 'draft')]}"/>

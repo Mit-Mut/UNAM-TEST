@@ -67,7 +67,7 @@
                             <page string="Operation" name="operation">
                                 <group>
                                     <group>
-                                        <field name="request_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        <field name="request_date" />
                                         <field name="trade_number" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
                                         <field name="opening_balance" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     </group>

@@ -237,7 +237,7 @@ class InvestmentCommittee(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_account_main',
-            'name': 'Accounts Productivas',
+            'name': 'Cuentas productivas',
             'columns': [{'name': ''}, 
                         {'name': ''},
                         {'name': ''},
@@ -265,7 +265,7 @@ class InvestmentCommittee(models.AbstractModel):
                             {'name':  account.journal_id and account.journal_id.bank_id and account.journal_id.bank_id.name or ''},
                             {'name':account.currency_id.name},
                             self._format({'name': account.actual_amount},figure_type='float'),
-                            {'name': 'Accounts Productivas'},
+                            {'name': 'Cuentas productivas'},
                             {'name': account.interest_rate or ''},
                             {'name': account.extra_percentage or ''},
                             {'name': account.yield_id and account.yield_id.name or ''},
@@ -293,7 +293,7 @@ class InvestmentCommittee(models.AbstractModel):
         })
 
         #=====================Investment Currency Data ==========#
-        period_name = [{'name': 'Currency'}]
+        period_name = [{'name': 'Moneda' if self.env.user.lang == 'es_MX' else 'Currency'}]
         for per in periods:
             period_name.append({'name': per.get('string'),'class':'number'})
         r_column = 6 - len(periods)
@@ -430,7 +430,7 @@ class InvestmentCommittee(models.AbstractModel):
 
 
         #=====================CETES Currency Data ==========#
-        period_name = [{'name': 'Currency'}]
+        period_name = [{'name': 'Moneda' if self.env.user.lang == 'es_MX' else 'Currency'}]
         for per in periods:
             period_name.append({'name': per.get('string'),'class':'number'})
         r_column = 6 - len(periods)
@@ -569,7 +569,7 @@ class InvestmentCommittee(models.AbstractModel):
 
 
         #=====================Udibonos Currency Data ==========#
-        period_name = [{'name': 'Currency'}]
+        period_name = [{'name': 'Moneda' if self.env.user.lang == 'es_MX' else 'Currency'}]
         for per in periods:
             period_name.append({'name': per.get('string'),'class':'number'})
         r_column = 6 - len(periods)
@@ -650,7 +650,7 @@ class InvestmentCommittee(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_bonds_main',
-            'name': 'Bonds',
+            'name': 'BONOS',
             'columns': [{'name': ''}, 
                         {'name': ''}, 
                         {'name': ''},
@@ -677,7 +677,7 @@ class InvestmentCommittee(models.AbstractModel):
                             {'name': bonds.bank_id and bonds.bank_id.name or ''},
                             {'name':bonds.currency_id.name},
                             self._format({'name': bonds.nominal_value},figure_type='float'),
-                            {'name': 'BONDS'},
+                            {'name': 'BONOS'},
                             {'name': bonds.interest_rate or ''},
                             {'name':''},
                            {'name': bonds.yield_id and bonds.yield_id.name or ''},
@@ -705,7 +705,7 @@ class InvestmentCommittee(models.AbstractModel):
         })
 
         #=====================bonds Currency Data ==========#
-        period_name = [{'name': 'Currency'}]
+        period_name = [{'name': 'Moneda' if self.env.user.lang == 'es_MX' else 'Currency'}]
         for per in periods:
             period_name.append({'name': per.get('string'),'class':'number'})
         r_column = 6 - len(periods)
@@ -787,7 +787,7 @@ class InvestmentCommittee(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_pay_main',
-            'name': 'Pay',
+            'name': 'Promissory',
             'columns': [{'name': ''}, 
                         {'name': ''}, 
                         {'name': ''},
@@ -842,7 +842,7 @@ class InvestmentCommittee(models.AbstractModel):
         })
 
         #=====================pay Currency Data ==========#
-        period_name = [{'name': 'Currency'}]
+        period_name = [{'name': 'Moneda' if self.env.user.lang == 'es_MX' else 'Currency'}]
         for per in periods:
             period_name.append({'name': per.get('string'),'class':'number'})
         r_column = 6 - len(periods)
@@ -938,7 +938,7 @@ class InvestmentCommittee(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_sale_main',
-            'name': 'Security',
+            'name': 'Títulos',
             'columns': [{'name': ''}, 
                         {'name': ''}, 
                         {'name': ''},
@@ -968,7 +968,7 @@ class InvestmentCommittee(models.AbstractModel):
                             {'name': sale.journal_id and sale.journal_id.bank_id and sale.journal_id.bank_id.name or ''},
                             {'name':sale.currency_id.name},
                             self._format({'name': sale.amount},figure_type='float'),
-                            {'name': 'TITLES'},
+                            {'name': 'Títulos'},
                             {'name': sale.price or ''},
                             {'name':''},
                             {'name': sale.yield_id and sale.yield_id.name or ''},
@@ -996,7 +996,7 @@ class InvestmentCommittee(models.AbstractModel):
         })
 
         #=====================Security Currency Data ==========#
-        period_name = [{'name': 'Currency'}]
+        period_name = [{'name': 'Moneda' if self.env.user.lang == 'es_MX' else 'Currency'}]
         for per in periods:
             period_name.append({'name': per.get('string'),'class':'number'})
         r_column = 6 - len(periods)
@@ -1037,15 +1037,11 @@ class InvestmentCommittee(models.AbstractModel):
                 
                 amount = 0
                 for x in sale_currency:
-                    print ("====Move====",x.movement)
                     if x.movement and x.movement=='buy':
                         amount += x.amount
                     if x.movement and x.movement=='sell':
                         amount -= x.amount
                 #amount += sum(x.amount for x in sale_currency)
-                print ("Cu====",currency)
-                print ("====",sale_currency)
-                print ("amount====",amount)
                 columns.append(self._format({'name': amount},figure_type='float'))
                 
                 if total_dict.get(period.get('string')):

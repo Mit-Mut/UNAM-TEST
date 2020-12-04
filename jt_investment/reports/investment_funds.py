@@ -208,16 +208,23 @@ class SummaryofOperationInvestmentFunds(models.AbstractModel):
                 'unfoldable': False,
                 'unfolded': True,
             })
-            
+            lang = self.env.user.lang
             for rec in records.filtered(lambda x:x.fund_id.id==fund.id):
                 if rec.movement:
-                    total_amount += rec.amount
+                    
                     if rec.movement == 'sell':
                         total_titel -= rec.title
+                        total_amount -= rec.amount
                     elif rec.movement == 'buy':
                         total_titel += rec.title
+                        total_amount += rec.amount
                         
                     movement = dict(rec._fields['movement'].selection).get(rec.movement)
+                    if lang == 'es_MX':
+                        if movement == 'Purchase':
+                            movement = 'Compra'
+                        elif movement == 'Sale':
+                            movement = 'venta'
                     lines.append({
                         'id': 'hierarchy' + str(rec.id),
                         'name': rec.fund_id and rec.fund_id.name or '',
@@ -286,7 +293,9 @@ class SummaryofOperationInvestmentFunds(models.AbstractModel):
                 sale_fund_record = self.env['purchase.sale.security'].search([('fund_id','=',origin.id),('contract_id','in',contract_list),domain,('invesment_date','>=',date_start),('invesment_date','<=',date_end)])
 
                 amount = 0
-                amount += sum(x.amount for x in sale_fund_record)
+                amount += sum(x.amount for x in sale_fund_record.filtered(lambda x:x.movement=='buy'))
+                amount -= sum(x.amount for x in sale_fund_record.filtered(lambda x:x.movement=='sell'))
+                
                 columns.append(self._format({'name': amount},figure_type='float'))
 
                 if total_dict.get(period.get('string')):
@@ -327,7 +336,7 @@ class SummaryofOperationInvestmentFunds(models.AbstractModel):
 
 
         #===================== Currency Data ==========#
-        period_name = [{'name': 'Currency'}]
+        period_name = [{'name': 'Moneda' if self.env.user.lang == 'es_MX' else 'Currency'}]
         for per in periods:
             period_name.append({'name': per.get('string'),'class':'number'})
         r_column = 4 - len(periods)
@@ -364,10 +373,13 @@ class SummaryofOperationInvestmentFunds(models.AbstractModel):
                 date_end = datetime.strptime(str(period.get('date_to')),
                                          DEFAULT_SERVER_DATE_FORMAT).date()
 
-                sale_currency_record = self.env['purchase.sale.security'].search([('currency_id','=',currency.id),('fund_id','=',origin.id),('contract_id','in',contract_list),domain,('invesment_date','>=',date_start),('invesment_date','<=',date_end)])
+                sale_currency_record = self.env['purchase.sale.security'].search([('currency_id','=',currency.id),
+                                                                                  ('fund_id','=',fund_list),('contract_id','in',contract_list),domain,('invesment_date','>=',date_start),('invesment_date','<=',date_end)])
 
                 amount = 0
-                amount += sum(x.amount for x in sale_currency_record)
+                amount += sum(x.amount for x in sale_currency_record.filtered(lambda x:x.movement=='buy'))
+                amount -= sum(x.amount for x in sale_currency_record.filtered(lambda x:x.movement=='sell'))
+                
                 columns.append(self._format({'name': amount},figure_type='float'))
                 
                 if total_dict.get(period.get('string')):

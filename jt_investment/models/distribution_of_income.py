@@ -98,7 +98,7 @@ class DistributionOfIncome(models.Model):
     
     def action_calculation(self):
         #domain = [('bases_collaboration_id','!=',False)]
-        domain = [('line_state','=','done'),('dependency_id','!=',False)]
+        domain = [('line_state','=','done')]
         
         self.line_ids = [(6, 0, [])]
         self.calculation_line_ids = [(6, 0, [])]
@@ -115,7 +115,7 @@ class DistributionOfIncome(models.Model):
         #base_ids = self.env['bases.collaboration'].search(domain)
         #base_ids = requests.mapped('bases_collaboration_id')
         
-        opt_lines = self.env['investment.operation'].search(domain,order='dependency_id')
+        opt_lines = self.env['investment.operation'].search(domain,order='date_required')
         
         
         if self.dependency_ids and not self.all_dependencies:
@@ -127,84 +127,91 @@ class DistributionOfIncome(models.Model):
         if self.fund_ids and not self.all_agreement:
             opt_lines = opt_lines.filtered(lambda x:x.investment_fund_id.fund_id.id in self.fund_ids.ids)
         
-        inv_funds = opt_lines.mapped('investment_fund_id')
-        for fund  in inv_funds:
-            dependency_ids = opt_lines.filtered(lambda x: x.investment_fund_id.id == fund.id).mapped('dependency_id')
-            for dep in dependency_ids: 
-                lines = opt_lines.filtered(lambda x:x.investment_fund_id.id == fund.id and x.dependency_id.id==dep.id)
-                capital = sum(a.amount for a  in lines.filtered(lambda x:x.type_of_operation == 'open_bal'))
-                 
-                for line in lines.filtered(lambda x:x.type_of_operation != 'open_bal'):
-                    inc = 0
-                    withdrawal = 0
-                    if line.type_of_operation in ('increase','increase_by_closing'):
-                        inc = line.amount
-                    elif line.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure'):
-                        withdrawal = line.amount
+        inv_ids = opt_lines.mapped('investment_id')
+        
+        print ("======",opt_lines)
+        for inv  in inv_ids:
+#             dependency_ids = opt_lines.filtered(lambda x: x.investment_fund_id.id == fund.id).mapped('dependency_id')
+#             for dep in dependency_ids: 
+#                 lines = opt_lines.filtered(lambda x:x.investment_fund_id.id == fund.id and x.dependency_id.id==dep.id)
+#                 capital = sum(a.amount for a  in lines.filtered(lambda x:x.type_of_operation == 'open_bal'))
+            capital = 0     
+            for line in opt_lines.filtered(lambda x:x.investment_id.id == inv_ids.id):
+                inc = 0
+                withdrawal = 0
+                if line.type_of_operation in ('increase','increase_by_closing','open_bal'):
+                    inc = line.amount
+                elif line.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure'):
+                    withdrawal = line.amount
                     
-                    inv = line.investment_id
+                inv = line.investment_id
+                
+                term = 0
+                rate = 0
+                if inv.is_fixed_rate:
+                    term = inv.term
+                    rate = inv.interest_rate + inv.extra_percentage
                     
-                    term = 0
-                    rate = 0
-                    if inv.is_fixed_rate:
-                        term = inv.term
-                        rate = inv.interest_rate + inv.extra_percentage
-                        
-                    elif inv.is_variable_rate:
-                        v_rate = 0
-                        term = inv.term_variable
-                        if inv.investment_rate_id:
-                            other_rate_id = False
-                            if not other_rate_id: 
-                                if inv.term_variable == 28 and inv.investment_rate_id.rate_days_28:
-                                    v_rate = inv.investment_rate_id.rate_days_28
-                                    other_rate_id = True
-                                else:
-                                    other_rate_id = self.env['investment.period.rate'].search([('rate_days_28','>',0),('rate_date','<=',inv.investment_rate_id.rate_date),('product_type','=',inv.investment_rate_id.product_type)],limit=1,order='rate_date desc')
-                                    if other_rate_id:
-                                        v_rate = other_rate_id.rate_days_28
-                                    other_rate_id = True
-                                    
-                            if not other_rate_id:
-                                if inv.term_variable == 91 and inv.investment_rate_id.rate_days_91:
-                                    v_rate = inv.investment_rate_id.rate_days_91
-                                    other_rate_id = True
-                                else:
-                                    other_rate_id = self.env['investment.period.rate'].search([('rate_days_91','>',0),('rate_date','<=',inv.investment_rate_id.rate_date),('product_type','=',inv.investment_rate_id.product_type)],limit=1,order='rate_date desc')
-                                    if other_rate_id:
-                                        v_rate = other_rate_id.rate_days_91
-                                    other_rate_id = True
-                                    
-                            if not other_rate_id:                                    
-                                if inv.term_variable == 182 and inv.investment_rate_id.rate_days_182:
-                                    v_rate = inv.investment_rate_id.rate_days_182
-                                    other_rate_id = True
-                                else:
-                                    other_rate_id = self.env['investment.period.rate'].search([('rate_days_182','>',0),('rate_date','<=',inv.investment_rate_id.rate_date),('product_type','=',inv.investment_rate_id.product_type)],limit=1,order='rate_date desc')
-                                    if other_rate_id:
-                                        v_rate = other_rate_id.rate_days_182
-                                    other_rate_id = True
-                                    
-                        rate = v_rate + inv.extra_percentage
-                        
-                    final_balance = capital + inc - withdrawal
-                    income = (((final_balance * rate)/100)/360)*term
-                                   
-                    cal_vals.append([0, 0, 
-                                {
-                                 'fund_id':line.investment_fund_id and line.investment_fund_id.fund_id and line.investment_fund_id.fund_id.id or False,
-                                 'agreement_type_id':line.agreement_type_id and line.agreement_type_id.id or False,
-                                 'base_id' : line.base_collabaration_id and line.base_collabaration_id.id or False,
-                                 'dependency_id' : line.dependency_id and line.dependency_id.id or False,
-                                 'capital' : capital,
-                                 'increments' : inc,
-                                 'withdrawals' : withdrawal,
-                                 'final_balance' : final_balance,
-                                 'income' : income,
-                                 'rounded': income,
-                                 'rate' : rate,
-                                 'days': term
-                                 }]) 
+                elif inv.is_variable_rate:
+                    v_rate = 0
+                    term = inv.term_variable
+                    if inv.investment_rate_id:
+                        other_rate_id = False
+                        if not other_rate_id: 
+                            if inv.term_variable == 28 and inv.investment_rate_id.rate_days_28:
+                                v_rate = inv.investment_rate_id.rate_days_28
+                                other_rate_id = True
+                            else:
+                                other_rate_id = self.env['investment.period.rate'].search([('rate_days_28','>',0),('rate_date','<=',inv.investment_rate_id.rate_date),('product_type','=',inv.investment_rate_id.product_type)],limit=1,order='rate_date desc')
+                                if other_rate_id:
+                                    v_rate = other_rate_id.rate_days_28
+                                other_rate_id = True
+                                
+                        if not other_rate_id:
+                            if inv.term_variable == 91 and inv.investment_rate_id.rate_days_91:
+                                v_rate = inv.investment_rate_id.rate_days_91
+                                other_rate_id = True
+                            else:
+                                other_rate_id = self.env['investment.period.rate'].search([('rate_days_91','>',0),('rate_date','<=',inv.investment_rate_id.rate_date),('product_type','=',inv.investment_rate_id.product_type)],limit=1,order='rate_date desc')
+                                if other_rate_id:
+                                    v_rate = other_rate_id.rate_days_91
+                                other_rate_id = True
+                                
+                        if not other_rate_id:                                    
+                            if inv.term_variable == 182 and inv.investment_rate_id.rate_days_182:
+                                v_rate = inv.investment_rate_id.rate_days_182
+                                other_rate_id = True
+                            else:
+                                other_rate_id = self.env['investment.period.rate'].search([('rate_days_182','>',0),('rate_date','<=',inv.investment_rate_id.rate_date),('product_type','=',inv.investment_rate_id.product_type)],limit=1,order='rate_date desc')
+                                if other_rate_id:
+                                    v_rate = other_rate_id.rate_days_182
+                                other_rate_id = True
+                                
+                    rate = v_rate + inv.extra_percentage
+                    
+                final_balance = capital + inc - withdrawal
+                income = (((final_balance * rate)/100)/360)*term
+                               
+                cal_vals.append([0, 0, 
+                            {
+                             'fund_id':line.investment_fund_id and line.investment_fund_id.fund_id and line.investment_fund_id.fund_id.id or False,
+                             'agreement_type_id':line.agreement_type_id and line.agreement_type_id.id or False,
+                             'base_id' : line.base_collabaration_id and line.base_collabaration_id.id or False,
+                             'dependency_id' : line.dependency_id and line.dependency_id.id or False,
+                             'capital' : capital,
+                             'increments' : inc,
+                             'withdrawals' : withdrawal,
+                             'final_balance' : final_balance,
+                             'income' : income,
+                             'rounded': income,
+                             'rate' : rate,
+                             'days': term
+
+                             }]) 
+                if line.type_of_operation in ('increase','increase_by_closing','open_bal'):
+                    capital += line.amount
+                elif line.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure'):
+                    capital -= line.amount
  
 #         self.line_ids = vals
             self.calculation_line_ids = cal_vals 

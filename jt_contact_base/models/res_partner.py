@@ -29,7 +29,7 @@ class ResPartner(models.Model):
     # Registration of supplier / beneficiaries
     person_type = fields.Selection(
         [('physics', 'Physics'), ('moral', 'Moral')], string='Person type')
-    beneficiary_type = fields.Selection([('alimony', 'Alimony'), (
+    beneficiary_type = fields.Selection([('employee','Employee'),('alimony', 'Alimony'), (
         'scholar', 'Scholar'), ('national_provider', 'National provider'),
         ('foreign_supplier','Foreign supplier'),('fixed_fund','Fixed Fund')
         ],

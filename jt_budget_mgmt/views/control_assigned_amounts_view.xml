@@ -49,7 +49,7 @@
                             </group>
                             <group>
                                 <field name="import_date" readonly="1"/>
-                                <field name="observations"/>
+                                <field name="observations" invisible="1"/>
                                 <field name="assigned_total"/>
                             </group>
                         </group>

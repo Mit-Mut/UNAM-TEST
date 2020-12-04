@@ -184,7 +184,7 @@
                                     </group>
                                 </group>
                             </page>                            
-                             <page string="Accounts" name="accounts">
+                             <page string="Accounts" name="accounts" invisible="1">
                                 <group>
                                     <group>
                                     	

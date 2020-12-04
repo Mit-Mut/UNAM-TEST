@@ -14,7 +14,8 @@ class InvestmentPeriodRate(models.Model):
     _order = 'rate_date'
     
     rate_date = fields.Date(string='Date',default=datetime.today())
-    product_type = fields.Selection([('TIIE','TIIE'),('CETES','CETES'),('UDIBONOS','UDIBONOS'),('BONUS','BONUS'),('PAGARE','PAGARE')],string="Product Type")
+    product_type = fields.Selection([('TIIE','TIIE'),('CETES','CETES'),('UDIBONOS','UDIBONOS'),('BONUS','BONUS'),
+                                     ('PAGARE','PAGARE')],string="Product Type")
     rate_daily = fields.Float(string="Daily Rate",digits=0)
     rate_days_28 = fields.Float(string="28 Days",digits=0)
     term_days_28 = fields.Integer(string="Term 28 Days")

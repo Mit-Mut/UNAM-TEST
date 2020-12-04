@@ -383,12 +383,13 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
                                          DEFAULT_SERVER_DATE_FORMAT).date()
 
                 
-                domain_period = domain + [('date_required','>=',date_start),('date_required','<=',date_end),('investment_id.currency_id','in',currency_list)]
+                domain_period = domain + [('investment_id.journal_id.bank_id','=',journal.id),('date_required','>=',date_start),('date_required','<=',date_end),('investment_id.currency_id','in',currency_list)]
 
                 records_period = self.env['investment.operation'].search(domain_period)
 
                 amount = 0
-                amount += sum(x.amount for x in records_period)
+                amount += sum(x.amount for x in records_period.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal')))
+                amount -= sum(x.amount for x in records_period.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure')))
                 columns.append(self._format({'name': amount},figure_type='float',digit=2))
                 
                 if total_dict.get(period.get('string')):
@@ -427,7 +428,7 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
             })
 
         #===================== Currency Data ==========#
-        period_name = [{'name': 'Currency'}]
+        period_name = [{'name': 'Moneda' if self.env.user.lang == 'es_MX' else 'Currency'}]
         for per in periods:
             period_name.append({'name': per.get('string'),'class':'number'})
         r_column = 7 - len(periods)
@@ -469,7 +470,9 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
                 records_currency_period = self.env['investment.operation'].search(domain_currency_period)
 
                 amount = 0
-                amount += sum(x.amount for x in records_currency_period)
+                amount += sum(x.amount for x in records_currency_period.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal')))
+                amount -= sum(x.amount for x in records_currency_period.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure')))
+                
                 columns.append(self._format({'name': amount},figure_type='float',digit=2))
                 
                 if total_dict.get(period.get('string')):

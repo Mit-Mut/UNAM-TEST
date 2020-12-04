@@ -145,6 +145,7 @@ class InvestmentAccountStatement(models.AbstractModel):
                             {'name': ''},
                             {'name': ''},
                             {'name': ''},
+                            {'name': ''},
                             ],
                 'level': 1,
                 'unfoldable': False,

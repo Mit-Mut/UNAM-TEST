@@ -589,7 +589,7 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
 
 
         #===================== Currency Data ==========#
-        period_name = [{'name': 'Currency'}]
+        period_name = [{'name': 'Moneda' if self.env.user.lang == 'es_MX' else 'Currency'}]
         for per in periods:
             period_name.append({'name': per.get('string'),'class':'number'})
         r_column = 7 - len(periods)

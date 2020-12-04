@@ -50,7 +50,7 @@ class ReportProductiveAccounts(models.AbstractModel):
 
     filter_contract = True
     filter_currency = True
-    filter_funds = True
+    filter_funds = None
 
     @api.model
     def _get_filter_funds(self):
@@ -142,7 +142,6 @@ class ReportProductiveAccounts(models.AbstractModel):
 
     def _get_columns_name(self, options):
         return [
-            {'name': _('Recurso')},
             {'name': _('Institución financiera')},
             {'name': _('Contrato')},
             {'name':_('moneda')},            
@@ -223,54 +222,52 @@ class ReportProductiveAccounts(models.AbstractModel):
         periods.append(options.get('date'))
 
         if options.get('all_entries') is False:
-            domain=[('line_state','in',('confirmed','done'))]
+            domain=[('state','in',('confirmed','done'))]
             
         else:
-            domain=[('line_state','not in',('rejected','canceled'))]
+            domain=[('state','not in',('rejected','canceled'))]
 
 #         journal = self._get_options_journals_domain(options)
 #         if journal:
 #             domain+=journal
 
-        for fund in options.get('funds'):
-            if fund.get('selected',False)==True:
-                fund_list.append(fund.get('id',0))
-        
-        if fund_list:
-            domain.append(('investment_fund_id.fund_id','in',fund_list))
+#         for fund in options.get('funds'):
+#             if fund.get('selected',False)==True:
+#                 fund_list.append(fund.get('id',0))
+#         
+#         if fund_list:
+#             domain.append(('investment_fund_id.fund_id','in',fund_list))
 
         for select_curreny in options.get('currency'):
             if select_curreny.get('selected',False)==True:
                 currency_list.append(select_curreny.get('id',0))
 
         if currency_list:
-            domain.append(('investment_id.currency_id','in',currency_list))
+            domain.append(('currency_id','in',currency_list))
         
         for contract in options.get('contract'):
             if contract.get('selected',False)==True:
                 contract_list.append(contract.get('id',0))
         
         if contract_list:
-            domain.append(('investment_id.contract_id','in',currency_list))
+            domain.append(('contract_id','in',currency_list))
 
         for journal in options.get('journals'):
             if journal.get('selected',False)==True:
                 journal_list.append(journal.get('id',0))
 
         if journal_list:
-            domain += [('investment_id.journal_id','in',journal_list)]
+            domain += [('journal_id','in',journal_list)]
         
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
-        main_domain = domain + [('date_required','>=',start),('date_required','<=',end)]
+        main_domain = domain + [('invesment_date','>=',start),('invesment_date','<=',end)]
         
         #records = self.env['investment.investment'].search([('invesment_date','>=',start),('invesment_date','<=',end)])
-        print ("Domain =-=-=", domain)
-        records = self.env['investment.operation'].search(main_domain)
-        print ("Records -=-=", records)
+        records = self.env['investment.investment'].search(main_domain)
         
         month_list = {1:[],2:[],3:[],4:[],5:[],6:[],
                       7:[],8:[],9:[],10:[],11:[],12:[]
@@ -286,37 +283,36 @@ class ReportProductiveAccounts(models.AbstractModel):
         total_diff_amount = 0
         for rec in records:
             term = 0
-            if rec.investment_id.is_fixed_rate:
-                term = rec.investment_id.term
-            if rec.investment_id.is_variable_rate:
-                term = rec.investment_id.term_variable
-            total_rate = rec.investment_id.extra_percentage + rec.investment_id.interest_rate
+            if rec.is_fixed_rate:
+                term = rec.term
+            if rec.is_variable_rate:
+                term = rec.term_variable
+            total_rate = rec.extra_percentage + rec.interest_rate
             
-            days = ((rec.amount * total_rate)/100)/360*term
+            days = ((rec.actual_amount * total_rate)/100)/360*term
             total_days += days
-            extra_percentage_value =  ((rec.amount * rec.investment_id.extra_percentage)/100)/360*term
+            extra_percentage_value =  ((rec.actual_amount * rec.extra_percentage)/100)/360*term
             diffrence = days - extra_percentage_value
-            capital =  self._format({'name': rec.amount},figure_type='float',digit=2)
+            capital =  self._format({'name': rec.actual_amount},figure_type='float',digit=2)
             capital = capital.get('name')
             
             total_p_amount += days
             total_extra_amount += extra_percentage_value
             total_diff_amount += diffrence
             
-            resouce_name = rec.investment_fund_id and rec.investment_fund_id.fund_id and rec.investment_fund_id.fund_id.name or ''
+            #resouce_name = rec.investment_fund_id and rec.investment_fund_id.fund_id and rec.investment_fund_id.fund_id.name or ''
              
             lines.append({
                 'id': 'hierarchy' + str(rec.id),
-                'name': resouce_name,
+                'name': rec.journal_id and rec.journal_id.name or '',
                 'columns': [
-                            {'name': rec.investment_id.journal_id and rec.investment_id.journal_id.name or ''},
-                            {'name': rec.investment_id and rec.investment_id.contract_id and rec.investment_id.contract_id.name or ''},
-                            {'name':rec.investment_id.currency_id.name},
-                            self._format({'name': rec.investment_id.actual_amount},figure_type='float',digit=2),
+                            {'name': rec.contract_id and rec.contract_id.name or ''},
+                            {'name':rec.currency_id.name},
+                            self._format({'name': rec.actual_amount},figure_type='float',digit=2),
                             self._format({'name': total_rate},figure_type='float',digit=6),
                             {'name': term},
                             self._format({'name': days},figure_type='float',digit=2),
-                            self._format({'name': rec.investment_id.extra_percentage},figure_type='float',digit=6),
+                            self._format({'name': rec.extra_percentage},figure_type='float',digit=6),
                             self._format({'name': extra_percentage_value},figure_type='float',digit=2),
                             self._format({'name': diffrence},figure_type='float',digit=2),
                             ],
@@ -324,11 +320,11 @@ class ReportProductiveAccounts(models.AbstractModel):
                 'unfoldable': False,
                 'unfolded': True,
             })
-            end_date = rec.date_required + timedelta(days=term)
+            end_date = rec.invesment_date + timedelta(days=term)
 
-            total_month = (end_date.year - rec.date_required.year) * 12 +  (end_date.month - rec.date_required.month)
+            total_month = (end_date.year - rec.invesment_date.year) * 12 +  (end_date.month - rec.invesment_date.month)
              
-            current_month_start_date = rec.date_required
+            current_month_start_date = rec.invesment_date
              
             for month in range(total_month+1):
  
@@ -343,24 +339,24 @@ class ReportProductiveAccounts(models.AbstractModel):
                 day_diff = current_month_end_date - current_month_start_date 
                 day_diff = day_diff.days + 1 - remove_days
                 
-                total_rate = rec.investment_id.extra_percentage + rec.investment_id.interest_rate
+                total_rate = rec.extra_percentage + rec.interest_rate
                  
-                days = ((rec.amount * total_rate)/100)/360*day_diff
+                days = ((rec.actual_amount * total_rate)/100)/360*day_diff
 
-                extra_percentage_value =  ((rec.amount * rec.investment_id.extra_percentage)/100)/360*day_diff
+                extra_percentage_value =  ((rec.actual_amount * rec.extra_percentage)/100)/360*day_diff
                 diffrence = days - extra_percentage_value
  
                 month_vals={
                 'id': 'hierarchy_' + str(rec.id) + str(current_month_start_date.month),
-                'name': resouce_name,
-                'columns': [{'name': rec.investment_id.journal_id and rec.investment_id.journal_id.name or ''},
-                            {'name': rec.investment_id and rec.investment_id.contract_id and rec.investment_id.contract_id.name or ''},
-                            {'name':rec.investment_id.currency_id.name},
-                            self._format({'name': rec.amount},figure_type='float',digit=2),
+                'name': rec.journal_id and rec.journal_id.name or '',
+                'columns': [
+                            {'name': rec.contract_id and rec.contract_id.name or ''},
+                            {'name':rec.currency_id.name},
+                            self._format({'name': rec.actual_amount},figure_type='float',digit=2),
                             self._format({'name': total_rate},figure_type='float',digit=6),
                             {'name': day_diff},
                             self._format({'name': days},figure_type='float',digit=2),
-                            self._format({'name': rec.investment_id.extra_percentage},figure_type='float',digit=6),
+                            self._format({'name': rec.extra_percentage},figure_type='float',digit=6),
                             self._format({'name': extra_percentage_value},figure_type='float',digit=2),
                             self._format({'name': diffrence},figure_type='float',digit=2),
                             ],
@@ -376,7 +372,7 @@ class ReportProductiveAccounts(models.AbstractModel):
         lines.append({
             'id': 'hierarchy_total_pro',
             'name': '',
-            'columns': [{'name': ''},
+            'columns': [
                         {'name': ''},
                         {'name': ''},
                         {'name': ''},
@@ -398,7 +394,7 @@ class ReportProductiveAccounts(models.AbstractModel):
                 lines.append({
                 'id': 'hierarchy_month_' + str(current_month_start_date.month),
                 'name': '',
-                'columns': [{'name': ''},
+                'columns': [
                             {'name': ''},
                             {'name': ''},
                             {'name': ''},
@@ -417,7 +413,7 @@ class ReportProductiveAccounts(models.AbstractModel):
                 lines.append({
                 'id': 'hierarchy_month_' + str(current_month_start_date.month),
                 'name': 'INVERSION '+self.get_month_name(month),
-                'columns': [{'name': ''},
+                'columns': [
                             {'name': ''},
                             {'name': ''},
                             {'name': ''},
@@ -442,9 +438,9 @@ class ReportProductiveAccounts(models.AbstractModel):
                 for m_dict in month_list.get(month):
                     count += 1
                     col = m_dict.get('columns')
-                    a= col[6]
-                    b = col[8]
-                    c = col[9]
+                    a= col[5]
+                    b = col[7]
+                    c = col[8]
                     
                     if 'no_format_name' in a:
                         total_month_amount += a.get('no_format_name',0) 
@@ -469,7 +465,7 @@ class ReportProductiveAccounts(models.AbstractModel):
                         lines.append({
                         'id': 'hierarchy_month_total_' + str(current_month_start_date.month),
                         'name': '',
-                        'columns': [{'name': ''},
+                        'columns': [
                                     {'name': ''},
                                     {'name': ''},
                                     {'name': ''},
@@ -488,14 +484,14 @@ class ReportProductiveAccounts(models.AbstractModel):
 
 
         #===================== Currency Data ==========#
-        period_name = [{'name': 'Currency'}]
+        period_name = [{'name': 'Moneda' if self.env.user.lang == 'es_MX' else 'Currency'}]
         for per in periods:
             period_name.append({'name': per.get('string'),'class':'number'})
-        r_column = 9 - len(periods)
+        r_column = 8 - len(periods)
         if r_column > 0:
             for col in range(r_column):
                 period_name.append({'name': ''})
-
+ 
         lines.append({
                 'id': 'hierarchy_inst',
                 'name': '',
@@ -504,33 +500,35 @@ class ReportProductiveAccounts(models.AbstractModel):
                 'unfoldable': False,
                 'unfolded': True,
             })
-
+ 
         currency_ids = self.env['res.currency']
-        currency_ids += records.mapped('investment_id.currency_id')
-
+        currency_ids += records.mapped('currency_id')
+ 
         if currency_ids:
             currencys = list(set(currency_ids.ids))
             currency_ids = self.env['res.currency'].browse(currencys)
-
+ 
         amount_total = [{'name': 'Total'}]
         total_dict = {}
         for currency in currency_ids:
             total_ins = 0
             columns = [{'name': currency.name}]
-
+ 
             for period in periods:
                 date_start = datetime.strptime(str(period.get('date_from')),
                                            DEFAULT_SERVER_DATE_FORMAT).date()
                 date_end = datetime.strptime(str(period.get('date_to')),
                                          DEFAULT_SERVER_DATE_FORMAT).date()
-
-                records_domain_period = domain + [('investment_id.currency_id','=',currency.id),('date_required','>=',date_start),('date_required','<=',date_end)]
-                productive_currency_records = self.env['investment.operation'].search(records_domain_period,order='currency_id')
+ 
+                records_domain_period = domain + [('currency_id','=',currency.id),('invesment_date','>=',date_start),('invesment_date','<=',date_end)]
+                productive_currency_records = self.env['investment.investment'].search(records_domain_period,order='currency_id')
                 amount = 0
-                amount += sum(x.amount for x in productive_currency_records)
-        
+                #amount += sum(x.amount for x in productive_currency_records.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal')))
+                #amount -= sum(x.amount for x in productive_currency_records.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure')))                
+                amount += sum(x.actual_amount for x in productive_currency_records)
+         
                 columns.append(self._format({'name': amount},figure_type='float',digit=2))
-                
+                 
                 if total_dict.get(period.get('string')):
                     old_amount = total_dict.get(period.get('string',0)) + amount
                     total_dict.update({period.get('string'):old_amount})
@@ -538,7 +536,7 @@ class ReportProductiveAccounts(models.AbstractModel):
                     total_dict.update({period.get('string'):amount})
                 total_ins += amount
             amount_total.append(self._format({'name': total_ins},figure_type='float',digit=2))
-            
+             
             lines.append({
                 'id': 'hierarchy_jr' + str(currency.id),
                 'name': '',
@@ -547,16 +545,16 @@ class ReportProductiveAccounts(models.AbstractModel):
                 'unfoldable': False,
                 'unfolded': True,
             })
-
+ 
         total_name = [{'name': 'Total'}]
         for per in total_dict:
             total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2))
-            
-        r_column = 10 - len(total_name)
+             
+        r_column = 9 - len(total_name)
         if r_column > 0:
             for col in range(r_column):
                 total_name.append({'name': ''})
-                
+                 
         lines.append({
                 'id': 'total_name_currency',
                 'name': '',
@@ -565,7 +563,7 @@ class ReportProductiveAccounts(models.AbstractModel):
                 'unfoldable': False,
                 'unfolded': True,
             })
-                    
+                     
                 
             #print("=======",month_list.get(month))
         return lines

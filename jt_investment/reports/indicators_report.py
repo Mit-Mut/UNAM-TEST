@@ -123,7 +123,6 @@ class IndicatorsReport(models.AbstractModel):
             periods = [period for period in period_list]
         periods.append(options.get('date'))
         
-        print ("=======",periods)
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
@@ -142,7 +141,8 @@ class IndicatorsReport(models.AbstractModel):
             date_end = datetime.strptime(str(period.get('date_to')),
                                          DEFAULT_SERVER_DATE_FORMAT).date()
             
-            cetes_rate = self.env['investment.period.rate'].search([('rate_date','>=',date_start),('rate_date','<=',date_end),('product_type','=','CETES')])
+            cetes_rate = self.env['investment.period.rate'].search([('rate_date','>=',date_start),
+                                                        ('rate_date','<=',date_end),('product_type','=','CETES')])
             if cetes_rate:
                 start_month_date = min(x.rate_date for x in cetes_rate)
                 end_month_date = max(x.rate_date for x in cetes_rate)
@@ -232,10 +232,11 @@ class IndicatorsReport(models.AbstractModel):
             'unfoldable': False,
             'unfolded': True,
         })
-        
+
+        lang = self.env.user.lang
         lines.append({
             'id': 'hierarchy_cetes_28_days',
-            'name': '28 DAYS',
+            'name': '28 Días' if lang == 'es_MX' else '28 DAYS',
             'columns': CETES_columns_28,
             'level': 3,
             'unfoldable': False,
@@ -243,7 +244,7 @@ class IndicatorsReport(models.AbstractModel):
         })
         lines.append({
             'id': 'hierarchy_cetes_91_days',
-            'name': '91 DAYS',
+            'name': '91 Días' if lang == 'es_MX' else '91 DAYS',
             'columns': CETES_columns_91,
             'level': 3,
             'unfoldable': False,
@@ -251,7 +252,7 @@ class IndicatorsReport(models.AbstractModel):
         })
         lines.append({
             'id': 'hierarchy_cetes_182_days',
-            'name': '182 DAYS',
+            'name': '182 Días' if lang == 'es_MX' else '182 DAYS',
             'columns': CETES_columns_182,
             'level': 3,
             'unfoldable': False,
@@ -260,7 +261,7 @@ class IndicatorsReport(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_cetes_364_days',
-            'name': '364 DAYS',
+            'name': '364 Días' if lang == 'es_MX' else '364 DAYS',
             'columns': CETES_columns_364,
             'level': 3,
             'unfoldable': False,
@@ -399,7 +400,7 @@ class IndicatorsReport(models.AbstractModel):
                             
         lines.append({
             'id': 'hierarchy_bonds',
-            'name': 'B) BONDS',
+            'name': 'B) BONOS',
             'columns': [{'name': ''}, 
                         {'name': ''}, 
                         {'name': ''},
@@ -415,7 +416,7 @@ class IndicatorsReport(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_bond_3_year',
-            'name': '3 YEARS',
+            'name': '3 Años' if lang == 'es_MX' else '3 YEARS',
             'columns': bonds_columns_3,
             'level': 3,
             'unfoldable': False,
@@ -424,7 +425,7 @@ class IndicatorsReport(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_bond_5_year',
-            'name': '5 YEARS',
+            'name': '5 Años' if lang == 'es_MX' else '5 YEARS',
             'columns': bonds_columns_5,
             'level': 3,
             'unfoldable': False,
@@ -433,7 +434,7 @@ class IndicatorsReport(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_bond_7_year',
-            'name': '7 YEARS',
+            'name': '7 Años' if lang == 'es_MX' else '7 YEARS',
             'columns': bonds_columns_7,
             'level': 3,
             'unfoldable': False,
@@ -442,7 +443,7 @@ class IndicatorsReport(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_bond_10_year',
-            'name': '10 YEARS',
+            'name': '10 Años' if lang == 'es_MX' else '10 YEARS',
             'columns': bonds_columns_10,
             'level': 3,
             'unfoldable': False,
@@ -451,7 +452,7 @@ class IndicatorsReport(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_bond_20_year',
-            'name': '20 YEARS',
+            'name': '10 Años' if lang == 'es_MX' else '20 YEARS',
             'columns': bonds_columns_20,
             'level': 3,
             'unfoldable': False,
@@ -460,7 +461,7 @@ class IndicatorsReport(models.AbstractModel):
  
         lines.append({
            'id': 'hierarchy_bond_30_year',
-           'name': '30 YEARS',
+           'name': '30 Años' if lang == 'es_MX' else '30 YEARS',
            'columns': bonds_columns_30,
            'level': 3,
            'unfoldable': False,
@@ -595,7 +596,7 @@ class IndicatorsReport(models.AbstractModel):
         })
         lines.append({
             'id': 'hierarchy_udibond_3_year',
-            'name': '3 YEARS',
+            'name': '3 Años' if lang == 'es_MX' else '3 YEARS',
             'columns': UdiBonds_columns_3,
             'level': 3,
             'unfoldable': False,
@@ -604,7 +605,7 @@ class IndicatorsReport(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_udibond_5_year',
-            'name': '5 YEARS',
+            'name': '5 Años' if lang == 'es_MX' else '5 YEARS',
             'columns': UdiBonds_columns_5,
             'level': 3,
             'unfoldable': False,
@@ -613,7 +614,7 @@ class IndicatorsReport(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_udibond_10_year',
-            'name': '10 YEARS',
+            'name': '10 Años' if lang == 'es_MX' else '10 YEARS',
             'columns': UdiBonds_columns_10,
             'level': 3,
             'unfoldable': False,
@@ -621,7 +622,7 @@ class IndicatorsReport(models.AbstractModel):
         })
         lines.append({
             'id': 'hierarchy_udibond_20_year',
-            'name': '20 YEARS',
+            'name': '20 Años' if lang == 'es_MX' else '20 YEARS',
             'columns': UdiBonds_columns_20,
             'level': 3,
             'unfoldable': False,
@@ -629,7 +630,7 @@ class IndicatorsReport(models.AbstractModel):
         })
         lines.append({
             'id': 'hierarchy_udibond_30_year',
-            'name': '30 YEARS',
+            'name': '30 Años' if lang == 'es_MX' else '30 YEARS',
             'columns': UdiBonds_columns_30,
             'level': 3,
             'unfoldable': False,
@@ -742,7 +743,7 @@ class IndicatorsReport(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_tiie_daily_days',
-            'name': 'Daily',
+            'name': 'Diariamente' if lang == 'es_MX' else 'Daily',
             'columns': TIIE_columns_1,
             'level': 3,
             'unfoldable': False,
@@ -751,7 +752,7 @@ class IndicatorsReport(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_TIIE_28_days',
-            'name': '28 DAYS',
+            'name': '28 Días' if lang == 'es_MX' else '28 DAYS',
             'columns': TIIE_columns_28,
             'level': 3,
             'unfoldable': False,
@@ -759,7 +760,7 @@ class IndicatorsReport(models.AbstractModel):
         })
         lines.append({
             'id': 'hierarchy_TIIE_91_days',
-            'name': '91 DAYS',
+            'name': '91 Días' if lang == 'es_MX' else '91 DAYS',
             'columns': TIIE_columns_91,
             'level': 3,
             'unfoldable': False,
@@ -767,7 +768,7 @@ class IndicatorsReport(models.AbstractModel):
         })
         lines.append({
             'id': 'hierarchy_TIIE_182_days',
-            'name': '182 DAYS',
+            'name': '182 Días' if lang == 'es_MX' else '182 DAYS',
             'columns': TIIE_columns_182,
             'level': 3,
             'unfoldable': False,
@@ -845,7 +846,7 @@ class IndicatorsReport(models.AbstractModel):
 
             lines.append({
                 'id': 'hierarchy_tiie_daily_days',
-                'name': 'Daily',
+                'name': 'Diariamente' if lang == 'es_MX' else 'Daily',
                 'columns': currency_col,
                 'level': 3,
                 'unfoldable': False,

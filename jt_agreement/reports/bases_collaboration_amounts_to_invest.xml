@@ -68,7 +68,8 @@
                     <span t-set="start_date" t-value="context.get('start_date')"/>
                     <span t-set="end_date" t-value="context.get('end_date')"/>
 					<span t-set="period_name" t-value="o.get_period_name_amount_invest(start_date, end_date)"/>
-                    <span t-set="balance_dict" t-value="o.get_amount_invest_dict(start_date, end_date)"/>
+                    <span t-set="balance_dict" t-value="o.get_amount_invest_dict(context.get('collaborations'),
+                                                    start_date, end_date)"/>
                  	<tr style="width:100%">
                  		<td style="width:35%;text-align:right;"><b>Periodo: </b><span t-esc="period_name"/></td>
                  	</tr>

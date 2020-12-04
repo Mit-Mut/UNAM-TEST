@@ -42,7 +42,7 @@ class CancelPatrimonial(models.TransientModel):
             rec.supporing_doc = self.supporing_doc
             rec.reason_cancel = self.reason_cancel
             rec.in_force()
-            withdrawal_req = self.env['request.open.balance'].create({
+            self.env['request.open.balance'].create({
                 'patrimonial_resources_id' : rec.id,
                 'is_cancel_collaboration': True,
                 'apply_to_basis_collaboration': True,
@@ -60,4 +60,3 @@ class CancelPatrimonial(models.TransientModel):
                 'specifics_project_id': rec.specifics_project_id.id if rec.specifics_project_id else False,
                 'background_project_id': rec.background_project_id.id if rec.background_project_id else False,
             })
-            withdrawal_req.action_confirmed()

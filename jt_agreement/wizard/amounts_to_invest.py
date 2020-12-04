@@ -30,20 +30,20 @@ class BasesCollaborationAmountstoInvest(models.TransientModel):
 
     start_date = fields.Date(string="Start Date")
     end_date = fields.Date(string="End Date")
-    line_ids = fields.One2many('bases.collaboration.amounts.invest.line', "wizard_id")
     is_hide_button = fields.Boolean(default=False)
+    file = fields.Binary(string='File')
+    filename = fields.Char(string='File name')
 
     def print_amount_invest_bases_collaboration(self):
-        lines = []
         pdf_rec = self.env['bases.collaboration.amounts.invest'].create(
             {'is_hide_button': True, 'start_date': self.start_date, 'end_date': self.end_date})
         for rec in self.env.context.get('active_ids'):
             qr_pdf = self.env.ref('jt_agreement.collaboration_amount_to_invest_report').with_context(
-                start_date=self.start_date,end_date=self.end_date).render_qweb_pdf([rec])[0]
+                start_date=self.start_date,end_date=self.end_date,
+                collaborations=self.env.context.get('active_ids')).render_qweb_pdf([rec])[0]
             qr_pdf = base64.b64encode(qr_pdf)
-            lines.append((0, 0, {'bases_id': rec, 'file': qr_pdf,
-                                 'filename': 'bases_collaboration_amouts_to_invest.pdf'}))
-        pdf_rec.line_ids = lines
+            pdf_rec.file = qr_pdf
+            pdf_rec.filename = 'bases_collaboration_amouts_to_invest.pdf'
 
         return {
             'name': 'Download Files',
@@ -57,23 +57,3 @@ class BasesCollaborationAmountstoInvest(models.TransientModel):
             'res_id': pdf_rec.id,
             'context': {'active_ids': self.env.context.get('active_ids')}
         }
-
-
-class AccountStatementLine(models.TransientModel):
-    _name = 'bases.collaboration.amounts.invest.line'
-    _description = "Bases of collaboration - Amounts to Invest Lines"
-
-    wizard_id = fields.Many2one('bases.collaboration.amounts.invest')
-    bases_id = fields.Many2one('bases.collaboration')
-    file = fields.Binary(string='File')
-    filename = fields.Char(string='File name')
-
-    def download_pdf(self):
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_url',
-            'target': 'download',
-            'url': "web/content/?model=bases.collaboration.amounts.invest.line&id=" + str(
-                self.id) + "&filename_field=filename&field=file&download=true&filename=" + self.filename,
-        }
-

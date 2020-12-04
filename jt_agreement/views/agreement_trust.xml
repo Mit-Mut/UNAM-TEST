@@ -216,6 +216,7 @@
             <field name="name">Trusts</field>
             <field name="res_model">agreement.trust</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">{'from_agreement':1}</field>
         </record>
 
         <menuitem id="menu_agreement_trust" name="Trusts" parent="menu_collaboration_contracts"

@@ -36,7 +36,8 @@ class AgreementBasesCollabration(models.TransientModel):
         
     def print_bases_collaboration(self):
         lines = []
-        pdf_rec = self.env['jt_agreement.bases.collaboration'].create({'is_hide_button':True,'start_date':self.start_date,'end_date':self.end_date})
+        pdf_rec = self.env['jt_agreement.bases.collaboration'].create({'is_hide_button':True,
+                                'start_date':self.start_date,'end_date':self.end_date})
         for rec in self.env.context.get('active_ids'):
             base_records = self.env['bases.collaboration'].browse(rec)
             

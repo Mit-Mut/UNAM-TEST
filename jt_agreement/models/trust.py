@@ -353,9 +353,10 @@ class Trust(models.Model):
         final = 0
 
         lang = self.env.user.lang
-        req_date = self.request_open_balance_ids.filtered(lambda x: x.request_date and x.state=='confirmed' and \
+        req_date = self.request_open_balance_ids.filtered(lambda x: self.report_start_date and self.report_end_date \
+            and x.state=='confirmed' and \
             x.request_date >= self.report_start_date and x.request_date <= self.report_end_date).mapped('request_date')
-        req_date += self.interest_rate_ids.filtered(lambda x:x.request_date and \
+        req_date += self.interest_rate_ids.filtered(lambda x: self.report_start_date and self.report_end_date and \
             x.interest_date >= self.report_start_date and \
            x.interest_date <= self.report_end_date).mapped('interest_date')
         

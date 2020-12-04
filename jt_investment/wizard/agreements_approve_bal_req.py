@@ -50,7 +50,7 @@ class ApproveInvestmentBalReq(models.TransientModel):
     def validate_balance(self):
         if self.investment_id and self.base_collabaration_id:
             opt_lines = self.env['investment.operation'].search([('investment_id', '=', self.investment_id.id),
-                                                                 ('line_state', '=', 'done'), '|',
+                                                ('line_state', '=', 'done'), '|',
                                                 ('investment_fund_id', '=', self.investment_fund_id.id),
                                                 ('base_collabaration_id', '=', self.base_collabaration_id.id)])
             inc = sum(a.amount for a in opt_lines.filtered(
@@ -63,7 +63,7 @@ class ApproveInvestmentBalReq(models.TransientModel):
             else:
                 self.is_balance = False
                 self.msg = "Available balance is not enough"
-        if self.investment_id and self.patrimonial_id:
+        elif self.investment_id and self.patrimonial_id:
             opt_lines = self.env['investment.operation'].search([('investment_id', '=', self.investment_id.id),
                     ('line_state', '=', 'done'), '|', ('investment_fund_id', '=', self.investment_fund_id.id),
                     ('patrimonial_id', '=', self.patrimonial_id.id)])
@@ -95,6 +95,23 @@ class ApproveInvestmentBalReq(models.TransientModel):
     @api.onchange('base_collabaration_id')
     def onchange_base_collabaration_investment(self):
         self.investment_id = False
+
+    @api.onchange('patrimonial_id', 'investment_fund_id')
+    def onchange_patrimonial_id(self):
+        if self.patrimonial_id and self.investment_fund_id:
+            if self.type_of_operation and self.type_of_operation in ('retirement', 'withdrawal', 'withdrawal_cancellation'):
+                inv_ids = []
+                opt_lines = self.env['investment.operation'].search([('type_of_operation', 'in',
+                        ('open_bal', 'increase')), ('investment_fund_id', '=', self.investment_fund_id.id),
+                                                                     ('line_state', '=', 'done')])
+                if opt_lines:
+                    exist_inv_ids = opt_lines.mapped('investment_id')
+                    inv_ids = exist_inv_ids.ids
+            else:
+                inv_ids = self.env['investment.investment'].search([('state', '=', 'confirmed')]).ids
+            return {'domain': {'investment_id': [('id', 'in', inv_ids)]}}
+        elif self.patrimonial_id and not self.investment_fund_id:
+            return {'domain': {'investment_id': [('id', 'in', [])]}}
 
     @api.depends('base_collabaration_id', 'type_of_operation')
     def get_inv_ids(self):

@@ -208,26 +208,28 @@ class BasesCollabration(models.Model):
 
         return month_name.upper()
 
-    def get_amount_invest_dict(self, start_date, end_date):
+    def get_amount_invest_dict(self, collaborations, start_date, end_date):
         balance_dict = {}
         increments = intial_bal = withdrawals = interest = 0
-        deposite = sum(
-            x.opening_balance for x in self.request_open_balance_ids.filtered(lambda x: x.state == 'confirmed'
-                                         and x.request_date < start_date and \
-                                            x.type_of_operation in ('open_bal', 'increase', 'increase_by_closing')))
-        retiros = sum(x.opening_balance for x in self.request_open_balance_ids.filtered(lambda x: x.state == 'confirmed'
-                                         and x.request_date < start_date and \
-                x.type_of_operation in ('retirement', 'withdrawal', 'withdrawal_cancellation', 'withdrawal_closure')))
-        intial_bal = deposite - retiros
-        print ("Intial Bal =-=-", intial_bal)
-        operations = self.request_open_balance_ids.filtered(lambda x:x.state=='confirmed'
-                and x.request_date >= start_date and x.request_date <= end_date)
-        for operation in operations:
-            if operation.type_of_operation in ('open_bal', 'increase','increase_by_closing'):
-                increments += operation.opening_balance
-            elif operation.type_of_operation in ('retirement', 'withdrawal_cancellation', 'withdrawal',
-                                                 'withdrawal_closure'):
-                withdrawals += operation.opening_balance
+        for collab in collaborations:
+            collaboration = self.browse(collab)
+            deposite = sum(
+              x.opening_balance for x in collaboration.request_open_balance_ids.filtered(lambda x: x.state == 'confirmed'
+                                             and x.request_date < start_date and \
+                                                x.type_of_operation in ('open_bal', 'increase', 'increase_by_closing')))
+            retiros = sum(x.opening_balance for x in collaboration.request_open_balance_ids.filtered(lambda x:
+                                            x.state == 'confirmed'
+                                             and x.request_date < start_date and \
+                    x.type_of_operation in ('retirement', 'withdrawal', 'withdrawal_cancellation', 'withdrawal_closure')))
+            intial_bal = deposite - retiros
+            operations = collaboration.request_open_balance_ids.filtered(lambda x:x.state=='confirmed'
+                    and x.request_date >= start_date and x.request_date <= end_date)
+            for operation in operations:
+                if operation.type_of_operation in ('open_bal', 'increase','increase_by_closing'):
+                    increments += operation.opening_balance
+                elif operation.type_of_operation in ('retirement', 'withdrawal_cancellation', 'withdrawal',
+                                                     'withdrawal_closure'):
+                    withdrawals += operation.opening_balance
         balance_dict.update({
             'intial_bal': intial_bal,
             'increments': increments,
@@ -316,7 +318,7 @@ class BasesCollabration(models.Model):
     def get_report_lines(self):
         lines = self.env['request.open.balance'].search([('bases_collaboration_id', '=', self.id),
             ('state', '=', 'confirmed'), ('request_date', '>=', self.report_start_date),
-            ('request_date', '<=', self.report_end_date)], order='order_seq, request_date')
+            ('request_date', '<=', self.report_end_date)], order='request_date')
         return lines
 
     @api.model

@@ -66,6 +66,7 @@
                         	<page string="Calculation">
                         		<field name="calculation_line_ids" >
                         			<tree create="0" edit="0" delete="0">
+                        				<field name="date_required"/>
                         				<field name="fund_id" invisible="1"/>
                         				<field name="investment_fund_id"/>
                         				<field name="agreement_type_id"/>

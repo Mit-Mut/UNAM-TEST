@@ -131,6 +131,9 @@ class DistributionTransferRequest(models.TransientModel):
                 })
             inv_opt_lines.append(ot_id.id)
             
+            if line.base_collabaration_id:
+                line.base_collabaration_id.interest_rate += line.amount_to_transfer
+                 
         self.env['request.open.balance.finance'].create(
             {
                 'bank_account_id': self.bank_account_id.id if self.bank_account_id else False,

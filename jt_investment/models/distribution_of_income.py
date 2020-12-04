@@ -138,8 +138,8 @@ class DistributionOfIncome(models.Model):
                      'income' : income,
                      'rounded': income,
                      'rate' : rate,
-                     'days': term
-
+                     'days': term,
+                     'date_required' : line.date_required,
                      }]) 
         if line.type_of_operation in ('increase','increase_by_closing','open_bal'):
             capital += line.amount
@@ -161,13 +161,12 @@ class DistributionOfIncome(models.Model):
             domain.append(('date_required','<=',self.end_date))
         
         if self.journal_id:
-            domain.append(('investment_id.journal_id','<=',self.journal_id.id))
+            domain.append(('investment_id.journal_id','=',self.journal_id.id))
             
         #base_ids = self.env['bases.collaboration'].search(domain)
         #base_ids = requests.mapped('bases_collaboration_id')
         
         opt_lines = self.env['investment.operation'].search(domain,order='date_required')
-        
         
         if self.dependency_ids and not self.all_dependencies:
             opt_lines = opt_lines.filtered(lambda x:x.dependency_id.id in self.dependency_ids.ids)
@@ -185,7 +184,7 @@ class DistributionOfIncome(models.Model):
             for fund in opt_lines.filtered(lambda x:x.investment_id.id == inv.id).mapped('investment_fund_id'):
                 capital = 0
                 line = False
-                fund_lines = opt_lines.filtered(lambda x:x.investment_id.id == inv.id and x.investment_fund_id.id == fund.id)      
+                fund_lines = opt_lines.filtered(lambda x:not x.base_collabaration_id and x.investment_id.id == inv.id and x.investment_fund_id.id == fund.id)      
                 for opt_line in fund_lines:
                     if not line:
                         line = opt_line
@@ -194,7 +193,21 @@ class DistributionOfIncome(models.Model):
                     line = opt_line
                 if line:
                     cal_vals,capital = self.create_line_records(line,line,capital,cal_vals)
-            self.calculation_line_ids = cal_vals 
+
+                for base in opt_lines.filtered(lambda x:x.investment_id.id == inv.id and x.investment_fund_id.id == fund.id).mapped('base_collabaration_id'):
+                    capital = 0
+                    line = False
+                    base_lines = opt_lines.filtered(lambda x:x.base_collabaration_id.id==base.id and x.investment_id.id == inv.id and x.investment_fund_id.id == fund.id)      
+                    for opt_line in base_lines:
+                        if not line:
+                            line = opt_line
+                            continue
+                        cal_vals,capital = self.create_line_records(line,opt_line,capital,cal_vals)
+                        line = opt_line
+                    if line:
+                        cal_vals,capital = self.create_line_records(line,line,capital,cal_vals)
+                    
+        self.calculation_line_ids = cal_vals 
 
     def action_confirm(self):
         today = datetime.today().date()
@@ -306,6 +319,7 @@ class DistributionOfIncomecalculation(models.Model):
     
     _name = 'distribution.of.income.calculation'
     _description = "Distribution Of Income Line"
+    _order= 'date_required'
     
     distribution_id = fields.Many2one('distribution.of.income','Distribution')    
 
@@ -324,6 +338,7 @@ class DistributionOfIncomecalculation(models.Model):
     rounded = fields.Float("Rounded")
     rate = fields.Float("Average Rate")
     days = fields.Integer("Days")
+    date_required = fields.Date("Date Required")
     
     
     

@@ -2,7 +2,6 @@ from odoo import models, fields, api , _
 from datetime import datetime
 from odoo.exceptions import UserError
 
-
 class DistributionOfIncome(models.Model):
 
     _name = 'distribution.of.income'
@@ -28,11 +27,8 @@ class DistributionOfIncome(models.Model):
     
     state = fields.Selection([('draft', 'Draft'),
                                ('requested', 'Requested'),
-                               ('rejected', 'Rejected'),
-                               ('approved', 'Approved'),
                                ('confirmed', 'Confirmed'),
-                               ('done', 'Done'),
-                               ('canceled', 'Canceled')], string="Status", default="draft")
+                               ], string="Status", default="draft")
     
 
     journal_id = fields.Many2one('account.journal','Bank')
@@ -57,7 +53,7 @@ class DistributionOfIncome(models.Model):
                 raise UserError(_('You can delete only draft status data.'))
         return super(DistributionOfIncome, self).unlink()
     
-    def create_line_records(self,line,opt_line,capital,cal_vals):
+    def create_line_records(self,line,opt_line,capital,cal_vals,pre_line,days):
         inc = 0
         withdrawal = 0
         if line.type_of_operation in ('increase','increase_by_closing','open_bal'):
@@ -71,10 +67,18 @@ class DistributionOfIncome(models.Model):
         rate = 0
         if inv.is_fixed_rate:
             if opt_line==line:
-                term = inv.term - opt_line.date_required.day + 1
+                if not pre_line:
+                    term = inv.term - days
+                    days += term
+                else:
+                    term = inv.term - days
+                    #term = inv.term - opt_line.date_required.day + 1
+                    days += term
+                #term = inv.term
             else:
                 if opt_line.date_required and line.date_required:
                     term = opt_line.date_required.day - line.date_required.day
+                    days += term 
                      
             rate = inv.interest_rate + inv.extra_percentage
             
@@ -145,8 +149,30 @@ class DistributionOfIncome(models.Model):
             capital += line.amount
         elif line.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure'):
             capital -= line.amount
-        return cal_vals,capital
+        return cal_vals,capital,days
     
+    def set_rate_data(self,inv):
+        if inv.is_fixed_rate:
+            self.if_fixed = True
+            self.fixed_rate = inv.interest_rate
+            self.fixed_extra = inv.extra_percentage
+        elif inv.is_variable_rate:
+            self.if_variable = True
+            self.variable_extra = inv.extra_percentage
+            total_rate = 0.0
+            total_days = self.end_date.day - self.start_date.day + 1
+             
+            rate_ids = self.env['investment.period.rate'].search([('rate_date','>=',self.start_date),('rate_date','<=',self.end_date),('product_type','=','TIIE')])
+            if inv.term_variable and inv.term_variable==28:
+                total_rate = sum(x.rate_days_28 for x in rate_ids)
+            elif inv.term_variable and inv.term_variable==91:
+                total_rate = sum(x.rate_days_91 for x in rate_ids)
+            elif inv.term_variable and inv.term_variable==182:
+                total_rate = sum(x.rate_days_182 for x in rate_ids)
+            
+            
+            self.variable_rate = total_rate/total_days
+            
     def action_calculation(self):
         #domain = [('bases_collaboration_id','!=',False)]
         domain = [('line_state','=','done')]
@@ -166,7 +192,7 @@ class DistributionOfIncome(models.Model):
         #base_ids = self.env['bases.collaboration'].search(domain)
         #base_ids = requests.mapped('bases_collaboration_id')
         
-        opt_lines = self.env['investment.operation'].search(domain,order='date_required')
+        opt_lines = self.env['investment.operation'].search(domain,order='date_required,id')
         
         if self.dependency_ids and not self.all_dependencies:
             opt_lines = opt_lines.filtered(lambda x:x.dependency_id.id in self.dependency_ids.ids)
@@ -178,34 +204,43 @@ class DistributionOfIncome(models.Model):
             opt_lines = opt_lines.filtered(lambda x:x.investment_fund_id.fund_id.id in self.fund_ids.ids)
         
         inv_ids = opt_lines.mapped('investment_id')
-        
-        
+                
         for inv  in inv_ids:
-            for fund in opt_lines.filtered(lambda x:x.investment_id.id == inv.id).mapped('investment_fund_id'):
+            self.set_rate_data(inv)
+            for fund in opt_lines.filtered(lambda x:x.investment_id.id == inv.id and not x.base_collabaration_id).mapped('investment_fund_id'):
                 capital = 0
+                days = 0
                 line = False
+                pre_line = False
                 fund_lines = opt_lines.filtered(lambda x:not x.base_collabaration_id and x.investment_id.id == inv.id and x.investment_fund_id.id == fund.id)      
                 for opt_line in fund_lines:
                     if not line:
                         line = opt_line
                         continue
-                    cal_vals,capital = self.create_line_records(line,opt_line,capital,cal_vals)
+                    pre_line = opt_line
+                    cal_vals,capital,days = self.create_line_records(line,opt_line,capital,cal_vals,pre_line,days)
                     line = opt_line
                 if line:
-                    cal_vals,capital = self.create_line_records(line,line,capital,cal_vals)
+                    cal_vals,capital,days = self.create_line_records(line,line,capital,cal_vals,pre_line,days)
 
+            for fund in opt_lines.filtered(lambda x:x.investment_id.id == inv.id and x.base_collabaration_id).mapped('investment_fund_id'):
                 for base in opt_lines.filtered(lambda x:x.investment_id.id == inv.id and x.investment_fund_id.id == fund.id).mapped('base_collabaration_id'):
                     capital = 0
+                    days = 0 
                     line = False
+                    pre_line = False
                     base_lines = opt_lines.filtered(lambda x:x.base_collabaration_id.id==base.id and x.investment_id.id == inv.id and x.investment_fund_id.id == fund.id)      
                     for opt_line in base_lines:
                         if not line:
                             line = opt_line
                             continue
-                        cal_vals,capital = self.create_line_records(line,opt_line,capital,cal_vals)
+                        
+                        pre_line = opt_line
+                        cal_vals,capital,days = self.create_line_records(line,opt_line,capital,cal_vals,pre_line,days)
                         line = opt_line
+                        
                     if line:
-                        cal_vals,capital = self.create_line_records(line,line,capital,cal_vals)
+                        cal_vals,capital,days = self.create_line_records(line,line,capital,cal_vals,pre_line,days)
                     
         self.calculation_line_ids = cal_vals 
 
@@ -240,6 +275,7 @@ class DistributionOfIncome(models.Model):
         today = datetime.today().date()
         fund_ids = self.calculation_line_ids.mapped('investment_fund_id')
         opt_lines = []
+        total_transfer = 0
         for fund in fund_ids:
             base_ids = self.calculation_line_ids.filtered(
                 lambda x: x.investment_fund_id.id == fund.id).mapped('base_id')
@@ -251,8 +287,9 @@ class DistributionOfIncome(models.Model):
                 #balance = inc - ret
                 if balance > 0:
                     opt_lines.append((0, 0, {'opt_line_ids': [(6, 0, lines.ids)], 'investment_fund_id': fund.id,
-                                             'base_collabaration_id': base.id, 'agreement_number': base.convention_no, 'amount': balance}))
-
+                                             'base_collabaration_id': base.id, 'agreement_number': base.convention_no, 'amount': balance,'amount_to_transfer':balance,'check':True}))
+                    total_transfer += balance
+                    
             lines = self.calculation_line_ids.filtered(lambda x: x.investment_fund_id.id ==
                                            fund.id and not x.base_id)
             
@@ -260,8 +297,8 @@ class DistributionOfIncome(models.Model):
             
             if balance > 0:
                 opt_lines.append((0, 0, {'opt_line_ids': [
-                                 (6, 0, lines.ids)], 'investment_fund_id': fund.id, 'amount': balance}))
-
+                                 (6, 0, lines.ids)], 'investment_fund_id': fund.id, 'amount': balance,'amount_to_transfer':balance,'check':True}))
+                total_transfer += balance 
         dis_journal = self.env.ref(
             'jt_investment.distribution_of_income')
         journal_id = False
@@ -277,25 +314,22 @@ class DistributionOfIncome(models.Model):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'context': {
+                'default_distribution_income_id':self.id,
                 'default_date': today,
                 'default_bank_account_id': journal_id,
                 'default_line_ids': opt_lines,
                 'show_for_agreement': True,
-                'show_agreement_name': True
+                'show_agreement_name': True,
+                'default_amount' : total_transfer,
             }
         }
 
     def action_requested(self):
         self.state = 'requested'
 
-    def action_approved(self):
-        self.state = 'approved'
-
     def action_confirmed(self):
         self.state = 'confirmed'
         
-    def action_reject(self):
-        self.state = 'rejected'
         
 class DistributionOfIncomeLine(models.Model):
     

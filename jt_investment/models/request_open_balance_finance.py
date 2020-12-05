@@ -20,6 +20,7 @@ class BasesCollabration(models.Model):
     from_opt_transfer = fields.Boolean(default=False,copy=False)
     amount_type = fields.Selection([('increment','Increment'),('withdrawal','Withdrawal')])
     investment_operation_ids = fields.Many2many('investment.operation','rel_operation_finance_dis','line_id','opt_id',copy=False)
+    distribution_income_id = fields.Many2one('distribution.of.income','Distribution Income')
     
     def approve_finance(self):
         result = super(BasesCollabration,self).approve_finance()
@@ -86,6 +87,9 @@ class BasesCollabration(models.Model):
 
         for line in self.investment_operation_ids:
             line.action_done()
+            
+        if self.distribution_income_id:
+            self.distribution_income_id.action_confirmed()
             
         return result 
     

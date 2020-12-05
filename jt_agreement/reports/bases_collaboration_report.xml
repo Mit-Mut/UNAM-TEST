@@ -155,32 +155,27 @@
                     		<td></td>
                     		<td class="style1 border1" style="text-align:right;"><span t-esc="opening_bal"/></td>
                     	</tr>
+                    	<t t-set="total_final" t-value="0"/>
+                    	<t t-set="total_debit" t-value="0"/>
+                    	<t t-set="total_credit" t-value="0"/>
+                    	
 	                    <tr class="style1" t-foreach="o.get_report_lines()" t-as="line">
-	                    	<t t-set="debit" t-value="0"/>
-	                    	<t t-set="credit" t-value="0"/>
 	                    
-	                        <td class="style1 border1" style="text-align:left;"><span t-field="line.request_date"/></td>
-	                        <td class="style1 border1" style="text-align:left;"><span t-field="line.type_of_operation"/></td>
-	                        <t t-if="line.type_of_operation in ('withdrawal','retirement','withdrawal_cancellation','withdrawal_closure')">
-	                        	<t t-set="credit" t-value="line.opening_balance"/>
-	                        	<t t-set="total_final" t-value="total_final - line.opening_balance"/>
-	                        	<t t-set="total_ret" t-value='total_ret + line.opening_balance'/>
-	                        	
-	                        </t>
-	                        <t t-if="line.type_of_operation in ('open_bal','increase','increase_by_closing')">
-	                        	<t t-set="debit" t-value="line.opening_balance"/>
-	                        	<t t-set="total_final" t-value="total_final + line.opening_balance"/>
-	                        	<t t-set="total_inc" t-value='total_inc+line.opening_balance'/>
-	                        </t>
-	                        <td class="style1 border1" style="text-align:right;"><span t-esc="debit" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
-	                        <td class="style1 border1" style="text-align:right;"><span t-esc="credit" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
-	                        <td class="style1 border1" style="text-align:right;"><span t-esc="total_final" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+	                        <td class="style1 border1" style="text-align:left;"><span t-esc="line['date']"/></td>
+	                        <td class="style1 border1" style="text-align:left;"><span t-esc="line['opt']"/></td>
+	                        <td class="style1 border1" style="text-align:right;"><span t-esc="line['debit']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+	                        <td class="style1 border1" style="text-align:right;"><span t-esc="line['credit']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+	                        <td class="style1 border1" style="text-align:right;"><span t-esc="line['final']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+	                        <t t-set="total_final" t-value="line['final']"/>
+	                        <t t-set="total_debit" t-value="total_debit + line['debit']"/>
+                    		<t t-set="total_credit" t-value="total_credit + line['credit']"/>
+	                        
 	                    </tr>
                         <tr>
                         	<th></th>
                         	<th></th>
-	                        <th class="style1 border1" style="text-align:right;"><span t-esc="total_inc" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></th>
-	                        <th class="style1 border1" style="text-align:right;"><span t-esc="total_ret" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></th>
+	                        <th class="style1 border1" style="text-align:right;"><span t-esc="total_debit" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></th>
+	                        <th class="style1 border1" style="text-align:right;"><span t-esc="total_credit" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></th>
 	                        <th class="style1 border1" style="text-align:right;"><span t-esc="total_final" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></th>
                         	
                         </tr>

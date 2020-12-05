@@ -105,7 +105,7 @@ class InvestmentAccountStatement(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         lines = []
-
+        lang = self.env.user.lang
         if options.get('all_entries') is False:
             domain=[('line_state','in',('confirmed','done'))]
         else:
@@ -126,6 +126,7 @@ class InvestmentAccountStatement(models.AbstractModel):
         g_total_inc = 0
         g_total_with = 0
         g_total_final = 0
+
 
         #===== Investment =======#
         journal_ids = productive_ids.mapped('investment_id.journal_id')
@@ -173,6 +174,21 @@ class InvestmentAccountStatement(models.AbstractModel):
                 
 
                 movement = dict(rec._fields['type_of_operation'].selection).get(rec.type_of_operation)
+                if lang == 'es_MX':
+                    if movement=='Opening Balance':
+                        movement = 'Importe de apertura'
+                    elif movement=='Increase':
+                        movement = 'Incremento'
+                    elif movement=='Retirement':
+                        movement = 'Retiro'
+                    elif movement=='Withdrawal for settlement':
+                        movement = 'Retiro por liquidación'
+                    elif movement=='Withdrawal Due to Cancellation':
+                        movement = 'Retiro por cancelación'
+                    elif movement=='Withdrawal due to closure':
+                        movement = 'Retiro por cierre'
+                    elif movement=='Increase by closing':
+                        movement = 'Incremento por cierre'
                 lines.append({
                     'id': 'hierarchy_account' + str(rec.id),
                     'name' :invesment_date, 
@@ -350,7 +366,37 @@ class InvestmentAccountStatement(models.AbstractModel):
         output.seek(0)
         generated_file = output.read()
         output.close()
-        return generated_file    
+        return generated_file
+
+    def get_month_name(self, month):
+        month_name = ''
+        if month == 1:
+            month_name = 'Enero'
+        elif month == 2:
+            month_name = 'Febrero'
+        elif month == 3:
+            month_name = 'Marzo'
+        elif month == 4:
+            month_name = 'Abril'
+        elif month == 5:
+            month_name = 'Mayo'
+        elif month == 6:
+            month_name = 'Junio'
+        elif month == 7:
+            month_name = 'Julio'
+        elif month == 8:
+            month_name = 'Agosto'
+        elif month == 9:
+            month_name = 'Septiembre'
+        elif month == 10:
+            month_name = 'Octubre'
+        elif month == 11:
+            month_name = 'Noviembre'
+        elif month == 12:
+            month_name = 'Diciembre'
+
+        return month_name.upper()
+
 
     def get_pdf(self, options, minimal_layout=True):
         # As the assets are generated during the same transaction as the rendering of the
@@ -365,7 +411,8 @@ class InvestmentAccountStatement(models.AbstractModel):
         if not config['test_enable']:
             self = self.with_context(commit_assetsbundle=True)
 
-        base_url = self.env['ir.config_parameter'].sudo().get_param('report.url') or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('report.url') or self.env['ir.config_parameter'].\
+            sudo().get_param('web.base.url')
         rcontext = {
             'mode': 'print',
             'base_url': base_url,
@@ -385,12 +432,26 @@ class InvestmentAccountStatement(models.AbstractModel):
             spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 10}
             footer = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
         else:
+            period_name = ''
+            start_date = datetime.strptime(options.get('date').get('date_from'), DEFAULT_SERVER_DATE_FORMAT)
+            end_date = datetime.strptime(options.get('date').get('date_to'), DEFAULT_SERVER_DATE_FORMAT)
+            if start_date and end_date:
+                period_name += "Del " + str(start_date.day)
+
+                period_name += ' ' + self.get_month_name(start_date.month)
+                if start_date.year != end_date.year:
+                    period_name += ' ' + str(start_date.year)
+
+                period_name += " al " + str(end_date.day) + " de " + self.get_month_name(end_date.month) + " " \
+                               + str(end_date.year)
             rcontext.update({
                     'css': '',
                     'o': self.env.user,
                     'res_company': self.env.company,
+                    'period_name': period_name
                 })
-            header = self.env['ir.actions.report'].render_template("jt_investment.external_layout_investment_committee", values=rcontext)
+            header = self.env['ir.actions.report'].with_context(period_name=period_name).render_template("jt_investment.external_layout_investment_committee",
+                                                                   values=rcontext)
             header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
             spec_paperformat_args = {}
             # Default header and footer in case the user customized web.external_layout and removed the header/footer

@@ -149,7 +149,11 @@ class VerificationOfExpenseLine(models.Model):
     @api.depends('price','tax_ids')
     def get_tax_amount(self):
         for rec in self:
-            rec.amount_tax = 0.0 
+            amount = 0
+            if rec.tax_ids:
+                taxes_res = rec.tax_ids._origin.compute_all(rec.price,quantity=1)
+                amount = taxes_res['total_included'] - taxes_res['total_excluded']
+            rec.amount_tax = amount 
 
 class AccountMoveLine(models.Model):
 

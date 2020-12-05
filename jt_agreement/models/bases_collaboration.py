@@ -127,7 +127,8 @@ class BasesCollabration(models.Model):
     journal_id = fields.Many2one('account.journal')
     move_line_ids = fields.One2many(
         'account.move.line', 'collaboration_id', string="Journal Items")
-
+    rate_base_ids = fields.One2many('interest.rate.base','base_id')
+    
     _sql_constraints = [
         ('folio_convention_no', 'unique(convention_no)', 'The Convention No. must be unique.')]
 
@@ -230,6 +231,9 @@ class BasesCollabration(models.Model):
                 elif operation.type_of_operation in ('retirement', 'withdrawal_cancellation', 'withdrawal',
                                                      'withdrawal_closure'):
                     withdrawals += operation.opening_balance
+            interest = sum(x.interest_rate for x in collaboration.rate_base_ids.filtered(lambda x:x.interest_date and x.interest_date >= start_date and x.interest_date <= end_date))
+            interest = round(interest,2)
+            print ("interest===",interest)
         balance_dict.update({
             'intial_bal': intial_bal,
             'increments': increments,
@@ -316,9 +320,69 @@ class BasesCollabration(models.Model):
         return retiros
 
     def get_report_lines(self):
-        lines = self.env['request.open.balance'].search([('bases_collaboration_id', '=', self.id),
-            ('state', '=', 'confirmed'), ('request_date', '>=', self.report_start_date),
-            ('request_date', '<=', self.report_end_date)], order='request_date')
+
+        req_date = self.request_open_balance_ids.filtered(lambda x: self.report_start_date and self.report_end_date \
+            and x.state=='confirmed' and \
+            x.request_date >= self.report_start_date and x.request_date <= self.report_end_date).mapped('request_date')
+
+        lang = self.env.user.lang
+        req_date += self.rate_base_ids.filtered(lambda x: self.report_start_date and self.report_end_date and \
+            x.interest_date >= self.report_start_date and \
+           x.interest_date <= self.report_end_date).mapped('interest_date')
+
+        if req_date:
+            req_date = list(set(req_date))
+            req_date =  sorted(req_date)
+        
+        final = 0
+        lines = []
+        for req in req_date:
+            opt_lines = self.request_open_balance_ids.filtered(lambda x:x.state=='confirmed' and x.request_date == req)
+            for line in opt_lines:
+                opt = dict(line._fields['type_of_operation'].selection).get(line.type_of_operation)
+                #opt = line.type_of_operation
+                if lang == 'es_MX':
+                    if line.type_of_operation=='open_bal':
+                        opt = 'Importe de apertura'
+                    elif line.type_of_operation=='increase':
+                        opt = 'Incremento'
+                    elif line.type_of_operation=='retirement':
+                        opt = 'Retiro'
+                    elif line.type_of_operation=='withdrawal':
+                        opt = 'Retiro por liquidación'
+                    elif line.type_of_operation=='withdrawal_cancellation':
+                        opt = 'Retiro por cancelación'
+                    elif line.type_of_operation=='withdrawal_closure':
+                        opt = 'Retiro por cierre'
+                    elif line.type_of_operation=='increase_by_closing':
+                        opt = 'Incremento por cierre'
+                debit = 0
+                credit = 0  
+                if line.type_of_operation in ('open_bal','increase','increase_by_closing'):         
+                    final += line.opening_balance
+                    debit = line.opening_balance
+                elif line.type_of_operation in ('withdrawal','retirement','withdrawal_cancellation','withdrawal_closure'):
+                    final -= line.opening_balance
+                    credit = line.opening_balance
+                    
+                lines.append({
+                              'date':line.request_date,
+                              'opt': opt,
+                              'debit':debit,
+                              'credit' : credit,
+                              'final' : final
+                              })
+
+            for line in self.rate_base_ids.filtered(lambda x:x.interest_date == req):
+                final += line.interest_rate
+                lines.append({
+                              'date':line.interest_date,
+                              'opt': 'Intereses' if lang == 'es_MX' else 'Interest',
+                              'debit':line.interest_rate,
+                              'credit' : 0.0,
+                              'final' : final
+                              })
+        
         return lines
 
     @api.model
@@ -643,6 +707,13 @@ class BasesCollabration(models.Model):
         if self.agreement_type_id and self.agreement_type_id.fund_type_id:
             self.fund_type_id = self.agreement_type_id.fund_type_id.id
 
+class InterestRateBase(models.Model):
+    _name = 'interest.rate.base'
+    _rec_name = 'interest_date'
+    
+    interest_date = fields.Date('Interest Date')
+    interest_rate = fields.Float('Interest Rate')
+    base_id = fields.Many2one('bases.collaboration','Base')
 
 class Committe(models.Model):
 

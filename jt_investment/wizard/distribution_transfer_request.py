@@ -23,6 +23,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from odoo.exceptions import UserError,ValidationError,UserError
+from datetime import datetime
 
 class DistributionTransferRequest(models.TransientModel):
     _name = 'distribution.transfer.request'
@@ -36,6 +37,7 @@ class DistributionTransferRequest(models.TransientModel):
     user_id = fields.Many2one('res.users', default=lambda self: self.env.user.id, string="Applicant")
     line_ids = fields.One2many('distribution.transfer.request.line','wizard_id')
     destination_investment_id = fields.Many2one('investment.investment', "Destination Investment")
+    distribution_income_id = fields.Many2one('distribution.of.income','Distribution Income')
     
 #     @api.onchange('bank_account_id')
 #     def onchange_bank_account_id(self):
@@ -65,9 +67,9 @@ class DistributionTransferRequest(models.TransientModel):
 #         self.line_ids = opt_lines
                
     def approve(self):
-        line_amount = sum(x.amount_to_transfer for x in self.line_ids.filtered(lambda a:a.check))
-        if line_amount != self.amount:
-            raise UserError(_('Sum of amount in line is not equal to header amount'))
+#         line_amount = sum(x.amount_to_transfer for x in self.line_ids.filtered(lambda a:a.check))
+#         if line_amount != self.amount:
+#             raise UserError(_('Sum of amount in line is not equal to header amount'))
         opt_lines = []
         inv_opt_lines = []
         for line in self.line_ids.filtered(lambda a:a.check):
@@ -130,9 +132,13 @@ class DistributionTransferRequest(models.TransientModel):
                 'date_required' : self.date,
                 })
             inv_opt_lines.append(ot_id.id)
-            
+            if self.date:
+                today = self.date
+            else:
+                today = datetime.today().date()
+                 
             if line.base_collabaration_id:
-                line.base_collabaration_id.interest_rate += line.amount_to_transfer
+                self.env['interest.rate.base'].create({'base_id':line.base_collabaration_id.id,'interest_rate':line.amount_to_transfer,'interest_date':today})
                  
         self.env['request.open.balance.finance'].create(
             {
@@ -145,10 +151,12 @@ class DistributionTransferRequest(models.TransientModel):
                 'state': 'requested',
                 'line_opt_ids' : opt_lines,
                 'investment_operation_ids' : [(6,0,inv_opt_lines)],
-                'from_opt_transfer' : True
+                'from_opt_transfer' : True,
+                'distribution_income_id' : self.distribution_income_id and self.distribution_income_id.id or False
             }
         )
-            
+        self.distribution_income_id.action_requested()
+        
 class DistributionTransferRequestLine(models.TransientModel):
     _name = 'distribution.transfer.request.line'
     _description = "Distribution Transfer Request Line"
@@ -158,7 +166,7 @@ class DistributionTransferRequestLine(models.TransientModel):
     base_collabaration_id = fields.Many2one('bases.collaboration','Name Of Agreements')
     agreement_number = fields.Char("Agreement Number")
     amount = fields.Float("Amount")
-    amount_to_transfer = fields.Float("Amount To Transfer")
+    amount_to_transfer = fields.Float("Amount")
     check = fields.Boolean('Transfer')
     opt_line_ids = fields.Many2many('distribution.of.income.calculation','des_cal_operation_wizard_line','opt_id','line_id')
 

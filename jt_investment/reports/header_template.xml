@@ -445,16 +445,17 @@
                 </div>
             
                 <div class="col-6 text-center">
-                   	<span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span><br/>
-                   	<span style="font-size:14px;">UNIVERSITY BOARD</span><br/>
-                   	<span style="font-size:12px;">DIRECCIÓN GENERAL DE FINANZAS</span><br/>
-                   	<span style="font-size:12px;">SUBDIRECCION DE FINANZAS</span><br/>
-                   	<span style="font-size:12px;">COMITÉ DE INVERSIONES</span><br/>
+                    <b><span style="font-size:16px"
+                          class="text-center">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span><br/>
+                    <span style="font-size:14px;"
+                          class="text-center">DIRECCIÓN GENERAL DE FINANZAS</span><br/></b>
+                    <span style="font-size:12px;"
+                          class="text-center">DIRECCIÓN DE INGRESOS Y OPERATIÓN FINANCIERA</span><br/>
+                    <span style="font-size:12px;"
+                          class="text-center">DEPTO. DE OPERACIÓN FINANCIERA</span><br/>
+                    <b><span style="padding-top:5px;font-size:12px;">ESTADO DE CUENTA </span>
+                        <span style="padding-top:5px;font-size:12px;" t-esc="period_name"/></b>
                 </div>
-                <div class="col-3 text-left" style="vertical-align: bottom;">
-                	<span>Fecha y hora de impresión  </span><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/> 
-                </div>
-                
             </div>
         </div>
         <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">

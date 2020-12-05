@@ -96,13 +96,13 @@ class ApproveInvestmentBalReq(models.TransientModel):
     def onchange_base_collabaration_investment(self):
         self.investment_id = False
 
-    @api.onchange('patrimonial_id', 'investment_fund_id')
-    def onchange_patrimonial_fund_id(self):
-        if self.patrimonial_id and self.investment_fund_id:
+    @api.onchange('patrimonial_id')
+    def onchange_patrimonial_inv_id(self):
+        if self.patrimonial_id:
             if self.type_of_operation and self.type_of_operation in ('retirement', 'withdrawal', 'withdrawal_cancellation'):
                 inv_ids = []
                 opt_lines = self.env['investment.operation'].search([('type_of_operation', 'in',
-                        ('open_bal', 'increase')), ('investment_fund_id', '=', self.investment_fund_id.id),
+                        ('open_bal', 'increase')), ('patrimonial_id', '=', self.patrimonial_id.id),
                                                                      ('line_state', '=', 'done')])
                 if opt_lines:
                     exist_inv_ids = opt_lines.mapped('investment_id')
@@ -110,12 +110,6 @@ class ApproveInvestmentBalReq(models.TransientModel):
             else:
                 inv_ids = self.env['investment.investment'].search([('state', '=', 'confirmed')]).ids
             return {'domain': {'investment_id': [('id', 'in', inv_ids)]}}
-        elif self.patrimonial_id and not self.investment_fund_id:
-            if self.type_of_operation and self.type_of_operation in (
-            'retirement', 'withdrawal', 'withdrawal_cancellation'):
-                return {'domain': {'investment_id': [('id', 'in', [])]}}
-            else:
-                return {}
 
     @api.depends('base_collabaration_id', 'type_of_operation')
     def get_inv_ids(self):

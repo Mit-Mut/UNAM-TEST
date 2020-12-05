@@ -67,7 +67,7 @@
                             <page string="Operation" name="operation">
                                 <group>
                                     <group>
-                                        <field name="request_date" />
+                                        <field name="request_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                         <field name="trade_number" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
                                         <field name="opening_balance" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     </group>
@@ -360,10 +360,16 @@
                             </page>
 
                             <page name="interest_rate_page" string="Interest Rate">
-                                <group>
+                            	<field name="rate_base_ids" readonly="1">
+                            		<tree>
+                            			<field name="interest_rate"/>
+                            			<field name="interest_date"/>
+                            		</tree>
+                            	</field>
+<!--                                 <group>
                                     <field name="interest_rate"/>
                                 </group>
-                            </page>
+ -->                            </page>
                             
                         </notebook>
                     </sheet>
@@ -646,7 +652,7 @@
                                 <field name="concept" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="user_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="unit_req_transfer_id" context="{'show_for_agreement':1}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="date_required" required="1" />
+                                <field name="date_required" required="1"/>
                                 <field name="fund_id" invisible="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="investment_fund_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="fund_type" attrs="{'readonly': [('state', '!=', 'draft')]}"/>

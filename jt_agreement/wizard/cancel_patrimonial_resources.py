@@ -46,7 +46,7 @@ class CancelPatrimonial(models.TransientModel):
                 'patrimonial_resources_id' : rec.id,
                 'is_cancel_collaboration': True,
                 'apply_to_basis_collaboration': True,
-                'opening_balance': rec.opening_balance,
+                'opening_balance': rec.available_bal,
                 'type_of_operation': 'withdrawal_cancellation',
                 'name': rec.name,
                 'patrimonial_equity_account_id': rec.patrimonial_equity_account_id and  rec.patrimonial_equity_account_id.id or False,

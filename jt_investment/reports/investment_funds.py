@@ -189,7 +189,10 @@ class SummaryofOperationInvestmentFunds(models.AbstractModel):
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
-        records = self.env['purchase.sale.security'].search([('fund_id','in',fund_list),('contract_id','in',contract_list),domain,('invesment_date','>=',start),('invesment_date','<=',end)])
+        records = self.env['purchase.sale.security'].search([('fund_id','in',fund_list),
+                                                             ('contract_id','in',contract_list),
+                                                             domain,('invesment_date','>=',start),
+                                                             ('invesment_date','<=',end)])
         fund_ids = records.mapped('fund_id')
         for fund in fund_ids:
             total_amount = 0
@@ -211,7 +214,6 @@ class SummaryofOperationInvestmentFunds(models.AbstractModel):
             lang = self.env.user.lang
             for rec in records.filtered(lambda x:x.fund_id.id==fund.id):
                 if rec.movement:
-                    
                     if rec.movement == 'sell':
                         total_titel -= rec.title
                         total_amount -= rec.amount

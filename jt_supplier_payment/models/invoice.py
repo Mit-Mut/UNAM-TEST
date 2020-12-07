@@ -432,7 +432,7 @@ class AccountMove(models.Model):
             conac_move.sudo().unlink()
             for line in self.line_ids:
                 line.coa_conac_id = False
-            move.payment_state = 'registered'
+            move.payment_state = 'for_payment_procedure'
 
     def get_non_business_day(self, invoice_date, next_date):
         non_business_day = self.env['calendar.payment.regis'].search(

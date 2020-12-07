@@ -57,7 +57,6 @@ class AccountMove(models.Model):
     responsible_job_position = fields.Many2one(
         'hr.job', 'Responsible job position')
 
-
 class AccountMoveLine(models.Model):
 
     _inherit = 'account.move.line'

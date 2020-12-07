@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+         <record id="maturity_report_form_view" model="ir.ui.view">
+            <field name="name">maturity.report.form.view</field>
+            <field name="model">maturity.report</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="partner_id"/>
+                            <field name="date"/>
+                            <field name="fund_id" attrs="{'invisible': [('fund_id', '=', False)]}"/>
+                            <field name="po_sale_security_id" attrs="{'invisible': [('po_sale_security_id', '=', False)]}"/>
+                            <field name="investment_id" attrs="{'invisible': [('investment_id', '=', False)]}"/>
+                            <field name="cetes_id" attrs="{'invisible': [('cetes_id', '=', False)]}"/>
+                            <field name="udibonos_id" attrs="{'invisible': [('udibonos_id', '=', False)]}"/>
+                            <field name="bonds_id" attrs="{'invisible': [('bonds_id', '=', False)]}"/>
+                            <field name="will_pay_id" attrs="{'invisible': [('will_pay_id', '=', False)]}"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+         </record>
+
+         <record id="maturity_report_tree_view" model="ir.ui.view">
+            <field name="name">maturity.report.tree.view</field>
+            <field name="model">maturity.report</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="partner_id"/>
+                </tree>
+            </field>
+         </record>
+
+        <record id="maturity_report_calendar_view" model="ir.ui.view">
+            <field name="name">maturity.report.calendar.view</field>
+            <field name="model">maturity.report</field>
+            <field name="arch" type="xml">
+                  <calendar date_start="date" mode="month" string="Investments" color="partner_id">
+                    <field name="name"/>
+                </calendar>
+            </field>
+        </record>
+
+         <record id="action_maturity_report" model="ir.actions.act_window">
+            <field name="name">Maturity Report</field>
+            <field name="res_model">maturity.report</field>
+            <field name="view_mode">calendar,tree,form</field>
+        </record>
+
+        <menuitem id="menu_maturity_report" name="Maturity Report" sequence="8"
+            parent="submenu_menu_investment_config" action="action_maturity_report"/>
+
+    </data>
+</odoo>

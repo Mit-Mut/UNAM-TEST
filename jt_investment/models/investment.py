@@ -27,7 +27,7 @@ class Investment(models.Model):
     frequency = fields.Integer("Frequency of interest payments")
     currency_id = fields.Many2one("res.currency", "Currency")
     currency_rate = fields.Float(
-        related="currency_id.rate", string="Exchange rate")
+        related="currency_id.rate", string="Exchange rate", store=True)
 
     investment_rate_id = fields.Many2one(
         "investment.period.rate", "Exchange rate")
@@ -200,6 +200,12 @@ class Investment(models.Model):
 
     def action_confirm_inv(self):
         self.state = 'confirmed'
+        self.env['maturity.report'].create({
+            'name': self.first_number,
+            'investment_id': self.id,
+            'partner_id': self.env.user.partner_id.id,
+            'date': self.expiry_date
+        })
 
     def action_reset_inv(self):
         self.state = 'draft'

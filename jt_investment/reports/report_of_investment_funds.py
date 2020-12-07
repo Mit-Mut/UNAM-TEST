@@ -277,11 +277,17 @@ class ReportOfInvestmentFunds(models.AbstractModel):
                 date_end = datetime.strptime(str(period.get('date_to')),
                                          DEFAULT_SERVER_DATE_FORMAT).date()
 
-                sale_fund_domain = domain + [('fund_id','=',origin.id),('invesment_date','>=',date_start),('invesment_date','<=',date_end)]
+                sale_fund_domain = domain + [('fund_id','=',origin.id),('invesment_date','>=',date_start),
+                                             ('invesment_date','<=',date_end)]
                 records_fund = self.env['purchase.sale.security'].search(sale_fund_domain)
 
                 amount = 0
-                amount += sum(x.amount for x in records_fund)
+                for rf in records_fund:
+                    if rf.movement == 'sell':
+                        amount -= rf.amount
+                    else:
+                        amount += rf.amount
+                # amount += sum(x.amount for x in records_fund)
                 columns.append(self._format({'name': amount},figure_type='float',digit=2))
 
                 if total_dict.get(period.get('string')):
@@ -358,11 +364,19 @@ class ReportOfInvestmentFunds(models.AbstractModel):
                 date_end = datetime.strptime(str(period.get('date_to')),
                                          DEFAULT_SERVER_DATE_FORMAT).date()
 
-                sale_currency_domain = domain + [('currency_id','=',currency.id),('fund_id','in',fund_list),('invesment_date','>=',date_start),('invesment_date','<=',date_end)]
+                sale_currency_domain = domain + [('currency_id','=',currency.id),
+                                                 ('fund_id','in',fund_list),
+                                                 ('invesment_date','>=',date_start),
+                                                 ('invesment_date','<=',date_end)]
                 records_currency = self.env['purchase.sale.security'].search(sale_currency_domain)
 
                 amount = 0
-                amount += sum(x.amount for x in records_currency)
+                for rc in records_currency:
+                    if rc.movement == 'sell':
+                        amount -= rc.amount
+                    else:
+                        amount += rc.amount
+                # amount += sum(x.amount for x in records_currency)
                 columns.append(self._format({'name': amount},figure_type='float',digit=2))
                 
                 if total_dict.get(period.get('string')):

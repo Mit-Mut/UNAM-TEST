@@ -59,22 +59,57 @@ class BasesCollabration(models.Model):
         result = super(BasesCollabration,self).confirmed_finance()
 
         if self.purchase_sale_security_id:
-            self.purchase_sale_security_id.action_confirmed()
-        
+            po_so_security_id = self.purchase_sale_security_id
+            po_so_security_id.action_confirmed()
+            self.env['maturity.report'].create({
+                'name': po_so_security_id.first_number,
+                'po_sale_security_id': po_so_security_id.id,
+                'partner_id': self.env.user.partner_id.id,
+                'date': po_so_security_id.expiry_date
+            })
+
         if self.investment_id:
             self.investment_id.action_confirmed()
 
         if self.bonds_id:
-            self.bonds_id.action_confirmed()
+            bonds_id = self.bonds_id
+            bonds_id.action_confirmed()
+            self.env['maturity.report'].create({
+                'name': bonds_id.first_number,
+                'bonds_id': bonds_id.id,
+                'partner_id': self.env.user.partner_id.id,
+                'date': bonds_id.expiry_date
+            })
 
         if self.cetes_id:
-            self.cetes_id.action_confirmed()
+            cetes_id = self.cetes_id
+            cetes_id.action_confirmed()
+            self.env['maturity.report'].create({
+                'name': cetes_id.first_number,
+                'cetes_id': cetes_id.id,
+                'partner_id': self.env.user.partner_id.id,
+                'date': cetes_id.expiry_date
+            })
 
         if self.udibonos_id:
+            udibonos_id = self.udibonos_id
             self.udibonos_id.action_confirmed()
+            self.env['maturity.report'].create({
+                'name': udibonos_id.first_number,
+                'udibonos_id': udibonos_id.id,
+                'partner_id': self.env.user.partner_id.id,
+                'date': udibonos_id.expiry_date
+            })
 
         if self.will_pay_id:
-            self.will_pay_id.action_confirmed()
+            will_pay_id = self.will_pay_id
+            will_pay_id.action_confirmed()
+            self.env['maturity.report'].create({
+                'name': will_pay_id.first_number,
+                'will_pay_id': will_pay_id.id,
+                'partner_id': self.env.user.partner_id.id,
+                'date': will_pay_id.expiry_date
+            })
 
         if self.investment_fund_id:
             self.investment_fund_id.action_confirmed()

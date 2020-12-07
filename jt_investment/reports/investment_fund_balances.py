@@ -164,11 +164,11 @@ class SummaryofOperationInvestmentFundsBalances(models.AbstractModel):
             domain = [('state','=','confirmed')]
         else:
             domain=[('state','not in',('rejected','canceled'))]
-        
+
         for fund in options.get('funds'):
             if fund.get('selected',False)==True:
                 fund_list.append(fund.get('id',0))
-        
+
         if fund_list:
             domain += [('fund_id','in',fund_list)]
             
@@ -319,11 +319,16 @@ class SummaryofOperationInvestmentFundsBalances(models.AbstractModel):
                 date_end = datetime.strptime(str(period.get('date_to')),
                                          DEFAULT_SERVER_DATE_FORMAT).date()
 
-                origin_domain = domain + [('fund_id','=',origin.id),('invesment_date','>=',date_start),('invesment_date','<=',date_end)]
+                origin_domain = domain + [('fund_id', '=', origin.id),('invesment_date','>=',date_start),
+                                          ('invesment_date','<=',date_end)]
                 records_fund = self.env['purchase.sale.security'].search(origin_domain)
-
                 amount = 0
-                amount += sum(x.amount for x in records_fund)
+                for rf in records_fund:
+                    if rf.movement == 'sell':
+                        amount -= rf.amount
+                    else:
+                        amount += rf.amount
+                # amount += sum(x.amount for x in records_fund)
                 columns.append(self._format({'name': amount},figure_type='float',digit=2))
 
                 if total_dict.get(period.get('string')):
@@ -401,14 +406,18 @@ class SummaryofOperationInvestmentFundsBalances(models.AbstractModel):
                 date_end = datetime.strptime(str(period.get('date_to')),
                                          DEFAULT_SERVER_DATE_FORMAT).date()
 
-                currency_domain = domain + [('currency_id','=',currency.id),('invesment_date','>=',date_start),('invesment_date','<=',date_end)]
-                
-                sale_currency_record = self.env['purchase.sale.security'].search(currency_domain)
+                currency_domain = domain + [('currency_id','=',currency.id),('invesment_date','>=',date_start),
+                                            ('invesment_date','<=',date_end),('fund_id', '!=', False)]
 
+                sale_currency_record = self.env['purchase.sale.security'].search(currency_domain)
                 amount = 0
-                amount += sum(x.amount for x in sale_currency_record)
+                for sr in sale_currency_record:
+                    if sr.movement == 'sell':
+                        amount -= sr.amount
+                    else:
+                        amount += sr.amount
+                # amount += sum(x.amount for x in sale_currency_record)
                 columns.append(self._format({'name': amount},figure_type='float',digit=2))
-                
                 if total_dict.get(period.get('string')):
                     old_amount = total_dict.get(period.get('string',0)) + amount
                     total_dict.update({period.get('string'):old_amount})

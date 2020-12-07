@@ -19,33 +19,45 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                    	<button name="action_calculation" states="draft" string="Calculation" class="oe_highlight" type="object"/>
+                    	<button name="action_calculation" states="draft" string="Calculation"
+								class="oe_highlight" type="object"/>
                     	<!-- <button name="action_confirm" states="draft" string="Confirm" class="oe_highlight" type="object"/> -->
-                        <button name="transfer_request" states="draft" string="Transfer" class="oe_highlight" type="object"/>
+                        <button name="transfer_request" states="draft" string="Transfer"
+								class="oe_highlight" type="object"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
                         <group>
                             <group>
-                            	<field name="all_agreement"/>
-                            	<field name="fund_ids" widget="many2many_tags" attrs="{'invisible':[('all_agreement','=',True)]}"/>
-                            	<field name="all_types_of_Agreements"/>
-                            	<field name="agreement_type_ids" widget="many2many_tags" attrs="{'invisible':[('all_types_of_Agreements','=',True)]}"/>
-                            	<field name="start_date" required="1"/>
-			                	<field name="end_date" required="1"/>
-			                	<field name="journal_id" domain="[('type','=','bank')]" required="1"/>
-			                	<field name="reason_rejection" readonly="1" attrs="{'invisible': [('state', '!=', 'rejected')]}"/>
+                            	<field name="all_agreement" attrs="{'readonly':[('state', '=', 'confirmed')]}"/>
+                            	<field name="fund_ids" widget="many2many_tags"
+									   attrs="{'invisible':[('all_agreement','=',True)],
+									   'readonly':[('state', '=', 'confirmed')]}"/>
+                            	<field name="all_types_of_Agreements" attrs="{'readonly':[('state', '=', 'confirmed')]}"/>
+                            	<field name="agreement_type_ids" widget="many2many_tags"
+									   attrs="{'invisible':[('all_types_of_Agreements','=',True)],
+									   'readonly':[('state', '=', 'confirmed')]}"/>
+                            	<field name="start_date" required="1" attrs="{'readonly':[('state', '=', 'confirmed')]}"/>
+			                	<field name="end_date" required="1" attrs="{'readonly':[('state', '=', 'confirmed')]}"/>
+			                	<field name="journal_id" domain="[('type','=','bank')]" required="1"
+									attrs="{'readonly':[('state', '=', 'confirmed')]}"/>
+			                	<field name="reason_rejection" readonly="1"
+									   attrs="{'invisible': [('state', '!=', 'rejected')]}"/>
                             </group>
                             <group>
-                            	<field name="all_base"/>
-                            	<field name="base_ids" widget="many2many_tags" attrs="{'invisible':[('all_base','=',True)]}"/>
-                            	<field name="all_dependencies"/>
-                            	<field name="dependency_ids" widget="many2many_tags" context="{'show_for_agreement':True}" attrs="{'invisible':[('all_dependencies','=',True)]}"/>
+                            	<field name="all_base" attrs="{'readonly':[('state', '=', 'confirmed')]}"/>
+                            	<field name="base_ids" widget="many2many_tags"
+								attrs="{'invisible':[('all_base','=',True)], 'readonly':[('state', '=', 'confirmed')]}"/>
+                            	<field name="all_dependencies" attrs="{'readonly':[('state', '=', 'confirmed')]}"/>
+                            	<field name="dependency_ids" widget="many2many_tags"
+									   context="{'show_for_agreement':True}"
+									   attrs="{'invisible':[('all_dependencies','=',True)],
+									    'readonly':[('state', '=', 'confirmed')]}"/>
                             </group>
                         </group>
                         <group>
                         	<group col="6" colspan="2">
-    							<field name="if_fixed" />
+    							<field name="if_fixed" attrs="{'readonly':[('state', '=', 'confirmed')]}"/>
     							<field name="fixed_rate" attrs="{'invisible':[('if_fixed','=',False)]}"/>
     							<field name="fixed_extra" attrs="{'invisible':[('if_fixed','=',False)]}"/>
 							</group>
@@ -57,14 +69,14 @@
 							</group>
 							 -->
                         	<group col="6" colspan="2">
-    							<field name="if_variable" />
+    							<field name="if_variable" attrs="{'readonly':[('state', '=', 'confirmed')]}"/>
     							<field name="variable_rate" attrs="{'invisible':[('if_variable','=',False)]}"/>
     							<field name="variable_extra" attrs="{'invisible':[('if_variable','=',False)]}"/>
 							</group>
                         </group>
                         <notebook>
                         	<page string="Calculation">
-                        		<field name="calculation_line_ids" >
+                        		<field name="calculation_line_ids">
                         			<tree create="0" edit="0" delete="0">
                         				<field name="date_required"/>
                         				<field name="fund_id" invisible="1"/>

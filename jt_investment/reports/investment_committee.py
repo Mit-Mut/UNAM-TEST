@@ -786,7 +786,7 @@ class InvestmentCommittee(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_pay_main',
-            'name': 'Promissory note',
+            'name': 'Promissory Note',
             'columns': [{'name': ''}, 
                         {'name': ''}, 
                         {'name': ''},
@@ -812,7 +812,7 @@ class InvestmentCommittee(models.AbstractModel):
                             {'name': pay.bank_id and pay.bank_id.name or ''},
                             {'name':pay.currency_id.name},
                             self._format({'name': pay.amount},figure_type='float'),
-                            {'name': 'Promissory note'},
+                            {'name': 'Promissory Note'},
                             {'name': pay.interest_rate or ''},
                             {'name':''},
                             {'name': pay.yield_id and pay.yield_id.name or ''},

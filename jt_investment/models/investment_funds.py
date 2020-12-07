@@ -103,6 +103,12 @@ class InvestmentFunds(models.Model):
 
     def approve_fund(self):
         self.state = 'confirmed'
+        self.env['maturity.report'].create({
+            'name': self.first_number,
+            'fund_id': self.id,
+            'partner_id': self.responsible_user_id.partner_id.id,
+            'date': datetime.today().date()
+        })
 
     def reset_fund(self):
         self.state = 'draft'

@@ -61,7 +61,7 @@
         'reports/header_template.xml',
         'reports/menu_report.xml',
         'reports/filter_template.xml',
-        
+        'views/maturity_report_views.xml'
     ],
     'application': True,
     'installable': True,

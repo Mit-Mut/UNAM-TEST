@@ -7,7 +7,7 @@
             <field name="res_model">account.move</field>
             <field name="view_mode">tree,form</field>
             <field name="context">{'show_for_supplier_payment':True,'default_type': 'in_invoice', 'default_is_project_payment': 1,'from_move': 1,'from_conacyt':1}</field>
-            <field name="domain">[('type', '=', 'in_invoice'), ('is_project_payment', '=', True)]</field>
+            <field name="domain">[('type', '=', 'in_invoice'), ('is_project_payment', '=', True),('payment_state', '!=', 'draft')]</field>
         </record>
 
         <record id="upa_payment_request_form_action" model="ir.actions.act_window.view">

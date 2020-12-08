@@ -126,6 +126,10 @@ class InvestmentAccountStatement(models.AbstractModel):
         g_total_inc = 0
         g_total_with = 0
         g_total_final = 0
+
+        header_intial = 0
+        header_increment = 0
+        header_withdrawal = 0
         
         #===== Investment =======#
         journal_ids = productive_ids.mapped('investment_id.journal_id')
@@ -208,7 +212,9 @@ class InvestmentAccountStatement(models.AbstractModel):
                     movement = 'Retiro por cierre'
                 elif movement=='Increase by closing':
                     movement = 'Incremento por cierre'
-                    
+                header_intial += capital
+                header_increment += inc
+                header_withdrawal += withdraw
                 lines.append({
                     'id': 'hierarchy_account' + str(rec.id),
                     'name' :invesment_date, 
@@ -283,7 +289,7 @@ class InvestmentAccountStatement(models.AbstractModel):
             'unfoldable': False,
             'unfolded': True,
         })
-
+        options.update({'intial': header_intial, 'increment': header_increment, 'withdrawal': header_withdrawal})
         return lines
         
 
@@ -487,11 +493,21 @@ class InvestmentAccountStatement(models.AbstractModel):
 
                 period_name += " al " + str(end_date.day) + " de " + self.get_month_name(end_date.month) + " " \
                                + str(end_date.year)
+            header_intial = options.get('intial')
+            header_withdrawal = options.get('withdrawal')
+            header_increment = options.get('increment')
+            actual = (header_increment + header_intial) - header_withdrawal
             rcontext.update({
                 'css': '',
                 'o': self.env.user,
                 'res_company': self.env.company,
-                'period_name': period_name
+                'period_name': period_name,
+                'name': 'CUENTAS PRODUCTIVAS',
+                'intial': header_intial,
+                'increment': header_increment,
+                'withdrawal': header_withdrawal,
+                'actual': actual,
+                'extra_data': True
             })
             header = self.env['ir.actions.report'].with_context(period_name=period_name).render_template(
                 "jt_investment.external_layout_investment_committee",

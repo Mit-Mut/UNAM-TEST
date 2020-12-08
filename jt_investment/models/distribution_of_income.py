@@ -30,19 +30,19 @@ class DistributionOfIncome(models.Model):
                                ('confirmed', 'Confirmed'),
                                ], string="Status", default="draft")
     
-
-    journal_id = fields.Many2one('account.journal','Bank')
-    if_fixed = fields.Boolean("Fixed")
-    if_average = fields.Boolean("Average")
-    if_variable = fields.Boolean("Variable")
-
-    fixed_rate = fields.Float("Rate")
-    average_rate = fields.Float("Rate")
-    variable_rate = fields.Float("Rate")
-
-    fixed_extra = fields.Float("Extra Percentage")
-    average_extra = fields.Float("Extra Percentage")
-    variable_extra = fields.Float("Extra Percentage")
+    investment_id = fields.Many2one('investment.investment', "Investment")
+    journal_id = fields.Many2one('account.journal','Bank', related='investment_id.journal_id')
+    # if_fixed = fields.Boolean("Fixed")
+    # if_average = fields.Boolean("Average")
+    # if_variable = fields.Boolean("Variable")
+    #
+    # fixed_rate = fields.Float("Rate")
+    # average_rate = fields.Float("Rate")
+    # variable_rate = fields.Float("Rate")
+    #
+    # fixed_extra = fields.Float("Extra Percentage")
+    # average_extra = fields.Float("Extra Percentage")
+    # variable_extra = fields.Float("Extra Percentage")
     
     #@api.onchange('start_date','end_date','dependency_ids','agreement_type_ids','base_ids','fund_ids')
 
@@ -142,7 +142,7 @@ class DistributionOfIncome(models.Model):
                      'income' : income,
                      'rounded': income,
                      'rate' : rate,
-                     'days': term,
+                     'days':  (self.end_date - self.start_date).days + 1,
                      'date_required' : line.date_required,
                      }]) 
         if line.type_of_operation in ('increase','increase_by_closing','open_bal'):
@@ -151,32 +151,32 @@ class DistributionOfIncome(models.Model):
             capital -= line.amount
         return cal_vals,capital,days
     
-    def set_rate_data(self,inv):
-        if inv.is_fixed_rate:
-            self.if_fixed = True
-            self.fixed_rate = inv.interest_rate
-            self.fixed_extra = inv.extra_percentage
-        elif inv.is_variable_rate:
-            self.if_variable = True
-            self.variable_extra = inv.extra_percentage
-            total_rate = 0.0
-            total_days = self.end_date.day - self.start_date.day + 1
-             
-            rate_ids = self.env['investment.period.rate'].search([('rate_date','>=',self.start_date),('rate_date','<=',self.end_date),('product_type','=','TIIE')])
-            if inv.term_variable and inv.term_variable==28:
-                total_rate = sum(x.rate_days_28 for x in rate_ids)
-            elif inv.term_variable and inv.term_variable==91:
-                total_rate = sum(x.rate_days_91 for x in rate_ids)
-            elif inv.term_variable and inv.term_variable==182:
-                total_rate = sum(x.rate_days_182 for x in rate_ids)
-            
-            
-            self.variable_rate = total_rate/total_days
+    # def set_rate_data(self,inv):
+    #     if inv.is_fixed_rate:
+    #         self.if_fixed = True
+    #         self.fixed_rate = inv.interest_rate
+    #         self.fixed_extra = inv.extra_percentage
+    #     elif inv.is_variable_rate:
+    #         self.if_variable = True
+    #         self.variable_extra = inv.extra_percentage
+    #         total_rate = 0.0
+    #         total_days = self.end_date.day - self.start_date.day + 1
+    #
+    #         rate_ids = self.env['investment.period.rate'].search([('rate_date','>=',self.start_date),('rate_date','<=',self.end_date),('product_type','=','TIIE')])
+    #         if inv.term_variable and inv.term_variable==28:
+    #             total_rate = sum(x.rate_days_28 for x in rate_ids)
+    #         elif inv.term_variable and inv.term_variable==91:
+    #             total_rate = sum(x.rate_days_91 for x in rate_ids)
+    #         elif inv.term_variable and inv.term_variable==182:
+    #             total_rate = sum(x.rate_days_182 for x in rate_ids)
+    #
+    #
+    #         self.variable_rate = total_rate/total_days
             
     def action_calculation(self):
         #domain = [('bases_collaboration_id','!=',False)]
-        domain = [('line_state','=','done')]
-        
+        domain = [('line_state','=','done'), ('investment_id', '=', self.investment_id.id)]
+
         self.line_ids = [(6, 0, [])]
         self.calculation_line_ids = [(6, 0, [])]
         vals = []
@@ -206,7 +206,7 @@ class DistributionOfIncome(models.Model):
         inv_ids = opt_lines.mapped('investment_id')
                 
         for inv  in inv_ids:
-            self.set_rate_data(inv)
+            # self.set_rate_data(inv)
             for fund in opt_lines.filtered(lambda x:x.investment_id.id == inv.id and not x.base_collabaration_id).mapped('investment_fund_id'):
                 capital = 0
                 days = 0

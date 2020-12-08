@@ -38,7 +38,7 @@ class TypeofOperation(models.AbstractModel):
 
     filter_date = {'mode': 'range', 'filter': 'this_month'}
     filter_comparison = None
-    filter_all_entries = None
+    filter_all_entries = True
     filter_journals = None
     filter_analytic = None
     filter_unfold_all = None
@@ -99,8 +99,18 @@ class TypeofOperation(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
-        
-        account_payment = self.env['account.payment'].search([('payment_date', '>=', start), ('payment_date', '<=', end),('payment_request_type','!=',False),('payment_state','in',('for_payment_procedure','posted','reconciled'))],order="journal_id")
+
+        if options.get('all_entries') == True:
+            account_payment = self.env['account.payment'].search([('payment_date', '>=', start),
+                                                                  ('payment_date', '<=', end),
+                                                                  ('payment_request_type','!=',False),
+                        ('payment_state','in',('for_payment_procedure','posted','reconciled'))],order="journal_id")
+        else:
+            account_payment = self.env['account.payment'].search([('payment_date', '>=', start),
+                                                                  ('payment_date', '<=', end),
+                                                                  ('payment_request_type', '!=', False),
+                                                                  ('payment_state', 'in', ('posted', 'reconciled'))],
+                                                                 order="journal_id")
         master_total_amount_supplier = 0
         master_total_amount_payroll = 0
         master_total_amount_different_payroll = 0
@@ -227,7 +237,7 @@ class TypeofOperation(models.AbstractModel):
  
                         ],
             'level': 2,
-            'parent_id': 'hierarchy1_' + str(journal.id),
+            # 'parent_id': 'hierarchy1_' + str(journal.id),
         })
             
         return lines

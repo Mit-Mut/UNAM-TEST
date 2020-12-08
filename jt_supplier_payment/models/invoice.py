@@ -480,7 +480,23 @@ class AccountMove(models.Model):
                 rec.employee_paryoll_ids.write({'payment_issuing_bank_id': rec.payment_issuing_bank_id and rec.payment_issuing_bank_id.id or False,
                                                 'bank_acc_payment_insur_id': rec.payment_issuing_bank_acc_id and rec.payment_issuing_bank_acc_id.id or False
                                                 })
+        if vals.get('folio_dependency'):
+            for rec in self:
+                if rec.is_payment_request:
+                    move = self.search([('is_payment_request', '=', True),
+                                        ('folio_dependency', '=', rec.folio_dependency), ('id', '!=', rec.id)])
+                    if move:
+                        raise ValidationError(_("Can't create Payment Request with same Folio Dependency!"))
+        return res
 
+    @api.model
+    def create(self, vals):
+        res = super(AccountMove, self).create(vals)
+        if res.is_payment_request and res.folio_dependency:
+            move = self.search([('is_payment_request', '=', True), ('folio_dependency', '=', res.folio_dependency),
+                                ('id', '!=', res.id)])
+            if move:
+                raise ValidationError(_("Can't create Payment Request with same Folio Dependency!"))
         return res
 
 #     def remove_journal_line(self):

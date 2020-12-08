@@ -132,6 +132,10 @@ class MoneyMarketAccountStatement(models.AbstractModel):
         g_total_with = 0
         g_total_final = 0
 
+        header_intial = 0
+        header_increment = 0
+        header_withdrawal = 0
+
         if journal_ids:
             journals = list(set(journal_ids.ids))
             journal_ids = self.env['account.journal'].browse(journals)
@@ -172,6 +176,10 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                 total_final += final
                 g_total_final += final
 
+                header_intial += capital
+                header_increment += inc
+                header_withdrawal += withdraw
+
                 lines.append({
                     'id': 'hierarchy_account' + str(rec.id),
                     'name' :invesment_date, 
@@ -211,6 +219,10 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                     total_final += final
                     g_total_final += final
 
+                    header_intial += capital
+                    header_increment += inc
+                    header_withdrawal += withdraw
+
                     lines.append({
                         'id': 'hierarchy_account_line' + str(line.id),
                         'name' :invesment_date, 
@@ -242,6 +254,10 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                 final = capital + inc - withdraw
                 total_final += final
                 g_total_final += final
+
+                header_intial += capital
+                header_increment += inc
+                header_withdrawal += withdraw
 
                 lines.append({
                     'id': 'hierarchy_account' + str(rec.id),
@@ -282,6 +298,10 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                     total_final += final
                     g_total_final += final
 
+                    header_intial += capital
+                    header_increment += inc
+                    header_withdrawal += withdraw
+
                     lines.append({
                         'id': 'hierarchy_account_line' + str(line.id),
                         'name' :invesment_date, 
@@ -313,6 +333,10 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                 final = capital + inc - withdraw
                 total_final += final
                 g_total_final += final
+
+                header_intial += capital
+                header_increment += inc
+                header_withdrawal += withdraw
 
                 lines.append({
                     'id': 'hierarchy_account' + str(rec.id),
@@ -353,6 +377,10 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                     total_final += final
                     g_total_final += final
 
+                    header_intial += capital
+                    header_increment += inc
+                    header_withdrawal += withdraw
+
                     lines.append({
                         'id': 'hierarchy_account_line' + str(line.id),
                         'name' :invesment_date, 
@@ -384,6 +412,10 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                 final = capital + inc - withdraw
                 total_final += final
                 g_total_final += final
+
+                header_intial += capital
+                header_increment += inc
+                header_withdrawal += withdraw
 
                 lines.append({
                     'id': 'hierarchy_account' + str(rec.id),
@@ -423,6 +455,10 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                     final = capital + inc - withdraw
                     total_final += final
                     g_total_final += final
+
+                    header_intial += capital
+                    header_increment += inc
+                    header_withdrawal += withdraw
 
                     lines.append({
                         'id': 'hierarchy_account_line' + str(line.id),
@@ -472,9 +508,7 @@ class MoneyMarketAccountStatement(models.AbstractModel):
             'unfoldable': False,
             'unfolded': True,
         })
-
-                
-
+        options.update({'intial': header_intial, 'increment': header_increment, 'withdrawal': header_withdrawal})
         return lines
         
 
@@ -678,11 +712,21 @@ class MoneyMarketAccountStatement(models.AbstractModel):
 
                 period_name += " al " + str(end_date.day) + " de " + self.get_month_name(end_date.month) + " " \
                                + str(end_date.year)
+            header_intial = options.get('intial')
+            header_withdrawal = options.get('withdrawal')
+            header_increment = options.get('increment')
+            actual = (header_increment + header_intial) - header_withdrawal
             rcontext.update({
                 'css': '',
                 'o': self.env.user,
                 'res_company': self.env.company,
-                'period_name': period_name
+                'period_name': period_name,
+                'name': 'MERCADO DE DINERO',
+                'intial': header_intial,
+                'increment': header_increment,
+                'withdrawal': header_withdrawal,
+                'actual': actual,
+                'extra_data': True
             })
             header = self.env['ir.actions.report'].with_context(period_name=period_name).render_template(
                 "jt_investment.external_layout_investment_committee",

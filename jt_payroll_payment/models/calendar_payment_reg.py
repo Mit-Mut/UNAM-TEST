@@ -29,7 +29,8 @@ class CalendarPaymentRegistration(models.Model):
     _description = "Calendar for Payment Registration"
     _rec_name = 'type_pay'
 
-    type_pay = fields.Selection([('Non Business Day', 'Non Business Day'), ('Payment schedule', 'Payment schedule')], string="Type")
+    type_pay = fields.Selection([('Non Business Day', 'Non Business Day'),
+                                 ('Payment schedule', 'Payment schedule')], string="Type")
     type_of_payment = fields.Selection([('payroll', 'Payroll'),
                                         ('pay_contr', 'Payment of Contributions'),
                                         ('pay_commi', 'Payment of Commissions and Interests')], string="Payment Type")

@@ -65,6 +65,12 @@ class InvTransferRequest(models.TransientModel):
 #         self.line_ids = opt_lines
                
     def approve(self):
+        if self.date:
+            non_bussiness_day = self.env['calendar.payment.regis'].search([('date', '=', self.date),
+                                                                           ('type_pay', '=', 'Non Business Day')])
+            if non_bussiness_day:
+                raise ValidationError(_("You are creating Transfer Request on %s which is Non Business Day" \
+                                        % str(self.date)))
         line_amount = sum(x.amount_to_transfer for x in self.line_ids.filtered(lambda a:a.check))
         if line_amount != self.amount:
             raise UserError(_('Sum of amount in line is not equal to header amount'))

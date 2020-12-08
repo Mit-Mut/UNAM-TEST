@@ -818,8 +818,8 @@ class ControlAssignedAmountsLines(models.Model):
     end_date = fields.Date(string='End date')
 
     # authorized = fields.Integer(string='Authorized')
-    assigned = fields.Integer(string='Assigned')
-    available = fields.Integer(string='Available')
+    assigned = fields.Float(string='Assigned')
+    available = fields.Float(string='Available')
     currency_id = fields.Many2one(
         'res.currency', default=lambda self: self.env.company.currency_id)
 

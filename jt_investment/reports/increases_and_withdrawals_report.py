@@ -291,14 +291,24 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
                     total_salidas += rec.amount
                     final_amount -= rec.amount
                 final_amount += inc_balance
-                
+                p_rate = 0
+                if rec.date_required:
+                    period_rate_id = self.env['investment.period.rate'].search(
+                        [('rate_date', '=', rec.date_required), ('product_type', '=', 'TIIE')], limit=1)
+                    if period_rate_id:
+                        p_rate = period_rate_id.rate_days_28
+                    else:
+                        period_rate_id = self.env['investment.period.rate'].search(
+                            [('rate_date', '<', rec.date_required), ('product_type', '=', 'TIIE')], limit=1,
+                            order='rate_date desc')
+                        p_rate = period_rate_id.rate_days_28
                 lines.append({
                     'id': 'hierarchy' + str(rec.id),
                     'name': rec.date_required.day,
                     'columns': [{'name': month_name},
                                 {'name':rec.investment_id.journal_id and rec.investment_id.journal_id.bank_id and rec.investment_id.journal_id.bank_id.name or ''},
                                 {'name':rec.investment_id and rec.investment_id.currency_id and rec.investment_id.currency_id.name or ''},
-                                self._format({'name': rec.investment_id and rec.investment_id.currency_rate or False},figure_type='float',digit=4),
+                                self._format({'name': p_rate},figure_type='float',digit=4),
                                 self._format({'name': inc_balance},figure_type='float',digit=2),
                                 self._format({'name': entradas},figure_type='float',digit=2),
                                 self._format({'name': salidas},figure_type='float',digit=2),

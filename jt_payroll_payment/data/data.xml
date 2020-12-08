@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
+    <data noupdate="1">
 	     <record id="payroll_payment_request_jour" model="account.journal">
 	        <field name="name">Payroll Payment Request Journal</field>
 	        <field name="code">PPAR</field>

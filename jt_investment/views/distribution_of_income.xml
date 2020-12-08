@@ -39,8 +39,9 @@
 									   'readonly':[('state', '=', 'confirmed')]}"/>
                             	<field name="start_date" required="1" attrs="{'readonly':[('state', '=', 'confirmed')]}"/>
 			                	<field name="end_date" required="1" attrs="{'readonly':[('state', '=', 'confirmed')]}"/>
-			                	<field name="journal_id" domain="[('type','=','bank')]" required="1"
+								<field name="investment_id" required="1"
 									attrs="{'readonly':[('state', '=', 'confirmed')]}"/>
+			                	<field name="journal_id" required="1"/>
 			                	<field name="reason_rejection" readonly="1"
 									   attrs="{'invisible': [('state', '!=', 'rejected')]}"/>
                             </group>
@@ -56,11 +57,11 @@
                             </group>
                         </group>
                         <group>
-                        	<group col="6" colspan="2">
-    							<field name="if_fixed" attrs="{'readonly':[('state', '=', 'confirmed')]}"/>
-    							<field name="fixed_rate" attrs="{'invisible':[('if_fixed','=',False)]}"/>
-    							<field name="fixed_extra" attrs="{'invisible':[('if_fixed','=',False)]}"/>
-							</group>
+<!--                        	<group col="6" colspan="2">-->
+<!--    							<field name="if_fixed" attrs="{'readonly':[('state', '=', 'confirmed')]}"/>-->
+<!--    							<field name="fixed_rate" attrs="{'invisible':[('if_fixed','=',False)]}"/>-->
+<!--    							<field name="fixed_extra" attrs="{'invisible':[('if_fixed','=',False)]}"/>-->
+<!--							</group>-->
 							<!-- 
                         	<group col="6" colspan="2">
     							<field name="if_average" />
@@ -68,11 +69,11 @@
     							<field name="average_extra" attrs="{'invisible':[('if_average','=',False)]}"/>
 							</group>
 							 -->
-                        	<group col="6" colspan="2">
-    							<field name="if_variable" attrs="{'readonly':[('state', '=', 'confirmed')]}"/>
-    							<field name="variable_rate" attrs="{'invisible':[('if_variable','=',False)]}"/>
-    							<field name="variable_extra" attrs="{'invisible':[('if_variable','=',False)]}"/>
-							</group>
+<!--                        	<group col="6" colspan="2">-->
+<!--    							<field name="if_variable" attrs="{'readonly':[('state', '=', 'confirmed')]}"/>-->
+<!--    							<field name="variable_rate" attrs="{'invisible':[('if_variable','=',False)]}"/>-->
+<!--    							<field name="variable_extra" attrs="{'invisible':[('if_variable','=',False)]}"/>-->
+<!--							</group>-->
                         </group>
                         <notebook>
                         	<page string="Calculation">

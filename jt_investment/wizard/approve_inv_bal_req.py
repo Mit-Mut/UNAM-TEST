@@ -59,6 +59,13 @@ class ApproveInvestmentBalReq(models.TransientModel):
     amount_type = fields.Selection([('increment','Increment'),('withdrawal','Withdrawal')])
     
     def approve(self):
+        if self.bonds_id or self.cetes_id or self.udibonos_id or self.will_pay_id \
+            or self.purchase_sale_security_id or self.investment_id:
+            non_bussiness_day = self.env['calendar.payment.regis'].search([('date', '=', self.date),
+                                            ('type_pay', '=', 'Non Business Day')])
+            if non_bussiness_day:
+                raise ValidationError(_("You are creating Transfer Request on %s which is Non Business Day" \
+                                        % str(self.date)))
         self.env['request.open.balance.finance'].create(
             {
                 'invoice': self.invoice,

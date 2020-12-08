@@ -260,7 +260,7 @@ msgstr "<strong>Fecha:</strong>"
 #. module: jt_supplier_payment
 #: model_terms:ir.ui.view,arch_db:jt_supplier_payment.payment_request_report_document
 msgid "<strong>Dependency Folio:</strong>"
-msgstr "<strong>Folio de dependencia:</strong>"
+msgstr "<strong>Folio de Solicitud:</strong>"
 
 #. module: jt_supplier_payment
 #: model_terms:ir.ui.view,arch_db:jt_supplier_payment.payment_request_report_document
@@ -1071,7 +1071,7 @@ msgstr ""
 #. module: jt_supplier_payment
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_account_move__folio_dependency
 msgid "Folio Dependency"
-msgstr "Folio de Dependencia"
+msgstr "Folio de Solicitud"
 
 #. module: jt_supplier_payment
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_account_move__folio_invoice

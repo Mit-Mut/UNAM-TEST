@@ -121,6 +121,10 @@ class TitlesAccountStatement(models.AbstractModel):
         g_total_with = 0
         g_total_final = 0
 
+        header_intial = 0
+        header_increment = 0
+        header_withdrawal = 0
+
         journal_ids = title_ids.mapped('bank_id')
         for journal in journal_ids:
             capital = 0
@@ -171,6 +175,9 @@ class TitlesAccountStatement(models.AbstractModel):
                         invesment_date = rec.invesment_date.strftime('%Y-%m-%d') 
                     final = capital + inc - withdraw
                     total_final = final
+                    header_intial += capital
+                    header_increment += inc
+                    header_withdrawal += withdraw
                     lines.append({
                         'id': 'hierarchy_account' + str(rec.id),
                         'name' :invesment_date, 
@@ -204,6 +211,9 @@ class TitlesAccountStatement(models.AbstractModel):
                     if line.date_required:
                         invesment_date = line.date_required.strftime('%Y-%m-%d') 
                     final = capital + inc - withdraw
+                    header_intial += capital
+                    header_increment += inc
+                    header_withdrawal += withdraw
                     lines.append({
                         'id': 'hierarchy_account_line' + str(line.id),
                         'name' :invesment_date, 
@@ -253,7 +263,7 @@ class TitlesAccountStatement(models.AbstractModel):
             'unfoldable': False,
             'unfolded': True,
         })
-        
+        options.update({'intial': header_intial, 'increment': header_increment, 'withdrawal': header_withdrawal})
         return lines
         
 
@@ -457,11 +467,21 @@ class TitlesAccountStatement(models.AbstractModel):
 
                 period_name += " al " + str(end_date.day) + " de " + self.get_month_name(end_date.month) + " " \
                                + str(end_date.year)
+            header_intial = options.get('intial')
+            header_withdrawal = options.get('withdrawal')
+            header_increment = options.get('increment')
+            actual = (header_increment + header_intial) - header_withdrawal
             rcontext.update({
                 'css': '',
                 'o': self.env.user,
                 'res_company': self.env.company,
-                'period_name': period_name
+                'period_name': period_name,
+                'name': 'TITULOS',
+                'intial': header_intial,
+                'increment': header_increment,
+                'withdrawal': header_withdrawal,
+                'actual': actual,
+                'extra_data': True
             })
             header = self.env['ir.actions.report'].with_context(period_name=period_name).render_template(
                 "jt_investment.external_layout_investment_committee",

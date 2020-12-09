@@ -53,7 +53,7 @@
                         </div>
                         <group>
                             <group>
-                            	<field name="program_code" attrs="{'readonly': [('status', '!=', 'open')],'invisible':[('is_papiit_project','=',False)]}" />
+                            	<field name="program_code" attrs="{'readonly': [('status', '!=', 'open')]}" />
                                 <field name="project_type" attrs="{'readonly': [('status', '!=', 'open')],'invisible':[('is_papiit_project','=',True)]}"/>
                                 <field name="stage_identifier_id" attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="stage_identifier" invisible="1" attrs="{'readonly': [('status', '!=', 'open')]}"/>

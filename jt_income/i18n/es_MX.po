@@ -16,6 +16,23 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: jt_income
+#: code:addons/jt_income/models/product.py:0
+#: model:ir.model.constraint,message:jt_income.constraint_product_template_unique_default_code
+#, python-format
+msgid "Internal Reference must be unique."
+msgstr "La Referencia Interna debe de ser única."
+
+#. module: jt_income
+#: model:ir.model.constraint,message:jt_income.constraint_res_partner_bank_acc_number_uniq
+msgid "Account Number must be unique."
+msgstr ""El Número de Cuenta debe de ser único"
+
+#. module: jt_income
+#: model:ir.model.constraint,message:jt_income.constraint_res_partner_bank_clabe_uniq
+msgid "CLABE must be unique."
+msgstr "La CLABE debe de ser única"
+
+#. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_7_document
 msgid ", (CHEQUERA  CONACYT)"
 msgstr ""

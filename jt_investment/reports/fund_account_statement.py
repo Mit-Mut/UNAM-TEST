@@ -118,7 +118,8 @@ class InvestmentAccountStatement(models.AbstractModel):
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
-        productive_domain = domain + [('date_required','>=',start),('date_required','<=',end),('investment_fund_id','!=',False)]
+        productive_domain = domain + [('date_required','>=',start),('date_required','<=',end),
+                                      ('investment_fund_id','!=',False)]
         productive_ids = self.env['investment.operation'].search(productive_domain)
         
         g_total_inc = 0
@@ -457,11 +458,12 @@ class InvestmentAccountStatement(models.AbstractModel):
                     'res_company': self.env.company,
                     'name': 'FONDOS',
                     'period_name': period_name,
-                    'intial': header_intial,
-                    'increment': header_increment,
-                    'withdrawal': header_withdrawal,
-                    'actual': actual,
-                    'extra_data': True
+                    'intial':  str(self._format({'name': header_intial},figure_type='float',digit=2).get('name')),
+                    'increment': str(self._format({'name': header_increment},figure_type='float',digit=2).get('name')),
+                    'withdrawal': str(self._format({'name': header_withdrawal},figure_type='float',digit=2).get('name')),
+                    'actual': str(self._format({'name': actual},figure_type='float',digit=2).get('name')),
+                    'extra_data': True,
+                    'company_currency_id': self.env.user.company_id.currency_id
                 })
             header = self.env['ir.actions.report'].render_template("jt_investment.external_layout_investment_committee",
                 values=rcontext)

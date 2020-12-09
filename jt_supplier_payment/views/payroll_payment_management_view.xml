@@ -41,9 +41,9 @@
             <field name="context">{'show_for_bank_transfer':True}</field>
         </record>
 	
-        <menuitem id="menu_payroll_payment_bank_transfer_request" name="Bank Transfer Request"
-                  action="payroll_payment_bank_transfer_request_action"
-                  parent="payroll_payment_management_menu" sequence="10"/>
+        <!--<menuitem id="menu_payroll_payment_bank_transfer_request" name="Bank Transfer Request"-->
+                  <!--action="payroll_payment_bank_transfer_request_action"-->
+                  <!--parent="payroll_payment_management_menu" sequence="10"/>-->
                   
     <!-- Menu Payroll Payments -->
 

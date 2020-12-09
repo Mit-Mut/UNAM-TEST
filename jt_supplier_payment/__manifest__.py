@@ -52,6 +52,7 @@
         'views/res_partner_bank_view.xml',
         'wizard/payment_declined_view.xml',
         'wizard/load_bank_layout_view.xml',
+        'wizard/reschedule_request.xml',
         # Payroll Payment
         'views/payroll_payment_request_view.xml',
         'views/payroll_payment_management_view.xml',

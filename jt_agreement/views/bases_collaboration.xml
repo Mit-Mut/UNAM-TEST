@@ -617,7 +617,7 @@
         </record>
 
         <record id="view_req_open_balance_form_finance" model="ir.ui.view">
-            <field name="name">Trasfer Request Form View</field>
+            <field name="name">Transfer Request Form View</field>
             <field name="model">request.open.balance.finance</field>
             <field name="arch" type="xml">
                 <form>
@@ -651,8 +651,10 @@
                                 <field name="date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="concept" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="user_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="unit_req_transfer_id" context="{'show_for_agreement':1}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="date_required" required="1"/>
+                                <field name="unit_req_transfer_id" context="{'show_for_agreement':1}"
+                                       attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="date_required" required="1" attrs="{'readonly':
+                                [('state', 'not in', ('draft','requested'))]}"/>
                                 <field name="fund_id" invisible="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="investment_fund_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="fund_type" attrs="{'readonly': [('state', '!=', 'draft')]}"/>

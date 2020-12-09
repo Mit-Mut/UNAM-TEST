@@ -30,6 +30,16 @@ class RequestTransfer(models.Model):
     origin_bank_id = fields.Many2one(
         related="origin_journal_id.bank_account_id", string='Origin Bank Account')
     aggrement = fields.Text('Agreement or Project reference')
+    dependency_id = fields.Many2one('dependency', "Dependency")
+    subdependency_id = fields.Many2one('sub.dependency', "Sub Dependency")
+    fund_type = fields.Many2one('fund.type', "Background")
+    investment_fund_id = fields.Many2one('investment.funds', 'Investment Fund')
+    agreement_type_id = fields.Many2one(
+        'agreement.agreement.type', 'Agreement Type')
+    fund_id = fields.Many2one('agreement.fund', 'Fund')
+    base_collabaration_id = fields.Many2one(
+        'bases.collaboration', 'Name Of Agreements')
+
     status = fields.Selection([('draft', 'Draft'),
                                ('requested', 'Requested'),
                                ('rejected', 'Rejected'),

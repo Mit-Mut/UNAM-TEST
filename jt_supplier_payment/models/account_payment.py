@@ -102,7 +102,8 @@ class AccountPayment(models.Model):
 
     @api.constrains('payment_date')
     def check_payment_date(self):
-        non_business_day = self.env['calendar.payment.regis'].search([('type_pay','=','Non Business Day'),('date','=',self.payment_date)])
+        non_business_day = self.env['calendar.payment.regis'].search([('type_pay','=','Non Business Day'),
+                                                                      ('date','=',self.payment_date)])
         if non_business_day:
             raise UserError(_('Not allow to schedule payment for non-working days.'))
                 
@@ -124,6 +125,9 @@ class AccountPayment(models.Model):
         if self.env.context and self.env.context.get('call_from_reject',False):
             return result
         self.write({'payment_state': 'cancelled'})
+        if self.payment_request_id:
+            payment_request = self.env['account.move'].search([('id', '=', self.payment_request_id.id)])
+            payment_request.payment_state = 'for_payment_procedure'
         return result
 
     def action_validate_payment_procedure(self):
@@ -206,6 +210,9 @@ class AccountPayment(models.Model):
     def action_draft(self):
         result = super(AccountPayment,self).action_draft()
         self.write({'payment_state': 'draft'})
+        if self.payment_request_id:
+            payment_request = self.env['account.move'].search([('id', '=', self.payment_request_id.id)])
+            payment_request.payment_state = 'for_payment_procedure'
         return result
                
     def action_register_payment(self):

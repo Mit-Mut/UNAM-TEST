@@ -722,10 +722,10 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                 'res_company': self.env.company,
                 'period_name': period_name,
                 'name': 'MERCADO DE DINERO',
-                'intial': header_intial,
-                'increment': header_increment,
-                'withdrawal': header_withdrawal,
-                'actual': actual,
+                'intial': str(self._format({'name': header_intial},figure_type='float').get('name')),
+                'increment': str(self._format({'name': header_increment},figure_type='float').get('name')),
+                'withdrawal': str(self._format({'name': header_withdrawal},figure_type='float').get('name')),
+                'actual': str(self._format({'name': actual},figure_type='float').get('name')),
                 'extra_data': True
             })
             header = self.env['ir.actions.report'].with_context(period_name=period_name).render_template(

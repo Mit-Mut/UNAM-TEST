@@ -142,7 +142,7 @@ class DistributionOfIncome(models.Model):
                      'income' : income,
                      'rounded': income,
                      'rate' : rate,
-                     'days':  (self.end_date - self.start_date).days + 1,
+                     'days':  (self.end_date - line.date_required).days + 1,
                      'date_required' : line.date_required,
                      }]) 
         if line.type_of_operation in ('increase','increase_by_closing','open_bal'):

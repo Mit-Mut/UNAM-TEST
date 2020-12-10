@@ -44,6 +44,7 @@
                                 <field name="application_concept" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                                 <field name="origin_journal_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                                 <field name="origin_bank_id" readonly="1"/>
+                                <field name="journal_id" required="1" domain="[('is_conacyt_project','=',True)]" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                                 <field name="aggrement" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                                 <field name="reason_rejection" readonly="1" attrs="{'invisible': [('status', '!=', 'rejected')]}"/>
                                 <field name="investment_fund_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
@@ -52,6 +53,12 @@
                                 <field name="base_collabaration_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                             </group>
                         </group>
+                        <notebook>
+                        	<page string="Accounting Notes">
+                        		<field name="move_line_ids" readonly="1"/>
+                        	</page>
+                        </notebook>                        
+                        
                     </sheet>
                 </form>
             </field>

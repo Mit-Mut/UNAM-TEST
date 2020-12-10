@@ -73,7 +73,7 @@
                             <page string='Inovice Lines' name='invoice_tab'>
                                 <field
                                 name="verifcation_expense_ids"
-                                widget="section_and_note_one2many">
+                                widget="section_and_note_one2many" attrs="{'readonly': [('status', '!=', 'eraser')]}">
                                     <tree editable="bottom" string="Verfication Expense Line">
                                           <field name="row"/>
                                           <field name="program_code"/>
@@ -87,7 +87,7 @@
                             </field>
                                 <group class="oe_subtotal_footer">
                                     <field name="amount_untaxed"/>
-                                    <field name="amount_tax" widget="tax-group-custom-field" nolabel="1" colspan="2"/>
+                                    <field name="amount_tax" colspan="2"/>
                                     <field name="amount_total" class="oe_subtotal_footer_separator"/>
                                 </group>
                             

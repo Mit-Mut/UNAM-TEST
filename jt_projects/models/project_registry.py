@@ -42,11 +42,11 @@ class ProjectRegistry(models.Model):
     is_related_agreement = fields.Boolean(
         'Is It related to agreement?', default=False)
 
-    base_number = fields.Many2one('bases.collaboration', 'Agreement Number')
-    # base_name = fields.Char(related='base_number.name', string='Agreement Name')
-    base_name = fields.Char(string='Agreement Name')
-    # agreement_type_id = fields.Many2one(related='base_number.agreement_type_id')
-    agreement_type_id = fields.Many2one(string="Agreement Type")
+
+    number_agreement = fields.Char("Agreement Number")
+    name_agreement = fields.Text("Agreement Name")
+    agreement_type_id = fields.Many2one("agreement.type", "Agreement Type")
+
     resource_type = fields.Selection(
         [('R', 'R (Remnant)'), ('P', 'P (Budget)')], string="Resource Type")
     pre_account_id = fields.Many2one('account.account', 'Previous')
@@ -87,11 +87,10 @@ class ProjectRegistry(models.Model):
             self.number = self.program_code.project_number
             self.project_type_identifier_id = self.program_code.project_type_id
             self.agreement_type_id = self.program_code.agreement_type_id.id
-            self.base_name = self.program_code.name_agreement
-            # self.base_number = self.program_code.number_agreement
+            self.name_agreement = self.program_code.name_agreement
+            self.number_agreement = self.program_code.number_agreement
             self.dependency_id = self.program_code.dependency_id.id
             self.subdependency_id = self.program_code.sub_dependency_id
-
 
     @api.depends('exercised_amount', 'allocated_amount')
     def get_final_amount(self):

@@ -323,7 +323,7 @@ class AccountMove(models.Model):
 
     def button_cancel(self):
         for record in self:
-            if record.is_payment_request or record.is_payroll_payment_request:
+            if record.is_payment_request or record.is_payroll_payment_request or record.is_project_payment:
                 if record.payment_state == 'cancel':
                     record.cancel_payment_revers_entry()
                     record.add_budget_available_amount()

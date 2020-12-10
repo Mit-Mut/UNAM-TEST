@@ -8,7 +8,7 @@ class ResBank(models.Model):
     for_income = fields.Boolean("Income")
 
     _sql_constraints = [
-        ('acc_number_uniq', 'unique (acc_number)', (_('Account Numner must be unique.'))),
+        ('acc_number_uniq', 'unique (acc_number)', (_('Account Number must be unique.'))),
         ('clabe_uniq', 'unique (l10n_mx_edi_clabe)', (_('CLABE must be unique.')))]
 
     # @api.model

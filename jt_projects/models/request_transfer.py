@@ -1,5 +1,6 @@
-from odoo import models, fields, api
-
+from odoo import models, fields, api,_
+from odoo.exceptions import ValidationError, UserError
+from datetime import datetime, timedelta
 
 class RequestTransfer(models.Model):
 
@@ -25,6 +26,7 @@ class RequestTransfer(models.Model):
         string='Amount of the transfer requested', currency_field='currency_id')
     handover_date = fields.Date('Required handover Date', Required=True)
     application_concept = fields.Text('Application Concept')
+    journal_id = fields.Many2one('account.journal')
     origin_journal_id = fields.Many2one(
         'account.journal', 'Origin Bank')
     origin_bank_id = fields.Many2one(
@@ -39,6 +41,9 @@ class RequestTransfer(models.Model):
     fund_id = fields.Many2one('agreement.fund', 'Fund')
     base_collabaration_id = fields.Many2one(
         'bases.collaboration', 'Name Of Agreements')
+
+    move_line_ids = fields.One2many(
+        'account.move.line', 'transfer_request_id', string="Journal Items")
 
     status = fields.Selection([('draft', 'Draft'),
                                ('requested', 'Requested'),
@@ -86,6 +91,96 @@ class RequestTransfer(models.Model):
 
     def confirmed_finance(self):
         self.status = 'confirmed'
+
+        if self.journal_id:
+            journal = self.journal_id
+            if not journal.receivable_CFDIS_credit_account_id or not journal.conac_receivable_CFDIS_credit_account_id \
+                    or not journal.receivable_CFDIS_debit_account_id or not journal.conac_receivable_CFDIS_debit_account_id:
+                if self.env.user.lang == 'es_MX':
+                    raise ValidationError(
+                        _("Por favor configure la cuenta UNAM y CONAC en diario!"))
+                else:
+                    raise ValidationError(
+                        _("Please configure UNAM and CONAC account in journal!"))
+
+            if not journal.ministrations_credit_account_id or not journal.conac_ministrations_credit_account_id \
+                    or not journal.ministrations_debit_account_id or not journal.conac_ministrations_debit_account_id:
+                if self.env.user.lang == 'es_MX':
+                    raise ValidationError(
+                        _("Por favor configure la cuenta UNAM y CONAC en diario!"))
+                else:
+                    raise ValidationError(
+                        _("Please configure UNAM and CONAC account in journal!"))
+
+            if not journal.ei_credit_account_id or not journal.conac_ei_credit_account_id \
+                    or not journal.ei_debit_account_id or not journal.conac_ei_debit_account_id:
+                if self.env.user.lang == 'es_MX':
+                    raise ValidationError(
+                        _("Por favor configure la cuenta UNAM y CONAC en diario!"))
+                else:
+                    raise ValidationError(
+                        _("Please configure UNAM and CONAC account in journal!"))
+
+            today = datetime.today().date()
+            user = self.env.user
+            partner_id = user.partner_id.id
+            amount = self.amount_req_tranfer
+            name = ''
+            if self.invoice:
+                name += self.invoice
+
+
+            unam_move_val = {'name': name, 'ref': name,  'conac_move': True,
+                             'date': today, 'journal_id': journal.id, 'company_id': self.env.user.company_id.id,
+                             'line_ids': [(0, 0, {
+                                 'account_id': journal.receivable_CFDIS_credit_account_id.id,
+                                 'coa_conac_id': journal.conac_receivable_CFDIS_credit_account_id.id,
+                                 'credit': amount,
+                                 'partner_id': partner_id,
+                                 'transfer_request_id': self.id,
+                             }),
+                                 (0, 0, {
+                                     'account_id': journal.receivable_CFDIS_debit_account_id.id,
+                                     'coa_conac_id': journal.conac_receivable_CFDIS_debit_account_id.id,
+                                     'debit': amount,
+                                     'partner_id': partner_id,
+                                     'transfer_request_id': self.id,
+                                 }),
+
+                                (0, 0, {
+                                 'account_id': journal.ministrations_credit_account_id.id,
+                                 'coa_conac_id': journal.conac_ministrations_credit_account_id.id,
+                                 'credit': amount,
+                                 'partner_id': partner_id,
+                                 'transfer_request_id': self.id,
+                             }),
+                                 (0, 0, {
+                                     'account_id': journal.ministrations_debit_account_id.id,
+                                     'coa_conac_id': journal.conac_ministrations_debit_account_id.id,
+                                     'debit': amount,
+                                     'partner_id': partner_id,
+                                     'transfer_request_id': self.id,
+                                 }),
+
+                                (0, 0, {
+                                 'account_id': journal.ei_credit_account_id.id,
+                                 'coa_conac_id': journal.conac_ei_credit_account_id.id,
+                                 'credit': amount,
+                                 'partner_id': partner_id,
+                                 'transfer_request_id': self.id,
+                             }),
+                                 (0, 0, {
+                                     'account_id': journal.ei_debit_account_id.id,
+                                     'coa_conac_id': journal.conac_ei_debit_account_id.id,
+                                     'debit': amount,
+                                     'partner_id': partner_id,
+                                     'transfer_request_id': self.id,
+                                 }),                                 
+                                                                  
+                             ]}
+            move_obj = self.env['account.move']
+            unam_move = move_obj.create(unam_move_val)
+            unam_move.action_post()
 
     def reject_finance(self):
         self.status = 'rejected'

@@ -255,7 +255,9 @@
                                         <!-- Displayed fields -->
                                         <field name="sequence" widget="handle"/>
                                         <field name="move_name" invisible="1"/>
-                                        <field name="product_id" string="Payment of"  optional="show" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
+                                        <field name="product_id" string="Payment of"
+                                               optional="show" domain="['|', ('company_id', '=', False),
+                                               ('company_id', '=', parent.company_id)]"/>
                                         <field name="l10n_mx_edi_product_code_sat_id"/>
                                         <field name="name" widget="section_and_note_text" />
                                         <field name="subproduct_count"/>
@@ -286,7 +288,8 @@
                                         <field name="income_sub_subaccount" invisible="1"/>
                                                
                                         <field name="quantity"/>
-                                        <field name="product_uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
+                                        <field name="product_uom_id" string="UoM" groups="uom.group_uom"
+                                               optional="show"/>
                                         <field name="l10n_mx_edi_uom_code_sat_id" groups="uom.group_uom"/>
                                         <field name="price_unit" string="Price"/>
                                         

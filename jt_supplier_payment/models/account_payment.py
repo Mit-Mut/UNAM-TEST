@@ -195,11 +195,11 @@ class AccountPayment(models.Model):
         result = super(AccountPayment,self).post()
         self.write({'payment_state': 'posted'})
         for payment in self:
-            for inv in payment.invoice_ids.filtered(lambda x:x.is_payment_request or x.is_payroll_payment_request or x.is_different_payroll_request):
+            for inv in payment.invoice_ids.filtered(lambda x:x.is_project_payment or x.is_payment_request or x.is_payroll_payment_request or x.is_different_payroll_request):
                 if inv.invoice_payment_state == 'paid':
                     inv.payment_state = 'paid'
                     payment.create_journal_for_paid(inv)
-            is_supplier_payment = payment.invoice_ids.filtered(lambda x:x.is_payment_request or x.is_payroll_payment_request or x.is_different_payroll_request)
+            is_supplier_payment = payment.invoice_ids.filtered(lambda x:x.is_project_payment or x.is_payment_request or x.is_payroll_payment_request or x.is_different_payroll_request)
             if is_supplier_payment:
                 for line in payment.move_line_ids:
                     line.coa_conac_id = line.account_id and line.account_id.coa_conac_id and line.account_id.coa_conac_id.id or False

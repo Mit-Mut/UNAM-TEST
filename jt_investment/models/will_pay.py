@@ -1,6 +1,6 @@
 from odoo import models, fields, api , _
 from datetime import datetime
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 class WillPay(models.Model):
 
@@ -173,10 +173,27 @@ class WillPay(models.Model):
             if rec.compound_interest:
                 rec.compound_estimated_real_variation = rec.compound_interest_real_performance - rec.compound_interest_estimated_yield
             else:
-                rec.compound_estimated_real_variation = 0 
+                rec.compound_estimated_real_variation = 0
+
+    def write(self, vals):
+        res = super(WillPay, self).write(vals)
+        if vals.get('expiry_date'):
+            pay_regis_obj = self.env['calendar.payment.regis']
+            pay_regis_rec = pay_regis_obj.search([('date', '=', vals.get('expiry_date')),
+                                                  ('type_pay', '=', 'Non Business Day')], limit=1)
+            if pay_regis_rec:
+                raise ValidationError(_("You have choosen Non-Business Day on Expiry Date!"))
+        return res
 
     @api.model
     def create(self,vals):
+        if vals.get('expiry_date'):
+            pay_regis_obj = self.env['calendar.payment.regis']
+            pay_regis_rec = pay_regis_obj.search([('date', '=', vals.get('expiry_date')),
+                                                  ('type_pay', '=', 'Non Business Day')], limit=1)
+            if pay_regis_rec:
+                raise ValidationError(_("You have choosen Non-Business Day on Expiry Date!"))
+
         vals['folio'] = self.env['ir.sequence'].next_by_code('folio.will.pay')
         res = super(WillPay,self).create(vals)
 

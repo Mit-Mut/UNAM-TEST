@@ -17,6 +17,13 @@ msgstr ""
 "Language: es\n"
 "X-Generator: Poedit 2.3\n"
 
+
+#. module: jt_contact_base
+#: code:addons/jt_contact_base/models/res_partner.py:0
+#, python-format
+msgid "Supplier Registration"
+msgstr "Registro de Proveedores"
+
 #. module: jt_contact_base
 #: model:ir.model.fields,field_description:jt_contact_base.field_account_setup_bank_manual_config__aba
 #: model:ir.model.fields,field_description:jt_contact_base.field_res_partner_bank__aba

@@ -21,7 +21,7 @@
 #
 ##############################################################################
 from odoo import models, api, _
-from datetime import datetime
+from datetime import datetime, timedelta
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tools.misc import formatLang
 from odoo.tools.misc import xlsxwriter
@@ -113,17 +113,59 @@ class TitlesAccountStatement(models.AbstractModel):
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
+        period_type = options.get('date').get('period_type')
+        header_intial = 0
+        header_increment = 0
+        header_withdrawal = 0
+        prev_start = prev_end = False
+        if period_type == 'month' or period_type == 'custom':
+            first_day_of_month = start.replace(day=1)
+            prev_end = first_day_of_month - timedelta(days=1)
+            prev_start = prev_end.replace(day=1)
+        elif period_type == 'fiscalyear':
+            prev_year = start.year - 1
+            prev_start = start.replace(year=prev_year)
+            prev_end = end.replace(year=prev_year)
+        elif period_type == 'quarter':
+            if start.month == 1:
+                prev_start = start.replace(year=start.year - 1, day=1, month=10)
+                prev_end = start.replace(year=start.year - 1, day=31, month=12)
+            elif start.month == 4:
+                prev_start = start.replace(day=1, month=1)
+                prev_end = start.replace(day=31, month=3)
+            elif start.month == 7:
+                prev_start = start.replace(day=1, month=4)
+                prev_end = start.replace(day=30, month=6)
+            elif start.month == 10:
+                prev_start = start.replace(day=1, month=7)
+                prev_end = start.replace(day=31, month=10)
+
         title_domain = domain + [('invesment_date','>=',start),('invesment_date','<=',end)]
+        prev_title_domain = domain + [('invesment_date','>=',prev_start),('invesment_date','<=',prev_end)]
+        prev_title_ids = self.env['purchase.sale.security'].search(prev_title_domain, order='invesment_date')
+        other_lines = self.env['request.open.balance.finance'].search([('date_required', '>=', prev_start),
+                                                                       ('date_required', '<=', prev_end),
+                                                                       ('amount_type', '!=', False),
+                                                                       ('state', 'in', ('confirmed', 'done')),
+                                                            ('purchase_sale_security_id', 'in', prev_title_ids.ids)])
+        for rec in prev_title_ids:
+            if rec.movement == 'buy':
+                header_intial += rec.amount
+            elif rec.movement == 'sell':
+                header_intial -= rec.amount
+        for rec in other_lines:
+            if rec.movement == 'increment':
+                header_intial += rec.amount
+            elif rec.movement == 'withdrawal':
+                header_intial -= rec.amount
+
+        print ("Header Intial =-=-", header_intial)
 
         title_ids = self.env['purchase.sale.security'].search(title_domain,order='invesment_date')
 
         g_total_inc = 0
         g_total_with = 0
         g_total_final = 0
-
-        header_intial = 0
-        header_increment = 0
-        header_withdrawal = 0
 
         journal_ids = title_ids.mapped('bank_id')
         for journal in journal_ids:
@@ -149,7 +191,11 @@ class TitlesAccountStatement(models.AbstractModel):
                 'unfolded': True,
             })
             records = title_ids.filtered(lambda x:x.bank_id.id==journal.id)
-            other_lines = self.env['request.open.balance.finance'].search([('date_required','>=',start),('date_required','<=',end),('amount_type','!=',False),('state','in',('confirmed','done')),('purchase_sale_security_id','in',records.ids)])
+            other_lines = self.env['request.open.balance.finance'].search([('date_required','>=',start),
+                                                                           ('date_required','<=',end),
+                                                                           ('amount_type','!=',False),
+                                                                           ('state','in',('confirmed','done')),
+                                                                           ('purchase_sale_security_id','in',records.ids)])
             req_date = records.mapped('invesment_date')
             req_date += other_lines.mapped('date_required')
 
@@ -175,7 +221,6 @@ class TitlesAccountStatement(models.AbstractModel):
                         invesment_date = rec.invesment_date.strftime('%Y-%m-%d') 
                     final = capital + inc - withdraw
                     total_final = final
-                    header_intial += capital
                     header_increment += inc
                     header_withdrawal += withdraw
                     lines.append({
@@ -211,7 +256,6 @@ class TitlesAccountStatement(models.AbstractModel):
                     if line.date_required:
                         invesment_date = line.date_required.strftime('%Y-%m-%d') 
                     final = capital + inc - withdraw
-                    header_intial += capital
                     header_increment += inc
                     header_withdrawal += withdraw
                     lines.append({

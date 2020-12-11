@@ -29,20 +29,20 @@
                         </div>
                         <group>
                             <group>
-                                <field name="application_date"  attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                                <field name="application_date" required="1"  attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                                 <field name="request_area" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                                 <field name="user_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
-                                <field name="destination_journal_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                                <field name="destination_journal_id" required="1" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                                 <field name="destination_bank_id"/>
                                 <field name="currency_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
-                                <field name="amount_req_tranfer" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                                <field name="amount_req_tranfer" required="1" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                                 <field name="dependency_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                                 <field name="subdependency_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                             </group>
                             <group>
                                 <field name="handover_date" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                                 <field name="application_concept" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
-                                <field name="origin_journal_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                                <field name="origin_journal_id" required="1" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                                 <field name="origin_bank_id" readonly="1"/>
                                 <field name="journal_id" required="1" domain="[('is_conacyt_project','=',True)]" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                                 <field name="aggrement" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
@@ -58,7 +58,6 @@
                         		<field name="move_line_ids" readonly="1"/>
                         	</page>
                         </notebook>                        
-                        
                     </sheet>
                 </form>
             </field>

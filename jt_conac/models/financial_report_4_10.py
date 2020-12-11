@@ -247,7 +247,7 @@ class StatesAndProgramReports(models.AbstractModel):
                 prog_name = program.budget_program_conversion_id.desc.upper()
                 prog_name = self.strip_accents(prog_name)
                 shcp = program.budget_program_conversion_id.shcp.name
-                self.env.cr.execute("select coalesce(sum(abs(line.balance)),0) as committed from account_move_line line,account_move amove where line.program_code_id in %s and amove.id=line.move_id and amove.payment_state=%s and amove.invoice_date >= %s and amove.invoice_date <= %s", (tuple(program.ids),'paid',period_date_from,period_date_to))
+                self.env.cr.execute("select coalesce(sum(abs(line.balance)+abs(line.tax_price_cr)),0) as committed from account_move_line line,account_move amove where line.program_code_id in %s and amove.id=line.move_id and amove.payment_state=%s and amove.invoice_date >= %s and amove.invoice_date <= %s", (tuple(program.ids),'paid',period_date_from,period_date_to))
                 my_datas = self.env.cr.fetchone()
                 paid_amt = 0
                 if my_datas:

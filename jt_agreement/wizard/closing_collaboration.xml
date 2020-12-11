@@ -10,6 +10,7 @@
                 	<group>
                         <field name="start_date" required="1"/>
                         <field name="end_date" required="1"/>
+                        <field name="registration_date" required="1"/>
                     </group>
                 	<footer>
                         <button string="Confirm" name="confirm" type="object" class="oe_highlight"/>

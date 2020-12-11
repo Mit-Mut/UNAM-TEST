@@ -110,7 +110,7 @@ class ProjectRegistry(models.Model):
 
     @api.depends('proj_end_date', 'status')
     def get_project_due(self):
-        for rec in self:
+        for rec in self:                
             if rec.proj_end_date and rec.status:
                 end_date = rec.proj_end_date
                 today = date.today()

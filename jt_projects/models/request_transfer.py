@@ -57,6 +57,11 @@ class RequestTransfer(models.Model):
 
     reason_rejection = fields.Text("Reason for Rejection")
 
+    @api.constrains('amount_req_tranfer')
+    def check_amount_req_tranfer(self):
+        if self.amount_req_tranfer == 0:
+            raise UserError(_('Please add Amount of the transfer requested'))
+
     def generate_request(self):
         self.status = 'requested'
         record = {
@@ -112,8 +117,8 @@ class RequestTransfer(models.Model):
                     raise ValidationError(
                         _("Please configure UNAM and CONAC account in journal!"))
 
-            if not journal.ei_credit_account_id or not journal.conac_ei_credit_account_id \
-                    or not journal.ei_debit_account_id or not journal.conac_ei_debit_account_id:
+            if not journal.income_CFDIS_credit_account_id or not journal.conac_income_CFDIS_credit_account_id \
+                    or not journal.income_CFDIS_debit_account_id or not journal.conac_income_CFDIS_debit_account_id:
                 if self.env.user.lang == 'es_MX':
                     raise ValidationError(
                         _("Por favor configure la cuenta UNAM y CONAC en diario!"))
@@ -163,15 +168,15 @@ class RequestTransfer(models.Model):
                                  }),
 
                                 (0, 0, {
-                                 'account_id': journal.ei_credit_account_id.id,
-                                 'coa_conac_id': journal.conac_ei_credit_account_id.id,
+                                 'account_id': journal.income_CFDIS_credit_account_id.id,
+                                 'coa_conac_id': journal.conac_income_CFDIS_credit_account_id.id,
                                  'credit': amount,
                                  'partner_id': partner_id,
                                  'transfer_request_id': self.id,
                              }),
                                  (0, 0, {
-                                     'account_id': journal.ei_debit_account_id.id,
-                                     'coa_conac_id': journal.conac_ei_debit_account_id.id,
+                                     'account_id': journal.income_CFDIS_debit_account_id.id,
+                                     'coa_conac_id': journal.conac_income_CFDIS_debit_account_id.id,
                                      'debit': amount,
                                      'partner_id': partner_id,
                                      'transfer_request_id': self.id,

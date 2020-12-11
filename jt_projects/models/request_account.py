@@ -111,7 +111,7 @@ class RequestAccounts(models.Model):
             today = datetime.today().date()
             user = self.env.user
             partner_id = user.partner_id.id
-            amount = self.ministrations_amount
+            amount = self.authorized_amount
             name = ''
             if self.invoice:
                 name += self.invoice

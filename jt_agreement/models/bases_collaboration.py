@@ -128,6 +128,8 @@ class BasesCollabration(models.Model):
     move_line_ids = fields.One2many(
         'account.move.line', 'collaboration_id', string="Journal Items")
     rate_base_ids = fields.One2many('interest.rate.base','base_id')
+
+    periods_closing_ids = fields.One2many('periods.closing', 'collaboration_id', "Closing Periods")
     
     _sql_constraints = [
         ('folio_convention_no', 'unique(convention_no)', 'The Convention No. must be unique.')]
@@ -1783,3 +1785,12 @@ class AccountMoveLine(models.Model):
     patrimonial_id = fields.Many2one(
         'patrimonial.resources', 'Patrimonial Resources')
     request_id = fields.Many2one('request.open.balance', 'Operation Request')
+
+class PeriodsClosing(models.Model):
+
+    _name = 'periods.closing'
+    _description = "Closing Period"
+
+    start_date = fields.Date("Start Date")
+    end_date = fields.Date("End Date")
+    collaboration_id = fields.Many2one('bases.collaboration')

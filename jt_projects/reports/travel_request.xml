@@ -19,7 +19,7 @@
                     <table style="width:100%;">
                         <tr>
                             <td style="width:30%;">
-                            <img t-attf-src="data:image/png;base64,{{res_company.header_logo}}" style="width:150px;height:170px;margin-left:30px;margin-top:10px;"/></td>
+                            <img t-attf-src="data:image/png;base64,{{res_company.logo}}" style="width:150px;height:170px;margin-left:30px;margin-top:10px;"/></td>
 
                             <td style="width:80%;">
                                 <b>
@@ -77,9 +77,9 @@
                             <b><span style="margin-left:20px;font-size:16px;">Nombramiento:</span></b><br/><br/>
                         </tr>
                         <tr>
-                            <span t-field="o.responsible_id" style="margin-left:20px;font-size:16px;"></span>
+                            <span t-field="o.responsible_expend_id" style="margin-left:20px;font-size:16px;"></span>
 
-                            <span t-field="o.rf_person" style="margin-left:160px;font-size:16px;"></span>
+                            <span t-field="o.responsible_rfc" style="margin-left:160px;font-size:16px;"></span>
 
                             <span t-field="o.responsible_category_key" style="margin-left:200px;font-size:16px;"></span>
 
@@ -89,8 +89,9 @@
                         <tr>
                             <br/>
                             <b><span style="margin-left:350px;">MOTIVO DEL VIAJE</span></b><br/><br/>
-                            <span t-field="o.reason_for_expendiure" style="margin-left:20px;position: absolute;"/>
-
+                            <center>
+                            <span t-field="o.reason_for_expendiure" style="margin-left:20px;text-align:left;"/>
+                        </center>
                             <br/><br/>
                             <b><span style="margin-left:380px;">DESTINO</span></b><br/><br/>
                             <span t-field="o.destination" style="margin-left:20px;"/>

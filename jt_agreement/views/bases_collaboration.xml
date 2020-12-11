@@ -356,6 +356,12 @@
                                 <group>
                                     <field name="fund_name_transfer_id" context="{'show_agreement_name':True}"/>
                                     <field name="closing_amt"/>
+                                    <field name="periods_closing_ids" invisible="1">
+                                        <tree>
+                                            <field name="start_date"/>
+                                            <field name="end_date"/>
+                                        </tree>
+                                    </field>
                                 </group>
                             </page>
 

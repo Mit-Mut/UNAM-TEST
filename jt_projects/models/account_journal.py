@@ -57,6 +57,10 @@ class AccountJournal(models.Model):
     ai_debit_account_id = fields.Many2one('account.account', "Default Debit Account")
     conac_ai_debit_account_id = fields.Many2one(related='ai_debit_account_id.coa_conac_id', string="CONAC Debit Account")
 
+    capitalizable_credit_account_id = fields.Many2one('account.account', "Default Credit Account")
+    conac_capitalizable_credit_account_id = fields.Many2one(related='capitalizable_credit_account_id.coa_conac_id', string="CONAC Credit Account")
+    capitalizable_debit_account_id = fields.Many2one('account.account', "Default Debit Account")
+    conac_capitalizable_debit_account_id = fields.Many2one(related='capitalizable_debit_account_id.coa_conac_id', string="CONAC Debit Account")
     
     
     

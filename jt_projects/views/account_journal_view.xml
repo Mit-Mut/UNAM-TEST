@@ -41,6 +41,13 @@
 	                        <field name="ai_debit_account_id" />
 	                        <field name="conac_ai_debit_account_id"/>
                 		</group>
+
+                		<group string="Capitalizable Assets">
+	                        <field name="capitalizable_credit_account_id"/>
+	                        <field name="conac_capitalizable_credit_account_id"/>
+	                        <field name="capitalizable_debit_account_id" />
+	                        <field name="conac_capitalizable_debit_account_id"/>
+                		</group>
                 		
 					</group>            	
             	</xpath>

@@ -127,7 +127,7 @@ class DistributionOfIncome(models.Model):
             
         final_balance = capital + inc - withdrawal
         income = (((final_balance * rate)/100)/360)*term
-                       
+        
         cal_vals.append([0, 0, 
                     {
                      'fund_id':line.investment_fund_id and line.investment_fund_id.fund_id and line.investment_fund_id.fund_id.id or False,
@@ -172,43 +172,136 @@ class DistributionOfIncome(models.Model):
     #
     #
     #         self.variable_rate = total_rate/total_days
+    
+    def get_previous_capital(self,cal_vals,pre_lines,inv,fund,base):
+        term = (self.end_date - self.start_date).days + 1
+        rate = 0
+        if inv.is_fixed_rate:                     
+            rate = inv.interest_rate + inv.extra_percentage
             
+        elif inv.is_variable_rate:
+            v_rate = 0
+            
+            #term = inv.term_variable
+            if inv.investment_rate_id:
+                other_rate_id = False
+                if not other_rate_id: 
+                    if inv.term_variable == 28 and inv.investment_rate_id.rate_days_28:
+                        v_rate = inv.investment_rate_id.rate_days_28
+                        other_rate_id = True
+                    else:
+                        other_rate_id = self.env['investment.period.rate'].search([('rate_days_28','>',0),('rate_date','<=',inv.investment_rate_id.rate_date),('product_type','=',inv.investment_rate_id.product_type)],limit=1,order='rate_date desc')
+                        if other_rate_id:
+                            v_rate = other_rate_id.rate_days_28
+                        other_rate_id = True
+                        
+                if not other_rate_id:
+                    if inv.term_variable == 91 and inv.investment_rate_id.rate_days_91:
+                        v_rate = inv.investment_rate_id.rate_days_91
+                        other_rate_id = True
+                    else:
+                        other_rate_id = self.env['investment.period.rate'].search([('rate_days_91','>',0),('rate_date','<=',inv.investment_rate_id.rate_date),('product_type','=',inv.investment_rate_id.product_type)],limit=1,order='rate_date desc')
+                        if other_rate_id:
+                            v_rate = other_rate_id.rate_days_91
+                        other_rate_id = True
+                        
+                if not other_rate_id:                                    
+                    if inv.term_variable == 182 and inv.investment_rate_id.rate_days_182:
+                        v_rate = inv.investment_rate_id.rate_days_182
+                        other_rate_id = True
+                    else:
+                        other_rate_id = self.env['investment.period.rate'].search([('rate_days_182','>',0),('rate_date','<=',inv.investment_rate_id.rate_date),('product_type','=',inv.investment_rate_id.product_type)],limit=1,order='rate_date desc')
+                        if other_rate_id:
+                            v_rate = other_rate_id.rate_days_182
+                        other_rate_id = True
+                        
+            rate = v_rate + inv.extra_percentage
+        capital = 0
+        for line in pre_lines:
+            if line.type_of_operation in ('increase','increase_by_closing','open_bal'):
+                capital += line.amount
+            elif line.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure'):
+                capital -= line.amount
+
+            
+        final_balance = capital 
+        income = (((final_balance * rate)/100)/360)*term
+        
+        cal_vals.append([0, 0, 
+                    {
+                     'fund_id':fund and fund.fund_id and fund.fund_id.id or False,
+                     'investment_fund_id' : fund and fund.id or False,
+                     'agreement_type_id':False,
+                     'base_id' : base and base.id or False,
+                     'dependency_id' : False,
+                     'capital' : capital,
+                     'increments' : 0,
+                     'withdrawals' : 0,
+                     'final_balance' : final_balance,
+                     'income' : income,
+                     'rounded': income,
+                     'rate' : rate,
+                     'days':  term,
+                     'date_required' : self.start_date,
+                     }]) 
+        return cal_vals,capital
+         
     def action_calculation(self):
         #domain = [('bases_collaboration_id','!=',False)]
         domain = [('line_state','=','done'), ('investment_id', '=', self.investment_id.id)]
-
+        capital_domain = [('line_state','=','done'), ('investment_id', '=', self.investment_id.id)]
+        
         self.line_ids = [(6, 0, [])]
         self.calculation_line_ids = [(6, 0, [])]
         vals = []
         cal_vals = []
+        
         if self.start_date:
             domain.append(('date_required','>=',self.start_date))
+            capital_domain.append(('date_required','<=',self.start_date))
         if self.end_date:
             domain.append(('date_required','<=',self.end_date))
-        
+            
+            
         if self.journal_id:
             domain.append(('investment_id.journal_id','=',self.journal_id.id))
+            capital_domain.append(('investment_id.journal_id','=',self.journal_id.id))
             
         #base_ids = self.env['bases.collaboration'].search(domain)
         #base_ids = requests.mapped('bases_collaboration_id')
         
         opt_lines = self.env['investment.operation'].search(domain,order='date_required,id')
+        capital_lines = self.env['investment.operation'].search(capital_domain,order='date_required,id')
         
         if self.dependency_ids and not self.all_dependencies:
             opt_lines = opt_lines.filtered(lambda x:x.dependency_id.id in self.dependency_ids.ids)
+            capital_lines = capital_lines.filtered(lambda x:x.dependency_id.id in self.dependency_ids.ids)
+            
         if self.agreement_type_ids and not self.all_types_of_Agreements:
             opt_lines = opt_lines.filtered(lambda x:x.agreement_type_id.id in self.agreement_type_ids.ids)
+            capital_lines = capital_lines.filtered(lambda x:x.agreement_type_id.id in self.agreement_type_ids.ids)
+            
         if self.base_ids and not self.all_base:
             opt_lines = opt_lines.filtered(lambda x:x.base_collabaration_id.id in self.base_ids.ids)
+            capital_lines = capital_lines.filtered(lambda x:x.base_collabaration_id.id in self.base_ids.ids)
+            
         if self.fund_ids and not self.all_agreement:
             opt_lines = opt_lines.filtered(lambda x:x.investment_fund_id.fund_id.id in self.fund_ids.ids)
+            capital_lines = capital_lines.filtered(lambda x:x.investment_fund_id.fund_id.id in self.fund_ids.ids)
         
         inv_ids = opt_lines.mapped('investment_id')
-                
+        if not inv_ids and capital_lines:
+            cal_vals,capital = self.get_previous_capital(cal_vals,capital_lines,self.investment_id,False,False)
         for inv  in inv_ids:
             # self.set_rate_data(inv)
+                
             for fund in opt_lines.filtered(lambda x:x.investment_id.id == inv.id and not x.base_collabaration_id).mapped('investment_fund_id'):
                 capital = 0
+                
+                pre_capital_lines = capital_lines.filtered(lambda x:not x.base_collabaration_id and x.investment_id.id == inv.id and x.investment_fund_id.id == fund.id)
+                if pre_capital_lines:
+                    cal_vals,capital = self.get_previous_capital(cal_vals,pre_capital_lines,inv,fund,False)
+                                    
                 days = 0
                 line = False
                 pre_line = False
@@ -229,6 +322,12 @@ class DistributionOfIncome(models.Model):
                     days = 0 
                     line = False
                     pre_line = False
+                    print ("capital_lines===",capital_lines)
+                    pre_capital_lines = capital_lines.filtered(lambda x:x.base_collabaration_id and x.investment_id.id == inv.id and x.investment_fund_id.id == fund.id)
+                    if pre_capital_lines:
+                        cal_vals,capital = self.get_previous_capital(cal_vals,pre_capital_lines,inv,fund,base)
+                    print ("pre_capital_lines===",pre_capital_lines)
+                    
                     base_lines = opt_lines.filtered(lambda x:x.base_collabaration_id.id==base.id and x.investment_id.id == inv.id and x.investment_fund_id.id == fund.id)      
                     for opt_line in base_lines:
                         if not line:

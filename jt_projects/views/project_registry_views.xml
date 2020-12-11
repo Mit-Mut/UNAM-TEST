@@ -41,9 +41,9 @@
                             <field name='check_project_due' invisible="1"/>
                             <field name='check_project_expire' invisible="1"/>
                             
-                            <button string="Project Due" class="oe_stat_button" type="object" name="calculate_project_overdue" attrs="{'invisible': [('check_project_due', '=',False)]}">
+                            <button string="Project Due" class="oe_stat_button" type="object" name="calculate_project_overdue" attrs="{'invisible': ['|',('check_project_due', '=',False),('is_papiit_project','=',True)]}">
                             </button>
-                            <button string="Project next to expire"  class="oe_stat_button" type="object" name="calculate_project_overdue" attrs="{'invisible': [('check_project_expire', '=',False)]}">
+                            <button string="Project next to expire"  class="oe_stat_button" type="object" name="calculate_project_overdue" attrs="{'invisible': ['|',('check_project_expire', '=',False),('is_papiit_project','=',True)]}">
                             </button>
                             </div>
 
@@ -72,8 +72,8 @@
                                 <field name="PAPIIT_project_type"  attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
                                 <field name="technical_support_id" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
                                 <field name="administrative_manager_id" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
-                                <field name="co_responsible_id" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
-                                <field name="co_responsible_rfc" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
+                                <field name="co_responsible_id" />
+                                <field name="co_responsible_rfc"/>
                             </group>
                             <group>
                                 <field name="proj_start_date" attrs="{'readonly': [('status', '!=', 'open')]}"/>

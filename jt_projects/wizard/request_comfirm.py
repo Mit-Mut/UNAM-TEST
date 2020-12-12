@@ -20,7 +20,7 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from odoo import models, fields,_
+from odoo import models, fields
 
 
 class RequestConfirm(models.TransientModel):
@@ -38,7 +38,7 @@ class RequestConfirm(models.TransientModel):
         active_id = self._context.get('active_id', False)
         if active_id:
             request_account_id = self.env['request.accounts'].browse(active_id)
-            request_account_id.confirm_account()
+            request_account_id.status = 'confirmed'
             request_account_id.bank_account_id = self.bank_account_id
             request_account_id.bank_acc_number_id = self.bank_acc_number_id.acc_number
             request_account_id.no_contract = self.no_contract

@@ -93,11 +93,70 @@ class IntegrationOfCurrentResearchProjects(models.AbstractModel):
         value['name'] = round(value['name'], 1)
         return value
 
+    def _get_lines(self, options, line_id=None):
+        lines = []
+        
+        
+        start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+        # project_records = self.env['project.project'].search(
+        #     [('proj_start_date', '>=', start), ('proj_end_date', '<=', end)])
+        project_records = self.env['project.project'].search([])
+
+        # stage_identifier = project_records.mapped('stage_identifier_id')
+        # for stage in stage_identifier:
+        for record in project_records:
+            ministering_amount = 0.0
+            approved_amount = 0.0
+            name = str(record.stage_identifier_id.id or '') + \
+                '/' + str(record.proj_start_date)
+            
+            for rec in record.project_ministrations_ids:
+                ministering_amount += rec.ministering_amount
+            
+            approved_amount += record.approved_amount
+            lines.append({
+                'id': 'projects' + str(record.id),
+                'name': name,
+                'columns': [
+                            self._format({'name': ministering_amount},figure_type='float'),
+                            {'name': ''},
+                            self._format({'name': approved_amount},figure_type='float'),
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+
+                            ],
+                'level': 2,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        lines.append({
+            'id': 'project_id',
+            'name': 'Concept',
+            'columns': [
+                        {'name':'Project With Bank Accounts'},
+                        {'name': 'Accounting Balance'},
+                        {'name':'Number Of Bank Accounts'},
+                        {'name': 'Difference Of Expenses Pending Verification'},
+                        {'name': 'Total'},
+                        {'name': ''},
+
+                        ],
+            'level': 2,
+            'unfoldable': False,
+            'unfolded': True,
+            })
+
+        return lines
+
     def get_header(self, options):
 
         start_date = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
-        today = datetime.today().date() 
         return[
 
             [
@@ -105,7 +164,7 @@ class IntegrationOfCurrentResearchProjects(models.AbstractModel):
                 {'name': _('Active project control system balances'),
                  'colspan': 3},
                 {'name': _('Accounting Balance at') + ' ' +
-                 str(today), 'class': 'number'},
+                 str(start_date), 'class': 'number'},
 
             ],
 
@@ -115,230 +174,11 @@ class IntegrationOfCurrentResearchProjects(models.AbstractModel):
                 {'name': _('Checked')},
                 {'name': _('To check')},
                 {'name': _('Countable balance')},
-                {'name': _('Accounting account of various debtors')},
                 {'name': _('Total of (Number of projects)')},
+                {'name': _('Accounting account of various debtors'),
+                 'colspan': 2},
             ]
         ]
-
-    def _get_lines(self, options, line_id=None):
-        lines = []
-        
-        print ("options====",options)
-        
-        start = datetime.strptime(
-            str(options['date'].get('date_from')), '%Y-%m-%d').date()
-        end = datetime.strptime(
-            options['date'].get('date_to'), '%Y-%m-%d').date()
-        # project_records = self.env['project.project'].search(
-        #     [('proj_start_date', '>=', start), ('proj_end_date', '<=', end)])
-        project_records = self.env['project.project'].search([('project_type','=','conacyt')])
-
-        # stage_identifier = project_records.mapped('stage_identifier_id')
-        # for stage in stage_identifier:
-        stage_ids = project_records.mapped('stage_identifier_id')
-        
-        total_project = 0
-        total_ministering_amount = 0
-        total_checked_amount = 0
-        total_to_checked_amount = 0
-                
-        for stage in stage_ids:
-            stage_project_records = project_records.filtered(lambda x:x.stage_identifier_id.id==stage.id)
-             
-            ministering_amount = 0.0
-            checked_amount = 0.0
-            
-            name = ''
-            if stage:
-                name = stage.stage_identifier or ''
-                if stage.desc_stage:
-                    name += '/'+stage.desc_stage
-                    
-#             name = str(record.stage_identifier_id.id or '') + \
-#                 '/' + str(record.proj_start_date)
-            for record in stage_project_records:
-                for rec in record.project_ministrations_ids:
-                    ministering_amount += rec.ministering_amount
-            
-            exp_records = self.env['expense.verification'].search([('project_id','in',stage_project_records.ids),('status','=','approve')])
-            checked_amount = sum(x.amount_total for x in exp_records)
-            
-            total_project += len(stage_project_records)
-            total_ministering_amount += ministering_amount
-            total_checked_amount += checked_amount
-            total_to_checked_amount += ministering_amount - checked_amount
-                       
-            lines.append({
-                'id': 'projects' + str(record.id),
-                'name': name,
-                'columns': [
-                            self._format({'name': ministering_amount},figure_type='float'),
-                            self._format({'name': checked_amount},figure_type='float'),
-                            self._format({'name': ministering_amount - checked_amount},figure_type='float'),
-                            self._format({'name': ministering_amount - checked_amount},figure_type='float'),
-                            {'name': '121,003 MINISTRATIONS FOR VERIFYING CONACYT PROJECTS'},
-                            {'name': len(stage_project_records)},
-                            ],
-                'level': 3,
-                'unfoldable': False,
-                'unfolded': True,
-            })
-
-        lines.append({
-            'id': 'projects_total',
-            'name': 'TOTAL DE '+str(total_project)+' PROYECTOS',
-            'columns': [
-                        self._format({'name': total_ministering_amount},figure_type='float'),
-                        self._format({'name': total_checked_amount},figure_type='float'),
-                        self._format({'name': total_to_checked_amount},figure_type='float'),
-                        self._format({'name': total_to_checked_amount},figure_type='float'),
-                        {'name': ''},
-                        {'name': ''},
-                        ],
-            'level': 2,
-            'unfoldable': False,
-            'unfolded': True,
-        })
-
-        lines.append({
-            'id': 'projects_saldo_total',
-            'name': '',
-            'columns': [
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': 'SALDO EN CUENTA & BANCARIA & CONACTY'},
-                        self._format({'name': 0.0},figure_type='float'),
-                        {'name': ''},
-                        {'name': ''},
-                        ],
-            'level': 2,
-            'unfoldable': False,
-            'unfolded': True,
-        })
-
-        lines.append({
-            'id': 'projects_diff_total',
-            'name': '',
-            'columns': [
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': _('DIFERENCIA GASTO & PENDIENTE & DE COMP ROBARA LA CONTADURA GENERAL')},
-
-                        #{'name': 'DIFERENCIA GASTO & PENDIENTE & DE COMP ROBARA LA CONTADURA GENERAL'},
-                        self._format({'name': total_to_checked_amount},figure_type='float'),
-                        {'name': ''},
-                        {'name': ''},
-                        ],
-            'level': 2,
-            'unfoldable': False,
-            'unfolded': True,
-        })
-
-        #=================== Second Part =================#
-
-        lines.append({
-            'id': 'projects_2_01',
-            'name': '',
-            'columns': [
-                        {'name': '','colspan': 6},
-                        ],
-            'level': 2,
-            'unfoldable': False,
-            'unfolded': True,
-        })
-
-        lines.append({
-            'id': 'projects_2_1',
-            'name': '',
-            'columns': [
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': 'PROYECTOS DE INVESTIGACION CONACYT POR NUMERO DE CUENTAS BANCARIAS'},
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        ],
-            'level': 2,
-            'unfoldable': False,
-            'unfolded': True,
-        })
-
-        lines.append({
-            'id': 'project_id',
-            'name': 'CONCEPTO',
-            'columns': [
-                        {'name':'PROYECTOS CON CUENTAS BANCARIAS SEGUN CONTADURIA GENERAL','style': 'word-wrap: break-word;'},
-                        {'name': 'SALDO CONTABLE'},
-                        {'name':'N*,CTAS,BANCARIAS'},
-                        {'name': 'SALDO EN CUENTAS BANCARIAS SEGUN DIRECCION GENERAL DE FINANZAS '},
-                        {'name': 'DIFERENCIA GASTOS PENDIENTES DE COMPROBAR A LA CONTADURIA GENERAL'},
-                        {'name': ''},
- 
-                        ],
-            'level': 2,
-            'unfoldable': False,
-            'unfolded': True,
-            })
-
-        active_project = self.env['request.accounts'].search([('status','=','confirmed'),('project_id','in',project_records.ids),('move_type','=','account open')])
-        cancel_project = self.env['request.accounts'].search([('status','=','confirmed'),('project_id','in',project_records.ids),('move_type','=','account cancel')])
-        
-        active_project_total = sum(x.ministrations_amount for x in active_project)
-        cancel_project_total = sum(x.ministrations_amount for x in cancel_project)
-        
-        active_bank_ids = active_project.mapped('bank_account_id')
-        active_no_bank_account = len(active_bank_ids)
-
-        cancel_bank_ids = cancel_project.mapped('bank_account_id')
-        cancel_no_bank_account = len(cancel_bank_ids)
-         
-         
-        active_len = len(active_project) - len(cancel_project)
-        cancel_len = len(cancel_project)
-        
-        active_total = 0.0
-        cancel_total = 0.0
-        
-        active_diff = active_project_total - active_total
-        cancel_diff = cancel_project_total - cancel_total
-        
-         
-
-        lines.append({
-            'id': 'projects_2_active',
-            'name': 'PROYECTOS ACTIVOS CON UNA CUENTA BANCARIA ACTIVA',
-            'columns': [
-                        {'name': active_len,'class':'number'},
-                        self._format({'name': active_project_total},figure_type='float'),
-                        {'name': active_no_bank_account,'class':'number'},
-                        self._format({'name': active_total},figure_type='float'),
-                        self._format({'name': active_diff},figure_type='float'),
-                        {'name': ''},
-                        ],
-            'level': 3,
-            'unfoldable': False,
-            'unfolded': True,
-        })
-
-        lines.append({
-            'id': 'projects_2_active',
-            'name': 'PROYECTOS ACTIVOS CON UNA CUENTA BANCARIA CANCELADA',
-            'columns': [
-                        {'name': cancel_len,'class':'number'},
-                        self._format({'name': cancel_project_total},figure_type='float'),
-                        {'name': cancel_no_bank_account,'class':'number'},
-                        self._format({'name': cancel_total},figure_type='float'),
-                        self._format({'name': cancel_diff},figure_type='float'),
-                        {'name': ''},
-                        ],
-            'level': 3,
-            'unfoldable': False,
-            'unfolded': True,
-        })
-        
-
-        return lines
-
 
     def _get_report_name(self):
         return _("Integration of current research projects")

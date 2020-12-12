@@ -163,45 +163,17 @@ class PurchaseSaleSecurity(models.Model):
     def get_investment_amount(self):
         for rec in self:
             rec.amount = rec.movement_price * rec.number_of_titles
-
-    def write(self, vals):
-        res = super(PurchaseSaleSecurity, self).write(vals)
-        if vals.get('invesment_date') or vals.get('expiry_date'):
-            pay_regis_obj = self.env['calendar.payment.regis']
-            if vals.get('invesment_date'):
-                pay_regis_rec = pay_regis_obj.search([('date', '=', vals.get('invesment_date')),
-                                               ('type_pay', '=', 'Non Business Day')], limit=1)
-                if pay_regis_rec:
-                    raise ValidationError(_("You have choosen Non-Business Day in Investment Date!"))
-            if vals.get('expiry_date'):
-                pay_regis_rec = pay_regis_obj.search([('date', '=', vals.get('expiry_date')),
-                                               ('type_pay', '=', 'Non Business Day')], limit=1)
-                if pay_regis_rec:
-                    raise ValidationError(_("You have choosen Non-Business Day in Expiration Date!"))
-        return res
+            
 
     @api.model
     def create(self,vals):
         res = super(PurchaseSaleSecurity,self).create(vals)
-        if vals.get('invesment_date') or vals.get('expiry_date'):
-            pay_regis_obj = self.env['calendar.payment.regis']
-            if vals.get('invesment_date'):
-                pay_regis_rec = pay_regis_obj.search([('date', '=', vals.get('invesment_date')),
-                                               ('type_pay', '=', 'Non Business Day')], limit=1)
-                if pay_regis_rec:
-                    raise ValidationError(_("You have choosen Non-Business Day in Investment Date!"))
-            if vals.get('expiry_date'):
-                pay_regis_rec = pay_regis_obj.search([('date', '=', vals.get('expiry_date')),
-                                               ('type_pay', '=', 'Non Business Day')], limit=1)
-                if pay_regis_rec:
-                    raise ValidationError(_("You have choosen Non-Business Day in Expiration Date!"))
 
         sequence = res.new_journal_id and res.new_journal_id.sequence_id or False 
         if not sequence:
             raise UserError(_('Please define a sequence on your journal.'))
 
         res.first_number = sequence.with_context(ir_sequence_date=res.invesment_date).next_by_id()
-
         
 #         first_number = self.env['ir.sequence'].next_by_code('purchase.sale.security.number')
 #         res.first_number = first_number

@@ -424,27 +424,15 @@ class AccountMove(models.Model):
                 move.commitment_date = current_date
             move.payment_state = 'registered'
 
-    def action_draft(self):
-        self.ensure_one()
-        self.payment_state = 'draft'
-
     def action_reschedule(self):
-        return {
-            'name': 'Reschecule Request',
-            'view_mode': 'form',
-            'view_id': self.env.ref('jt_supplier_payment.reschedule_request_form_view').id,
-            'res_model': 'reschedule.request',
-            'type': 'ir.actions.act_window',
-            'target': 'new'
-        }
-        # for move in self:
-        #     move.is_from_reschedule_payment = True
-        #     move.payment_issuing_bank_id = False
-        #     conac_move = self.line_ids.filtered(lambda x: x.conac_move)
-        #     conac_move.sudo().unlink()
-        #     for line in self.line_ids:
-        #         line.coa_conac_id = False
-        #     move.payment_state = 'for_payment_procedure'
+        for move in self:
+            move.is_from_reschedule_payment = True
+            move.payment_issuing_bank_id = False
+            conac_move = self.line_ids.filtered(lambda x: x.conac_move)
+            conac_move.sudo().unlink()
+            for line in self.line_ids:
+                line.coa_conac_id = False
+            move.payment_state = 'for_payment_procedure'
 
     def get_non_business_day(self, invoice_date, next_date):
         non_business_day = self.env['calendar.payment.regis'].search(

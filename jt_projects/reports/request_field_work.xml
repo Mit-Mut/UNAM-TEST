@@ -19,7 +19,7 @@
                     <table style="width:100%;">
                         <tr>
                             <td style="width:30%;">
-                            <img t-attf-src="data:image/png;base64,{{res_company.logo}}" style="width:150px;height:170px;margin-left:30px;margin-top:10px;"/></td>
+                            <img t-attf-src="data:image/png;base64,{{res_company.header_logo}}" style="width:150px;height:170px;margin-left:30px;margin-top:10px;"/></td>
 
                             <td style="width:80%;">
                                 <b>
@@ -77,13 +77,11 @@
                             <br/>
                             <b><span style="margin-left:20px;font-size:16px;">Name:</span></b>
                             <b><span style="margin-left:225px;font-size:16px;">Key:</span></b><br/><br/>
-                            <b><span style="margin-left:390px;font-size:16px;">Baneficiary Key:</span></b><br/><br/>
                         </tr>
                         <tr>
                             <span t-field="o.partner_id" style="margin-left:20px;font-size:16px;"></span>
 
-                            <span t-field="o.rfc" style="margin-left:165px;font-size:16px;"></span>
-                            <span t-field="o.baneficiary_key" style="margin-left:390px;font-size:16px;"></span><br/><br/>
+                            <span t-field="o.rfc" style="margin-left:165px;font-size:16px;"></span><br/><br/>
                         </tr>
 
                         <tr>
@@ -97,13 +95,13 @@
                             <b><span style="margin-left:150px;font-size:16px;"> Category Key:</span></b><br/><br/>
                         </tr>
                         <tr>
-                            <span t-field="o.project_number_id.number" style="margin-left:20px;font-size:16px;"></span>
+                            <span t-field="o.project_number_id" style="margin-left:20px;font-size:16px;"></span>
 
-                            <span t-field="o.responsible_expend_id" style="margin-left:175px;font-size:16px;"></span>
+                            <span t-field="o.responsible_id" style="margin-left:175px;font-size:16px;"></span>
 
-                            <span t-field="o.responsible_rfc" style="margin-left:155px;font-size:16px;"></span>
+                            <span t-field="o.rf_person" style="margin-left:155px;font-size:16px;"></span>
 
-                            <span t-field="o.responsible_category_key" style="margin-left:150;font-size:16px;"></span><br/><br/>
+                            <span t-field="o.category_key" style="margin-left:150;font-size:16px;"></span><br/><br/>
                         </tr>
                         <tr>
                             <br/> 
@@ -115,8 +113,8 @@
 
                         <tr>
                             <br/>
-                            <b><span style="margin-left:350px;">REASON FOR EXPENDITURE</span></b><br/><br/><center>
-                            <span t-field="o.reason_for_expendiure" style="margin-left:20px;text-align:center;"/></center>
+                            <b><span style="margin-left:350px;">REASON FOR EXPENDITURE</span></b><br/><br/>
+                            <span t-field="o.reason_for_expendiure" style="margin-left:20px;position: absolute;"/>
 
                             <br/><br/>
                             <b><span style="margin-left:380px;">DESTINATION</span></b><br/><br/>
@@ -129,9 +127,6 @@
                             <b><span style="margin-left:350px;">DATA FOR DISCHARGE</span></b>
                             </tr>
                             <tr>
-                                <th style="height:30px;text-align:center;border-top:1px solid grey;border-bottom: 1px solid grey;">
-                                Type of business</th>
-
                                 <th style="height:30px;text-align:center;border-top:1px solid grey;border-bottom: 1px solid grey;">
                                 Egress Key</th>
 
@@ -147,10 +142,6 @@
 
                             </tr>
                             <tr t-foreach="o.invoice_line_ids" t-as="line">
-
-                                <td name="account_invoice_line_bus" style="text-align:center;border-bottom: 1px solid grey;">
-                                    <span class="text-left" t-field="line.type_of_bussiness_line"/>
-                                </td>
                                 <td style="text-align:center;border-bottom: 1px solid grey;"><span t-field="line.egress_key_id"/></td>
 
                                 <td style="text-align:center;border-bottom: 1px solid grey;">

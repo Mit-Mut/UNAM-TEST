@@ -15,7 +15,7 @@
         <report
             id="payment_request_report"
             model="account.move"
-            string="Supplier Request"
+            string="Payment Request Report"
             report_type="qweb-pdf"
             name="jt_supplier_payment.payment_request_report_template"
             file="jt_supplier_payment.payment_request_report_template"

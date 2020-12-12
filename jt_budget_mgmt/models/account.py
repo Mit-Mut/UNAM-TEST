@@ -323,7 +323,7 @@ class AccountMove(models.Model):
 
     def button_cancel(self):
         for record in self:
-            if record.is_payment_request or record.is_payroll_payment_request or record.is_project_payment:
+            if record.is_payment_request or record.is_payroll_payment_request:
                 if record.payment_state == 'cancel':
                     record.cancel_payment_revers_entry()
                     record.add_budget_available_amount()
@@ -334,11 +334,11 @@ class AccountMove(models.Model):
         self.payment_state = 'cancel'
         self.button_cancel()
         
-    # def action_reschedule(self):
-    #     res = super(AccountMove,self).action_reschedule()
-    #     for move in self:
-    #         move.add_budget_available_amount()
-    #     return res
+    def action_reschedule(self):
+        res = super(AccountMove,self).action_reschedule()
+        for move in self:
+            move.add_budget_available_amount()
+        return res
               
     def create_journal_line_for_approved_payment(self):
         if self.journal_id and (not self.journal_id.default_credit_account_id or not \

@@ -21,5 +21,4 @@ access_patrimonial_resources,patrimonial.resources,model_patrimonial_resources,b
 access_yield_destination,yield.destination,model_yield_destination,base.group_user,1,1,1,1
 access_interest_rate_operation,interest.rate.operation,model_interest_rate_operation,base.group_user,1,1,1,1
 access_interest_rate_base,interest.rate.base,model_interest_rate_base,base.group_user,1,1,1,1
-access_period_closing_base,period.closing.base,model_periods_closing,base.group_user,1,1,1,1
 

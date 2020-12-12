@@ -104,7 +104,7 @@ class TypeofOperation(models.AbstractModel):
             account_payment = self.env['account.payment'].search([('payment_date', '>=', start),
                                                                   ('payment_date', '<=', end),
                                                                   ('payment_request_type','!=',False),
-                                               ('payment_state', '=',   ('for_payment_procedure'))],order="journal_id")
+                        ('payment_state','in',('for_payment_procedure','posted','reconciled'))],order="journal_id")
         else:
             account_payment = self.env['account.payment'].search([('payment_date', '>=', start),
                                                                   ('payment_date', '<=', end),

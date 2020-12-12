@@ -710,12 +710,6 @@ msgid "Control of Assigned Amounts Validation Process Started at %s"
 msgstr "Proceso de validación de Estacionalidad Trimestral iniciado en %s"
 
 #. module: jt_budget_mgmt
-#: code:addons/jt_budget_mgmt/models/account.py:0
-#, python-format
-msgid "Configure Default Debit and Credit Account in %s!"
-msgstr "Por favor configure la cuenta UNAM y CONAC en %s"
-
-#. module: jt_budget_mgmt
 #: code:addons/jt_budget_mgmt/models/control_assigned_amounts.py:0
 #, python-format
 msgid ""

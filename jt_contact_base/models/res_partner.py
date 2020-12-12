@@ -57,7 +57,7 @@ class ResPartner(models.Model):
 
     def supplier_registration(self):
         return {
-            'name': (_('Supplier Registration')),
+            'name': 'Supplier Registration',
             'type': 'ir.actions.act_window',
             'res_model': 'supplier.registration',
             'view_mode': 'form',

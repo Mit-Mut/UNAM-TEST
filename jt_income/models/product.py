@@ -1,4 +1,4 @@
-from odoo import models, fields, api, _
+from odoo import models, fields, api
 
 class Product(models.Model):
 
@@ -12,7 +12,7 @@ class Product(models.Model):
     do_you_require_password = fields.Boolean("Do you require password?")
     ie_account_id = fields.Many2many('association.distribution.ie.accounts','ie_accounts_product','product_id','ie_account','IE Account')
 
-    _sql_constraints = [('unique_default_code', 'unique(default_code)', (_('Internal Reference must be unique.')))]
+    _sql_constraints = [('unique_default_code', 'unique(default_code)', 'Internal Reference must be unique.')]
     
     @api.onchange('parent_product_id')
     def onchange_parent_product(self):

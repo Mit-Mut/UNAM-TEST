@@ -61,8 +61,6 @@
         'reports/filter_template.xml',
         'security/ir.model.access.csv',
         'views/upa_payment_request.xml',
-        'views/account_journal_view.xml',
-        'views/bank_transfer_request.xml',
 
     ],
     'application': False,

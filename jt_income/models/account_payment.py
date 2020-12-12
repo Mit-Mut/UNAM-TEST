@@ -1,6 +1,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 
+
 class account_payment(models.Model):
     _inherit = "account.payment"
 
@@ -50,13 +51,13 @@ class account_payment(models.Model):
                     or not payment.journal_id.conac_accrued_income_credit_account_id \
                     or not payment.journal_id.accrued_income_debit_account_id \
                     or not payment.journal_id.conac_accrued_income_debit_account_id :
-                    raise ValidationError(_("Please configure UNAM and CONAC Accrued Income Account!"))
+                    raise ValidationError("Please configure UNAM and CONAC Accrued Income Account!")
 
                 if payment.journal_id and not payment.journal_id.recover_income_credit_account_id \
                     or not payment.journal_id.conac_recover_income_credit_account_id \
                     or not payment.journal_id.recover_income_debit_account_id \
                     or not payment.journal_id.conac_recover_income_debit_account_id :
-                    raise ValidationError(_("Please configure UNAM and CONAC Recover Income Account!"))
+                    raise ValidationError("Please configure UNAM and CONAC Recover Income Account!")
                 
                 company_currency = self.company_id.currency_id
                 # Manage currency.

@@ -102,8 +102,7 @@ class AccountPayment(models.Model):
 
     @api.constrains('payment_date')
     def check_payment_date(self):
-        non_business_day = self.env['calendar.payment.regis'].search([('type_pay','=','Non Business Day'),
-                                                                      ('date','=',self.payment_date)])
+        non_business_day = self.env['calendar.payment.regis'].search([('type_pay','=','Non Business Day'),('date','=',self.payment_date)])
         if non_business_day:
             raise UserError(_('Not allow to schedule payment for non-working days.'))
                 
@@ -125,9 +124,6 @@ class AccountPayment(models.Model):
         if self.env.context and self.env.context.get('call_from_reject',False):
             return result
         self.write({'payment_state': 'cancelled'})
-        if self.payment_request_id:
-            payment_request = self.env['account.move'].search([('id', '=', self.payment_request_id.id)])
-            payment_request.payment_state = 'for_payment_procedure'
         return result
 
     def action_validate_payment_procedure(self):
@@ -195,11 +191,11 @@ class AccountPayment(models.Model):
         result = super(AccountPayment,self).post()
         self.write({'payment_state': 'posted'})
         for payment in self:
-            for inv in payment.invoice_ids.filtered(lambda x:x.is_project_payment or x.is_payment_request or x.is_payroll_payment_request or x.is_different_payroll_request):
+            for inv in payment.invoice_ids.filtered(lambda x:x.is_payment_request or x.is_payroll_payment_request or x.is_different_payroll_request):
                 if inv.invoice_payment_state == 'paid':
                     inv.payment_state = 'paid'
                     payment.create_journal_for_paid(inv)
-            is_supplier_payment = payment.invoice_ids.filtered(lambda x:x.is_project_payment or x.is_payment_request or x.is_payroll_payment_request or x.is_different_payroll_request)
+            is_supplier_payment = payment.invoice_ids.filtered(lambda x:x.is_payment_request or x.is_payroll_payment_request or x.is_different_payroll_request)
             if is_supplier_payment:
                 for line in payment.move_line_ids:
                     line.coa_conac_id = line.account_id and line.account_id.coa_conac_id and line.account_id.coa_conac_id.id or False
@@ -210,9 +206,6 @@ class AccountPayment(models.Model):
     def action_draft(self):
         result = super(AccountPayment,self).action_draft()
         self.write({'payment_state': 'draft'})
-        if self.payment_request_id:
-            payment_request = self.env['account.move'].search([('id', '=', self.payment_request_id.id)])
-            payment_request.payment_state = 'for_payment_procedure'
         return result
                
     def action_register_payment(self):

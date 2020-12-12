@@ -258,13 +258,6 @@ msgid "<strong>Date:</strong>"
 msgstr "<strong>Fecha:</strong>"
 
 #. module: jt_supplier_payment
-#: code:addons/jt_supplier_payment/models/invoice.py:0
-#: code:addons/jt_supplier_payment/models/invoice.py:0
-#, python-format
-msgid "Can't create Payment Request with same Folio Dependency!"
-msgstr "No puede haber 2 Solicitudes de Pago con el mismo Folio de Solicitud"
-
-#. module: jt_supplier_payment
 #: model_terms:ir.ui.view,arch_db:jt_supplier_payment.payment_request_report_document
 msgid "<strong>Dependency Folio:</strong>"
 msgstr "<strong>Folio de Solicitud:</strong>"
@@ -2407,7 +2400,7 @@ msgstr ""
 #: code:addons/jt_supplier_payment/models/account_payment.py:0
 #, python-format
 msgid "You can not register payment with 0 amount"
-msgstr "Las cuentas contables del Beneficiario del Pago no están bien configuradas"
+msgstr ""
 
 #. module: jt_supplier_payment
 #: code:addons/jt_supplier_payment/wizard/payment_declined.py:0

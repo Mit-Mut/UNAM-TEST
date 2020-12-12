@@ -1,6 +1,7 @@
 from odoo import models, fields, api , _ 
 from datetime import datetime
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
+
 
 class CETES(models.Model):
 
@@ -169,24 +170,8 @@ class CETES(models.Model):
     profit_variation = fields.Float(
         string="Estimated vs Real Profit Variation", compute="get_profit_variation", store=True)
 
-    def write(self, vals):
-        res = super(CETES, self).write(vals)
-        if vals.get('expiry_date'):
-            pay_regis_obj = self.env['calendar.payment.regis']
-            pay_regis_rec = pay_regis_obj.search([('date', '=', vals.get('expiry_date')),
-                                                  ('type_pay', '=', 'Non Business Day')], limit=1)
-            if pay_regis_rec:
-                raise ValidationError(_("You have choosen Non-Business Day on Expiry Date!"))
-        return res
-
     @api.model
     def create(self, vals):
-        if vals.get('expiry_date'):
-            pay_regis_obj = self.env['calendar.payment.regis']
-            pay_regis_rec = pay_regis_obj.search([('date', '=', vals.get('expiry_date')),
-                                                  ('type_pay', '=', 'Non Business Day')], limit=1)
-            if pay_regis_rec:
-                raise ValidationError(_("You have choosen Non-Business Day on Expiry Date!"))
         vals['folio'] = self.env['ir.sequence'].next_by_code('folio.cetes')
         res = super(CETES, self).create(vals)
         

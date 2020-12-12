@@ -19,7 +19,7 @@
                     <table style="width:100%;">
                         <tr>
                             <td style="width:30%;">
-                            <img t-attf-src="data:image/png;base64,{{res_company.logo}}" style="width:150px;height:170px;margin-left:30px;margin-top:10px;"/></td>
+                            <img t-attf-src="data:image/png;base64,{{res_company.header_logo}}" style="width:150px;height:170px;margin-left:30px;margin-top:10px;"/></td>
 
                             <td style="width:80%;">
                                 <b>
@@ -96,13 +96,13 @@
                             
                         </tr>
                         <tr>
-                            <span t-field="o.project_number_id.number" style="margin-left:20px;font-size:16px;"></span>
+                            <span t-field="o.project_number_id" style="margin-left:20px;font-size:16px;"></span>
 
-                            <span t-field="o.project_number_id.name_agreement" style="margin-left:170px;font-size:16px;"></span>
+                            <span t-field="o.agreement_number" style="margin-left:170px;font-size:16px;"></span>
 
-                            <span t-field="o.responsible_expend_id" style="margin-left:200px;font-size:16px;"></span>
+                            <span t-field="o.responsible_id" style="margin-left:200px;font-size:16px;"></span>
 
-                            <span t-field="o.responsible_rfc" style="margin-left:150px;font-size:16px;"></span>
+                            <span t-field="o.rf_person" style="margin-left:150px;font-size:16px;"></span>
 
                           <br/>
                         </tr>
@@ -119,8 +119,7 @@
                         <tr>
                             <br/>
                             <b><span style="margin-left:350px;">REASON FOR EXPENDITURE</span></b><br/><br/>
-                            <center>
-                            <span t-field="o.reason_for_expendiure" style="margin-left:100px;text-align:center;"/></center>
+                            <span t-field="o.reason_for_expendiure" style="margin-left:20px;position: absolute;"/>
 
                             <br/><br/>
                             <b><span style="margin-left:380px;">DESTINATION</span></b><br/><br/>

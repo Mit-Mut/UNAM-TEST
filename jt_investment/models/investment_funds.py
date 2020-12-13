@@ -95,6 +95,27 @@ class InvestmentFunds(models.Model):
     yield_id = fields.Many2one('yield.destination',string="Yield Destination")
 
 
+    @api.model
+    def create(self, vals):
+        res = super(InvestmentFunds, self).create(vals)
+        if vals.get('fund_request_date'):
+            pay_regis_obj = self.env['calendar.payment.regis']
+            pay_regis_rec = pay_regis_obj.search([('date', '=', vals.get('fund_request_date')),
+                                           ('type_pay', '=', 'Non Business Day')], limit=1)
+            if pay_regis_rec:
+                raise ValidationError(_("You are creating Fund Request on Non-Business Day!"))
+        return res
+
+    def write(self, vals):
+        res = super(InvestmentFunds, self).write(vals)
+        if vals.get('fund_request_date'):
+            pay_regis_obj = self.env['calendar.payment.regis']
+            pay_regis_rec = pay_regis_obj.search([('date', '=', vals.get('fund_request_date')),
+                                           ('type_pay', '=', 'Non Business Day')], limit=1)
+            if pay_regis_rec:
+                raise ValidationError(_("You are creating Fund Request on Non-Business Day!"))
+        return res
+
     def unlink(self):
         for rec in self:
             if rec.state not in ['draft']:

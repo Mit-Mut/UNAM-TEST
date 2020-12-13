@@ -1,5 +1,6 @@
-from odoo import models, fields, api
-
+from odoo import models, fields, api,_
+from odoo.exceptions import ValidationError, UserError
+from datetime import datetime, timedelta
 
 class RequestAccounts(models.Model):
 
@@ -24,6 +25,7 @@ class RequestAccounts(models.Model):
     ministrations_amount = fields.Float("Amount of ministrations")
     authorized_amount = fields.Float("Authorized Amount")
     observations = fields.Text("Observations")
+    journal_id = fields.Many2one('account.journal')
     bank_account_id = fields.Many2one(
         "account.journal", string="Bank", domain=[('type', '=', 'bank')])
     bank_acc_number_id = fields.Many2one('res.partner.bank',
@@ -48,8 +50,20 @@ class RequestAccounts(models.Model):
         ('account open', 'Account Open'),
     ], 'Move Type')
 
+    move_line_ids = fields.One2many(
+        'account.move.line', 'open_request_id', string="Journal Items")
 
 
+
+    @api.constrains('ministrations_amount')
+    def check_ministrations_amount(self):
+        if self.ministrations_amount == 0:
+            raise UserError(_('Please add Amount of ministrations'))
+
+    @api.constrains('authorized_amount')
+    def check_authorized_amount(self):
+        if self.authorized_amount == 0:
+            raise UserError(_('Please add Authorized Amount'))
 
     def generate_request(self):
         self.status = 'request'
@@ -92,6 +106,56 @@ class RequestAccounts(models.Model):
 
     def confirm_account(self):
         self.write({'status': 'confirmed'})
+
+        if self.journal_id and self.bank_account_id:
+            journal = self.journal_id
+            if not journal.default_debit_account_id or not journal.default_credit_account_id \
+                    or not journal.conac_debit_account_id or not journal.conac_credit_account_id:
+                if self.env.user.lang == 'es_MX':
+                    raise ValidationError(
+                        _("Por favor configure la cuenta UNAM y CONAC en diario!"))
+                else:
+                    raise ValidationError(
+                        _("Please configure UNAM and CONAC account in journal!"))
+                
+            if self.bank_account_id and  not self.bank_account_id.default_debit_account_id or not self.bank_account_id.default_credit_account_id \
+                    or not self.bank_account_id.conac_debit_account_id or not self.bank_account_id.conac_credit_account_id:
+                if self.env.user.lang == 'es_MX':
+                    raise ValidationError(
+                        _("Por favor configure la cuenta UNAM y CONAC en diario!"))
+                else:
+                    raise ValidationError(
+                        _("Please configure UNAM and CONAC account in journal!"))
+
+            today = datetime.today().date()
+            user = self.env.user
+            partner_id = user.partner_id.id
+            amount = self.authorized_amount
+            name = ''
+            if self.invoice:
+                name += self.invoice
+
+
+            unam_move_val = {'name': name, 'ref': name,  'conac_move': True,
+                             'date': today, 'journal_id': journal.id, 'company_id': self.env.user.company_id.id,
+                             'line_ids': [(0, 0, {
+                                 'account_id': journal.default_credit_account_id.id,
+                                 'coa_conac_id': journal.conac_credit_account_id.id,
+                                 'credit': amount,
+                                 'partner_id': partner_id,
+                                 'open_request_id': self.id,
+                             }),
+                                 (0, 0, {
+                                     'account_id': self.bank_account_id.default_debit_account_id.id,
+                                     'coa_conac_id': self.bank_account_id.conac_debit_account_id.id,
+                                     'debit': amount,
+                                     'partner_id': partner_id,
+                                     'open_request_id': self.id,
+                                 }),
+                             ]}
+            move_obj = self.env['account.move']
+            unam_move = move_obj.create(unam_move_val)
+            unam_move.action_post()
 
     def reject_account(self):
         self.write({'status': 'rejected'})

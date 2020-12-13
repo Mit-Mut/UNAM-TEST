@@ -429,7 +429,9 @@ class ExpenditureBudget(models.Model):
                                       "------>> Invalid Dependency(DEP) Format\n"
                         failed_line_ids.append(line.id)
                         continue
-
+                    
+                    if not subdependancy_obj:
+                        subdependancy_obj = []
                     # Validate Sub-Dependency
                     subdependency = False
                     subdependency_str = str(line.subdependency).zfill(2)

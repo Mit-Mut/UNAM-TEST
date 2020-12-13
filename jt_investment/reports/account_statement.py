@@ -21,7 +21,7 @@
 #
 ##############################################################################
 from odoo import models, api, _
-from datetime import datetime
+from datetime import datetime, timedelta
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tools.misc import formatLang
 from odoo.tools.misc import xlsxwriter
@@ -120,17 +120,49 @@ class InvestmentAccountStatement(models.AbstractModel):
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
+        period_type = options.get('date').get('period_type')
+        header_intial = 0
+        header_increment = 0
+        header_withdrawal = 0
+        prev_start = prev_end = False
+        if period_type == 'month' or period_type == 'custom':
+            first_day_of_month = start.replace(day=1)
+            prev_end = first_day_of_month - timedelta(days=1)
+            prev_start = prev_end.replace(day=1)
+        elif period_type == 'fiscalyear':
+            prev_year = start.year - 1
+            prev_start = start.replace(year=prev_year)
+            prev_end = end.replace(year=prev_year)
+        elif period_type == 'quarter':
+            if start.month == 1:
+                prev_start = start.replace(year=start.year - 1, day=1, month=10)
+                prev_end = start.replace(year=start.year - 1, day=31, month=12)
+            elif start.month == 4:
+                prev_start = start.replace(day=1, month=1)
+                prev_end = start.replace(day=31, month=3)
+            elif start.month == 7:
+                prev_start = start.replace(day=1, month=4)
+                prev_end = start.replace(day=30, month=6)
+            elif start.month == 10:
+                prev_start = start.replace(day=1, month=7)
+                prev_end = start.replace(day=31, month=10)
+
         productive_domain = domain + [('date_required','>=',start),('date_required','<=',end)]
+        prev_productive_domain = domain + [('date_required','>=',prev_start),('date_required','<=',prev_end)]
+        prev_productive_ids = self.env['investment.operation'].search(prev_productive_domain)
+
+        for rec in prev_productive_ids:
+            if rec.type_of_operation in ('increase', 'increase_by_closing', 'open_bal'):
+                header_intial += rec.amount
+            elif rec.type_of_operation in ('retirement', 'withdrawal', 'withdrawal_cancellation', 'withdrawal_closure'):
+                header_intial -= rec.amount
+
         productive_ids = self.env['investment.operation'].search(productive_domain)
-        
+
         g_total_inc = 0
         g_total_with = 0
         g_total_final = 0
 
-        header_intial = 0
-        header_increment = 0
-        header_withdrawal = 0
-        
         #===== Investment =======#
         journal_ids = productive_ids.mapped('investment_id.journal_id')
         for journal in journal_ids:
@@ -212,7 +244,6 @@ class InvestmentAccountStatement(models.AbstractModel):
                     movement = 'Retiro por cierre'
                 elif movement=='Increase by closing':
                     movement = 'Incremento por cierre'
-                header_intial += capital
                 header_increment += inc
                 header_withdrawal += withdraw
                 lines.append({
@@ -503,10 +534,10 @@ class InvestmentAccountStatement(models.AbstractModel):
                 'res_company': self.env.company,
                 'period_name': period_name,
                 'name': 'CUENTAS PRODUCTIVAS',
-                'intial': header_intial,
-                'increment': header_increment,
-                'withdrawal': header_withdrawal,
-                'actual': actual,
+                'intial': str(self._format({'name': header_intial},figure_type='float',digit=2).get('name')),
+                'increment': str(self._format({'name': header_increment},figure_type='float',digit=2).get('name')),
+                'withdrawal': str(self._format({'name': header_withdrawal},figure_type='float',digit=2).get('name')),
+                'actual': str(self._format({'name': actual},figure_type='float',digit=2).get('name')),
                 'extra_data': True
             })
             header = self.env['ir.actions.report'].with_context(period_name=period_name).render_template(

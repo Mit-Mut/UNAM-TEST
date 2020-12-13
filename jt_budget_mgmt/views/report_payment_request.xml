@@ -18,16 +18,15 @@
                      </span>
                  </div>
             </xpath>
-            <xpath expr="//table[@name='invoice_line_table']/thead[1]/tr[1]/th[@name='th_account']" position="after">
+            <xpath expr="//table[@name='invoice_line_table']/thead[1]/tr[1]/th[@name='th_account']" position="replace">
                  <th name="th_code" class="text-left">
-                 	<span>Programmatic Code</span>
+                 	<span>Account and / or Programmatic Code</span>
                  </th>
             
             </xpath>
-            <xpath expr="//td[@name='account_invoice_line_account']" position="after">
-                   <td name="account_invoice_line_code">
-
-                       <span class="text-left" t-if="line.program_code_id" t-field="line.program_code_id.program_code"/>
+            <xpath expr="//td[@name='account_invoice_line_account']" position="replace">
+                   <td name="account_invoice_line_account_and_code">
+                        <span class="text-left" t-if="line.account_id" t-field="line.account_id.name"/>/<span class="text-left" t-if="line.program_code_id" t-field="line.program_code_id.program_code"/>
                    </td>
             </xpath>
             

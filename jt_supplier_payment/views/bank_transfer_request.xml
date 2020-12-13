@@ -73,9 +73,9 @@
             <field name="context">{'show_for_bank_transfer':True}</field>
         </record>
 	
-        <menuitem id="menu_bank_transfer_request" name="Bank Transfer Request"
-                  action="bank_transfer_request_action"
-                  parent="supplier_payment_management_menu" sequence="10"/>
+        <!--<menuitem id="menu_bank_transfer_request" name="Bank Transfer Request"-->
+                  <!--action="bank_transfer_request_action"-->
+                  <!--parent="supplier_payment_management_menu" sequence="10"/>-->
 		
 	</data>
 </odoo>

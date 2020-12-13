@@ -1,6 +1,6 @@
-from odoo import models, fields, api
+from odoo import models, fields, api,_
 from datetime import date
-
+from odoo.exceptions import ValidationError, UserError
 
 class ProjectRegistry(models.Model):
     _inherit = 'project.project'
@@ -42,11 +42,11 @@ class ProjectRegistry(models.Model):
     is_related_agreement = fields.Boolean(
         'Is It related to agreement?', default=False)
 
-    base_number = fields.Many2one('bases.collaboration', 'Agreement Number')
-    # base_name = fields.Char(related='base_number.name', string='Agreement Name')
-    base_name = fields.Char(string='Agreement Name')
-    # agreement_type_id = fields.Many2one(related='base_number.agreement_type_id')
-    agreement_type_id = fields.Many2one(string="Agreement Type")
+
+    number_agreement = fields.Char("Agreement Number")
+    name_agreement = fields.Text("Agreement Name")
+    agreement_type_id = fields.Many2one("agreement.type", "Agreement Type")
+
     resource_type = fields.Selection(
         [('R', 'R (Remnant)'), ('P', 'P (Budget)')], string="Resource Type")
     pre_account_id = fields.Many2one('account.account', 'Previous')
@@ -74,6 +74,26 @@ class ProjectRegistry(models.Model):
     #     if self.project_type_identifier_id:
     #         self.number = self.project_type_identifier_id.number
 
+    @api.constrains('allocated_amount')
+    def check_allocated_amount(self):
+        if self.allocated_amount == 0 and self.project_type=='conacyt':
+            raise UserError(_('Please add allocated amount'))
+
+        if self.allocated_amount == 0 and self.is_papiit_project:
+            raise UserError(_('Please add allocated amount'))
+
+
+    @api.constrains('approved_amount')
+    def check_approved_amount(self):
+        if self.approved_amount == 0 and self.project_type=='conacyt':
+            raise UserError(_('Please add approved amount'))
+
+
+    @api.constrains('exercised_amount')
+    def check_exercised_amount(self):
+        if self.exercised_amount == 0 and self.is_papiit_project:
+            raise UserError(_('Please add Amount exercised'))
+
     @api.onchange('stage_identifier_id')
     def onchange_stage_identifier_id(self):
         if self.stage_identifier_id:
@@ -87,11 +107,10 @@ class ProjectRegistry(models.Model):
             self.number = self.program_code.project_number
             self.project_type_identifier_id = self.program_code.project_type_id
             self.agreement_type_id = self.program_code.agreement_type_id.id
-            self.base_name = self.program_code.name_agreement
-            # self.base_number = self.program_code.number_agreement
+            self.name_agreement = self.program_code.name_agreement
+            self.number_agreement = self.program_code.number_agreement
             self.dependency_id = self.program_code.dependency_id.id
             self.subdependency_id = self.program_code.sub_dependency_id
-
 
     @api.depends('exercised_amount', 'allocated_amount')
     def get_final_amount(self):
@@ -111,7 +130,7 @@ class ProjectRegistry(models.Model):
 
     @api.depends('proj_end_date', 'status')
     def get_project_due(self):
-        for rec in self:
+        for rec in self:                
             if rec.proj_end_date and rec.status:
                 end_date = rec.proj_end_date
                 today = date.today()

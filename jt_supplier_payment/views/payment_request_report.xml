@@ -40,14 +40,13 @@
         		</th>
         		</thead>
         		<tbody>
-        			<td style="border:1px solid black;">
+        			<td style="border:1px solid black;" height="70">
         				<span t-if="o.holder_of_dependency_id" t-field="o.holder_of_dependency_id.name"/>
         			</td>
-        			<td style="border:1px solid black;">
+        			<td style="border:1px solid black;" height="70">
         				<span t-if="o.administrative_secretary_id" t-field="o.administrative_secretary_id.name"/>
         			</td>
-        			
-        			<td style="border:1px solid black;"></td>
+        			<td style="border:1px solid black;" height="70"></td>
         		</tbody>
         	</table>
         </div>
@@ -165,7 +164,8 @@
                                 <th name="th_taxes">
                                 	<span>Taxes</span>
                                 </th>
-                                <th name="th_subtotal" class="text-right">
+                                
+                                <th t-if="not o.is_project_payment" name="th_subtotal" class="text-right">
                                     <span>Amount</span>
                                 </th>
                             </tr>
@@ -198,7 +198,7 @@
                                      <td name="account_invoice_line_taxes">
                                          <span t-esc="', '.join(map(lambda x: (x.description or x.name), line.tax_ids))" id="line_tax_ids"/>
                                      </td>
-                                     <td name="account_invoice_line_amount">
+                                     <td t-if="not o.is_project_payment" name="account_invoice_line_amount">
                                          <span class="text-right" t-field="line.price_subtotal" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                      </td>
                                 </tr>

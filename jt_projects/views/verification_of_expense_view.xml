@@ -31,7 +31,7 @@
                          <group>
                             <group>
                                 <field name="application_approval_date" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="project_id"  attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="project_id" required="1"  attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="project_number_id" readonly="1"/>
                                 <field name="number" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="doc_type" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
@@ -50,7 +50,7 @@
                                 <field name="administrative_forum" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                             </group>
                             <group>
-                                <field name="reg_date" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="reg_date" required="1" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                  <field name="exercise" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                
                                 <field name="upa_code" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
@@ -59,7 +59,7 @@
                                 <field name="uuid_invoice" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="invoice_series" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="invoice_folio" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="beneficiary_name" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="beneficiary_name" required="1" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="type_of_aggrement" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="agreement_number" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="agreement_name" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
@@ -73,7 +73,7 @@
                             <page string='Inovice Lines' name='invoice_tab'>
                                 <field
                                 name="verifcation_expense_ids"
-                                widget="section_and_note_one2many">
+                                widget="section_and_note_one2many" attrs="{'readonly': [('status', '!=', 'eraser')]}">
                                     <tree editable="bottom" string="Verfication Expense Line">
                                           <field name="row"/>
                                           <field name="program_code"/>
@@ -87,7 +87,7 @@
                             </field>
                                 <group class="oe_subtotal_footer">
                                     <field name="amount_untaxed"/>
-                                    <field name="amount_tax" widget="tax-group-custom-field" nolabel="1" colspan="2"/>
+                                    <field name="amount_tax" colspan="2"/>
                                     <field name="amount_total" class="oe_subtotal_footer_separator"/>
                                 </group>
                             

@@ -27,8 +27,6 @@ class AccountMove(models.Model):
 
     _inherit = 'account.move'
 
-    dependence = fields.Many2one('dependency', string="Dependency")
-    subdependence = fields.Many2one('sub.dependency', string='Sub Dependence')
     leaves = fields.Integer('Leaves')
     project_code = fields.Char('Project Code')
     exchange_rate = fields.Char('Exchange Rate')
@@ -37,8 +35,8 @@ class AccountMove(models.Model):
         'project.project', string='Project Number')
     is_papiit_project = fields.Boolean(
         related='project_number_id.is_papiit_project', string='Is Papiit Project')
-    agreement_number = fields.Many2one(
-        related='project_number_id.base_number', string='Agreement Number')
+    agreement_number = fields.Char(
+        related='project_number_id.number_agreement', string='Agreement Number')
     # stage = fields.Char(
     #     related='project_number_id.stage_identifier', string='Stage',readonly=False)
     stage = fields.Many2one(
@@ -81,3 +79,7 @@ class AccountMoveLine(models.Model):
     invoice_folio = fields.Char(string='Invoice Folio')
     #other_amounts = fields.Monetary("Other Amounts")
     # price_payment = fields.Monetary("Price")
+
+    open_request_id = fields.Many2one('request.accounts','Open Request')
+    transfer_request_id = fields.Many2one('request.transfer','Transfer Request')
+    

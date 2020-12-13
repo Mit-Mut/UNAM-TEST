@@ -344,7 +344,11 @@ class PatrimonialResources(models.Model):
                         if count == need_skip:
                             count = 0
 
-                        partner_id = beneficiary.employee_id and beneficiary.employee_id.user_id and beneficiary.employee_id.user_id.partner_id and beneficiary.employee_id.user_id.partner_id.id or False
+                        if beneficiary.partner_id:
+                            partner_id = beneficiary.partner_id.id
+                        else: 
+                            partner_id = beneficiary.employee_id and beneficiary.employee_id.user_id and beneficiary.employee_id.user_id.partner_id and beneficiary.employee_id.user_id.partner_id.id or False
+                            
                         req_obj.create({
                             'patrimonial_resources_id': patimonial.id,
                             'apply_to_basis_collaboration': True,

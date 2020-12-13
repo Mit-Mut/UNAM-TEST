@@ -9,9 +9,15 @@
             <field name="arch" type="xml">
                 <form>
 					<header>
-					 	<button name="action_register" string="Register" class="oe_highlight" type="object"  attrs="{'invisible': [('payment_state', '!=', 'draft')]}"/>
-					 	<button name="action_reschedule" string="Reschedule" class="oe_highlight" type="object"  attrs="{'invisible': [('payment_state', '!=', 'payment_not_applied')]}"/>
-                        <field name="payment_state" widget="statusbar" statusbar_visible="draft,registered,approved_payment,for_payment_procedure,paid,payment_not_applied,rejected,cancel"/>
+					 	<button name="action_register" string="Register" class="oe_highlight" type="object"
+                                attrs="{'invisible': [('payment_state', '!=', 'draft')]}"/>
+                        <button name="action_draft" string="Draft" class="oe_highlight" type="object"
+                        attrs="{'invisible': [('payment_state','not in',('approved_payment','for_payment_procedure'))]}"/>
+					 	<button name="action_reschedule" string="Reschedule" class="oe_highlight" type="object"
+                                attrs="{'invisible': [('payment_state', '!=', 'payment_not_applied')]}"/>
+                        <field name="payment_state" widget="statusbar"
+                               statusbar_visible="draft,registered,approved_payment,for_payment_procedure,paid,
+                               payment_not_applied,rejected,cancel"/>
                     </header>
                     <sheet>
                         <div>
@@ -112,7 +118,8 @@
 								<field name="document_type" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
 								<field name="operation_type_id"  domain="[('currency_type','=',document_type),('upa_catalog_policy_id','=',upa_key)]" context="{'show_for_supplier_payment':True}" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 <field name="folio" readonly="1" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>								
-	                            <field name="date_approval_request" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', 'in', ('draft','registered'))]}"/>
+	                            <field name="date_approval_request" readonly="1"
+                                       attrs="{'invisible':[('is_payment_request','=',False)]}"/>
                                 <field name="payment_bank_id" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 <field name="payment_bank_account_id" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 <field name="payment_issuing_bank_id" readonly="1"/> <!-- attrs="{'readonly': [('payment_state', '!=', 'draft'),('is_from_reschedule_payment','=',False)]}" -->
@@ -347,7 +354,7 @@
                                 <!-- Internal note -->
                                 <field name="narration" placeholder="Add an internal note..." nolabel="1" height="50"/>
                             </page>
-                             <page id="aml_tab" string="Journal Items" groups="account.group_account_user" attrs="{'invisible':[('payment_state','in',('draft','registered','approved_payment'))]}">
+                             <page id="aml_tab" string="Journal Items" groups="account.group_account_user">
                                 <field name="line_ids"
                                 		attrs="{'readonly': [('payment_state', '!=', 'draft')]}"
                                        context="{'default_type': context.get('default_type'), 'line_ids': line_ids, 'journal_id': journal_id, 'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id != company_currency_id and currency_id or False}">

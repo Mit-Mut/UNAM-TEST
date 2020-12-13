@@ -128,6 +128,8 @@ class BasesCollabration(models.Model):
     move_line_ids = fields.One2many(
         'account.move.line', 'collaboration_id', string="Journal Items")
     rate_base_ids = fields.One2many('interest.rate.base','base_id')
+
+    periods_closing_ids = fields.One2many('periods.closing', 'collaboration_id', "Closing Periods")
     
     _sql_constraints = [
         ('folio_convention_no', 'unique(convention_no)', 'The Convention No. must be unique.')]
@@ -635,8 +637,10 @@ class BasesCollabration(models.Model):
                         count += 1
                         if count == need_skip:
                             count = 0
-
-                        partner_id = beneficiary.employee_id and beneficiary.employee_id.user_id and beneficiary.employee_id.user_id.partner_id and beneficiary.employee_id.user_id.partner_id.id or False
+                        if beneficiary.partner_id:
+                            partner_id = beneficiary.partner_id.id
+                        else: 
+                            partner_id = beneficiary.employee_id and beneficiary.employee_id.user_id and beneficiary.employee_id.user_id.partner_id and beneficiary.employee_id.user_id.partner_id.id or False
                         req_obj.create({
                             'bases_collaboration_id': collaboration.id,
                             'apply_to_basis_collaboration': True,
@@ -751,7 +755,11 @@ class Beneficiary(models.Model):
     _description = "Collaboration Beneficiary"
 
     collaboration_id = fields.Many2one('bases.collaboration')
-    employee_id = fields.Many2one('hr.employee', "Name")
+    employee_id = fields.Many2one('hr.employee', "Employee")
+    partner_id =  fields.Many2one('res.partner', "Contact")
+    is_employee = fields.Boolean('Employee',copy=False,default=False)
+    is_contact = fields.Boolean('Contact',copy=False,default=False
+                                 )
     bank_id = fields.Many2one('res.partner.bank', "Bank")
     account_number = fields.Char("Account Number")
     currency_id = fields.Many2one(
@@ -765,6 +773,17 @@ class Beneficiary(models.Model):
     withdrawal_sch_date = fields.Date("Withdrawal scheduling date")
     sequence = fields.Integer()
 
+    @api.onchange('is_employee')
+    def onchange_is_employee(self):
+        if self.is_employee:
+            self.is_contact = False
+            self.partner_id = False
+    @api.onchange('is_contact')
+    def onchange_is_contact(self):
+        if self.is_contact:
+            self.is_employee = False
+            self.employee_id = False
+            
     @api.onchange('bank_id')
     def onchage_bank(self):
         if self.bank_id:
@@ -1783,3 +1802,12 @@ class AccountMoveLine(models.Model):
     patrimonial_id = fields.Many2one(
         'patrimonial.resources', 'Patrimonial Resources')
     request_id = fields.Many2one('request.open.balance', 'Operation Request')
+
+class PeriodsClosing(models.Model):
+
+    _name = 'periods.closing'
+    _description = "Closing Period"
+
+    start_date = fields.Date("Start Date")
+    end_date = fields.Date("End Date")
+    collaboration_id = fields.Many2one('bases.collaboration')

@@ -21,7 +21,7 @@
 #
 ##############################################################################
 from odoo import models, api, _
-from datetime import datetime
+from datetime import datetime, timedelta
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tools.misc import formatLang
 from odoo.tools.misc import xlsxwriter
@@ -113,15 +113,105 @@ class MoneyMarketAccountStatement(models.AbstractModel):
         if journal:
             domain+=journal
 
+        header_intial = 0
+        header_increment = 0
+        header_withdrawal = 0
+        period_type = options.get('date').get('period_type')
+        prev_start = prev_end = False
+        if period_type == 'month' or period_type == 'custom':
+            first_day_of_month = start.replace(day=1)
+            prev_end = first_day_of_month - timedelta(days=1)
+            prev_start = prev_end.replace(day=1)
+        elif period_type == 'fiscalyear':
+            prev_year = start.year - 1
+            prev_start = start.replace(year=prev_year)
+            prev_end = end.replace(year=prev_year)
+        elif period_type == 'quarter':
+            if start.month == 1:
+                prev_start = start.replace(year=start.year - 1, day=1, month=10)
+                prev_end = start.replace(year=start.year - 1, day=31, month=12)
+            elif start.month == 4:
+                prev_start = start.replace(day=1, month=1)
+                prev_end = start.replace(day=31, month=3)
+            elif start.month == 7:
+                prev_start = start.replace(day=1, month=4)
+                prev_end = start.replace(day=30, month=6)
+            elif start.month == 10:
+                prev_start = start.replace(day=1, month=7)
+                prev_end = start.replace(day=31, month=10)
+
+        prev_cetes_domain = domain + [('date_time', '>=', prev_start), ('date_time', '<=', prev_end),
+                                      ('journal_id', '!=', False)]
+        prev_udibonos_domain = domain + [('date_time', '>=', prev_start), ('date_time', '<=', prev_end),
+                                         ('journal_id', '!=', False)]
+        prev_bonds_domain = domain + [('date_time', '>=', prev_start), ('date_time', '<=', prev_end),
+                                      ('journal_id', '!=', False)]
+        prev_will_pay_domain = domain + [('date_time', '>=', prev_start), ('date_time', '<=', prev_end),
+                                         ('journal_id', '!=', False)]
+
         cetes_domain = domain + [('date_time','>=',start),('date_time','<=',end)]
         udibonos_domain = domain + [('date_time','>=',start),('date_time','<=',end)]
         bonds_domain = domain + [('date_time','>=',start),('date_time','<=',end)]
         will_pay_domain = domain + [('date_time','>=',start),('date_time','<=',end)]
-        
+
+        prev_cetes_records = self.env['investment.cetes'].search(prev_cetes_domain)
+        prev_udibonos_records = self.env['investment.udibonos'].search(prev_udibonos_domain)
+        prev_bonds_records = self.env['investment.bonds'].search(prev_bonds_domain)
+        prev_will_pay_records = self.env['investment.will.pay'].search(prev_will_pay_domain)
+
         cetes_records = self.env['investment.cetes'].search(cetes_domain)
         udibonos_records = self.env['investment.udibonos'].search(udibonos_domain)
         bonds_records = self.env['investment.bonds'].search(bonds_domain)
         will_pay_records = self.env['investment.will.pay'].search(will_pay_domain)
+
+        prev_journal_ids = self.env['account.journal']
+        prev_journal_ids += prev_cetes_records.mapped('journal_id')
+        prev_journal_ids += prev_udibonos_records.mapped('journal_id')
+        prev_journal_ids += prev_bonds_records.mapped('journal_id')
+        prev_journal_ids += prev_will_pay_records.mapped('journal_id')
+        inc = 0
+        wid = 0
+        for rec in prev_cetes_records:
+            inc += rec.nominal_value
+            new_inc = rec.nominal_value
+            fin_lines = rec.request_finance_ids.filtered(
+                lambda x: x.amount_type and x.state in ('confirmed', 'done'))
+            for line in fin_lines:
+                if line.amount_type == 'increment':
+                    inc += line.amount
+                elif line.amount_type == 'withdrawal':
+                    wid -= line.amount
+        for rec in prev_udibonos_records:
+            inc += rec.nominal_value
+            new_inc = rec.nominal_value
+            fin_lines = rec.request_finance_ids.filtered(
+                lambda x: x.amount_type and x.state in ('confirmed', 'done'))
+            for line in fin_lines:
+                if line.amount_type == 'increment':
+                    inc += line.amount
+                elif line.amount_type == 'withdrawal':
+                    wid -= line.amount
+        for rec in prev_bonds_records:
+            inc += rec.nominal_value
+            new_inc = rec.nominal_value
+            fin_lines = rec.request_finance_ids.filtered(
+                lambda x: x.amount_type and x.state in ('confirmed', 'done'))
+            for line in fin_lines:
+                if line.amount_type == 'increment':
+                    inc += line.amount
+                elif line.amount_type == 'withdrawal':
+                    wid -= line.amount
+        for rec in prev_will_pay_records:
+            inc += rec.amount
+            new_inc = rec.amount
+            fin_lines = rec.request_finance_ids.filtered(
+                lambda x: x.amount_type and x.state in ('confirmed', 'done'))
+            for line in fin_lines:
+                if line.amount_type == 'increment':
+                    inc += line.amount
+                elif line.amount_type == 'withdrawal':
+                    wid -= line.amount
+        header_intial = inc - wid
 
         journal_ids = self.env['account.journal']
         journal_ids += cetes_records.mapped('journal_id')
@@ -131,10 +221,6 @@ class MoneyMarketAccountStatement(models.AbstractModel):
         g_total_inc = 0
         g_total_with = 0
         g_total_final = 0
-
-        header_intial = 0
-        header_increment = 0
-        header_withdrawal = 0
 
         if journal_ids:
             journals = list(set(journal_ids.ids))
@@ -164,26 +250,25 @@ class MoneyMarketAccountStatement(models.AbstractModel):
             #================ CETES =====================#
             for rec in cetes_records.filtered(lambda x:x.journal_id.id==journal.id):
                 invesment_date = ''
-                inc = 0 
+                inc = 0
                 withdraw = 0
                 inc = rec.nominal_value
                 total_inc += inc
                 g_total_inc += inc
-                
+
                 if rec.date_time:
-                    invesment_date = rec.date_time.strftime('%Y-%m-%d') 
+                    invesment_date = rec.date_time.strftime('%Y-%m-%d')
                 final = capital + inc - withdraw
                 total_final += final
                 g_total_final += final
 
-                header_intial += capital
                 header_increment += inc
                 header_withdrawal += withdraw
 
                 lines.append({
                     'id': 'hierarchy_account' + str(rec.id),
-                    'name' :invesment_date, 
-                    'columns': [ 
+                    'name' :invesment_date,
+                    'columns': [
                                 {'name':rec.concept},
                                 {'name': 'Importe de apertura' if lang == 'es_MX' else "Opening Balance"},
                                 self._format({'name': capital},figure_type='float'),
@@ -196,10 +281,9 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                     'unfolded': True,
                 })
                 capital = capital + inc - withdraw
-                
                 for line in rec.request_finance_ids.filtered(lambda x:x.amount_type and x.state in ('confirmed','done')):
                     invesment_date = ''
-                    inc = 0 
+                    inc = 0
                     withdraw = 0
                     concept = line.concept
                     if line.amount_type == 'increment':
@@ -212,21 +296,20 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                         total_with += withdraw
                         g_total_with += withdraw
                         ref = 'Retiros' if lang == 'es_MX' else 'Withdrawal'
-                        
+
                     if line.date_required:
-                        invesment_date = line.date_required.strftime('%Y-%m-%d') 
+                        invesment_date = line.date_required.strftime('%Y-%m-%d')
                     final = capital + inc - withdraw
                     total_final += final
                     g_total_final += final
 
-                    header_intial += capital
                     header_increment += inc
                     header_withdrawal += withdraw
 
                     lines.append({
                         'id': 'hierarchy_account_line' + str(line.id),
-                        'name' :invesment_date, 
-                        'columns': [ 
+                        'name' :invesment_date,
+                        'columns': [
                                     {'name':concept},
                                     {'name': ref},
                                     self._format({'name': capital},figure_type='float'),
@@ -239,30 +322,28 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                         'unfolded': True,
                     })
                     capital = capital + inc - withdraw
-
-            #================ udibonos_records =====================#
+            # # #================ udibonos_records =====================#
             for rec in udibonos_records.filtered(lambda x:x.journal_id.id==journal.id):
                 invesment_date = ''
-                inc = 0 
+                inc = 0
                 withdraw = 0
                 inc = rec.nominal_value
                 total_inc += inc
                 g_total_inc += inc
-                
+
                 if rec.date_time:
-                    invesment_date = rec.date_time.strftime('%Y-%m-%d') 
+                    invesment_date = rec.date_time.strftime('%Y-%m-%d')
                 final = capital + inc - withdraw
                 total_final += final
                 g_total_final += final
 
-                header_intial += capital
                 header_increment += inc
                 header_withdrawal += withdraw
 
                 lines.append({
                     'id': 'hierarchy_account' + str(rec.id),
-                    'name' :invesment_date, 
-                    'columns': [ 
+                    'name' :invesment_date,
+                    'columns': [
                                 {'name':rec.concept},
                                 {'name': 'Importe de apertura' if lang == 'es_MX' else 'Opening Balance'},
                                 self._format({'name': capital},figure_type='float'),
@@ -275,10 +356,9 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                     'unfolded': True,
                 })
                 capital = capital + inc - withdraw
-                
                 for line in rec.request_finance_ids.filtered(lambda x:x.amount_type and x.state in ('confirmed','done')):
                     invesment_date = ''
-                    inc = 0 
+                    inc = 0
                     withdraw = 0
                     line_concept = line.concept
                     if line.amount_type == 'increment':
@@ -291,21 +371,20 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                         total_with += withdraw
                         g_total_with += withdraw
                         ref = 'Retiros' if lang == 'es_MX' else 'Withdrawal'
-                        
+
                     if line.date_required:
-                        invesment_date = line.date_required.strftime('%Y-%m-%d') 
+                        invesment_date = line.date_required.strftime('%Y-%m-%d')
                     final = capital + inc - withdraw
                     total_final += final
                     g_total_final += final
 
-                    header_intial += capital
                     header_increment += inc
                     header_withdrawal += withdraw
 
                     lines.append({
                         'id': 'hierarchy_account_line' + str(line.id),
-                        'name' :invesment_date, 
-                        'columns': [ 
+                        'name' :invesment_date,
+                        'columns': [
                                     {'name':line.concept},
                                     {'name': ref},
                                     self._format({'name': capital},figure_type='float'),
@@ -318,30 +397,28 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                         'unfolded': True,
                     })
                     capital = capital + inc - withdraw
-
-            #================ bonds_records =====================#
+            # # #================ bonds_records =====================#
             for rec in bonds_records.filtered(lambda x:x.journal_id.id==journal.id):
                 invesment_date = ''
-                inc = 0 
+                inc = 0
                 withdraw = 0
                 inc = rec.nominal_value
                 total_inc += inc
                 g_total_inc += inc
-                
+
                 if rec.date_time:
-                    invesment_date = rec.date_time.strftime('%Y-%m-%d') 
+                    invesment_date = rec.date_time.strftime('%Y-%m-%d')
                 final = capital + inc - withdraw
                 total_final += final
                 g_total_final += final
 
-                header_intial += capital
                 header_increment += inc
                 header_withdrawal += withdraw
 
                 lines.append({
                     'id': 'hierarchy_account' + str(rec.id),
-                    'name' :invesment_date, 
-                    'columns': [ 
+                    'name' :invesment_date,
+                    'columns': [
                                 {'name':rec.concept},
                                 {'name': 'Importe de apertura' if lang == 'es_MX' else 'Opening Balance'},
                                 self._format({'name': capital},figure_type='float'),
@@ -354,10 +431,9 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                     'unfolded': True,
                 })
                 capital = capital + inc - withdraw
-                
                 for line in rec.request_finance_ids.filtered(lambda x:x.amount_type and x.state in ('confirmed','done')):
                     invesment_date = ''
-                    inc = 0 
+                    inc = 0
                     withdraw = 0
                     line_concept = line.concept
                     if line.amount_type == 'increment':
@@ -370,21 +446,20 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                         total_with += withdraw
                         g_total_with += withdraw
                         ref = 'Retiros'  if lang == 'es_MX' else 'Withdrawal'
-                        
+
                     if line.date_required:
-                        invesment_date = line.date_required.strftime('%Y-%m-%d') 
+                        invesment_date = line.date_required.strftime('%Y-%m-%d')
                     final = capital + inc - withdraw
                     total_final += final
                     g_total_final += final
 
-                    header_intial += capital
                     header_increment += inc
                     header_withdrawal += withdraw
 
                     lines.append({
                         'id': 'hierarchy_account_line' + str(line.id),
-                        'name' :invesment_date, 
-                        'columns': [ 
+                        'name' :invesment_date,
+                        'columns': [
                                     {'name':line_concept},
                                     {'name': ref},
                                     self._format({'name': capital},figure_type='float'),
@@ -398,29 +473,27 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                     })
                     capital = capital + inc - withdraw
 
-            #================ will_pay_records =====================#
+            # #================ will_pay_records =====================#
             for rec in will_pay_records.filtered(lambda x:x.journal_id.id==journal.id):
                 invesment_date = ''
-                inc = 0 
+                inc = 0
                 withdraw = 0
                 inc = rec.amount
                 total_inc += inc
                 g_total_inc += inc
-                
+
                 if rec.date_time:
-                    invesment_date = rec.date_time.strftime('%Y-%m-%d') 
+                    invesment_date = rec.date_time.strftime('%Y-%m-%d')
                 final = capital + inc - withdraw
                 total_final += final
                 g_total_final += final
 
-                header_intial += capital
                 header_increment += inc
                 header_withdrawal += withdraw
-
                 lines.append({
                     'id': 'hierarchy_account' + str(rec.id),
-                    'name' :invesment_date, 
-                    'columns': [ 
+                    'name' :invesment_date,
+                    'columns': [
                                 {'name':rec.concept},
                                 {'name': 'Importe de apertura' if lang == 'es_MX' else 'Opening Balance'},
                                 self._format({'name': capital},figure_type='float'),
@@ -433,10 +506,10 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                     'unfolded': True,
                 })
                 capital = capital + inc - withdraw
-                
+
                 for line in rec.request_finance_ids.filtered(lambda x:x.amount_type and x.state in ('confirmed','done')):
                     invesment_date = ''
-                    inc = 0 
+                    inc = 0
                     withdraw = 0
                     line_concept = line.concept
                     if line.amount_type == 'increment':
@@ -449,21 +522,20 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                         total_with += withdraw
                         g_total_with += withdraw
                         ref = 'Retiros' if lang == 'es_MX' else 'Withdrawal'
-                        
+
                     if line.date_required:
-                        invesment_date = line.date_required.strftime('%Y-%m-%d') 
+                        invesment_date = line.date_required.strftime('%Y-%m-%d')
                     final = capital + inc - withdraw
                     total_final += final
                     g_total_final += final
 
-                    header_intial += capital
                     header_increment += inc
                     header_withdrawal += withdraw
 
                     lines.append({
                         'id': 'hierarchy_account_line' + str(line.id),
-                        'name' :invesment_date, 
-                        'columns': [ 
+                        'name' :invesment_date,
+                        'columns': [
                                     {'name':line_concept},
                                     {'name': ref},
                                     self._format({'name': capital},figure_type='float'),
@@ -476,7 +548,6 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                         'unfolded': True,
                     })
                     capital = capital + inc - withdraw
-
 
             lines.append({
                 'id': 'Total',
@@ -722,10 +793,10 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                 'res_company': self.env.company,
                 'period_name': period_name,
                 'name': 'MERCADO DE DINERO',
-                'intial': header_intial,
-                'increment': header_increment,
-                'withdrawal': header_withdrawal,
-                'actual': actual,
+                'intial': str(self._format({'name': header_intial},figure_type='float').get('name')),
+                'increment': str(self._format({'name': header_increment},figure_type='float').get('name')),
+                'withdrawal': str(self._format({'name': header_withdrawal},figure_type='float').get('name')),
+                'actual': str(self._format({'name': actual},figure_type='float').get('name')),
                 'extra_data': True
             })
             header = self.env['ir.actions.report'].with_context(period_name=period_name).render_template(

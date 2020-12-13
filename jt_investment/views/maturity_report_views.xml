@@ -29,10 +29,9 @@
                             </group>
                             <group>
                                 <group>
-<!--                                    <field name="start" attrs="{'invisible': True}"/>-->
-<!--                                    <field name="stop" attrs="{'invisible': True}"/>-->
-<!--                                    <field name="id" attrs="{'invisible': True}"/>-->
-
+                                    <field name="start" invisible="1"/>	
+                                    <field name="stop" invisible="1"/>
+									<field name="display_time" invisible="1"/>
                                     <field name="start_date" string="Starting at"
                                            attrs="{'required': [('allday','=',True)],
                                            'invisible': [('allday','=',False)], 'readonly': [('recurrency','=',True)]}"
@@ -45,7 +44,7 @@
                                     <field name="start_datetime" string="Starting at"
                                            attrs="{'required': [('allday','=',False)],
                                            'invisible': [('allday','=',True)], 'readonly': [('recurrency','=',True)]}"/>
-<!--                                    <field name="stop_datetime" invisible="1"/>-->
+                                    <field name="stop_datetime" invisible="1"/>
                                     <label for="duration" attrs="{'invisible': [('allday','=',True)]}"/>
                                     <div attrs="{'invisible': [('allday','=',True)]}">
                                         <field name="duration" widget="float_time" string="Duration" class="oe_inline"

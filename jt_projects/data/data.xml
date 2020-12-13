@@ -29,6 +29,15 @@
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
         </record>
+
+        <!-- Journal for CONACYT -->
+        <record id="conacyt_journal_book" model="account.journal">
+            <field name="name">PROYECTOS CONACYT</field>
+            <field name="code">PCYT</field>
+            <field name="currency_id" ref="base.MXN"/>
+            <field name="type">general</field>
+        </record>
+
     </data>
     
 </odoo>

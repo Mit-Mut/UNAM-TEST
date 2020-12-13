@@ -33,15 +33,16 @@
                             <group>
                                 <field name="invoice" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="move_type" readonly="1"/>
-                                <field name="project_id" domain="[('project_type', '=', 'conacyt')]"
+                                <field name="project_id" required="1" domain="[('project_type', '=', 'conacyt')]"
                                 attrs="{'readonly': [('status', '!=', 'eraser')]}" context="{'from_conacyt':1}"/>
                                 <field name="project_name"/>
                                 <field name="user_id" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="project_type_identifier" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="project_stage_identifier" readonly="1"/>
-                                <field name="ministrations_amount" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="authorized_amount" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="program_code" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="ministrations_amount" required="1" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="authorized_amount" required="1" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="program_code" required="1" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="journal_id" required="1" domain="[('is_conacyt_project','=',True)]" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                             </group>
                             <group>
                                 <field name="observations" attrs="{'invisible': [('status', '!=', 'eraser')]}"/>
@@ -55,6 +56,11 @@
                                 <field name="rejection_observations" readonly="1" attrs="{'invisible': [('status', '!=', 'rejected')]}"/>
                             </group>
                         </group>
+                        <notebook>
+                        	<page string="Accounting Notes">
+                        		<field name="move_line_ids" readonly="1"/>
+                        	</page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
@@ -100,6 +106,7 @@
                                 <field name="ministrations_amount" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="authorized_amount" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="program_code" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="journal_id" required="1" domain="[('is_conacyt_project','=',True)]" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                             </group>
                             <group>
                                 <field name="observations" readonly="1" attrs="{'invisible': [('status', '!=', 'rejected')]}"/>
@@ -113,6 +120,11 @@
                                 <field name="rejection_observations" readonly="1" attrs="{'invisible': [('status', '!=', 'rejected')]}"/>
                             </group>
                         </group>
+                        <notebook>
+                        	<page string="Accounting Notes">
+                        		<field name="move_line_ids" readonly="1"/>
+                        	</page>
+                        </notebook>                        
                     </sheet>
                 </form>
             </field>

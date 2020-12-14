@@ -39,6 +39,12 @@ class Adequacies(models.Model):
     def action_send_request(self):
         
         for rec in self:
+            total_decreased = sum(a.amount for a in rec.adequacies_lines_ids.filtered(lambda x:x.line_type=='increase'))
+            total_increased = sum(a.amount for a in rec.adequacies_lines_ids.filtered(lambda x:x.line_type=='decrease'))
+            
+            if rec.adaptation_type == 'compensated' and total_decreased != total_increased:
+                raise ValidationError(_("The amount does not match"))
+            
             vals_list = []
             rec.is_send_request = True
             for line in rec.adequacies_lines_ids:
@@ -122,7 +128,9 @@ class ProgramCode(models.Model):
     _inherit = 'program.code'
     
     parent_program_id = fields.Many2one('program.code','Parent Program Code')
-    
+    conacyt_project_id = fields.Many2one('project.project','CONACYT Project',copy=False)
+    conacyt_code = fields.Boolean(string="CONACYT Code",copy=False,default=False)
+     
     @api.onchange('parent_program_id')
     def onchange_parent_program_id(self):
         if self.parent_program_id:

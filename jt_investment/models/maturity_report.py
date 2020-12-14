@@ -27,8 +27,8 @@ class MaturityReport(models.Model):
     user_id = fields.Many2one('res.users', 'Owner', states={'done': [('readonly', True)]},
                               default=lambda self: self.env.user)
     allday = fields.Boolean("All Day")
-    start = fields.Datetime('Start', required=True, help="Start date of an event, without time for full days events")
-    stop = fields.Datetime('Stop', required=True, help="Stop date of an event, without time for full days events")
+    start = fields.Datetime('Start',help="Start date of an event, without time for full days events")
+    stop = fields.Datetime('Stop',  help="Stop date of an event, without time for full days events")
 
     start_date = fields.Date('Starting At', compute='_compute_dates', inverse='_inverse_dates', store=True)
     start_datetime = fields.Datetime('Starting At', compute='_compute_dates', inverse='_inverse_dates', store=True)

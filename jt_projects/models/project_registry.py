@@ -42,7 +42,8 @@ class ProjectRegistry(models.Model):
     is_related_agreement = fields.Boolean(
         'Is It related to agreement?', default=False)
 
-
+    is_code_create = fields.Boolean('Code Created',copy=False,default=False)
+    
     number_agreement = fields.Char("Agreement Number")
     name_agreement = fields.Text("Agreement Name")
     agreement_type_id = fields.Many2one("agreement.type", "Agreement Type")
@@ -69,6 +70,22 @@ class ProjectRegistry(models.Model):
     project_ministrations_ids = fields.One2many(
         'project.ministrations', 'project_id', string='Project Ministrations')
 
+    custom_stage_id = fields.Many2one('project.custom.stage','Stage')
+    custom_stage_description = fields.Text(related='stage_identifier_id.description',string="Description Stage")
+    custom_project_type_id = fields.Many2one('project.type.custom','Project Type Identifier')
+    
+    program_code_ids = fields.Many2many('program.code','program_code_project_rel','program_id','project_id',compute="get_program_ids")
+    
+    @api.depends('is_papiit_project')
+    def get_program_ids(self):
+        for rec in self:
+            lines = self.env['adequacies.lines'].search([('line_type','=','increase'),('adequacies_id.state','=','accepted'),('adequacies_id.is_from_project','=',True)])
+            if lines:
+                rec.program_code_ids = [
+                    (6, 0, lines.mapped('program').ids)]
+            else:
+                rec.program_code_ids = [(6, 0, [])]
+    
     # @api.onchange('project_type_identifier_id')
     # def onchange_project_type_identifier_id(self):
     #     if self.project_type_identifier_id:
@@ -220,7 +237,20 @@ class ProjectRegistry(models.Model):
             'context': "{'create': False}"
         }
 
-
+    def create_program_code(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Create Program Code',
+            'view_mode': 'form',
+            'res_model': 'project.program.code',
+            'target':'new',
+            #'domain': [('project_number_id', '=', self.number)],
+            'context': {'default_conacyt_project_id': self.id,
+                        'default_stage_id':self.stage_identifier_id and self.stage_identifier_id.id or False,
+                        'default_project_type_id':self.project_type_identifier_id and self.project_type_identifier_id.id or False,
+                        },
+        }
+        
 class ProjectMinistrations(models.Model):
 
     _name = 'project.ministrations'

@@ -126,6 +126,15 @@ class RequestTransfer(models.Model):
                     raise ValidationError(
                         _("Please configure UNAM and CONAC account in journal!"))
 
+            if not self.origin_journal_id.default_credit_account_id or not self.origin_journal_id.conac_credit_account_id:
+                if self.env.user.lang == 'es_MX':
+                    raise ValidationError(
+                        _("Por favor configure la cuenta UNAM y CONAC en Banco!"))
+                else:
+                    raise ValidationError(
+                        _("Please configure UNAM and CONAC account in Bank!"))
+
+                 
             today = datetime.today().date()
             user = self.env.user
             partner_id = user.partner_id.id
@@ -153,8 +162,8 @@ class RequestTransfer(models.Model):
                                  }),
 
                                 (0, 0, {
-                                 'account_id': journal.ministrations_credit_account_id.id,
-                                 'coa_conac_id': journal.conac_ministrations_credit_account_id.id,
+                                 'account_id': self.origin_journal_id.default_credit_account_id.id,
+                                 'coa_conac_id': self.origin_journal_id.conac_credit_account_id.id,
                                  'credit': amount,
                                  'partner_id': partner_id,
                                  'transfer_request_id': self.id,

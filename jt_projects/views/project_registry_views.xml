@@ -18,8 +18,13 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
+                    	<field name="is_code_create" invisible="1"/>
                         <button name="close_project" string="Close" class="oe_highlight"
                                 type="object" attrs="{'invisible': [('status', '=', 'closed')]}"/>
+
+                        <button name="create_program_code" string="Create Cod. Program" class="oe_highlight"
+                                type="object" attrs="{'invisible': ['|','|',('is_code_create','=',True),('project_type','!=','conacyt'),('status', '=', 'closed')]}"/>
+                                
                         <field name="status" widget="statusbar" />
                     </header>
                     <sheet>
@@ -53,12 +58,13 @@
                         </div>
                         <group>
                             <group>
-                            	<field name="program_code" required="1" attrs="{'readonly': [('status', '!=', 'open')]}" />
+                            	<field name="program_code_ids" invisible="1"/>
+                            	<field name="program_code" domain="[('id','in',program_code_ids)]"  attrs="{'required':[('is_papiit_project','=',True)],'readonly': [('status', '!=', 'open')]}" />
                                 <field name="project_type" attrs="{'readonly': [('status', '!=', 'open')],'invisible':[('is_papiit_project','=',True)]}"/>
-                                <field name="stage_identifier_id" attrs="{'readonly': [('status', '!=', 'open')]}"/>
+                                <field name="stage_identifier_id" domain="[('from_project','=',True)]" attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="stage_identifier" invisible="1" attrs="{'readonly': [('status', '!=', 'open')]}"/>
-                                <field name="desc_stage" attrs="{'readonly': [('status', '!=', 'open')]}"/>
-                                <field name="project_type_identifier_id" attrs="{'readonly': [('status', '!=', 'open')]}"/>
+                                <field name="custom_stage_description" />
+                                <field name="project_type_identifier_id" domain="[('from_project','=',True)]" attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="project_type_identifier" invisible="1" attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="number" required="1" attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="responsible_name" required="1" attrs="{'readonly': [('status', '!=', 'open')]}"/>

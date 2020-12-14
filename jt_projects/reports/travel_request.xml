@@ -40,10 +40,16 @@
                 </th>
                 </thead>
                 <tbody>
-                    <td style="border:1px solid black;" height="70">
+                    <td style="border:1px solid black;text-align: center;" height="70">
+                        <br/>
+                        <br/>
+                        <br/>
                         <span t-if="o.holder_of_dependency_id" t-field="o.holder_of_dependency_id.name"/>
                     </td>
-                    <td style="border:1px solid black;" height="70">
+                    <td style="border:1px solid black;text-align: center;" height="70">
+                        <br/>
+                        <br/>
+                        <br/>
                         <span t-if="o.administrative_secretary_id" t-field="o.administrative_secretary_id.name"/>
                     </td>
                     <td style="border:1px solid black;" height="70"></td>
@@ -157,7 +163,7 @@
                     </div>
                 </div>  
 
-                <h4 align="center">ZONA CORRESPONDIENTE</h4>
+                <!-- <h4 align="center">ZONA CORRESPONDIENTE</h4>
                 <div id="zona_corrspondient" class="row mt32 mb32">
                     <div class="col-3" t-if="o.zone" name="zone">
                         <strong>Zona</strong>
@@ -172,24 +178,40 @@
                         <p class="m-0"   t-field="o.days"/>
                     </div>
                      
-                </div>  
-                
-                
+                </div>   --> 
                 
                 <div id="info6" class="row mt32 mb32">
                     <div class="col-12" t-if="o.reason_for_expendiure" name="reason_for_expenditure">
-                        <strong>MOTIVO DEL VIAJE</strong>
-                        <p class="m-0"  t-field="o.reason_for_expendiure"/>
+                        <center><strong>MOTIVO DEL VIAJE</strong></center>
+                        <p style="margin-left:30px;text-align:justify;" class="m-0"  t-field="o.reason_for_expendiure"/>
                     </div>
                 </div>  
 
                 <div id="info7" class="row">
                     <div class="col-12" name="destination">
-                        <strong>DESTINO</strong>
-                        <p class="m-0"  t-field="o.destination"/>
+                       <center> <strong>DESTINO</strong></center>
+                        <p style="margin-left:30px;text-align:justify;" class="m-0"  t-field="o.destination"/>
                     </div>
                 </div>  
-                <div  id="table_label" class="row">
+
+
+                 <table class="table table-condensed" width="100%" style="border:1px solid black;" cellpadding="5">
+                    <tr>
+                        <th colspan="3" style="border:1px solid black;text-align:center;font-size:18px;">ZONA CORRESPONDIENTE</th>
+                    </tr>
+                    <tr>
+                        <th style="border:1px solid black;font-weight: bold;font-size:15px;">Zona</th>
+                        <th style="border:1px solid black;font-weight: bold;font-size:15px;">Tarifa</th>
+                        <th style="border:1px solid black;font-weight: bold;font-size:15px;">Dias</th>
+                    </tr>
+                    <tr>
+                        <td style="border:1px solid black;font-size:15px;"><span t-field="o.zone"/></td>
+                        <td style="border:1px solid black;font-size:15px;"><span t-field="o.rate"/></td>
+                        <td style="border:1px solid black;font-size:15px;"><span t-field="o.days"/></td>
+                    </tr>
+                </table>
+
+                <div  id="table_label" class="row mt32 mb32">
                     <div align="center" class="col-12">
                         <h4>DATOS PARA ELEGRESO</h4>
                     </div>
@@ -288,7 +310,7 @@
         <report 
             id="travel_request_action"
             model="account.move"
-            string="Travel Request"
+            string="Solicitud Viáticos"
             report_type="qweb-pdf"
             name="jt_projects.travel_request_template"
             file="jt_projects.travel_request_template"

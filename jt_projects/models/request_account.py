@@ -67,7 +67,14 @@ class RequestAccounts(models.Model):
 
     def generate_request(self):
         self.status = 'request'
-
+        if self.move_type == 'account cancel':
+            if self.bank_account_id and not self.bank_account_id.default_debit_account_id:
+                raise UserError(_('Please configure account into bank'))
+            values= self.env['account.move.line'].search([('account_id', '=', self.bank_account_id.default_debit_account_id.id),('move_id.state', '=', 'posted')])
+            account_balance = sum(x.debit-x.credit for x in values)
+            if not account_balance > 0:
+                raise UserError(_('To request the cancellation of a bank account the account balance must be 0'))
+        
     # @api.model
     # def create(self, vals):
     #     if vals.get('invoice', 'New') == 'New':
@@ -159,3 +166,9 @@ class RequestAccounts(models.Model):
 
     def reject_account(self):
         self.write({'status': 'rejected'})
+
+    @api.onchange('project_id')
+    def onchange_project_id(self):
+        if self.project_id and self.move_type=='account open':
+            self.program_code = self.project_id.program_code and self.project_id.program_code.id or False  
+        

@@ -63,7 +63,9 @@
         'views/upa_payment_request.xml',
         'views/account_journal_view.xml',
         'views/bank_transfer_request.xml',
-
+        'views/project_stage_view.xml',
+        'views/project_custom_type_view.xml',
+        'wizard/program_code_create_view.xml',
     ],
     'application': False,
     'installable': True,

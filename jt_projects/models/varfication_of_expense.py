@@ -12,6 +12,7 @@ class VerficationOfExpense(models.Model):
                                ('approve', 'Approved'),
                                ('reject', 'Rejected')], string="Status", default="eraser")
     project_id = fields.Many2one('project.project', string='Project Code')
+    program_code_id = fields.Many2one(related='project_id.program_code') 
     project_number_id = fields.Char(
         related='project_id.number', string="Project Number")
     stage_id = fields.Many2one('stage', string='Stage')
@@ -141,8 +142,8 @@ class VerficationOfExpense(models.Model):
                                  'expense_id': self.id,
                              }),
                                  (0, 0, {
-                                     'account_id': journal.ai_debit_account_id.id,
-                                     'coa_conac_id': journal.conac_ai_debit_account_id.id,
+                                     'account_id': journal.capitalizable_debit_account_id.id,
+                                     'coa_conac_id': journal.conac_capitalizable_debit_account_id.id,
                                      'debit': amount,
                                      'partner_id': partner_id,
                                      'expense_id': self.id,

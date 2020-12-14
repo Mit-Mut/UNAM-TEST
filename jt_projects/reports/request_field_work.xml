@@ -27,6 +27,7 @@
             <t t-raw="0"/>
         </div>
         <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
+            <br/>
             <table class="table table-condensed" width="100%" style="border:1px solid black;">
                 <thead>
                 <th style="border:1px solid black;">
@@ -40,10 +41,16 @@
                 </th>
                 </thead>
                 <tbody>
-                    <td style="border:1px solid black;" height="70">
+                    <td style="border:1px solid black;text-align: center;" height="70">
+                        <br/>
+                        <br/>
+                        <br/>
                         <span t-if="o.holder_of_dependency_id" t-field="o.holder_of_dependency_id.name"/>
                     </td>
-                    <td style="border:1px solid black;" height="70">
+                    <td style="border:1px solid black;text-align: center;" height="70">
+                        <br/>
+                        <br/>
+                        <br/>
                         <span t-if="o.administrative_secretary_id" t-field="o.administrative_secretary_id.name"/>
                     </td>
                     <td style="border:1px solid black;" height="70"></td>
@@ -166,15 +173,15 @@
                 </div>    
                 <div id="info6" class="row mt32 mb32">
                     <div class="col-12" t-if="o.reason_for_expendiure" name="reason_for_expenditure">
-                        <strong>REASON FOR EXPENDITURE</strong>
-                        <p class="m-0"  t-field="o.reason_for_expendiure"/>
+                       <h4 align="center">REASON FOR EXPENDITURE</h4>
+                        <p style="margin-left:30px;text-align:justify;" class="m-0"  t-field="o.reason_for_expendiure"/>
                     </div>
                 </div>  
 
                 <div id="info7" class="row">
                     <div class="col-12" name="destination">
-                        <strong>DESTINATION</strong>
-                        <p class="m-0"  t-field="o.destination"/>
+                        <h4 align="center">DESTINATION</h4>
+                        <p style="margin-left:30px;text-align:justify;" class="m-0"  t-field="o.destination"/>
                     </div>
                 </div>  
                 <div  id="table_label" class="row">
@@ -285,7 +292,7 @@
         <report 
             id="request_field_work_action"
             model="account.move"
-            string="Request For Field Work"
+            string="Solicitud Trabajos de Campo"
             report_type="qweb-pdf"
             name="jt_projects.request_field_work_template"
             file="jt_projects.request_field_work_template"

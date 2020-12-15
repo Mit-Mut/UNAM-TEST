@@ -61,6 +61,7 @@ class BankAccountingBalance(models.AbstractModel):
     def _get_filter_subdepenancy(self):
         return self.env['sub.dependency'].search([])
 
+
     @api.model
     def _init_filter_subdepenancy(self, options, previous_options=None):
         if self.filter_subdepenancy is None:
@@ -143,6 +144,8 @@ class BankAccountingBalance(models.AbstractModel):
         value['name'] = round(value['name'], 1)
         return value
 
+        
+
     def _get_lines(self, options, line_id=None):
         lines = []
         if options.get('project_type'):
@@ -178,8 +181,26 @@ class BankAccountingBalance(models.AbstractModel):
                             {'name': record.proj_start_date},
                             {'name': record.proj_end_date},
                             {'name':''},
-                            {'name':''}
+                            ],
+                'level': 2,
+                'unfoldable': False,
+                'unfolded': True,
+            })
 
+            lines.append({
+                'id': 'hierarchy_1',
+                'name': 'Total SubDep' ,
+                'columns': [{'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name':''},
                             ],
                 'level': 2,
                 'unfoldable': False,
@@ -201,7 +222,7 @@ class BankAccountingBalance(models.AbstractModel):
             {'name': _('Start')},
             {'name': _('End')},
             {'name': _('Subtotal')},
-            {'name': _('Total SubDep')},
+            # {'name': _('Total SubDep')},
         ]
 
     def _get_report_name(self):

@@ -130,6 +130,7 @@ class DistributionTransferRequest(models.TransientModel):
                 'origin_resource_id': origin_resource_id,
                 'user_id': self.user_id.id if self.user_id else False,
                 'date_required' : self.date,
+                'distribution_income_id' : self.distribution_income_id and self.distribution_income_id.id or False
                 })
             inv_opt_lines.append(ot_id.id)
             if self.date:

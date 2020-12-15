@@ -65,31 +65,41 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
         return templates
 
 
-    def get_header(self, options):
-
-        return[
-
-            [
+#     def get_header(self, options):
+# 
+#         return[
+# 
+#             [
+#                 {'name': ''},
+#                 {'name': _('Cuenta de Pasivo'),
+#                  'colspan': 2},
+#                 {'name':''},
+#                 {'name': _('Recursos etapa 29(2018)'),
+#                  'colspan': 3},
+# 
+#             ],
+# 
+#             [
+#                 {'name': _('Programs')},
+#                 {'name': _('Etapa 29')},
+#                 {'name': _('Total')},
+#                 {'name': _('Poyectos de Sistemas de pagos')},
+#                 {'name': _('Authorizados')},
+#                 {'name': _('Ejercidos')},
+#                 {'name': _('Por Ejercer')},
+#             ]
+#         ]
+    def _get_columns_name(self, options):
+        return [
                 {'name': ''},
-                {'name': _('Cuenta de Pasivo'),
-                 'colspan': 2},
-                {'name':''},
-                {'name': _('Recursos etapa 29(2018)'),
-                 'colspan': 3},
-
-            ],
-
-            [
-                {'name': _('Programs')},
-                {'name': _('Etapa 29')},
-                {'name': _('Total')},
-                {'name': _('Poyectos de Sistemas de pagos')},
-                {'name': _('Authorizados')},
-                {'name': _('Ejercidos')},
-                {'name': _('Por Ejercer')},
+                {'name': ''},
+                {'name': ''},
+                {'name': ''},
+                {'name': ''},
+                {'name': ''},
+                {'name': ''},
             ]
-        ]
-
+    
     def _format(self, value,figure_type):
         if self.env.context.get('no_format'):
             return value
@@ -114,11 +124,267 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         lines = []
+        domain = []
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+
+        domain = [('proj_start_date','>=',start),('proj_end_date','<=',end),('PAPIIT_project_type','!=',False)]
+                    
+        project_ids = self.env['project.project'].search(domain)
+
+        year_list_tuple = range(start.year, end.year+1)
+        year_list = []
+                
+        for y in year_list_tuple:
+            year_list.append(str(y))
         
+
+        gt_total_auth = 0
+        gt_total_exer = 0
+        gt_total_diff = 0
+        gt_total_len = 0
+        
+        stage_ids = project_ids.mapped('custom_stage_id')
+        for stage in stage_ids:
+            for year in year_list:
+                total_auth = 0
+                total_exer = 0
+                total_diff = 0
+                total_len = 0
+
+                current_project_ids = project_ids.filtered(lambda x:x.custom_stage_id.id==stage.id and str(x.proj_start_date.year)==year)
+                if not current_project_ids:
+                    continue
+
+                lines.append({
+                        'id': 'hierarchy_blank' + str(stage.id)+str(year),
+                        'name' : '', 
+                        'columns': [ 
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    ],
+                        'level': 2,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+                
+                lines.append({
+                    'id': 'hierarchy_' + str(stage.id)+str(year),
+                    'name' : 'INTEGRACION DE PROYECTOS ETAPA '+stage.name+"/"+year+" CON RECURSOS REMANENTES", 
+                    'columns': [ 
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                ],
+                    'level': 1,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+
+                lines.append({
+                        'id': 'hierarchy_col' + str(stage.id)+str(year),
+                        'name' : 'Programas', 
+                        'columns': [ 
+                                    {'name': 'Etapa '+stage.name+"("+year+")"},
+                                    {'name': 'Total'},
+                                    {'name': 'Proyectos de Sistemas de Pagos'},
+                                    {'name': 'Autorizados'},
+                                    {'name': 'Ejercidos'},
+                                    {'name': 'Por Ejercer'},
+                                    ],
+                        'level': 1,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+                
+                PAPIIT_ids = current_project_ids.filtered(lambda x:x.PAPIIT_project_type=='PAPIIT')
+
+                #====== PAPIIT =================#               
+                auth_amt = sum(x.allocated_amount for x in PAPIIT_ids)
+                exer_amt = sum(x.exercised_amount for x in PAPIIT_ids)
+                diff_amt = auth_amt - exer_amt
+                project_len = len(PAPIIT_ids)
+                
+                total_auth += auth_amt
+                total_exer += exer_amt
+                total_diff += diff_amt
+                total_len += project_len
+
+                gt_total_auth += auth_amt
+                gt_total_exer += exer_amt
+                gt_total_diff += diff_amt
+                gt_total_len += project_len
+                
+                lines.append({
+                        'id': 'hierarchy_PAPIIT' + str(stage.id)+str(year),
+                        'name' : 'PAPIIT', 
+                        'columns': [ 
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    ],
+                        'level': 2,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+                lines.append({
+                        'id': 'hierarchy_PAPIIT_amount' + str(stage.id)+str(year),
+                        'name' : 'Programa de Apoyo a Proyectos de Investigación e Innovación Tecnológica', 
+                        'columns': [ 
+                                    self._format({'name': diff_amt},figure_type='float'),
+                                    self._format({'name': diff_amt},figure_type='float'),
+                                    {'name': project_len,'class':'number'},
+                                    self._format({'name': auth_amt},figure_type='float'),
+                                    self._format({'name': exer_amt},figure_type='float'),
+                                    self._format({'name': diff_amt},figure_type='float'),
+                                    ],
+                        'level': 3,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+
+                PAPIME_ids = current_project_ids.filtered(lambda x:x.PAPIIT_project_type=='PAPIME')
+
+                #====== PAPIME =================#               
+                auth_amt = sum(x.allocated_amount for x in PAPIME_ids)
+                exer_amt = sum(x.exercised_amount for x in PAPIME_ids)
+                diff_amt = auth_amt - exer_amt
+                project_len = len(PAPIME_ids)
+                
+                total_auth += auth_amt
+                total_exer += exer_amt
+                total_diff += diff_amt
+                total_len += project_len
+
+                gt_total_auth += auth_amt
+                gt_total_exer += exer_amt
+                gt_total_diff += diff_amt
+                gt_total_len += project_len
+                
+                lines.append({
+                        'id': 'hierarchy_PAPIME' + str(stage.id)+str(year),
+                        'name' : 'PAPIME', 
+                        'columns': [ 
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    ],
+                        'level': 2,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+                lines.append({
+                        'id': 'hierarchy_PAPIME_amount' + str(stage.id)+str(year),
+                        'name' : 'Programa de apoyo a proyectos de innovación y mejora de la docencia', 
+                        'columns': [ 
+                                    self._format({'name': diff_amt},figure_type='float'),
+                                    self._format({'name': diff_amt},figure_type='float'),
+                                    {'name': project_len,'class':'number'},
+                                    self._format({'name': auth_amt},figure_type='float'),
+                                    self._format({'name': exer_amt},figure_type='float'),
+                                    self._format({'name': diff_amt},figure_type='float'),
+                                    ],
+                        'level': 3,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+
+                INFOCAB_ids = current_project_ids.filtered(lambda x:x.PAPIIT_project_type=='INFOCAB')
+                #====== INFOCAB =================#               
+                auth_amt = sum(x.allocated_amount for x in INFOCAB_ids)
+                exer_amt = sum(x.exercised_amount for x in INFOCAB_ids)
+                diff_amt = auth_amt - exer_amt
+                project_len = len(INFOCAB_ids)
+                
+                total_auth += auth_amt
+                total_exer += exer_amt
+                total_diff += diff_amt
+                total_len += project_len
+
+                gt_total_auth += auth_amt
+                gt_total_exer += exer_amt
+                gt_total_diff += diff_amt
+                gt_total_len += project_len
+                
+                lines.append({
+                        'id': 'hierarchy_INFOCAB' + str(stage.id)+str(year),
+                        'name' : 'INFOCAB', 
+                        'columns': [ 
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    ],
+                        'level': 2,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+                lines.append({
+                        'id': 'hierarchy_INFOCAB_amount' + str(stage.id)+str(year),
+                        'name' : 'Iniciativa para el Fortalecimiento de la Carrera Académica en el Bachillerato de la UNAM', 
+                        'columns': [ 
+                                    self._format({'name': diff_amt},figure_type='float'),
+                                    self._format({'name': diff_amt},figure_type='float'),
+                                    {'name': project_len,'class':'number'},
+                                    self._format({'name': auth_amt},figure_type='float'),
+                                    self._format({'name': exer_amt},figure_type='float'),
+                                    self._format({'name': diff_amt},figure_type='float'),
+                                    ],
+                        'level': 3,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+                 
+                lines.append({
+                        'id': 'hierarchy_total' + str(stage.id)+str(year),
+                        'name' : 'Subtotal Etapa '+stage.name+"("+str(year)+")", 
+                        'columns': [ 
+                                    self._format({'name': total_diff},figure_type='float'),
+                                    self._format({'name': total_diff},figure_type='float'),
+                                    {'name': total_len,'class':'number'},
+                                    self._format({'name': total_auth},figure_type='float'),
+                                    self._format({'name': total_exer},figure_type='float'),
+                                    self._format({'name': total_diff},figure_type='float'),
+                                    ],
+                        'level': 2,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+
+        lines.append({
+                'id': 'hierarchy_gt_total',
+                'name' : 'Total ', 
+                'columns': [ 
+                            self._format({'name': gt_total_diff},figure_type='float'),
+                            self._format({'name': gt_total_diff},figure_type='float'),
+                            {'name': gt_total_len,'class':'number'},
+                            self._format({'name': gt_total_auth},figure_type='float'),
+                            self._format({'name': gt_total_exer},figure_type='float'),
+                            self._format({'name': gt_total_diff},figure_type='float'),
+                            ],
+                'level': 2,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+                   
+         
         return lines
 
     def _get_report_name(self):

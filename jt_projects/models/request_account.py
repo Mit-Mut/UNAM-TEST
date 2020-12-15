@@ -72,7 +72,7 @@ class RequestAccounts(models.Model):
                 raise UserError(_('Please configure account into bank'))
             values= self.env['account.move.line'].search([('account_id', '=', self.bank_account_id.default_debit_account_id.id),('move_id.state', '=', 'posted')])
             account_balance = sum(x.debit-x.credit for x in values)
-            if not account_balance > 0:
+            if account_balance > 0:
                 raise UserError(_('To request the cancellation of a bank account the account balance must be 0'))
         
     # @api.model

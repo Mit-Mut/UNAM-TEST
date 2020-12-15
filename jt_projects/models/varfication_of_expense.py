@@ -101,15 +101,6 @@ class VerficationOfExpense(models.Model):
                     raise ValidationError(
                         _("Please configure UNAM and CONAC account in journal!"))
 
-#             if not journal.ministrations_credit_account_id or not journal.conac_ministrations_credit_account_id \
-#                     or not journal.ministrations_debit_account_id or not journal.conac_ministrations_debit_account_id:
-#                 if self.env.user.lang == 'es_MX':
-#                     raise ValidationError(
-#                         _("Por favor configure la cuenta UNAM y CONAC en diario!"))
-#                 else:
-#                     raise ValidationError(
-#                         _("Please configure UNAM and CONAC account in journal!"))
-
             today = datetime.today().date()
             user = self.env.user
             partner_id = user.partner_id.id
@@ -142,8 +133,8 @@ class VerficationOfExpense(models.Model):
                                  'expense_id': self.id,
                              }),
                                  (0, 0, {
-                                     'account_id': journal.capitalizable_debit_account_id.id,
-                                     'coa_conac_id': journal.conac_capitalizable_debit_account_id.id,
+                                     'account_id': journal.ai_debit_account_id.id,
+                                     'coa_conac_id': journal.conac_ai_debit_account_id.id,
                                      'debit': amount,
                                      'partner_id': partner_id,
                                      'expense_id': self.id,
@@ -152,7 +143,7 @@ class VerficationOfExpense(models.Model):
 
             #===================particular Item records ===============#
                 #===== Group 511 ======#
-            item_line_ids = self.verifcation_expense_ids.filtered(lambda x:x.program_code and x.program_code.item_id.item =='511' )
+            item_line_ids = self.verifcation_expense_ids.filtered(lambda x:x.program_code and x.program_code.item_id.item in ('511','512','513','514','515','516','517','521','523','524','531'))
             if item_line_ids:
 
                 if not journal.capitalizable_credit_account_id or not journal.conac_capitalizable_credit_account_id \
@@ -165,13 +156,13 @@ class VerficationOfExpense(models.Model):
                             _("Please configure UNAM and CONAC account in journal!"))
                 
                 item_amount = sum(x.subtotal for x in item_line_ids)
-                account_id = journal.capitalizable_debit_account_id.id
-                coa_conac_id =  journal.conac_capitalizable_debit_account_id.id
-                
-                item_id = item_line_ids.mapped('program_code.item_id')
-                if item_id and item_id[0].unam_account_id:
-                    account_id = item_id[0].unam_account_id.id
-                    coa_conac_id = item_id[0].unam_account_id.coa_conac_id and item_id[0].unam_account_id.coa_conac_id.id or False
+#                 account_id = journal.capitalizable_debit_account_id.id
+#                 coa_conac_id =  journal.conac_capitalizable_debit_account_id.id
+#                 
+#                 item_id = item_line_ids.mapped('program_code.item_id')
+#                 if item_id and item_id[0].unam_account_id:
+#                     account_id = item_id[0].unam_account_id.id
+#                     coa_conac_id = item_id[0].unam_account_id.coa_conac_id and item_id[0].unam_account_id.coa_conac_id.id or False
                      
                 lines.append(                                (0, 0, {
                                  'account_id': journal.capitalizable_credit_account_id.id,
@@ -182,387 +173,387 @@ class VerficationOfExpense(models.Model):
                              }))
                 
                 lines.append((0, 0, {
-                                     'account_id': account_id,
-                                     'coa_conac_id': coa_conac_id,
+                                     'account_id': journal.capitalizable_debit_account_id.id,
+                                     'coa_conac_id': journal.conac_capitalizable_debit_account_id.id,
                                      'debit': item_amount,
                                      'partner_id': partner_id,
                                      'expense_id': self.id,
                                  }))
                 
 
-                #===== Group 512 ======#
-            item_line_ids = self.verifcation_expense_ids.filtered(lambda x:x.program_code and x.program_code.item_id.item =='512' )
-            if item_line_ids:
-
-                if not journal.capitalizable_credit_account_id or not journal.conac_capitalizable_credit_account_id \
-                        or not journal.capitalizable_debit_account_id or not journal.conac_capitalizable_debit_account_id:
-                    if self.env.user.lang == 'es_MX':
-                        raise ValidationError(
-                            _("Por favor configure la cuenta UNAM y CONAC en diario!"))
-                    else:
-                        raise ValidationError(
-                            _("Please configure UNAM and CONAC account in journal!"))
-                
-                item_amount = sum(x.subtotal for x in item_line_ids)
-                account_id = journal.capitalizable_debit_account_id.id
-                coa_conac_id =  journal.conac_capitalizable_debit_account_id.id
-                
-                item_id = item_line_ids.mapped('program_code.item_id')
-                if item_id and item_id[0].unam_account_id:
-                    account_id = item_id[0].unam_account_id.id
-                    coa_conac_id = item_id[0].unam_account_id.coa_conac_id and item_id[0].unam_account_id.coa_conac_id.id or False
-                     
-                lines.append(                                (0, 0, {
-                                 'account_id': journal.capitalizable_credit_account_id.id,
-                                 'coa_conac_id': journal.conac_capitalizable_credit_account_id.id,
-                                 'credit': item_amount,
-                                 'partner_id': partner_id,
-                                 'expense_id': self.id,
-                             }))
-                
-                lines.append((0, 0, {
-                                     'account_id': account_id,
-                                     'coa_conac_id': coa_conac_id,
-                                     'debit': item_amount,
-                                     'partner_id': partner_id,
-                                     'expense_id': self.id,
-                                 }))
-
-                #===== Group 513 ======#
-            item_line_ids = self.verifcation_expense_ids.filtered(lambda x:x.program_code and x.program_code.item_id.item =='513' )
-            if item_line_ids:
-
-                if not journal.capitalizable_credit_account_id or not journal.conac_capitalizable_credit_account_id \
-                        or not journal.capitalizable_debit_account_id or not journal.conac_capitalizable_debit_account_id:
-                    if self.env.user.lang == 'es_MX':
-                        raise ValidationError(
-                            _("Por favor configure la cuenta UNAM y CONAC en diario!"))
-                    else:
-                        raise ValidationError(
-                            _("Please configure UNAM and CONAC account in journal!"))
-                
-                item_amount = sum(x.subtotal for x in item_line_ids)
-                account_id = journal.capitalizable_debit_account_id.id
-                coa_conac_id =  journal.conac_capitalizable_debit_account_id.id
-                
-                item_id = item_line_ids.mapped('program_code.item_id')
-                if item_id and item_id[0].unam_account_id:
-                    account_id = item_id[0].unam_account_id.id
-                    coa_conac_id = item_id[0].unam_account_id.coa_conac_id and item_id[0].unam_account_id.coa_conac_id.id or False
-                     
-                lines.append(                                (0, 0, {
-                                 'account_id': journal.capitalizable_credit_account_id.id,
-                                 'coa_conac_id': journal.conac_capitalizable_credit_account_id.id,
-                                 'credit': item_amount,
-                                 'partner_id': partner_id,
-                                 'expense_id': self.id,
-                             }))
-                
-                lines.append((0, 0, {
-                                     'account_id': account_id,
-                                     'coa_conac_id': coa_conac_id,
-                                     'debit': item_amount,
-                                     'partner_id': partner_id,
-                                     'expense_id': self.id,
-                                 }))
-
-                #===== Group 514 ======#
-            item_line_ids = self.verifcation_expense_ids.filtered(lambda x:x.program_code and x.program_code.item_id.item =='514' )
-            if item_line_ids:
-
-                if not journal.capitalizable_credit_account_id or not journal.conac_capitalizable_credit_account_id \
-                        or not journal.capitalizable_debit_account_id or not journal.conac_capitalizable_debit_account_id:
-                    if self.env.user.lang == 'es_MX':
-                        raise ValidationError(
-                            _("Por favor configure la cuenta UNAM y CONAC en diario!"))
-                    else:
-                        raise ValidationError(
-                            _("Please configure UNAM and CONAC account in journal!"))
-                
-                item_amount = sum(x.subtotal for x in item_line_ids)
-                account_id = journal.capitalizable_debit_account_id.id
-                coa_conac_id =  journal.conac_capitalizable_debit_account_id.id
-                
-                item_id = item_line_ids.mapped('program_code.item_id')
-                if item_id and item_id[0].unam_account_id:
-                    account_id = item_id[0].unam_account_id.id
-                    coa_conac_id = item_id[0].unam_account_id.coa_conac_id and item_id[0].unam_account_id.coa_conac_id.id or False
-                     
-                lines.append(                                (0, 0, {
-                                 'account_id': journal.capitalizable_credit_account_id.id,
-                                 'coa_conac_id': journal.conac_capitalizable_credit_account_id.id,
-                                 'credit': item_amount,
-                                 'partner_id': partner_id,
-                                 'expense_id': self.id,
-                             }))
-                
-                lines.append((0, 0, {
-                                     'account_id': account_id,
-                                     'coa_conac_id': coa_conac_id,
-                                     'debit': item_amount,
-                                     'partner_id': partner_id,
-                                     'expense_id': self.id,
-                                 }))
-
-                #===== Group 515 ======#
-            item_line_ids = self.verifcation_expense_ids.filtered(lambda x:x.program_code and x.program_code.item_id.item =='515' )
-            if item_line_ids:
-
-                if not journal.capitalizable_credit_account_id or not journal.conac_capitalizable_credit_account_id \
-                        or not journal.capitalizable_debit_account_id or not journal.conac_capitalizable_debit_account_id:
-                    if self.env.user.lang == 'es_MX':
-                        raise ValidationError(
-                            _("Por favor configure la cuenta UNAM y CONAC en diario!"))
-                    else:
-                        raise ValidationError(
-                            _("Please configure UNAM and CONAC account in journal!"))
-                
-                item_amount = sum(x.subtotal for x in item_line_ids)
-                account_id = journal.capitalizable_debit_account_id.id
-                coa_conac_id =  journal.conac_capitalizable_debit_account_id.id
-                
-                item_id = item_line_ids.mapped('program_code.item_id')
-                if item_id and item_id[0].unam_account_id:
-                    account_id = item_id[0].unam_account_id.id
-                    coa_conac_id = item_id[0].unam_account_id.coa_conac_id and item_id[0].unam_account_id.coa_conac_id.id or False
-                     
-                lines.append(                                (0, 0, {
-                                 'account_id': journal.capitalizable_credit_account_id.id,
-                                 'coa_conac_id': journal.conac_capitalizable_credit_account_id.id,
-                                 'credit': item_amount,
-                                 'partner_id': partner_id,
-                                 'expense_id': self.id,
-                             }))
-                
-                lines.append((0, 0, {
-                                     'account_id': account_id,
-                                     'coa_conac_id': coa_conac_id,
-                                     'debit': item_amount,
-                                     'partner_id': partner_id,
-                                     'expense_id': self.id,
-                                 }))
-                #===== Group 516 ======#
-            item_line_ids = self.verifcation_expense_ids.filtered(lambda x:x.program_code and x.program_code.item_id.item =='516' )
-            if item_line_ids:
-
-                if not journal.capitalizable_credit_account_id or not journal.conac_capitalizable_credit_account_id \
-                        or not journal.capitalizable_debit_account_id or not journal.conac_capitalizable_debit_account_id:
-                    if self.env.user.lang == 'es_MX':
-                        raise ValidationError(
-                            _("Por favor configure la cuenta UNAM y CONAC en diario!"))
-                    else:
-                        raise ValidationError(
-                            _("Please configure UNAM and CONAC account in journal!"))
-                
-                item_amount = sum(x.subtotal for x in item_line_ids)
-                account_id = journal.capitalizable_debit_account_id.id
-                coa_conac_id =  journal.conac_capitalizable_debit_account_id.id
-                
-                item_id = item_line_ids.mapped('program_code.item_id')
-                if item_id and item_id[0].unam_account_id:
-                    account_id = item_id[0].unam_account_id.id
-                    coa_conac_id = item_id[0].unam_account_id.coa_conac_id and item_id[0].unam_account_id.coa_conac_id.id or False
-                     
-                lines.append(                                (0, 0, {
-                                 'account_id': journal.capitalizable_credit_account_id.id,
-                                 'coa_conac_id': journal.conac_capitalizable_credit_account_id.id,
-                                 'credit': item_amount,
-                                 'partner_id': partner_id,
-                                 'expense_id': self.id,
-                             }))
-                
-                lines.append((0, 0, {
-                                     'account_id': account_id,
-                                     'coa_conac_id': coa_conac_id,
-                                     'debit': item_amount,
-                                     'partner_id': partner_id,
-                                     'expense_id': self.id,
-                                 }))
-                #===== Group 517 ======#
-            item_line_ids = self.verifcation_expense_ids.filtered(lambda x:x.program_code and x.program_code.item_id.item =='517' )
-            if item_line_ids:
-
-                if not journal.capitalizable_credit_account_id or not journal.conac_capitalizable_credit_account_id \
-                        or not journal.capitalizable_debit_account_id or not journal.conac_capitalizable_debit_account_id:
-                    if self.env.user.lang == 'es_MX':
-                        raise ValidationError(
-                            _("Por favor configure la cuenta UNAM y CONAC en diario!"))
-                    else:
-                        raise ValidationError(
-                            _("Please configure UNAM and CONAC account in journal!"))
-                
-                item_amount = sum(x.subtotal for x in item_line_ids)
-                account_id = journal.capitalizable_debit_account_id.id
-                coa_conac_id =  journal.conac_capitalizable_debit_account_id.id
-                
-                item_id = item_line_ids.mapped('program_code.item_id')
-                if item_id and item_id[0].unam_account_id:
-                    account_id = item_id[0].unam_account_id.id
-                    coa_conac_id = item_id[0].unam_account_id.coa_conac_id and item_id[0].unam_account_id.coa_conac_id.id or False
-                     
-                lines.append(                                (0, 0, {
-                                 'account_id': journal.capitalizable_credit_account_id.id,
-                                 'coa_conac_id': journal.conac_capitalizable_credit_account_id.id,
-                                 'credit': item_amount,
-                                 'partner_id': partner_id,
-                                 'expense_id': self.id,
-                             }))
-                
-                lines.append((0, 0, {
-                                     'account_id': account_id,
-                                     'coa_conac_id': coa_conac_id,
-                                     'debit': item_amount,
-                                     'partner_id': partner_id,
-                                     'expense_id': self.id,
-                                 }))
-                #===== Group 521 ======#
-            item_line_ids = self.verifcation_expense_ids.filtered(lambda x:x.program_code and x.program_code.item_id.item =='521' )
-            if item_line_ids:
-
-                if not journal.capitalizable_credit_account_id or not journal.conac_capitalizable_credit_account_id \
-                        or not journal.capitalizable_debit_account_id or not journal.conac_capitalizable_debit_account_id:
-                    if self.env.user.lang == 'es_MX':
-                        raise ValidationError(
-                            _("Por favor configure la cuenta UNAM y CONAC en diario!"))
-                    else:
-                        raise ValidationError(
-                            _("Please configure UNAM and CONAC account in journal!"))
-                
-                item_amount = sum(x.subtotal for x in item_line_ids)
-                account_id = journal.capitalizable_debit_account_id.id
-                coa_conac_id =  journal.conac_capitalizable_debit_account_id.id
-                
-                item_id = item_line_ids.mapped('program_code.item_id')
-                if item_id and item_id[0].unam_account_id:
-                    account_id = item_id[0].unam_account_id.id
-                    coa_conac_id = item_id[0].unam_account_id.coa_conac_id and item_id[0].unam_account_id.coa_conac_id.id or False
-                     
-                lines.append(                                (0, 0, {
-                                 'account_id': journal.capitalizable_credit_account_id.id,
-                                 'coa_conac_id': journal.conac_capitalizable_credit_account_id.id,
-                                 'credit': item_amount,
-                                 'partner_id': partner_id,
-                                 'expense_id': self.id,
-                             }))
-                
-                lines.append((0, 0, {
-                                     'account_id': account_id,
-                                     'coa_conac_id': coa_conac_id,
-                                     'debit': item_amount,
-                                     'partner_id': partner_id,
-                                     'expense_id': self.id,
-                                 }))
-                #===== Group 523 ======#
-            item_line_ids = self.verifcation_expense_ids.filtered(lambda x:x.program_code and x.program_code.item_id.item =='523' )
-            if item_line_ids:
-
-                if not journal.capitalizable_credit_account_id or not journal.conac_capitalizable_credit_account_id \
-                        or not journal.capitalizable_debit_account_id or not journal.conac_capitalizable_debit_account_id:
-                    if self.env.user.lang == 'es_MX':
-                        raise ValidationError(
-                            _("Por favor configure la cuenta UNAM y CONAC en diario!"))
-                    else:
-                        raise ValidationError(
-                            _("Please configure UNAM and CONAC account in journal!"))
-                
-                item_amount = sum(x.subtotal for x in item_line_ids)
-                account_id = journal.capitalizable_debit_account_id.id
-                coa_conac_id =  journal.conac_capitalizable_debit_account_id.id
-                
-                item_id = item_line_ids.mapped('program_code.item_id')
-                if item_id and item_id[0].unam_account_id:
-                    account_id = item_id[0].unam_account_id.id
-                    coa_conac_id = item_id[0].unam_account_id.coa_conac_id and item_id[0].unam_account_id.coa_conac_id.id or False
-                     
-                lines.append(                                (0, 0, {
-                                 'account_id': journal.capitalizable_credit_account_id.id,
-                                 'coa_conac_id': journal.conac_capitalizable_credit_account_id.id,
-                                 'credit': item_amount,
-                                 'partner_id': partner_id,
-                                 'expense_id': self.id,
-                             }))
-                
-                lines.append((0, 0, {
-                                     'account_id': account_id,
-                                     'coa_conac_id': coa_conac_id,
-                                     'debit': item_amount,
-                                     'partner_id': partner_id,
-                                     'expense_id': self.id,
-                                 }))
-                #===== Group 524 ======#
-            item_line_ids = self.verifcation_expense_ids.filtered(lambda x:x.program_code and x.program_code.item_id.item =='524' )
-            if item_line_ids:
-
-                if not journal.capitalizable_credit_account_id or not journal.conac_capitalizable_credit_account_id \
-                        or not journal.capitalizable_debit_account_id or not journal.conac_capitalizable_debit_account_id:
-                    if self.env.user.lang == 'es_MX':
-                        raise ValidationError(
-                            _("Por favor configure la cuenta UNAM y CONAC en diario!"))
-                    else:
-                        raise ValidationError(
-                            _("Please configure UNAM and CONAC account in journal!"))
-                
-                item_amount = sum(x.subtotal for x in item_line_ids)
-                account_id = journal.capitalizable_debit_account_id.id
-                coa_conac_id =  journal.conac_capitalizable_debit_account_id.id
-                
-                item_id = item_line_ids.mapped('program_code.item_id')
-                if item_id and item_id[0].unam_account_id:
-                    account_id = item_id[0].unam_account_id.id
-                    coa_conac_id = item_id[0].unam_account_id.coa_conac_id and item_id[0].unam_account_id.coa_conac_id.id or False
-                     
-                lines.append(                                (0, 0, {
-                                 'account_id': journal.capitalizable_credit_account_id.id,
-                                 'coa_conac_id': journal.conac_capitalizable_credit_account_id.id,
-                                 'credit': item_amount,
-                                 'partner_id': partner_id,
-                                 'expense_id': self.id,
-                             }))
-                
-                lines.append((0, 0, {
-                                     'account_id': account_id,
-                                     'coa_conac_id': coa_conac_id,
-                                     'debit': item_amount,
-                                     'partner_id': partner_id,
-                                     'expense_id': self.id,
-                                 }))
-                #===== Group 531 ======#
-            item_line_ids = self.verifcation_expense_ids.filtered(lambda x:x.program_code and x.program_code.item_id.item =='531')
-            if item_line_ids:
-
-                if not journal.capitalizable_credit_account_id or not journal.conac_capitalizable_credit_account_id \
-                        or not journal.capitalizable_debit_account_id or not journal.conac_capitalizable_debit_account_id:
-                    if self.env.user.lang == 'es_MX':
-                        raise ValidationError(
-                            _("Por favor configure la cuenta UNAM y CONAC en diario!"))
-                    else:
-                        raise ValidationError(
-                            _("Please configure UNAM and CONAC account in journal!"))
-                
-                item_amount = sum(x.subtotal for x in item_line_ids)
-                account_id = journal.capitalizable_debit_account_id.id
-                coa_conac_id =  journal.conac_capitalizable_debit_account_id.id
-                
-                item_id = item_line_ids.mapped('program_code.item_id')
-                if item_id and item_id[0].unam_account_id:
-                    account_id = item_id[0].unam_account_id.id
-                    coa_conac_id = item_id[0].unam_account_id.coa_conac_id and item_id[0].unam_account_id.coa_conac_id.id or False
-                     
-                lines.append(                                (0, 0, {
-                                 'account_id': journal.capitalizable_credit_account_id.id,
-                                 'coa_conac_id': journal.conac_capitalizable_credit_account_id.id,
-                                 'credit': item_amount,
-                                 'partner_id': partner_id,
-                                 'expense_id': self.id,
-                             }))
-                
-                lines.append((0, 0, {
-                                     'account_id': account_id,
-                                     'coa_conac_id': coa_conac_id,
-                                     'debit': item_amount,
-                                     'partner_id': partner_id,
-                                     'expense_id': self.id,
-                                 }))
+#                 #===== Group 512 ======#
+#             item_line_ids = self.verifcation_expense_ids.filtered(lambda x:x.program_code and x.program_code.item_id.item =='512' )
+#             if item_line_ids:
+# 
+#                 if not journal.capitalizable_credit_account_id or not journal.conac_capitalizable_credit_account_id \
+#                         or not journal.capitalizable_debit_account_id or not journal.conac_capitalizable_debit_account_id:
+#                     if self.env.user.lang == 'es_MX':
+#                         raise ValidationError(
+#                             _("Por favor configure la cuenta UNAM y CONAC en diario!"))
+#                     else:
+#                         raise ValidationError(
+#                             _("Please configure UNAM and CONAC account in journal!"))
+#                 
+#                 item_amount = sum(x.subtotal for x in item_line_ids)
+#                 account_id = journal.capitalizable_debit_account_id.id
+#                 coa_conac_id =  journal.conac_capitalizable_debit_account_id.id
+#                 
+# #                 item_id = item_line_ids.mapped('program_code.item_id')
+# #                 if item_id and item_id[0].unam_account_id:
+# #                     account_id = item_id[0].unam_account_id.id
+# #                     coa_conac_id = item_id[0].unam_account_id.coa_conac_id and item_id[0].unam_account_id.coa_conac_id.id or False
+#                      
+#                 lines.append(                                (0, 0, {
+#                                  'account_id': journal.capitalizable_credit_account_id.id,
+#                                  'coa_conac_id': journal.conac_capitalizable_credit_account_id.id,
+#                                  'credit': item_amount,
+#                                  'partner_id': partner_id,
+#                                  'expense_id': self.id,
+#                              }))
+#                 
+#                 lines.append((0, 0, {
+#                                      'account_id': account_id,
+#                                      'coa_conac_id': coa_conac_id,
+#                                      'debit': item_amount,
+#                                      'partner_id': partner_id,
+#                                      'expense_id': self.id,
+#                                  }))
+# 
+#                 #===== Group 513 ======#
+#             item_line_ids = self.verifcation_expense_ids.filtered(lambda x:x.program_code and x.program_code.item_id.item =='513' )
+#             if item_line_ids:
+# 
+#                 if not journal.capitalizable_credit_account_id or not journal.conac_capitalizable_credit_account_id \
+#                         or not journal.capitalizable_debit_account_id or not journal.conac_capitalizable_debit_account_id:
+#                     if self.env.user.lang == 'es_MX':
+#                         raise ValidationError(
+#                             _("Por favor configure la cuenta UNAM y CONAC en diario!"))
+#                     else:
+#                         raise ValidationError(
+#                             _("Please configure UNAM and CONAC account in journal!"))
+#                 
+#                 item_amount = sum(x.subtotal for x in item_line_ids)
+#                 account_id = journal.capitalizable_debit_account_id.id
+#                 coa_conac_id =  journal.conac_capitalizable_debit_account_id.id
+#                 
+#                 item_id = item_line_ids.mapped('program_code.item_id')
+#                 if item_id and item_id[0].unam_account_id:
+#                     account_id = item_id[0].unam_account_id.id
+#                     coa_conac_id = item_id[0].unam_account_id.coa_conac_id and item_id[0].unam_account_id.coa_conac_id.id or False
+#                      
+#                 lines.append(                                (0, 0, {
+#                                  'account_id': journal.capitalizable_credit_account_id.id,
+#                                  'coa_conac_id': journal.conac_capitalizable_credit_account_id.id,
+#                                  'credit': item_amount,
+#                                  'partner_id': partner_id,
+#                                  'expense_id': self.id,
+#                              }))
+#                 
+#                 lines.append((0, 0, {
+#                                      'account_id': account_id,
+#                                      'coa_conac_id': coa_conac_id,
+#                                      'debit': item_amount,
+#                                      'partner_id': partner_id,
+#                                      'expense_id': self.id,
+#                                  }))
+# 
+#                 #===== Group 514 ======#
+#             item_line_ids = self.verifcation_expense_ids.filtered(lambda x:x.program_code and x.program_code.item_id.item =='514' )
+#             if item_line_ids:
+# 
+#                 if not journal.capitalizable_credit_account_id or not journal.conac_capitalizable_credit_account_id \
+#                         or not journal.capitalizable_debit_account_id or not journal.conac_capitalizable_debit_account_id:
+#                     if self.env.user.lang == 'es_MX':
+#                         raise ValidationError(
+#                             _("Por favor configure la cuenta UNAM y CONAC en diario!"))
+#                     else:
+#                         raise ValidationError(
+#                             _("Please configure UNAM and CONAC account in journal!"))
+#                 
+#                 item_amount = sum(x.subtotal for x in item_line_ids)
+#                 account_id = journal.capitalizable_debit_account_id.id
+#                 coa_conac_id =  journal.conac_capitalizable_debit_account_id.id
+#                 
+#                 item_id = item_line_ids.mapped('program_code.item_id')
+#                 if item_id and item_id[0].unam_account_id:
+#                     account_id = item_id[0].unam_account_id.id
+#                     coa_conac_id = item_id[0].unam_account_id.coa_conac_id and item_id[0].unam_account_id.coa_conac_id.id or False
+#                      
+#                 lines.append(                                (0, 0, {
+#                                  'account_id': journal.capitalizable_credit_account_id.id,
+#                                  'coa_conac_id': journal.conac_capitalizable_credit_account_id.id,
+#                                  'credit': item_amount,
+#                                  'partner_id': partner_id,
+#                                  'expense_id': self.id,
+#                              }))
+#                 
+#                 lines.append((0, 0, {
+#                                      'account_id': account_id,
+#                                      'coa_conac_id': coa_conac_id,
+#                                      'debit': item_amount,
+#                                      'partner_id': partner_id,
+#                                      'expense_id': self.id,
+#                                  }))
+# 
+#                 #===== Group 515 ======#
+#             item_line_ids = self.verifcation_expense_ids.filtered(lambda x:x.program_code and x.program_code.item_id.item =='515' )
+#             if item_line_ids:
+# 
+#                 if not journal.capitalizable_credit_account_id or not journal.conac_capitalizable_credit_account_id \
+#                         or not journal.capitalizable_debit_account_id or not journal.conac_capitalizable_debit_account_id:
+#                     if self.env.user.lang == 'es_MX':
+#                         raise ValidationError(
+#                             _("Por favor configure la cuenta UNAM y CONAC en diario!"))
+#                     else:
+#                         raise ValidationError(
+#                             _("Please configure UNAM and CONAC account in journal!"))
+#                 
+#                 item_amount = sum(x.subtotal for x in item_line_ids)
+#                 account_id = journal.capitalizable_debit_account_id.id
+#                 coa_conac_id =  journal.conac_capitalizable_debit_account_id.id
+#                 
+#                 item_id = item_line_ids.mapped('program_code.item_id')
+#                 if item_id and item_id[0].unam_account_id:
+#                     account_id = item_id[0].unam_account_id.id
+#                     coa_conac_id = item_id[0].unam_account_id.coa_conac_id and item_id[0].unam_account_id.coa_conac_id.id or False
+#                      
+#                 lines.append(                                (0, 0, {
+#                                  'account_id': journal.capitalizable_credit_account_id.id,
+#                                  'coa_conac_id': journal.conac_capitalizable_credit_account_id.id,
+#                                  'credit': item_amount,
+#                                  'partner_id': partner_id,
+#                                  'expense_id': self.id,
+#                              }))
+#                 
+#                 lines.append((0, 0, {
+#                                      'account_id': account_id,
+#                                      'coa_conac_id': coa_conac_id,
+#                                      'debit': item_amount,
+#                                      'partner_id': partner_id,
+#                                      'expense_id': self.id,
+#                                  }))
+#                 #===== Group 516 ======#
+#             item_line_ids = self.verifcation_expense_ids.filtered(lambda x:x.program_code and x.program_code.item_id.item =='516' )
+#             if item_line_ids:
+# 
+#                 if not journal.capitalizable_credit_account_id or not journal.conac_capitalizable_credit_account_id \
+#                         or not journal.capitalizable_debit_account_id or not journal.conac_capitalizable_debit_account_id:
+#                     if self.env.user.lang == 'es_MX':
+#                         raise ValidationError(
+#                             _("Por favor configure la cuenta UNAM y CONAC en diario!"))
+#                     else:
+#                         raise ValidationError(
+#                             _("Please configure UNAM and CONAC account in journal!"))
+#                 
+#                 item_amount = sum(x.subtotal for x in item_line_ids)
+#                 account_id = journal.capitalizable_debit_account_id.id
+#                 coa_conac_id =  journal.conac_capitalizable_debit_account_id.id
+#                 
+#                 item_id = item_line_ids.mapped('program_code.item_id')
+#                 if item_id and item_id[0].unam_account_id:
+#                     account_id = item_id[0].unam_account_id.id
+#                     coa_conac_id = item_id[0].unam_account_id.coa_conac_id and item_id[0].unam_account_id.coa_conac_id.id or False
+#                      
+#                 lines.append(                                (0, 0, {
+#                                  'account_id': journal.capitalizable_credit_account_id.id,
+#                                  'coa_conac_id': journal.conac_capitalizable_credit_account_id.id,
+#                                  'credit': item_amount,
+#                                  'partner_id': partner_id,
+#                                  'expense_id': self.id,
+#                              }))
+#                 
+#                 lines.append((0, 0, {
+#                                      'account_id': account_id,
+#                                      'coa_conac_id': coa_conac_id,
+#                                      'debit': item_amount,
+#                                      'partner_id': partner_id,
+#                                      'expense_id': self.id,
+#                                  }))
+#                 #===== Group 517 ======#
+#             item_line_ids = self.verifcation_expense_ids.filtered(lambda x:x.program_code and x.program_code.item_id.item =='517' )
+#             if item_line_ids:
+# 
+#                 if not journal.capitalizable_credit_account_id or not journal.conac_capitalizable_credit_account_id \
+#                         or not journal.capitalizable_debit_account_id or not journal.conac_capitalizable_debit_account_id:
+#                     if self.env.user.lang == 'es_MX':
+#                         raise ValidationError(
+#                             _("Por favor configure la cuenta UNAM y CONAC en diario!"))
+#                     else:
+#                         raise ValidationError(
+#                             _("Please configure UNAM and CONAC account in journal!"))
+#                 
+#                 item_amount = sum(x.subtotal for x in item_line_ids)
+#                 account_id = journal.capitalizable_debit_account_id.id
+#                 coa_conac_id =  journal.conac_capitalizable_debit_account_id.id
+#                 
+#                 item_id = item_line_ids.mapped('program_code.item_id')
+#                 if item_id and item_id[0].unam_account_id:
+#                     account_id = item_id[0].unam_account_id.id
+#                     coa_conac_id = item_id[0].unam_account_id.coa_conac_id and item_id[0].unam_account_id.coa_conac_id.id or False
+#                      
+#                 lines.append(                                (0, 0, {
+#                                  'account_id': journal.capitalizable_credit_account_id.id,
+#                                  'coa_conac_id': journal.conac_capitalizable_credit_account_id.id,
+#                                  'credit': item_amount,
+#                                  'partner_id': partner_id,
+#                                  'expense_id': self.id,
+#                              }))
+#                 
+#                 lines.append((0, 0, {
+#                                      'account_id': account_id,
+#                                      'coa_conac_id': coa_conac_id,
+#                                      'debit': item_amount,
+#                                      'partner_id': partner_id,
+#                                      'expense_id': self.id,
+#                                  }))
+#                 #===== Group 521 ======#
+#             item_line_ids = self.verifcation_expense_ids.filtered(lambda x:x.program_code and x.program_code.item_id.item =='521' )
+#             if item_line_ids:
+# 
+#                 if not journal.capitalizable_credit_account_id or not journal.conac_capitalizable_credit_account_id \
+#                         or not journal.capitalizable_debit_account_id or not journal.conac_capitalizable_debit_account_id:
+#                     if self.env.user.lang == 'es_MX':
+#                         raise ValidationError(
+#                             _("Por favor configure la cuenta UNAM y CONAC en diario!"))
+#                     else:
+#                         raise ValidationError(
+#                             _("Please configure UNAM and CONAC account in journal!"))
+#                 
+#                 item_amount = sum(x.subtotal for x in item_line_ids)
+#                 account_id = journal.capitalizable_debit_account_id.id
+#                 coa_conac_id =  journal.conac_capitalizable_debit_account_id.id
+#                 
+#                 item_id = item_line_ids.mapped('program_code.item_id')
+#                 if item_id and item_id[0].unam_account_id:
+#                     account_id = item_id[0].unam_account_id.id
+#                     coa_conac_id = item_id[0].unam_account_id.coa_conac_id and item_id[0].unam_account_id.coa_conac_id.id or False
+#                      
+#                 lines.append(                                (0, 0, {
+#                                  'account_id': journal.capitalizable_credit_account_id.id,
+#                                  'coa_conac_id': journal.conac_capitalizable_credit_account_id.id,
+#                                  'credit': item_amount,
+#                                  'partner_id': partner_id,
+#                                  'expense_id': self.id,
+#                              }))
+#                 
+#                 lines.append((0, 0, {
+#                                      'account_id': account_id,
+#                                      'coa_conac_id': coa_conac_id,
+#                                      'debit': item_amount,
+#                                      'partner_id': partner_id,
+#                                      'expense_id': self.id,
+#                                  }))
+#                 #===== Group 523 ======#
+#             item_line_ids = self.verifcation_expense_ids.filtered(lambda x:x.program_code and x.program_code.item_id.item =='523' )
+#             if item_line_ids:
+# 
+#                 if not journal.capitalizable_credit_account_id or not journal.conac_capitalizable_credit_account_id \
+#                         or not journal.capitalizable_debit_account_id or not journal.conac_capitalizable_debit_account_id:
+#                     if self.env.user.lang == 'es_MX':
+#                         raise ValidationError(
+#                             _("Por favor configure la cuenta UNAM y CONAC en diario!"))
+#                     else:
+#                         raise ValidationError(
+#                             _("Please configure UNAM and CONAC account in journal!"))
+#                 
+#                 item_amount = sum(x.subtotal for x in item_line_ids)
+#                 account_id = journal.capitalizable_debit_account_id.id
+#                 coa_conac_id =  journal.conac_capitalizable_debit_account_id.id
+#                 
+#                 item_id = item_line_ids.mapped('program_code.item_id')
+#                 if item_id and item_id[0].unam_account_id:
+#                     account_id = item_id[0].unam_account_id.id
+#                     coa_conac_id = item_id[0].unam_account_id.coa_conac_id and item_id[0].unam_account_id.coa_conac_id.id or False
+#                      
+#                 lines.append(                                (0, 0, {
+#                                  'account_id': journal.capitalizable_credit_account_id.id,
+#                                  'coa_conac_id': journal.conac_capitalizable_credit_account_id.id,
+#                                  'credit': item_amount,
+#                                  'partner_id': partner_id,
+#                                  'expense_id': self.id,
+#                              }))
+#                 
+#                 lines.append((0, 0, {
+#                                      'account_id': account_id,
+#                                      'coa_conac_id': coa_conac_id,
+#                                      'debit': item_amount,
+#                                      'partner_id': partner_id,
+#                                      'expense_id': self.id,
+#                                  }))
+#                 #===== Group 524 ======#
+#             item_line_ids = self.verifcation_expense_ids.filtered(lambda x:x.program_code and x.program_code.item_id.item =='524' )
+#             if item_line_ids:
+# 
+#                 if not journal.capitalizable_credit_account_id or not journal.conac_capitalizable_credit_account_id \
+#                         or not journal.capitalizable_debit_account_id or not journal.conac_capitalizable_debit_account_id:
+#                     if self.env.user.lang == 'es_MX':
+#                         raise ValidationError(
+#                             _("Por favor configure la cuenta UNAM y CONAC en diario!"))
+#                     else:
+#                         raise ValidationError(
+#                             _("Please configure UNAM and CONAC account in journal!"))
+#                 
+#                 item_amount = sum(x.subtotal for x in item_line_ids)
+#                 account_id = journal.capitalizable_debit_account_id.id
+#                 coa_conac_id =  journal.conac_capitalizable_debit_account_id.id
+#                 
+#                 item_id = item_line_ids.mapped('program_code.item_id')
+#                 if item_id and item_id[0].unam_account_id:
+#                     account_id = item_id[0].unam_account_id.id
+#                     coa_conac_id = item_id[0].unam_account_id.coa_conac_id and item_id[0].unam_account_id.coa_conac_id.id or False
+#                      
+#                 lines.append(                                (0, 0, {
+#                                  'account_id': journal.capitalizable_credit_account_id.id,
+#                                  'coa_conac_id': journal.conac_capitalizable_credit_account_id.id,
+#                                  'credit': item_amount,
+#                                  'partner_id': partner_id,
+#                                  'expense_id': self.id,
+#                              }))
+#                 
+#                 lines.append((0, 0, {
+#                                      'account_id': account_id,
+#                                      'coa_conac_id': coa_conac_id,
+#                                      'debit': item_amount,
+#                                      'partner_id': partner_id,
+#                                      'expense_id': self.id,
+#                                  }))
+#                 #===== Group 531 ======#
+#             item_line_ids = self.verifcation_expense_ids.filtered(lambda x:x.program_code and x.program_code.item_id.item =='531')
+#             if item_line_ids:
+# 
+#                 if not journal.capitalizable_credit_account_id or not journal.conac_capitalizable_credit_account_id \
+#                         or not journal.capitalizable_debit_account_id or not journal.conac_capitalizable_debit_account_id:
+#                     if self.env.user.lang == 'es_MX':
+#                         raise ValidationError(
+#                             _("Por favor configure la cuenta UNAM y CONAC en diario!"))
+#                     else:
+#                         raise ValidationError(
+#                             _("Please configure UNAM and CONAC account in journal!"))
+#                 
+#                 item_amount = sum(x.subtotal for x in item_line_ids)
+#                 account_id = journal.capitalizable_debit_account_id.id
+#                 coa_conac_id =  journal.conac_capitalizable_debit_account_id.id
+#                 
+#                 item_id = item_line_ids.mapped('program_code.item_id')
+#                 if item_id and item_id[0].unam_account_id:
+#                     account_id = item_id[0].unam_account_id.id
+#                     coa_conac_id = item_id[0].unam_account_id.coa_conac_id and item_id[0].unam_account_id.coa_conac_id.id or False
+#                      
+#                 lines.append(                                (0, 0, {
+#                                  'account_id': journal.capitalizable_credit_account_id.id,
+#                                  'coa_conac_id': journal.conac_capitalizable_credit_account_id.id,
+#                                  'credit': item_amount,
+#                                  'partner_id': partner_id,
+#                                  'expense_id': self.id,
+#                              }))
+#                 
+#                 lines.append((0, 0, {
+#                                      'account_id': account_id,
+#                                      'coa_conac_id': coa_conac_id,
+#                                      'debit': item_amount,
+#                                      'partner_id': partner_id,
+#                                      'expense_id': self.id,
+#                                  }))
             
             unam_move_val = {'ref': self.display_name,  'conac_move': True,
                              'date': today, 'journal_id': journal.id, 'company_id': self.env.user.company_id.id,

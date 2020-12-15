@@ -150,7 +150,7 @@
                     </div>
                     <div class="col-2" t-if="o.project_number_id.name_agreement" name="agreement_name">
                         <strong>Agreement(s):</strong>
-                        <p class="m-0"   t-field="o.project_number_id.name_agreement"/>
+                        <p class="m-0" t-field="o.agreement_number"/>
                     </div>
                     <div class="col-3" t-if="o.project_number_id.agreement_type_id" name="agreement_name">
                         <strong>Agreement Type:</strong>

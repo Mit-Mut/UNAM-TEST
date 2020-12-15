@@ -44,8 +44,6 @@ class ProjectRegistry(models.Model):
 
     is_code_create = fields.Boolean('Code Created',copy=False,default=False)
     
-    number_agreement = fields.Char("Agreement Number")
-    name_agreement = fields.Text("Agreement Name")
     agreement_type_id = fields.Many2one("agreement.type", "Agreement Type")
 
     resource_type = fields.Selection(
@@ -71,11 +69,46 @@ class ProjectRegistry(models.Model):
         'project.ministrations', 'project_id', string='Project Ministrations')
 
     custom_stage_id = fields.Many2one('project.custom.stage','Stage')
-    custom_stage_description = fields.Text(related='stage_identifier_id.description',string="Description Stage")
+    custom_stage_description = fields.Text(related='custom_stage_id.description',string="Description Stage")
     custom_project_type_id = fields.Many2one('project.type.custom','Project Type Identifier')
     
     program_code_ids = fields.Many2many('program.code','program_code_project_rel','program_id','project_id',compute="get_program_ids")
-    
+    project_status = fields.Selection(
+        [('open', 'Open'), ('close', 'Close')], string="Project Status")
+
+    base_id = fields.Many2one('bases.collaboration','Type of Agreement')
+
+    @api.onchange('custom_stage_id')
+    def onchange_custom_stage_id(self):
+        if self.custom_stage_id:
+            self.stage_identifier = self.custom_stage_id.name
+            self.desc_stage = self.custom_stage_id.description
+        else:
+            self.stage_identifier = ''
+            self.desc_stage = ''
+
+    @api.onchange('custom_project_type_id')
+    def onchange_custom_project_type_id(self):
+        if self.custom_project_type_id:
+            self.project_type_identifier = self.custom_project_type_id.name
+        else:
+            self.project_type_identifier = ''
+
+    @api.onchange('base_id')
+    def onchange_base_id(self):
+        if self.base_id:
+            self.name_agreement = self.base_id.name
+            self.number_agreement = self.base_id.convention_no
+            self.agreement_type = self.base_id and self.base_id.agreement_type_id and self.base_id.agreement_type_id.code or ''
+        else:
+            self.name_agreement = ''
+            self.number_agreement = ''
+            self.agreement_type = ''
+                 
+#     agreement_type = fields.Char(related='base_id.name',stringname='Agreement Type', size=2)
+#     name_agreement = fields.Text(related='base_id.name',string='Name Agreement')
+#     number_agreement = fields.Char(related='base_id.convention_no',string='Number Agreement', size=6)
+        
     @api.depends('is_papiit_project')
     def get_program_ids(self):
         for rec in self:
@@ -238,6 +271,16 @@ class ProjectRegistry(models.Model):
         }
 
     def create_program_code(self):
+        stage_id = False
+        type_id = False
+        stage = self.env['stage'].search([('project_id','=',self.id)],limit=1)
+        if stage:
+            stage_id = stage.id
+            
+        project_type_id = self.env['project.type'].search([('project_id','=',self.id)],limit=1)
+        if project_type_id:
+            type_id = project_type_id.id
+        
         return {
             'type': 'ir.actions.act_window',
             'name': 'Create Program Code',
@@ -246,8 +289,8 @@ class ProjectRegistry(models.Model):
             'target':'new',
             #'domain': [('project_number_id', '=', self.number)],
             'context': {'default_conacyt_project_id': self.id,
-                        'default_stage_id':self.stage_identifier_id and self.stage_identifier_id.id or False,
-                        'default_project_type_id':self.project_type_identifier_id and self.project_type_identifier_id.id or False,
+                        'default_stage_id':stage_id,
+                        'default_project_type_id':type_id,
                         },
         }
         

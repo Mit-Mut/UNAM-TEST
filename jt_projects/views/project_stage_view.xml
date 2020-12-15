@@ -36,13 +36,13 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-<!--         <menuitem id="menu_project_custom_stage" 
+         <menuitem id="menu_project_custom_stage" 
                   name="Stage"  
                   action="action_project_custom_stage"
                   parent="project.menu_project_config"
                   sequence="1"
                   />
- -->
+
 	<!-- Budget Stage -->
 
         <!-- form view for stage model -->
@@ -98,12 +98,12 @@
             <field name="act_window_id" ref="action_project_budget_stage1"/>
         </record>
 
-        <menuitem id="menu_project_budget_stage1" 
+<!--         <menuitem id="menu_project_budget_stage1" 
                   name="Stage"  
                   action="action_project_budget_stage1"
                   parent="project.menu_project_config"
                   sequence="1"
                   />
-	
+ -->	
      </data>
 </odoo>

@@ -418,7 +418,8 @@ class InvestmentOperation(models.Model):
                                 'journal_id', 'opt_id', compute="get_journal_ids")
     is_request_generated = fields.Boolean(default=False, copy=False)
     concept = fields.Text("Application Concept")
-
+    distribution_income_id = fields.Many2one('distribution.of.income','Distribution Income')
+    
     def unlink(self):
         for rec in self:
             if rec.line_state not in ['draft']:

@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
+	<!-- Project Base views-->
+	
+        <!-- project.project form view inherited -->
+        <record id="budget_project_project_view_form_inherit" model="ir.ui.view">
+            <field name="name">budget.project.project.form.view.inherit</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="jt_budget_mgmt.budget_project_project_view_form"/>
+            <field name="arch" type="xml">
+            	<field name="agreement_type" position="before">
+            		<field name="base_id"/>
+            	</field>
+            </field>
+        </record>
         <record id="project_registry_tree_view" model="ir.ui.view">
             <field name="name">Project Registry List view</field>
             <field name="model">project.project</field>
@@ -61,10 +73,11 @@
                             	<field name="program_code_ids" invisible="1"/>
                             	<field name="program_code" domain="[('id','in',program_code_ids)]"  attrs="{'required':[('is_papiit_project','=',True)],'readonly': [('status', '!=', 'open')]}" />
                                 <field name="project_type" attrs="{'readonly': [('status', '!=', 'open')],'invisible':[('is_papiit_project','=',True)]}"/>
-                                <field name="stage_identifier_id" domain="[('from_project','=',True)]" attrs="{'readonly': [('status', '!=', 'open')]}"/>
+                                <field name="custom_stage_id"  attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="stage_identifier" invisible="1" attrs="{'readonly': [('status', '!=', 'open')]}"/>
+                                <field name="desc_stage" invisible="1"/>
                                 <field name="custom_stage_description" />
-                                <field name="project_type_identifier_id" domain="[('from_project','=',True)]" attrs="{'readonly': [('status', '!=', 'open')]}"/>
+                                <field name="custom_project_type_id" attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="project_type_identifier" invisible="1" attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="number" required="1" attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="responsible_name" required="1" attrs="{'readonly': [('status', '!=', 'open')]}"/>
@@ -80,6 +93,7 @@
                                 <field name="administrative_manager_id" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
                                 <field name="co_responsible_id" />
                                 <field name="co_responsible_rfc"/>
+                                <field name="project_status" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
                             </group>
                             <group>
                                 <field name="proj_start_date" required="1" attrs="{'readonly': [('status', '!=', 'open')]}"/>

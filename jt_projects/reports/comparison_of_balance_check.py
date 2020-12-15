@@ -76,12 +76,12 @@ class ComparisonOfBalanceCheck(models.AbstractModel):
         return [
             {'name': _('Stage / Year')},
             {'name': _(
-                'To be checked as of December / Year [Two years behind the year in which it is consulted]')},
+                'To be checked')},
             {'name': _(
-                'To be checked as of December / Year [One year behind the year in which it is consulted]')},
-            {'name': _('To check Month / Year [In which it is consulted]')},
+                'To be checked')},
+            {'name': _('To check')},
             {'name': _(
-                'Checked in the period January / [Month in which it is consulted]')},
+                'Checked in the period')},
             {'name': _(
                 'Subtotal Stage [Start stage] to [End stage] that was selected')},
             {'name': _('Accounting account of various debtors')},
@@ -90,8 +90,8 @@ class ComparisonOfBalanceCheck(models.AbstractModel):
             {'name': _('Accumulated [Start month-End    month Stages]')},
             {'name': _(
                 'Stage [N of Stage] Accumulated [Months of consultation]')},
-            {'name': _('Total [Vertical]')},
-            {'name': _('Total checked [Horizontal]')},
+            {'name': _('Total')},
+            {'name': _('Total checked')},
         ]
 
     def _format(self, value,figure_type):

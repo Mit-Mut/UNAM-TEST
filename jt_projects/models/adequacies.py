@@ -149,6 +149,61 @@ class ProgramCode(models.Model):
             self.portfolio_id = self.parent_program_id.portfolio_id and self.parent_program_id.portfolio_id.id or False
             
             
+    def _compute_amt(self):
+        bud_line_obj = self.env['expenditure.budget.line']
+        for code in self:
+            lines = bud_line_obj.search([('program_code_id', '=', code.id),
+                                         ('expenditure_budget_id.state', '=', 'validate')])
+            authorized = assigned = st_ass = nd_ass = rd_ass = th_ass = 0
+            for line in lines:
+                if not line.imported_sessional:
+                    authorized += line.authorized
+                assigned += line.assigned
+                if line.start_date and line.end_date and line.start_date.month == 1 and \
+                        line.start_date.day == 1 and line.end_date.month == 3 and line.end_date.day == 31:
+                    st_ass += line.assigned
+                elif line.start_date and line.end_date and line.start_date and line.end_date and line.start_date.month == 4 and \
+                        line.start_date.day == 1 and line.end_date.month == 6 and line.end_date.day == 30:
+                    nd_ass += line.assigned
+                elif line.start_date and line.end_date and line.start_date.month == 7 and \
+                        line.start_date.day == 1 and line.end_date.month == 9 and line.end_date.day == 30:
+                    rd_ass += line.assigned
+                elif line.start_date and line.end_date and line.start_date.month == 10 and \
+                        line.start_date.day == 1 and line.end_date.month == 12 and line.end_date.day == 31:
+                    th_ass += line.assigned
+                    
+            request_lines = self.env['request.transfer'].search([('program_code_id', '=', code.id),('status','=','confirmed')])
+            for req_line in request_lines:
+                if req_line.application_date:
+                    b_s_month = req_line.application_date.month
+                    if b_s_month in (1, 2, 3):
+                        st_ass += req_line.amount_req_tranfer
+                    elif b_s_month in (4, 5, 6):
+                        nd_ass += req_line.amount_req_tranfer
+                    elif b_s_month in (7, 8, 9):
+                        rd_ass += req_line.amount_req_tranfer
+                    elif b_s_month in (10, 11, 12):
+                        th_ass += req_line.amount_req_tranfer
+            
+            verification_lines = self.env['verification.expense.line'].search([('program_code', '=', code.id),('verification_expense_id.status','=','approve')])
+            for req_line in verification_lines:
+                if req_line.verification_expense_id and  req_line.verification_expense_id.reg_date:
+                    b_s_month = req_line.verification_expense_id.reg_date.month
+                    if b_s_month in (1, 2, 3):
+                        st_ass -= req_line.subtotal
+                    elif b_s_month in (4, 5, 6):
+                        nd_ass -= req_line.subtotal
+                    elif b_s_month in (7, 8, 9):
+                        rd_ass -= req_line.subtotal
+                    elif b_s_month in (10, 11, 12):
+                        th_ass -= req_line.subtotal
+                
+            code.total_assigned_amt = assigned
+            code.total_authorized_amt = authorized
+            code.total_1_assigned_amt = st_ass
+            code.total_2_assigned_amt = nd_ass
+            code.total_3_assigned_amt = rd_ass
+            code.total_4_assigned_amt = th_ass
             
             
             

@@ -230,20 +230,29 @@ class InvestmentAccountStatement(models.AbstractModel):
                 total_final += final
 
                 movement = dict(rec._fields['type_of_operation'].selection).get(rec.type_of_operation)
-                if movement=='Opening Balance':
-                    movement = 'Importe de apertura'
-                elif movement=='Increase':
-                    movement = 'Incremento'
-                elif movement=='Retirement':
-                    movement = 'Retiro'
-                elif movement=='Withdrawal for settlement':
-                    movement = 'Retiro por liquidación'
-                elif movement=='Withdrawal Due to Cancellation':
-                    movement = 'Retiro por cancelación'
-                elif movement=='Withdrawal due to closure':
-                    movement = 'Retiro por cierre'
-                elif movement=='Increase by closing':
-                    movement = 'Incremento por cierre'
+
+                if rec.distribution_income_id:
+                    movement = 'Distribution Income'
+                
+                if lang == 'es_MX':
+                    if movement=='Opening Balance':
+                        movement = 'Importe de apertura'
+                    elif movement=='Increase':
+                        movement = 'Incremento'
+                    elif movement=='Retirement':
+                        movement = 'Retiro'
+                    elif movement=='Withdrawal for settlement':
+                        movement = 'Retiro por liquidación'
+                    elif movement=='Withdrawal Due to Cancellation':
+                        movement = 'Retiro por cancelación'
+                    elif movement=='Withdrawal due to closure':
+                        movement = 'Retiro por cierre'
+                    elif movement=='Increase by closing':
+                        movement = 'Incremento por cierre'
+
+                    if rec.distribution_income_id:
+                        movement = 'Distribución de Rendimientos'
+                        
                 header_increment += inc
                 header_withdrawal += withdraw
                 lines.append({

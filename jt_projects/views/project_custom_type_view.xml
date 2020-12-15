@@ -36,13 +36,13 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-<!--         <menuitem id="menu_project_type_custom" 
+         <menuitem id="menu_project_type_custom" 
                   name="Type Of Project"  
                   action="action_project_type_custom"
                   parent="project.menu_project_config"
                   sequence="2"
                   />
- -->
+
 	<!-- Budget Project Type -->
 
     	<record id="project_type_form_view_project" model="ir.ui.view">
@@ -97,12 +97,12 @@
             <field name="act_window_id" ref="action_project_budget_type_custom1"/>
         </record>
 
-        <menuitem id="menu_project_budget_type_custom1" 
+<!--         <menuitem id="menu_project_budget_type_custom1" 
                   name="Type Of Project"  
                   action="action_project_budget_type_custom1"
                   parent="project.menu_project_config"
                   sequence="2"
                   />
-	
+ -->	
      </data>
 </odoo>

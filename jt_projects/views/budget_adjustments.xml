@@ -142,6 +142,11 @@
         action="action_adequacies_project"
         sequence="20"
     />
+    <!-- Domain into the Budget adequacies Menu -->
+		<record id="jt_budget_mgmt.action_adequacies" model="ir.actions.act_window">
+		    <field name="domain">['|',('is_from_project','=',False),('is_send_request','=',True)]</field>
+		</record>
+    
     <!--
     	Program Code View 
      -->

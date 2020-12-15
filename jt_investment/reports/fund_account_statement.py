@@ -209,6 +209,10 @@ class InvestmentAccountStatement(models.AbstractModel):
                 total_final  = final
 
                 movement = dict(rec._fields['type_of_operation'].selection).get(rec.type_of_operation)
+
+                if rec.distribution_income_id:
+                    movement = 'Distribution Income'
+                
                 if lang == 'es_MX':
                     if movement=='Opening Balance':
                         movement = 'Importe de apertura'
@@ -224,6 +228,10 @@ class InvestmentAccountStatement(models.AbstractModel):
                         movement = 'Retiro por cierre'
                     elif movement=='Increase by closing':
                         movement = 'Incremento por cierre'
+                    
+                    if rec.distribution_income_id:
+                        movement = 'Distribución de Rendimientos'
+                        
                 header_increment += inc
                 header_withdrawal += withdraw
                 lines.append({

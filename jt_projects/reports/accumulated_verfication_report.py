@@ -21,7 +21,7 @@
 #
 ##############################################################################
 from odoo import models, api, _
-from datetime import datetime
+from datetime import datetime , timedelta
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tools.misc import formatLang
 from odoo.tools.misc import xlsxwriter
@@ -76,16 +76,11 @@ class AccumulatedVerficationRecorded(models.AbstractModel):
             {'name': _('443 IE REC expenses.Concurrent CONACYT')},
             {'name': _('448 IE CONACYT Checkbooks Expenses')},
             {'name': _('449 IE Expenses Other Projects with checkbook')},
-            {'name': _('Total 443,448 and 449 [Horizontal sum]')},
-            {'name': _('Countable balance')},
-            {'name': _('Accounting account of various debtors')},
-            {'name': _('Total of (Number of projects)')},
-            {'name': _('Concept')},
-            {'name': _('Accumulated [Start month-End    month Stages]')},
-            {'name': _(
-                'Stage [N of Stage] Accumulated [Months of consultation]')},
-            {'name': _('Total [Vertical]')},
-            {'name': _('Total checked [Horizontal]')},
+            {'name': _('Total 443,448 and 449')},
+            # {'name': _('Countable balance')},
+            # {'name': _('Accounting account of various debtors')},
+            # {'name': _('Total of (Number of projects)')},
+
         ]
 
     def _format(self, value,figure_type):
@@ -109,6 +104,36 @@ class AccumulatedVerficationRecorded(models.AbstractModel):
         value['name'] = round(value['name'], 1)
         return value
 
+    def get_month_name(self,month):
+        month_name = ''
+        if month==1:
+            month_name = 'Enero'
+        elif month==2:
+            month_name = 'Febrero'
+        elif month==3:
+            month_name = 'Marzo'
+        elif month==4:
+            month_name = 'Abril'
+        elif month==5:
+            month_name = 'Mayo'
+        elif month==6:
+            month_name = 'Junio'
+        elif month==7:
+            month_name = 'Julio'
+        elif month==8:
+            month_name = 'Agosto'
+        elif month==9:
+            month_name = 'Septiembre'
+        elif month==10:
+            month_name = 'Octubre'
+        elif month==11:
+            month_name = 'Noviembre'
+        elif month==12:
+            month_name = 'Diciembre'
+            
+        return month_name.upper()
+
+
     def _get_lines(self, options, line_id=None):
         lines = []
         project_type_list = []
@@ -116,19 +141,100 @@ class AccumulatedVerficationRecorded(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
-
+        month_name = self.get_month_name(start.month)
+       
+        prev = start.replace(day=1) - timedelta(days=1)
+        previous_month = self.get_month_name(prev.month)
+        print("**previous month*",previous_month)
+       
         lines.append({
             'id': 'hierarchy_3',
-            'name': 'Concept',
-            'columns': [{'name': 'Accumulated [Start month-End month Stages]'},
-                        {'name': 'Stage [N of Stage] Accumulated [Months consultation] of'},
-                        {'name': 'Total [Vertical]'},
-                        {'name': 'Total checked [Horizontal]'},
+            'name': 'Accumulated'+ ' ' + previous_month,
+            'columns': [{'name': ''},
+                        {'name': ''},
+                        {'name': ''},
                         ],
             'level': 2,
             'unfoldable': False,
             'unfolded': True,
         })
+
+        lines.append({
+            'id': 'hierarchy_3',
+            'name': month_name,
+            'columns': [{'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        ],
+            'level': 2,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+
+        lines.append({
+            'id': 'hierarchy_3',
+            'name': 'Accumulated' + ' ' + month_name,
+            'columns': [{'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        ],
+            'level': 2,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+
+
+        lines.append({
+            'id': 'hierarchy_3',
+            'name': 'Concept',
+            'columns': [{'name': 'Accumulated'},
+                        {'name': 'Stage [N of Stage] Accumulated [Months consultation] of'},
+                        {'name': 'Total'},
+                        ],
+            'level': 2,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+
+        lines.append({
+            'id':'hierarchy_4',
+            'name': 'Accounting accounts (443,449 and 449) that affect Income / Expense',
+            'columns': [{'name':''},
+                        {'name':''},
+                        {'name':''},
+
+                        ],
+            'level': 2,
+            'unfoldable': False,
+            'unfolded': True,
+            })
+
+        lines.append({
+            'id':'hierarchy_5',
+            'name': 'Concepts that do not affect Income / Expenditure B1) Budgetary concurrent "CP", B2) Returns of resources to CONACYT, B3) Interdependency payments',
+            'columns': [{'name': ''},
+                        {'name':''},
+                        {'name':''},
+                        
+                    
+                        ],
+            'level': 2,
+            'unfoldable': False,
+            'unfolded': True,
+            })
+
+        lines.append({
+            'id':'hierarchy_5',
+            'name': 'Total Checked',
+            'columns': [{'name': ''},
+                        {'name':''},
+                        {'name':''},
+                    
+                        ],
+            'level': 2,
+            'unfoldable': False,
+            'unfolded': True,
+            })
 
         return lines
 

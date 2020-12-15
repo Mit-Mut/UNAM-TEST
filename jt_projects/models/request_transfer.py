@@ -56,7 +56,9 @@ class RequestTransfer(models.Model):
 
 
     reason_rejection = fields.Text("Reason for Rejection")
-
+    program_code_id = fields.Many2one('program.code','Program Code')
+    
+    
     @api.constrains('amount_req_tranfer')
     def check_amount_req_tranfer(self):
         if self.amount_req_tranfer == 0:

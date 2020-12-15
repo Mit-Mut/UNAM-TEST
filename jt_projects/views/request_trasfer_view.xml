@@ -35,6 +35,7 @@
                                 <field name="destination_journal_id" required="1" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                                 <field name="destination_bank_id"/>
                                 <field name="currency_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                                <field name="program_code_id" domain="[('conacyt_code','=',True)]" attrs="{'readonly': [('status', '!=', 'draft')]}" required="1"/>
                                 <field name="amount_req_tranfer" required="1" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                                 <field name="dependency_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                                 <field name="subdependency_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>

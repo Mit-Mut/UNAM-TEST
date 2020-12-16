@@ -123,7 +123,6 @@ class IntegrationOfCurrentResearchProjects(models.AbstractModel):
     def _get_lines(self, options, line_id=None):
         lines = []
         
-        print ("options====",options)
         
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
@@ -135,7 +134,7 @@ class IntegrationOfCurrentResearchProjects(models.AbstractModel):
 
         # stage_identifier = project_records.mapped('stage_identifier_id')
         # for stage in stage_identifier:
-        stage_ids = project_records.mapped('stage_identifier_id')
+        stage_ids = project_records.mapped('custom_stage_id')
         
         total_project = 0
         total_ministering_amount = 0
@@ -143,16 +142,16 @@ class IntegrationOfCurrentResearchProjects(models.AbstractModel):
         total_to_checked_amount = 0
                 
         for stage in stage_ids:
-            stage_project_records = project_records.filtered(lambda x:x.stage_identifier_id.id==stage.id)
+            stage_project_records = project_records.filtered(lambda x:x.custom_stage_id.id==stage.id)
              
             ministering_amount = 0.0
             checked_amount = 0.0
             
             name = ''
             if stage:
-                name = stage.stage_identifier or ''
-                if stage.desc_stage:
-                    name += '/'+stage.desc_stage
+                name = stage.name or ''
+                if stage.description:
+                    name += '/'+stage.description
                     
 #             name = str(record.stage_identifier_id.id or '') + \
 #                 '/' + str(record.proj_start_date)

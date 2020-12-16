@@ -226,8 +226,25 @@ class MoneyMarketAccountStatement(models.AbstractModel):
             journals = list(set(journal_ids.ids))
             journal_ids = self.env['account.journal'].browse(journals)
 
+        if not journal_ids:
+            lines.append({
+                'id': 'hierarchy_account_start',
+                'name' :start, 
+                'columns': [
+                            {'name':''},
+                            {'name': ''},
+                            self._format({'name': header_intial},figure_type='float'),
+                            self._format({'name': 0.0},figure_type='float'),
+                            self._format({'name': 0.0},figure_type='float'),
+                            self._format({'name': header_intial},figure_type='float'),
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
         for journal in journal_ids:
-            capital = 0
+            capital = header_intial
             total_inc = 0
             total_with = 0
             total_final = 0

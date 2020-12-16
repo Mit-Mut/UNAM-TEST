@@ -154,12 +154,11 @@ class TitlesAccountStatement(models.AbstractModel):
             elif rec.movement == 'sell':
                 header_intial -= rec.amount
         for rec in other_lines:
-            if rec.movement == 'increment':
+            if rec.amount_type == 'increment':
                 header_intial += rec.amount
-            elif rec.movement == 'withdrawal':
+            elif rec.amount_type == 'withdrawal':
                 header_intial -= rec.amount
 
-        print ("Header Intial =-=-", header_intial)
 
         title_ids = self.env['purchase.sale.security'].search(title_domain,order='invesment_date')
 
@@ -167,13 +166,31 @@ class TitlesAccountStatement(models.AbstractModel):
         g_total_with = 0
         g_total_final = 0
 
+        
         journal_ids = title_ids.mapped('bank_id')
+        if not journal_ids:
+            lines.append({
+                'id': 'hierarchy_account_start',
+                'name' :start, 
+                'columns': [
+                            {'name':''},
+                            {'name': ''},
+                            self._format({'name': header_intial},figure_type='float'),
+                            self._format({'name': 0.0},figure_type='float'),
+                            self._format({'name': 0.0},figure_type='float'),
+                            self._format({'name': header_intial},figure_type='float'),
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+             
         for journal in journal_ids:
-            capital = 0
+            capital = header_intial
             total_inc = 0
             total_with = 0
             total_final = 0
-            final = 0
+            final = header_intial
             
             lines.append({
                 'id': 'hierarchy_account' + str(journal.id),

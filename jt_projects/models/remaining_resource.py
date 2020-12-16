@@ -7,8 +7,8 @@ class RemainingResource(models.Model):
     _rec_name = 'concept'
 
     concept = fields.Char('Concept')
-    stage = fields.Integer("Stage")
-    year = fields.Integer("Year")
+    stage_id = fields.Many2one("project.custom.stage","Stage")
+    year = fields.Char("Year",size=4)
     project_type = fields.Selection(
         [('papit', 'PAPIIT'), ('papime', 'PAPIME'), ('infocab', 'INFOCAB')], string='Project Type')
     account_id = fields.Many2one('account.account')

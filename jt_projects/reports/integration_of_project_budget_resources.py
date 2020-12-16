@@ -65,32 +65,44 @@ class IntegrationOfBudgetResource(models.AbstractModel):
         return templates
 
 
-    def get_header(self, options):
+#     def get_header(self, options):
+# 
+#         return[
+#             
+#             [
+#                 
+#                 {'name': ''},
+#                 {'name': _('RECURSOS PRESUPUESTALES PENDIENTES DE EJERCER'),
+#                  'colspan': 3},
+#                 {'name':''},
+#                 {'name': _('RECURSOS ASIGNADOS A PROYECTOS DE INVESTIGACION DE LA DGAPA EN EL SIATEMA DE CONTROL  DE PROYECTOS PAPIIT'),
+#                  'colspan': 3},
+# 
+#             ],
+# 
+#             [
+#                 {'name': 'SUBPROGRAMS'},
+#                 {'name': _('ASIGNADOS Y AUTORIZADOS ETAPA 30')},
+#                 {'name': _('DISTRIBUIDOS ETAPA')},
+#                 {'name': _('POR EJERCER ETAPA 30')},
+#                 {'name': _('PROYECTOS')},
+#                 {'name': _('DISTRIBUIDOS')},
+#                 {'name': _('EJERCIDOS')},
+#                 {'name': _('POR EJERCER')},
+#             ]
+#         ]
 
-        return[
-            
-            [
-                
+    def _get_columns_name(self, options):
+        return [
                 {'name': ''},
-                {'name': _('RECURSOS PRESUPUESTALES PENDIENTES DE EJERCER'),
-                 'colspan': 3},
-                {'name':''},
-                {'name': _('RECURSOS ASIGNADOS A PROYECTOS DE INVESTIGACION DE LA DGAPA EN EL SIATEMA DE CONTROL  DE PROYECTOS PAPIIT'),
-                 'colspan': 3},
-
-            ],
-
-            [
-                {'name': 'SUBPROGRAMS'},
-                {'name': _('ASIGNADOS Y AUTORIZADOS ETAPA 30')},
-                {'name': _('DISTRIBUIDOS ETAPA')},
-                {'name': _('POR EJERCER ETAPA 30')},
-                {'name': _('PROYECTOS')},
-                {'name': _('DISTRIBUIDOS')},
-                {'name': _('EJERCIDOS')},
-                {'name': _('POR EJERCER')},
+                {'name': ''},
+                {'name': ''},
+                {'name': ''},
+                {'name': ''},
+                {'name': ''},
+                {'name': ''},
+                {'name': ''},
             ]
-        ]
 
     def _format(self, value,figure_type):
         if self.env.context.get('no_format'):
@@ -120,7 +132,412 @@ class IntegrationOfBudgetResource(models.AbstractModel):
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
         
+        domain = [('proj_start_date','>=',start),('proj_end_date','<=',end),('PAPIIT_project_type','!=',False)]
+                    
+        project_ids = self.env['project.project'].search(domain)
+
+        year_list_tuple = range(start.year, end.year+1)
+        year_list = []
+                
+        for y in year_list_tuple:
+            year_list.append(str(y))
+        
+
+        gt_total_auth = 0
+        gt_total_exer = 0
+        gt_total_paid = 0
+        gt_total_len = 0
+        gt_total_debit = 0
+        gt_total_credit = 0
+        gt_total_balance = 0
+         
+        stage_ids = project_ids.mapped('custom_stage_id')
+        for stage in stage_ids:
+            for year in year_list:
+                total_auth = 0
+                total_exer = 0
+                total_paid = 0
+                total_len = 0
+                total_debit = 0
+                total_credit = 0
+                total_balance = 0
+                
+                current_project_ids = project_ids.filtered(lambda x:x.custom_stage_id.id==stage.id and str(x.proj_start_date.year)==year)
+                if not current_project_ids:
+                    continue
+
+                lines.append({
+                        'id': 'hierarchy_blank' + str(stage.id)+str(year),
+                        'name' : '', 
+                        'columns': [ 
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    ],
+                        'level': 2,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+                
+                lines.append({
+                    'id': 'hierarchy_' + str(stage.id)+str(year),
+                    'name' : 'INTEGRACION DE PROYECTOS ETAPA '+stage.name+"/"+year+" CON RECURSOS REMANENTES", 
+                    'columns': [ 
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                ],
+                    'level': 1,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+
+                lines.append({
+                        'id': 'hierarchy_col' + str(stage.id)+str(year),
+                        'name' : 'SUBPROGRAMAS', 
+                        'columns': [ 
+                                    {'name': 'ASIGNADOS Y AUTHORIZADOS '+stage.name+"("+year+")"},
+                                    {'name': 'DISTRIBUIDOS ETAPA '+stage.name+"("+year+")"},
+                                    {'name': 'POR EJERCER ETAPA '+stage.name+"("+year+")"},
+                                    {'name': 'PROYECTOS'},
+                                    {'name': 'DISTRIBUIDOS'},
+                                    {'name': 'EJERCIDOS'},
+                                    {'name': 'POR EJERCER'},
+                                    ],
+                        'level': 1,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+                
+                    
+                    
+                #====== PAPIIT =================#
+
+                PAPIIT_ids = current_project_ids.filtered(lambda x:x.PAPIIT_project_type=='PAPIIT')
+                account_code = ''
+                debit = 0
+                credit = 0
+                balance = 0
+                
+                PAPIIT_configuration_id = self.env['remaining.resource'].search([('stage_id','=',stage.id),('year','=',year),('project_type','=','papit')],limit=1)
+                if PAPIIT_configuration_id and PAPIIT_configuration_id.account_id:
+                    account_code = PAPIIT_configuration_id.account_id.code
+                    values= self.env['account.move.line'].search([('account_id', '=', PAPIIT_configuration_id.account_id.id),('move_id.state', '=', 'posted')])
+                    
+                    debit = sum(x.debit for x in values)
+                    credit = sum(x.credit for x in values)
+                    balance = credit - debit 
+                
+                auth_amt = 0
+                paid_amt = 0
+                exer_amt = 0
+                program_code_ids = PAPIIT_ids.mapped('program_code')
+                if program_code_ids:
+                    self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NULL and start_date >= %s and end_date <= %s", (tuple(program_code_ids.ids),start,end))
+                    my_datas = self.env.cr.fetchone()
+                    if my_datas:
+                        auth_amt = my_datas[0]
+
+                    self.env.cr.execute("select coalesce(sum(abs(line.balance)+abs(line.tax_price_cr)),0) from account_move_line line,account_move amove where line.program_code_id in %s and amove.id=line.move_id and amove.payment_state in %s and amove.invoice_date >= %s and amove.invoice_date <= %s", (tuple(program_code_ids.ids),('for_payment_procedure','payment_not_applied'),start,end))
+                    my_datas = self.env.cr.fetchone()
+                    if my_datas:
+                        exer_amt = my_datas[0]
+                        
+                    self.env.cr.execute("""(select coalesce(sum(abs(amount_total_signed)),0) from account_move where id in 
+                                        (select DISTINCT amlp.move_id from account_move_line amlp where amlp.payment_id in  
+                                        (select DISTINCT apay.id from account_move_line line,account_move amove,account_payment apay 
+                                        where  line.program_code_id in %s and amove.id=line.move_id and amove.payment_state=%s and apay.payment_date >= %s and apay.payment_date <= %s and apay.payment_request_id = amove.id)))""", (tuple(program_code_ids.ids),'paid',start,end))
+                    
+                    #self.env.cr.execute("select coalesce(sum(line.price_total),0) from account_move_line line,account_move amove where line.program_code_id in %s and amove.id=line.move_id and amove.payment_state=%s and amove.invoice_date >= %s and amove.invoice_date <= %s", (tuple(program_code_list),'paid',start,end))
+                    my_datas = self.env.cr.fetchone()
+                    if my_datas:
+                        paid_amt = my_datas[0]
+               
+                project_len = len(PAPIIT_ids)
+                
+                total_auth += auth_amt
+                total_exer += exer_amt
+                total_paid += paid_amt
+                
+                total_len += project_len
+                
+                total_debit += debit
+                total_credit += credit
+                total_balance += balance
+                
+                
+                gt_total_auth += auth_amt
+                gt_total_exer += exer_amt
+                gt_total_paid += paid_amt
+                gt_total_len += project_len
+                gt_total_debit += debit
+                gt_total_credit += credit
+                gt_total_balance += balance
+                
+                lines.append({
+                        'id': 'hierarchy_PAPIIT' + str(stage.id)+str(year),
+                        'name' : 'SUBPROGRAMA 81 PAPIIT', 
+                        'columns': [ 
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': account_code},
+                                    {'name': account_code},
+                                    {'name': ''},
+                                    ],
+                        'level': 2,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+                lines.append({
+                        'id': 'hierarchy_PAPIIT_amount' + str(stage.id)+str(year),
+                        'name' : 'Programa de Apoyo a Proyectos de Investigación e Innovación Tecnológica', 
+                        'columns': [ 
+                                    self._format({'name': auth_amt},figure_type='float'),
+                                    self._format({'name': paid_amt},figure_type='float'),
+                                    self._format({'name': exer_amt},figure_type='float'),
+                                    {'name': project_len,'class':'number'},
+                                    self._format({'name': credit},figure_type='float'),
+                                    self._format({'name': debit},figure_type='float'),
+                                    self._format({'name': balance},figure_type='float'),
+                                    ],
+                        'level': 3,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+
+
+
+                #====== PAPIME =================#
+                PAPIME_ids = current_project_ids.filtered(lambda x:x.PAPIIT_project_type=='PAPIME')
+                account_code = ''
+                debit = 0
+                credit = 0
+                balance = 0
+                
+                PAPIME_configuration_id = self.env['remaining.resource'].search([('stage_id','=',stage.id),('year','=',year),('project_type','=','papime')],limit=1)
+                if PAPIME_configuration_id and PAPIME_configuration_id.account_id:
+                    account_code = PAPIME_configuration_id.account_id.code
+                    values= self.env['account.move.line'].search([('account_id', '=', PAPIME_configuration_id.account_id.id),('move_id.state', '=', 'posted')])
+                    debit = sum(x.debit for x in values)
+                    credit = sum(x.credit for x in values)
+                    balance = credit - debit 
+
+                auth_amt = 0
+                paid_amt = 0
+                exer_amt = 0
+                program_code_ids = PAPIME_ids.mapped('program_code')
+                if program_code_ids:
+                    self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NULL and start_date >= %s and end_date <= %s", (tuple(program_code_ids.ids),start,end))
+                    my_datas = self.env.cr.fetchone()
+                    if my_datas:
+                        auth_amt = my_datas[0]
+
+                    self.env.cr.execute("select coalesce(sum(abs(line.balance)+abs(line.tax_price_cr)),0) from account_move_line line,account_move amove where line.program_code_id in %s and amove.id=line.move_id and amove.payment_state in %s and amove.invoice_date >= %s and amove.invoice_date <= %s", (tuple(program_code_ids.ids),('for_payment_procedure','payment_not_applied'),start,end))
+                    my_datas = self.env.cr.fetchone()
+                    if my_datas:
+                        exer_amt = my_datas[0]
+                        
+                    self.env.cr.execute("""(select coalesce(sum(abs(amount_total_signed)),0) from account_move where id in 
+                                        (select DISTINCT amlp.move_id from account_move_line amlp where amlp.payment_id in  
+                                        (select DISTINCT apay.id from account_move_line line,account_move amove,account_payment apay 
+                                        where  line.program_code_id in %s and amove.id=line.move_id and amove.payment_state=%s and apay.payment_date >= %s and apay.payment_date <= %s and apay.payment_request_id = amove.id)))""", (tuple(program_code_ids.ids),'paid',start,end))
+                    
+                    #self.env.cr.execute("select coalesce(sum(line.price_total),0) from account_move_line line,account_move amove where line.program_code_id in %s and amove.id=line.move_id and amove.payment_state=%s and amove.invoice_date >= %s and amove.invoice_date <= %s", (tuple(program_code_list),'paid',start,end))
+                    my_datas = self.env.cr.fetchone()
+                    if my_datas:
+                        paid_amt = my_datas[0]
+                               
+                project_len = len(PAPIME_ids)
+                
+                total_auth += auth_amt
+                total_exer += exer_amt
+                total_paid += paid_amt
+                total_len += project_len
+                total_credit += credit
+                total_debit += debit
+                total_balance += balance
+                
+                gt_total_auth += auth_amt
+                gt_total_exer += exer_amt
+                gt_total_paid += paid_amt
+                gt_total_len += project_len
+                gt_total_credit += credit
+                gt_total_debit += debit
+                gt_total_balance += balance
+                
+                lines.append({
+                        'id': 'hierarchy_PAPIME' + str(stage.id)+str(year),
+                        'name' : 'SUBPROGRAMA 82 PAPIME', 
+                        'columns': [ 
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': account_code},
+                                    {'name': account_code},
+                                    {'name': ''},
+                                    ],
+                        'level': 2,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+                lines.append({
+                        'id': 'hierarchy_PAPIME_amount' + str(stage.id)+str(year),
+                        'name' : 'Programa de apoyo a proyectos de innovación y mejora de la docencia', 
+                        'columns': [ 
+                                    self._format({'name': auth_amt},figure_type='float'),
+                                    self._format({'name': paid_amt},figure_type='float'),
+                                    self._format({'name': exer_amt},figure_type='float'),
+                                    {'name': project_len,'class':'number'},
+                                    self._format({'name': credit},figure_type='float'),
+                                    self._format({'name': debit},figure_type='float'),
+                                    self._format({'name': balance},figure_type='float'),
+                                    ],
+                        'level': 3,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+
+
+                #====== INFOCAB =================#
+                INFOCAB_ids = current_project_ids.filtered(lambda x:x.PAPIIT_project_type=='INFOCAB')
+                
+                account_code = ''
+                debit = 0
+                credit = 0
+                balance = 0
+                
+                INFOCAB_configuration_id = self.env['remaining.resource'].search([('stage_id','=',stage.id),('year','=',year),('project_type','=','infocab')],limit=1)
+                if INFOCAB_configuration_id and INFOCAB_configuration_id.account_id:
+                    account_code = INFOCAB_configuration_id.account_id.code
+                    values= self.env['account.move.line'].search([('account_id', '=', INFOCAB_configuration_id.account_id.id),('move_id.state', '=', 'posted')])
+                    debit = sum(x.debit for x in values)
+                    credit = sum(x.credit for x in values)
+                    balance = credit - debit 
+
+                auth_amt = 0
+                paid_amt = 0
+                exer_amt = 0
+                program_code_ids = INFOCAB_ids.mapped('program_code')
+                if program_code_ids:
+                    self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NULL and start_date >= %s and end_date <= %s", (tuple(program_code_ids.ids),start,end))
+                    my_datas = self.env.cr.fetchone()
+                    if my_datas:
+                        auth_amt = my_datas[0]
+
+                    self.env.cr.execute("select coalesce(sum(abs(line.balance)+abs(line.tax_price_cr)),0) from account_move_line line,account_move amove where line.program_code_id in %s and amove.id=line.move_id and amove.payment_state in %s and amove.invoice_date >= %s and amove.invoice_date <= %s", (tuple(program_code_ids.ids),('for_payment_procedure','payment_not_applied'),start,end))
+                    my_datas = self.env.cr.fetchone()
+                    if my_datas:
+                        exer_amt = my_datas[0]
+                        
+                    self.env.cr.execute("""(select coalesce(sum(abs(amount_total_signed)),0) from account_move where id in 
+                                        (select DISTINCT amlp.move_id from account_move_line amlp where amlp.payment_id in  
+                                        (select DISTINCT apay.id from account_move_line line,account_move amove,account_payment apay 
+                                        where  line.program_code_id in %s and amove.id=line.move_id and amove.payment_state=%s and apay.payment_date >= %s and apay.payment_date <= %s and apay.payment_request_id = amove.id)))""", (tuple(program_code_ids.ids),'paid',start,end))
+                    
+                    #self.env.cr.execute("select coalesce(sum(line.price_total),0) from account_move_line line,account_move amove where line.program_code_id in %s and amove.id=line.move_id and amove.payment_state=%s and amove.invoice_date >= %s and amove.invoice_date <= %s", (tuple(program_code_list),'paid',start,end))
+                    my_datas = self.env.cr.fetchone()
+                    if my_datas:
+                        paid_amt = my_datas[0]
+                               
+                project_len = len(INFOCAB_ids)
+                
+                total_auth += auth_amt
+                total_exer += exer_amt
+                total_paid += paid_amt
+                total_len += project_len
+                total_credit += credit
+                total_debit += debit
+                total_balance += balance
+                
+                gt_total_auth += auth_amt
+                gt_total_exer += exer_amt
+                gt_total_paid += paid_amt
+                gt_total_len += project_len
+                gt_total_credit += credit
+                gt_total_debit += debit
+                gt_total_balance += balance
+                
+                lines.append({
+                        'id': 'hierarchy_INFOCAB' + str(stage.id)+str(year),
+                        'name' : 'SUBPROGRAMA 86 INFOCAB', 
+                        'columns': [ 
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': account_code},
+                                    {'name': account_code},
+                                    {'name': ''},
+                                    ],
+                        'level': 2,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+                lines.append({
+                        'id': 'hierarchy_INFOCAB_amount' + str(stage.id)+str(year),
+                        'name' : 'Iniciativa para el Fortalecimiento de la Carrera Académica en el Bachillerato de la UNAM', 
+                        'columns': [ 
+                                    self._format({'name': auth_amt},figure_type='float'),
+                                    self._format({'name': paid_amt},figure_type='float'),
+                                    self._format({'name': exer_amt},figure_type='float'),
+                                    {'name': project_len,'class':'number'},
+                                    self._format({'name': credit},figure_type='float'),
+                                    self._format({'name': debit},figure_type='float'),
+                                    self._format({'name': balance},figure_type='float'),
+                                    ],
+                        'level': 3,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+                 
+                lines.append({
+                        'id': 'hierarchy_total' + str(stage.id)+str(year),
+                        'name' : 'Subtotal Etapa '+stage.name+"("+str(year)+")", 
+                        'columns': [ 
+                                    self._format({'name': total_auth},figure_type='float'),
+                                    self._format({'name': total_paid},figure_type='float'),
+                                    self._format({'name': total_exer},figure_type='float'),
+                                    {'name': total_len,'class':'number'},
+                                    self._format({'name': total_credit},figure_type='float'),
+                                    self._format({'name': total_debit},figure_type='float'),
+                                    self._format({'name': total_balance},figure_type='float'),
+                                    ],
+                        'level': 2,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+
+        lines.append({
+                'id': 'hierarchy_gt_total',
+                'name' : 'Total ', 
+                'columns': [ 
+                            self._format({'name': gt_total_auth},figure_type='float'),
+                            self._format({'name': gt_total_paid},figure_type='float'),
+                            self._format({'name': gt_total_exer},figure_type='float'),
+                            {'name': gt_total_len,'class':'number'},
+                            self._format({'name': gt_total_credit},figure_type='float'),
+                            self._format({'name': gt_total_debit},figure_type='float'),
+                            self._format({'name': gt_total_balance},figure_type='float'),
+                            ],
+                'level': 2,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+                   
+         
         return lines
+
 
     def _get_report_name(self):
         return _("Integration of projects with budget resources")

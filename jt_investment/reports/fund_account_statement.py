@@ -164,13 +164,31 @@ class InvestmentAccountStatement(models.AbstractModel):
         g_total_with = 0
         g_total_final = 0
 
+        if not productive_ids:
+
+            lines.append({
+                'id': 'hierarchy_account_start',
+                'name' :start, 
+                'columns': [
+                            {'name':''},
+                            {'name': ''},
+                            self._format({'name': header_intial},figure_type='float',digit=2),
+                            self._format({'name': 0.0},figure_type='float',digit=2),
+                            self._format({'name': 0.0},figure_type='float',digit=2),
+                            self._format({'name': header_intial},figure_type='float',digit=2),
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
         #===== Investment =======#
         journal_ids = productive_ids.mapped('investment_id.journal_id')
         for journal in journal_ids:
-            capital = 0
+            capital = header_intial
             total_inc = 0
             total_with = 0
-            total_final = 0
+            total_final = header_intial
             
             records = productive_ids.filtered(lambda x:x.investment_id.journal_id.id == journal.id).sorted('date_required')
             lines.append({

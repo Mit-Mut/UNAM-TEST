@@ -9,6 +9,24 @@
             <field name="model">project.project</field>
             <field name="inherit_id" ref="jt_budget_mgmt.budget_project_project_view_form"/>
             <field name="arch" type="xml">
+            	<field name="project_type_identifier" position="before">
+            		<field name="custom_project_type_id" required="1"/>
+            	</field>
+
+            	<field name="project_type_identifier" position="attributes">
+            		<attribute name="required">0</attribute>
+            		<attribute name="invisible">1</attribute>
+            	</field>
+
+            	<field name="stage_identifier" position="before">
+            		<field name="custom_stage_id" required="1"/>
+            	</field>
+
+            	<field name="stage_identifier" position="attributes">
+            		<attribute name="required">0</attribute>
+            		<attribute name="invisible">1</attribute>
+            	</field>
+            	
             	<field name="agreement_type" position="before">
             		<field name="base_id"/>
             	</field>
@@ -71,7 +89,7 @@
                         <group>
                             <group>
                             	<field name="program_code_ids" invisible="1"/>
-                            	<field name="program_code" domain="[('id','in',program_code_ids)]"  attrs="{'required':[('is_papiit_project','=',True)],'readonly': [('status', '!=', 'open')]}" />
+                            	<field name="program_code" domain="[('id','in',program_code_ids)]"  attrs="{'required':[('is_papiit_project','=',True)],'readonly': ['|',('is_papiit_project','=',False),('status', '!=', 'open')]}" />
                                 <field name="project_type" attrs="{'readonly': [('status', '!=', 'open')],'invisible':[('is_papiit_project','=',True)]}"/>
                                 <field name="custom_stage_id"  attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="stage_identifier" invisible="1" attrs="{'readonly': [('status', '!=', 'open')]}"/>

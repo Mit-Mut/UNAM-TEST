@@ -81,6 +81,8 @@ class RequestTransfer(models.Model):
             'date_required': self.handover_date,
             'concept': self.application_concept,
             'agreement_number': self.aggrement,
+            'dependency_id' : self.dependency_id and self.dependency_id.id or False,
+            'sub_dependency_id' : self.subdependency_id and self.subdependency_id.id or False,
 
         }
         self.env['request.open.balance.finance'].create(record)

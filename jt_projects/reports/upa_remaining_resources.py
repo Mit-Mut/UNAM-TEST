@@ -145,7 +145,7 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
         gt_total_exer = 0
         gt_total_diff = 0
         gt_total_len = 0
-        
+        gt_total_account_amount = 0 
         stage_ids = project_ids.mapped('custom_stage_id')
         for stage in stage_ids:
             for year in year_list:
@@ -153,7 +153,8 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
                 total_exer = 0
                 total_diff = 0
                 total_len = 0
-
+                total_account_amount = 0
+                
                 current_project_ids = project_ids.filtered(lambda x:x.custom_stage_id.id==stage.id and str(x.proj_start_date.year)==year)
                 if not current_project_ids:
                     continue
@@ -206,9 +207,19 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
                         'unfolded': True,
                     })
                 
-                PAPIIT_ids = current_project_ids.filtered(lambda x:x.PAPIIT_project_type=='PAPIIT')
+                    
+                    
+                #====== PAPIIT =================#
 
-                #====== PAPIIT =================#               
+                PAPIIT_ids = current_project_ids.filtered(lambda x:x.PAPIIT_project_type=='PAPIIT')
+                account_code = ''
+                account_amount = 0
+                PAPIIT_configuration_id = self.env['remaining.resource'].search([('stage_id','=',stage.id),('year','=',year),('project_type','=','papit')],limit=1)
+                if PAPIIT_configuration_id and PAPIIT_configuration_id.account_id:
+                    account_code = PAPIIT_configuration_id.account_id.code
+                    values= self.env['account.move.line'].search([('account_id', '=', PAPIIT_configuration_id.account_id.id),('move_id.state', '=', 'posted')])
+                    account_amount = sum(x.debit-x.credit for x in values)
+                               
                 auth_amt = sum(x.allocated_amount for x in PAPIIT_ids)
                 exer_amt = sum(x.exercised_amount for x in PAPIIT_ids)
                 diff_amt = auth_amt - exer_amt
@@ -218,18 +229,20 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
                 total_exer += exer_amt
                 total_diff += diff_amt
                 total_len += project_len
-
+                total_account_amount += account_amount
+                
                 gt_total_auth += auth_amt
                 gt_total_exer += exer_amt
                 gt_total_diff += diff_amt
                 gt_total_len += project_len
+                gt_total_account_amount += account_amount
                 
                 lines.append({
                         'id': 'hierarchy_PAPIIT' + str(stage.id)+str(year),
                         'name' : 'PAPIIT', 
                         'columns': [ 
-                                    {'name': ''},
-                                    {'name': ''},
+                                    {'name': 'Cuenta de pasivo:'},
+                                    {'name': account_code},
                                     {'name': ''},
                                     {'name': ''},
                                     {'name': ''},
@@ -243,8 +256,8 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
                         'id': 'hierarchy_PAPIIT_amount' + str(stage.id)+str(year),
                         'name' : 'Programa de Apoyo a Proyectos de Investigación e Innovación Tecnológica', 
                         'columns': [ 
-                                    self._format({'name': diff_amt},figure_type='float'),
-                                    self._format({'name': diff_amt},figure_type='float'),
+                                    self._format({'name': account_amount},figure_type='float'),
+                                    self._format({'name': account_amount},figure_type='float'),
                                     {'name': project_len,'class':'number'},
                                     self._format({'name': auth_amt},figure_type='float'),
                                     self._format({'name': exer_amt},figure_type='float'),
@@ -255,9 +268,18 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
                         'unfolded': True,
                     })
 
-                PAPIME_ids = current_project_ids.filtered(lambda x:x.PAPIIT_project_type=='PAPIME')
 
-                #====== PAPIME =================#               
+
+                #====== PAPIME =================#
+                PAPIME_ids = current_project_ids.filtered(lambda x:x.PAPIIT_project_type=='PAPIME')
+                account_code = ''
+                account_amount = 0
+                PAPIME_configuration_id = self.env['remaining.resource'].search([('stage_id','=',stage.id),('year','=',year),('project_type','=','papime')],limit=1)
+                if PAPIME_configuration_id and PAPIME_configuration_id.account_id:
+                    account_code = PAPIME_configuration_id.account_id.code
+                    values= self.env['account.move.line'].search([('account_id', '=', PAPIME_configuration_id.account_id.id),('move_id.state', '=', 'posted')])
+                    account_amount = sum(x.debit-x.credit for x in values)
+                               
                 auth_amt = sum(x.allocated_amount for x in PAPIME_ids)
                 exer_amt = sum(x.exercised_amount for x in PAPIME_ids)
                 diff_amt = auth_amt - exer_amt
@@ -267,18 +289,20 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
                 total_exer += exer_amt
                 total_diff += diff_amt
                 total_len += project_len
-
+                total_account_amount += account_amount
+                
                 gt_total_auth += auth_amt
                 gt_total_exer += exer_amt
                 gt_total_diff += diff_amt
                 gt_total_len += project_len
+                gt_total_account_amount += account_amount
                 
                 lines.append({
                         'id': 'hierarchy_PAPIME' + str(stage.id)+str(year),
                         'name' : 'PAPIME', 
                         'columns': [ 
-                                    {'name': ''},
-                                    {'name': ''},
+                                    {'name': 'Cuenta de Pasivo:'},
+                                    {'name': account_code},
                                     {'name': ''},
                                     {'name': ''},
                                     {'name': ''},
@@ -292,8 +316,8 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
                         'id': 'hierarchy_PAPIME_amount' + str(stage.id)+str(year),
                         'name' : 'Programa de apoyo a proyectos de innovación y mejora de la docencia', 
                         'columns': [ 
-                                    self._format({'name': diff_amt},figure_type='float'),
-                                    self._format({'name': diff_amt},figure_type='float'),
+                                    self._format({'name': account_amount},figure_type='float'),
+                                    self._format({'name': account_amount},figure_type='float'),
                                     {'name': project_len,'class':'number'},
                                     self._format({'name': auth_amt},figure_type='float'),
                                     self._format({'name': exer_amt},figure_type='float'),
@@ -304,8 +328,18 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
                         'unfolded': True,
                     })
 
+
+                #====== INFOCAB =================#
                 INFOCAB_ids = current_project_ids.filtered(lambda x:x.PAPIIT_project_type=='INFOCAB')
-                #====== INFOCAB =================#               
+                
+                account_code = ''
+                account_amount = 0
+                INFOCAB_configuration_id = self.env['remaining.resource'].search([('stage_id','=',stage.id),('year','=',year),('project_type','=','infocab')],limit=1)
+                if INFOCAB_configuration_id and INFOCAB_configuration_id.account_id:
+                    account_code = INFOCAB_configuration_id.account_id.code
+                    values= self.env['account.move.line'].search([('account_id', '=', INFOCAB_configuration_id.account_id.id),('move_id.state', '=', 'posted')])
+                    account_amount = sum(x.debit-x.credit for x in values)
+                               
                 auth_amt = sum(x.allocated_amount for x in INFOCAB_ids)
                 exer_amt = sum(x.exercised_amount for x in INFOCAB_ids)
                 diff_amt = auth_amt - exer_amt
@@ -315,18 +349,20 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
                 total_exer += exer_amt
                 total_diff += diff_amt
                 total_len += project_len
-
+                total_account_amount += account_amount
+                
                 gt_total_auth += auth_amt
                 gt_total_exer += exer_amt
                 gt_total_diff += diff_amt
                 gt_total_len += project_len
+                gt_total_account_amount += account_amount
                 
                 lines.append({
                         'id': 'hierarchy_INFOCAB' + str(stage.id)+str(year),
                         'name' : 'INFOCAB', 
                         'columns': [ 
-                                    {'name': ''},
-                                    {'name': ''},
+                                    {'name': 'Cuenta de Pasivo:'},
+                                    {'name': account_code},
                                     {'name': ''},
                                     {'name': ''},
                                     {'name': ''},
@@ -340,8 +376,8 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
                         'id': 'hierarchy_INFOCAB_amount' + str(stage.id)+str(year),
                         'name' : 'Iniciativa para el Fortalecimiento de la Carrera Académica en el Bachillerato de la UNAM', 
                         'columns': [ 
-                                    self._format({'name': diff_amt},figure_type='float'),
-                                    self._format({'name': diff_amt},figure_type='float'),
+                                    self._format({'name': account_amount},figure_type='float'),
+                                    self._format({'name': account_amount},figure_type='float'),
                                     {'name': project_len,'class':'number'},
                                     self._format({'name': auth_amt},figure_type='float'),
                                     self._format({'name': exer_amt},figure_type='float'),
@@ -356,8 +392,8 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
                         'id': 'hierarchy_total' + str(stage.id)+str(year),
                         'name' : 'Subtotal Etapa '+stage.name+"("+str(year)+")", 
                         'columns': [ 
-                                    self._format({'name': total_diff},figure_type='float'),
-                                    self._format({'name': total_diff},figure_type='float'),
+                                    self._format({'name': total_account_amount},figure_type='float'),
+                                    self._format({'name': total_account_amount},figure_type='float'),
                                     {'name': total_len,'class':'number'},
                                     self._format({'name': total_auth},figure_type='float'),
                                     self._format({'name': total_exer},figure_type='float'),
@@ -372,8 +408,8 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
                 'id': 'hierarchy_gt_total',
                 'name' : 'Total ', 
                 'columns': [ 
-                            self._format({'name': gt_total_diff},figure_type='float'),
-                            self._format({'name': gt_total_diff},figure_type='float'),
+                            self._format({'name': gt_total_account_amount},figure_type='float'),
+                            self._format({'name': gt_total_account_amount},figure_type='float'),
                             {'name': gt_total_len,'class':'number'},
                             self._format({'name': gt_total_auth},figure_type='float'),
                             self._format({'name': gt_total_exer},figure_type='float'),

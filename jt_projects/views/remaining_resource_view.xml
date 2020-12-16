@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="concept"/>
-                    <field name="stage"/>
+                    <field name="stage_id"/>
                 </tree>
             </field>
          </record>
@@ -22,7 +22,7 @@
                         <group>
                             <group>
                                 <field name="concept"/>
-                                <field name="stage"/>
+                                <field name="stage_id"/>
                                 <field name="account_id"/>
                             </group>
                             <group>

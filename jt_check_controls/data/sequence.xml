@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="sequence_chekbook_application_no" model="ir.sequence">
+            <field name="name">Checkbook Application No</field>
+            <field name="code">checkbook.application</field>
+            <field name="padding">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="sequence_chekbook_legal_folio" model="ir.sequence">
+            <field name="name">Checkbook Legal Folio</field>
+            <field name="code">checkbook.legal.folio</field>
+            <field name="padding">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+
+    </data>
+</odoo>

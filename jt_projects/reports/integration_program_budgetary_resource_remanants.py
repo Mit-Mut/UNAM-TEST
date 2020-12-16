@@ -29,7 +29,8 @@ import io
 import base64
 from odoo.tools import config, date_utils, get_lang
 import lxml.html
-
+from docutils.nodes import option
+from dateutil.relativedelta import relativedelta
 
 class IntegrationOfBudgetResourceRemanats(models.AbstractModel):
 
@@ -65,32 +66,32 @@ class IntegrationOfBudgetResourceRemanats(models.AbstractModel):
         return templates
 
 
-    def get_header(self, options):
-
-        return[
-            
-            [
-                {'name': ''},
-                {'name': _('PAPIIT (SUB PROG 81)'),
-                 'colspan': 2},
-                {'name': _('PAPIME (SUB PROG 82)'),
-                 'colspan': 2},
-                {'name': _('INFOCAB (SUB PROG 86)'),
-                 'colspan': 2},
-
-            ],
-
-            [
-                {'name': 'MES'},
-                {'name': _('SUBSIDIO DEL GOBIERNO FEDERAL')},
-                {'name': _('REMANENTES')},
-                {'name': _('SUBSIDIO DEL GOBIERNO FEDERAL')},
-                {'name': _('REMANENTES')},
-                {'name': _('SUBSIDIO DEL GOBIERNO FEDERAL')},
-                {'name': _('REMANENTES')},
-                {'name': _('TOTAL ASIGNADO')},
-            ]
-        ]
+#     def get_header(self, options):
+# 
+#         return[
+#             
+#             [
+#                 {'name': ''},
+#                 {'name': _('PAPIIT (SUB PROG 81)'),
+#                  'colspan': 2},
+#                 {'name': _('PAPIME (SUB PROG 82)'),
+#                  'colspan': 2},
+#                 {'name': _('INFOCAB (SUB PROG 86)'),
+#                  'colspan': 2},
+# 
+#             ],
+# 
+#             [
+#                 {'name': 'MES'},
+#                 {'name': _('SUBSIDIO DEL GOBIERNO FEDERAL')},
+#                 {'name': _('REMANENTES')},
+#                 {'name': _('SUBSIDIO DEL GOBIERNO FEDERAL')},
+#                 {'name': _('REMANENTES')},
+#                 {'name': _('SUBSIDIO DEL GOBIERNO FEDERAL')},
+#                 {'name': _('REMANENTES')},
+#                 {'name': _('TOTAL ASIGNADO')},
+#             ]
+#         ]
 
     def _format(self, value,figure_type):
         if self.env.context.get('no_format'):
@@ -114,13 +115,391 @@ class IntegrationOfBudgetResourceRemanats(models.AbstractModel):
         return value
 
 
+    def _get_columns_name(self, options):
+        return [
+                {'name': ''},
+                {'name': ''},
+                {'name': ''},
+                {'name': ''},
+                {'name': ''},
+                {'name': ''},
+                {'name': ''},
+                {'name': ''},
+            ]
+
     def _get_lines(self, options, line_id=None):
         lines = []
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+
+        domain = [('proj_start_date','>=',start),('proj_end_date','<=',end),('PAPIIT_project_type','!=',False)]
+                    
+        project_ids = self.env['project.project'].search(domain)
+
+        year_list_tuple = range(start.year, end.year+1)
+        year_list = []
+                
+        for y in year_list_tuple:
+            year_list.append(str(y))
         
+        
+        stage_ids = project_ids.mapped('custom_stage_id')
+        for stage in stage_ids:
+            for year in year_list:
+                
+                current_project_ids = project_ids.filtered(lambda x:x.custom_stage_id.id==stage.id and str(x.proj_start_date.year)==year)
+                if not current_project_ids:
+                    continue
+                
+                lines.append({
+                        'id': 'hierarchy_blank' + str(stage.id)+str(year),
+                        'name' : '', 
+                        'columns': [ 
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    ],
+                        'level': 2,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+                
+                lines.append({
+                    'id': 'hierarchy_' + str(stage.id)+str(year),
+                    'name' : 'INTEGRACIÓN POR PROGRAMA DE LA ASIGNACIÓN DE RECURSOS', 
+                    'columns': [ 
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                ],
+                    'level': 1,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+
+                lines.append({
+                    'id': 'hierarchy_' + str(stage.id)+str(year),
+                    'name' : 'PRESUPUESTARIOS A PROYECTOS DE ETAPA '+stage.name+"/"+year, 
+                    'columns': [ 
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                ],
+                    'level': 1,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+
+                lines.append({
+                    'id': 'hierarchy_2' + str(stage.id)+str(year),
+                    'name' : '', 
+                    'columns': [ 
+                                {'name': 'PAPIIT (SUB PROG 81)'},
+                                {'name': ''},
+                                {'name': 'PAPIME (SUB PROG 82)'},
+                                {'name': ''},
+                                {'name': 'INFOCAB (SUB PROG 86)'},
+                                {'name': ''},
+                                {'name': ''},
+                                ],
+                    'level': 1,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+
+                lines.append({
+                    'id': 'hierarchy_3' + str(stage.id)+str(year),
+                    'name' : 'MES', 
+                    'columns': [ 
+                                {'name': 'SUBSIDIO DEL GOBIERNO FEDERAL'},
+                                {'name': 'REMANENTES'},
+                                {'name': 'SUBSIDIO DEL GOBIERNO FEDERAL'},
+                                {'name': 'REMANENTES'},
+                                {'name': 'SUBSIDIO DEL GOBIERNO FEDERAL'},
+                                {'name': 'REMANENTES'},
+                                {'name': 'TOTAL ASIGNADO'},
+                                ],
+                    'level': 1,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+                #======= Datas Authorized =================#
+                total_auth = 0
+                if start.month==1 and start.day==1:
+                    previous_start_date = start - relativedelta(years=1)
+                    previous_start_date = previous_start_date.replace(month=1,day=1)
+                    
+                else: 
+                    previous_start_date = start.replace(month=1,day=1)
+                
+                PAPIIT_pre_auth_amt = 0
+                PAPIME_pre_auth_amt = 0
+                INFOCAB_pre_auth_amt = 0
+                
+                PAPIIT_ids = current_project_ids.filtered(lambda x:x.PAPIIT_project_type=='PAPIIT')
+                PAPIIT_auth_amt = 0
+                program_code_ids = PAPIIT_ids.mapped('program_code')
+                if program_code_ids:
+                    self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NULL and start_date >= %s and end_date <= %s", (tuple(program_code_ids.ids),start,end))
+                    my_datas = self.env.cr.fetchone()
+                    if my_datas:
+                        PAPIIT_auth_amt = my_datas[0]
+
+                    self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NULL and start_date >= %s and end_date < %s", (tuple(program_code_ids.ids),previous_start_date,start))
+                    my_datas = self.env.cr.fetchone()
+                    if my_datas:
+                        PAPIIT_pre_auth_amt = my_datas[0]
+
+                total_auth += PAPIIT_auth_amt
+                
+
+                PAPIME_ids = current_project_ids.filtered(lambda x:x.PAPIIT_project_type=='PAPIME')
+                PAPIME_auth_amt = 0
+                program_code_ids = PAPIME_ids.mapped('program_code')
+                if program_code_ids:
+                    self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NULL and start_date >= %s and end_date <= %s", (tuple(program_code_ids.ids),start,end))
+                    my_datas = self.env.cr.fetchone()
+                    if my_datas:
+                        PAPIME_auth_amt = my_datas[0]
+
+                    self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NULL and start_date >= %s and end_date < %s", (tuple(program_code_ids.ids),previous_start_date,start))
+                    my_datas = self.env.cr.fetchone()
+                    if my_datas:
+                        PAPIME_pre_auth_amt = my_datas[0]
+
+                total_auth += PAPIME_auth_amt
+                
+
+                INFOCAB_ids = current_project_ids.filtered(lambda x:x.PAPIIT_project_type=='INFOCAB')
+                INFOCAB_auth_amt = 0
+                program_code_ids = INFOCAB_ids.mapped('program_code')
+                if program_code_ids:
+                    self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NULL and start_date >= %s and end_date <= %s", (tuple(program_code_ids.ids),start,end))
+                    my_datas = self.env.cr.fetchone()
+                    if my_datas:
+                        INFOCAB_auth_amt = my_datas[0]
+
+                    self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NULL and start_date >= %s and end_date < %s", (tuple(program_code_ids.ids),previous_start_date,start))
+                    my_datas = self.env.cr.fetchone()
+                    if my_datas:
+                        INFOCAB_pre_auth_amt = my_datas[0]
+
+                total_auth += INFOCAB_auth_amt
+                                   
+                lines.append({
+                    'id': 'hierarchy_assign' + str(stage.id)+str(year),
+                    'name' : 'ASIGNACIÓN ORIGINAL DE RECURSOS', 
+                    'columns': [ 
+                                self._format({'name': PAPIIT_auth_amt},figure_type='float'),
+                                {'name': ''},
+                                self._format({'name': PAPIME_auth_amt},figure_type='float'),
+                                {'name': ''},
+                                self._format({'name': INFOCAB_auth_amt},figure_type='float'),
+                                {'name': ''},
+                                self._format({'name': total_auth},figure_type='float'),
+                                ],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+
+                #======= Datas Previous Authorized =================#
+                
+                total_pre_auth = PAPIIT_pre_auth_amt + PAPIME_pre_auth_amt + INFOCAB_pre_auth_amt
+
+                lines.append({
+                    'id': 'hierarchy_assign' + str(stage.id)+str(year),
+                    'name' : 'DISTRIBUCIÓN DE RECURSOS MESES ANTERIORES', 
+                    'columns': [ 
+                                self._format({'name': PAPIIT_pre_auth_amt},figure_type='float'),
+                                {'name': ''},
+                                self._format({'name': PAPIME_pre_auth_amt},figure_type='float'),
+                                {'name': ''},
+                                self._format({'name': INFOCAB_pre_auth_amt},figure_type='float'),
+                                {'name': ''},
+                                self._format({'name': total_pre_auth},figure_type='float'),
+                                ],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+                #======= Datas DESACTIVADOS =================#
+
+                PAPIIT_des_auth_amt = 0
+                PAPIME_des_auth_amt = 0
+                INFOCAB_des_auth_amt = 0
+                
+                total_des_auth = PAPIIT_des_auth_amt + PAPIME_des_auth_amt + INFOCAB_des_auth_amt
+                    
+                lines.append({
+                    'id': 'hierarchy_assign' + str(stage.id)+str(year),
+                    'name' : 'PROYECTOS PRESUPUESTALED DESACTIVADOS A SOLICITUD DE LA DGAPA', 
+                    'columns': [ 
+                                self._format({'name': PAPIIT_des_auth_amt},figure_type='float'),
+                                {'name': ''},
+                                self._format({'name': PAPIME_des_auth_amt},figure_type='float'),
+                                {'name': ''},
+                                self._format({'name': INFOCAB_des_auth_amt},figure_type='float'),
+                                {'name': ''},
+                                self._format({'name': total_des_auth},figure_type='float'),
+                                ],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+
+                #======= Datas DISTRIBUTION =================#
+
+                PAPIIT_dist_auth_amt = PAPIIT_pre_auth_amt - PAPIIT_des_auth_amt
+                PAPIME_dist_auth_amt = PAPIME_pre_auth_amt - PAPIME_des_auth_amt
+                INFOCAB_dist_auth_amt = INFOCAB_pre_auth_amt - INFOCAB_des_auth_amt
+                
+                total_dist_auth = PAPIIT_dist_auth_amt + PAPIME_dist_auth_amt + INFOCAB_dist_auth_amt
+                    
+                lines.append({
+                    'id': 'hierarchy_assign' + str(stage.id)+str(year),
+                    'name' : 'DISTRIBUCIÓN PRESUPUESTAL AL '+str(options.get('date',{}).get('string','')), 
+                    'columns': [ 
+                                self._format({'name': PAPIIT_dist_auth_amt},figure_type='float'),
+                                {'name': ''},
+                                self._format({'name': PAPIME_dist_auth_amt},figure_type='float'),
+                                {'name': ''},
+                                self._format({'name': INFOCAB_dist_auth_amt},figure_type='float'),
+                                {'name': ''},
+                                self._format({'name': total_dist_auth},figure_type='float'),
+                                ],
+                    'level': 1,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+                
+                PAPIIT_pre_balance = 0
+                PAPIME_pre_balance = 0
+                INFOCAB_pre_balance = 0
+                total_pre_balance = 0
+
+                PAPIIT_curt_balance = 0
+                PAPIME_curt_balance = 0
+                INFOCAB_curt_balance = 0
+                total_curt_balance = 0
+
+                previous_start_date = start.replace(month=1,day=1)
+                                
+                PAPIIT_configuration_id = self.env['remaining.resource'].search([('stage_id','=',stage.id),('year','=',year),('project_type','=','papit')],limit=1)
+                if PAPIIT_configuration_id and PAPIIT_configuration_id.account_id:
+                    values= self.env['account.move.line'].search([('date', '>=', previous_start_date), ('date', '<', start),('account_id', '=', PAPIIT_configuration_id.account_id.id),('move_id.state', '=', 'posted')])
+                    PAPIIT_curt_balance = sum(x.debit - x.credit for x in values)
+
+                    values= self.env['account.move.line'].search([('date', '>=', start), ('date', '<=', end),('account_id', '=', PAPIIT_configuration_id.account_id.id),('move_id.state', '=', 'posted')])
+                    PAPIIT_pre_balance = sum(x.debit - x.credit for x in values)
+
+                PAPIME_configuration_id = self.env['remaining.resource'].search([('stage_id','=',stage.id),('year','=',year),('project_type','=','papime')],limit=1)
+                if PAPIME_configuration_id and PAPIME_configuration_id.account_id:
+                    values= self.env['account.move.line'].search([('date', '>=', start), ('date', '<=', end),('account_id', '=', PAPIME_configuration_id.account_id.id),('move_id.state', '=', 'posted')])
+                    PAPIME_curt_balance = sum(x.debit - x.credit for x in values)
+
+                    values= self.env['account.move.line'].search([('date', '>=', previous_start_date), ('date', '<', start),('account_id', '=', PAPIME_configuration_id.account_id.id),('move_id.state', '=', 'posted')])
+                    PAPIME_pre_balance = sum(x.debit - x.credit for x in values)
+
+                INFOCAB_configuration_id = self.env['remaining.resource'].search([('stage_id','=',stage.id),('year','=',year),('project_type','=','infocab')],limit=1)
+                if INFOCAB_configuration_id and INFOCAB_configuration_id.account_id:
+                    values= self.env['account.move.line'].search([('date', '>=', start), ('date', '<=', end),('account_id', '=', INFOCAB_configuration_id.account_id.id),('move_id.state', '=', 'posted')])
+                    INFOCAB_curt_balance =  sum(x.debit - x.credit for x in values)
+
+                    values= self.env['account.move.line'].search([('date', '>=', previous_start_date), ('date', '<', start),('account_id', '=', INFOCAB_configuration_id.account_id.id),('move_id.state', '=', 'posted')])
+                    INFOCAB_pre_balance = sum(x.debit - x.credit for x in values)
+                
+                total_curt_balance = PAPIIT_curt_balance + PAPIME_curt_balance + INFOCAB_curt_balance
+                total_pre_balance = PAPIIT_pre_balance + PAPIME_pre_balance + INFOCAB_pre_balance
+                    
+                #======= liability account  Previous=================#
+                lines.append({
+                    'id': 'hierarchy_assign' + str(stage.id)+str(year),
+                    'name' : 'DISTRIBUCIÓN DE RECURSOS MESES ANTERIORES ETAPA '+stage.name+"/"+year, 
+                    'columns': [
+                                {'name': ''}, 
+                                self._format({'name': PAPIIT_pre_balance},figure_type='float'),
+                                {'name': ''},
+                                self._format({'name': PAPIME_pre_balance},figure_type='float'),
+                                {'name': ''},
+                                self._format({'name': INFOCAB_pre_balance},figure_type='float'),
+                                self._format({'name': total_pre_balance},figure_type='float'),
+                                ],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+
+                #======= liability account  Current=================#
+                lines.append({
+                    'id': 'hierarchy_assign' + str(stage.id)+str(year),
+                    'name' : 'DISTRIBUCIÓN DE RECURSOS MES'+options.get('date',{}).get('string',' ')+ ' ETAPA '+stage.name+"/"+year, 
+                    'columns': [
+                                {'name': ''}, 
+                                self._format({'name': PAPIIT_curt_balance},figure_type='float'),
+                                {'name': ''},
+                                self._format({'name': PAPIME_curt_balance},figure_type='float'),
+                                {'name': ''},
+                                self._format({'name': INFOCAB_curt_balance},figure_type='float'),
+                                self._format({'name': total_curt_balance},figure_type='float'),
+                                ],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+
+                #======= Different Months=================#
+                lines.append({
+                    'id': 'hierarchy_assign' + str(stage.id)+str(year),
+                    'name' : 'MES ANTERRIOR Y REACTIVADOS EN MES '+options.get('date',{}).get('string',' '), 
+                    'columns': [
+                                {'name': ''}, 
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                ],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+
+                #======= Total Previous and current Months=================#
+                
+                lines.append({
+                    'id': 'hierarchy_total' + str(stage.id)+str(year),
+                    'name' : 'DISTRIBUCIÓN REMANTES ETAPA AL '+options.get('date',{}).get('string',' '), 
+                    'columns': [
+                                {'name': ''}, 
+                                self._format({'name': PAPIIT_pre_balance+PAPIIT_curt_balance},figure_type='float'),
+                                {'name': ''},
+                                self._format({'name': PAPIME_pre_balance + PAPIME_curt_balance},figure_type='float'),
+                                {'name': ''},
+                                self._format({'name': INFOCAB_pre_balance + INFOCAB_curt_balance},figure_type='float'),
+                                self._format({'name': total_pre_balance + total_curt_balance},figure_type='float'),
+                                ],
+                    'level': 1,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+
+                
         return lines
 
     def get_xlsx(self, options, response=None):

@@ -15,7 +15,8 @@ class VerficationOfExpense(models.Model):
     program_code_id = fields.Many2one(related='project_id.program_code') 
     project_number_id = fields.Char(
         related='project_id.number', string="Project Number")
-    stage_id = fields.Many2one('stage', string='Stage')
+    custom_stage_id = fields.Many2one('project.custom.stage', string='Stage')
+    
     exercise = fields.Text('Exercise')
     exchange_rate = fields.Float('Exchange Rate')
     expense_journal_id = fields.Many2one(
@@ -125,22 +126,40 @@ class VerficationOfExpense(models.Model):
                                  }),                                 
 
 
-                                (0, 0, {
+#                                 (0, 0, {
+#                                  'account_id': journal.ai_credit_account_id.id,
+#                                  'coa_conac_id': journal.conac_ai_credit_account_id.id,
+#                                  'credit': amount,
+#                                  'partner_id': partner_id,
+#                                  'expense_id': self.id,
+#                              }),
+#                                  (0, 0, {
+#                                      'account_id': journal.ai_debit_account_id.id,
+#                                      'coa_conac_id': journal.conac_ai_debit_account_id.id,
+#                                      'debit': amount,
+#                                      'partner_id': partner_id,
+#                                      'expense_id': self.id,
+#                                  }),
+                             ]
+            item_expense_account_ids = self.verifcation_expense_ids.mapped('program_code.item_id.unam_account_id')
+            for account_id in item_expense_account_ids:
+                item_amount = sum(x.subtotal for x in self.verifcation_expense_ids.filtered(lambda x:x.program_code and x.program_code.item_id and x.program_code.item_id.unam_account_id and x.program_code.item_id.unam_account_id.id==account_id.id))
+
+                lines.append((0, 0, {
                                  'account_id': journal.ai_credit_account_id.id,
                                  'coa_conac_id': journal.conac_ai_credit_account_id.id,
-                                 'credit': amount,
+                                 'credit': item_amount,
                                  'partner_id': partner_id,
                                  'expense_id': self.id,
-                             }),
-                                 (0, 0, {
-                                     'account_id': journal.ai_debit_account_id.id,
-                                     'coa_conac_id': journal.conac_ai_debit_account_id.id,
-                                     'debit': amount,
-                                     'partner_id': partner_id,
-                                     'expense_id': self.id,
-                                 }),
-                             ]
-
+                             }))                
+                lines.append((0, 0, {
+                                 'account_id': account_id.id,
+                                 'coa_conac_id': account_id.coa_conac_id and account_id.coa_conac_id.id or False,
+                                 'debit': item_amount,
+                                 'partner_id': partner_id,
+                                 'expense_id': self.id,
+                             }))
+                
             #===================particular Item records ===============#
                 #===== Group 511 ======#
             item_line_ids = self.verifcation_expense_ids.filtered(lambda x:x.program_code and x.program_code.item_id.item in ('511','512','513','514','515','516','517','521','523','524','531'))
@@ -164,7 +183,7 @@ class VerficationOfExpense(models.Model):
 #                     account_id = item_id[0].unam_account_id.id
 #                     coa_conac_id = item_id[0].unam_account_id.coa_conac_id and item_id[0].unam_account_id.coa_conac_id.id or False
                      
-                lines.append(                                (0, 0, {
+                lines.append((0, 0, {
                                  'account_id': journal.capitalizable_credit_account_id.id,
                                  'coa_conac_id': journal.conac_capitalizable_credit_account_id.id,
                                  'credit': item_amount,

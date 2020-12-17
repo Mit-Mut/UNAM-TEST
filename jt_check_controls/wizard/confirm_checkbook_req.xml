@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+	<data>
+
+		<record id="confirm_checkbook_form_view" model="ir.ui.view">
+			<field name="name">Confirm Checkbook form view</field>
+			<field name="model">confirm.checkbook</field>
+			<field name="arch" type="xml">
+				<form>
+					<sheet>
+						<group>
+							<field name="checkbook_no" required="1"/>
+							<field name="received_boxes" required="1"/>
+							<field name="check_per_box" required="1"/>
+							<field name="additional_checks" required="1"/>
+							<field name="total_cash" required="1"/>
+						</group>
+						<footer>
+                   			<button string="Apply" class="btn btn-primary" type="object" name="apply"/>
+                		</footer>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+	</data>
+</odoo>

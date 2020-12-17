@@ -37,11 +37,11 @@
                                 attrs="{'readonly': [('status', '!=', 'eraser')]}" context="{'from_conacyt':1}"/>
                                 <field name="project_name"/>
                                 <field name="user_id" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="project_type_identifier" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="project_stage_identifier" readonly="1"/>
+                                <field name="custom_project_type_id" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="custom_stage_id" />
                                 <field name="ministrations_amount" required="1" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="authorized_amount" required="1" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="program_code" required="1" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="program_code" readonly="1" force_save="1" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="journal_id" required="1" domain="[('is_conacyt_project','=',True)]" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                             </group>
                             <group>

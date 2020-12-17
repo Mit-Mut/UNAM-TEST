@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="external_layout_header_check_request_1">
+            <div t-attf-class="header o_company_#{company.id}_layout">
+                <div class="row">
+                    <div class="col-2 mb4" align="left">
+                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)"
+                             style="max-height: 150px;" alt="Logo"/>
+                    </div>
+                    <div class="col-4 mb4" style="padding-left:15px;padding-top:7px;">
+                        <p style="margin-top:0;margin-bottom:0;font-size:15px;">
+                            UNIVERSITY BOARD OF TRUSTEES
+                        </p>
+                        <p style="margin-top:0;margin-bottom:0;font-size:15px;">
+                            TREASURY
+                        </p>
+                    </div>
+                    <div class="col-6 mb4" align="right" style="padding-right:0;">
+                        <img src="/jt_check_controls/static/src/img/dgf.png"
+                             style="max-height:100px;width:54%"/>
+                        <p style="margin-top:0;margin-bottom:0;font-size:20px;">
+                            GENERAL DIRECTORATE OF FINANCE
+                        </p>
+                        <p style="margin-top:0;margin-bottom:0;font-size:20px;">
+                            DIRECTORATE OF INCOME AND FINANCIAL OPERATIONS
+                        </p>
+                        <p style="margin-top:0;margin-bottom:0;font-size:20px;">
+                            <t t-esc="o.folio_legal"/>
+                        </p>
+                        <p style="margin-top:0;margin-bottom:0;font-size:20px;">
+                            SUBJECT: REQUEST FOR CHECKS
+                        </p>
+                    </div>
+                </div>
+<!--                <div class="row">-->
+<!--                    <div class="col-12 mb4" align="right">-->
+<!--                        <p style="margin-top:0;margin-bottom:0;font-size:20px;">-->
+<!--                            GENERAL DIRECTORATE OF FINANCE-->
+<!--                        </p>-->
+<!--                        <p style="margin-top:0;margin-bottom:0;font-size:20px;">-->
+<!--                            DIRECTORATE OF INCOME AND FINANCIAL OPERATIONS-->
+<!--                        </p>-->
+<!--                        <p style="margin-top:0;margin-bottom:0;font-size:20px;">-->
+<!--                            <t t-esc="o.folio_legal"/>-->
+<!--                        </p>-->
+<!--                        <p style="margin-top:0;margin-bottom:0;font-size:20px;">-->
+<!--                            SUBJECT: REQUEST FOR CHECKS-->
+<!--                        </p>-->
+<!--                    </div>-->
+<!--                </div>-->
+                <div class="row">
+                    <div class="col-12 mb4" align="left">
+                        <t t-if="o.bank_id">
+                            <b><p style="margin-top:0;margin-bottom:0;font-size:15px;">
+                                <t t-esc="o.bank_id.name"/>
+                            </p>
+                            <t t-if="o.bank_id.bank_id">
+                                <t t-set="bank" t-value="o.bank_id.bank_id"/>
+                                <p style="margin-top:0;margin-bottom:0;font-size:15px;">
+                                    <t t-esc="bank.street"/>
+                                    <t t-if="bank.street2">
+                                        ,
+                                        <t t-esc="bank.street2"/>
+                                    </t>
+                                    <t t-if="bank.city">
+                                        ,
+                                        <t t-esc="bank.city"/>
+                                    </t>
+                                    <t t-if="bank.state">
+                                        ,
+                                        <t t-esc="bank.state.name"/>
+                                    </t>
+                                    <t t-if="bank.zip">
+                                        ,
+                                        <t t-esc="bank.zip"/>
+                                    </t>
+                                </p>
+                                <p style="margin-top:0;margin-bottom:0;font-size:15px;">
+                                    <t t-if="bank.country">
+                                        <t t-esc="bank.country.name"/>
+                                    </t>
+                                </p>
+                            </t>
+                            <p style="margin-top:0;margin-bottom:0;font-size:15px;">
+                                Present:
+                            </p></b>
+                        </t>
+                    </div>
+                </div>
+                <div class="row">
+                    <t t-if="o.bank_id">
+                        <div class="col-12 mb4" align="right">
+                            <t t-set="exe_name" t-value=""/>
+                           <b><p style="margin-top:0;margin-bottom:0;font-size:15px;">AT'N:
+                                <t t-foreach="o.bank_id.executive_ids" t-as="exe">
+                                    <t t-if="exe.recipient_executive and not exe_name">
+                                        <t t-esc="exe.name"/>
+                                        <t t-set="exe_name" t-value="exe.name"/>
+                                    </t>
+                                </t>
+                            </p>
+                            <p style="margin-top:0;margin-bottom:0;font-size:15px;">
+                                No. Account
+                                <t t-esc="o.bank_id.bank_acc_number"/>
+                                (CUENTA DE PROVEEDORES)
+                            </p></b>
+                        </div>
+                    </t>
+                </div>
+            </div>
+            <div t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout"
+                 t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
+                 t-att-data-oe-lang="o and o.env.context.get('lang')">
+                <t t-raw="0"/>
+            </div>
+            <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
+                <table class="table table-condensed" width="100%" style="border:1px solid black;margin-top:460px;">
+                    <thead>
+                        <th style="border:1px solid black;">
+                            <span>Titular de la dependencia</span>
+                        </th>
+                        <th style="border:1px solid black;">
+                            <span>Secretario Administrativo</span>
+                        </th>
+                        <th style="border:1px solid black;">
+                            <span>UNIDAD DE PROCESO ADMINISTRATIVO/MODULO</span>
+                        </th>
+                    </thead>
+                    <!--                <tbody>-->
+                    <!--                    <td style="border:1px solid black;text-align: center;" height="70">-->
+                    <!--                        <br/>-->
+                    <!--                        <br/>-->
+                    <!--                        <br/>-->
+                    <!--                        <span t-if="o.holder_of_dependency_id" t-field="o.holder_of_dependency_id.name"/>-->
+                    <!--                    </td>-->
+                    <!--                    <td style="border:1px solid black;text-align: center;" height="70">-->
+                    <!--                        <br/>-->
+                    <!--                        <br/>-->
+                    <!--                        <br/>-->
+                    <!--                        <span t-if="o.administrative_secretary_id" t-field="o.administrative_secretary_id.name"/>-->
+                    <!--                    </td>-->
+                    <!--                    <td style="border:1px solid black;" height="70"></td>-->
+                    <!--                </tbody>-->
+                </table>
+            </div>
+        </template>
+
+        <template id="external_layout_check_req_1">
+            <t t-if="not o" t-set="o" t-value="doc"/>
+
+            <t t-if="not company">
+                <!-- Multicompany -->
+                <t t-if="company_id">
+                    <t t-set="company" t-value="company_id"/>
+                </t>
+                <t t-elif="o and 'company_id' in o">
+                    <t t-set="company" t-value="o.company_id.sudo()"/>
+                </t>
+                <t t-else="else">
+                    <t t-set="company" t-value="res_company"/>
+                </t>
+            </t>
+            <t t-call="jt_check_controls.external_layout_header_check_request_1">
+                <t t-raw="0"/>
+            </t>
+        </template>
+
+        <template id="check_request_1">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-if="o.state == 'approved'">
+                        <t t-call="jt_check_controls.external_layout_check_req_1">
+                            <div class="page">
+                                <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+                                Through this channel, we would greatly appreciate turning your kind instruction to whom
+                                it may concern, in order to carry out the development of
+                            </div>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <report
+                id="check_request_1"
+                model="checkbook.request"
+                string="Check Request 1"
+                report_type="qweb-pdf"
+                name="jt_check_controls.check_request_1"
+                file="jt_check_controls.check_request_1"
+        />
+
+    </data>
+</odoo>

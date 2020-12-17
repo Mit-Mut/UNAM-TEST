@@ -4,3 +4,5 @@ access_trades_config,trades_config_access,model_trades_config,base.group_user,1,
 access_copied_employees,copied_employees_access,model_copied_employees,base.group_user,1,1,1,1
 access_check_auth_dependency,check_auth_dependency_access,model_check_authorized_dependency,base.group_user,1,1,1,1
 access_checkbook_request,checkbook_request_access,model_checkbook_request,base.group_user,1,1,1,1
+access_checklist,checklist_access,model_checklist,base.group_user,1,1,1,1
+access_checklist_line,checklist_line_access,model_checklist_line,base.group_user,1,1,1,1

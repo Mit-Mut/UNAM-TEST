@@ -130,7 +130,6 @@ class DistributionOfIncome(models.Model):
                         
             rate = v_rate + inv.extra_percentage
         
-        print ("term====",term)    
         final_balance = capital + inc - withdrawal
         income = (((final_balance * rate)/100)/360)*term
         
@@ -148,7 +147,8 @@ class DistributionOfIncome(models.Model):
                      'income' : income,
                      'rounded': income,
                      'rate' : rate,
-                     'days':  (self.end_date - line.date_required).days + 1,
+                     'days': term,
+                     #'days':  (self.end_date - line.date_required).days + 1,
                      'date_required' : line.date_required,
                      }]) 
         if line.type_of_operation in ('increase','increase_by_closing','open_bal'):
@@ -179,8 +179,13 @@ class DistributionOfIncome(models.Model):
     #
     #         self.variable_rate = total_rate/total_days
     
-    def get_previous_capital(self,cal_vals,pre_lines,inv,fund,base):
-        term = (self.end_date - self.start_date).days + 1
+    def get_previous_capital(self,cal_vals,pre_lines,capital_next_line,inv,fund,base):
+        print ("====",capital_next_line)
+        
+        if capital_next_line and capital_next_line.date_required:
+            term = (capital_next_line.date_required - self.start_date).days 
+        else:
+            term = (self.end_date - self.start_date).days + 1
         rate = 0
         if inv.is_fixed_rate:                     
             rate = inv.interest_rate + inv.extra_percentage
@@ -297,21 +302,32 @@ class DistributionOfIncome(models.Model):
         
         inv_ids = opt_lines.mapped('investment_id')
         if not inv_ids and capital_lines:
-            cal_vals,capital = self.get_previous_capital(cal_vals,capital_lines,self.investment_id,False,False)
+            cal_vals,capital = self.get_previous_capital(cal_vals,capital_lines,False,self.investment_id,False,False)
         for inv  in inv_ids:
             # self.set_rate_data(inv)
+            investment_fund_ids = opt_lines.filtered(lambda x:x.investment_id.id == inv.id and not x.base_collabaration_id).mapped('investment_fund_id')
+            
+            for capital_fund in capital_lines.filtered(lambda x:not x.base_collabaration_id and x.investment_id.id == inv.id and x.investment_fund_id.id not in investment_fund_ids.ids).mapped('investment_fund_id'):
+                capital_next_line = False
+                pre_capital_lines = capital_lines.filtered(lambda x:not x.base_collabaration_id and x.investment_id.id == inv.id and x.investment_fund_id.id == capital_fund.id)
                 
-            for fund in opt_lines.filtered(lambda x:x.investment_id.id == inv.id and not x.base_collabaration_id).mapped('investment_fund_id'):
+                cal_vals,capital = self.get_previous_capital(cal_vals,pre_capital_lines,capital_next_line,inv,capital_fund,False)
+                
+            for fund in investment_fund_ids:
                 capital = 0
-                
-                pre_capital_lines = capital_lines.filtered(lambda x:not x.base_collabaration_id and x.investment_id.id == inv.id and x.investment_fund_id.id == fund.id)
-                if pre_capital_lines:
-                    cal_vals,capital = self.get_previous_capital(cal_vals,pre_capital_lines,inv,fund,False)
-                                    
                 days = 0
                 line = False
                 pre_line = False
-                fund_lines = opt_lines.filtered(lambda x:not x.base_collabaration_id and x.investment_id.id == inv.id and x.investment_fund_id.id == fund.id)      
+                capital_next_line = False
+                fund_lines = opt_lines.filtered(lambda x:not x.base_collabaration_id and x.investment_id.id == inv.id and x.investment_fund_id.id == fund.id)
+
+                pre_capital_lines = capital_lines.filtered(lambda x:not x.base_collabaration_id and x.investment_id.id == inv.id and x.investment_fund_id.id == fund.id)
+                
+                if pre_capital_lines:
+                    if fund_lines:
+                        capital_next_line = fund_lines[0]  
+                    cal_vals,capital = self.get_previous_capital(cal_vals,pre_capital_lines,capital_next_line,inv,fund,False)
+                      
                 for opt_line in fund_lines:
                     if not line:
                         line = opt_line
@@ -322,19 +338,40 @@ class DistributionOfIncome(models.Model):
                 if line:
                     cal_vals,capital,days = self.create_line_records(line,line,capital,cal_vals,pre_line,days)
 
-            for fund in opt_lines.filtered(lambda x:x.investment_id.id == inv.id and x.base_collabaration_id).mapped('investment_fund_id'):
-                for base in opt_lines.filtered(lambda x:x.investment_id.id == inv.id and x.investment_fund_id.id == fund.id).mapped('base_collabaration_id'):
+            #Prevois Line #
+            investment_fund_ids = opt_lines.filtered(lambda x:x.investment_id.id == inv.id and x.base_collabaration_id).mapped('investment_fund_id')
+            capital_investment_fund_ids = capital_lines.filtered(lambda x:x.investment_id.id == inv.id and x.base_collabaration_id and x.investment_fund_id.id not in investment_fund_ids.ids).mapped('investment_fund_id')
+            for fund in capital_investment_fund_ids:
+
+                clb_base_ids = capital_lines.filtered(lambda x:x.investment_id.id == inv.id and x.investment_fund_id.id == fund.id).mapped('base_collabaration_id')
+                for capital_base in clb_base_ids:
+                    capital_next_line = False
+                    pre_capital_lines = capital_lines.filtered(lambda x:x.base_collabaration_id.id==capital_base.id and x.investment_id.id == inv.id and x.investment_fund_id.id == fund.id)
+                    cal_vals,capital = self.get_previous_capital(cal_vals,pre_capital_lines,capital_next_line,inv,capital_fund,capital_base)
+            
+            for fund in investment_fund_ids:
+                clb_base_ids = opt_lines.filtered(lambda x:x.investment_id.id == inv.id and x.investment_fund_id.id == fund.id).mapped('base_collabaration_id')
+                for capital_base in capital_lines.filtered(lambda x:x.investment_id.id == inv.id and x.investment_fund_id.id == fund.id and x.base_collabaration_id.id not in clb_base_ids.ids).mapped('base_collabaration_id'):
+                    capital_next_line = False
+                    pre_capital_lines = capital_lines.filtered(lambda x:x.base_collabaration_id.id==capital_base.id and x.investment_id.id == inv.id and x.investment_fund_id.id == fund.id)
+                    cal_vals,capital = self.get_previous_capital(cal_vals,pre_capital_lines,capital_next_line,inv,capital_fund,capital_base)
+                
+                 
+                for base in clb_base_ids:
                     capital = 0
                     days = 0 
                     line = False
                     pre_line = False
-                    print ("capital_lines===",capital_lines)
+                    capital_next_line = False
+                    base_lines = opt_lines.filtered(lambda x:x.base_collabaration_id.id==base.id and x.investment_id.id == inv.id and x.investment_fund_id.id == fund.id)
+
+                    if base_lines:
+                        capital_next_line = base_lines[0]
+                         
                     pre_capital_lines = capital_lines.filtered(lambda x:x.base_collabaration_id and x.investment_id.id == inv.id and x.investment_fund_id.id == fund.id)
                     if pre_capital_lines:
-                        cal_vals,capital = self.get_previous_capital(cal_vals,pre_capital_lines,inv,fund,base)
-                    print ("pre_capital_lines===",pre_capital_lines)
-                    
-                    base_lines = opt_lines.filtered(lambda x:x.base_collabaration_id.id==base.id and x.investment_id.id == inv.id and x.investment_fund_id.id == fund.id)      
+                        cal_vals,capital = self.get_previous_capital(cal_vals,pre_capital_lines,capital_next_line,inv,fund,base)
+                          
                     for opt_line in base_lines:
                         if not line:
                             line = opt_line

@@ -144,70 +144,6 @@ class BankAccountingBalance(models.AbstractModel):
         value['name'] = round(value['name'], 1)
         return value
 
-        
-
-    def _get_lines(self, options, line_id=None):
-        lines = []
-        if options.get('project_type'):
-            domain=[('project_type','in',('conacyt','concurrent'))]
-        else:
-            domain=[('project_type','=','other')]
-
-
-        start = datetime.strptime(
-            str(options['date'].get('date_from')), '%Y-%m-%d').date()
-        end = datetime.strptime(
-            options['date'].get('date_to'), '%Y-%m-%d').date()
-
-        project_domain = domain +  [('proj_start_date', '>=', start), ('proj_end_date', '<=', end)]
-        # project_domain =  [('proj_start_date', '>=', start), ('proj_end_date', '<=', end)]
-        project_records = self.env['project.project'].search(project_domain)
-        for record in project_records:
-            name = record.stage_identifier or ''
-            expense_ids = self.env['expense.verification'].search(
-                [('project_id', '=', record.name)])
-            lines.append({
-                'id': 'projects' + str(record.id),
-                'name': name,
-                'columns': [{'name': expense_ids[0].dependence.dependency if expense_ids else ''},
-
-                            {'name': record.number or ''},
-                            {'name': record.status},
-                            {'name': record.bank_account_id.name or ''},
-                            {'name': record.ministering_amount or 0.00},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': record.proj_start_date},
-                            {'name': record.proj_end_date},
-                            {'name':''},
-                            ],
-                'level': 2,
-                'unfoldable': False,
-                'unfolded': True,
-            })
-
-            lines.append({
-                'id': 'hierarchy_1',
-                'name': 'Total SubDep' ,
-                'columns': [{'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name':''},
-                            ],
-                'level': 2,
-                'unfoldable': False,
-                'unfolded': True,
-            })
-        return lines
-
     def _get_columns_name(self, options):
         return [
             {'name': _('Stage')},
@@ -221,9 +157,117 @@ class BankAccountingBalance(models.AbstractModel):
             {'name': _('Validity')},
             {'name': _('Start')},
             {'name': _('End')},
-            {'name': _('Subtotal')},
-            # {'name': _('Total SubDep')},
         ]
+        
+
+    def _get_lines(self, options, line_id=None):
+        lines = []
+        
+        if options.get('project_type'):
+            domain=[('project_type','in',('conacyt','concurrent'))]
+        else:
+            domain=[('project_type','=','other')]
+
+
+        start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+
+        project_domain = domain +  [('status','=','open'),('proj_start_date', '>=', start), ('proj_end_date', '<=', end)]
+        # project_domain =  [('proj_start_date', '>=', start), ('proj_end_date', '<=', end)]
+        project_records = self.env['project.project'].search(project_domain)
+        bank_accounts = project_records.mapped('bank_account_id')
+
+        gt_total_ministring_amount = 0
+        gt_total_checked_amount = 0
+        gt_total_to_checked_amont = 0
+        
+        for bank in bank_accounts:
+            total_ministring_amount = 0
+            total_checked_amount = 0
+            total_to_checked_amont = 0
+              
+            for record in project_records.filtered(lambda x:x.bank_account_id.id==bank.id):
+                
+                name = record.custom_stage_id and record.custom_stage_id.name or ''
+                ministring_amount = sum(x.ministering_amount for x in record.project_ministrations_ids)
+                exp_records = self.env['expense.verification'].search([('project_id','=',record.id),('status','=','approve')])
+                checked_amount = sum(x.amount_total for x in exp_records)
+                to_checked_amont = ministring_amount - checked_amount
+
+                total_ministring_amount += ministring_amount 
+                total_checked_amount += checked_amount 
+                total_to_checked_amont += to_checked_amont
+                 
+                gt_total_ministring_amount += ministring_amount
+                gt_total_checked_amount += checked_amount 
+                gt_total_to_checked_amont += to_checked_amont
+                
+                dep_name = ''
+                if record.dependency_id and record.dependency_id.dependency:
+                    dep_name = record.dependency_id.dependency
+                if record.subdependency_id and record.subdependency_id.sub_dependency:
+                    dep_name += record.subdependency_id.sub_dependency
+                     
+                lines.append({
+                    'id': 'projects' + str(record.id),
+                    'name': name,
+                    'columns': [{'name': dep_name},
+                                {'name': record.number or ''},
+                                {'name': record.status},
+                                {'name': record.bank_acc_number_id and record.bank_acc_number_id.acc_number or ''},
+                                self._format({'name': ministring_amount},figure_type='float'),
+                                self._format({'name': checked_amount},figure_type='float'),
+                                self._format({'name': to_checked_amont},figure_type='float'),
+                                self._format({'name': 0.0},figure_type='float'),
+                                {'name': record.proj_start_date},
+                                {'name': record.proj_end_date},
+                                ],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+
+            lines.append({
+                'id': 'hierarchy_2'+str(bank.id),
+                'name': 'Total' ,
+                'columns': [{'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            self._format({'name': total_ministring_amount},figure_type='float'),
+                            self._format({'name': total_checked_amount},figure_type='float'),
+                            self._format({'name': total_to_checked_amont},figure_type='float'),
+                            self._format({'name': 0.0},figure_type='float'),
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 2,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        lines.append({
+            'id': 'hierarchy_1',
+            'name': 'Total SubDep' ,
+            'columns': [{'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        self._format({'name': gt_total_ministring_amount},figure_type='float'),
+                        self._format({'name': gt_total_checked_amount},figure_type='float'),
+                        self._format({'name': gt_total_to_checked_amont},figure_type='float'),
+                        self._format({'name': 0.0},figure_type='float'),
+                        {'name': ''},
+                        {'name': ''},
+                        ],
+            'level': 2,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+        return lines
+
 
     def _get_report_name(self):
         return _("Accounting and bank account balances")

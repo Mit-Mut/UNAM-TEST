@@ -101,7 +101,7 @@ class IntegrationOfCurrentResearchProjects(models.AbstractModel):
         return[
 
             [
-                {'name': ''},
+                {'name': _('Stage / Year'),'class':'align-center'},
                 {'name': _('Active project control system balances'),
                  'colspan': 3},
                 {'name': _('Accounting Balance at') + ' ' +
@@ -110,7 +110,7 @@ class IntegrationOfCurrentResearchProjects(models.AbstractModel):
             ],
 
             [
-                {'name': 'Stage / Year'},
+                {'name': ''},
                 {'name': _('Ministered')},
                 {'name': _('Checked')},
                 {'name': _('To check')},
@@ -182,7 +182,7 @@ class IntegrationOfCurrentResearchProjects(models.AbstractModel):
                 'unfoldable': False,
                 'unfolded': True,
             })
-
+        
         lines.append({
             'id': 'projects_total',
             'name': 'TOTAL DE '+str(total_project)+' PROYECTOS',
@@ -198,14 +198,15 @@ class IntegrationOfCurrentResearchProjects(models.AbstractModel):
             'unfoldable': False,
             'unfolded': True,
         })
-
+        
+    
         lines.append({
             'id': 'projects_saldo_total',
-            'name': '',
+            'name': 'SALDO EN CUENTA & BANCARIA & CONACTY',
             'columns': [
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': 'SALDO EN CUENTA & BANCARIA & CONACTY'},
+#                         {'name': ''},
+#                         {'name': ''},
+#                         {'name': ''},
                         self._format({'name': 0.0},figure_type='float'),
                         {'name': ''},
                         {'name': ''},
@@ -213,15 +214,17 @@ class IntegrationOfCurrentResearchProjects(models.AbstractModel):
             'level': 2,
             'unfoldable': False,
             'unfolded': True,
+            'colspan' :4,
+            'class': 'o_account_reports_load_more text-right',
         })
 
         lines.append({
             'id': 'projects_diff_total',
-            'name': '',
+            'name': 'DIFERENCIA GASTO & PENDIENTE & DE COMP ROBARA LA CONTADURA GENERAL',
             'columns': [
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': _('DIFERENCIA GASTO & PENDIENTE & DE COMP ROBARA LA CONTADURA GENERAL')},
+#                        {'name': _('DIFERENCIA GASTO & PENDIENTE & DE COMP ROBARA LA CONTADURA GENERAL')},
+#                         {'name': ''},
+#                         {'name': ''},
 
                         #{'name': 'DIFERENCIA GASTO & PENDIENTE & DE COMP ROBARA LA CONTADURA GENERAL'},
                         self._format({'name': total_to_checked_amount},figure_type='float'),
@@ -231,8 +234,10 @@ class IntegrationOfCurrentResearchProjects(models.AbstractModel):
             'level': 2,
             'unfoldable': False,
             'unfolded': True,
+            'colspan' :4,
+            'class': 'o_account_reports_load_more text-right',
         })
-
+    
         #=================== Second Part =================#
 
         lines.append({
@@ -248,37 +253,62 @@ class IntegrationOfCurrentResearchProjects(models.AbstractModel):
 
         lines.append({
             'id': 'projects_2_1',
-            'name': '',
-            'columns': [
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': 'PROYECTOS DE INVESTIGACION CONACYT POR NUMERO DE CUENTAS BANCARIAS'},
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        ],
+            'name': 'PROYECTOS DE INVESTIGACION CONACYT POR NUMERO DE CUENTAS BANCARIAS',
+#             'columns': [
+#                         {'name': ''},
+#                         {'name': ''},
+#                         {'name': 'PROYECTOS DE INVESTIGACION CONACYT POR NUMERO DE CUENTAS BANCARIAS'},
+#                         {'name': ''},
+#                         {'name': ''},
+#                         {'name': ''},
+#                         ],
             'level': 2,
             'unfoldable': False,
             'unfolded': True,
+            'colspan':7,
+            'class': 'o_account_reports_load_more text-center',
         })
+        
+        
 
+#         lines.append({
+#             'id': 'project_id',
+#             'name': 'CONCEPTO',
+#             'columns': [
+#                         {'name':'PROYECTOS CON CUENTAS BANCARIAS SEGUN CONTADURIA GENERAL','style': 'word-wrap: break-word;'},
+#                         {'name': 'SALDO CONTABLE'},
+#                         {'name':'N*,CTAS,BANCARIAS'},
+#                         {'name': 'SALDO EN CUENTAS BANCARIAS SEGUN DIRECCION GENERAL DE FINANZAS '},
+#                         {'name': 'DIFERENCIA GASTOS PENDIENTES DE COMPROBAR A LA CONTADURIA GENERAL'},
+#                         {'name': ''},
+#  
+#                         ],
+#             'level': 2,
+#             'unfoldable': False,
+#             'unfolded': True,
+#             'class': 'o_account_reports_load_more text-center',
+#             })
+    
         lines.append({
             'id': 'project_id',
             'name': 'CONCEPTO',
             'columns': [
-                        {'name':'PROYECTOS CON CUENTAS BANCARIAS SEGUN CONTADURIA GENERAL','style': 'word-wrap: break-word;'},
+                        {'name':'PROYECTOS CON CUENTAS BANCARIAS','style': 'word-wrap: break-word;'},
                         {'name': 'SALDO CONTABLE'},
                         {'name':'N*,CTAS,BANCARIAS'},
-                        {'name': 'SALDO EN CUENTAS BANCARIAS SEGUN DIRECCION GENERAL DE FINANZAS '},
-                        {'name': 'DIFERENCIA GASTOS PENDIENTES DE COMPROBAR A LA CONTADURIA GENERAL'},
-                        {'name': ''},
+                        {'name': 'SALDO EN CUENTAS BANCARIAS '},
+                        {'name': 'DIFERENCIA '},
  
                         ],
             'level': 2,
             'unfoldable': False,
             'unfolded': True,
+            'colspan':2,
+            'class':'height:100px;'
             })
-
+        
+        
+        
         active_project = self.env['request.accounts'].search([('status','=','confirmed'),('project_id','in',project_records.ids),('move_type','=','account open')])
         cancel_project = self.env['request.accounts'].search([('status','=','confirmed'),('project_id','in',project_records.ids),('move_type','=','account cancel')])
         
@@ -312,11 +342,11 @@ class IntegrationOfCurrentResearchProjects(models.AbstractModel):
                         {'name': active_no_bank_account,'class':'number'},
                         self._format({'name': active_total},figure_type='float'),
                         self._format({'name': active_diff},figure_type='float'),
-                        {'name': ''},
                         ],
             'level': 3,
             'unfoldable': False,
             'unfolded': True,
+            'colspan':2,
         })
 
         lines.append({
@@ -328,11 +358,11 @@ class IntegrationOfCurrentResearchProjects(models.AbstractModel):
                         {'name': cancel_no_bank_account,'class':'number'},
                         self._format({'name': cancel_total},figure_type='float'),
                         self._format({'name': cancel_diff},figure_type='float'),
-                        {'name': ''},
                         ],
             'level': 3,
             'unfoldable': False,
             'unfolded': True,
+            'colspan':2,
         })
         
 
@@ -494,7 +524,7 @@ class IntegrationOfCurrentResearchProjects(models.AbstractModel):
                     'o': self.env.user,
                     'res_company': self.env.company,
                 })
-            header = self.env['ir.actions.report'].render_template("jt_investment.external_layout_investment_funds_balances", values=rcontext)
+            header = self.env['ir.actions.report'].render_template("jt_projects.external_integration_of_current_research_projects", values=rcontext)
             header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
             spec_paperformat_args = {}
             # Default header and footer in case the user customized web.external_layout and removed the header/footer

@@ -78,8 +78,6 @@ class InegrationOfExpAndCurrProject(models.AbstractModel):
             {'name': _('% Total overdue')},
             {'name': _('No. of projects with zero balance,with active bank account')},
             {'name': _('Total projects')},
-            {'name': _('Total[Horizontal]')},
-            {'name': _('Grand Total [Vertical]')},
         ]
 
     def _format(self, value,figure_type):
@@ -115,28 +113,108 @@ class InegrationOfExpAndCurrProject(models.AbstractModel):
         count = 0
         project_records = self.env['project.project'].search(
             [('proj_start_date', '>=', start), ('proj_end_date', '<=', end)])
-        for record in project_records:
-            expense_ids = self.env['expense.verification'].search(
-                [('project_id', '=', record.name)])
-            count = count + 1
-            lines.append({
-                'id': 'projects' + str(record.id),
-                'name': count,
-                'columns': [{'name': str(expense_ids[0].dependence.dependency or '') + str(expense_ids[0].subdependence.sub_dependency or '') if expense_ids else ''},
-                            {'name': record.name},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''}, ],
-                'level': 3,
-                'unfoldable': False,
-                'unfolded': True,
-            })
+        
+        dep_ids = project_records.mapped('dependency_id')
+
+        gt_total_open_project = 0
+        gt_total_open_verification_amount = 0
+        gt_total_expired_project = 0
+        gt_total_over_dua = 0
+        gt_total_per = 0
+        gt_total_active = 0
+        gt_total_all_project = 0
+        
+        for dep in dep_ids:
+#             total_open_project = 0
+#             total_open_verification_amount = 0
+#             total_expired_project = 0
+#             total_over_dua = 0
+#             total_per = 0
+#             total_active = 0
+#             total_all_project = 0
+            
+            sub_dep_ids =  project_records.filtered(lambda x:x.dependency_id.id==dep.id).mapped('subdependency_id')
+            for sub in sub_dep_ids:
+                count = count + 1
+                entity = ''
+                if dep.dependency:
+                    entity = dep.dependency
+                if sub.sub_dependency:
+                    entity += sub.sub_dependency
+                
+                total_project = 0
+                open_project_ids = project_records.filtered(lambda x:x.dependency_id.id==dep.id and x.subdependency_id.id==sub.id and x.status=='open') 
+                open_project = len(open_project_ids)
+                total_project += open_project
+                 
+                verification_expense = self.env['expense.verification'].search([('project_id','in',open_project_ids.ids),('status','=','approve')])
+                open_verification_amounts = sum(x.amount_total for x in verification_expense)
+                
+                expired_projects_ids = project_records.filtered(lambda x:x.dependency_id.id==dep.id and x.subdependency_id.id==sub.id and x.status=='open' and x.check_project_expire)
+                expired_project = len(expired_projects_ids)
+                
+                total_project += expired_project
+                active_project = 0
+                for pr in open_project_ids:
+                    if pr.bank_account_id and pr.bank_account_id.default_debit_account_id:
+                        values= self.env['account.move.line'].search([('account_id', '=', pr.bank_account_id.default_debit_account_id.id),('move_id.state', '=', 'posted')])
+                        account_amount = sum(x.debit-x.credit for x in values)
+                        if account_amount ==0:
+                            active_project+=1
+                
+                total_project += active_project
+
+#                 total_open_project += open_project
+#                 total_open_verification_amount += open_verification_amounts
+#                 total_expired_project += expired_project 
+#                 total_over_dua = 0
+#                 total_per = 0
+#                 total_active += active_project
+#                 total_all_project += total_project
+
+                gt_total_open_project += open_project
+                gt_total_open_verification_amount += open_verification_amounts
+                gt_total_expired_project += expired_project
+                gt_total_over_dua = 0
+                gt_total_per = 0
+                gt_total_active += active_project
+                gt_total_all_project += total_project
+                            
+                lines.append({
+                    'id': 'projects' + str(dep.id)+str(sub.id),
+                    'name': count,
+                    'columns': [{'name': entity},
+                                {'name': dep.description and dep.description or ''},
+                                {'name': open_project,'class':'number'},
+                                self._format({'name': open_verification_amounts},figure_type='float'),
+                                {'name': expired_project,'class':'number'},
+                                self._format({'name': 0.0},figure_type='float'),
+                                self._format({'name': 0.0},figure_type='float'),
+                                {'name': active_project,'class':'number'},
+                                {'name': total_project,'class':'number'},
+                                ],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+
+        lines.append({
+            'id': 'projects_total',
+            'name': 'Total',
+            'columns': [{'name': ''},
+                        {'name': ''},
+                        {'name': gt_total_open_project,'class':'number'},
+                        self._format({'name': gt_total_open_verification_amount},figure_type='float'),
+                        {'name': gt_total_expired_project,'class':'number'},
+                        self._format({'name': gt_total_over_dua},figure_type='float'),
+                        self._format({'name': gt_total_per},figure_type='float'),
+                        {'name': gt_total_active,'class':'number'},
+                        {'name': gt_total_all_project,'class':'number'},
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
 
         return lines
 

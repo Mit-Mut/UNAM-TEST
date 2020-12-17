@@ -401,10 +401,10 @@ class IntegrationOfBudgetResourceRemanats(models.AbstractModel):
                                 
                 PAPIIT_configuration_id = self.env['remaining.resource'].search([('stage_id','=',stage.id),('year','=',year),('project_type','=','papit')],limit=1)
                 if PAPIIT_configuration_id and PAPIIT_configuration_id.account_id:
-                    values= self.env['account.move.line'].search([('date', '>=', previous_start_date), ('date', '<', start),('account_id', '=', PAPIIT_configuration_id.account_id.id),('move_id.state', '=', 'posted')])
+                    values= self.env['account.move.line'].search([('date', '>=', start), ('date', '<=', end),('account_id', '=', PAPIIT_configuration_id.account_id.id),('move_id.state', '=', 'posted')])
                     PAPIIT_curt_balance = sum(x.debit - x.credit for x in values)
 
-                    values= self.env['account.move.line'].search([('date', '>=', start), ('date', '<=', end),('account_id', '=', PAPIIT_configuration_id.account_id.id),('move_id.state', '=', 'posted')])
+                    values= self.env['account.move.line'].search([('date', '>=', previous_start_date), ('date', '<', start),('account_id', '=', PAPIIT_configuration_id.account_id.id),('move_id.state', '=', 'posted')])
                     PAPIIT_pre_balance = sum(x.debit - x.credit for x in values)
 
                 PAPIME_configuration_id = self.env['remaining.resource'].search([('stage_id','=',stage.id),('year','=',year),('project_type','=','papime')],limit=1)

@@ -34,6 +34,7 @@
         'data/ir_cron.xml',
         'data/data.xml',
         'security/project_security.xml',
+        'reports/header_template.xml',
         'views/rejection_checks_views.xml',
         'views/project_registry_views.xml',
         'views/request_trasfer_view.xml',

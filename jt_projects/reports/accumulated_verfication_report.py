@@ -72,11 +72,11 @@ class AccumulatedVerficationRecorded(models.AbstractModel):
 
     def _get_columns_name(self, options):
         return [
-            {'name': _('Entry')},
-            {'name': _('443 IE REC expenses.Concurrent CONACYT')},
-            {'name': _('448 IE CONACYT Checkbooks Expenses')},
-            {'name': _('449 IE Expenses Other Projects with checkbook')},
-            {'name': _('Total 443,448 and 449')},
+            {'name': _('INGRESO')},
+            {'name': _('443 GTOS I.E. REC. CONCURRENTES CYT')},
+            {'name': _('448 GTOS I.E. CONACYT CHEQUERAS')},
+            {'name': _('449 GTOS I.E. OTROS PROYS C/CHEQUERA')},
+            {'name': _('Total 443,448 Y 449')},
             # {'name': _('Countable balance')},
             # {'name': _('Accounting account of various debtors')},
             # {'name': _('Total of (Number of projects)')},
@@ -145,16 +145,60 @@ class AccumulatedVerficationRecorded(models.AbstractModel):
        
         prev = start.replace(day=1) - timedelta(days=1)
         previous_month = self.get_month_name(prev.month)
-        print("**previous month*",previous_month)
-       
+        
+        
+        account_443_id = self.env['account.account'].search([('code','=','411.001.002.012')],limit=1)
+        account_448_id = self.env['account.account'].search([('code','=','411.001.002.010')],limit=1)
+        account_449_id = self.env['account.account'].search([('code','=','411.001.002.011')],limit=1)
+        
+        current_443_balance = 0
+        previous_443_balance = 0
+        current_448_balance = 0
+        previous_448_balance = 0
+        current_449_balance = 0
+        previous_449_balance = 0
+
+        
+        previous_month_date = prev.replace(day=1)
+        if account_443_id:
+            values= self.env['account.move.line'].search([('date', '>=', start), ('date', '<=', end),('account_id', '=', account_443_id.id),('move_id.state', '=', 'posted')])
+            current_443_balance =  sum(x.debit - x.credit for x in values)
+
+            values= self.env['account.move.line'].search([('date', '>=', previous_month_date), ('date', '<', start),('account_id', '=', account_443_id.id),('move_id.state', '=', 'posted')])
+            previous_443_balance = sum(x.debit - x.credit for x in values)
+
+        if account_448_id:
+            values= self.env['account.move.line'].search([('date', '>=', start), ('date', '<=', end),('account_id', '=', account_448_id.id),('move_id.state', '=', 'posted')])
+            current_448_balance =  sum(x.debit - x.credit for x in values)
+
+            values= self.env['account.move.line'].search([('date', '>=', previous_month_date), ('date', '<', start),('account_id', '=', account_448_id.id),('move_id.state', '=', 'posted')])
+            previous_448_balance = sum(x.debit - x.credit for x in values)
+
+        if account_449_id:
+            values= self.env['account.move.line'].search([('date', '>=', start), ('date', '<=', end),('account_id', '=', account_449_id.id),('move_id.state', '=', 'posted')])
+            current_449_balance =  sum(x.debit - x.credit for x in values)
+
+            values= self.env['account.move.line'].search([('date', '>=', previous_month_date), ('date', '<', start),('account_id', '=', account_449_id.id),('move_id.state', '=', 'posted')])
+            previous_449_balance = sum(x.debit - x.credit for x in values)
+                     
+        total_pre = previous_443_balance + previous_448_balance + previous_449_balance
+        total_current = current_443_balance + current_448_balance + current_449_balance
+        
+        total_443 = previous_443_balance + current_443_balance
+        total_448 = previous_448_balance + current_448_balance
+        total_449 = previous_449_balance + current_449_balance
+        
+        total_all = total_443 + total_448 + total_449
+        
         lines.append({
             'id': 'hierarchy_3',
             'name': 'Accumulated'+ ' ' + previous_month,
-            'columns': [{'name': ''},
-                        {'name': ''},
-                        {'name': ''},
+            'columns': [self._format({'name': previous_443_balance},figure_type='float'),
+                        self._format({'name': previous_448_balance},figure_type='float'),
+                        self._format({'name': previous_449_balance},figure_type='float'),
+                        self._format({'name': total_pre},figure_type='float'),
                         ],
-            'level': 2,
+            'level': 3,
             'unfoldable': False,
             'unfolded': True,
         })
@@ -162,11 +206,12 @@ class AccumulatedVerficationRecorded(models.AbstractModel):
         lines.append({
             'id': 'hierarchy_3',
             'name': month_name,
-            'columns': [{'name': ''},
-                        {'name': ''},
-                        {'name': ''},
+            'columns': [self._format({'name': current_443_balance},figure_type='float'),
+                        self._format({'name': current_448_balance},figure_type='float'),
+                        self._format({'name': current_449_balance},figure_type='float'),
+                        self._format({'name': total_current},figure_type='float'),
                         ],
-            'level': 2,
+            'level': 3,
             'unfoldable': False,
             'unfolded': True,
         })
@@ -174,67 +219,69 @@ class AccumulatedVerficationRecorded(models.AbstractModel):
         lines.append({
             'id': 'hierarchy_3',
             'name': 'Accumulated' + ' ' + month_name,
-            'columns': [{'name': ''},
-                        {'name': ''},
-                        {'name': ''},
+            'columns': [self._format({'name': total_443},figure_type='float'),
+                        self._format({'name': total_448},figure_type='float'),
+                        self._format({'name': total_449},figure_type='float'),
+                        self._format({'name': total_all},figure_type='float'),
                         ],
             'level': 2,
             'unfoldable': False,
             'unfolded': True,
         })
 
-
-        lines.append({
-            'id': 'hierarchy_3',
-            'name': 'Concept',
-            'columns': [{'name': 'Accumulated'},
-                        {'name': 'Stage [N of Stage] Accumulated [Months consultation] of'},
-                        {'name': 'Total'},
-                        ],
-            'level': 2,
-            'unfoldable': False,
-            'unfolded': True,
-        })
-
-        lines.append({
-            'id':'hierarchy_4',
-            'name': 'Accounting accounts (443,449 and 449) that affect Income / Expense',
-            'columns': [{'name':''},
-                        {'name':''},
-                        {'name':''},
-
-                        ],
-            'level': 2,
-            'unfoldable': False,
-            'unfolded': True,
-            })
-
-        lines.append({
-            'id':'hierarchy_5',
-            'name': 'Concepts that do not affect Income / Expenditure B1) Budgetary concurrent "CP", B2) Returns of resources to CONACYT, B3) Interdependency payments',
-            'columns': [{'name': ''},
-                        {'name':''},
-                        {'name':''},
-                        
-                    
-                        ],
-            'level': 2,
-            'unfoldable': False,
-            'unfolded': True,
-            })
-
-        lines.append({
-            'id':'hierarchy_5',
-            'name': 'Total Checked',
-            'columns': [{'name': ''},
-                        {'name':''},
-                        {'name':''},
-                    
-                        ],
-            'level': 2,
-            'unfoldable': False,
-            'unfolded': True,
-            })
+# 
+#         lines.append({
+#             'id': 'hierarchy_3',
+#             'name': 'Concept',
+#             'columns': [{'name': 'Accumulated'},
+#                         {'name': 'Stage [N of Stage] Accumulated [Months consultation] of'},
+#                         {'name': 'Total'},
+#                         ],
+#             'level': 2,
+#             'unfoldable': False,
+#             'unfolded': True,
+#         })
+# 
+#         lines.append({
+#             'id':'hierarchy_4',
+#             'name': 'Accounting accounts (443,449 and 449) that affect Income / Expense',
+#             'columns': [{'name':''},
+#                         {'name':''},
+#                         {'name':''},
+# 
+#                         ],
+#             'level': 2,
+#             'unfoldable': False,
+#             'unfolded': True,
+#             })
+# 
+#         lines.append({
+#             'id':'hierarchy_5',
+#             'name': 'Concepts that do not affect Income / Expenditure B1) Budgetary concurrent "CP", B2) Returns of resources to CONACYT, B3) Interdependency payments',
+# #             'columns': [{'name': ''},
+# #                         {'name':''},
+# #                         {'name':''},
+# #                         
+# #                     
+# #                         ],
+#             'level': 2,
+#             'unfoldable': False,
+#             'unfolded': True,
+#             'colspan': 5,
+#             })
+# 
+#         lines.append({
+#             'id':'hierarchy_5',
+#             'name': 'Total Checked',
+#             'columns': [{'name': ''},
+#                         {'name':''},
+#                         {'name':''},
+#                     
+#                         ],
+#             'level': 2,
+#             'unfoldable': False,
+#             'unfolded': True,
+#             })
 
         return lines
 

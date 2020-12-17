@@ -22,10 +22,10 @@
                                 <field name="project_id" required="1" domain="[('project_type', '=', 'conacyt')]"
                                 attrs="{'readonly': [('status', '!=', 'eraser')]}" />
                                 <field name="project_name" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="program_code" required="1"  attrs="{'readonly': [('status', '!=', 'eraser')]}" context="{'from_conacyt':1}"/>
+                                <field name="program_code" readonly="1" force_save="1"  attrs="{'readonly': [('status', '!=', 'eraser')]}" context="{'from_conacyt':1}"/>
                                 <field name="user_id" readonly="1"/>
-                                <field name="project_type_identifier" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="project_stage_identifier" readonly="1" string="Project Type"/>
+                                <field name="custom_project_type_id" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="custom_stage_id" readonly="1" string="Project Type"/>
                                 <field name="ministrations_amount" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="authorized_amount" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                             </group>

@@ -22,6 +22,10 @@ class RequestAccounts(models.Model):
         related='project_id.project_type_identifier_id', string="Project Type Identifier")
     project_stage_identifier = fields.Many2one(
         related='project_id.stage_identifier_id', string="Number of stages")
+
+    custom_stage_id = fields.Many2one(related='project_id.custom_stage_id',string='Number of stages')
+    custom_project_type_id = fields.Many2one(related='project_id.custom_project_type_id',string='Project Type Identifier')
+    
     ministrations_amount = fields.Float("Amount of ministrations")
     authorized_amount = fields.Float("Authorized Amount")
     observations = fields.Text("Observations")
@@ -169,6 +173,6 @@ class RequestAccounts(models.Model):
 
     @api.onchange('project_id')
     def onchange_project_id(self):
-        if self.project_id and self.move_type=='account open':
+        if self.project_id:
             self.program_code = self.project_id.program_code and self.project_id.program_code.id or False  
         

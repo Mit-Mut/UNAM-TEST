@@ -22,7 +22,7 @@
                             <field name="job_template" required="1"/>
                         </group>
                         <notebook>
-                            <page string="office of indemnification" name="indemnification">
+                            <page string="Office of indemnification" name="indemnification">
                                  <group>
                                     <group string="General Director">
                                         <field name="general_director_title"/>

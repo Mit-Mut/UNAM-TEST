@@ -103,6 +103,46 @@ class CheckbookRequest(models.Model):
                 'res_id': checklist.id
             }
 
+    def get_checklist(self, checkbook):
+        checklist = self.env['checklist'].search([('checkbook_req_id', '=', checkbook.id)], limit=1)
+        return checklist
+
+    def get_date(self):
+        today = datetime.today().date()
+        day = today.day
+        month = today.month
+        month_name = ''
+        if month == 1:
+            month_name = 'Enero'
+        elif month == 2:
+            month_name = 'Febrero'
+        elif month == 3:
+            month_name = 'Marzo'
+        elif month == 4:
+            month_name = 'Abril'
+        elif month == 5:
+            month_name = 'Mayo'
+        elif month == 6:
+            month_name = 'Junio'
+        elif month == 7:
+            month_name = 'Julio'
+        elif month == 8:
+            month_name = 'Agosto'
+        elif month == 9:
+            month_name = 'Septiembre'
+        elif month == 10:
+            month_name = 'Octubre'
+        elif month == 11:
+            month_name = 'Noviembre'
+        elif month == 12:
+            month_name = 'Diciembre'
+        year = today.year
+        return str(day) + ' de ' + month_name + ' de ' + str(year)
+
+    def get_trade_configuration(self):
+        trade = self.env['trades.config'].search([('job_template', '=', 'check_req_1')], limit=1)
+        return trade
+
 class CheckList(models.Model):
 
     _name = 'checklist'

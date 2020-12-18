@@ -1,0 +1,752 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* jt_check_controls
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-12-18 12:03+0000\n"
+"PO-Revision-Date: 2020-12-18 12:03+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
+msgid "-Boxes of"
+msgstr ""
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
+msgid "-Packing of"
+msgstr ""
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
+msgid ""
+"<br/>\n"
+"                            <br/>\n"
+"                            <br/>\n"
+"                            <br/>\n"
+"                            <br/>\n"
+"                            <br/>\n"
+"                            <br/>\n"
+"                            <br/>\n"
+"                            <span>Through this channel, we would greatly appreciate turning your kind instruction to\n"
+"                                whom it may concern, in order to carry out the development of\n"
+"                            </span>"
+msgstr ""
+"<br/>\n"
+"                            <br/>\n"
+"                            <br/>\n"
+"                            <br/>\n"
+"                            <br/>\n"
+"                            <br/>\n"
+"                            <br/>\n"
+"                            <br/>\n"
+"                            <span>TA través de este canal, agradeceríamos enormemente que nos diera sus amables instrucciones. a quien pueda concernir, con el fin de llevar a cabo el desarrollo de\n"
+"                            </span>"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
+msgid ""
+"<span style=\"font-size:15px\">\n"
+"                            Sincerely\n"
+"                            <br/>\n"
+"                        </span>\n"
+"                        <span style=\"font-size:15px\">\n"
+"                            FOR MY RACE THE SPIRIT WILL SPEAK\n"
+"                        </span>"
+msgstr ""
+"<span style=\"font-size:15px\">\n"
+"                            Atentamente                            <br/>\n"
+"                        </span>\n"
+"                        <span style=\"font-size:15px\">\n"
+"                            POR MI RAZA HABLARÁ EL ESPÍRITU                        </span>"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
+msgid "<span style=\"font-size:15px\">C.C.P.</span>"
+msgstr ""
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
+msgid ""
+"<span style=\"font-size:15px\">DIRECTOR OF INCOME AND FINANCIAL "
+"OPERATION</span>"
+msgstr ""
+"<span style=\"font-size:15px\">DIRECTOR DE INGRESOS Y OPERACIÓN "
+"FINANZAS</span>"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
+msgid "<span style=\"font-size:15px\">GENERAL DIRECTOR</span>"
+msgstr "<span style=\"font-size:15px\">DIRECTOR GENERAL</span>"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
+msgid ""
+"<span>\n"
+"                                , In order to enable it and avoid unnecessary overdrafts, requesting that you send\n"
+"                                us the invoice for this remittance as soon as possible to send it to our General\n"
+"                                Accounting area for registration.\n"
+"                            </span>\n"
+"                            <br/>\n"
+"                            <span>\n"
+"                                We request that the packing order be as follows:\n"
+"                                <br/>\n"
+"                            </span>"
+msgstr ""
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
+msgid ""
+"<span>\n"
+"                                -Protection of thick cardboard sheets at the beginning and end of each package,\n"
+"                                as well as craft paper wrapping.\n"
+"                                <br/>\n"
+"                                -Checks should be arranged from 1 to “N” with the face facing up.\n"
+"                                <br/>\n"
+"                                -They must be counted from the lower left corner to avoid lifting and jamming\n"
+"                                during printing\n"
+"                                <br/>\n"
+"                                -9 points per inch tattoo and ties on the edges.\n"
+"                                <br/>\n"
+"                                -Format in measures of 8.5 by 14 inches, refined in 90 grms security paper.\n"
+"                                <br/>\n"
+"                                -Finally, remember that these checks must have the security measures of the ABM,\n"
+"                                the security characteristics of each bank and contain the legend \"THE VALIDITY OF\n"
+"                                THIS CHECK IS 30 DAYS\" ON THE FRONT AND REVERSE.\n"
+"                                <br/>\n"
+"                            </span>\n"
+"                            <span>\n"
+"                                We appreciate you sending us the corresponding CFDI in PDF format and XML file.\n"
+"                            </span>\n"
+"                            <span>\n"
+"                                Please strictly adhere to the technical characteristics of substance and form, as\n"
+"                                well as the security measures of the attached sample check.\n"
+"                                <br/>\n"
+"                                Without further ado and thanking you again for your attention to the present,\n"
+"                                we bid you farewell with a cordial greeting.\n"
+"                            </span>"
+msgstr ""
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
+msgid "<span>(CUENTA DE PROVEEDORES)</span>"
+msgstr ""
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
+msgid ""
+"<span>, In order to be considered (s) as a print sample.</span>\n"
+"                            <br/>\n"
+"                            <span>Likewise, we would also appreciate informing us in advance the corresponding\n"
+"                                charge, which must be applied to the account\n"
+"                            </span>"
+msgstr ""
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
+msgid ""
+"<span>Annex, it will be useful to find the\n"
+"                                canceled format containing the folio\n"
+"                            </span>"
+msgstr ""
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
+msgid "<span>Formats to print checks from this account</span>"
+msgstr "<span>Formatos para imprimir cheques de esta cuenta</span>"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
+msgid "<span>No. Account</span>"
+msgstr "<span>No. De Cuenta</span>"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
+msgid "<span>Present:</span>"
+msgstr "<span>Presente:</span>"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
+msgid "<span>They must start from the folio</span>"
+msgstr ""
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
+msgid "AT'N:"
+msgstr ""
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_checklist__additional_checks
+#: model:ir.model.fields,field_description:jt_check_controls.field_confirm_checkbook__additional_checks
+msgid "Additional checks without cash"
+msgstr "Cheques adicionales sin caja"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__amount_checks
+msgid "Amount of Checks"
+msgstr "Cantidad de cheques"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__applicant_id
+msgid "Applicant"
+msgstr "Solicitante"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__appliaction_date
+msgid "Application Date"
+msgstr "Fecha solicitud"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__application_no
+msgid "Application No."
+msgstr "Solicitud No"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.confirm_checkbook_form_view
+msgid "Apply"
+msgstr "Aplicar"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.checkbook_req_form_view
+msgid "Approve"
+msgstr "Aprobar"
+
+#. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__checkbook_request__state__approved
+msgid "Approved"
+msgstr "Aprobado"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__are_test_prin_formats_sent
+msgid "Are test print formats sent?"
+msgstr "¿Se envían formatos para prueba de impresión?"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_authorized_dependency__area
+#: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__area
+msgid "Area"
+msgstr "Área"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.checkbook_req_form_view
+msgid "Back to Draft"
+msgstr "Regresar A Borrador"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__bank_id
+#: model:ir.model.fields,field_description:jt_check_controls.field_minimum_checks__bank_id
+msgid "Bank"
+msgstr "Banco"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__bank_account_id
+msgid "Bank Account"
+msgstr "Cuenta bancaria"
+
+#. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__checkbook_request__state__cancelled
+msgid "Cancelled"
+msgstr "Cancelado"
+
+#. module: jt_check_controls
+#: model:ir.model,name:jt_check_controls.model_check_authorized_dependency
+msgid "Check Authorized By Dependency"
+msgstr "Cheque autorizado por dependencia"
+
+#. module: jt_check_controls
+#: model:ir.ui.menu,name:jt_check_controls.check_control_main_menu
+msgid "Check Control"
+msgstr "Control de cheques"
+
+#. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__trades_config__job_template__check_delivery_document
+msgid "Check Delivery Document"
+msgstr "Revise el documento de entrega"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__check_receipt_date
+msgid "Check Receipt Date"
+msgstr "Fecha de recepción del cheques"
+
+#. module: jt_check_controls
+#: code:addons/jt_check_controls/models/checkbook_req.py:0
+#, python-format
+msgid "Check Reception"
+msgstr "Recepción de Cheques"
+
+#. module: jt_check_controls
+#: model:ir.actions.report,name:jt_check_controls.check_request_1
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__trades_config__job_template__check_req_1
+msgid "Check Request 1"
+msgstr "Solicitud de cheque 1"
+
+#. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__trades_config__job_template__check_req_2
+msgid "Check Request 2"
+msgstr "Solicitud de cheque 2"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_checklist__checkbook_req_id
+#: model:ir.model.fields,field_description:jt_check_controls.field_minimum_checks__checkbook_id
+msgid "Checkbook"
+msgstr "Chequera"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__checkbook_no
+#: model:ir.model.fields,field_description:jt_check_controls.field_checklist__checkbook_no
+#: model:ir.model.fields,field_description:jt_check_controls.field_confirm_checkbook__checkbook_no
+msgid "Checkbook No."
+msgstr "Chequera No."
+
+#. module: jt_check_controls
+#: model:ir.model,name:jt_check_controls.model_checkbook_request
+msgid "Checkbook Request"
+msgstr "Solicitud de chequera"
+
+#. module: jt_check_controls
+#: model:ir.actions.act_window,name:jt_check_controls.action_checkbook_req
+#: model:ir.ui.menu,name:jt_check_controls.checkbook_request_menu
+msgid "Checkbooks"
+msgstr "Chequeras"
+
+#. module: jt_check_controls
+#: model:ir.actions.act_window,name:jt_check_controls.action_checklist
+#: model:ir.model,name:jt_check_controls.model_checklist
+#: model:ir.model.fields,field_description:jt_check_controls.field_checklist_line__checklist_id
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.checkbook_req_form_view
+msgid "Checklist"
+msgstr "Relación de Cheques"
+
+#. module: jt_check_controls
+#: model:ir.model,name:jt_check_controls.model_checklist_line
+msgid "Checklist Line"
+msgstr "Relación de Cheques línea"
+
+#. module: jt_check_controls
+#: model:ir.actions.act_window,name:jt_check_controls.action_check_auth_by_dependency
+#: model:ir.ui.menu,name:jt_check_controls.check_auth_by_dependency_menu
+msgid "Checks authorized by dependency"
+msgstr "Cheques autorizados por la dependencia"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_authorized_dependency__checks_authorized_on_previous_app
+msgid "Checks authorized on previous applications"
+msgstr "Controles autorizados en solicitudes anteriores"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_checklist__check_per_box
+#: model:ir.model.fields,field_description:jt_check_controls.field_confirm_checkbook__check_per_box
+msgid "Checks per box"
+msgstr "Cheques por caja"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_authorized_dependency__checks_remaining_to_auth
+msgid "Checks remaining to authorize"
+msgstr "Cheques restantes por solicitar"
+
+#. module: jt_check_controls
+#: code:addons/jt_check_controls/models/checkbook_req.py:0
+#, python-format
+msgid "Cheklist"
+msgstr ""
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
+msgid ""
+"Ciudad Universitaria, Cd. Mx., A\n"
+"                            <br/>"
+msgstr ""
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_trades_config__clerk_id
+msgid "Clerk Collecting Checkbooks"
+msgstr "Empleado que regoge las chequeras"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.checkbook_req_form_view
+msgid "Complementary data for receipt of checks"
+msgstr "Datos complementarios para la recepción de cheques"
+
+#. module: jt_check_controls
+#: model:ir.ui.menu,name:jt_check_controls.check_control_setting_menu
+msgid "Configuration"
+msgstr "Configuración"
+
+#. module: jt_check_controls
+#: model:ir.actions.act_window,name:jt_check_controls.action_trade_configuration
+#: model:ir.model,name:jt_check_controls.model_trades_config
+#: model:ir.ui.menu,name:jt_check_controls.trades_configuration_menu
+msgid "Configuration of Trades"
+msgstr "Configuración de oficios"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.checkbook_req_form_view
+msgid "Confirm"
+msgstr "Confirmar"
+
+#. module: jt_check_controls
+#: model:ir.model,name:jt_check_controls.model_confirm_checkbook
+msgid "Confirm Checkbook"
+msgstr "Confirmar la chequera"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__confirmation_letter
+msgid "Confirmation Letter"
+msgstr "Offcio de Confirmación"
+
+#. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__checkbook_request__state__confirmed
+msgid "Confirmed"
+msgstr "Confirmado"
+
+#. module: jt_check_controls
+#: model:ir.model,name:jt_check_controls.model_copied_employees
+#: model:ir.model.fields,field_description:jt_check_controls.field_trades_config__copied_employee_ids
+msgid "Copied Employees"
+msgstr ""
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_authorized_dependency__create_uid
+#: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__create_uid
+#: model:ir.model.fields,field_description:jt_check_controls.field_checklist__create_uid
+#: model:ir.model.fields,field_description:jt_check_controls.field_checklist_line__create_uid
+#: model:ir.model.fields,field_description:jt_check_controls.field_confirm_checkbook__create_uid
+#: model:ir.model.fields,field_description:jt_check_controls.field_copied_employees__create_uid
+#: model:ir.model.fields,field_description:jt_check_controls.field_minimum_checks__create_uid
+#: model:ir.model.fields,field_description:jt_check_controls.field_trades_config__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_authorized_dependency__create_date
+#: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__create_date
+#: model:ir.model.fields,field_description:jt_check_controls.field_checklist__create_date
+#: model:ir.model.fields,field_description:jt_check_controls.field_checklist_line__create_date
+#: model:ir.model.fields,field_description:jt_check_controls.field_confirm_checkbook__create_date
+#: model:ir.model.fields,field_description:jt_check_controls.field_copied_employees__create_date
+#: model:ir.model.fields,field_description:jt_check_controls.field_minimum_checks__create_date
+#: model:ir.model.fields,field_description:jt_check_controls.field_trades_config__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
+msgid "DIRECTORATE OF INCOME AND FINANCIAL OPERATIONS"
+msgstr "DIRECCIÓN DE INGRESOS Y OPERACIONES FINANCIERAS"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_authorized_dependency__dependency_id
+#: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__dependence_id
+msgid "Dependence"
+msgstr "Dependencia"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_authorized_dependency__display_name
+#: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__display_name
+#: model:ir.model.fields,field_description:jt_check_controls.field_checklist__display_name
+#: model:ir.model.fields,field_description:jt_check_controls.field_checklist_line__display_name
+#: model:ir.model.fields,field_description:jt_check_controls.field_confirm_checkbook__display_name
+#: model:ir.model.fields,field_description:jt_check_controls.field_copied_employees__display_name
+#: model:ir.model.fields,field_description:jt_check_controls.field_minimum_checks__display_name
+#: model:ir.model.fields,field_description:jt_check_controls.field_trades_config__display_name
+msgid "Display Name"
+msgstr "Nombre de pantalla"
+
+#. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__checkbook_request__state__draft
+msgid "Draft"
+msgstr "Borrador"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_copied_employees__employee_id
+#: model:ir.model.fields,field_description:jt_check_controls.field_trades_config__general_director_id
+#: model:ir.model.fields,field_description:jt_check_controls.field_trades_config__revenue_dirctor_id
+msgid "Employee"
+msgstr "Empleado"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.trade_configuration_form_view
+msgid "Employee Collectiong Checkbooks"
+msgstr "Empleado que recoge las chequeras"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__final_folio
+msgid "Final Folio"
+msgstr "Folio final"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_checklist_line__folio
+msgid "Folio"
+msgstr ""
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__folio_legal
+msgid "Folio Legal"
+msgstr "Folio Offcio"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__full_address
+msgid "Full Address"
+msgstr "Dirección completa"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
+msgid "GENERAL DIRECTORATE OF FINANCE"
+msgstr "DIRECCIÓN GENERAL DE FINANZAS"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.trade_configuration_form_view
+msgid "General Director"
+msgstr "Director General"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.checkbook_req_form_view
+msgid "Generate Request"
+msgstr "Generar la solicitud"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_authorized_dependency__id
+#: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__id
+#: model:ir.model.fields,field_description:jt_check_controls.field_checklist__id
+#: model:ir.model.fields,field_description:jt_check_controls.field_checklist_line__id
+#: model:ir.model.fields,field_description:jt_check_controls.field_confirm_checkbook__id
+#: model:ir.model.fields,field_description:jt_check_controls.field_copied_employees__id
+#: model:ir.model.fields,field_description:jt_check_controls.field_minimum_checks__id
+#: model:ir.model.fields,field_description:jt_check_controls.field_trades_config__id
+msgid "ID"
+msgstr "Identificador"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__intial_folio
+msgid "Initial Folio"
+msgstr "Folio inicial"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_trades_config__job_template
+msgid "Job Template"
+msgstr "Plantilla de trabajo"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_copied_employees__job_title
+#: model:ir.model.fields,field_description:jt_check_controls.field_trades_config__general_director_job_tile
+#: model:ir.model.fields,field_description:jt_check_controls.field_trades_config__revenue_director_job_title
+msgid "Job Title"
+msgstr "Título Profesional"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_authorized_dependency____last_update
+#: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request____last_update
+#: model:ir.model.fields,field_description:jt_check_controls.field_checklist____last_update
+#: model:ir.model.fields,field_description:jt_check_controls.field_checklist_line____last_update
+#: model:ir.model.fields,field_description:jt_check_controls.field_confirm_checkbook____last_update
+#: model:ir.model.fields,field_description:jt_check_controls.field_copied_employees____last_update
+#: model:ir.model.fields,field_description:jt_check_controls.field_minimum_checks____last_update
+#: model:ir.model.fields,field_description:jt_check_controls.field_trades_config____last_update
+msgid "Last Modified on"
+msgstr "Última modificación en"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_authorized_dependency__write_uid
+#: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__write_uid
+#: model:ir.model.fields,field_description:jt_check_controls.field_checklist__write_uid
+#: model:ir.model.fields,field_description:jt_check_controls.field_checklist_line__write_uid
+#: model:ir.model.fields,field_description:jt_check_controls.field_confirm_checkbook__write_uid
+#: model:ir.model.fields,field_description:jt_check_controls.field_copied_employees__write_uid
+#: model:ir.model.fields,field_description:jt_check_controls.field_minimum_checks__write_uid
+#: model:ir.model.fields,field_description:jt_check_controls.field_trades_config__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_authorized_dependency__write_date
+#: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__write_date
+#: model:ir.model.fields,field_description:jt_check_controls.field_checklist__write_date
+#: model:ir.model.fields,field_description:jt_check_controls.field_checklist_line__write_date
+#: model:ir.model.fields,field_description:jt_check_controls.field_confirm_checkbook__write_date
+#: model:ir.model.fields,field_description:jt_check_controls.field_copied_employees__write_date
+#: model:ir.model.fields,field_description:jt_check_controls.field_minimum_checks__write_date
+#: model:ir.model.fields,field_description:jt_check_controls.field_trades_config__write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.checklist_form_view
+msgid "List of Checks"
+msgstr "Lista de Cheques"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_checklist__checklist_lines
+msgid "List of checks"
+msgstr "Lista de Cheques"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
+msgid "Logo"
+msgstr ""
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_authorized_dependency__max_authorized_checks
+msgid "Maximum authorized checks"
+msgstr "Máximos de cheques autorizados"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_minimum_checks__minimum_of_checks
+msgid "Mimimum of Checks"
+msgstr "Mínimo de Cheques"
+
+#. module: jt_check_controls
+#: model:ir.actions.act_window,name:jt_check_controls.action_minimum_of_checks
+#: model:ir.model,name:jt_check_controls.model_minimum_checks
+#: model:ir.ui.menu,name:jt_check_controls.minimum_checks_menu
+msgid "Minimum of Checks"
+msgstr "Mínimo de Cheques"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__name
+#: model:ir.model.fields,field_description:jt_check_controls.field_minimum_checks__name
+msgid "Name"
+msgstr "Nombre"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__number_of_folios
+msgid "Number of Folios"
+msgstr "Número de folios"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_checklist__received_boxes
+#: model:ir.model.fields,field_description:jt_check_controls.field_confirm_checkbook__received_boxes
+msgid "Number of boxes received"
+msgstr "Número de cajas recibidas"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__observations
+msgid "Observations"
+msgstr "Observaciones"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.trade_configuration_form_view
+msgid "Office of indemnification"
+msgstr "oficina de indemnización"
+
+#. module: jt_check_controls
+#: code:addons/jt_check_controls/models/trades.py:0
+#: code:addons/jt_check_controls/models/trades.py:0
+#, python-format
+msgid "Only one record have this option!"
+msgstr "¡Sólo un disco tiene esta opción!"
+
+#. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__trades_config__job_template__payroll_payment_notice
+msgid "Payroll Payment Notice"
+msgstr "Aviso de pago de la nómina"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__print_sample_folio_number
+msgid "Print Sample Folio Number"
+msgstr "Número de folio muestra de Imprimir"
+
+#. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__trades_config__job_template__register_checks
+msgid "Register Checks"
+msgstr "Cheques de registro"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.checkbook_req_form_view
+msgid "Reject"
+msgstr "Rechazar"
+
+#. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__checkbook_request__state__rejected
+msgid "Rejected"
+msgstr "rechazo"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_minimum_checks__reorder_point
+msgid "Reorder Point"
+msgstr "Punto de reordenación"
+
+#. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__checkbook_request__state__requested
+msgid "Requested"
+msgstr "Solicitado"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.trade_configuration_form_view
+msgid "Revenue Director"
+msgstr "Director de Ingresos"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
+msgid "SUBJECT: REQUEST FOR CHECKS"
+msgstr "ASUNTO: SOLICITUD DE CHEQUES"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.checkbook_req_form_view
+msgid "Send"
+msgstr "Envía"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__state
+#: model:ir.model.fields,field_description:jt_check_controls.field_checklist_line__status
+msgid "Status"
+msgstr "Estado"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_authorized_dependency__subdependency_id
+#: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__subdependence_id
+msgid "Subdependence"
+msgstr "Subdependencia"
+
+#. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__checkbook_request__state__submitted
+msgid "Submitted"
+msgstr "Presentado"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
+msgid "TREASURY"
+msgstr "TESORERÍA"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_copied_employees__title
+#: model:ir.model.fields,field_description:jt_check_controls.field_trades_config__clerk_title
+#: model:ir.model.fields,field_description:jt_check_controls.field_trades_config__general_director_title
+#: model:ir.model.fields,field_description:jt_check_controls.field_trades_config__revenue_director_title
+msgid "Title"
+msgstr "Título"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_checklist__total_cash
+#: model:ir.model.fields,field_description:jt_check_controls.field_confirm_checkbook__total_cash
+msgid "Total Checks"
+msgstr "Chequeos totales"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_copied_employees__trade_config_id
+msgid "Trade Config"
+msgstr "Configuraciones comerciales"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
+msgid "UNIVERSITY BOARD OF TRUSTEES"
+msgstr ""
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
+msgid "checks each one"
+msgstr ""
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
+msgid ""
+"custom formats without the use of strap to some type of tie\n"
+"                                that mistreats the boxes and checks."
+msgstr ""

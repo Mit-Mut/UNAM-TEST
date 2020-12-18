@@ -186,9 +186,15 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
         
-        domain = domain + [('date_required','>=',start),('date_required','<=',end)]
+        previous_domain = domain + [('date_required','<',start)]
         
-        records = self.env['investment.operation'].search(domain)
+        main_domain = domain + [('date_required','>=',start),('date_required','<=',end)]
+        
+        
+        records = self.env['investment.operation'].search(main_domain)
+        
+        previous_records = self.env['investment.operation'].search(previous_domain)
+        
         
         opt_lines = self.env['investment.operation']
         opt_lines += records.filtered(lambda x:x.type_of_operation == 'open_bal')
@@ -234,9 +240,15 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                 'unfoldable': False,
                 'unfolded': True,
             })
-              
+            header_intial = 0
+            for rec in previous_records.filtered(lambda x:x.investment_id.journal_id.id == bank.id):
+                if rec.type_of_operation in ('increase', 'increase_by_closing', 'open_bal'):
+                    header_intial += rec.amount
+                elif rec.type_of_operation in ('retirement', 'withdrawal', 'withdrawal_cancellation', 'withdrawal_closure'):
+                    header_intial -= rec.amount
+               
             for rec in opt_lines.filtered(lambda x:x.investment_id.journal_id.id == bank.id).sorted('date_required'):
-                capital = 0
+                capital = header_intial
                 entradas = 0
                 salidas  = 0
                 
@@ -253,6 +265,10 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                     salidas = rec.amount
                     total_salidas += rec.amount
                     final_amount -= rec.amount
+                final_amount += header_intial
+                total_capital += header_intial
+                header_intial = 0
+                    
                 p_rate = 0
                 if rec.date_required:
                     period_rate_id = self.env['investment.period.rate'].search([('rate_date','=',rec.date_required),('product_type','=','TIIE')],limit=1)

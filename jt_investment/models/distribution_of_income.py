@@ -69,18 +69,14 @@ class DistributionOfIncome(models.Model):
             if opt_line==line:
                 if not pre_line:
                     
-#                     term = inv.term - days
-#                     days += term
                     term = (self.end_date - line.date_required).days + 1
                     days += term
                 else:
-#                     term = inv.term - days
-#                     days += term
                     term = (self.end_date - line.date_required).days + 1
                     days += term
             else:
                 if opt_line.date_required and line.date_required:
-                    term = opt_line.date_required.day - line.date_required.day
+                    term = (opt_line.date_required - line.date_required).days
                     days += term 
                      
             rate = inv.interest_rate + inv.extra_percentage
@@ -93,7 +89,8 @@ class DistributionOfIncome(models.Model):
                 #term = inv.term_variable - opt_line.date_required.day + 1
             else:
                 if opt_line.date_required and line.date_required:
-                    term = opt_line.date_required.day - line.date_required.day
+                    term = (opt_line.date_required - line.date_required).days
+                    #term = opt_line.date_required.day - line.date_required.day
             
             #term = inv.term_variable
             if inv.investment_rate_id:
@@ -133,6 +130,7 @@ class DistributionOfIncome(models.Model):
         final_balance = capital + inc - withdrawal
         income = (((final_balance * rate)/100)/360)*term
         
+        print ("=====Term====",term)
         cal_vals.append([0, 0, 
                     {
                      'fund_id':line.investment_fund_id and line.investment_fund_id.fund_id and line.investment_fund_id.fund_id.id or False,

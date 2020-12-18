@@ -145,7 +145,7 @@ class InvestmentAccountStatement(models.AbstractModel):
                 prev_start = start.replace(day=1, month=7)
                 prev_end = start.replace(day=31, month=10)
 
-        prev_domain = domain + [('date_required','>=',prev_start),('date_required','<=',prev_end),
+        prev_domain = domain + [('date_required','<',start),
                                       ('investment_fund_id','!=',False)]
         prev_productive_ids = self.env['investment.operation'].search(prev_domain)
         inc_ops = prev_productive_ids.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing',

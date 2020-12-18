@@ -9,6 +9,7 @@
                 <tree>
                     <field name="name"/>
                     <field name="application_no"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -25,45 +26,68 @@
                                 attrs="{'invisible': [('state', '!=', 'requested')]}"/>
                         <button name="action_reject" type="object" string="Reject" class="oe_highlight"
                                 attrs="{'invisible': [('state', '!=', 'requested')]}"/>
+                        <button name="action_submit" type="object" string="Send" class="oe_highlight"
+                                attrs="{'invisible': [('state', '!=', 'approved')]}"/>
+                        <button name="action_draft" type="object" string="Back to Draft" class="oe_highlight"
+                                attrs="{'invisible': [('state', '!=', 'rejected')]}"/>
+                        <button name="action_confirm" type="object" string="Confirm" class="oe_highlight"
+                                attrs="{'invisible': [('state', '!=', 'submitted')]}"/>
+                        <button name="action_confirmed_reject" type="object" string="Reject" class="oe_highlight"
+                                attrs="{'invisible': [('state', '!=', 'submitted')]}"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
+                         <div class="oe_button_box" name="button_box">
+                            <button name="action_checklist" type="object" class="oe_stat_button"
+                                    widget="statinfo" string="Checklist"
+                                    attrs="{'invisible': [('state', '!=', 'confirmed')]}">
+                            </button>
+                        </div>
                         <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/><h1><field name="name" required="1"/></h1>
+                            <label for="name" class="oe_edit_only"/><h1><field name="name" required="1"
+                                attrs="{'readonly': [('state', '=', 'cancelled')]}"/></h1>
                         </div>
                         <group>
                             <group>
-                                <field name="application_no" required="1"/>
-                                <field name="folio_legal" required="1"/>
-                                <field name="appliaction_date"/>
-                                <field name="bank_id"/>
-                                <field name="bank_account_id"/>
-                                <field name="amount_checks"/>
-                                <field name="applicant_id"/>
-                                <field name="observations"/>
+                                <field name="application_no" readonly="1"
+                                       attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
+                                <field name="folio_legal" readonly="1"
+                                        attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
+                                <field name="appliaction_date" attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
+                                <field name="bank_id" attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
+                                <field name="bank_account_id" attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
+                                <field name="amount_checks" attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
+                                <field name="applicant_id" attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
+                                <field name="observations" attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
                             </group>
                             <group>
-                                <field name="checkbook_no"/>
-                                <field name="intial_folio"/>
-                                <field name="final_folio"/>
-                                <field name="confirmation_letter"/>
-                                <field name="are_test_prin_formats_sent"/>
+                                <field name="checkbook_no" attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
+                                <field name="intial_folio" attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
+                                <field name="final_folio" attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
+                                <field name="confirmation_letter" attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
+                                <field name="are_test_prin_formats_sent"
+                                    attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
                                 <field name="dependence_id"
-                                       attrs="{'invisible': [('are_test_prin_formats_sent', '=', False)]}"/>
+                                       attrs="{'invisible': [('are_test_prin_formats_sent', '=', False)],
+                                        'readonly': [('state', '=', 'cancelled')]}"/>
                                 <field name="subdependence_id"
-                                       attrs="{'invisible': [('are_test_prin_formats_sent', '=', False)]}"/>
-                                <field name="area" attrs="{'invisible': [('are_test_prin_formats_sent', '=', False)]}"/>
+                                       attrs="{'invisible': [('are_test_prin_formats_sent', '=', False)],
+                                       'readonly': [('state', '=', 'cancelled')]}"/>
+                                <field name="area" attrs="{'invisible': [('are_test_prin_formats_sent', '=', False)],
+                                        'readonly': [('state', '=', 'cancelled')]}"/>
                                 <field name="number_of_folios"
-                                    attrs="{'invisible': [('are_test_prin_formats_sent', '=', False)]}"/>
+                                    attrs="{'invisible': [('are_test_prin_formats_sent', '=', False)],
+                                    'readonly': [('state', '=', 'cancelled')]}"/>
                                 <field name="print_sample_folio_number"
-                                    attrs="{'invisible': [('are_test_prin_formats_sent', '=', False)]}"/>
+                                    attrs="{'invisible': [('are_test_prin_formats_sent', '=', False)],
+                                    'readonly': [('state', '=', 'cancelled')]}"/>
                             </group>
                         </group>
                         <notebook>
                             <page string="Complementary data for receipt of checks">
                                 <group>
-                                    <field name="full_address"/>
-                                    <field name="check_receipt_date"/>
+                                    <field name="full_address" attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
+                                    <field name="check_receipt_date" attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
                                 </group>
                             </page>
                         </notebook>
@@ -82,5 +106,41 @@
         <menuitem id="checkbook_request_menu" name="Checkbooks"
                   parent="check_control_main_menu"
                   action="action_checkbook_req" sequence="1"/>
+
+        <record id="checklist_form_view" model="ir.ui.view">
+            <field name="name">checklist.form.view</field>
+            <field name="model">checklist</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="checkbook_no"/>
+                        <field name="received_boxes"/>
+                        <field name="check_per_box"/>
+                        <field name="check_per_box"/>
+                        <field name="additional_checks"/>
+                        <field name="total_cash"/>
+                    </group>
+                    <notebook>
+                        <page string="List of Checks">
+                            <group>
+                                <field name="checklist_lines" nolabel="1">
+                                    <tree>
+                                        <field name="folio"/>
+                                        <field name="status"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+         <record id="action_checklist" model="ir.actions.act_window">
+            <field name="name">Checklist</field>
+            <field name="res_model">checklist</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
     </data>
 </odoo>

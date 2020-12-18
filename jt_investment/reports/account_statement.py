@@ -148,7 +148,7 @@ class InvestmentAccountStatement(models.AbstractModel):
                 prev_end = start.replace(day=31, month=10)
 
         productive_domain = domain + [('date_required','>=',start),('date_required','<=',end)]
-        prev_productive_domain = domain + [('date_required','>=',prev_start),('date_required','<=',prev_end)]
+        prev_productive_domain = domain + [('date_required','<',start)]
         prev_productive_ids = self.env['investment.operation'].search(prev_productive_domain)
 
         for rec in prev_productive_ids:

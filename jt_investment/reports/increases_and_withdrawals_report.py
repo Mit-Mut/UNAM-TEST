@@ -226,19 +226,15 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
         if not currency_list:
             currency_list = [0]
         
-        domain = domain + [('date_required','>=',start),('date_required','<=',end),
-                           ('investment_id.currency_id','in',currency_list)]
-        inc_domain = domain + [('date_required','<',start),('investment_id.currency_id','in',currency_list)]
+        inc_domain = domain + [('journal_id.bank_id','in',bank_list),('date_required','<',start),('investment_id.currency_id','in',currency_list)]
         
-        domain += [('journal_id.bank_id','in',bank_list),]
-
-        records = self.env['investment.operation'].search(domain)
+        domain = domain + [('investment_id.currency_id','in',currency_list),('journal_id.bank_id','in',bank_list)]
+        
+        
+        main_domain = domain + [('date_required','>=',start),('date_required','<=',end)]
+        records = self.env['investment.operation'].search(main_domain)
         inc_records = self.env['investment.operation'].search(inc_domain)
         inc_balance = 0 
-        inc_balance += sum(x.amount for x in inc_records.filtered(lambda x:x.type_of_operation in
-                                                                        ('open_bal','increase','increase_by_closing')))
-        inc_balance -= sum(x.amount for x in inc_records.filtered(lambda x:x.type_of_operation in
-                                           ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure')))
          
         opt_lines = self.env['investment.operation']
         opt_lines += records.filtered(lambda x:x.type_of_operation == 'open_bal')
@@ -259,6 +255,12 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
             final_amount = 0
             total_entradas = 0
             total_salidas  = 0
+            inc_balance = 0
+            
+            inc_balance += sum(x.amount for x in inc_records.filtered(lambda x:x.investment_id.journal_id.id == bank.id and x.type_of_operation in
+                                                                            ('open_bal','increase','increase_by_closing')))
+            inc_balance -= sum(x.amount for x in inc_records.filtered(lambda x:x.investment_id.journal_id.id == bank.id and x.type_of_operation in
+                                               ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure')))
 
             lines.append({
                 'id': 'hierarchy_total',
@@ -397,7 +399,7 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
 
                 
                 domain_period = domain + [('investment_id.journal_id.bank_id','=',journal.id),('date_required','>=',date_start),('date_required','<=',date_end),('investment_id.currency_id','in',currency_list)]
-
+                
                 records_period = self.env['investment.operation'].search(domain_period)
 
                 amount = 0

@@ -35,8 +35,10 @@
         'views/trades.xml',
         'views/check_authorized_by_dependency.xml',
         'views/checkbook_req.xml',
+        'wizard/confirm_checkbook_req.xml',
         'security/ir.model.access.csv',
-        'data/sequence.xml'
+        'data/sequence.xml',
+        'reports/check_request_1.xml'
     ],
     'demo': [
     ],

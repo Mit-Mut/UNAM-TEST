@@ -110,7 +110,10 @@ class EmployeePayroll(models.Model):
     move_id = fields.Many2one('account.move','Payroll Payments')
     payment_place_id = fields.Many2one(related="employee_id.payment_place_id",string="Place of payment")
     payroll_register_user_id = fields.Many2one('res.users',default=lambda self: self.env.user,copy=False,string="User who registers")
+
+    payroll_processing_id = fields.Many2one('custom.payroll.processing','Payroll Processing')
     
+        
     @api.onchange('employee_id') 
     def onchange_partner_bak_account(self):
         if self.employee_id and self.employee_id.bank_ids:
@@ -130,3 +133,17 @@ class EmployeePayroll(models.Model):
                 res.bank_receiving_payment_id= res.employee_id.bank_ids[0].bank_id and res.employee_id.bank_ids[0].bank_id.id or False
         
         return res
+    
+
+class PreceptionLine(models.Model):
+    
+    _name = 'preception.line'
+    
+    payroll_id = fields.Many2one('employee.payroll.file','Payroll')
+    
+    preception_id = fields.Many2one('preception','Key To Perception')
+    description = fields.Char("Description")
+    #program_code_id = fields.Many2one('program.code','')
+    amount = fields.Float("Matter")
+    
+        

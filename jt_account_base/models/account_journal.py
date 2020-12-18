@@ -107,6 +107,8 @@ class ExecutiveData(models.Model):
     telephone = fields.Char('Telephone')
     address = fields.Char('Address')
     email = fields.Char('Email')
+    recipient_executive = fields.Boolean("Recipient Executive")
+    copied_executive = fields.Boolean("Copied Executive")
     
 class MinimumBalanceHistory(models.Model):
     

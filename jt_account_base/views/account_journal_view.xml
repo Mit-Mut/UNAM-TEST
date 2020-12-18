@@ -54,6 +54,8 @@
                                     <field name="telephone"/>
                                     <field name="address"/>
                                     <field name="email"/>
+                                    <field name="recipient_executive"/>
+                                    <field name="copied_executive"/>
                                 </tree>
                                 <form>
                                     <group>
@@ -62,6 +64,8 @@
                                         <field name="telephone"/>
                                         <field name="address"/>
                                         <field name="email" widget="email"/>
+                                        <field name="recipient_executive"/>
+                                        <field name="copied_executive"/>
                                     </group>
                                 </form>
                             </field>

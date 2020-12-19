@@ -41,6 +41,7 @@
                     <field name="concept_id"/>
                     <field name="has_checkbook"/>
                     <field name="checkbook_type" attrs="{'invisible':[('has_checkbook','=',False)]}"/>
+                    <field name="checkbook_no" attrs="{'invisible':[('has_checkbook','=',False)]}"/>
                     <field name="signatures"/>
                     <field name="contract"/>
                 </xpath>
@@ -54,6 +55,8 @@
                                     <field name="telephone"/>
                                     <field name="address"/>
                                     <field name="email"/>
+                                    <field name="recipient_executive"/>
+                                    <field name="copied_executive"/>
                                 </tree>
                                 <form>
                                     <group>
@@ -62,6 +65,8 @@
                                         <field name="telephone"/>
                                         <field name="address"/>
                                         <field name="email" widget="email"/>
+                                        <field name="recipient_executive"/>
+                                        <field name="copied_executive"/>
                                     </group>
                                 </form>
                             </field>

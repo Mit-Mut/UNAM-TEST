@@ -430,8 +430,8 @@ class ExpenditureBudget(models.Model):
                     subdependency_str = str(line.subdependency).zfill(2)
                     if subdependency_str.isnumeric():
                         subdependency = list(filter(
-                            lambda sdo: sdo['sub_dependency'] == subdependency_str and sdo['dependency_id'][
-                                0] == dependency, subdependancy_obj))
+                            lambda sdo: sdo['sub_dependency'] == subdependency_str and
+                                        sdo['dependency_id'][0] == dependency, subdependancy_obj))
                         subdependency = subdependency[0]['id'] if subdependency else False
 
                     if not subdependency:

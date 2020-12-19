@@ -162,13 +162,34 @@ class BankAccountingBalance(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         lines = []
+        project_type_domain = []
+        domain = []
+        dependency_list = []
+        sub_dependency_list = []
+        project_type_select = options.get('project_type')
+        for p_type in project_type_select:
+            if p_type.get('selected',False):
+                project_type_domain.append(p_type.get('id'))
         
-        if options.get('project_type'):
-            domain=[('project_type','in',('conacyt','concurrent'))]
+        if project_type_domain:
+            domain += [('project_type','in',tuple(project_type_domain))]
         else:
-            domain=[('project_type','=','other')]
+            domain += [('project_type','in',('conacyt','concurrent','other'))]
 
+        for select_curreny in options.get('dependancy'):
+            if select_curreny.get('selected',False)==True:
+                dependency_list.append(select_curreny.get('id',0))
+        
+        if dependency_list:
+            domain += [('dependency_id','in',dependency_list)]
 
+        for select_curreny in options.get('subdependancy'):
+            if select_curreny.get('selected',False)==True:
+                sub_dependency_list.append(select_curreny.get('id',0))
+        
+        if sub_dependency_list:
+            domain += [('subdependency_id','in',sub_dependency_list)]
+            
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(

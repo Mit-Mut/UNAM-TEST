@@ -571,7 +571,7 @@ class InvestmentAccountStatement(models.AbstractModel):
                 "jt_investment.external_layout_investment_committee",
                 values=rcontext)
             header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
-            spec_paperformat_args = {}
+            spec_paperformat_args = {'data-report-margin-top': 55, 'data-report-header-spacing': 50}
             # Default header and footer in case the user customized web.external_layout and removed the header/footer
             headers = header.encode()
             footer = b''

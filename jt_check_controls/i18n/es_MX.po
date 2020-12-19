@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-18 12:03+0000\n"
-"PO-Revision-Date: 2020-12-18 12:03+0000\n"
+"POT-Creation-Date: 2020-12-19 05:57+0000\n"
+"PO-Revision-Date: 2020-12-19 05:57+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,12 +18,12 @@ msgstr ""
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
 msgid "-Boxes of"
-msgstr ""
+msgstr "-Cajas de"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
 msgid "-Packing of"
-msgstr ""
+msgstr "-Empaque de"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
@@ -49,6 +49,67 @@ msgstr ""
 "                            <br/>\n"
 "                            <br/>\n"
 "                            <span>TA través de este canal, agradeceríamos enormemente que nos diera sus amables instrucciones. a quien pueda concernir, con el fin de llevar a cabo el desarrollo de\n"
+"                            </span>"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
+msgid ""
+"<br/>\n"
+"                            <span>\n"
+"                                -Protection of thick cardboard sheets at the beginning and end of each package,\n"
+"                                as well as craft paper wrapping.\n"
+"                                <br/>\n"
+"                                -Checks should be arranged from 1 to “N” with the face facing up.\n"
+"                                <br/>\n"
+"                                -They must be counted from the lower left corner to avoid lifting and jamming\n"
+"                                during printing\n"
+"                                <br/>\n"
+"                                -9 points per inch tattoo and ties on the edges.\n"
+"                                <br/>\n"
+"                                -Format in measures of 8.5 by 14 inches, refined in 90 grms security paper.\n"
+"                                <br/>\n"
+"                                -Finally, remember that these checks must have the security measures of the ABM,\n"
+"                                the security characteristics of each bank and contain the legend \"THE VALIDITY OF\n"
+"                                THIS CHECK IS 30 DAYS\" ON THE FRONT AND REVERSE.\n"
+"                                <br/>\n"
+"                            </span>\n"
+"                            <span>\n"
+"                                We appreciate you sending us the corresponding CFDI in PDF format and XML file.\n"
+"                            </span>\n"
+"                            <span>\n"
+"                                Please strictly adhere to the technical characteristics of substance and form, as\n"
+"                                well as the security measures of the attached sample check.\n"
+"                                <br/>\n"
+"                                Without further ado and thanking you again for your attention to the present,\n"
+"                                we bid you farewell with a cordial greeting.\n"
+"                            </span>"
+msgstr ""
+"<br/>\n"
+"<span>\n"
+"                              -Protección de hojas de cartulina gruesa al inicio y al final de cada paquete, así como envoltura de papel craft.                            \n"
+"                               <br/>\n"
+"                                -Los cheques deberán ser acomodados de 1 a \"N\" con la carátula hacia arriba.\n"
+"                                <br/>\n"
+"                                -Deberán ser contados por la esquina inferior izquierda para evitar levantamientos y atoramientos durante su impresión\n"
+"                                <br/>\n"
+"                                -Suaje de 9 puntos por pulgada y amarres en las orillas.\n"
+"                                <br/>\n"
+"                                -Formato en medidas de 8.5 por 14 pulgadas, refinado en papel seguridad de 90 grms.\n"
+"                                <br/>\n"
+"                                -Por último, recordar que estos cheques deberán contar con las medidas de\n"
+"                                seguridad de la ABM, las características de seguridad de cada banco y contengan la leyenda \"LA VIGENCIA DE ESTE\"\n"
+"                                CHEQUE ES DE 30 DÍAS” EN SU ANVERSO Y REVERSO.\n"
+"                                <br/>\n"
+"                            </span>\n"
+"                            <span>\n"
+"                               Agradecemos nos envíe el CFDI correspondiente en formato PDF y archivo XML.\n"
+"                            </span>\n"
+"                            <span>\n"
+"                                Favor de apegarse estrictamente a las características técnicas de fondo y forma,\n"
+"                               así como medidas de seguridad del cheque muestra anexo.\n"
+"                                <br/>\n"
+"                               Sin otro particular y agradeciendo nuevamente su atención al presente, nos\n"
+"                               despedimos de usted con un cordial saludo.\n"
 "                            </span>"
 
 #. module: jt_check_controls
@@ -101,39 +162,14 @@ msgid ""
 "                                <br/>\n"
 "                            </span>"
 msgstr ""
-
-#. module: jt_check_controls
-#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
-msgid ""
 "<span>\n"
-"                                -Protection of thick cardboard sheets at the beginning and end of each package,\n"
-"                                as well as craft paper wrapping.\n"
-"                                <br/>\n"
-"                                -Checks should be arranged from 1 to “N” with the face facing up.\n"
-"                                <br/>\n"
-"                                -They must be counted from the lower left corner to avoid lifting and jamming\n"
-"                                during printing\n"
-"                                <br/>\n"
-"                                -9 points per inch tattoo and ties on the edges.\n"
-"                                <br/>\n"
-"                                -Format in measures of 8.5 by 14 inches, refined in 90 grms security paper.\n"
-"                                <br/>\n"
-"                                -Finally, remember that these checks must have the security measures of the ABM,\n"
-"                                the security characteristics of each bank and contain the legend \"THE VALIDITY OF\n"
-"                                THIS CHECK IS 30 DAYS\" ON THE FRONT AND REVERSE.\n"
-"                                <br/>\n"
+"                                , a efecto de habilitarla y evitar sobregiros innecesarios, solicitándole nos remita a labrevedad la factura de esta remesa para enviarla a su registro a nuestra área de Contaduría General.\n"
 "                            </span>\n"
+"                            <br/>\n"
 "                            <span>\n"
-"                                We appreciate you sending us the corresponding CFDI in PDF format and XML file.\n"
-"                            </span>\n"
-"                            <span>\n"
-"                                Please strictly adhere to the technical characteristics of substance and form, as\n"
-"                                well as the security measures of the attached sample check.\n"
+"                               Le solicitamos que el orden de empaque sea de la siguiente forma:\n"
 "                                <br/>\n"
-"                                Without further ado and thanking you again for your attention to the present,\n"
-"                                we bid you farewell with a cordial greeting.\n"
 "                            </span>"
-msgstr ""
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
@@ -149,6 +185,10 @@ msgid ""
 "                                charge, which must be applied to the account\n"
 "                            </span>"
 msgstr ""
+"<span>, a fin de ser considerado(s) como muestra de impresión.</span>\n"
+"                            <br/>\n"
+"                            <span>Asi mismo, también agradeceremos nos informe con anticipación el cargocorrespondiente, mismo que deberá aplicarse a la cuenta\n"
+"                            </span>"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
@@ -157,6 +197,8 @@ msgid ""
 "                                canceled format containing the folio\n"
 "                            </span>"
 msgstr ""
+"<span>, anexo se servirá encontrar el formatocancelado conteniendo el "
+"folio</span>"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
@@ -176,7 +218,7 @@ msgstr "<span>Presente:</span>"
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
 msgid "<span>They must start from the folio</span>"
-msgstr ""
+msgstr "<span>mismos que deberán iniciar a partir del folio</span>"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
@@ -248,6 +290,7 @@ msgstr "Banco"
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__bank_account_id
+#: model:ir.model.fields,field_description:jt_check_controls.field_minimum_checks__bank_account_id
 msgid "Bank Account"
 msgstr "Cuenta bancaria"
 
@@ -611,7 +654,6 @@ msgstr "Mínimo de Cheques"
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__name
-#: model:ir.model.fields,field_description:jt_check_controls.field_minimum_checks__name
 msgid "Name"
 msgstr "Nombre"
 
@@ -740,9 +782,15 @@ msgid "UNIVERSITY BOARD OF TRUSTEES"
 msgstr ""
 
 #. module: jt_check_controls
+#: code:addons/jt_check_controls/models/checkbook_req.py:0
+#, python-format
+msgid "Value of Amount of checks does not match."
+msgstr ""
+
+#. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
 msgid "checks each one"
-msgstr ""
+msgstr "heques cada uno"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
@@ -750,3 +798,5 @@ msgid ""
 "custom formats without the use of strap to some type of tie\n"
 "                                that mistreats the boxes and checks."
 msgstr ""
+"formatos a la medida sin uso de fleje a algún tipo de amarre que maltrate "
+"las cajas y cheques."

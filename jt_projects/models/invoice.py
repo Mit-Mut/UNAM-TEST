@@ -54,7 +54,8 @@ class AccountMove(models.Model):
     # responsible_category_key = fields.Char("Responsible category key")
     responsible_job_position = fields.Many2one(
         'hr.job', 'Responsible job position')
-
+    operation_name = fields.Char(related='operation_type_id.name')
+    
 class AccountMoveLine(models.Model):
 
     _inherit = 'account.move.line'

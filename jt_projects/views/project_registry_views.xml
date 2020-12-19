@@ -59,7 +59,7 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box" groups="base.group_user">
-                            <button name="show_attachment"
+                            <button attrs="{'invisible':[('is_papiit_project','=',True)]}" name="show_attachment"
                                 string="Files"
                                 type="object"
                                 class="oe_stat_button"
@@ -160,7 +160,7 @@
             <field name="name">Projects</field>
             <field name="res_model">project.project</field>
             <field name="view_mode">tree,form</field>
-			<field name="domain">[('project_type','=','conacyt')]</field>
+			<field name="domain">[('project_type','!=',False)]</field>
             <field name="context">{'default_project_type':'conacyt'}</field>
         </record>
 

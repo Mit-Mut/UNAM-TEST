@@ -10,8 +10,7 @@
             <field name="model">minimum.checks</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="name"/>
-                    <field name="checkbook_id"/>
+                    <field name="checkbook"/>
                     <field name="bank_id"/>
                 </tree>
             </field>
@@ -25,9 +24,9 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="name"/>
-                                <field name="checkbook_id"/>
                                 <field name="bank_id" domain="[('type', '=', 'bank')]"/>
+                                <field name="bank_account_id"/>
+                                <field name="checkbook"/>
                             </group>
                             <group>
                                 <field name="minimum_of_checks"/>

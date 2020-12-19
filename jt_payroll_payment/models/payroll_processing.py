@@ -59,7 +59,7 @@ class CustomPayrollProcessing(models.Model):
                 'view_type': 'form',
                 # 'view_id': self.env.ref('jt_agreement.view_req_open_balance_tree').id,
                 'view_mode': 'tree,form',
-                'views': [(self.env.ref('jt_payroll_payment.employee_payroll_file_tree_process').id, 'tree'), (self.env.ref("jt_payroll_payment.employee_payroll_file_form").id, 'form')],
+                'views': [(self.env.ref('jt_payroll_payment.employee_payroll_file_tree_process').id, 'tree'), (self.env.ref("jt_payroll_payment.employee_payroll_file_form_processing").id, 'form')],
                 #'context': {'default_payroll_process_id': self.id},
                 'target': 'current',
                 'type': 'ir.actions.act_window',

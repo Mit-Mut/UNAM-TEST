@@ -41,6 +41,7 @@
                     <field name="concept_id"/>
                     <field name="has_checkbook"/>
                     <field name="checkbook_type" attrs="{'invisible':[('has_checkbook','=',False)]}"/>
+                    <field name="checkbook_no" attrs="{'invisible':[('has_checkbook','=',False)]}"/>
                     <field name="signatures"/>
                     <field name="contract"/>
                 </xpath>

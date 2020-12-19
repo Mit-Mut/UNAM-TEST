@@ -67,7 +67,7 @@
             <field name="model">employee.payroll.file</field>
             <field eval="100" name="priority"/>
             <field name="arch" type="xml">
-                <tree create="0" edit="0">
+                <tree create="0">
                     <field name="reference"/>
                     <field name="employee_id"/>
                     <field name="name"/>
@@ -76,6 +76,104 @@
                 </tree>
             </field>
          </record>
+
+        <record id="employee_payroll_file_form_processing" model="ir.ui.view">
+            <field name="name">employee.payroll.file.form.view.processing</field>
+            <field name="model">employee.payroll.file</field>
+            <field name="arch" type="xml">
+                <form create="0">
+                    <header>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="employee_id" class="oe_edit_only"/>
+                            <h1>
+                                <field name="employee_id" required="1" attrs="{'readonly':[('state','=','done')]}"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                 <label for="period_start"/>
+                                <div>
+                                    <field name="period_start" class="oe_inline" attrs="{'readonly':[('state','=','done')]}"/> -
+                                    <field name="period_end" class="oe_inline" attrs="{'readonly':[('state','=','done')]}"/>
+                                </div>
+                                <field name="rfc"/>
+                                <field name="employee_number"/>
+                                <field name="job_id"/>
+                                <field name="payment_place_id"/>
+                                
+                                <field name="fornight" attrs="{'readonly':[('state','=','done')]}" invisible="1"/>
+                                <field name="bank_receiving_payment_id" attrs="{'readonly':[('state','=','done')]}"/>
+                                <field name="receiving_bank_acc_pay_id" attrs="{'readonly':[('state','=','done')]}"/>
+                                <field name="payment_issuing_bank_id" readonly="1" attrs="{'readonly':[('state','=','done')]}"/>
+                                <field name="bank_acc_payment_insur_id" readonly="1" attrs="{'readonly':[('state','=','done')]}"/>
+                                <field name="payment_request_type" required="1" attrs="{'readonly':[('state','=','done')]}"/>
+                                <field name="amount_payable" attrs="{'readonly':[('state','=','done')]}" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="reference" readonly="1"/>
+                                <field name="name" readonly="1"/>
+                                <field name="l10n_mx_edi_payment_method_id"/>
+                                <field name="deposite_number"/>
+                                <field name="check_number"/>
+                                <field name="adjustment_case_id"/>
+                                <field name="net_salary"/>
+                                <field name="request_type" attrs="{'readonly':[('state','=','done')]}" invisible="1"/>
+                                <field name="payroll_adjustment" attrs="{'readonly':[('state','=','done')]}" invisible="1"/>
+                                <field name="due_to_inappropriate" attrs="{'invisible':[('payroll_adjustment','!=','inappropriate')],'readonly':[('state','=','done')]}" invisible="1"/>
+                                <field name="beneficiary_id" domain="[('beneficiary_type', '=', 'alimony')]" attrs="{'readonly':[('state','=','done')]}" invisible="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                        	<page string="Perception" name="preception_line">
+                        		<field name="preception_line_ids" readonly="1">
+                        			<tree>
+                        				<field name="preception_id"/>
+                        				<field name="description"/>
+                        				<field name="amount"/>
+                        			</tree>
+                        			<form>
+                        				<group>
+	                        				<field name="preception_id"/>
+	                        				<field name="description"/>
+	                        				<field name="amount"/>
+                        				</group>
+                        			</form>
+                        		</field>
+                        	</page>
+                        	<page string="Deductions" name="deduction_line">
+                        		<field name="deduction_line_ids" readonly="1">
+                        			<tree>
+                        				<field name="credit_account_id"/>
+                        				<field name="deduction_id"/>
+                        				<field name="description"/>
+                        				<field name="amount"/>
+                        				<field name="net_salary"/>
+                        			</tree>
+                        			<form>
+                        				<group>
+	                        				<field name="credit_account_id"/>
+	                        				<field name="deduction_id"/>
+	                        				<field name="description"/>
+	                        				<field name="amount"/>
+	                        				<field name="net_salary"/>
+                        				</group>
+                        			</form>
+                        		</field>
+                        	</page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                    
+                </form>
+            </field>
+        </record>
 	       
 	</data>
 </odoo>

@@ -112,7 +112,22 @@ class EmployeePayroll(models.Model):
     payroll_register_user_id = fields.Many2one('res.users',default=lambda self: self.env.user,copy=False,string="User who registers")
 
     payroll_processing_id = fields.Many2one('custom.payroll.processing','Payroll Processing')
+    preception_line_ids = fields.One2many('preception.line','payroll_id')
+    deduction_line_ids = fields.One2many('deduction.line','payroll_id')
     
+    rfc = fields.Char(related='employee_id.rfc')
+    job_id = fields.Many2one(related='employee_id.job_id',string='Category key')
+    deposite_number = fields.Char("Deposit number")
+    check_number = fields.Char("Check number")
+    adjustment_case_id = fields.Many2one('adjustment.cases','Adjustment Cases')
+    net_salary = fields.Float("Net Salary")
+    
+    l10n_mx_edi_payment_method_id = fields.Many2one(
+        'l10n_mx_edi.payment.method',
+        string='Payment Method',
+        help='Indicates the way the payment was/will be received, where the '
+        'options could be: Cash, Nominal Check, Credit Card, etc.')
+
         
     @api.onchange('employee_id') 
     def onchange_partner_bak_account(self):
@@ -142,8 +157,19 @@ class PreceptionLine(models.Model):
     payroll_id = fields.Many2one('employee.payroll.file','Payroll')
     
     preception_id = fields.Many2one('preception','Key To Perception')
-    description = fields.Char("Description")
-    #program_code_id = fields.Many2one('program.code','')
+    description = fields.Char(related='preception_id.concept',string="Description")
     amount = fields.Float("Matter")
+    
+class deductionLine(models.Model):
+    
+    _name = 'deduction.line'
+    
+    payroll_id = fields.Many2one('employee.payroll.file','Payroll')
+    
+    deduction_id = fields.Many2one('deduction','Key To Perception')
+    description = fields.Char(related='deduction_id.concept',string="Description")
+    amount = fields.Float("Matter")
+    net_salary = fields.Float("Net Salary")
+    credit_account_id = fields.Many2one(related='deduction_id.credit_account_id',string='Ledger account')
     
         

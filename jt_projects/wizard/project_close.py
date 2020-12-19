@@ -27,15 +27,21 @@ class ProjectClose(models.TransientModel):
 
 	close_letter = fields.Binary(string='Closing Official Letter',attachment=True)
 	current_id = fields.Integer(string="Current Id")
+	is_papiit_project = fields.Boolean(
+		'PAPIIT project', default=False, copy=False)
+	project_id = fields.Many2one('project.project')
+	close_label = fields.Char('Close',default='Do you want to close the project?')
 
 	def apply_document(self):
-		res = self.env['ir.attachment'].create({
-			'name':"Closing Official Letter",
-			'datas':self.close_letter,
-			'res_model':"project.project",
-			'res_id':self.current_id,
-			})
-		return res
+		self.project_id.status = 'closed'
+		if not self.is_papiit_project and self.close_letter:
+			res = self.env['ir.attachment'].create({
+				'name':"Closing Official Letter",
+				'datas':self.close_letter,
+				'res_model':"project.project",
+				'res_id':self.current_id,
+				})
+			return res
 		
 
 		

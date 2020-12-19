@@ -1,5 +1,6 @@
 from odoo import models, fields, api, _
 from datetime import datetime
+from odoo.exceptions import ValidationError
 
 class CheckbookRequest(models.Model):
 
@@ -22,7 +23,7 @@ class CheckbookRequest(models.Model):
     are_test_prin_formats_sent = fields.Boolean("Are test print formats sent?")
     dependence_id = fields.Many2one('dependency', "Dependence")
     subdependence_id = fields.Many2one('sub.dependency', "Subdependence")
-    area = fields.Char("Area", default="Are test print formats sent?")
+    area = fields.Char("Area", default="Financial Operations Department")
     number_of_folios = fields.Char("Number of Folios")
     print_sample_folio_number = fields.Char("Print Sample Folio Number")
 
@@ -34,6 +35,18 @@ class CheckbookRequest(models.Model):
                               ('confirmed', 'Confirmed'),
                               ('rejected', 'Rejected'), ('cancelled', 'Cancelled')
                              ], string="Status", default='draft')
+
+    @api.constrains('intial_folio', 'final_folio')
+    def _check_code(self):
+        if (self.final_folio - self.intial_folio) != self.amount_checks:
+            raise ValidationError(_('Value of Amount of checks does not match.'))
+
+    @api.onchange('bank_id')
+    def onchange_bank_id(self):
+        if self.bank_id and self.bank_id.bank_account_id:
+            self.bank_account_id = self.bank_id.bank_account_id.id
+        if self.bank_id and self.bank_id.checkbook_no:
+            self.checkbook_no = self.bank_id.checkbook_no
 
     @api.model
     def default_get(self, fields):

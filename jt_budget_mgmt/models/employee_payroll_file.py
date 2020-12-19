@@ -58,3 +58,9 @@ class PaymentRequest(models.Model):
     sub_dependancy_id = fields.Many2one('sub.dependency', 'Sub Dependency')
     program_code_id = fields.Many2one("program.code", string="Program Code")
 
+class PreceptionLine(models.Model):
+    
+    _inherit = 'preception.line'
+ 
+    program_code_id = fields.Many2one("program.code", string="Program Code")
+    

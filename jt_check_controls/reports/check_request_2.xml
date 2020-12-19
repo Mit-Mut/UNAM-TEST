@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <template id="external_layout_header_check_request_1">
+        <template id="external_layout_header_check_request_2">
             <div t-attf-class="header o_company_#{company.id}_layout">
                 <div class="row">
                     <div class="col-2" align="left">
@@ -49,7 +49,7 @@
                                         <t t-if="bank.city">
                                             ,
                                             <t t-esc="bank.city"/>
-                                        </t>
+                                        </t><br/>
                                         <t t-if="bank.state">
                                             ,
                                             <t t-esc="bank.state.name"/>
@@ -109,7 +109,7 @@
                         </span>
                         <span style="font-size:15px">
                             FOR MY RACE THE SPIRIT WILL SPEAK
-                        </span>
+                        </span><br/>
                         <span style="font-size:15px">
                             Ciudad Universitaria, Cd. Mx., A
                             <br/>
@@ -182,7 +182,7 @@
             </div>
         </template>
 
-        <template id="external_layout_check_req_1">
+        <template id="external_layout_check_req_2">
             <t t-if="not o" t-set="o" t-value="doc"/>
 
             <t t-if="not company">
@@ -197,16 +197,16 @@
                     <t t-set="company" t-value="res_company"/>
                 </t>
             </t>
-            <t t-call="jt_check_controls.external_layout_header_check_request_1">
+            <t t-call="jt_check_controls.external_layout_header_check_request_2">
                 <t t-raw="0"/>
             </t>
         </template>
 
-        <template id="check_request_1_template">
+        <template id="check_request_2_template">
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="o">
                     <!--                    <t t-if="o.state == 'approved'">-->
-                    <t t-call="jt_check_controls.external_layout_check_req_1">
+                    <t t-call="jt_check_controls.external_layout_check_req_2">
                         <div class="page">
                             <br/>
                             <br/>
@@ -232,77 +232,161 @@
                             <span> </span><t t-esc="o.print_sample_folio_number"/>
                             <span>, In order to be considered (s) as a print sample.</span>
                             <br/>
-                            <span>Likewise, we would also appreciate informing us in advance the corresponding
-                                charge, which must be applied to the account
-                            </span>
-                            <t t-if="o.bank_account_id">
-                                <t t-esc="o.bank_account_id.acc_number"/>
-                            </t>
-                            <span>
-                                , In order to enable it and avoid unnecessary overdrafts, requesting that you send
-                                us the invoice for this remittance as soon as possible to send it to our General
-                                Accounting area for registration.
+                            <span>This Checks must have the AMB
+                                security measures, in addition to the
+                                security features of the following technical sheet:
                             </span>
                             <br/>
                             <span>
-                                We request that the packing order be as follows:
-                                <br/>
-                            </span>
-                            <t t-set="checklist" t-value="o.get_checklist(o)"/>
+                                1. The exact size of the format should be
+                                    8 1⁄2 ”X 14” refined.
+                            </span><br/>
                             <span>
-                                -Packing of
-                                <t t-if="checklist">
-                                    <t t-esc="checklist.check_per_box"/>
-                                </t>
-                                checks each one
+                                2. On security paper, you must comply
+                                with what is established in the standards for checks.
+                            </span><br/>
+                            <span>
+                                3. All the tables of the vouchers must keep
+                                the measurements according to the check
+                                sample.
+                            </span><br/>
+                            <span>
+                                4. All texts must be legible and have good
+                                print quality.
+                            </span><br/>
+                            <span>
+                                5. Respect the position and texts that are
+                                located in each box or field of the receipts.
+                            </span><br/>
+                            <span>
+                                6. The legend POLICY PAPER printed on
+                                    the reverse should be in the lowest tone allowed by the standard.
+                            </span><br/>
+                            <span>
+                                7. Arabic folios must be printed with inkjet (Inkjet).
+                            </span><br/>
+                            <span>
+                                8. The magnetizable strip must be printed
+                                    with inkjet (Inkjet).
+                            </span><br/>
+                            <span>
+                                9. The tone of the UNAM logos presented
+                                on the check and on the vouchers must be
+                                in accordance with those printed on the
+                                check delivered.
+                            </span><br/>
+                            <span>
+                                10. The background tone of the vouchers
+                                and the check must be the same as those of the folio <span> </span><t t-esc="o.print_sample_folio_number"/> check.
                             </span>
                             <br/>
                             <span>
-                                -Boxes of
-                                <t t-if="checklist">
-                                    <t t-esc="checklist.received_boxes"/>
-                                </t>
-                                custom formats without the use of strap to some type of tie
-                                that mistreats the boxes and checks.
-                            </span>
-                            <br/>
+                                11. Die ties should not end in cut and
+                                should be 1/32 ”apart from each side.
+                            </span><br/>
                             <span>
-                                -Protection of thick cardboard sheets at the beginning and end of each package,
-                                as well as craft paper wrapping.
-                                <br/>
-                                -Checks should be arranged from 1 to “N” with the face facing up.
-                                <br/>
-                                -They must be counted from the lower left corner to avoid lifting and jamming
-                                during printing
-                                <br/>
-                                -9 points per inch tattoo and ties on the edges.
-                                <br/>
-                                -Format in measures of 8.5 by 14 inches, refined in 90 grms security paper.
-                                <br/>
-                                -Finally, remember that these checks must have the security measures of the ABM,
-                                the security characteristics of each bank and contain the legend "THE VALIDITY OF
-                                THIS CHECK IS 30 DAYS" ON THE FRONT AND REVERSE.
-                                <br/>
-                            </span>
+                                12. The inks used in the printing of the
+                                checks must not be unpainted and / or
+                                must not be repainted when they are
+                                passed through the UNAM printing
+                                equipment.
+                            </span><br/>
                             <span>
-                                We appreciate you sending us the corresponding CFDI in PDF format and XML file.
-                            </span>
+                                13. The numbering of the checks must be
+                                ordered consecutively from "N" to 1 face
+                                up.
+                            </span><br/>
                             <span>
-                                Please strictly adhere to the technical characteristics of substance and form, as
-                                well as the security measures of the attached sample check.
-                                <br/>
-                                Without further ado and thanking you again for your attention to the present,
-                                we bid you farewell with a cordial greeting.
-                            </span>
+                                15. The check count should be from the
+                                bottom left of the check.
+                            </span><br/>
+                            <span>
+                                16. Packaging specifications:
+                            </span><br/>
+                            <span style="margin-left: 30px;">
+                                - Checks should be packaged clean, with no paper residue or
+                                    cut-outs.
+                            </span><br/>
+                            <span style="margin-left: 30px;">
+                                - Make blocks of 500 checks.
+                            </span><br/>
+                            <span style="margin-left: 30px;">
+                                - Place strips for every 500 checks.
+                            </span><br/>
+                            <span style="margin-left: 30px;">
+                                - A cover and back cover must be
+                                placed in 400 gram matt couché
+                                cardboard. As protectors above
+                                and below each block of 500
+                                checks and then place the
+                                binding.    
+                            </span><br/>
+                            <span style="margin-left: 30px;">
+                                - Once wrapped and with the
+                                coated paper protectors, wrap the
+                                blocks of the 500 checks in 130-
+                                gram brown kraft paper.
+                            </span><br/>
+                            <span style="margin-left: 30px;">
+                                - Each package of 500 checks
+                                must be labeled with its folio rank.
+                            </span><br/>
+                            <span style="margin-left: 30px;">
+                               - Place check packages in boxes
+                                with a capacity of 200 checks.
+                            </span><br/>
+                            <span style="margin-left: 30px;">
+                                - Place one carton above and one
+                                below the 4 packages of 500.
+                            </span><br/>
+                            <span style="margin-left: 30px;">
+                                - The carton must be the same as
+                                the box.
+                            </span><br/>
+                            <span style="margin-left: 30px;">
+                               - The box must be the exact size of
+                                the checks.
+                            </span><br/>
+                            <span style="margin-left: 30px;">
+                                - The box must be single
+                                corrugated telescopic and
+                                measures 14 1⁄4 ”long by 8 3⁄4”
+                                wide by 8 1⁄4 ”high.
+                            </span><br/>
+                            <span style="margin-left: 30px;">
+                                - The box must be labeled with the
+                                range of folios it contains.
+                            </span><br/>
+                            <span style="margin-left: 30px;">
+                                - The box without strap because
+                                when they are transported, the
+                                boxes are taken by the straps and
+                                they cause cracks in the boxes so
+                                that the inner packages are
+                                mistreated.
+                            </span><br/>
+                            <span>
+                                Please strictly adhere to the technical
+                                characteristics of substance and form, as
+                                well as security measures of the approved
+                                check, also contain the legend" THE
+                                VALIDITY OF THIS CHECK IS FOR
+                                 DAYS "ON THE FRONT AND BACK OF THE DOCUMENT .."
+                            </span><br/>
+                            <span>
+                                Without any other particular and hoping to
+                                be favored with your attention to the
+                                present, we say goodbye to you with a
+                                cordial greeting.
+                            </span><br/>
                         </div>
                     </t>
-                    <!--                    </t>-->
                 </t>
             </t>
         </template>
 
-        <record id="paperformat_check_request_1" model="report.paperformat">
-            <field name="name">Check Request 1</field>
+        <record id="paperformat_check_request_2" model="report.paperformat">
+            <field name="name">Check Request 2</field>
             <field name="default" eval="True"/>
             <field name="orientation">Portrait</field>
             <field name="format">A4</field>
@@ -316,13 +400,13 @@
         </record>
 
         <report
-                id="check_request_1"
+                id="check_request_2"
                 model="checkbook.request"
-                string="Check Request 1"
+                string="Check Request 2"
                 report_type="qweb-pdf"
-                name="jt_check_controls.check_request_1_template"
-                file="jt_check_controls.check_request_1_template"
-                paperformat="jt_check_controls.paperformat_check_request_1"
+                name="jt_check_controls.check_request_2_template"
+                file="jt_check_controls.check_request_2_template"
+                paperformat="jt_check_controls.paperformat_check_request_2"
         />
 
     </data>

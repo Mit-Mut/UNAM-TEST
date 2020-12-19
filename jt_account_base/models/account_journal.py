@@ -46,6 +46,7 @@ class AccountJournal(models.Model):
         default=False, string='Do you have a checkbook?')
     checkbook_type = fields.Selection(
         [('normal', 'Normal'), ('massive', 'Massive')], string='Type of checkbook')
+    checkbook_no = fields.Char("Checkbook No.")
     signatures = fields.Binary('Account Authorization Signatures')
     contract = fields.Binary('Attach contract')
     min_balance = fields.Monetary(string='Minimum Balance', tracking=True)

@@ -12,6 +12,4 @@ access_upa_document_type,upa.document.type,model_upa_document_type,,1,1,1,1
 access_adjustment_cases,adjustment.cases,model_adjustment_cases,,1,1,1,1
 access_custom_payroll_processing,custom.payroll.processing,model_custom_payroll_processing,,1,1,1,1
 access_preception_line,preception.line,model_preception_line,,1,1,1,1
-
-
-
+access_deduction_line,deduction.line,model_deduction_line,,1,1,1,1

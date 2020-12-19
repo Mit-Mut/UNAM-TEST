@@ -122,18 +122,28 @@ class IntegrationOfCurrentResearchProjects(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         lines = []
-        
+        project_domain = []
+        project_type_domain = []
         
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
-        # project_records = self.env['project.project'].search(
-        #     [('proj_start_date', '>=', start), ('proj_end_date', '<=', end)])
-        project_records = self.env['project.project'].search([('project_type','=','conacyt')])
 
-        # stage_identifier = project_records.mapped('stage_identifier_id')
-        # for stage in stage_identifier:
+        project_type_select = options.get('project_type')
+        for p_type in project_type_select:
+            if p_type.get('selected',False):
+                project_type_domain.append(p_type.get('id'))
+        
+        if project_type_domain:
+            project_domain += [('project_type','in',tuple(project_type_domain))]
+        else:
+            project_domain += [('project_type','in',('conacyt','concurrent','other'))]
+            
+        project_domain += [('proj_start_date', '>=', start), ('proj_end_date', '<=', end)]
+          
+        project_records = self.env['project.project'].search(project_domain)
+
         stage_ids = project_records.mapped('custom_stage_id')
         
         total_project = 0
@@ -198,8 +208,13 @@ class IntegrationOfCurrentResearchProjects(models.AbstractModel):
             'unfoldable': False,
             'unfolded': True,
         })
+        account_amount = 0
         
-    
+        project_account_ids = project_records.mapped('bank_account_id.default_debit_account_id')
+        if project_account_ids:
+            values= self.env['account.move.line'].search([('date', '>=', start), ('date', '<=', end),('account_id', '=', project_account_ids.ids),('move_id.state', '=', 'posted')])
+            account_amount = sum(x.debit-x.credit for x in values)
+            
         lines.append({
             'id': 'projects_saldo_total',
             'name': 'SALDO EN CUENTA & BANCARIA & CONACTY',
@@ -207,7 +222,7 @@ class IntegrationOfCurrentResearchProjects(models.AbstractModel):
 #                         {'name': ''},
 #                         {'name': ''},
 #                         {'name': ''},
-                        self._format({'name': 0.0},figure_type='float'),
+                        self._format({'name': account_amount},figure_type='float'),
                         {'name': ''},
                         {'name': ''},
                         ],
@@ -227,7 +242,7 @@ class IntegrationOfCurrentResearchProjects(models.AbstractModel):
 #                         {'name': ''},
 
                         #{'name': 'DIFERENCIA GASTO & PENDIENTE & DE COMP ROBARA LA CONTADURA GENERAL'},
-                        self._format({'name': total_to_checked_amount},figure_type='float'),
+                        self._format({'name': total_to_checked_amount-account_amount},figure_type='float'),
                         {'name': ''},
                         {'name': ''},
                         ],
@@ -239,7 +254,8 @@ class IntegrationOfCurrentResearchProjects(models.AbstractModel):
         })
     
         #=================== Second Part =================#
-
+        return lines
+    
         lines.append({
             'id': 'projects_2_01',
             'name': '',

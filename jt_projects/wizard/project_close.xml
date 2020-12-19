@@ -7,11 +7,16 @@
             <field name="arch" type="xml">
                 <form>
                     <group>
-                        <field name="close_letter"/>
+                    	<field name="is_papiit_project" invisible="1"/>
+                    	<field name="project_id" invisible="1"/>
+                        <field name="close_letter" attrs="{'invisible':[('is_papiit_project','=',True)],'required':[('is_papiit_project','=',False)]}"/>
                         <field name="current_id" invisible="1"/>
                     </group>
+                    <field name="close_label" attrs="{'invisible':[('is_papiit_project','=',False)]}" readonly="1"/>
+                    
                     <footer>
-                        <button string="Apply" name="apply_document" type="object" class="oe_highlight"/>
+                        <button string="Yes" name="apply_document" type="object" class="oe_highlight" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
+                        <button string="Apply" name="apply_document" type="object" class="oe_highlight" attrs="{'invisible':[('is_papiit_project','=',True)]}"/>
                         <button string="Cancel" class="btn btn-default" special="cancel"/>
                     </footer>
                 </form>

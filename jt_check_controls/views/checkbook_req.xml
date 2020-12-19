@@ -45,49 +45,49 @@
                         </div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/><h1><field name="name" required="1"
-                                attrs="{'readonly': [('state', '=', 'cancelled')]}"/></h1>
+                                attrs="{'readonly': [('state', '!=', 'draft')]}"/></h1>
                         </div>
                         <group>
                             <group>
                                 <field name="application_no" readonly="1"
-                                       attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
+                                       attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="folio_legal" readonly="1"
-                                        attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
-                                <field name="appliaction_date" attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
-                                <field name="bank_id" attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
-                                <field name="bank_account_id" attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
-                                <field name="amount_checks" attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
-                                <field name="applicant_id" attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
-                                <field name="observations" attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
+                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="appliaction_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="bank_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="bank_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="amount_checks" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="applicant_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="observations" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
                             <group>
-                                <field name="checkbook_no" attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
-                                <field name="intial_folio" attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
-                                <field name="final_folio" attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
-                                <field name="confirmation_letter" attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
+                                <field name="checkbook_no" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="intial_folio" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="final_folio" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="confirmation_letter" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="are_test_prin_formats_sent"
-                                    attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
+                                    attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="dependence_id"
                                        attrs="{'invisible': [('are_test_prin_formats_sent', '=', False)],
-                                        'readonly': [('state', '=', 'cancelled')]}"/>
+                                        'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="subdependence_id"
                                        attrs="{'invisible': [('are_test_prin_formats_sent', '=', False)],
-                                       'readonly': [('state', '=', 'cancelled')]}"/>
+                                       'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="area" attrs="{'invisible': [('are_test_prin_formats_sent', '=', False)],
-                                        'readonly': [('state', '=', 'cancelled')]}"/>
+                                        'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="number_of_folios"
                                     attrs="{'invisible': [('are_test_prin_formats_sent', '=', False)],
-                                    'readonly': [('state', '=', 'cancelled')]}"/>
+                                    'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="print_sample_folio_number"
                                     attrs="{'invisible': [('are_test_prin_formats_sent', '=', False)],
-                                    'readonly': [('state', '=', 'cancelled')]}"/>
+                                    'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
                         </group>
                         <notebook>
                             <page string="Complementary data for receipt of checks">
                                 <group>
-                                    <field name="full_address" attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
-                                    <field name="check_receipt_date" attrs="{'readonly': [('state', '=', 'cancelled')]}"/>
+                                    <field name="full_address" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="check_receipt_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 </group>
                             </page>
                         </notebook>
@@ -115,7 +115,6 @@
                     <group>
                         <field name="checkbook_no"/>
                         <field name="received_boxes"/>
-                        <field name="check_per_box"/>
                         <field name="check_per_box"/>
                         <field name="additional_checks"/>
                         <field name="total_cash"/>

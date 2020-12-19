@@ -78,6 +78,7 @@ class ProjectRegistry(models.Model):
 
     base_id = fields.Many2one('bases.collaboration','Type of Agreement')
 
+    
     @api.onchange('custom_stage_id')
     def onchange_custom_stage_id(self):
         if self.custom_stage_id:
@@ -152,10 +153,11 @@ class ProjectRegistry(models.Model):
     @api.onchange('program_code')
     def onchange_program_code(self):
         if self.program_code:
-            self.stage_identifier_id = self.program_code.stage_id
+            
+            self.custom_stage_id = self.program_code.stage_id and self.program_code.stage_id.project_id and self.program_code.stage_id.project_id.custom_stage_id and self.program_code.stage_id.project_id.custom_stage_id.id or False 
             self.desc_stage = self.program_code.desc_stage
             self.number = self.program_code.project_number
-            self.project_type_identifier_id = self.program_code.project_type_id
+            self.custom_project_type_id = self.program_code.project_type_id and self.program_code.project_type_id.project_id and self.program_code.project_type_id.project_id.custom_project_type_id and self.program_code.project_type_id.project_id.custom_project_type_id.id or False
             self.agreement_type_id = self.program_code.agreement_type_id.id
             self.name_agreement = self.program_code.name_agreement
             self.number_agreement = self.program_code.number_agreement
@@ -233,7 +235,7 @@ class ProjectRegistry(models.Model):
             self.branch_office = self.bank_account_id.branch_number
 
     def close_project(self):
-        self.status = 'closed'
+        #self.status = 'closed'
         return {
             'name': 'Project Close',
             'view_type': 'form',
@@ -244,6 +246,8 @@ class ProjectRegistry(models.Model):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'context': {'default_current_id': self.id,
+                        'default_project_id':self.id,
+                        'default_is_papiit_project' : self.is_papiit_project,
                         'active_ids': self.ids}
         }
 

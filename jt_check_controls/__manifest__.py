@@ -38,7 +38,8 @@
         'wizard/confirm_checkbook_req.xml',
         'security/ir.model.access.csv',
         'data/sequence.xml',
-        'reports/check_request_1.xml'
+        'reports/check_request_1.xml',
+        'reports/check_request_2.xml',
     ],
     'demo': [
     ],

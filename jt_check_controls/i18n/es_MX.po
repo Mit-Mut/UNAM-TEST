@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-19 05:57+0000\n"
-"PO-Revision-Date: 2020-12-19 05:57+0000\n"
+"POT-Creation-Date: 2020-12-21 05:03+0000\n"
+"PO-Revision-Date: 2020-12-21 05:03+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,7 +26,16 @@ msgid "-Packing of"
 msgstr "-Empaque de"
 
 #. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_2_template
+msgid ""
+"10. The background tone of the vouchers\n"
+"                                and the check must be the same as those of the folio <span> </span>"
+msgstr ""
+"10. El tono de fondo de los comprobantes y del cheque deben quedar iguales a los del cheque del folio <span> </span>"
+
+#. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_2_template
 msgid ""
 "<br/>\n"
 "                            <br/>\n"
@@ -48,7 +57,7 @@ msgstr ""
 "                            <br/>\n"
 "                            <br/>\n"
 "                            <br/>\n"
-"                            <span>TA través de este canal, agradeceríamos enormemente que nos diera sus amables instrucciones. a quien pueda concernir, con el fin de llevar a cabo el desarrollo de\n"
+"                            <span>Por este conducto, mucho agradeceremos girar su amable instrucción a quien corresponda, a fin dellevar a cabo la elaboración de\n"
 "                            </span>"
 
 #. module: jt_check_controls
@@ -113,6 +122,187 @@ msgstr ""
 "                            </span>"
 
 #. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_2_template
+msgid ""
+"<br/>\n"
+"                            <span>\n"
+"                                11. The dies (horizontal perforations) should not be so deep, 8 points per inch.\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                                12. Die ties should not end in cut and should be 1/32 \" apart from each side.\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                                13. The inks used in the printing of the\n"
+"                                checks must not be unpainted and / or\n"
+"                                must not be repainted when they are\n"
+"                                passed through the UNAM printing\n"
+"                                equipment.\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                                14. The numbering of the checks must be\n"
+"                                ordered consecutively from \"N\" to 1 face\n"
+"                                up.\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                                15. The check count should be from the\n"
+"                                bottom left of the check.\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                                16. Packaging specifications:\n"
+"                            </span><br/>\n"
+"                            <span style=\"margin-left: 30px;\">\n"
+"                                - Checks should be packaged clean, with no paper residue or\n"
+"                                    cut-outs.\n"
+"                            </span><br/>\n"
+"                            <span style=\"margin-left: 30px;\">\n"
+"                                - Make blocks of 500 checks.\n"
+"                            </span><br/>\n"
+"                            <span style=\"margin-left: 30px;\">\n"
+"                                - Place strips for every 500 checks.\n"
+"                            </span><br/>\n"
+"                            <span style=\"margin-left: 30px;\">\n"
+"                                - A cover and back cover must be\n"
+"                                placed in 400 gram matt couché\n"
+"                                cardboard. As protectors above\n"
+"                                and below each block of 500\n"
+"                                checks and then place the\n"
+"                                binding.    \n"
+"                            </span><br/>\n"
+"                            <span style=\"margin-left: 30px;\">\n"
+"                                - Once wrapped and with the\n"
+"                                coated paper protectors, wrap the\n"
+"                                blocks of the 500 checks in 130-\n"
+"                                gram brown kraft paper.\n"
+"                            </span><br/>\n"
+"                            <span style=\"margin-left: 30px;\">\n"
+"                                - Each package of 500 checks\n"
+"                                must be labeled with its folio rank.\n"
+"                            </span><br/>\n"
+"                            <span style=\"margin-left: 30px;\">\n"
+"                               - Place check packages in boxes\n"
+"                                with a capacity of 200 checks.\n"
+"                            </span><br/>\n"
+"                            <span style=\"margin-left: 30px;\">\n"
+"                                - Place one carton above and one\n"
+"                                below the 4 packages of 500.\n"
+"                            </span><br/>\n"
+"                            <span style=\"margin-left: 30px;\">\n"
+"                                - The carton must be the same as\n"
+"                                the box.\n"
+"                            </span><br/>\n"
+"                            <span style=\"margin-left: 30px;\">\n"
+"                               - The box must be the exact size of\n"
+"                                the checks.\n"
+"                            </span><br/>\n"
+"                            <span style=\"margin-left: 30px;\">\n"
+"                                - The box must be single\n"
+"                                corrugated telescopic and\n"
+"                                measures 14 1⁄4 ”long by 8 3⁄4”\n"
+"                                wide by 8 1⁄4 ”high.\n"
+"                            </span><br/>\n"
+"                            <span style=\"margin-left: 30px;\">\n"
+"                                - The box must be labeled with the\n"
+"                                range of folios it contains.\n"
+"                            </span><br/>\n"
+"                            <span style=\"margin-left: 30px;\">\n"
+"                                - The box without strap because\n"
+"                                when they are transported, the\n"
+"                                boxes are taken by the straps and\n"
+"                                they cause cracks in the boxes so\n"
+"                                that the inner packages are\n"
+"                                mistreated.\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                                Please strictly adhere to the technical\n"
+"                                characteristics of substance and form, as\n"
+"                                well as security measures of the approved\n"
+"                                check, also contain the legend\" THE\n"
+"                                VALIDITY OF THIS CHECK IS FOR\n"
+"                                 DAYS \"ON THE FRONT AND BACK OF THE DOCUMENT ..\"\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                                Without any other particular and hoping to\n"
+"                                be favored with your attention to the\n"
+"                                present, we say goodbye to you with a\n"
+"                                cordial greeting.\n"
+"                            </span><br/>"
+msgstr ""
+"<br/>\n"
+"                            <span>\n"
+"                                11. Los suajes (perforaciones horizontales) no deberán ser tan profundos, de 8 puntos por pulgada.\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                                12. Los amarres de los suajes no deberán terminar en corte y deberán quedar a una "
+"distancia de 1/32” de cada lado.\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                                13. Las tintas que se utilicen en la impresión de los cheques no deben "
+"despintar y/o no deben repintar al pasarlos en los equipos de impresión de la UNAM.\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                                14. La numeración de los cheques debe quedar ordenada de forma consecutiva de “N” a 1 cara arriba.\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                                15. El conteo de los cheques debe ser de la parte inferior izquierda del cheque.\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                                16. Especificaciones del empaque:\n"
+"                            </span><br/>\n"
+"                            <span style=\"margin-left: 30px;\">\n"
+"                                - Los cheques se deben empacar limpios, sin residuos de papel ni sobrantes de los cortes.\n"
+"                            </span><br/>\n"
+"                            <span style=\"margin-left: 30px;\">\n"
+"                                - Hacer bloques de 500 cheques.\n"
+"                            </span><br/>\n"
+"                            <span style=\"margin-left: 30px;\">\n"
+"                                - Colocar fajillas por cada 500 cheques.\n"
+"                            </span><br/>\n"
+"                            <span style=\"margin-left: 30px;\">\n"
+"                                - Se debe colocar una tapa y contratapa en cartulina couché mate de 400 gramos. Como "
+"protectores arriba y debajo de cada bloque de 500 cheques y después colocar el enfajillado.\n"
+"                            </span><br/>\n"
+"                            <span style=\"margin-left: 30px;\">\n"
+"                                -Una vez enfajillados y con los protectores de papel couché, envolver los bloques de los 500"
+" cheques en papel kraft color café de 130 gramos.\n"
+"                            </span><br/>\n"
+"                            <span style=\"margin-left: 30px;\">\n"
+"                                - Cada paquete de 500 cheques debe estar etiquetado con su rango de folio.\n"
+"                            </span><br/>\n"
+"                            <span style=\"margin-left: 30px;\">\n"
+"                               - Colocar los paquetes de cheques en cajas con una capacidad para 200 cheques.\n"
+"                            </span><br/>\n"
+"                            <span style=\"margin-left: 30px;\">\n"
+"                                - Colocar un cartón arriba y otro debajo de los 4 paquetes de 500.\n"
+"                            </span><br/>\n"
+"                            <span style=\"margin-left: 30px;\">\n"
+"                                - El cartín debe ser igual al de la caja.\n"
+"                            </span><br/>\n"
+"                            <span style=\"margin-left: 30px;\">\n"
+"                               - La caja debe estar a la medida exacta de los cheques.\n"
+"                            </span><br/>\n"
+"                            <span style=\"margin-left: 30px;\">\n"
+"                                - La caja debe ser telescópica de corrugado sencillo y medidas de 14 1⁄4” de largo por 8 3⁄4 ” de"
+" ancho por 8 1⁄4 ” de alto.\n"
+"                            </span><br/>\n"
+"                            <span style=\"margin-left: 30px;\">\n"
+"                                - La caja debe estar etiquetada con el rango de folios que contiene.\n"
+"                            </span><br/>\n"
+"                            <span style=\"margin-left: 30px;\">\n"
+"                                - La caja sin fleje ya que cuando las transportan se toman las cajas por los flejes y ocasionan"
+" hendiduras en las cajas por lo que se maltratan los paquetes interiores.\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                                Favor de apegarse estrictamente a las características técnicas de fondo y forma, "
+"así como medidas de seguridad del cheque aprobado, así mismo contenga la leyenda “LA VIGENCIA DE ESTE CHEQUE ES DE DÍAS” EN EL "
+"ANVERSO Y REVERSO DEL DOCUMENTO..\"\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                               Sin otro particular y esperando vernos favorecidos con su atención al presente, "
+"nos despedimos de usted con un cordial saludo.\n"
+"                            </span><br/>"
+
+
+#. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
 msgid ""
 "<span style=\"font-size:15px\">\n"
@@ -130,12 +320,36 @@ msgstr ""
 "                            POR MI RAZA HABLARÁ EL ESPÍRITU                        </span>"
 
 #. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_registration
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_2
+msgid ""
+"<span style=\"font-size:15px\">\n"
+"                            Sincerely\n"
+"                            <br/>\n"
+"                        </span>\n"
+"                        <span style=\"font-size:15px\">\n"
+"                            FOR MY RACE THE SPIRIT WILL SPEAK\n"
+"                        </span><br/>"
+msgstr ""
+"<span style=\"font-size:15px\">\n"
+"                            Atentamente\n"
+"                            <br/>\n"
+"                        </span>\n"
+"                        <span style=\"font-size:15px\">\n"
+"                            PARA MI RAZA EL ESPÍRITU HABLARÁ\n"
+"   
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_registration
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_2
 msgid "<span style=\"font-size:15px\">C.C.P.</span>"
 msgstr ""
 
 #. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_registration
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_2
 msgid ""
 "<span style=\"font-size:15px\">DIRECTOR OF INCOME AND FINANCIAL "
 "OPERATION</span>"
@@ -144,7 +358,9 @@ msgstr ""
 "FINANZAS</span>"
 
 #. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_registration
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_2
 msgid "<span style=\"font-size:15px\">GENERAL DIRECTOR</span>"
 msgstr "<span style=\"font-size:15px\">DIRECTOR GENERAL</span>"
 
@@ -173,6 +389,7 @@ msgstr ""
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_2
 msgid "<span>(CUENTA DE PROVEEDORES)</span>"
 msgstr ""
 
@@ -191,37 +408,133 @@ msgstr ""
 "                            </span>"
 
 #. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_2_template
+msgid ""
+"<span>, In order to be considered (s) as a print sample.</span>\n"
+"                            <br/>\n"
+"                            <span>This Checks must have the AMB\n"
+"                                security measures, in addition to the\n"
+"                                security features of the following technical sheet:\n"
+"                            </span>\n"
+"                            <br/>\n"
+"                            <span>\n"
+"                                1. The exact size of the format should be\n"
+"                                    8 1⁄2 ”X 14” refined.\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                                2. On security paper, you must comply\n"
+"                                with what is established in the standards for checks.\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                                3. All the tables of the vouchers must keep\n"
+"                                the measurements according to the check\n"
+"                                sample.\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                                4. All texts must be legible and have good\n"
+"                                print quality.\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                                5. Respect the position and texts that are\n"
+"                                located in each box or field of the receipts.\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                                6. The legend POLICY PAPER printed on\n"
+"                                    the reverse should be in the lowest tone allowed by the standard.\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                                7. Arabic folios must be printed with inkjet (Inkjet).\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                                8. The magnetizable strip must be printed\n"
+"                                    with inkjet (Inkjet).\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                                9. The tone of the UNAM logos presented\n"
+"                                on the check and on the vouchers must be\n"
+"                                in accordance with those printed on the\n"
+"                                check delivered.\n"
+"                            </span><br/>"
+msgstr ""
+"<span>, In order to be considered (s) as a print sample.</span>\n"
+"                            <br/>\n"
+"                            <span>Estos cheques deberán contar con las medidas de seguridad de la AMB, además"
+"de las características de seguridad de la ficha técnica siguiente:\n"
+"                            </span>\n"
+"                            <br/>\n"
+"                            <span>\n"
+"                                1. La medida exacta del formato debe"
+"quedar de 8 1⁄2” X 14” refinado.\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                                2. En papel seguridad deberá cumplir con lo establecido en los estándares para cheques.\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                                3. Todos los cuadros de los comprobantes deben conservar las medidas conforme al"
+"cheque muestra.\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                                4. Todos los textos deben ser legibles y contar con buena calidad de impresión.\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                                5. Respetar la posición y textos que seubican en cada cuadro o campo de los comprobantes.\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                                6. La leyenda PAPEL PÓLIZA que se imprime al reverso deberá ser en el tono "
+"más bajo que permita el estándar.\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                                7. Los folios arábigos deben ser impresos con inyección de tinta (Inkjet).\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                                8. La banda magnetizable debe ser impresa con inyección de tinta (Inkjet).\n"
+"                            </span><br/>\n"
+"                            <span>\n"
+"                                9. El tono de los logotipos de la UNAM que presentan en el cheque y en los comprobantes"
+" deberá ser de acuerdo a los impresos en el cheque entregado.\n"
+"                            </span><br/>"
+
+#. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_2_template
 msgid ""
 "<span>Annex, it will be useful to find the\n"
 "                                canceled format containing the folio\n"
-"                            </span>"
+"                            </span>\n"
+"                            <span> </span>"
 msgstr ""
-"<span>, anexo se servirá encontrar el formatocancelado conteniendo el "
-"folio</span>"
+"<span>, anexo se servirá encontrar el\n"
+"                                formato cancelado conteniendo el folio\n"
+"                            </span>\n"
+"                            <span> </span>"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_2_template
 msgid "<span>Formats to print checks from this account</span>"
-msgstr "<span>Formatos para imprimir cheques de esta cuenta</span>"
+msgstr "<span>formatos para imprimir cheques de esta cuenta</span>"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_2
 msgid "<span>No. Account</span>"
 msgstr "<span>No. De Cuenta</span>"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_2
 msgid "<span>Present:</span>"
 msgstr "<span>Presente:</span>"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_2_template
 msgid "<span>They must start from the folio</span>"
 msgstr "<span>mismos que deberán iniciar a partir del folio</span>"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_2
 msgid "AT'N:"
 msgstr ""
 
@@ -332,13 +645,14 @@ msgid "Check Request 1"
 msgstr "Solicitud de cheque 1"
 
 #. module: jt_check_controls
+#: model:ir.actions.report,name:jt_check_controls.check_request_2
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__trades_config__job_template__check_req_2
 msgid "Check Request 2"
 msgstr "Solicitud de cheque 2"
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_checklist__checkbook_req_id
-#: model:ir.model.fields,field_description:jt_check_controls.field_minimum_checks__checkbook_id
+#: model:ir.model.fields,field_description:jt_check_controls.field_minimum_checks__checkbook
 msgid "Checkbook"
 msgstr "Chequera"
 
@@ -401,12 +715,6 @@ msgstr "Cheques restantes por solicitar"
 msgid "Cheklist"
 msgstr ""
 
-#. module: jt_check_controls
-#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
-msgid ""
-"Ciudad Universitaria, Cd. Mx., A\n"
-"                            <br/>"
-msgstr ""
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_trades_config__clerk_id
@@ -481,7 +789,9 @@ msgid "Created on"
 msgstr "Creado el"
 
 #. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_registration
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_2
 msgid "DIRECTORATE OF INCOME AND FINANCIAL OPERATIONS"
 msgstr "DIRECCIÓN DE INGRESOS Y OPERACIONES FINANCIERAS"
 
@@ -541,7 +851,9 @@ msgid "Full Address"
 msgstr "Dirección completa"
 
 #. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_registration
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_2
 msgid "GENERAL DIRECTORATE OF FINANCE"
 msgstr "DIRECCIÓN GENERAL DE FINANZAS"
 
@@ -631,7 +943,9 @@ msgid "List of checks"
 msgstr "Lista de Cheques"
 
 #. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_registration
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_2
 msgid "Logo"
 msgstr ""
 
@@ -727,6 +1041,7 @@ msgstr "Director de Ingresos"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_2
 msgid "SUBJECT: REQUEST FOR CHECKS"
 msgstr "ASUNTO: SOLICITUD DE CHEQUES"
 
@@ -753,7 +1068,9 @@ msgid "Submitted"
 msgstr "Presentado"
 
 #. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_registration
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_2
 msgid "TREASURY"
 msgstr "TESORERÍA"
 
@@ -777,14 +1094,21 @@ msgid "Trade Config"
 msgstr "Configuraciones comerciales"
 
 #. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_registration
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_2
 msgid "UNIVERSITY BOARD OF TRUSTEES"
-msgstr ""
+msgstr "PATRONATO UNIVERSITARIO"
 
 #. module: jt_check_controls
 #: code:addons/jt_check_controls/models/checkbook_req.py:0
 #, python-format
 msgid "Value of Amount of checks does not match."
+msgstr ""
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_2_template
+msgid "check."
 msgstr ""
 
 #. module: jt_check_controls
@@ -800,3 +1124,98 @@ msgid ""
 msgstr ""
 "formatos a la medida sin uso de fleje a algún tipo de amarre que maltrate "
 "las cajas y cheques."
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_registration
+msgid "<span>Present</span>"
+msgstr "<span>Presente</span>"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_registration
+msgid "FINANCIAL OPERATIONS DEPARTMENT"
+msgstr "DEPARTAMENTO DE OPERACIONES FINANCIERAS"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_registration
+msgid "Of. No."
+msgstr "De. No."
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_registration
+msgid "SUBJECT: CHECK REGISTRATION REQUEST"
+msgstr "ASUNTO: SOLICITUD DE REGISTRO DE CHEQUES"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_registration_template
+msgid ""
+"It is worth mentioning that the checkbooks were satisfactorily delivered on"
+msgstr ""
+"Cabe mencionar que las chequeras fueron entregadas satisfactoriamente en"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_registration_template
+msgid ", on behalf of the National Autonomous University of Mexico."
+msgstr ", en nombre de la Universidad Nacional Autónoma de México."
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_registration_template
+msgid ", they belong to checking account no."
+msgstr ", pertenecen al número de cuenta corriente."
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_registration_template
+msgid ", to"
+msgstr ", a"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_registration_template
+msgid "hereof, in the Financial Operations Department located in"
+msgstr "de la presente, en el Departamento de Operaciones Financieras ubicado en"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_registration_template
+msgid ""
+"By means of the present in the character of authorized, we request and "
+"authorize the Activation of the issuance of"
+msgstr ""
+"Por medio del presente en el carácter de autorizado, solicitamos y"
+"autorizar la activación de la emisión de"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_registration_template
+msgid "special checks with no. From folio"
+msgstr "cheques especiales con no. Del folio"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_registration_template
+msgid "to"
+msgstr "a"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_registration_template
+msgid ""
+"who identified himself with _________________________________\n"
+"                            _________________, for which a copy of\n"
+"                            his identification is attached."
+msgstr ""
+"que se identificó con _________________________________\n"
+"                            _________________, para el cual una copia de\n"
+"                            su identificación se adjunta."
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_registration_template
+msgid ""
+"<span>\n"
+"                                Without any other particular and hoping to be favored with your attention to the\n"
+"                                present, we say goodbye to you with a cordial greeting.\n"
+"                            </span>"
+msgstr ""
+"<span>\n"
+"                                Sin ningún otro particular y esperando ser favorecido con su atención a la\n"
+"                                presente, nos despedimos de usted con un cordial saludo.\n"
+"                            </span>"
+
+#. module: jt_check_controls
+#: model:ir.actions.report,name:jt_check_controls.check_registration
+msgid "Check Registration"
+msgstr "Verifique el registro."

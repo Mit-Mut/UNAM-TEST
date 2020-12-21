@@ -18,7 +18,8 @@ class ConfirmCheckBook(models.TransientModel):
     def apply(self):
         check_req = self.env['checkbook.request'].browse(self._context.get('active_id'))
         if check_req:
-            check_req.checkbook_no = self.checkbook_no
+            if check_req.bank_id and check_req.bank_id.checkbook_no:
+                check_req.checkbook_no = check_req.bank_id.checkbook_no
             checklist = self.env['checklist'].create({
                 'checkbook_no': self.checkbook_no,
                 'received_boxes': self.received_boxes,
@@ -30,6 +31,11 @@ class ConfirmCheckBook(models.TransientModel):
             for folio in range(check_req.intial_folio, check_req.final_folio + 1):
                 checklist.checklist_lines = [(0, 0, {
                     'folio': folio,
-                    'status': 'REGISTRATION OF CHECKBOOK'
+                    'status': 'Checkbook registration',
+                    'bank_id': check_req.bank_id.id if check_req.bank_id else False,
+                    'bank_account_id': check_req.bank_account_id.id if check_req.bank_account_id else False,
+                    'checkbook_no': check_req.checkbook_no,
+                    'dependence_id': check_req.dependence_id.id if check_req.dependence_id else False,
+                    'subdependence_id': check_req.subdependence_id.id if check_req.subdependence_id else False
                 })]
             check_req.state = 'confirmed'

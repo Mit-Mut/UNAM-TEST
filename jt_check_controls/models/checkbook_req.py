@@ -36,8 +36,17 @@ class CheckbookRequest(models.Model):
                               ('rejected', 'Rejected'), ('cancelled', 'Cancelled')
                              ], string="Status", default='draft')
 
+    def name_get(self):
+        result = []
+        for rec in self:
+            name = rec.name or ''
+            if 'from_approve_check' in self._context and rec.checkbook_no:
+                name = rec.checkbook_no
+            result.append((rec.id, name))
+        return result
+
     @api.constrains('intial_folio', 'final_folio')
-    def _check_code(self):
+    def _check_amount(self):
         if (self.final_folio - self.intial_folio) != self.amount_checks:
             raise ValidationError(_('Value of Amount of checks does not match.'))
 
@@ -45,8 +54,6 @@ class CheckbookRequest(models.Model):
     def onchange_bank_id(self):
         if self.bank_id and self.bank_id.bank_account_id:
             self.bank_account_id = self.bank_id.bank_account_id.id
-        if self.bank_id and self.bank_id.checkbook_no:
-            self.checkbook_no = self.bank_id.checkbook_no
 
     @api.model
     def default_get(self, fields):
@@ -120,6 +127,40 @@ class CheckbookRequest(models.Model):
         checklist = self.env['checklist'].search([('checkbook_req_id', '=', checkbook.id)], limit=1)
         return checklist
 
+
+    def get_application_date(self):
+        application = self.appliaction_date
+        day = application.day
+        month = application.month
+        year = application.year
+        month_name = ''
+        if month == 1:
+            month_name = 'Enero'
+        elif month == 2:
+            month_name = 'Febrero'
+        elif month == 3:
+            month_name = 'Marzo'
+        elif month == 4:
+            month_name = 'Abril'
+        elif month == 5:
+            month_name = 'Mayo'
+        elif month == 6:
+            month_name = 'Junio'
+        elif month == 7:
+            month_name = 'Julio'
+        elif month == 8:
+            month_name = 'Agosto'
+        elif month == 9:
+            month_name = 'Septiembre'
+        elif month == 10:
+            month_name = 'Octubre'
+        elif month == 11:
+            month_name = 'Noviembre'
+        elif month == 12:
+            month_name = 'Diciembre'
+
+        return str(day) + ' de ' + month_name + ' de ' + str(year)
+
     def get_date(self):
         today = datetime.today().date()
         day = today.day
@@ -167,14 +208,53 @@ class CheckList(models.Model):
     check_per_box = fields.Integer("Checks per box")
     additional_checks = fields.Integer("Additional checks without cash")
     total_cash = fields.Integer("Total Checks")
-    checklist_lines = fields.One2many('checklist.line', 'checklist_id', "List of checks")
+    checklist_lines = fields.One2many('check.log', 'checklist_id', "List of checks")
     checkbook_req_id = fields.Many2one("checkbook.request", "Checkbook")
 
 class CheckListLine(models.Model):
 
-    _name = 'checklist.line'
+    _name = 'check.log'
     _description = "Checklist Line"
+    _rec_name = 'folio'
 
-    checklist_id = fields.Many2one("checklist", "Checklist")
+    checklist_id = fields.Many2one("checklist", "Checkbook Request")
     folio = fields.Integer("Folio")
-    status = fields.Char("Status")
+    bank_id = fields.Many2one('account.journal',"Bank")
+    bank_account_id = fields.Many2one('res.partner.bank', "Bank Account")
+    checkbook_no = fields.Char("Checkbook No")
+    dependence_id = fields.Many2one('dependency', "Dependence")
+    subdependence_id = fields.Many2one('sub.dependency', "Subdependence")
+    reason_cancellation = fields.Text("Reason for cancellation")
+    reason_retention = fields.Text("Reason for retention")
+    date_printing = fields.Date("Printing Date")
+    date_protection = fields.Date("Protection Date")
+    date_expiration = fields.Date("Expiration Date")
+    date_cancellation = fields.Date("Cancellation Date")
+    currency_id = fields.Many2one(
+        'res.currency', default=lambda self: self.env.user.company_id.currency_id, string="Currency")
+    check_amount = fields.Monetary("Check Amount", currency_field='currency_id')
+    related_checks = fields.Char("Related Checks")
+    module = fields.Selection([('General Directorate of Personnel', 'General Directorate of Personnel'),
+                                   ('Payment coordination', 'Payment coordination'),
+                                   ('Financial transaction', 'Financial transaction'),('ACATLAN', 'ACATLAN'),
+                               ('ARAGON', 'ARAGON'), ('CUAUTITLAN', 'CUAUTITLAN'),
+                               ('CUERNAVACA', 'CUERNAVACA'),
+                               ('COVE', 'COVE'), ('IZTACALA', 'IZTACALA'),
+                               ('JURIQUILLA', 'JURIQUILLA'), ('LION', 'LION'),
+                               ('MORELIA', 'MORELIA'), ('YUCATAN', 'YUCATAN')], string="Module")
+    status = fields.Selection([('Checkbook registration', 'Checkbook registration'),
+                          ('Assigned for shipping', 'Assigned for shipping'),
+                          ('Available for printing', 'Available for printing'),
+                          ('Printed', 'Printed'), ('Delivered', 'Delivered'),
+                          ('In transit', 'In transit'), ('Sent to protection','Sent to protection'),
+                          ('Protected and in transit','Protected and in transit'),
+                          ('Protected', 'Protected'), ('Detained','Detained'),
+                          ('Withdrawn from circulation','Withdrawn from circulation'),
+                          ('Cancelled', 'Cancelled'),
+                          ('Canceled in custody of Finance', 'Canceled in custody of Finance'),
+                          ('On file','On file'),('Destroyed','Destroyed'),
+                          ('Reissued', 'Reissued'),('Charged','Charged')])
+    general_status = fields.Selection([('available', 'Available'),
+                                       ('assigned', 'Assigned'),
+                                       ('cancelled', 'Cancelled'),
+                                       ('paid_out', 'Paid Out')])

@@ -402,7 +402,16 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
                 
                 records_period = self.env['investment.operation'].search(domain_period)
 
+                inc_domain_period = domain + [('investment_id.journal_id.bank_id','=',journal.id),('date_required','<',date_start),('investment_id.currency_id','in',currency_list)]
+                inc_records_period = self.env['investment.operation'].search(inc_domain_period)
+                
                 amount = 0
+
+                amount += sum(x.amount for x in inc_records_period.filtered(lambda x:x.type_of_operation in
+                                                                                ('open_bal','increase','increase_by_closing')))
+                amount -= sum(x.amount for x in inc_records_period.filtered(lambda x:x.type_of_operation in
+                                                   ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure')))
+                
                 amount += sum(x.amount for x in records_period.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal')))
                 amount -= sum(x.amount for x in records_period.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure')))
                 columns.append(self._format({'name': amount},figure_type='float',digit=2))
@@ -481,10 +490,18 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
                                          DEFAULT_SERVER_DATE_FORMAT).date()
 
                 domain_currency_period = domain + [('date_required','>=',date_start),('date_required','<=',date_end),('investment_id.currency_id','=',currency.id)]
-
                 records_currency_period = self.env['investment.operation'].search(domain_currency_period)
 
+                inc_domain_currency_period = domain + [('date_required','<',date_start),('investment_id.currency_id','=',currency.id)]
+                inc_records_currency_period = self.env['investment.operation'].search(inc_domain_currency_period)
+
                 amount = 0
+
+                amount += sum(x.amount for x in inc_records_currency_period.filtered(lambda x:x.type_of_operation in
+                                                                                ('open_bal','increase','increase_by_closing')))
+                amount -= sum(x.amount for x in inc_records_currency_period.filtered(lambda x:x.type_of_operation in
+                                                   ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure')))
+                
                 amount += sum(x.amount for x in records_currency_period.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal')))
                 amount -= sum(x.amount for x in records_currency_period.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure')))
                 

@@ -56,10 +56,10 @@
                                 <field name="baneficiary_key" readonly="1"/>
                                 <field name="rfc" readonly="1"/>
                                 <field name="operation_name" readonly="1"/>
-                                <field name="student_account" attrs="{'invisible':[('operation_name','!=','Interns')],'required':[('operation_name','=','Interns')],'readonly':[('payment_state', 'not in', ('draft'))]}"/>
-                                <field name="transfer_key" attrs="{'invisible':[('operation_name','!=','Interns')],'required':[('operation_name','=','Interns')],'readonly':[('payment_state', 'not in', ('draft'))]}"/>
-                                <field name="category_key" attrs="{'invisible':[('operation_name','!=','Travel expenses')],'required':[('operation_name','=','Travel expenses')],'readonly':[('payment_state', 'not in', ('draft'))]}"/>
-                                <field name="workstation_id"  attrs="{'invisible': [('operation_name', '!=','Travel expenses')],'invisible':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="student_account" attrs="{'invisible':[('operation_name','in',('Interns','Becarios'))],'required':[('operation_name','in',('Interns','Becarios'))],'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="transfer_key" attrs="{'invisible':[('operation_name','in',('Interns','Becarios'))],'required':[('operation_name','in',('Interns','Becarios'))],'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="category_key" attrs="{'invisible':[('operation_name','in',('Travel expenses','Viáticos'))],'required':[('operation_name','in',('Travel expenses','Viáticos'))],'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="workstation_id"  attrs="{'invisible': [('operation_name', 'in',('Travel expenses','Viáticos'))],'invisible':[('payment_state', 'not in', ('draft'))]}"/>
                                 <field name="administrative_forms" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                 <field name="no_of_document" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                 <field name="vault_folio" invisible="1"/>
@@ -87,11 +87,11 @@
                                 <field name="invoice_date" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                 <field name="project_number_id" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}" context="{'from_conacyt':1}" domain="[('is_papiit_project','=',True)]"/>
                                 <!-- <field name="responsible_id" attrs="{'invisible': [('operation_type_id', 'not in',('REIMBURSEMENT TO THIRD PARTIES','PLANE TICKETS','PAYMENT TO SUPPLIER'))]}"/> -->
-                                <field name="responsible_id" attrs="{'invisible':[('operation_name','not in',('Creation of accounts payable','Air tickets',
-                                	'Interns','Reimbursement to third parties',
-                                	'Field work','Refund to responsible for the project',
-                                	'Exchange expenses','School practices','Travel expenses',
-                                	'REQUEST FOR PAYMENT IN ME(SUPPLIERS)','PAYMENT TO SUPPLIERS AND CONTRACTORS'
+                                <field name="responsible_id" attrs="{'invisible':[('operation_name','not in',('Creación de cuentas por pagar','Creation of accounts payable','Boletos de ​ avión','Air tickets',
+                                	'Becarios','Interns','Reembolso a terceros','Reimbursement to third parties',
+                                	'Trabajos de campo​','Field work','Reembolso a ​ responsables del proyecto','Refund to responsible for the project',
+                                	'​ Gastos de intercambio','Exchange expenses','Prácticas escolares','School practices','Viáticos','Travel expenses',
+                                	'​ SOLICITUD DE PAGO EN M.E. (PROVEEDORES)','REQUEST FOR PAYMENT IN ME(SUPPLIERS)','PAGO A SUPERIORES ​ Y CONTRATISTAS','PAYMENT TO SUPPLIERS AND CONTRACTORS'
                                 	))],'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                 	
                                 <field name="project_code" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
@@ -409,32 +409,32 @@
                                 <group>
                                     <group name="reason" string="Reason">
                                     	<field name="is_show_reason_for_expendiure" invisible="1"/>
-                                        <field name="reason_for_expendiure" attrs="{'invisible':[('operation_name','not in',('Creation of accounts payable',
-                                        'Field work','School internships','Exchange expenses','Travel expenses'
+                                        <field name="reason_for_expendiure" attrs="{'invisible':[('operation_name','not in',('Creación de cuentas por pagar','Creation of accounts payable',
+                                        'Trabajos de campo','Field work','Prácticas escolares​','School internships','Gastos de intercambio','Exchange expenses','Viáticos','Travel expenses'
                                         ))],'readonly': [('payment_state', '!=', 'draft')]}"/> <!-- 'invisible':[('is_show_reason_for_expendiure','=',False)], -->
                                         <field name="is_show_destination" invisible="1"/>
-                                        <field name="destination" attrs="{'invisible':[('operation_name','not in',('School practices'
-                                        'Field work','Travel expenses'
+                                        <field name="destination" attrs="{'invisible':[('operation_name','not in',('Prácticas escolares','School practices'
+                                        'Trabajos de campo','Field work','Viáticos','Travel expenses'
                                         ))],'readonly': [('payment_state', '!=', 'draft')]}"/> <!-- 'invisible':[('is_show_destination','=',False)], -->
                                         <field name="is_show_origin" invisible="1"/>
-                                        <field name="origin_payment" attrs="{'invisible':[('operation_name','not in',('Exchange expenses'))],'readonly': [('payment_state', '!=', 'draft')]}"/> <!-- 'invisible':[('is_show_origin','=',False)], -->
+                                        <field name="origin_payment" attrs="{'invisible':[('operation_name','not in',('​ Gastos de intercambio','Exchange expenses'))],'readonly': [('payment_state', '!=', 'draft')]}"/> <!-- 'invisible':[('is_show_origin','=',False)], -->
                                         <field name="rf_person" attrs="{'readonly': [('payment_state', '!=', 'draft')]}" invisible="1"/>
                                     </group>
 
 	                                <group name="responsible" string="Responsible">
 	                                	<field name="is_show_resposible_group" invisible="1"/>
-	                                    <field name="responsible_expend_id" attrs="{'invisible':[('operation_name','not in',('Creation of accounts payable','Field work','School internships','Exchange expenses'))],'readonly': [('payment_state', '!=', 'draft')]}"/> <!-- 'invisible':[('is_show_resposible_group','=',False)], -->
-	                                    <field name="responsible_rfc" readonly="1" attrs="{'invisible':[('operation_name','not in',('Creation of accounts payable','Field work','School internships','Exchange expenses'))]}"/>
-	                                    <field name="responsible_category_key" readonly="1" attrs="{'invisible':[('operation_name','not in',('Creation of accounts payable','Field work','School internships','Exchange expenses'))]}"/>
-	                                    <field name="manager_job_id" readonly="1" attrs="{'invisible':[('operation_name','not in',('Creation of accounts payable','Field work','School internships','Exchange expenses'))]}"/>
+	                                    <field name="responsible_expend_id" attrs="{'invisible':[('operation_name','not in',('Creación de cuentas por pagar','Creation of accounts payable','Trabajos de campo','Field work','Prácticas escolares','School internships','Gastos de intercambio','Exchange expenses'))],'readonly': [('payment_state', '!=', 'draft')]}"/> <!-- 'invisible':[('is_show_resposible_group','=',False)], -->
+	                                    <field name="responsible_rfc" readonly="1" attrs="{'invisible':[('operation_name','not in',('Creación de cuentas por pagar','Creation of accounts payable','Trabajos de campo','Field work','Prácticas escolares','School internships','Gastos de intercambio','Exchange expenses'))]}"/>
+	                                    <field name="responsible_category_key" readonly="1" attrs="{'invisible':[('operation_name','not in',('Creación de cuentas por pagar','Creation of accounts payable','Trabajos de campo','Field work','Prácticas escolares','School internships','Gastos de intercambio','Exchange expenses'))]}"/>
+	                                    <field name="manager_job_id" readonly="1" attrs="{'invisible':[('operation_name','not in',('Creación de cuentas por pagar','Creation of accounts payable','Trabajos de campo','Field work','Prácticas escolares','School internships','Gastos de intercambio','Exchange expenses'))]}"/>
 	                                </group>
                                 </group>
 								<group>                                
                                     <group name="zone" string="Zone Responsible">
                                     	<field name="is_zone_res" invisible="1"/>
-                                        <field name="zone" attrs="{'invisible':[('operation_name','not in',('Viatical'))],'readonly': [('payment_state', '!=', 'draft')]}"/> <!-- 'invisible':[('is_zone_res','=',False)],- -->
-                                        <field name="rate" attrs="{'invisible':[('operation_name','not in',('Viatical'))],'readonly': [('payment_state', '!=', 'draft')]}"/>
-                                        <field name="days" attrs="{'invisible':[('operation_name','not in',('Viatical'))],'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                        <field name="zone" attrs="{'invisible':[('operation_name','not in',('Viáticos','Viatical'))],'readonly': [('payment_state', '!=', 'draft')]}"/> <!-- 'invisible':[('is_zone_res','=',False)],- -->
+                                        <field name="rate" attrs="{'invisible':[('operation_name','not in',('Viáticos','Viatical'))],'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                        <field name="days" attrs="{'invisible':[('operation_name','not in',('Viáticos','Viatical'))],'readonly': [('payment_state', '!=', 'draft')]}"/>
                                     </group>
                                     <group></group>
 								</group>

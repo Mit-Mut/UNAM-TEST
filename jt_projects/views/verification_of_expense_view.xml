@@ -31,7 +31,7 @@
                          <group>
                             <group>
                                 <field name="application_approval_date" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="project_id" domain="[('project_type','=','conacyt')]" required="1"  attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="project_id" domain="[('project_type','in',('conacyt','concurrent','other'))]" required="1"  attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="project_number_id" readonly="1"/>
                                 <field name="program_code_id" invisible="1"/>
                                 <field name="number" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>

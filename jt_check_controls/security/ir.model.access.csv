@@ -5,4 +5,6 @@ access_copied_employees,copied_employees_access,model_copied_employees,base.grou
 access_check_auth_dependency,check_auth_dependency_access,model_check_authorized_dependency,base.group_user,1,1,1,1
 access_checkbook_request,checkbook_request_access,model_checkbook_request,base.group_user,1,1,1,1
 access_checklist,checklist_access,model_checklist,base.group_user,1,1,1,1
-access_checklist_line,checklist_line_access,model_checklist_line,base.group_user,1,1,1,1
+access_check_log,check_log_access,model_check_log,base.group_user,1,1,1,1
+access_blank_check_req,blank_check_req_access,model_blank_checks_request,base.group_user,1,1,1,1
+access_check_distribution_modules,check_distribution_modules_access,model_check_distribution_modules,base.group_user,1,1,1,1

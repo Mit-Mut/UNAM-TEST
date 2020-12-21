@@ -21,7 +21,8 @@
 #
 ##############################################################################
 from odoo import models, api, _ , _lt , fields
-from datetime import datetime
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tools.misc import formatLang
 from odoo.tools.misc import xlsxwriter
@@ -74,24 +75,11 @@ class ComparisonOfBalanceCheck(models.AbstractModel):
 
     def _get_columns_name(self, options):
         return [
-            {'name': _('Stage / Year')},
-            {'name': _(
-                'To be checked')},
-            {'name': _(
-                'To be checked')},
-            {'name': _('To check')},
-            {'name': _(
-                'Checked in the period')},
-            {'name': _(
-                'Subtotal Stage [Start stage] to [End stage] that was selected')},
-            {'name': _('Accounting account of various debtors')},
-            {'name': _('Total of (Number of projects)')},
-            {'name': _('Concept')},
-            {'name': _('Accumulated [Start month-End    month Stages]')},
-            {'name': _(
-                'Stage [N of Stage] Accumulated [Months of consultation]')},
-            {'name': _('Total')},
-            {'name': _('Total checked')},
+            {'name': ''},
+            {'name': ''},
+            {'name': ''},
+            {'name': ''},
+            {'name': ''},            
         ]
 
     def _format(self, value,figure_type):
@@ -115,41 +103,158 @@ class ComparisonOfBalanceCheck(models.AbstractModel):
         value['name'] = round(value['name'], 1)
         return value
 
+    def get_month_name(self, month):
+        month_name = ''
+        if month == 1:
+            month_name = 'Enero'
+        elif month == 2:
+            month_name = 'Febrero'
+        elif month == 3:
+            month_name = 'Marzo'
+        elif month == 4:
+            month_name = 'Abril'
+        elif month == 5:
+            month_name = 'Mayo'
+        elif month == 6:
+            month_name = 'Junio'
+        elif month == 7:
+            month_name = 'Julio'
+        elif month == 8:
+            month_name = 'Agosto'
+        elif month == 9:
+            month_name = 'Septiembre'
+        elif month == 10:
+            month_name = 'Octubre'
+        elif month == 11:
+            month_name = 'Noviembre'
+        elif month == 12:
+            month_name = 'Diciembre'
+
+        return month_name.upper()
+
     def _get_lines(self, options, line_id=None):
         lines = []
+
+        project_domain = []
+        project_type_domain = []
 
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
+        project_type_select = options.get('project_type')
+        for p_type in project_type_select:
+            if p_type.get('selected',False):
+                project_type_domain.append(p_type.get('id'))
+        
+        if project_type_domain:
+            project_domain += [('project_type','in',tuple(project_type_domain))]
+        else:
+            project_domain += [('project_type','in',('conacyt','concurrent','other'))]
 
-        project_records = self.env['project.project'].search(
-            [('proj_start_date', '>=', start), ('proj_end_date', '<=', end)])
-        for record in project_records:
-            name = str(record.stage_identifier or '') + \
-                '/' + str(record.proj_start_date.year)
-            lines.append({
-                'id': 'projects' + str(record.id),
-                'name': name,
-                'columns': [{'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
+        project_domain += [('proj_start_date', '>=', start), ('proj_end_date', '<=', end)]
+        
+        project_records = self.env['project.project'].search(project_domain)
 
+        year_list_tuple = range(start.year, end.year+1)
+        year_list = []
+                
+        for y in year_list_tuple:
+            year_list.append(str(y))
+        
+        #========== previos Year ===================#
+        two_year_ago = start - relativedelta(years=2)
+        two_year_ago = two_year_ago.replace(month=12,day=31)
+
+        one_year_ago = start - relativedelta(years=1)
+        one_year_ago = one_year_ago.replace(month=12,day=31)
+
+        first_month_date = start.replace(month=1,day=1)
+         
+        lines.append({
+                'id': 'hierarchy_header',
+                'name' : 'ETAPA/ANO', 
+                'columns': [ 
+                            {'name': 'POR COMPROBAR A DIC/'+str(two_year_ago.year)},
+                            {'name': 'POR COMPROBAR A DIC/'+str(one_year_ago.year)},
+                            {'name': 'POR COMPROBAR A '+self.get_month_name(end.month)+"/" + str(end.year)},
+                            {'name': 'COMPROBADO EN EL PERIODO '+self.get_month_name(first_month_date.month)+"/"+self.get_month_name(end.month)},
                             ],
-                'level': 2,
+                'level': 1,
                 'unfoldable': False,
                 'unfolded': True,
             })
+
+        
+        stage_ids = project_records.mapped('custom_stage_id')
+
+        total_two_year_ago_amount = 0.0
+        total_one_year_ago_amount = 0.0
+        total_current_year_amount = 0.0
+        total_different = 0.0
+        
+        cfdi_account_ids = self.env['account.journal'].search([]).mapped('income_CFDIS_credit_account_id')
+        print ("====",'cfdi_account_ids',cfdi_account_ids)
+        
+        for stage in stage_ids:
+            for year in year_list:
+                current_project_ids = project_records.filtered(lambda x:x.custom_stage_id.id==stage.id and str(x.proj_start_date.year)==year)
+                if not current_project_ids:
+                    continue
+
+                two_year_ago_amount = 0.0
+                one_year_ago_amount = 0.0
+                current_year_amount = 0.0
+
+                if cfdi_account_ids:
+                    values= self.env['account.move.line'].search([('date', '<=', two_year_ago),('account_id', '=', cfdi_account_ids.ids),('move_id.state', '=', 'posted')])
+                    two_year_ago_amount = sum(x.debit-x.credit for x in values)
+
+                if cfdi_account_ids:
+                    values= self.env['account.move.line'].search([('date', '<=', one_year_ago),('account_id', '=', cfdi_account_ids.ids),('move_id.state', '=', 'posted')])
+                    one_year_ago_amount = sum(x.debit-x.credit for x in values)
+
+                if cfdi_account_ids:
+                    values= self.env['account.move.line'].search([('date', '<=', end),('account_id', '=', cfdi_account_ids.ids),('move_id.state', '=', 'posted')])
+                    current_year_amount = sum(x.debit-x.credit for x in values)
+                
+                total_two_year_ago_amount += two_year_ago_amount
+                total_one_year_ago_amount += total_one_year_ago_amount
+                total_current_year_amount += current_year_amount
+                
+                different = current_year_amount - one_year_ago_amount
+                total_different += different
+                 
+                lines.append({
+                        'id': 'hierarchy_col' + str(stage.id)+str(year),
+                        'name' : stage.name+"/"+year, 
+                        'columns': [ 
+                                    self._format({'name': two_year_ago_amount},figure_type='float'),
+                                    self._format({'name': one_year_ago_amount},figure_type='float'),
+                                    self._format({'name': current_year_amount},figure_type='float'),
+                                    self._format({'name': different},figure_type='float'),
+                                    ],
+                        'level': 3,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+                
+
+        lines.append({
+                'id': 'hierarchy_subtotal_1',
+                'name' : 'SUBTOTAL', 
+                'columns': [ 
+                            self._format({'name': total_two_year_ago_amount},figure_type='float'),
+                            self._format({'name': total_one_year_ago_amount},figure_type='float'),
+                            self._format({'name': total_current_year_amount},figure_type='float'),
+                            self._format({'name': total_different},figure_type='float'),
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+                
 
         return lines
 

@@ -364,7 +364,13 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                 domain_bank_period = domain + [('date_required','>=',date_start),('date_required','<=',date_end),('investment_id.journal_id.bank_id','=',journal.id)]
                 records_bank_periods = self.env['investment.operation'].search(domain_bank_period)
 
+                inc_domain_bank_period = domain + [('date_required','<',date_start),('investment_id.journal_id.bank_id','=',journal.id)]
+                inc_records_bank_periods = self.env['investment.operation'].search(inc_domain_bank_period)
+
                 amount = 0
+                amount += sum(x.amount for x in inc_records_bank_periods.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal')))
+                amount -= sum(x.amount for x in inc_records_bank_periods.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure')))
+                
                 amount += sum(x.amount for x in records_bank_periods.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal')))
                 amount -= sum(x.amount for x in records_bank_periods.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure')))
                 columns.append(self._format({'name': amount},figure_type='float',digit=2))
@@ -442,10 +448,15 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
 
 
                 domain_fund = domain + [('date_required','>=',date_start),('date_required','<=',date_end)]
-        
                 records_fund = self.env['investment.operation'].search(domain_fund)
 
+                inc_domain_fund = domain + [('date_required','<',date_start)]
+                inc_records_fund = self.env['investment.operation'].search(inc_domain_fund)
+
                 amount = 0
+                amount += sum(x.amount for x in inc_records_fund.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal') and x.investment_fund_id.fund_id.id==origin.id))
+                amount -= sum(x.amount for x in inc_records_fund.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure') and x.investment_fund_id.fund_id.id==origin.id))
+                
                 amount += sum(x.amount for x in records_fund.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal') and x.investment_fund_id.fund_id.id==origin.id))
                 amount -= sum(x.amount for x in records_fund.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure') and x.investment_fund_id.fund_id.id==origin.id))
                 columns.append(self._format({'name': amount},figure_type='float',digit=2))
@@ -527,7 +538,14 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                 domain_currency_period = domain + [('date_required','>=',date_start),('date_required','<=',date_end),('investment_id.currency_id','=',currency.id)]
                 records_periods = self.env['investment.operation'].search(domain_currency_period)
 
+                inc_domain_currency_period = domain + [('date_required','<',date_start),('investment_id.currency_id','=',currency.id)]
+                inc_records_periods = self.env['investment.operation'].search(inc_domain_currency_period)
+
                 amount = 0
+
+                amount += sum(x.amount for x in inc_records_periods.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal')))
+                amount -= sum(x.amount for x in inc_records_periods.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure')))
+                
                 amount += sum(x.amount for x in records_periods.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal')))
                 amount -= sum(x.amount for x in records_periods.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure')))
                 columns.append(self._format({'name': amount},figure_type='float',digit=2))

@@ -53,6 +53,7 @@
         'views/adjustments_cases_view.xml',
         'views/payroll_processing_view.xml',
         'wizard/generate_payroll_wizard.xml',
+        'wizard/adjusted_payroll_view.xml',
     ],
     'application': False,
     'installable': True,

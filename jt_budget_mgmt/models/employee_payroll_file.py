@@ -64,3 +64,9 @@ class PreceptionLine(models.Model):
  
     program_code_id = fields.Many2one("program.code", string="Program Code")
     
+class AdditionalPaymentsLine(models.Model):
+    
+    _inherit = 'additional.payments.line'
+    
+    program_code_id = fields.Many2one("program.code", string="Program Code")
+    

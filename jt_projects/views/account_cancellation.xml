@@ -19,7 +19,7 @@
                                 <!-- <field name="invoice" attrs="{'readonly': [('status', '!=', 'eraser')]}"/> -->
                                 <field name="invoice_cancel" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="move_type" readonly="1"/>
-                                <field name="project_id" required="1" domain="[('project_type', '=', 'conacyt')]"
+                                <field name="project_id" required="1" domain="[('project_type','in',('conacyt','concurrent','other'))]"
                                 attrs="{'readonly': [('status', '!=', 'eraser')]}" />
                                 <field name="project_name" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="program_code" readonly="1" force_save="1"  attrs="{'readonly': [('status', '!=', 'eraser')]}" context="{'from_conacyt':1}"/>

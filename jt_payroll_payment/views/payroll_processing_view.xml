@@ -8,6 +8,7 @@
                 <form>
                   	<header>
                   		<button string='Generate Payroll' name='generate_payroll' type="object" class="oe_highlight"></button>
+                  		<button string='Generate Adjustment' name='generate_adjustment' type="object" class="oe_highlight"></button>
                   	</header>
                     <sheet>
                     	<field name="payroll_ids" invisible="1"/>
@@ -163,6 +164,69 @@
                         			</form>
                         		</field>
                         	</page>
+
+                        	<page string="Pension Payment" name="pension_line">
+                        		<field name="pension_payment_line_ids" readonly="1">
+                        			<tree>
+                        				<field name="partner_id"/>
+                        				<field name="rfc"/>
+                        				<field name="l10n_mx_edi_payment_method_id"/>
+                        				<field name="journal_id" invisible="1"/>
+                        				<field name="bank_acc_number"/>
+                        				<field name="bank_id"/>
+                        				<field name="deposit_number"/>
+                        				<field name="check_number"/>
+                        				<field name="total_pension"/>
+                        			</tree>
+                        			<form>
+                        				<group>
+	                        				<field name="partner_id"/>
+	                        				<field name="rfc"/>
+	                        				<field name="l10n_mx_edi_payment_method_id"/>
+	                        				<field name="journal_id" invisible="1"/>
+	                        				<field name="bank_acc_number"/>
+	                        				<field name="bank_id"/>
+	                        				<field name="deposit_number"/>
+	                        				<field name="check_number"/>
+	                        				<field name="total_pension"/>
+                        				</group>
+                        			</form>
+                        		</field>
+                        	</page>
+                        	<page string="Additional payments" name="additional_payments_line">
+                        		<field name="additional_payments_line_ids" readonly="1">
+                        			<tree>
+                        				<field name="job_id"/>
+                        				<field name="description"/>
+                        				<field name="details"/>
+                        				<field name="amount"/>
+                        			</tree>
+                        			<form>
+                        				<group>
+	                        				<field name="job_id"/>
+	                        				<field name="description"/>
+	                        				<field name="details"/>
+	                        				<field name="amount"/>
+                        				</group>
+                        			</form>
+                        		</field>
+                        	</page>
+                        	
+                        	<page string="Additional Pension Payments" name="additional_pension_payments_line">
+                        		<field name="additional_pension_payments_line_ids" readonly="1">
+                        			<tree>
+                        				<field name="partner_id"/>
+                        				<field name="amount"/>
+                        			</tree>
+                        			<form>
+                        				<group>
+	                        				<field name="partner_id"/>
+	                        				<field name="amount"/>
+                        				</group>
+                        			</form>
+                        		</field>
+                        	</page>
+                        	
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">

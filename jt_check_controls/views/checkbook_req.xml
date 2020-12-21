@@ -9,6 +9,7 @@
                 <tree>
                     <field name="name"/>
                     <field name="application_no"/>
+                    <field name="checkbook_no"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -37,22 +38,25 @@
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
-                         <div class="oe_button_box" name="button_box">
+                        <div class="oe_button_box" name="button_box">
                             <button name="action_checklist" type="object" class="oe_stat_button"
                                     widget="statinfo" string="Checklist"
                                     attrs="{'invisible': [('state', '!=', 'confirmed')]}">
                             </button>
                         </div>
                         <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/><h1><field name="name" required="1"
-                                attrs="{'readonly': [('state', '!=', 'draft')]}"/></h1>
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" required="1"
+                                       attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            </h1>
                         </div>
                         <group>
                             <group>
                                 <field name="application_no" readonly="1"
                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="folio_legal" readonly="1"
-                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                       attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="appliaction_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="bank_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="bank_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
@@ -66,7 +70,7 @@
                                 <field name="final_folio" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="confirmation_letter" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="are_test_prin_formats_sent"
-                                    attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                       attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="dependence_id"
                                        attrs="{'invisible': [('are_test_prin_formats_sent', '=', False)],
                                         'readonly': [('state', '!=', 'draft')]}"/>
@@ -76,10 +80,10 @@
                                 <field name="area" attrs="{'invisible': [('are_test_prin_formats_sent', '=', False)],
                                         'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="number_of_folios"
-                                    attrs="{'invisible': [('are_test_prin_formats_sent', '=', False)],
+                                       attrs="{'invisible': [('are_test_prin_formats_sent', '=', False)],
                                     'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="print_sample_folio_number"
-                                    attrs="{'invisible': [('are_test_prin_formats_sent', '=', False)],
+                                       attrs="{'invisible': [('are_test_prin_formats_sent', '=', False)],
                                     'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
                         </group>
@@ -127,6 +131,31 @@
                                         <field name="folio"/>
                                         <field name="status"/>
                                     </tree>
+                                    <form>
+                                        <group>
+                                            <group>
+                                                <field name="checklist_id"/>
+                                                <field name="folio"/>
+                                                <field name="bank_id"/>
+                                                <field name="bank_account_id"/>
+                                                <field name="checkbook_no"/>
+                                                <field name="dependence_id"/>
+                                                <field name="subdependence_id"/>
+                                                <field name="module"/>
+                                                <field name="general_status"/>
+                                            </group>
+                                            <group>
+                                                <field name="reason_cancellation"/>
+                                                <field name="reason_retention"/>
+                                                <field name="date_printing"/>
+                                                <field name="date_protection"/>
+                                                <field name="date_expiration"/>
+                                                <field name="date_cancellation"/>
+                                                <field name="check_amount"/>
+                                                <field name="related_checks"/>
+                                            </group>
+                                        </group>
+                                    </form>
                                 </field>
                             </group>
                         </page>
@@ -135,11 +164,72 @@
             </field>
         </record>
 
-         <record id="action_checklist" model="ir.actions.act_window">
+        <record id="action_checklist" model="ir.actions.act_window">
             <field name="name">Checklist</field>
             <field name="res_model">checklist</field>
             <field name="view_mode">tree,form</field>
         </record>
+
+        <record id="checklog_tree_view" model="ir.ui.view">
+            <field name="name">checklog.tree.view</field>
+            <field name="model">check.log</field>
+            <field name="arch" type="xml">
+                <tree create="false">
+                    <field name="checklist_id"/>
+                    <field name="folio"/>
+                    <field name="status"/>
+                    <field name="general_status"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="checklog_form_view" model="ir.ui.view">
+            <field name="name">checklog.form.view</field>
+            <field name="model">check.log</field>
+            <field name="arch" type="xml">
+                <form create="false">
+                    <header>
+                        <field name="status" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="checklist_id"/>
+                                <field name="folio"/>
+                                <field name="bank_id" domain="[('type', '=', 'bank')]"/>
+                                <field name="bank_account_id"/>
+                                <field name="checkbook_no"/>
+                                <field name="dependence_id"/>
+                                <field name="subdependence_id"/>
+                                <field name="module"/>
+                                <field name="general_status"/>
+                            </group>
+                            <group>
+                                <field name="reason_cancellation"/>
+                                <field name="reason_retention"/>
+                                <field name="date_printing"/>
+                                <field name="date_protection"/>
+                                <field name="date_expiration"/>
+                                <field name="date_cancellation"/>
+                                <field name="check_amount"/>
+                                <field name="related_checks"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_check_logs" model="ir.actions.act_window">
+            <field name="name">Check Logs</field>
+            <field name="res_model">check.log</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="check_log_menu" name="Check Logs"
+                  parent="check_control_main_menu"
+                  action="action_check_logs" sequence="3"/>
+
 
     </data>
 </odoo>

@@ -52,6 +52,19 @@ class CustomPayrollProcessing(models.Model):
                 'target': 'new',
                 'type': 'ir.actions.act_window',
             }
+
+    def generate_adjustment(self):
+        return {
+                'name': _('Generate Adjustment'),
+                'res_model':'adjusted.payroll.wizard',
+                'view_mode': 'form',
+                'view_id': self.env.ref('jt_payroll_payment.adjusted_payroll_wizard_view1').id,
+                'context': {'default_payroll_process_id': self.id},
+                'target': 'new',
+                'type': 'ir.actions.act_window',
+            }
+
+        
     def view_payment_receipt(self):
         return {
                 'name': _('Payroll'),

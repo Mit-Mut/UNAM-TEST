@@ -212,16 +212,18 @@ class IntegrationOfCurrentResearchProjects(models.AbstractModel):
         
         project_account_ids = project_records.mapped('bank_account_id.default_debit_account_id')
         if project_account_ids:
-            values= self.env['account.move.line'].search([('date', '>=', start), ('date', '<=', end),('account_id', '=', project_account_ids.ids),('move_id.state', '=', 'posted')])
+            values= self.env['account.move.line'].search([('date', '<=', end),('account_id', '=', project_account_ids.ids),('move_id.state', '=', 'posted')])
             account_amount = sum(x.debit-x.credit for x in values)
-            
+        
+        total_account = len(project_account_ids)
         lines.append({
             'id': 'projects_saldo_total',
-            'name': 'SALDO EN CUENTA & BANCARIA & CONACTY',
+            'name': 'TOTAL DE CUENTAS BANCARIAS '+str(total_account),
             'columns': [
-#                         {'name': ''},
-#                         {'name': ''},
-#                         {'name': ''},
+                         
+                         {'name': ''},
+                         {'name': ''},
+                        {'name': 'SALDO EN CUENTA & BANCARIA & CONACTY','colspan' :3},
                         self._format({'name': account_amount},figure_type='float'),
                         {'name': ''},
                         {'name': ''},
@@ -229,7 +231,7 @@ class IntegrationOfCurrentResearchProjects(models.AbstractModel):
             'level': 2,
             'unfoldable': False,
             'unfolded': True,
-            'colspan' :4,
+            #'colspan' :3,
             'class': 'o_account_reports_load_more text-right',
         })
 

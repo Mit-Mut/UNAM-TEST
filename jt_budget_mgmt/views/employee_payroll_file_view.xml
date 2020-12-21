@@ -34,6 +34,13 @@
                 <xpath expr="//notebook/page/field[@name='preception_line_ids']/form/group/field[@name='description']" position="after">
                 	<field name="program_code_id"/>
 				</xpath>
+
+                <xpath expr="//notebook/page[@name='additional_payments_line']/field[@name='additional_payments_line_ids']/tree/field[@name='details']" position="after">
+                	<field name="program_code_id"/>
+				</xpath>
+                <xpath expr="//notebook/page[@name='additional_payments_line']/field[@name='additional_payments_line_ids']/form/group/field[@name='details']" position="after">
+                	<field name="program_code_id"/>
+				</xpath>
 				
 			</field>
 		</record>

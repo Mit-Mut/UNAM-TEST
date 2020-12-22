@@ -41,7 +41,7 @@ class OperationType(models.Model):
         for rec in self:
             name = rec.name or ''
             if rec.op_number and self.env.context and self.env.context.get('show_for_supplier_payment', False):
-                name = rec.op_number
+                name = rec.op_number + " "+name
             result.append((rec.id, name))
         return result
 

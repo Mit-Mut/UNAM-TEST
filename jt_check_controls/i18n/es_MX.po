@@ -301,6 +301,21 @@ msgstr ""
 "nos despedimos de usted con un cordial saludo.\n"
 "                            </span><br/>"
 
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_2_template
+msgid ""
+"Please strictly adhere to the technical\n"
+"                                characteristics of substance and form, as\n"
+"                                well as security measures of the approved\n"
+"                                check, also contain the legend\" THE\n"
+"                                VALIDITY OF THIS CHECK IS FOR"
+msgstr "Favor de apegarse estrictamente a las características técnicas de fondo y forma, "
+"así como medidas de seguridad del cheque aprobado, así mismo contenga la leyenda “LA VIGENCIA DE ESTE CHEQUE ES DE"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_2_template
+msgid "DAYS \"ON THE FRONT AND BACK OF THE DOCUMENT ..\""
+msgstr "DÍAS” EN EL ANVERSO Y REVERSO DEL DOCUMENTO.."
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1

@@ -127,11 +127,11 @@ class ProjectRegistry(models.Model):
 
     @api.constrains('allocated_amount')
     def check_allocated_amount(self):
-        if self.allocated_amount == 0 and self.project_type=='conacyt':
+        if self.allocated_amount == 0 and self.project_type:
             raise UserError(_('Please add allocated amount'))
 
-        if self.allocated_amount == 0 and self.is_papiit_project:
-            raise UserError(_('Please add allocated amount'))
+#         if self.allocated_amount == 0 and self.is_papiit_project:
+#             raise UserError(_('Please add allocated amount'))
 
 
     @api.constrains('approved_amount')
@@ -140,10 +140,10 @@ class ProjectRegistry(models.Model):
             raise UserError(_('Please add approved amount'))
 
 
-    @api.constrains('exercised_amount')
-    def check_exercised_amount(self):
-        if self.exercised_amount == 0 and self.is_papiit_project:
-            raise UserError(_('Please add Amount exercised'))
+#     @api.constrains('exercised_amount')
+#     def check_exercised_amount(self):
+#         if self.exercised_amount == 0 and self.is_papiit_project:
+#             raise UserError(_('Please add Amount exercised'))
 
     @api.onchange('stage_identifier_id')
     def onchange_stage_identifier_id(self):

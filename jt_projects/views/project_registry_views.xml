@@ -89,22 +89,22 @@
                         <group>
                             <group>
                             	<field name="program_code_ids" invisible="1"/>
-                            	<field name="program_code" domain="[('id','in',program_code_ids)]"  attrs="{'required':[('is_papiit_project','=',True)],'readonly': ['|',('is_papiit_project','=',False),('status', '!=', 'open')]}" />
+                            	<field name="program_code" domain="[('id','in',program_code_ids)]"  attrs="{'readonly': ['|',('is_papiit_project','=',False),('status', '!=', 'open')]}" />
                                 <field name="project_type" attrs="{'readonly': [('status', '!=', 'open')],'invisible':[('is_papiit_project','=',True)]}"/>
-                                <field name="custom_stage_id"  attrs="{'readonly': [('status', '!=', 'open')]}"/>
+                                <field name="custom_stage_id"  attrs="{'required':[('is_papiit_project','=',True)],'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="stage_identifier" invisible="1" attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="desc_stage" invisible="1"/>
                                 <field name="custom_stage_description" />
-                                <field name="custom_project_type_id" attrs="{'readonly': [('status', '!=', 'open')]}"/>
+                                <field name="custom_project_type_id" attrs="{'required':[('is_papiit_project','=',True)],'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="project_type_identifier" invisible="1" attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="number" required="1" attrs="{'readonly': [('status', '!=', 'open')]}"/>
-                                <field name="responsible_name" required="1" attrs="{'readonly': [('status', '!=', 'open')]}"/>
+                                <field name="responsible_name"  attrs="{'required':[('is_papiit_project','!=',True)],'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="rfc" attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="is_related_agreement" attrs="{'invisible':[('is_papiit_project','=',False)],'readonly': [('status', '!=', 'open')]}"/>
-
-                                <field name="number_agreement" attrs="{'invisible':[('is_related_agreement','=',False)]}"/>
-                                <field name="name_agreement"  attrs="{'invisible':[('is_related_agreement','=',False)]}"/>
-                                <field name="agreement_type_id" attrs="{'invisible':[('is_related_agreement','=',False)]}"/>
+								<field name="base_id" attrs="{'invisible':[('is_related_agreement','=',False)]}"/>
+                                <field name="number_agreement" readonly="1" force_save="1" attrs="{'invisible':[('is_related_agreement','=',False)]}"/>
+                                <field name="name_agreement" readonly="1" force_save="1" attrs="{'invisible':[('is_related_agreement','=',False)]}"/>
+                                <field name="agreement_type_id"  attrs="{'invisible':[('is_related_agreement','=',False)]}"/>
 
                                 <field name="PAPIIT_project_type"  attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
                                 <field name="technical_support_id" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
@@ -114,9 +114,9 @@
                                 <field name="project_status" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
                             </group>
                             <group>
-                                <field name="proj_start_date" required="1" attrs="{'readonly': [('status', '!=', 'open')]}"/>
+                                <field name="proj_start_date" attrs="{'required':[('is_papiit_project','!=',True)],'readonly': [('status', '!=', 'open')]}"/>
 
-                                <field name="proj_end_date" required="1" attrs="{'readonly': [('status', '!=', 'open')]}"/>
+                                <field name="proj_end_date" attrs="{'required':[('is_papiit_project','!=',True)],'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="allocated_amount" required="1" attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="approved_amount" required="1" attrs="{'invisible':[('is_papiit_project','=',True)],'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="exercised_amount" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>

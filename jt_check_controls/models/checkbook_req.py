@@ -47,7 +47,7 @@ class CheckbookRequest(models.Model):
 
     @api.constrains('intial_folio', 'final_folio')
     def _check_amount(self):
-        if (self.final_folio - self.intial_folio) != self.amount_checks:
+        if ((self.final_folio - self.intial_folio) + 1) != self.amount_checks:
             raise ValidationError(_('Value of Amount of checks does not match.'))
 
     @api.onchange('bank_id')
@@ -127,7 +127,6 @@ class CheckbookRequest(models.Model):
         checklist = self.env['checklist'].search([('checkbook_req_id', '=', checkbook.id)], limit=1)
         return checklist
 
-
     def get_application_date(self):
         application = self.appliaction_date
         day = application.day
@@ -193,8 +192,12 @@ class CheckbookRequest(models.Model):
         year = today.year
         return str(day) + ' de ' + month_name + ' de ' + str(year)
 
-    def get_trade_configuration(self):
+    def get_trade_configuration_1(self):
         trade = self.env['trades.config'].search([('job_template', '=', 'check_req_1')], limit=1)
+        return trade
+
+    def get_trade_configuration_2(self):
+        trade = self.env['trades.config'].search([('job_template', '=', 'check_req_2')], limit=1)
         return trade
 
 class CheckList(models.Model):
@@ -258,3 +261,34 @@ class CheckListLine(models.Model):
                                        ('assigned', 'Assigned'),
                                        ('cancelled', 'Cancelled'),
                                        ('paid_out', 'Paid Out')])
+    
+    def write(self, vals):
+        if self.status == 'Cancelled' and vals.get('status') in ('Checkbook registration', 'Assigned for shipping',
+          'Available for printing', 'Printed', 'Delivered', 'In transit', 'Sent to protection',
+           'Protected and in transit', 'Protected', 'Detained', 'Withdrawn from circulation'):
+            raise ValidationError(_("You can't change check log from 'Cancelled' to following status: \n"
+                                    "Checkbook registration \n"
+                                    "Assigned for shipping \n"
+                                    "Available for printing \n"
+                                    "Printed \n"
+                                    "Delivered \n"
+                                    "In transit \n"
+                                    "Sent to protection \n"
+                                    "Protected and in transit \n"
+                                    "Protected \n"
+                                    "Detained \n"
+                                    "Withdrawn from circulation \n"))
+        res = super(CheckListLine, self).write(vals)
+        return res
+
+    def action_send_to_custody(self):
+        cancel_checks = self.env['cancel.checks']
+        cancel_checks.create({
+            'check_folio':self.folio,
+            })
+
+class ResBank(models.Model):
+
+    _inherit = 'res.bank'
+
+    check_validity = fields.Integer("Check Validity")

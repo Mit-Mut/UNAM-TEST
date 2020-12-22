@@ -2,6 +2,19 @@
 <odoo>
     <data>
 
+        <record id="check_validity_bank_inherit_view" model="ir.ui.view">
+            <field name="name">check.validity.bank.inherit.view</field>
+            <field name="model">res.bank</field>
+            <field name="inherit_id" ref="base.view_res_bank_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='communication_details']" position="after">
+                    <group>
+                        <field name="check_validity"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
         <record id="checkbook_req_tree_view" model="ir.ui.view">
             <field name="name">checkbook.request.tree.view</field>
             <field name="model">checkbook.request</field>
@@ -230,6 +243,15 @@
                   parent="check_control_main_menu"
                   action="action_check_logs" sequence="3"/>
 
+
+        <record id="action_send_to_custody" model="ir.actions.server">
+            <field name="name">Send To Custody</field>
+            <field name="model_id" ref="jt_check_controls.model_check_log"/>
+            <field name="binding_model_id" ref="jt_check_controls.model_check_log"/>
+            <field name="state">code</field>
+            <field name="binding_view_types">list</field>
+            <field name="code">action = records.action_send_to_custody()</field>
+        </record>
 
     </data>
 </odoo>

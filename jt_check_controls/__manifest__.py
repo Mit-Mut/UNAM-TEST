@@ -36,6 +36,7 @@
         'views/check_authorized_by_dependency.xml',
         'views/checkbook_req.xml',
         'views/blank_check_req_views.xml',
+        'views/supplier_payment_req.xml',
         'wizard/confirm_checkbook_req.xml',
         'wizard/approve_blank_check.xml',
         'security/ir.model.access.csv',
@@ -43,6 +44,8 @@
         'reports/check_request_1.xml',
         'reports/check_request_2.xml',
         'reports/check_registration.xml',
+        'views/cancel_checks.xml',
+        'reports/blank_check_req_report.xml',
     ],
     'demo': [
     ],

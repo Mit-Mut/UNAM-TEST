@@ -88,7 +88,6 @@
                                 <p style="margin-top:0;margin-bottom:0;font-size:15px;">
                                     <span>No. Account</span>
                                     <t t-esc="o.bank_id.bank_acc_number"/>
-                                    <span>(CUENTA DE PROVEEDORES)</span>
                                 </p>
                             </b>
                         </div>
@@ -101,84 +100,7 @@
                 <t t-raw="0"/>
             </div>
             <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
-                <div class="row">
-                    <div class="col-8" align="left" style="font-size:15px">
-                        <span style="font-size:15px">
-                            Sincerely
-                            <br/>
-                        </span>
-                        <span style="font-size:15px">
-                            FOR MY RACE THE SPIRIT WILL SPEAK
-                        </span>
-                        <span style="font-size:15px">
-                            Ciudad Universitaria, Cd. Mx., A
-                            <br/>
-                            <t t-esc="o.get_date()"/>
-                        </span>
-                    </div>
-                    <div class="col-4" align="right">
-                        <img src="/jt_check_controls/static/src/img/sign.png"
-                             style="max-height:100px;width:50%"/>
-                    </div>
-                </div>
-                <br/>
-                <div class="row">
-                    <t t-set="trade" t-value="o.get_trade_configuration()"/>
-                    <div class="col-6" align="left">
-                        <t t-if="trade">
-                            <span style="font-size:15px">GENERAL DIRECTOR</span>
-                        </t>
-                    </div>
-                    <div class="col-6" align="right">
-                        <t t-if="trade">
-                            <span style="font-size:15px">DIRECTOR OF INCOME AND FINANCIAL OPERATION</span>
-                        </t>
-                    </div>
-                </div>
-                <br/>
-                <br/>
-                <br/>
-                <div class="row">
-                    <div class="col-6" align="left">
-                        <t t-if="trade">
-                            <t t-if="trade.general_director_title">
-                                <span style="font-size:15px;" t-esc="trade.general_director_title"/>
-                                <span style="font-size:15px;">.</span>
-                            </t>
-                            <t t-if="trade.general_director_id">
-                                <span style="font-size:15px;" t-esc="trade.general_director_id.name"/>
-                            </t>
-                        </t>
-                    </div>
-                    <div class="col-6" align="right">
-                        <t t-if="trade">
-                            <t t-if="trade.revenue_director_title">
-                                <span style="font-size:15px;" t-esc="trade.revenue_director_title"/>
-                                <span style="font-size:15px;">.</span>
-                            </t>
-                            <t t-if="trade.revenue_dirctor_id">
-                                <span style="font-size:15px;" t-esc="trade.revenue_dirctor_id.name"/>
-                            </t>
-                        </t>
-                    </div>
-                </div><br/>
-                <div class="row">
-                    <div class="col-1" align="left">
-                        <span style="font-size:15px">C.C.P.</span>
-                    </div>
-                    <div class="col-11" align="left">
-                        <t t-if="trade">
-                            <t t-foreach="trade.copied_employee_ids" t-as="employee">
-                                <t t-if="employee.employee_id">
-                                    <t style="font-size:15px" t-esc="employee.title"/>.
-                                    <t style="font-size:15px" t-esc="employee.employee_id.name"/>-
-                                    <t style="font-size:15px" t-esc="employee.job_title"/>
-                                    <br/>
-                                </t>
-                            </t>
-                        </t>
-                    </div>
-                </div>
+
             </div>
         </template>
 
@@ -229,7 +151,8 @@
                             <span>Annex, it will be useful to find the
                                 canceled format containing the folio
                             </span>
-                            <span> </span><t t-esc="o.print_sample_folio_number"/>
+                            <span></span>
+                            <t t-esc="o.print_sample_folio_number"/>
                             <span>, In order to be considered (s) as a print sample.</span>
                             <br/>
                             <span>Likewise, we would also appreciate informing us in advance the corresponding
@@ -294,9 +217,90 @@
                                 Without further ado and thanking you again for your attention to the present,
                                 we bid you farewell with a cordial greeting.
                             </span>
+                            <div class="row">
+                                <div class="col-8" align="left" style="font-size:15px">
+                                    <span style="font-size:15px">
+                                        Sincerely
+                                        <br/>
+                                    </span>
+                                    <span style="font-size:15px">
+                                        FOR MY RACE THE SPIRIT WILL SPEAK
+                                    </span>
+                                    <span style="font-size:15px">
+                                        Ciudad Universitaria, Cd. Mx., A
+                                        <br/>
+                                        <t t-esc="o.get_date()"/>
+                                    </span>
+                                </div>
+                                <div class="col-4" align="right">
+                                    <img src="/jt_check_controls/static/src/img/sign.png"
+                                         style="max-height:100px;width:50%"/>
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="row">
+                                <t t-set="trade" t-value="o.get_trade_configuration_1()"/>
+                                <div class="col-6" align="left">
+                                    <t t-if="trade">
+                                        <span style="font-size:15px">GENERAL DIRECTOR</span>
+                                    </t>
+                                </div>
+                                <div class="col-6" align="right">
+                                    <t t-if="trade">
+                                        <span style="font-size:15px">DIRECTOR OF INCOME AND FINANCIAL OPERATION</span>
+                                    </t>
+                                </div>
+                            </div>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <div class="row">
+                                <div class="col-6" align="left">
+                                    <t t-if="trade">
+                                        <t t-if="trade.general_director_title">
+                                            <span style="font-size:15px;" t-esc="trade.general_director_title"/>
+                                            <span style="font-size:15px;">.</span>
+                                        </t>
+                                        <t t-if="trade.general_director_id">
+                                            <span style="font-size:15px;" t-esc="trade.general_director_id.name"/>
+                                        </t>
+                                    </t>
+                                </div>
+                                <div class="col-6" align="right">
+                                    <t t-if="trade">
+                                        <t t-if="trade.revenue_director_title">
+                                            <span style="font-size:15px;" t-esc="trade.revenue_director_title"/>
+                                            <span style="font-size:15px;">.</span>
+                                        </t>
+                                        <t t-if="trade.revenue_dirctor_id">
+                                            <span style="font-size:15px;" t-esc="trade.revenue_dirctor_id.name"/>
+                                        </t>
+                                    </t>
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="row">
+                                <div class="col-1" align="left">
+                                    <span style="font-size:15px">C.C.P.</span>
+                                </div>
+                                <div class="col-11" align="left">
+                                    <t t-if="trade">
+                                        <t t-foreach="trade.copied_employee_ids" t-as="employee">
+                                            <t t-if="employee.employee_id">
+                                                <t style="font-size:15px" t-esc="employee.title"/>.
+                                                <t style="font-size:15px" t-esc="employee.employee_id.name"/>-
+                                                <t style="font-size:15px" t-esc="employee.job_title"/>
+                                                <br/>
+                                            </t>
+                                        </t>
+                                    </t>
+                                </div>
+                            </div>
                         </div>
                     </t>
+
                     <!--                    </t>-->
+
                 </t>
             </t>
         </template>
@@ -307,7 +311,7 @@
             <field name="orientation">Portrait</field>
             <field name="format">A4</field>
             <field name="margin_top">40</field>
-            <field name="margin_bottom">80</field>
+            <field name="margin_bottom">10</field>
             <field name="margin_left">7</field>
             <field name="margin_right">7</field>
             <field name="header_line" eval="False"/>

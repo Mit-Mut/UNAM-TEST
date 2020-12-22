@@ -105,8 +105,7 @@ class BlankCheckRequest(models.Model):
         return str(day) + ' de ' + month_name + ' de ' + str(year)
 
     def get_trade_configuration(self):
-    trade = self.env['trades.config'].search(
-        [('job_template', '=', 'check_req_1')], limit=1)
+        trade = self.env['trades.config'].search(('job_template', '=', 'check_req_1')], limit=1)
     return trade
 
     def action_reject(self):

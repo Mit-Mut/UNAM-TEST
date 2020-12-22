@@ -125,6 +125,7 @@ class EmployeePayroll(models.Model):
     check_number = fields.Char("Check number")
     adjustment_case_id = fields.Many2one('adjustment.cases','Adjustment Cases')
     net_salary = fields.Float("Net Salary")
+    casualties_and_cancellations = fields.Selection([('B','B'),('BD','BD'),('BDEF','BDEF')],string='Casualties And Cancellations',tracking=True)
     
     l10n_mx_edi_payment_method_id = fields.Many2one(
         'l10n_mx_edi.payment.method',

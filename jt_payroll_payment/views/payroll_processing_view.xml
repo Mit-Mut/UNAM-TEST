@@ -9,11 +9,15 @@
                   	<header>
                   		<button string='Generate Payroll' name='generate_payroll' type="object" class="oe_highlight"></button>
                   		<button string='Generate Adjustment' name='generate_adjustment' type="object" class="oe_highlight"></button>
+                  		<button string='Lows and Cancellations' name='lows_and_cancellations' type="object" class="oe_highlight"></button>
+                  		
                   	</header>
                     <sheet>
                     	<field name="payroll_ids" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" attrs="{'invisible':[('payroll_ids','=',False)]}"  string="Payment Receipt" type="object" name="view_payment_receipt" icon="fa-money" widget="statinfo"/>
+                             <button name="view_payment_receipt" type="object" class="oe_stat_button" icon="fa-random" attrs="{'invisible':[('payroll_ids','=',False)]}">
+                                <field name="total_record" widget="statinfo"/>
+                            </button>
                         </div>
                     	
                         <div class="oe_title">
@@ -69,6 +73,7 @@
             <field eval="100" name="priority"/>
             <field name="arch" type="xml">
                 <tree create="0">
+                	<field name="state"/>
                     <field name="reference"/>
                     <field name="employee_id"/>
                     <field name="name"/>
@@ -121,6 +126,7 @@
                                 <field name="check_number"/>
                                 <field name="adjustment_case_id"/>
                                 <field name="net_salary"/>
+                                <field name="casualties_and_cancellations" attrs="{'readonly':[('state','=','done')]}"/>
                                 <field name="request_type" attrs="{'readonly':[('state','=','done')]}" invisible="1"/>
                                 <field name="payroll_adjustment" attrs="{'readonly':[('state','=','done')]}" invisible="1"/>
                                 <field name="due_to_inappropriate" attrs="{'invisible':[('payroll_adjustment','!=','inappropriate')],'readonly':[('state','=','done')]}" invisible="1"/>
@@ -151,7 +157,7 @@
                         				<field name="deduction_id"/>
                         				<field name="description"/>
                         				<field name="amount"/>
-                        				<field name="net_salary"/>
+                        				<field name="net_salary" invisible="1"/>
                         			</tree>
                         			<form>
                         				<group>
@@ -159,7 +165,7 @@
 	                        				<field name="deduction_id"/>
 	                        				<field name="description"/>
 	                        				<field name="amount"/>
-	                        				<field name="net_salary"/>
+	                        				<field name="net_salary" invisible="1"/>
                         				</group>
                         			</form>
                         		</field>

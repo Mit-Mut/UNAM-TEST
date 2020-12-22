@@ -54,6 +54,7 @@
         'views/payroll_processing_view.xml',
         'wizard/generate_payroll_wizard.xml',
         'wizard/adjusted_payroll_view.xml',
+        'wizard/lows_and_cancellations_view.xml',
     ],
     'application': False,
     'installable': True,

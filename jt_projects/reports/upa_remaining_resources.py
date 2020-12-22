@@ -468,7 +468,7 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
             sheet.insert_image(0,0, filename, {'image_data': image_data,'x_offset':8,'y_offset':3,'x_scale':0.6,'y_scale':0.6})
         
         col += 1
-        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICOO\nUNIVERSITY BOARD\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nRESUMEN DE OPERACIÓN - SALDOS DE FONDOS DE INVERSIÓN'''
+        header_title = '''UNIVERSITY BOARD TREASURY\nGENERAL DIRECTORATE OF BUDGETARY CONTROL\nGENERAL ACCOUNTING\nRESEARCH PROJECT CONTROL DEPARTMENT\nREPORT ON CURRENT RESEARCH PROJECTS OF THE\nPAPIIT, PAPIME AND INFOCAB PROGRAMS'''
         sheet.merge_range(y_offset, col, 5, col+6, header_title,super_col_style)
         y_offset += 6
         col=1
@@ -574,12 +574,17 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
             spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 10}
             footer = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
         else:
+            period_name = ''
+            start_date = datetime.strptime(options.get('date').get('date_from'), DEFAULT_SERVER_DATE_FORMAT)
+            end_date = datetime.strptime(options.get('date').get('date_to'), DEFAULT_SERVER_DATE_FORMAT)
+            period_name += str(end_date.year)
             rcontext.update({
                     'css': '',
                     'o': self.env.user,
                     'res_company': self.env.company,
+                    'period_name': period_name,
                 })
-            header = self.env['ir.actions.report'].render_template("jt_investment.external_layout_investment_funds_balances", values=rcontext)
+            header = self.env['ir.actions.report'].with_context(period_name=period_name).render_template("jt_projects.external_integration_of_upi_papiit_projects", values=rcontext)
             header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
             spec_paperformat_args = {}
             # Default header and footer in case the user customized web.external_layout and removed the header/footer

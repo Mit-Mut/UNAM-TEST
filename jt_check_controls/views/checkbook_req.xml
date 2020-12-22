@@ -2,6 +2,19 @@
 <odoo>
     <data>
 
+        <record id="check_validity_bank_inherit_view" model="ir.ui.view">
+            <field name="name">check.validity.bank.inherit.view</field>
+            <field name="model">res.bank</field>
+            <field name="inherit_id" ref="base.view_res_bank_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='communication_details']" position="after">
+                    <group>
+                        <field name="check_validity"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
         <record id="checkbook_req_tree_view" model="ir.ui.view">
             <field name="name">checkbook.request.tree.view</field>
             <field name="model">checkbook.request</field>

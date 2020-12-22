@@ -74,11 +74,14 @@ class AdjustedPayrollWizard(models.TransientModel):
                         employee_id =self.env['hr.employee'].search([('rfc','=',rfc)],limit=1)
                         if employee_id:
                             employee_id = employee_id.id
+                    
+                    case_id = self.env['adjustment.cases'].search([('case','=',case)],limit=1)
                         
                     if employee_id:
-                        emp_payroll_ids = self.payroll_process_id.payroll_ids.filtered(lambda x:x.employee_id.id==employee_id and x.adjustment_case_id.case==case)
+                        emp_payroll_ids = self.payroll_process_id.payroll_ids.filtered(lambda x:x.employee_id.id==employee_id)
                         
                     for rec in emp_payroll_ids:
+                        rec.adjustment_case_id = case_id and case_id.id or False
                         if case=='A' or case=='R' or case=='F' or case=='H' or case=='E' or case=='V' or case=='C':
                             if check_no:
                                 if  type(check_no) is int or type(check_no) is float:

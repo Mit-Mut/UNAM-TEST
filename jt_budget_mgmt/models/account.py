@@ -63,7 +63,7 @@ class AccountMove(models.Model):
             self.sub_dependancy_id = False
                 
     def action_register(self):
-        for move in self:
+        for move in self.filtered(lambda x:not x.is_different_payroll_request):
             invoice_lines = move.invoice_line_ids.filtered(lambda x:not x.program_code_id)
             if invoice_lines:
                 raise ValidationError("Please add program code into invoice lines")

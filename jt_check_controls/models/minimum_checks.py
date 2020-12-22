@@ -4,9 +4,9 @@ class MinimumCheck(models.Model):
 
     _name = 'minimum.checks'
     _description = "Minimum of Checks"
-    _rec_name = 'checkbook'
+    _rec_name = 'bank_id'
 
-    checkbook = fields.Char("Checkbook")
+    checkbook_no = fields.Char("Checkbook")
     bank_id = fields.Many2one('account.journal', "Bank")
     bank_account_id = fields.Many2one("res.partner.bank", string="Bank Account")
     minimum_of_checks = fields.Integer("Mimimum of Checks")
@@ -16,3 +16,7 @@ class MinimumCheck(models.Model):
     def onchange_bank_id(self):
         if self.bank_id and self.bank_id.bank_account_id:
             self.bank_account_id = self.bank_id.bank_account_id.id
+            self.checkbook_no = self.bank_id.checkbook_no
+        else:
+            self.bank_account_id = False
+            self.checkbook_no = False

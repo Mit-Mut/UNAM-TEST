@@ -18,8 +18,8 @@ class ConfirmCheckBook(models.TransientModel):
     def apply(self):
         check_req = self.env['checkbook.request'].browse(self._context.get('active_id'))
         if check_req:
-            if check_req.bank_id and check_req.bank_id.checkbook_no:
-                check_req.checkbook_no = check_req.bank_id.checkbook_no
+            if check_req.bank_id:
+                check_req.bank_id.checkbook_no = self.checkbook_no
             checklist = self.env['checklist'].create({
                 'checkbook_no': self.checkbook_no,
                 'received_boxes': self.received_boxes,

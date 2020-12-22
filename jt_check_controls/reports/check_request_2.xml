@@ -49,7 +49,8 @@
                                         <t t-if="bank.city">
                                             ,
                                             <t t-esc="bank.city"/>
-                                        </t><br/>
+                                        </t>
+                                        <br/>
                                         <t t-if="bank.state">
                                             ,
                                             <t t-esc="bank.state.name"/>
@@ -88,7 +89,6 @@
                                 <p style="margin-top:0;margin-bottom:0;font-size:15px;">
                                     <span>No. Account</span>
                                     <t t-esc="o.bank_id.bank_acc_number"/>
-                                    <span>(CUENTA DE PROVEEDORES)</span>
                                 </p>
                             </b>
                         </div>
@@ -101,84 +101,7 @@
                 <t t-raw="0"/>
             </div>
             <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
-                <div class="row">
-                    <div class="col-8" align="left" style="font-size:15px">
-                        <span style="font-size:15px">
-                            Sincerely
-                            <br/>
-                        </span>
-                        <span style="font-size:15px">
-                            FOR MY RACE THE SPIRIT WILL SPEAK
-                        </span><br/>
-                        <span style="font-size:15px">
-                            Ciudad Universitaria, Cd. Mx., A
-                            <br/>
-                            <t t-esc="o.get_date()"/>
-                        </span>
-                    </div>
-                    <div class="col-4" align="right">
-                        <img src="/jt_check_controls/static/src/img/sign.png"
-                             style="max-height:100px;width:50%"/>
-                    </div>
-                </div>
-                <br/>
-                <div class="row">
-                    <t t-set="trade" t-value="o.get_trade_configuration()"/>
-                    <div class="col-6" align="left">
-                        <t t-if="trade">
-                            <span style="font-size:15px">GENERAL DIRECTOR</span>
-                        </t>
-                    </div>
-                    <div class="col-6" align="right">
-                        <t t-if="trade">
-                            <span style="font-size:15px">DIRECTOR OF INCOME AND FINANCIAL OPERATION</span>
-                        </t>
-                    </div>
-                </div>
-                <br/>
-                <br/>
-                <br/>
-                <div class="row">
-                    <div class="col-6" align="left">
-                        <t t-if="trade">
-                            <t t-if="trade.general_director_title">
-                                <span style="font-size:15px;" t-esc="trade.general_director_title"/>
-                                <span style="font-size:15px;">.</span>
-                            </t>
-                            <t t-if="trade.general_director_id">
-                                <span style="font-size:15px;" t-esc="trade.general_director_id.name"/>
-                            </t>
-                        </t>
-                    </div>
-                    <div class="col-6" align="right">
-                        <t t-if="trade">
-                            <t t-if="trade.revenue_director_title">
-                                <span style="font-size:15px;" t-esc="trade.revenue_director_title"/>
-                                <span style="font-size:15px;">.</span>
-                            </t>
-                            <t t-if="trade.revenue_dirctor_id">
-                                <span style="font-size:15px;" t-esc="trade.revenue_dirctor_id.name"/>
-                            </t>
-                        </t>
-                    </div>
-                </div><br/>
-                <div class="row">
-                    <div class="col-1" align="left">
-                        <span style="font-size:15px">C.C.P.</span>
-                    </div>
-                    <div class="col-11" align="left">
-                        <t t-if="trade">
-                            <t t-foreach="trade.copied_employee_ids" t-as="employee">
-                                <t t-if="employee.employee_id">
-                                    <t style="font-size:15px" t-esc="employee.title"/>.
-                                    <t style="font-size:15px" t-esc="employee.employee_id.name"/>-
-                                    <t style="font-size:15px" t-esc="employee.job_title"/>
-                                    <br/>
-                                </t>
-                            </t>
-                        </t>
-                    </div>
-                </div>
+
             </div>
         </template>
 
@@ -229,7 +152,8 @@
                             <span>Annex, it will be useful to find the
                                 canceled format containing the folio
                             </span>
-                            <span> </span><t t-esc="o.print_sample_folio_number"/>
+                            <span></span>
+                            <t t-esc="o.print_sample_folio_number"/>
                             <span>, In order to be considered (s) as a print sample.</span>
                             <br/>
                             <span>This Checks must have the AMB
@@ -239,126 +163,155 @@
                             <br/>
                             <span>
                                 1. The exact size of the format should be
-                                    8 1⁄2 ”X 14” refined.
-                            </span><br/>
+                                8 1⁄2 ”X 14” refined.
+                            </span>
+                            <br/>
                             <span>
                                 2. On security paper, you must comply
                                 with what is established in the standards for checks.
-                            </span><br/>
+                            </span>
+                            <br/>
                             <span>
                                 3. All the tables of the vouchers must keep
                                 the measurements according to the check
                                 sample.
-                            </span><br/>
+                            </span>
+                            <br/>
                             <span>
                                 4. All texts must be legible and have good
                                 print quality.
-                            </span><br/>
+                            </span>
+                            <br/>
                             <span>
                                 5. Respect the position and texts that are
                                 located in each box or field of the receipts.
-                            </span><br/>
+                            </span>
+                            <br/>
                             <span>
                                 6. The legend POLICY PAPER printed on
-                                    the reverse should be in the lowest tone allowed by the standard.
-                            </span><br/>
+                                the reverse should be in the lowest tone allowed by the standard.
+                            </span>
+                            <br/>
                             <span>
                                 7. Arabic folios must be printed with inkjet (Inkjet).
-                            </span><br/>
+                            </span>
+                            <br/>
                             <span>
                                 8. The magnetizable strip must be printed
-                                    with inkjet (Inkjet).
-                            </span><br/>
+                                with inkjet (Inkjet).
+                            </span>
+                            <br/>
                             <span>
                                 9. The tone of the UNAM logos presented
                                 on the check and on the vouchers must be
                                 in accordance with those printed on the
                                 check delivered.
-                            </span><br/>
+                            </span>
+                            <br/>
                             <span>
                                 10. The background tone of the vouchers
-                                and the check must be the same as those of the folio <span> </span><t t-esc="o.print_sample_folio_number"/> check.
+                                and the check must be the same as those of the folio
+                                <span></span>
+                                <t t-esc="o.print_sample_folio_number"/>.
                             </span>
                             <br/>
                             <span>
                                 11. The dies (horizontal perforations) should not be so deep, 8 points per inch.
-                            </span><br/>
+                            </span>
+                            <br/>
                             <span>
                                 12. Die ties should not end in cut and should be 1/32 " apart from each side.
-                            </span><br/>
+                            </span>
+                            <br/>
                             <span>
                                 13. The inks used in the printing of the
                                 checks must not be unpainted and / or
                                 must not be repainted when they are
                                 passed through the UNAM printing
                                 equipment.
-                            </span><br/>
+                            </span>
+                            <br/>
                             <span>
                                 14. The numbering of the checks must be
                                 ordered consecutively from "N" to 1 face
                                 up.
-                            </span><br/>
+                            </span>
+                            <br/>
                             <span>
                                 15. The check count should be from the
                                 bottom left of the check.
-                            </span><br/>
+                            </span>
+                            <br/>
                             <span>
                                 16. Packaging specifications:
-                            </span><br/>
+                            </span>
+                            <br/>
                             <span style="margin-left: 30px;">
                                 - Checks should be packaged clean, with no paper residue or
-                                    cut-outs.
-                            </span><br/>
+                                cut-outs.
+                            </span>
+                            <br/>
                             <span style="margin-left: 30px;">
                                 - Make blocks of 500 checks.
-                            </span><br/>
+                            </span>
+                            <br/>
                             <span style="margin-left: 30px;">
                                 - Place strips for every 500 checks.
-                            </span><br/>
+                            </span>
+                            <br/>
                             <span style="margin-left: 30px;">
                                 - A cover and back cover must be
                                 placed in 400 gram matt couché
                                 cardboard. As protectors above
                                 and below each block of 500
                                 checks and then place the
-                                binding.    
-                            </span><br/>
+                                binding.
+                            </span>
+                            <br/>
                             <span style="margin-left: 30px;">
                                 - Once wrapped and with the
                                 coated paper protectors, wrap the
                                 blocks of the 500 checks in 130-
                                 gram brown kraft paper.
-                            </span><br/>
+                            </span>
+                            <br/>
                             <span style="margin-left: 30px;">
                                 - Each package of 500 checks
                                 must be labeled with its folio rank.
-                            </span><br/>
+                            </span>
+                            <br/>
                             <span style="margin-left: 30px;">
-                               - Place check packages in boxes
+                                - Place check packages in boxes
                                 with a capacity of 200 checks.
-                            </span><br/>
+                            </span>
+                            <br/>
                             <span style="margin-left: 30px;">
                                 - Place one carton above and one
                                 below the 4 packages of 500.
-                            </span><br/>
+                            </span>
+                            <br/>
                             <span style="margin-left: 30px;">
                                 - The carton must be the same as
                                 the box.
-                            </span><br/>
+                            </span>
+                            <br/>
                             <span style="margin-left: 30px;">
-                               - The box must be the exact size of
+                                - The box must be the exact size of
                                 the checks.
-                            </span><br/>
+                            </span>
+                            <br/>
                             <span style="margin-left: 30px;">
                                 - The box must be single
                                 corrugated telescopic and
                                 measures 14 1⁄4 ”long by 8 3⁄4”
                                 wide by 8 1⁄4 ”high.
-                            </span><br/>
+                            </span>
+                            <br/>
                             <span style="margin-left: 30px;">
                                 - The box must be labeled with the
                                 range of folios it contains.
-                            </span><br/>
+                            </span>
+                            <br/>
                             <span style="margin-left: 30px;">
                                 - The box without strap because
                                 when they are transported, the
@@ -366,21 +319,107 @@
                                 they cause cracks in the boxes so
                                 that the inner packages are
                                 mistreated.
-                            </span><br/>
+                            </span>
+                            <br/>
                             <span>
                                 Please strictly adhere to the technical
                                 characteristics of substance and form, as
                                 well as security measures of the approved
                                 check, also contain the legend" THE
                                 VALIDITY OF THIS CHECK IS FOR
-                                 DAYS "ON THE FRONT AND BACK OF THE DOCUMENT .."
-                            </span><br/>
+                                <t t-if="o.bank_id.bank_id.check_validity">
+                                    <span t-esc="o.bank_id.bank_id.check_validity"/>
+                                </t>
+                                DAYS "ON THE FRONT AND BACK OF THE DOCUMENT .."
+                            </span>
+                            <br/>
                             <span>
                                 Without any other particular and hoping to
                                 be favored with your attention to the
                                 present, we say goodbye to you with a
                                 cordial greeting.
-                            </span><br/>
+                            </span>
+                            <br/>
+                            <div class="row">
+                                <div class="col-8" align="left" style="font-size:15px">
+                                    <span style="font-size:15px">
+                                        Sincerely
+                                        <br/>
+                                    </span>
+                                    <span style="font-size:15px">
+                                        FOR MY RACE THE SPIRIT WILL SPEAK
+                                    </span>
+                                    <br/>
+                                    <span style="font-size:15px">
+                                        Ciudad Universitaria, Cd. Mx., A
+                                        <br/>
+                                        <t t-esc="o.get_date()"/>
+                                    </span>
+                                </div>
+                                <div class="col-4" align="right">
+                                    <img src="/jt_check_controls/static/src/img/sign.png"
+                                         style="max-height:100px;width:50%"/>
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="row">
+                                <t t-set="trade" t-value="o.get_trade_configuration_2()"/>
+                                <div class="col-6" align="left">
+                                    <t t-if="trade">
+                                        <span style="font-size:15px">GENERAL DIRECTOR</span>
+                                    </t>
+                                </div>
+                                <div class="col-6" align="right">
+                                    <t t-if="trade">
+                                        <span style="font-size:15px">DIRECTOR OF INCOME AND FINANCIAL OPERATION</span>
+                                    </t>
+                                </div>
+                            </div>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <div class="row">
+                                <div class="col-6" align="left">
+                                    <t t-if="trade">
+                                        <t t-if="trade.general_director_title">
+                                            <span style="font-size:15px;" t-esc="trade.general_director_title"/>
+                                            <span style="font-size:15px;">.</span>
+                                        </t>
+                                        <t t-if="trade.general_director_id">
+                                            <span style="font-size:15px;" t-esc="trade.general_director_id.name"/>
+                                        </t>
+                                    </t>
+                                </div>
+                                <div class="col-6" align="right">
+                                    <t t-if="trade">
+                                        <t t-if="trade.revenue_director_title">
+                                            <span style="font-size:15px;" t-esc="trade.revenue_director_title"/>
+                                            <span style="font-size:15px;">.</span>
+                                        </t>
+                                        <t t-if="trade.revenue_dirctor_id">
+                                            <span style="font-size:15px;" t-esc="trade.revenue_dirctor_id.name"/>
+                                        </t>
+                                    </t>
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="row">
+                                <div class="col-1" align="left">
+                                    <span style="font-size:15px">C.C.P.</span>
+                                </div>
+                                <div class="col-11" align="left">
+                                    <t t-if="trade">
+                                        <t t-foreach="trade.copied_employee_ids" t-as="employee">
+                                            <t t-if="employee.employee_id">
+                                                <t style="font-size:15px" t-esc="employee.title"/>.
+                                                <t style="font-size:15px" t-esc="employee.employee_id.name"/>-
+                                                <t style="font-size:15px" t-esc="employee.job_title"/>
+                                                <br/>
+                                            </t>
+                                        </t>
+                                    </t>
+                                </div>
+                            </div>
                         </div>
                     </t>
                 </t>
@@ -393,7 +432,7 @@
             <field name="orientation">Portrait</field>
             <field name="format">A4</field>
             <field name="margin_top">40</field>
-            <field name="margin_bottom">80</field>
+            <field name="margin_bottom">10</field>
             <field name="margin_left">7</field>
             <field name="margin_right">7</field>
             <field name="header_line" eval="False"/>

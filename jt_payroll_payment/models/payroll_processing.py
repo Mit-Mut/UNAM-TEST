@@ -41,7 +41,12 @@ class CustomPayrollProcessing(models.Model):
                                 string="Fornight")
     
     payroll_ids = fields.One2many('employee.payroll.file','payroll_processing_id')
-
+    total_record = fields.Integer(compute='get_total_record',string='Payment Receipt')
+    
+    def get_total_record(self):
+        for rec in self:
+            rec.total_record = len(rec.payroll_ids)
+            
     def generate_payroll(self):
         return {
                 'name': _('Generate Payroll'),
@@ -59,6 +64,17 @@ class CustomPayrollProcessing(models.Model):
                 'res_model':'adjusted.payroll.wizard',
                 'view_mode': 'form',
                 'view_id': self.env.ref('jt_payroll_payment.adjusted_payroll_wizard_view1').id,
+                'context': {'default_payroll_process_id': self.id},
+                'target': 'new',
+                'type': 'ir.actions.act_window',
+            }
+
+    def lows_and_cancellations(self):
+        return {
+                'name': _('Lows And Cancellations'),
+                'res_model':'lows.cancellation.wizard',
+                'view_mode': 'form',
+                'view_id': self.env.ref('jt_payroll_payment.lows_cancellation_wizard_view1').id,
                 'context': {'default_payroll_process_id': self.id},
                 'target': 'new',
                 'type': 'ir.actions.act_window',

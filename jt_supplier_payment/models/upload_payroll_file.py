@@ -74,6 +74,9 @@ class EmployeePayroll(models.Model):
         return self.env['account.move'].create(payroll_payment_vals)
         
     def action_done(self):
+        if any(self.filtered(lambda x:x.casualties_and_cancellations == 'BDEF')):
+            raise UserError(_("You can not Request for payment for Casualties And Cancellations which are in BDEF"))
+        
         if any(self.filtered(lambda x:x.state != 'revised')):
             raise UserError(_("You can Request for payment only for those Payroll which are in "
             "'Reviewed'!"))

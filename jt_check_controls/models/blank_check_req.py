@@ -84,7 +84,6 @@ class BlankCheckRequest(models.Model):
                                                    ('folio', '>=', self.intial_folio),
                                                    ('folio', '<=', self.final_folio)])
         for log in check_logs:
-            log.status = 'Assigned for shipping'
             log.module = self.department
         check_log = self.env['check.log'].search([('checklist_id.checkbook_req_id', '=', self.checkbook_req_id.id),
                                                    ('folio', '=', self.print_sample_folio_number)])

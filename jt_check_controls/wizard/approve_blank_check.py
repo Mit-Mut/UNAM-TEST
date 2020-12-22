@@ -38,5 +38,5 @@ class ApproveBlankCheck(models.TransientModel):
                                                        ('folio', '>=', self.intial_folio),
                                                        ('folio', '<=', self.final_folio)])
             for log in check_logs:
-                log.status = 'Available for printing'
+                log.status = 'Assigned for shipping'
 

@@ -163,12 +163,16 @@ class GeneratePayrollWizard(models.TransientModel):
                         if employee_id:
 
                             exit_payroll_id = self.env['employee.payroll.file'].search([('employee_id','=',employee_id.id),('id','in',self.payroll_process_id.payroll_ids.ids)],limit=1)
+                            if exit_payroll_id:
+                                exit_payroll_id.net_salary = net_salary
+                                
                             if not exit_payroll_id:                             
                                 result_dict.update({'payroll_processing_id':self.payroll_process_id.id,
                                                     'period_start' : self.payroll_process_id.period_start,
                                                     'period_end' : self.payroll_process_id.period_end,
                                                     'fornight' : self.payroll_process_id.fornight,
                                                     'employee_id':employee_id.id,
+                                                    'net_salary':net_salary,
                                                     'payment_request_type':'direct_employee'})
                     
                     if ded_key:
@@ -177,7 +181,7 @@ class GeneratePayrollWizard(models.TransientModel):
                         
                         ded_id = self.env['deduction'].search([('key','=',ded_key)],limit=1)
                         if ded_id:
-                            line_data.append((0,0,{'deduction_id':ded_id.id,'amount':amount,'net_salary':net_salary})) 
+                            line_data.append((0,0,{'deduction_id':ded_id.id,'amount':amount})) 
 
                 if exit_payroll_id and line_data:
                     exit_payroll_id.write({'deduction_line_ids':line_data})

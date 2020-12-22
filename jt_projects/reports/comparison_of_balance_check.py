@@ -31,7 +31,6 @@ import base64
 from odoo.tools import config, date_utils, get_lang
 import lxml.html
 
-
 class ComparisonOfBalanceCheck(models.AbstractModel):
 
     _name = "jt_projects.comparison.balances.check"
@@ -171,7 +170,8 @@ class ComparisonOfBalanceCheck(models.AbstractModel):
         one_year_ago = one_year_ago.replace(month=12,day=31)
 
         first_month_date = start.replace(month=1,day=1)
-         
+
+                    
         lines.append({
                 'id': 'hierarchy_header',
                 'name' : 'ETAPA/ANO', 
@@ -185,8 +185,7 @@ class ComparisonOfBalanceCheck(models.AbstractModel):
                 'unfoldable': False,
                 'unfolded': True,
             })
-
-        
+    
         stage_ids = project_records.mapped('custom_stage_id')
 
         total_two_year_ago_amount = 0.0
@@ -194,29 +193,31 @@ class ComparisonOfBalanceCheck(models.AbstractModel):
         total_current_year_amount = 0.0
         total_different = 0.0
         
-        cfdi_account_ids = self.env['account.journal'].search([]).mapped('income_CFDIS_credit_account_id')
-        print ("====",'cfdi_account_ids',cfdi_account_ids)
+        gt_total_different = 0.0
+        #cfdi_account_ids = self.env['account.journal'].search([]).mapped('income_CFDIS_credit_account_id')
+        
         
         for stage in stage_ids:
             for year in year_list:
                 current_project_ids = project_records.filtered(lambda x:x.custom_stage_id.id==stage.id and str(x.proj_start_date.year)==year)
                 if not current_project_ids:
                     continue
-
+                cfdi_account_ids = current_project_ids.mapped('bank_account_id.default_debit_account_id')
+                
                 two_year_ago_amount = 0.0
                 one_year_ago_amount = 0.0
                 current_year_amount = 0.0
 
                 if cfdi_account_ids:
-                    values= self.env['account.move.line'].search([('date', '<=', two_year_ago),('account_id', '=', cfdi_account_ids.ids),('move_id.state', '=', 'posted')])
+                    values= self.env['account.move.line'].search([('date', '<=', two_year_ago),('account_id', 'in', cfdi_account_ids.ids),('move_id.state', '=', 'posted')])
                     two_year_ago_amount = sum(x.debit-x.credit for x in values)
 
                 if cfdi_account_ids:
-                    values= self.env['account.move.line'].search([('date', '<=', one_year_ago),('account_id', '=', cfdi_account_ids.ids),('move_id.state', '=', 'posted')])
+                    values= self.env['account.move.line'].search([('date', '<=', one_year_ago),('account_id', 'in', cfdi_account_ids.ids),('move_id.state', '=', 'posted')])
                     one_year_ago_amount = sum(x.debit-x.credit for x in values)
 
                 if cfdi_account_ids:
-                    values= self.env['account.move.line'].search([('date', '<=', end),('account_id', '=', cfdi_account_ids.ids),('move_id.state', '=', 'posted')])
+                    values= self.env['account.move.line'].search([('date', '<=', end),('account_id', 'in', cfdi_account_ids.ids),('move_id.state', '=', 'posted')])
                     current_year_amount = sum(x.debit-x.credit for x in values)
                 
                 total_two_year_ago_amount += two_year_ago_amount
@@ -240,7 +241,8 @@ class ComparisonOfBalanceCheck(models.AbstractModel):
                         'unfolded': True,
                     })
                 
-
+        gt_total_different += total_different
+        
         lines.append({
                 'id': 'hierarchy_subtotal_1',
                 'name' : 'SUBTOTAL', 
@@ -255,6 +257,128 @@ class ComparisonOfBalanceCheck(models.AbstractModel):
                 'unfolded': True,
             })
                 
+        #==================== Secound Part =========================#
+        project_domain = []
+        project_domain += [('project_type','=','other')]
+
+        project_domain += [('proj_start_date', '>=', start), ('proj_end_date', '<=', end)]
+        
+        project_records = self.env['project.project'].search(project_domain)
+
+        lines.append({
+                'id': 'hierarchy_header_2',
+                'name' : 'PROYECTOS ESPECIALES', 
+#                 'columns': [ 
+#                             {'name': 'POR COMPROBAR A DIC/'+str(two_year_ago.year)},
+#                             {'name': 'POR COMPROBAR A DIC/'+str(one_year_ago.year)},
+#                             {'name': 'POR COMPROBAR A '+self.get_month_name(end.month)+"/" + str(end.year)},
+#                             {'name': 'COMPROBADO EN EL PERIODO '+self.get_month_name(first_month_date.month)+"/"+self.get_month_name(end.month)},
+#                             ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+                'colspan':5,
+                'class': 'o_account_reports_load_more text-center',
+            })
+
+        lines.append({
+                'id': 'hierarchy_header',
+                'name' : 'ETAPA/ANO', 
+                'columns': [ 
+                            {'name': 'POR COMPROBAR A DIC/'+str(two_year_ago.year)},
+                            {'name': 'POR COMPROBAR A DIC/'+str(one_year_ago.year)},
+                            {'name': 'POR COMPROBAR A '+self.get_month_name(end.month)+"/" + str(end.year)},
+                            {'name': 'COMPROBADO EN EL PERIODO '+self.get_month_name(first_month_date.month)+"/"+self.get_month_name(end.month)},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        
+        stage_ids = project_records.mapped('custom_stage_id')
+
+        total_two_year_ago_amount = 0.0
+        total_one_year_ago_amount = 0.0
+        total_current_year_amount = 0.0
+        total_different = 0.0
+        
+        #cfdi_account_ids = self.env['account.journal'].search([]).mapped('income_CFDIS_credit_account_id')
+        
+        
+        for stage in stage_ids:
+            for year in year_list:
+                current_project_ids = project_records.filtered(lambda x:x.custom_stage_id.id==stage.id and str(x.proj_start_date.year)==year)
+                if not current_project_ids:
+                    continue
+                cfdi_account_ids = current_project_ids.mapped('bank_account_id.default_debit_account_id')
+                two_year_ago_amount = 0.0
+                one_year_ago_amount = 0.0
+                current_year_amount = 0.0
+
+                if cfdi_account_ids:
+                    values= self.env['account.move.line'].search([('date', '<=', two_year_ago),('account_id', 'in', cfdi_account_ids.ids),('move_id.state', '=', 'posted')])
+                    two_year_ago_amount = sum(x.debit-x.credit for x in values)
+
+                if cfdi_account_ids:
+                    values= self.env['account.move.line'].search([('date', '<=', one_year_ago),('account_id', 'in', cfdi_account_ids.ids),('move_id.state', '=', 'posted')])
+                    one_year_ago_amount = sum(x.debit-x.credit for x in values)
+
+                if cfdi_account_ids:
+                    values= self.env['account.move.line'].search([('date', '<=', end),('account_id', 'in', cfdi_account_ids.ids),('move_id.state', '=', 'posted')])
+                    current_year_amount = sum(x.debit-x.credit for x in values)
+                
+                total_two_year_ago_amount += two_year_ago_amount
+                total_one_year_ago_amount += total_one_year_ago_amount
+                total_current_year_amount += current_year_amount
+                
+                different = current_year_amount - one_year_ago_amount
+                total_different += different
+                 
+                lines.append({
+                        'id': 'hierarchy_col' + str(stage.id)+str(year),
+                        'name' : stage.name+"/"+year, 
+                        'columns': [ 
+                                    self._format({'name': two_year_ago_amount},figure_type='float'),
+                                    self._format({'name': one_year_ago_amount},figure_type='float'),
+                                    self._format({'name': current_year_amount},figure_type='float'),
+                                    self._format({'name': different},figure_type='float'),
+                                    ],
+                        'level': 3,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+                
+        gt_total_different += total_different
+        
+        lines.append({
+                'id': 'hierarchy_subtotal_1',
+                'name' : 'SUBTOTAL', 
+                'columns': [ 
+                            self._format({'name': total_two_year_ago_amount},figure_type='float'),
+                            self._format({'name': total_one_year_ago_amount},figure_type='float'),
+                            self._format({'name': total_current_year_amount},figure_type='float'),
+                            self._format({'name': total_different},figure_type='float'),
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+        
+
+        lines.append({
+                'id': 'hierarchy_gt_total',
+                'name' : '', 
+                'columns': [ 
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': 'GRAN TOTAL','class':'number'},
+                            self._format({'name': gt_total_different},figure_type='float'),
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
 
         return lines
 

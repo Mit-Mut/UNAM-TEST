@@ -105,7 +105,8 @@ class BlankCheckRequest(models.Model):
         return str(day) + ' de ' + month_name + ' de ' + str(year)
 
     def get_trade_configuration(self):
-        trade = self.env['trades.config'].search([('job_template', '=', 'check_req_1')], limit=1)
+        trade = self.env['trades.config'].search(
+            [('job_template', '=', 'check_req_1')], limit=1)
         return trade
 
     def action_reject(self):
@@ -144,8 +145,11 @@ class BlankCheckRequest(models.Model):
                 check_logs = self.env['check.log'].search(
                     [('checklist_id.checkbook_req_id', '=', self.checkbook_req_id.id),
                      ('folio', '>=', self.intial_folio),
+                     ('folio', '!=', self.print_sample_folio_number),
+                     ('folio', '!=', int(self.checkbook_req_id.print_sample_folio_number)),
                      ('folio', '<=', self.final_folio)])
                 for log in check_logs:
+                    print ("Fsdfsdfdsfds", log.folio)
                     log.status = 'Available for printing'
 
     def action_apply_distribution(self):

@@ -150,9 +150,9 @@ class ComparisonOfBalanceCheck(models.AbstractModel):
         if project_type_domain:
             project_domain += [('project_type','in',tuple(project_type_domain))]
         else:
-            project_domain += [('project_type','in',('conacyt','concurrent','other'))]
+            project_domain += [('project_type','in',('conacyt','concurrent'))]
 
-        project_domain += [('proj_start_date', '>=', start), ('proj_end_date', '<=', end)]
+        project_domain += [('proj_start_date', '>=', start), ('proj_end_date', '<=', end),('project_type','!=','other')]
         
         project_records = self.env['project.project'].search(project_domain)
 
@@ -170,23 +170,41 @@ class ComparisonOfBalanceCheck(models.AbstractModel):
         one_year_ago = one_year_ago.replace(month=12,day=31)
 
         first_month_date = start.replace(month=1,day=1)
-
-                    
-        lines.append({
-                'id': 'hierarchy_header',
-                'name' : 'ETAPA/ANO', 
-                'columns': [ 
-                            {'name': 'POR COMPROBAR A DIC/'+str(two_year_ago.year)},
-                            {'name': 'POR COMPROBAR A DIC/'+str(one_year_ago.year)},
-                            {'name': 'POR COMPROBAR A '+self.get_month_name(end.month)+"/" + str(end.year)},
-                            {'name': 'COMPROBADO EN EL PERIODO '+self.get_month_name(first_month_date.month)+"/"+self.get_month_name(end.month)},
-                            ],
-                'level': 1,
-                'unfoldable': False,
-                'unfolded': True,
-            })
-    
         stage_ids = project_records.mapped('custom_stage_id')
+        
+        if stage_ids:        
+
+            lines.append({
+                    'id': 'hierarchy_header_2',
+                    'name' : 'CONACYT/CONCURRENT', 
+                    'columns': [ 
+    #                             {'name': ''},
+    #                             {'name': ''},
+    #                             {'name': ''},
+    #                             {'name': ''},
+                                ],
+                    'level': 1,
+                    #'unfoldable': False,
+                    #'unfolded': True,
+                    'colspan':5,
+                    'class': 'text-center',
+                })
+                
+            lines.append({
+                    'id': 'hierarchy_header',
+                    'name' : 'ETAPA/ANO', 
+                    'columns': [ 
+                                {'name': 'POR COMPROBAR A DIC/'+str(two_year_ago.year)},
+                                {'name': 'POR COMPROBAR A DIC/'+str(one_year_ago.year)},
+                                {'name': 'POR COMPROBAR A '+self.get_month_name(end.month)+"/" + str(end.year)},
+                                {'name': 'COMPROBADO EN EL PERIODO '+self.get_month_name(first_month_date.month)+"/"+self.get_month_name(end.month)},
+                                ],
+                    'level': 1,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+    
+        
 
         total_two_year_ago_amount = 0.0
         total_one_year_ago_amount = 0.0
@@ -242,43 +260,54 @@ class ComparisonOfBalanceCheck(models.AbstractModel):
                     })
                 
         gt_total_different += total_different
-        
-        lines.append({
-                'id': 'hierarchy_subtotal_1',
-                'name' : 'SUBTOTAL', 
-                'columns': [ 
-                            self._format({'name': total_two_year_ago_amount},figure_type='float'),
-                            self._format({'name': total_one_year_ago_amount},figure_type='float'),
-                            self._format({'name': total_current_year_amount},figure_type='float'),
-                            self._format({'name': total_different},figure_type='float'),
-                            ],
-                'level': 1,
-                'unfoldable': False,
-                'unfolded': True,
-            })
+        if stage_ids:
+            lines.append({
+                    'id': 'hierarchy_subtotal_1',
+                    'name' : 'SUBTOTAL', 
+                    'columns': [ 
+                                self._format({'name': total_two_year_ago_amount},figure_type='float'),
+                                self._format({'name': total_one_year_ago_amount},figure_type='float'),
+                                self._format({'name': total_current_year_amount},figure_type='float'),
+                                self._format({'name': total_different},figure_type='float'),
+                                ],
+                    'level': 1,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
                 
         #==================== Secound Part =========================#
+        
         project_domain = []
-        project_domain += [('project_type','=','other')]
 
-        project_domain += [('proj_start_date', '>=', start), ('proj_end_date', '<=', end)]
+        if project_type_domain:
+            project_domain += [('project_type','in',tuple(project_type_domain))]
+        else:
+            project_domain += [('project_type','=','other')]
+        
+
+        project_domain += [('proj_start_date', '>=', start), ('proj_end_date', '<=', end),('project_type','not in',('conacyt','concurrent'))]
         
         project_records = self.env['project.project'].search(project_domain)
+
+        stage_ids = project_records.mapped('custom_stage_id')
+        
+        if not stage_ids:
+            return lines
 
         lines.append({
                 'id': 'hierarchy_header_2',
                 'name' : 'PROYECTOS ESPECIALES', 
-#                 'columns': [ 
-#                             {'name': 'POR COMPROBAR A DIC/'+str(two_year_ago.year)},
-#                             {'name': 'POR COMPROBAR A DIC/'+str(one_year_ago.year)},
-#                             {'name': 'POR COMPROBAR A '+self.get_month_name(end.month)+"/" + str(end.year)},
-#                             {'name': 'COMPROBADO EN EL PERIODO '+self.get_month_name(first_month_date.month)+"/"+self.get_month_name(end.month)},
-#                             ],
+                'columns': [ 
+#                             {'name': ''},
+#                             {'name': ''},
+#                             {'name': ''},
+#                             {'name': ''},
+                            ],
                 'level': 1,
-                'unfoldable': False,
-                'unfolded': True,
+                #'unfoldable': False,
+                #'unfolded': True,
                 'colspan':5,
-                'class': 'o_account_reports_load_more text-center',
+                'class': 'text-center',
             })
 
         lines.append({
@@ -296,7 +325,7 @@ class ComparisonOfBalanceCheck(models.AbstractModel):
             })
 
         
-        stage_ids = project_records.mapped('custom_stage_id')
+        
 
         total_two_year_ago_amount = 0.0
         total_one_year_ago_amount = 0.0

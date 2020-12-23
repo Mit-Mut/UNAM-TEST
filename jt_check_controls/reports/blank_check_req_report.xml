@@ -61,47 +61,29 @@
             </div>
             <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
                 <div class="row">
-                    <div class="col-6" align="left" style="margin-left:10px;border:1px solid black;
-">
-                        <span>Nice Stay</span><br/>
-                        <span>BY MY RACE WILL SPEAK THE SPIRIT</span>
+                    <div class="col-6" align="left">
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <t t-set="trade" t-value="o.get_trade_configuration()"/>
+                        <p>L.I.C.<span t-field="trade.general_director_id.name"/></p>
+                        <br/>
+                        <strong>DIRECTOR GENERAL</strong>
+                    </div>
+                    <div class="col-6" align="right" style="margin-left:50px;">
+                    <img src="/jt_check_controls/static/src/img/sign.png"
+                         style="max-height:100px;width:50%;align:right;"/>
                     </div>
                    
-
                 </div>
-                <div class="row" >
-                    <div class="col-3" align="left" style="margin-left:10px;border:1px solid black;
-">
-                        <span>University City, Cdmx.,</span>
-                    </div>
-                    <div class="col-3" style="border:1px solid black;
-">
-                        <span><t t-esc="o.get_date()"/></span>
-                    </div>
-                    
-                </div>
-                 <div class="row">
-                <div class="col-6" align="right" style="margin-left:220px;float:right;">
-                    <img src="/jt_check_controls/static/src/img/sign.png"
-                         style="max-height:100px;width:50%"/>
-                </div>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <div clas="col-6" align="right" style="float:right;">
-                    <t t-set="trade" t-value="o.get_trade_configuration()"/>
-                    <p>L.I.C.<span t-field="trade.general_director_id.name"/></p>
-                    <br/>
-                    <strong>DIRECTOR GENERAL</strong>
-                </div>
+               
+                 
             </div>
                 
-            </div>
            
         </template>
 
@@ -192,6 +174,32 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <div class="row">
+                     <div class="col-6" align="left" style="margin-left:10px;border:1px solid black;
+">
+                        <span>Nice Stay</span><br/>
+                        <span>BY MY RACE WILL SPEAK THE SPIRIT</span>
+                    </div>
+                   
+
+                </div>
+                <div class="row" >
+                    <div class="col-3" align="left" style="margin-left:10px;border:1px solid black;
+">
+                        <span>University City, Cdmx.,</span>
+                    </div>
+                    <div class="col-3" style="border:1px solid black;
+">
+                        <span><t t-esc="o.get_date()"/></span>
                     </div>
                 </div>
             </div>

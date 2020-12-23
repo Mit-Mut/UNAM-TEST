@@ -9,3 +9,8 @@ access_check_log,check_log_access,model_check_log,base.group_user,1,1,1,1
 access_blank_check_req,blank_check_req_access,model_blank_checks_request,base.group_user,1,1,1,1
 access_check_distribution_modules,check_distribution_modules_access,model_check_distribution_modules,base.group_user,1,1,1,1
 access_cancel_checks,cancel_checks_access,model_cancel_checks,base.group_user,1,1,1,1
+access_payment_batch_supplier,payment_batch_supplier_access,model_payment_batch_supplier,base.group_user,1,1,1,1
+access_check_payment_req,check_payment_request_access,model_check_payment_req,base.group_user,1,1,1,1
+access_send_checks,send_checks_access,model_send_checks,base.group_user,1,1,1,1
+access_send_checks_line,send_checks_line_access,model_send_checks_line,base.group_user,1,1,1,1
+

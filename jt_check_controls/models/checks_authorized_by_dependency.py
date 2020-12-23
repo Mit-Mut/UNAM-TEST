@@ -15,10 +15,11 @@ class CheckAuthorizedByDependency(models.Model):
     checks_remaining_to_auth = fields.Integer("Checks remaining to authorize", compute='_compute_checks')
 
     def _compute_checks(self):
-        check_req_obj = self.env['checkbook.request']
+        check_req_obj = self.env['blank.checks.request']
         for rec in self:
-            check_reqs = check_req_obj.search([('dependence_id', '=', rec.dependency_id.id),
-                                               ('are_test_prin_formats_sent', '=', True),
-                                                               ('state', '=', 'approved')])
-            rec.checks_authorized_on_previous_app = len(check_reqs)
-            rec.checks_remaining_to_auth = rec.max_authorized_checks - len(check_reqs)
+            if rec.dependency_id and rec.subdependency_id:
+                check_reqs = check_req_obj.search([('dependence_id', '=', rec.dependency_id.id),
+                                                   ('subdependence_id', '=', rec.subdependency_id.id),
+                                                                   ('state', '=', 'confirmed')])
+                rec.checks_authorized_on_previous_app = sum(x.amount_checks for x in check_reqs)
+                rec.checks_remaining_to_auth = rec.max_authorized_checks - len(check_reqs)

@@ -283,9 +283,17 @@ class CheckListLine(models.Model):
 
     def action_send_to_custody(self):
         cancel_checks = self.env['cancel.checks']
-        cancel_checks.create({
-            'check_folio':self.folio,
-            })
+        for rec in self:
+            if rec.status == 'Cancelled' and rec.dependence_id:
+                cancel_checks.create({
+                    'check_folio':rec.folio,
+                    'dependency_id': rec.dependence_id.id,
+                    'check_status': rec.status,
+                    'bank_id': rec.bank_id.id if rec.bank_id else False,
+                    'bank_account_id': rec.bank_account_id.id if rec.bank_account_id else False,
+                    'checkbook_no': rec.checkbook_no,
+                    'check_log_id': rec.id
+                    })
 
 class ResBank(models.Model):
 

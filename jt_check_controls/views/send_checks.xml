@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="send_checks_form_view" model="ir.ui.view">
+			<field name="name">send.checks.form.view</field>
+			<field name="model">send.checks</field>
+			<field name="arch" type="xml">
+				<form>
+					<header>
+						<button name="action_reject" type="object" string="Reject" class="oe_highlight"
+                                attrs="{'invisible': [('status', '!=', 'draft')]}"/>
+                        <button name="action_destroy" type="object" string="Destroy" class="oe_highlight"
+                                attrs="{'invisible': [('status', '!=', 'approved')]}"/>
+                        <button name="action_approve" type="object" string="Confirm" class="oe_highlight"
+                                attrs="{'invisible': [('status', '!=', 'draft')]}"/>
+						<field name="status" widget="statusbar"/>
+					</header>
+					<sheet>
+						<group>
+							<group>
+								<field name="batch_folio"/>
+								<field name="total_checks"/>
+								<field name="responsible"/>
+							</group>
+							<group>
+								<field name="area_position"/>
+								<field name="date"/>
+								<field name="approval_date"/>
+								<!-- <field name="check_line_ids" widget="many2many_tags"/> -->
+							</group>
+							<field name="check_line_ids" nolabel="1" colspan="2">
+                            <tree>
+                                <field name="check_folio"/>
+                                <field name="dependency_id"/>
+                            </tree>
+                        	</field>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="send_checks_tree_view" model="ir.ui.view">
+            <field name="name">send.checks.tree.view</field>
+            <field name="model">send.checks</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="batch_folio"/>
+                    <field name="responsible"/>
+                    <field name="date"/>
+                </tree>
+            </field>
+        </record>
+
+		<record id="action_sending_checks" model="ir.actions.act_window">
+            <field name="name">Send Checks</field>
+            <field name="res_model">send.checks</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+		<menuitem id="menu_sending_checks" name="Sending checks to file" 
+            parent="jt_check_controls.menu_control_check_destruction" action="jt_check_controls.action_sending_checks"/>
+	</data>
+</odoo>

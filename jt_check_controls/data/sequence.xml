@@ -23,6 +23,11 @@
             <field name="company_id" eval="False"/>
         </record>
 
+        <record id="seq_generate_batch_folio" model="ir.sequence">
+            <field name="name">Batch Folio</field>
+            <field name="code">batch.folio</field>
+            <field name="company_id" eval="False"/>
+        </record>
 
     </data>
 </odoo>

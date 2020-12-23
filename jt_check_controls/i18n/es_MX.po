@@ -63,9 +63,32 @@ msgstr ""
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
 msgid ""
-"<br/>\n"
+"<span>\n"
+"                                We appreciate you sending us the corresponding CFDI in PDF format and XML file.\n"
+"                            </span>\n"
 "                            <span>\n"
-"                                -Protection of thick cardboard sheets at the beginning and end of each package,\n"
+"                                Please strictly adhere to the technical characteristics of substance and form, as\n"
+"                                well as the security measures of the attached sample check.\n"
+"                                <br/>\n"
+"                                Without further ado and thanking you again for your attention to the present,\n"
+"                                we bid you farewell with a cordial greeting.\n"
+"                            </span>"
+msgstr ""
+"<span>\n"
+"                               Agradecemos nos envíe el CFDI correspondiente en formato PDF y archivo XML.\n"
+"                            </span>\n"
+"                            <span>\n"
+"                                Favor de apegarse estrictamente a las características técnicas de fondo y forma,\n"
+"                               así como medidas de seguridad del cheque muestra anexo.\n"
+"                                <br/>\n"
+"                               Sin otro particular y agradeciendo nuevamente su atención al presente, nos\n"
+"                               despedimos de usted con un cordial saludo.\n"
+"                            </span>"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
+msgid ""
+"-Protection of thick cardboard sheets at the beginning and end of each package,\n"
 "                                as well as craft paper wrapping.\n"
 "                                <br/>\n"
 "                                -Checks should be arranged from 1 to “N” with the face facing up.\n"
@@ -79,22 +102,8 @@ msgid ""
 "                                <br/>\n"
 "                                -Finally, remember that these checks must have the security measures of the ABM,\n"
 "                                the security characteristics of each bank and contain the legend \"THE VALIDITY OF\n"
-"                                THIS CHECK IS 30 DAYS\" ON THE FRONT AND REVERSE.\n"
-"                                <br/>\n"
-"                            </span>\n"
-"                            <span>\n"
-"                                We appreciate you sending us the corresponding CFDI in PDF format and XML file.\n"
-"                            </span>\n"
-"                            <span>\n"
-"                                Please strictly adhere to the technical characteristics of substance and form, as\n"
-"                                well as the security measures of the attached sample check.\n"
-"                                <br/>\n"
-"                                Without further ado and thanking you again for your attention to the present,\n"
-"                                we bid you farewell with a cordial greeting.\n"
-"                            </span>"
+"                                THIS CHECK IS"
 msgstr ""
-"<br/>\n"
-"<span>\n"
 "                              -Protección de hojas de cartulina gruesa al inicio y al final de cada paquete, así como envoltura de papel craft.                            \n"
 "                               <br/>\n"
 "                                -Los cheques deberán ser acomodados de 1 a \"N\" con la carátula hacia arriba.\n"
@@ -107,19 +116,55 @@ msgstr ""
 "                                <br/>\n"
 "                                -Por último, recordar que estos cheques deberán contar con las medidas de\n"
 "                                seguridad de la ABM, las características de seguridad de cada banco y contengan la leyenda \"LA VIGENCIA DE ESTE\"\n"
-"                                CHEQUE ES DE 30 DÍAS” EN SU ANVERSO Y REVERSO.\n"
-"                                <br/>\n"
-"                            </span>\n"
-"                            <span>\n"
-"                               Agradecemos nos envíe el CFDI correspondiente en formato PDF y archivo XML.\n"
-"                            </span>\n"
-"                            <span>\n"
-"                                Favor de apegarse estrictamente a las características técnicas de fondo y forma,\n"
-"                               así como medidas de seguridad del cheque muestra anexo.\n"
-"                                <br/>\n"
-"                               Sin otro particular y agradeciendo nuevamente su atención al presente, nos\n"
-"                               despedimos de usted con un cordial saludo.\n"
-"                            </span>"
+"                                CHEQUE ES DE"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
+msgid ""
+"DAYS\" ON THE FRONT AND REVERSE.\n"
+"                                <br/>"
+msgstr ""
+"DÍAS” EN SU ANVERSO Y REVERSO.<br/>"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
+msgid ""
+"<span style=\"font-size:15px\">\n"
+"                                        Sincerely\n"
+"                                        <br/>\n"
+"                                    </span>\n"
+"                                    <span style=\"font-size:15px\">\n"
+"                                        FOR MY RACE THE SPIRIT WILL SPEAK\n"
+"                                    </span>"
+msgstr ""
+"<span style=\"font-size:15px\">\n"
+"                                        Atentamente\n"
+"                                        <br/>\n"
+"                                    </span>\n"
+"                                    <span style=\"font-size:15px\">\n"
+"                                        POR MI RAZA HABLARÁ EL ESPÍRITU\n"
+"                                    </span>"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_2_template
+msgid ""
+"<span style=\"font-size:15px\">\n"
+"                                        Sincerely\n"
+"                                        <br/>\n"
+"                                    </span>\n"
+"                                    <span style=\"font-size:15px\">\n"
+"                                        FOR MY RACE THE SPIRIT WILL SPEAK\n"
+"                                    </span>\n"
+"                                    <br/>"
+msgstr ""
+"<span style=\"font-size:15px\">\n"
+"                                        Atentamente\n"
+"                                        <br/>\n"
+"                                    </span>\n"
+"                                    <span style=\"font-size:15px\">\n"
+"                                        POR MI RAZA HABLARÁ EL ESPÍRITU\n"
+"                                    </span>\n"
+"                                    <br/>"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_2_template
@@ -536,6 +581,7 @@ msgid "<span>No. Account</span>"
 msgstr "<span>No. De Cuenta</span>"
 
 #. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_blank_req_check
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_2
 msgid "<span>Present:</span>"
@@ -560,11 +606,13 @@ msgid "Additional checks without cash"
 msgstr "Cheques adicionales sin caja"
 
 #. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_blank_checks_request__amount_checks
 #: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__amount_checks
 msgid "Amount of Checks"
 msgstr "Cantidad de cheques"
 
 #. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_blank_checks_request__applicant_id
 #: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__applicant_id
 msgid "Applicant"
 msgstr "Solicitante"
@@ -580,6 +628,11 @@ msgid "Application No."
 msgstr "Solicitud No"
 
 #. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_blank_checks_request__application_no
+msgid "Application No"
+msgstr "Solicitud No"
+
+#. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.confirm_checkbook_form_view
 msgid "Apply"
 msgstr "Aplicar"
@@ -590,11 +643,14 @@ msgid "Approve"
 msgstr "Aprobar"
 
 #. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__blank_checks_request__state__approved
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__status__approved
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__checkbook_request__state__approved
 msgid "Approved"
 msgstr "Aprobado"
 
 #. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_blank_checks_request__are_test_prin_formats_sent
 #: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__are_test_prin_formats_sent
 msgid "Are test print formats sent?"
 msgstr "¿Se envían formatos para prueba de impresión?"
@@ -611,18 +667,31 @@ msgid "Back to Draft"
 msgstr "Regresar A Borrador"
 
 #. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.blank_check_request_template
+#: model:ir.model,name:jt_check_controls.model_res_bank
+#: model:ir.model.fields,field_description:jt_check_controls.field_cancel_checks__bank_id
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_log__bank_id
 #: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__bank_id
 #: model:ir.model.fields,field_description:jt_check_controls.field_minimum_checks__bank_id
 msgid "Bank"
 msgstr "Banco"
 
 #. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.blank_check_request_template
+#: model:ir.model.fields,field_description:jt_check_controls.field_approve_blank_check__bank_account_id
+#: model:ir.model.fields,field_description:jt_check_controls.field_blank_checks_request__bank_account_id
+#: model:ir.model.fields,field_description:jt_check_controls.field_cancel_checks__bank_account_id
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_log__bank_account_id
 #: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__bank_account_id
 #: model:ir.model.fields,field_description:jt_check_controls.field_minimum_checks__bank_account_id
 msgid "Bank Account"
 msgstr "Cuenta bancaria"
 
 #. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__blank_checks_request__state__cancelled
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__cancelled
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__general_status__cancelled
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__cancelled
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__checkbook_request__state__cancelled
 msgid "Cancelled"
 msgstr "Cancelado"
@@ -654,6 +723,11 @@ msgid "Check Reception"
 msgstr "Recepción de Cheques"
 
 #. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_blank_checks_request__check_request
+msgid "Check Request"
+msgstr "Solicitud de cheque"
+
+#. module: jt_check_controls
 #: model:ir.actions.report,name:jt_check_controls.check_request_1
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__trades_config__job_template__check_req_1
 msgid "Check Request 1"
@@ -666,8 +740,9 @@ msgid "Check Request 2"
 msgstr "Solicitud de cheque 2"
 
 #. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_cancel_checks__checkbook_no
 #: model:ir.model.fields,field_description:jt_check_controls.field_checklist__checkbook_req_id
-#: model:ir.model.fields,field_description:jt_check_controls.field_minimum_checks__checkbook
+#: model:ir.model.fields,field_description:jt_check_controls.field_minimum_checks__checkbook_no
 msgid "Checkbook"
 msgstr "Chequera"
 
@@ -679,7 +754,20 @@ msgid "Checkbook No."
 msgstr "Chequera No."
 
 #. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_approve_blank_check__checkbook_req_id
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_log__checkbook_no
+msgid "Checkbook No"
+msgstr "Chequera No."
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_blank_checks_request__checkbook_req_id
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_distribution_modules__checkbook_req_id
+msgid "Checkbook no"
+msgstr "Chequera No."
+
+#. module: jt_check_controls
 #: model:ir.model,name:jt_check_controls.model_checkbook_request
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_log__checklist_id
 msgid "Checkbook Request"
 msgstr "Solicitud de chequera"
 
@@ -754,6 +842,8 @@ msgid "Configuration of Trades"
 msgstr "Configuración de oficios"
 
 #. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.blank_check_req_form_view
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.cancel_checks_form
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.checkbook_req_form_view
 msgid "Confirm"
 msgstr "Confirmar"
@@ -769,6 +859,7 @@ msgid "Confirmation Letter"
 msgstr "Offcio de Confirmación"
 
 #. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__blank_checks_request__state__confirmed
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__checkbook_request__state__confirmed
 msgid "Confirmed"
 msgstr "Confirmado"
@@ -811,7 +902,9 @@ msgid "DIRECTORATE OF INCOME AND FINANCIAL OPERATIONS"
 msgstr "DIRECCIÓN DE INGRESOS Y OPERACIONES FINANCIERAS"
 
 #. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_blank_checks_request__dependence_id
 #: model:ir.model.fields,field_description:jt_check_controls.field_check_authorized_dependency__dependency_id
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_log__dependence_id
 #: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__dependence_id
 msgid "Dependence"
 msgstr "Dependencia"
@@ -829,6 +922,8 @@ msgid "Display Name"
 msgstr "Nombre de pantalla"
 
 #. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__blank_checks_request__state__draft
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__status__draft
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__checkbook_request__state__draft
 msgid "Draft"
 msgstr "Borrador"
@@ -846,6 +941,10 @@ msgid "Employee Collectiong Checkbooks"
 msgstr "Empleado que recoge las chequeras"
 
 #. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.blank_check_request_template
+#: model:ir.model.fields,field_description:jt_check_controls.field_approve_blank_check__final_folio
+#: model:ir.model.fields,field_description:jt_check_controls.field_blank_checks_request__final_folio
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_distribution_modules__final_folio
 #: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__final_folio
 msgid "Final Folio"
 msgstr "Folio final"
@@ -859,6 +958,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__folio_legal
 msgid "Folio Legal"
 msgstr "Folio Offcio"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_log__folio
+msgid "Folio"
+msgstr "Folio"
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__full_address
@@ -895,8 +999,16 @@ msgid "ID"
 msgstr "Identificador"
 
 #. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.blank_check_request_template
 #: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__intial_folio
 msgid "Initial Folio"
+msgstr "Folio inicial"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_approve_blank_check__intial_folio
+#: model:ir.model.fields,field_description:jt_check_controls.field_blank_checks_request__intial_folio
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_distribution_modules__intial_filio
+msgid "Intial Folio"
 msgstr "Folio inicial"
 
 #. module: jt_check_controls
@@ -1003,6 +1115,11 @@ msgid "Observations"
 msgstr "Observaciones"
 
 #. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_cancel_checks__observation
+msgid "Observation"
+msgstr "Observación"
+
+#. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.trade_configuration_form_view
 msgid "Office of indemnification"
 msgstr "oficina de indemnización"
@@ -1030,11 +1147,15 @@ msgid "Register Checks"
 msgstr "Cheques de registro"
 
 #. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.blank_check_req_form_view
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.cancel_checks_form
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.checkbook_req_form_view
 msgid "Reject"
 msgstr "Rechazar"
 
 #. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__blank_checks_request__state__rejected
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__status__rejected
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__checkbook_request__state__rejected
 msgid "Rejected"
 msgstr "rechazo"
@@ -1045,6 +1166,7 @@ msgid "Reorder Point"
 msgstr "Punto de reordenación"
 
 #. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__blank_checks_request__state__requested
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__checkbook_request__state__requested
 msgid "Requested"
 msgstr "Solicitado"
@@ -1068,11 +1190,16 @@ msgstr "Envía"
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__state
 #: model:ir.model.fields,field_description:jt_check_controls.field_checklist_line__status
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_log__status
+#: model:ir.model.fields,field_description:jt_check_controls.field_blank_checks_request__state
+#: model:ir.model.fields,field_description:jt_check_controls.field_cancel_checks__status
 msgid "Status"
 msgstr "Estado"
 
 #. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_blank_checks_request__subdependence_id
 #: model:ir.model.fields,field_description:jt_check_controls.field_check_authorized_dependency__subdependency_id
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_log__subdependence_id
 #: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__subdependence_id
 msgid "Subdependence"
 msgstr "Subdependencia"
@@ -1234,3 +1361,283 @@ msgstr ""
 #: model:ir.actions.report,name:jt_check_controls.check_registration
 msgid "Check Registration"
 msgstr "Verifique el registro."
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_blank_checks_request__reason_request
+msgid "Reason for Request"
+msgstr "Motivo de la solicitud"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_blank_checks_request__delivery_of_checks
+msgid "Office of delivery of checks to dependency"
+msgstr "Oficina de entrega de cheques a la dependencia"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_approve_blank_check__department
+#: model:ir.model.fields,field_description:jt_check_controls.field_blank_checks_request__department
+msgid "Department"
+msgstr "Departamento"
+
+#. module: jt_check_controls
+#: model:ir.actions.act_window,name:jt_check_controls.action_blank_check_req
+#: model:ir.ui.menu,name:jt_check_controls.balnk_check_request_menu
+msgid "Request Blank Checks"
+msgstr "Solicitar cheques en blanco"
+
+#. module: jt_check_controls
+#: model:ir.actions.act_window,name:jt_check_controls.action_check_logs
+#: model:ir.ui.menu,name:jt_check_controls.check_log_menu
+msgid "Check Logs"
+msgstr "Comprobar los registros"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_distribution_modules__module
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_log__module
+msgid "Module"
+msgstr "Módulo"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_log__general_status
+msgid "General Status"
+msgstr "Estado general"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_log__reason_cancellation
+msgid "Reason for cancellation"
+msgstr "Razón de la cancelación"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_log__reason_retention
+msgid "Reason for retention"
+msgstr "Razón de la retención"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_log__date_printing
+msgid "Printing Date"
+msgstr "Fecha de impresión"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_log__date_protection
+msgid "Protection Date"
+msgstr "Fecha de protección"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_log__date_expiration
+msgid "Expiration Date"
+msgstr "Fecha de caducidad"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_log__date_cancellation
+msgid "Cancellation Date"
+msgstr "Fecha de cancelación"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_log__check_amount
+msgid "Check Amount"
+msgstr "Cantidad del cheque"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_log__related_checks
+msgid "Related Checks"
+msgstr "Chequeos relacionados"
+
+#. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__checkbook_registration
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__checkbook_registration
+msgid "Checkbook registration"
+msgstr "Registro de la chequera"
+
+#. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__assigned_for_shipping
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__assigned_for_shipping
+msgid "Assigned for shipping"
+msgstr "Asignado para el envío"
+
+#. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__available_for_printing
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__available_for_printing
+msgid "Available for printing"
+msgstr "Disponible para su impresión"
+
+#. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__printed
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__printed
+msgid "Printed"
+msgstr "Impreso"
+
+#. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__delivered
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__delivered
+msgid "Delivered"
+msgstr "Entregado"
+
+#. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__in_transit
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__in_transit
+msgid "In transit"
+msgstr "En tránsito"
+
+#. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__sent_to_protection
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__sent_to_protection
+msgid "Sent to protection"
+msgstr "Enviado a la protección"
+
+#. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__protected_and_in_transit
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__protected_and_in_transit
+msgid "Protected and in transit"
+msgstr "Protegido y en tránsito"
+
+#. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__protected
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__protected
+msgid "Protected"
+msgstr "Protegido"
+
+#. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__detained
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__detained
+msgid "Detained"
+msgstr "Detenido"
+
+#. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__withdrawn_from_circulation
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__withdrawn_from_circulation
+msgid "Withdrawn from circulation"
+msgstr "Retirada de la circulación"
+
+#. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__canceled_in_custody_of_finance
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__canceled_in_custody_of_finance
+msgid "Canceled in custody of Finance"
+msgstr "Cancelado en custodia de Finanzas"
+
+#. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__on_file
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__on_file
+msgid "On file"
+msgstr "En el archivo"
+
+#. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__destroyed
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__destroyed
+msgid "Destroyed"
+msgstr "Destruido"
+
+#. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__reissued
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__reissued
+msgid "Reissued"
+msgstr "Reeditado"
+
+#. module: jt_check_controls
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__charged
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__charged
+msgid "Charged"
+msgstr "Cargado"
+
+#. module: jt_check_controls
+#: model:ir.ui.menu,name:jt_check_controls.menu_control_check_destruction
+msgid "Control for check destruction"
+msgstr "control de la destrucción de cheques"
+
+#. module: jt_check_controls
+#: model:ir.ui.menu,name:jt_check_controls.menu_reception_of_canceled_check
+msgid "Reception of cancelled checks"
+msgstr "Recepción de cheques cancelados"
+
+#. module: jt_check_controls
+#: model:ir.actions.act_window,name:jt_check_controls.action_cancel_checks
+#: model:ir.model,name:jt_check_controls.model_cancel_checks
+msgid "Cancel Checks"
+msgstr "Cancelar los cheques"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_cancel_checks__check_folio
+msgid "Check Folio"
+msgstr "Revisa el folio"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_cancel_checks__dependency_id
+msgid "Dependency"
+msgstr "Dependencia"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_cancel_checks__check_status
+msgid "Check Status"
+msgstr "Comprobar el estado"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_blank_req_check
+msgid "Directorate-General for Finance"
+msgstr "Dirección General de Finanzas"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_blank_req_check
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_registration
+msgid "FINANCIAL OPERATIONS DEPARTMENT"
+msgstr "DEPARTAMENTO DE OPERACIONES FINANCIERAS"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_blank_req_check
+msgid "Finance Sub-Direction"
+msgstr "Subdirección de Finanzas"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_blank_req_check
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_registration
+msgid "Of. No."
+msgstr "De. No."
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_blank_req_check
+msgid "SUBJECT: Delivery of check format"
+msgstr "TEMA: Entrega de formato de cheque"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_blank_req_check
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_registration
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_1
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_request_2
+msgid "TREASURY"
+msgstr "TESORO"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_blank_req_check
+msgid "UNIVERSITY PATRONATE"
+msgstr "PATROCINIO DE LA UNIVERSIDAD"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_blank_req_check
+msgid "<span style=\"font-size:15px;font-weight:bold;\">L.I.C.</span>"
+msgstr ""
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.blank_check_request_template
+msgid "<span>Concept</span>"
+msgstr "Concepto"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.blank_check_request_template
+msgid ""
+"<span>Nice Stay</span><br/>\n"
+"                        <span>BY MY RACE WILL SPEAK THE SPIRIT</span>"
+msgstr ""
+"<span>Bonita estancia</span><br/>\n"
+"                        <span>POR MI RAZA HABLARÁ EL ESPÍRITU</span>"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.blank_check_request_template
+msgid "<span>University City, Cdmx.,</span>"
+msgstr "Ciudad Universitaria, Cdmx.,"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.blank_check_request_template
+msgid "<span>amounts</span>"
+msgstr "cantidades"
+
+#. module: jt_check_controls
+#: model:ir.actions.report,name:jt_check_controls.blank_check_request
+msgid "Blank Check Request"
+msgstr "Solicitud de cheque en blanco"

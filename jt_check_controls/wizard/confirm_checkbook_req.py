@@ -20,6 +20,7 @@ class ConfirmCheckBook(models.TransientModel):
         if check_req:
             if check_req.bank_id:
                 check_req.bank_id.checkbook_no = self.checkbook_no
+                check_req.checkbook_no = self.checkbook_no
             checklist = self.env['checklist'].create({
                 'checkbook_no': self.checkbook_no,
                 'received_boxes': self.received_boxes,
@@ -31,7 +32,8 @@ class ConfirmCheckBook(models.TransientModel):
             for folio in range(check_req.intial_folio, check_req.final_folio + 1):
                 checklist.checklist_lines = [(0, 0, {
                     'folio': folio,
-                    'status': 'Checkbook registration',
+                    'status': 'Checkbook registration' if folio != int(check_req.print_sample_folio_number) else \
+                            'Cancelled',
                     'bank_id': check_req.bank_id.id if check_req.bank_id else False,
                     'bank_account_id': check_req.bank_account_id.id if check_req.bank_account_id else False,
                     'checkbook_no': check_req.checkbook_no,

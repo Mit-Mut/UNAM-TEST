@@ -102,7 +102,7 @@
 
         <!-- Cumulative comparison-->
         <record id="action_cumulative_comparision" model="ir.actions.client">
-            <field name="name">Cumulative comparison</field>
+            <field name="name">ACCUMULATED CHECKS</field>
             <field name="tag">account_report</field>
             <field name="context" eval="{'model':'jt_projects.cumulative.comparison'}" />
         </record>
@@ -111,7 +111,7 @@
         <!--Cumulative comparison -->
         <menuitem
             id="menu_cumulative_comparison"
-            name="Cumulative Comparison"
+            name="ACCUMULATED CHECKS"
             parent="jt_projects.conacyt_submenu"
             action="action_cumulative_comparision"
             sequence="7"

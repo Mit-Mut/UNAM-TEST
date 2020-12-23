@@ -37,6 +37,7 @@
         'views/checkbook_req.xml',
         'views/blank_check_req_views.xml',
         'views/supplier_payment_req.xml',
+        'views/payment_batch_supplier.xml',
         'wizard/confirm_checkbook_req.xml',
         'wizard/approve_blank_check.xml',
         'security/ir.model.access.csv',
@@ -46,6 +47,7 @@
         'reports/check_registration.xml',
         'views/cancel_checks.xml',
         'reports/blank_check_req_report.xml',
+        'views/send_checks.xml',
     ],
     'demo': [
     ],

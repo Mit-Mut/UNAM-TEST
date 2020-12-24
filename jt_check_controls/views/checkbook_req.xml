@@ -200,7 +200,7 @@
             <field name="name">checklog.form.view</field>
             <field name="model">check.log</field>
             <field name="arch" type="xml">
-                <form create="false">
+                <form create="false" edit="false">
                     <header>
                         <field name="status" widget="statusbar"/>
                     </header>

@@ -48,6 +48,11 @@ class InegrationOfExpAndCurrProject(models.AbstractModel):
     filter_unposted_in_period = None
     MAX_LINES = None
 
+    filter_project_type = [
+        {'id': 'conacyt', 'name': ('CONACYT'), 'selected': False},
+        {'id': 'concurrent', 'name': ('Concurrent'), 'selected': False},
+        {'id': 'other', 'name': ('Other'), 'selected': False},
+    ]
     
 
     def _get_reports_buttons(self):
@@ -103,16 +108,28 @@ class InegrationOfExpAndCurrProject(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         lines = []
+        project_type_domain = []
+        domain = []
         
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
+        project_type_select = options.get('project_type')
+        for p_type in project_type_select:
+            if p_type.get('selected',False):
+                project_type_domain.append(p_type.get('id'))
         
+        if project_type_domain:
+            domain += [('project_type','in',tuple(project_type_domain))]
+        else:
+            domain += [('project_type','in',('conacyt','concurrent','other'))]
+
+        project_domain = domain +  [('proj_start_date', '>=', start), ('proj_end_date', '<=', end)]        
         count = 0
-        project_records = self.env['project.project'].search(
-            [('proj_start_date', '>=', start), ('proj_end_date', '<=', end)])
+        
+        project_records = self.env['project.project'].search(project_domain)
         
         dep_ids = project_records.mapped('dependency_id')
 
@@ -143,15 +160,31 @@ class InegrationOfExpAndCurrProject(models.AbstractModel):
                     entity += sub.sub_dependency
                 
                 total_project = 0
-                open_project_ids = project_records.filtered(lambda x:x.dependency_id.id==dep.id and x.subdependency_id.id==sub.id and x.status=='open') 
+                open_project_ids = project_records.filtered(lambda x:x.dependency_id.id==dep.id and x.subdependency_id.id==sub.id and x.status=='open' and not x.check_project_due) 
                 open_project = len(open_project_ids)
                 total_project += open_project
-                 
+                
+                ministring_amount = 0
+                for p in open_project_ids:
+                    ministring_amount += sum(x.ministering_amount for x in p.project_ministrations_ids)
+                    
                 verification_expense = self.env['expense.verification'].search([('project_id','in',open_project_ids.ids),('status','=','approve')])
                 open_verification_amounts = sum(x.amount_total for x in verification_expense)
                 
-                expired_projects_ids = project_records.filtered(lambda x:x.dependency_id.id==dep.id and x.subdependency_id.id==sub.id and x.status=='open' and x.check_project_expire)
+                open_verification_amounts = ministring_amount-open_verification_amounts
+                
+                # over due project
+                expired_projects_ids = project_records.filtered(lambda x:x.dependency_id.id==dep.id and x.subdependency_id.id==sub.id and x.status=='open' and x.check_project_due)
                 expired_project = len(expired_projects_ids)
+
+                over_due_ministring_amount = 0
+                for p in expired_projects_ids:
+                    over_due_ministring_amount += sum(x.ministering_amount for x in p.project_ministrations_ids)
+                    
+                overdue_verification_expense = self.env['expense.verification'].search([('project_id','in',expired_projects_ids.ids),('status','=','approve')])
+                overdue_open_verification_amounts = sum(x.amount_total for x in overdue_verification_expense)
+                
+                overdue_amount = over_due_ministring_amount - overdue_open_verification_amounts
                 
                 total_project += expired_project
                 active_project = 0
@@ -175,7 +208,7 @@ class InegrationOfExpAndCurrProject(models.AbstractModel):
                 gt_total_open_project += open_project
                 gt_total_open_verification_amount += open_verification_amounts
                 gt_total_expired_project += expired_project
-                gt_total_over_dua = 0
+                gt_total_over_dua += overdue_amount 
                 gt_total_per = 0
                 gt_total_active += active_project
                 gt_total_all_project += total_project
@@ -188,7 +221,7 @@ class InegrationOfExpAndCurrProject(models.AbstractModel):
                                 {'name': open_project,'class':'number'},
                                 self._format({'name': open_verification_amounts},figure_type='float'),
                                 {'name': expired_project,'class':'number'},
-                                self._format({'name': 0.0},figure_type='float'),
+                                self._format({'name': overdue_amount},figure_type='float'),
                                 self._format({'name': 0.0},figure_type='float'),
                                 {'name': active_project,'class':'number'},
                                 {'name': total_project,'class':'number'},

@@ -31,7 +31,7 @@ msgstr "La Referencia Interna debe de ser única."
 #. module: jt_income
 #: model:ir.model.constraint,message:jt_income.constraint_res_partner_bank_acc_number_uniq
 msgid "Account Number must be unique."
-msgstr ""El Número de Cuenta debe de ser único"
+msgstr "El Número de Cuenta debe de ser único"
 
 #. module: jt_income
 #: code:addons/jt_income/models/res_partner_bank.py:0

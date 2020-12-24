@@ -57,7 +57,7 @@
                                 <field name="rfc" readonly="1"/>
                                 <field name="operation_name" invisible="1"/>
                                 <field name="student_account" attrs="{'invisible':[('operation_name','not in',('Scholarship holders','Becarios'))],'required':[('operation_name','in',('Scholarship holders','Becarios'))],'readonly':[('payment_state', 'not in', ('draft'))]}"/>
-                                <field name="transfer_key" attrs="{'invisible':[('operation_name','not in',('Scholarship holders','Becarios'))],'required':[('operation_name','in',('Scholarship holders','Becarios'))],'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="transfer_key" attrs="{'invisible':[('operation_name','!=','Becarios')],'required':[('operation_name','=','Becarios')],'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                 <field name="category_key" attrs="{'invisible':[('operation_name','not in',('Per diem','Travel expenses','Viáticos'))],'required':[('operation_name','in',('Per diem','Travel expenses','Viáticos'))],'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                 <field name="workstation_id"  attrs="{'invisible': [('operation_name', 'not in',('Viaticum','Travel expenses','Viáticos'))],'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                 <field name="administrative_forms" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>

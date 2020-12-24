@@ -127,25 +127,255 @@ class CumulativeComparison(models.AbstractModel):
             project_domain += [('project_type','in',tuple(project_type_domain))]
         else:
             project_domain += [('project_type','in',('conacyt','concurrent','other'))]
+
+                
+        project_domain += [('status','=','open'),('proj_start_date', '>=', start), ('proj_end_date', '<=', end)]
         
-        project_domain += [('proj_start_date', '>=', start), ('proj_end_date', '<=', end)]
+        #============ Header Part ====================#
+        project_records = self.env['project.project'].search(project_domain)
         
-        con_project_domain =project_domain + [('project_type','!=','other')]
-         
-        
+        year_list_tuple = range(start.year, end.year+1)
+        year_list = []
+                
+        for y in year_list_tuple:
+            year_list.append(str(y))
+
+        lines.append({
+            'id': 'hierarchy_col_header',
+            'name': 'ETAPA/ANO',
+            'columns': [{'name': 'PROYECTOS CONACTY','class':'number'},
+                        {'name': 'PROYECTOS ESPECIALES'},
+                        {'name': 'TOTAL'},
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+            'colspan':2,
+        })
+
+        stage_ids = project_records.mapped('custom_stage_id')
+        for stage in stage_ids:
+            for year in year_list:
+                current_project_ids = project_records.filtered(lambda x:x.custom_stage_id.id==stage.id and str(x.proj_start_date.year)==year)
+                
+                con_project_ids = current_project_ids.filtered(lambda x:x.project_type != 'other')
+                other_project_ids = current_project_ids.filtered(lambda x:x.project_type == 'other')
+                
+                con_amount = 0
+                other_amount = 0 
+                
+                for c in con_project_ids:
+                    con_amount += sum(x.ministering_amount for x in c.project_ministrations_ids)
+
+                for c in other_project_ids:
+                    other_amount += sum(x.ministering_amount for x in c.project_ministrations_ids)
+                    
+                lines.append({
+                    'id': 'hierarchy_' + str(stage.id)+str(year),
+                    'name': stage.name+"/"+year,
+                    'columns': [self._format({'name': con_amount}, figure_type='float'),
+                                self._format({'name': other_amount}, figure_type='float'),
+                                self._format({'name': other_amount + con_amount}, figure_type='float'),
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                ],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                    'colspan':2,
+                })
+
         
         #================= First Part =====================#
-        total_current_due_project = 0
-        total_account_bal = 0
-        total_bank_bal = 0
+        total_cont_amount = 0
         
+        project_type_all = ['conacyt','concurrent','other']
+        
+        for t in project_type_all:
+            con_project_domain =project_domain + [('project_type','=',t)]
+            project_records = self.env['project.project'].search(con_project_domain)
+            if project_records:
+                total_current_due_project = 0
+                total_account_bal = 0
+                total_bank_bal = 0
+                type_name = ''
+                if t=='conacyt':
+                    type_name = 'CONACYT projects'
+                elif t=='concurrent':
+                    type_name = 'CONCURRENT projects'
+                elif t=='other':
+                    type_name = 'OTHER projects'
+                    
+                lines.append({
+                    'id': 'hierarchy_1_col',
+                    'name': 'NUM PROYS',
+                    'columns': [{'name': type_name},
+                                {'name': 'SALDO CONT.'},
+                                {'name': 'SALDO BANC.'},
+                                {'name': '%'},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                ],
+                    'level': 1,
+                    'unfoldable': False,
+                    'unfolded': True,
+                    'colspan':2,
+                })
+                
+                #==== Overdue Projects===========#        
+                overdue_project = project_records.filtered(lambda x:x.check_project_due)
+                overdue_account_balance = 0
+                
+                for p in overdue_project:
+                    overdue_account_balance += sum(x.ministering_amount for x in p.project_ministrations_ids)
+                
+                bank_account_ids = overdue_project.mapped('bank_account_id.default_debit_account_id')
+                values = self.env['account.move.line'].search([('date', '<=', end), (
+                    'account_id', 'in', bank_account_ids.ids), ('move_id.state', '=', 'posted')])
+                overdue_bank_balance = sum(x.debit - x.credit for x in values)
+                
+                total_current_due_project += len(overdue_project)
+                total_account_bal += overdue_account_balance
+                total_bank_bal += overdue_bank_balance
+                
+                lines.append({
+                    'id': 'hierarchy_1_col_overdue',
+                    'name':len(overdue_project),
+                    'columns': [{'name': 'PROYECTOS VENCIDOS'},
+                                self._format({'name': overdue_account_balance}, figure_type='float'),
+                                self._format({'name': overdue_bank_balance}, figure_type='float'),
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                ],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                    'colspan':2,
+                })
+        
+                #==== Current Projects===========#        
+                current_project = project_records.filtered(lambda x:not x.check_project_due)
+                current_account_balance = 0
+                
+                for p in current_project:
+                    current_account_balance += sum(x.ministering_amount for x in p.project_ministrations_ids)
+                
+                bank_account_ids = current_project.mapped('bank_account_id.default_debit_account_id')
+                values = self.env['account.move.line'].search([('date', '<=', end), (
+                    'account_id', 'in', bank_account_ids.ids), ('move_id.state', '=', 'posted')])
+                current_bank_balance = sum(x.debit - x.credit for x in values)
+        
+                total_current_due_project += len(current_project)
+                total_account_bal += current_account_balance
+                total_bank_bal += current_bank_balance
+        
+                lines.append({
+                    'id': 'hierarchy_1_col_current',
+                    'name':len(current_project),
+                    'columns': [{'name': 'PROYECTOS VIGENTES'},
+                                self._format({'name': current_account_balance}, figure_type='float'),
+                                self._format({'name': current_bank_balance}, figure_type='float'),
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                ],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                    'colspan':2,
+                })
+                
+                lines.append({
+                    'id': 'hierarchy_1_col_curr',
+                    'name':total_current_due_project,
+                    'columns': [{'name': 'SUBTOTAL'},
+                                self._format({'name': total_account_bal}, figure_type='float'),
+                                self._format({'name': total_bank_bal}, figure_type='float'),
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                ],
+                    'level': 1,
+                    'unfoldable': False,
+                    'unfolded': True,
+                    'colspan':2,
+                })
+                total_cont_amount +=  total_account_bal
+                
+                #==== Zero Bank Balance Projects===========#   
+                zero_balance_project = self.env['project.project']
+                total_zero_project = 0
+                total_zero_account_bal = 0
+                total_zero_bank_bal = 0
+                 
+                for pr in project_records:
+                    if pr.bank_account_id and pr.bank_account_id.default_debit_account_id:
+                        values= self.env['account.move.line'].search([('account_id', '=', pr.bank_account_id.default_debit_account_id.id),('move_id.state', '=', 'posted')])
+                        account_amount = sum(x.debit-x.credit for x in values)
+                        if account_amount ==0:
+                            zero_balance_project += pr
+            
+                zero_account_balance = 0
+                zero_bank_balance = 0
+                
+                for p in zero_balance_project:
+                    zero_account_balance += sum(x.ministering_amount for x in p.project_ministrations_ids)
+                
+                
+                total_zero_account_bal += zero_account_balance
+                total_zero_bank_bal += zero_bank_balance
+                total_zero_project += len(zero_balance_project)
+                
+                lines.append({
+                    'id': 'hierarchy_1_col_current',
+                    'name':len(zero_balance_project),
+                    'columns': [{'name': 'PROYECTOS COMPROBADOS CON SALIDO BANCARIO EN CERO'},
+                                self._format({'name': zero_account_balance}, figure_type='float'),
+                                self._format({'name': zero_bank_balance}, figure_type='float'),
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                ],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                    'colspan':2,
+                })
+                total_cont_amount +=  zero_account_balance
+
         lines.append({
-            'id': 'hierarchy_1_col',
-            'name': 'NUM PROYS',
-            'columns': [{'name': 'CONACYT projects'},
-                        {'name': 'SALDO CONT.'},
-                        {'name': 'SALDO BANC.'},
-                        {'name': '%'},
+            'id': 'hierarchy_1_col_total',
+            'name':'TOTAL',
+            'columns': [{'name': ''},
+                        self._format({'name': total_cont_amount}, figure_type='float'),
+                        {'name': ''},
+                        {'name': ''},
                         {'name': ''},
                         {'name': ''},
                         {'name': ''},
@@ -157,143 +387,10 @@ class CumulativeComparison(models.AbstractModel):
             'unfolded': True,
             'colspan':2,
         })
-        project_records = self.env['project.project'].search(con_project_domain)
-        
-        #==== Overdue Projects===========#        
-        overdue_project = project_records.filtered(lambda x:x.check_project_due)
-        overdue_account_balance = 0
-        
-        for p in overdue_project:
-            overdue_account_balance += sum(x.ministering_amount for x in p.project_ministrations_ids)
-        
-        bank_account_ids = overdue_project.mapped('bank_account_id.default_debit_account_id')
-        values = self.env['account.move.line'].search([('date', '<=', end), (
-            'account_id', 'in', bank_account_ids.ids), ('move_id.state', '=', 'posted')])
-        overdue_bank_balance = sum(x.debit - x.credit for x in values)
-        
-        total_current_due_project += len(overdue_project)
-        total_account_bal += overdue_account_balance
-        total_bank_bal += overdue_bank_balance
-        
-        lines.append({
-            'id': 'hierarchy_1_col_overdue',
-            'name':len(overdue_project),
-            'columns': [{'name': 'PROYECTOS VENCIDOS'},
-                        self._format({'name': overdue_account_balance}, figure_type='float'),
-                        self._format({'name': overdue_bank_balance}, figure_type='float'),
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        ],
-            'level': 3,
-            'unfoldable': False,
-            'unfolded': True,
-            'colspan':2,
-        })
-
-        #==== Current Projects===========#        
-        current_project = project_records.filtered(lambda x:not x.check_project_expire)
-        current_account_balance = 0
-        
-        for p in current_project:
-            current_account_balance += sum(x.ministering_amount for x in p.project_ministrations_ids)
-        
-        bank_account_ids = current_project.mapped('bank_account_id.default_debit_account_id')
-        values = self.env['account.move.line'].search([('date', '<=', end), (
-            'account_id', 'in', bank_account_ids.ids), ('move_id.state', '=', 'posted')])
-        current_bank_balance = sum(x.debit - x.credit for x in values)
-
-        total_current_due_project += len(current_project)
-        total_account_bal += current_account_balance
-        total_bank_bal += current_bank_balance
-
-        lines.append({
-            'id': 'hierarchy_1_col_current',
-            'name':len(current_project),
-            'columns': [{'name': 'PROYECTOS VIGENTES'},
-                        self._format({'name': current_account_balance}, figure_type='float'),
-                        self._format({'name': current_bank_balance}, figure_type='float'),
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        ],
-            'level': 3,
-            'unfoldable': False,
-            'unfolded': True,
-            'colspan':2,
-        })
-        
-        lines.append({
-            'id': 'hierarchy_1_col_curr',
-            'name':total_current_due_project,
-            'columns': [{'name': 'SUBTOTAL'},
-                        self._format({'name': total_account_bal}, figure_type='float'),
-                        self._format({'name': total_bank_bal}, figure_type='float'),
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        ],
-            'level': 1,
-            'unfoldable': False,
-            'unfolded': True,
-            'colspan':2,
-        })
-
-        
-        #==== Zero Bank Balance Projects===========#   
-        zero_balance_project = self.env['project.project']
-        total_zero_project = 0
-        total_zero_account_bal = 0
-        total_zero_bank_bal = 0
-         
-        for pr in project_records:
-            if pr.bank_account_id and pr.bank_account_id.default_debit_account_id:
-                values= self.env['account.move.line'].search([('account_id', '=', pr.bank_account_id.default_debit_account_id.id),('move_id.state', '=', 'posted')])
-                account_amount = sum(x.debit-x.credit for x in values)
-                if account_amount ==0:
-                    zero_balance_project += pr
-    
-        zero_account_balance = 0
-        zero_bank_balance = 0
-        
-        for p in zero_balance_project:
-            zero_account_balance += sum(x.ministering_amount for x in p.project_ministrations_ids)
-        
-        
-        total_zero_account_bal += zero_account_balance
-        total_zero_bank_bal += zero_bank_balance
-        total_zero_project += len(zero_balance_project)
-        
-        lines.append({
-            'id': 'hierarchy_1_col_current',
-            'name':len(zero_balance_project),
-            'columns': [{'name': 'PROYECTOS COMPROBADOS CON SALIDO BANCARIO EN CERO'},
-                        self._format({'name': zero_account_balance}, figure_type='float'),
-                        self._format({'name': zero_bank_balance}, figure_type='float'),
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        {'name': ''},
-                        ],
-            'level': 3,
-            'unfoldable': False,
-            'unfolded': True,
-            'colspan':2,
-        })
-        
+                
         #================ 2nd Part ====================#
         project_records = self.env['project.project'].search(project_domain)
+        
         
         lines.append({
             'id': 'hierarchy_2_col',
@@ -319,53 +416,64 @@ class CumulativeComparison(models.AbstractModel):
         total_account_balance = 0
         total_minis_amount = 0
         total_diff = 0
-         
-        for project in project_records:
-            count+=1
-            entity = ''
-            if project.dependency_id and project.dependency_id.dependency:
-                entity = project.dependency_id.dependency
-            if project.subdependency_id and project.subdependency_id.sub_dependency:
-                entity += project.subdependency_id.sub_dependency
-            stage_name = ''
-            if project.custom_stage_id and project.custom_stage_id.name:
-                stage_name = project.custom_stage_id.name
-            if project.proj_start_date:
-                stage_name += "/"+str(project.proj_start_date.year)
-                
-            account_balance = 0
-            if project.bank_account_id and project.bank_account_id.default_debit_account_id:
-                values = self.env['account.move.line'].search([('date', '<=', end), (
-                    'account_id', '=', project.bank_account_id.default_debit_account_id.id), ('move_id.state', '=', 'posted')])
-                account_balance = sum(x.debit - x.credit for x in values)
-            
-            minis_amount = sum(x.ministering_amount for x in project.project_ministrations_ids)
-            diff = minis_amount - account_balance
-            
-            
-            total_account_balance += account_balance
-            total_minis_amount += minis_amount
-            total_diff += diff
-            
-            lines.append({
-                'id': 'hierarchy_2_col'+str(project.id),
-                'name': count,
-                'columns': [{'name': entity},
-                            {'name': project.dependency_id and project.dependency_id.description or ''},
-                            {'name': project.bank_acc_number_id and project.bank_acc_number_id.acc_number or ''},
-                            {'name': project.number},
-                            {'name': project.proj_start_date},
-                            {'name': project.proj_end_date},
-                            {'name': stage_name},
-                            self._format({'name': minis_amount}, figure_type='float'),
-                            self._format({'name': account_balance}, figure_type='float'),
-                            self._format({'name': diff}, figure_type='float'),
-                            ],
-                'level': 3,
-                'unfoldable': False,
-                'unfolded': True,
-            })
-
+        
+        #project_records = project_records.search([('id','in',project_records.ids)],order='sub_dependency_name,dependency_name')
+        
+        dep_ids = project_records.mapped('dependency_id').sorted(key='dependency')
+        
+        
+        for dep in dep_ids:
+            dp_rec_ids = project_records.filtered(lambda x:x.dependency_id.id==dep.id)
+            sub_dep_ids = dp_rec_ids.mapped('subdependency_id').sorted(key='sub_dependency')   
+        
+            for sub in sub_dep_ids:
+                sp_rec_ids = dp_rec_ids.filtered(lambda x:x.subdependency_id.id==sub.id)
+                for project in sp_rec_ids:
+                    count+=1
+                    entity = ''
+                    if project.dependency_id and project.dependency_id.dependency:
+                        entity = project.dependency_id.dependency
+                    if project.subdependency_id and project.subdependency_id.sub_dependency:
+                        entity += project.subdependency_id.sub_dependency
+                    stage_name = ''
+                    if project.custom_stage_id and project.custom_stage_id.name:
+                        stage_name = project.custom_stage_id.name
+                    if project.proj_start_date:
+                        stage_name += "/"+str(project.proj_start_date.year)
+                        
+                    account_balance = 0
+                    if project.bank_account_id and project.bank_account_id.default_debit_account_id:
+                        values = self.env['account.move.line'].search([('date', '<=', end), (
+                            'account_id', '=', project.bank_account_id.default_debit_account_id.id), ('move_id.state', '=', 'posted')])
+                        account_balance = sum(x.debit - x.credit for x in values)
+                    
+                    minis_amount = sum(x.ministering_amount for x in project.project_ministrations_ids)
+                    diff = minis_amount - account_balance
+                    
+                    
+                    total_account_balance += account_balance
+                    total_minis_amount += minis_amount
+                    total_diff += diff
+                    
+                    lines.append({
+                        'id': 'hierarchy_2_col'+str(project.id),
+                        'name': count,
+                        'columns': [{'name': entity},
+                                    {'name': project.dependency_id and project.dependency_id.description or ''},
+                                    {'name': project.bank_acc_number_id and project.bank_acc_number_id.acc_number or ''},
+                                    {'name': project.number},
+                                    {'name': project.proj_start_date},
+                                    {'name': project.proj_end_date},
+                                    {'name': stage_name},
+                                    self._format({'name': minis_amount}, figure_type='float'),
+                                    self._format({'name': account_balance}, figure_type='float'),
+                                    self._format({'name': diff}, figure_type='float'),
+                                    ],
+                        'level': 3,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+    
         lines.append({
             'id': 'hierarchy_2_total',
             'name': '',

@@ -48,6 +48,7 @@
         'views/cancel_checks.xml',
         'reports/blank_check_req_report.xml',
         'views/send_checks.xml',
+        'reports/send_check_report.xml',
     ],
     'demo': [
     ],

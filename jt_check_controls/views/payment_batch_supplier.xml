@@ -24,7 +24,8 @@
                                 <field name="batch_folio"/>
                                 <field name="payment_issuing_bank_id"/>
                                 <field name="payment_issuing_bank_acc_id"/>
-                                <field name="checkbook_req_id" context="{'from_approve_check':1}"/>
+                                <field name="checkbook_req_id" context="{'from_approve_check':1}"
+                                    domain="[('bank_id', '=', payment_issuing_bank_id)]"/>
                                 <field name="type_of_payment_method" readonly="1"/>
                             </group>
                             <group>
@@ -38,7 +39,8 @@
                             <page name="check_payment_requests" string="Check Payment Requests">
                                 <field name="payment_req_ids" nolabel="1">
                                     <tree editable="bottom">
-                                        <field name="check_folio"/>
+                                        <field name="selected"/>
+                                        <field name="check_folio_id"/>
                                         <field name="payment_id"/>
                                         <field name="payment_req_id"/>
                                         <field name="amount_to_pay"/>
@@ -65,6 +67,14 @@
         <menuitem id="payment_batch_supplier_menu" name="Payment Batch(Supplier)"
                   parent="payment_batch_main_menu"
                   action="action_payment_batch_supplier" sequence="1"/>
+
+        <record id="action_assign_check_folio" model="ir.actions.server">
+            <field name="name">Assign Check Folio</field>
+            <field name="model_id" ref="jt_check_controls.model_payment_batch_supplier"/>
+            <field name="binding_model_id" ref="jt_check_controls.model_payment_batch_supplier"/>
+            <field name="state">code</field>
+            <field name="code">action = records.action_assign_check_folio()</field>
+        </record>
 
     </data>
 </odoo>

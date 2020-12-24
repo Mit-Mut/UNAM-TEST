@@ -4,3 +4,6 @@ from . import checks_authorized_by_dependency
 from . import checkbook_req
 from . import blank_check_req
 from . import account_move
+from . import cancel_checks
+from . import payment_batch_supplier
+from . import send_checks

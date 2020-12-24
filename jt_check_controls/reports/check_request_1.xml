@@ -3,96 +3,6 @@
     <data>
         <template id="external_layout_header_check_request_1">
             <div t-attf-class="header o_company_#{company.id}_layout">
-                <div class="row">
-                    <div class="col-2" align="left">
-                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)"
-                             style="max-height: 150px;" alt="Logo"/>
-                    </div>
-                    <div class="col-4" style="padding-left:15px;padding-top:7px;padding-right:0px;">
-                        <p style="margin-top:0;margin-bottom:0;font-size:15px;">UNIVERSITY BOARD OF TRUSTEES</p>
-                        <p style="margin-top:0;margin-bottom:0;font-size:15px;">
-                            TREASURY
-                        </p>
-                    </div>
-                    <div class="col-6" align="right" style="padding-right:0;padding-left:0px;">
-                        <img src="/jt_check_controls/static/src/img/dgf.png"
-                             style="max-height:100px;width:54%"/>
-                        <p style="margin-top:0;margin-bottom:0;font-size:15px;">
-                            GENERAL DIRECTORATE OF FINANCE
-                        </p>
-                        <p style="margin-top:0;margin-bottom:0;font-size:15px;">
-                            DIRECTORATE OF INCOME AND FINANCIAL OPERATIONS
-                        </p>
-                        <p style="margin-top:0;margin-bottom:0;font-size:15px;">
-                            <t t-esc="o.folio_legal"/>
-                        </p>
-                        <p style="margin-top:0;margin-bottom:0;font-size:15px;">
-                            SUBJECT: REQUEST FOR CHECKS
-                        </p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 mb4" align="left">
-                        <t t-if="o.bank_id">
-                            <b>
-                                <p style="margin-top:0;margin-bottom:0;font-size:15px;">
-                                    <t t-esc="o.bank_id.name"/>
-                                </p>
-                                <t t-if="o.bank_id.bank_id">
-                                    <t t-set="bank" t-value="o.bank_id.bank_id"/>
-                                    <p style="margin-top:0;margin-bottom:0;font-size:15px;">
-                                        <t t-esc="bank.street"/>
-                                        <t t-if="bank.street2">
-                                            ,
-                                            <t t-esc="bank.street2"/>
-                                        </t>
-                                        <t t-if="bank.city">
-                                            ,
-                                            <t t-esc="bank.city"/>
-                                        </t>
-                                        <t t-if="bank.state">
-                                            ,
-                                            <t t-esc="bank.state.name"/>
-                                        </t>
-                                        <t t-if="bank.zip">
-                                            ,
-                                            <t t-esc="bank.zip"/>
-                                        </t>
-                                    </p>
-                                    <p style="margin-top:0;margin-bottom:0;font-size:15px;">
-                                        <t t-if="bank.country">
-                                            <t t-esc="bank.country.name"/>
-                                        </t>
-                                    </p>
-                                </t>
-                                <p style="margin-top:0;margin-bottom:0;font-size:15px;">
-                                    <span>Present:</span>
-                                </p>
-                            </b>
-                        </t>
-                    </div>
-                </div>
-                <div class="row">
-                    <t t-if="o.bank_id">
-                        <div class="col-12 mb4" align="right">
-                            <t t-set="exe_name" t-value=""/>
-                            <b>
-                                <p style="margin-top:0;margin-bottom:0;font-size:15px;">AT'N:
-                                    <t t-foreach="o.bank_id.executive_ids" t-as="exe">
-                                        <t t-if="exe.recipient_executive and not exe_name">
-                                            <t t-esc="exe.name"/>
-                                            <t t-set="exe_name" t-value="exe.name"/>
-                                        </t>
-                                    </t>
-                                </p>
-                                <p style="margin-top:0;margin-bottom:0;font-size:15px;">
-                                    <span>No. Account</span>
-                                    <t t-esc="o.bank_id.bank_acc_number"/>
-                                </p>
-                            </b>
-                        </div>
-                    </t>
-                </div>
             </div>
             <div t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout"
                  t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
@@ -100,7 +10,6 @@
                 <t t-raw="0"/>
             </div>
             <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
-
             </div>
         </template>
 
@@ -130,13 +39,112 @@
                     <!--                    <t t-if="o.state == 'approved'">-->
                     <t t-call="jt_check_controls.external_layout_check_req_1">
                         <div class="page">
-                            <br/>
-                            <br/>
-                            <br/>
-                            <br/>
-                            <br/>
-                            <br/>
-                            <br/>
+                            <t t-if="not o" t-set="o" t-value="doc"/>
+
+                            <t t-if="not company">
+                                <!-- Multicompany -->
+                                <t t-if="company_id">
+                                    <t t-set="company" t-value="company_id"/>
+                                </t>
+                                <t t-elif="o and 'company_id' in o">
+                                    <t t-set="company" t-value="o.company_id.sudo()"/>
+                                </t>
+                                <t t-else="else">
+                                    <t t-set="company" t-value="res_company"/>
+                                </t>
+                            </t>
+                            <div class="row">
+                                <div class="col-2" align="left">
+                                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)"
+                                         style="max-height: 150px;" alt="Logo"/>
+                                </div>
+                                <div class="col-4" style="padding-left:15px;padding-top:7px;padding-right:0px;">
+                                    <p style="margin-top:0;margin-bottom:0;font-size:15px;">UNIVERSITY BOARD OF
+                                        TRUSTEES
+                                    </p>
+                                    <p style="margin-top:0;margin-bottom:0;font-size:15px;">
+                                        TREASURY
+                                    </p>
+                                </div>
+                                <div class="col-6" align="right" style="padding-right:0;padding-left:0px;">
+                                    <img src="/jt_check_controls/static/src/img/dgf.png"
+                                         style="max-height:100px;width:54%"/>
+                                    <p style="margin-top:0;margin-bottom:0;font-size:15px;">
+                                        GENERAL DIRECTORATE OF FINANCE
+                                    </p>
+                                    <p style="margin-top:0;margin-bottom:0;font-size:15px;">
+                                        DIRECTORATE OF INCOME AND FINANCIAL OPERATIONS
+                                    </p>
+                                    <p style="margin-top:0;margin-bottom:0;font-size:15px;">
+                                        <t t-esc="o.folio_legal"/>
+                                    </p>
+                                    <p style="margin-top:0;margin-bottom:0;font-size:15px;">
+                                        SUBJECT: REQUEST FOR CHECKS
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 mb4" align="left">
+                                    <t t-if="o.bank_id">
+                                        <b>
+                                            <p style="margin-top:0;margin-bottom:0;font-size:15px;">
+                                                <t t-esc="o.bank_id.name"/>
+                                            </p>
+                                            <t t-if="o.bank_id.bank_id">
+                                                <t t-set="bank" t-value="o.bank_id.bank_id"/>
+                                                <p style="margin-top:0;margin-bottom:0;font-size:15px;">
+                                                    <t t-esc="bank.street"/>
+                                                    <t t-if="bank.street2">
+                                                        ,
+                                                        <t t-esc="bank.street2"/>
+                                                    </t>
+                                                    <t t-if="bank.city">
+                                                        ,
+                                                        <t t-esc="bank.city"/>
+                                                    </t>
+                                                    <t t-if="bank.state">
+                                                        ,
+                                                        <t t-esc="bank.state.name"/>
+                                                    </t>
+                                                    <t t-if="bank.zip">
+                                                        ,
+                                                        <t t-esc="bank.zip"/>
+                                                    </t>
+                                                </p>
+                                                <p style="margin-top:0;margin-bottom:0;font-size:15px;">
+                                                    <t t-if="bank.country">
+                                                        <t t-esc="bank.country.name"/>
+                                                    </t>
+                                                </p>
+                                            </t>
+                                            <p style="margin-top:0;margin-bottom:0;font-size:15px;">
+                                                <span>Present:</span>
+                                            </p>
+                                        </b>
+                                    </t>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <t t-if="o.bank_id">
+                                    <div class="col-12 mb4" align="right">
+                                        <t t-set="exe_name" t-value=""/>
+                                        <b>
+                                            <p style="margin-top:0;margin-bottom:0;font-size:15px;">AT'N:
+                                                <t t-foreach="o.bank_id.executive_ids" t-as="exe">
+                                                    <t t-if="exe.recipient_executive and not exe_name">
+                                                        <t t-esc="exe.name"/>
+                                                        <t t-set="exe_name" t-value="exe.name"/>
+                                                    </t>
+                                                </t>
+                                            </p>
+                                            <p style="margin-top:0;margin-bottom:0;font-size:15px;">
+                                                <span>No. Account</span>
+                                                <t t-esc="o.bank_id.bank_acc_number"/>
+                                            </p>
+                                        </b>
+                                    </div>
+                                </t>
+                            </div>
                             <br/>
                             <span>Through this channel, we would greatly appreciate turning your kind instruction to
                                 whom it may concern, in order to carry out the development of
@@ -204,12 +212,17 @@
                                 <br/>
                                 -Finally, remember that these checks must have the security measures of the ABM,
                                 the security characteristics of each bank and contain the legend "THE VALIDITY OF
-                                THIS CHECK IS 30 DAYS" ON THE FRONT AND REVERSE.
+                                THIS CHECK IS
+                                <t t-if="o.bank_account_id and o.bank_account_id.bank_id">
+                                    <span t-esc="o.bank_account_id.bank_id.check_validity"/>
+                                </t>
+                                DAYS" ON THE FRONT AND REVERSE.
                                 <br/>
                             </span>
                             <span>
                                 We appreciate you sending us the corresponding CFDI in PDF format and XML file.
                             </span>
+                            <br/>
                             <span>
                                 Please strictly adhere to the technical characteristics of substance and form, as
                                 well as the security measures of the attached sample check.
@@ -310,7 +323,7 @@
             <field name="default" eval="True"/>
             <field name="orientation">Portrait</field>
             <field name="format">A4</field>
-            <field name="margin_top">40</field>
+            <field name="margin_top">2</field>
             <field name="margin_bottom">10</field>
             <field name="margin_left">7</field>
             <field name="margin_right">7</field>

@@ -51,7 +51,7 @@
                                             <t t-set="exe_name" t-value="exe.name"/>
                                         </t>
                                     </t>
-                                    <t t-esc="o.bank_id.bank_acc_number"/>
+<!--                                    <t t-esc="o.bank_id.bank_acc_number"/>-->
                                 </p>
                             </b>
 
@@ -106,7 +106,7 @@
                         <span style="font-size:15px">
                             Ciudad Universitaria, Cd. Mx., A
                             <br/>
-                            <t t-esc="o.get_application_date()"/>
+                            <t t-esc="o.get_application_date(o.appliaction_date)"/>
                         </span>
                     </div>
                     <div class="col-4" align="right">
@@ -116,7 +116,7 @@
                 </div>
                 <br/>
                 <div class="row">
-                    <t t-set="trade" t-value="o.get_trade_configuration()"/>
+                    <t t-set="trade" t-value="o.get_trade_configuration_1()"/>
                     <div class="col-6" align="left">
                         <t t-if="trade">
                             <span style="font-size:15px">GENERAL DIRECTOR</span>
@@ -217,16 +217,18 @@
                             </span>
 
 
-                            <span>It is worth mentioning that the checkbooks were satisfactorily delivered on <t t-esc="o.check_receipt_date"/> hereof, in the Financial Operations Department located in <t t-esc="o.full_address"/>, to
-                            <t t-set="trades" t-value="o.get_trade_configuration()"/>
+                            <span>It is worth mentioning that the checkbooks were satisfactorily delivered on
+                                <t t-esc="o.get_application_date(o.check_receipt_date)"/> hereof, in the Financial Operations
+                                Department located at <t t-esc="o.full_address"/>, to
+                            <t t-set="trades" t-value="o.get_trade_configuration_3()"/>
                             
                             <t t-if="trades">
-                                <t t-if="trades.general_director_title">
-                                    <span style="font-size:15px;" t-esc="trades.general_director_title"/>
+                                <t t-if="trades.clerk_title">
+                                    <span style="font-size:15px;" t-esc="trades.clerk_title"/>
                                     <span style="font-size:15px;">.</span>
                                 </t>
-                                <t t-if="trades.general_director_id">
-                                    <span style="font-size:15px;" t-esc="trades.general_director_id.name"/>
+                                <t t-if="trades.clerk_id">
+                                    <span style="font-size:15px;" t-esc="trades.clerk_id.name"/>
                                 </t>
                             </t> who identified himself with _________________________________
                             _________________, for which a copy of

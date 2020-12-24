@@ -104,7 +104,7 @@
 								<field name="base_id" attrs="{'invisible':[('is_related_agreement','=',False)]}"/>
                                 <field name="number_agreement" readonly="1" force_save="1" attrs="{'invisible':[('is_related_agreement','=',False)]}"/>
                                 <field name="name_agreement" readonly="1" force_save="1" attrs="{'invisible':[('is_related_agreement','=',False)]}"/>
-                                <field name="agreement_type_id"  attrs="{'invisible':[('is_related_agreement','=',False)]}"/>
+                                <field name="agreement_type_id" invisible="1"/>
 
                                 <field name="PAPIIT_project_type"  attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
                                 <field name="technical_support_id" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>

@@ -51,7 +51,7 @@ class ProjectRegistry(models.Model):
     pre_account_id = fields.Many2one('account.account', 'Previous')
     PAPIIT_project_type = fields.Selection(
         [('PAPIIT', 'PAPIIT'), ('PAPIME', 'PAPIME'), ('INFOCAB', 'INFOCAB')], string="PAPIIT Project Type")
-    dependency_id = fields.Many2one('dependency', "Dependency")
+    dependency_id = fields.Many2one('dependency', "Dependency")    
     subdependency_id = fields.Many2one('sub.dependency', "Sub Dependency")
     technical_support_id = fields.Many2one('hr.employee', 'Technical support')
     administrative_manager_id = fields.Many2one(

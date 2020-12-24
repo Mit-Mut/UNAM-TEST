@@ -127,38 +127,39 @@ class CheckbookRequest(models.Model):
         checklist = self.env['checklist'].search([('checkbook_req_id', '=', checkbook.id)], limit=1)
         return checklist
 
-    def get_application_date(self):
-        application = self.appliaction_date
-        day = application.day
-        month = application.month
-        year = application.year
-        month_name = ''
-        if month == 1:
-            month_name = 'Enero'
-        elif month == 2:
-            month_name = 'Febrero'
-        elif month == 3:
-            month_name = 'Marzo'
-        elif month == 4:
-            month_name = 'Abril'
-        elif month == 5:
-            month_name = 'Mayo'
-        elif month == 6:
-            month_name = 'Junio'
-        elif month == 7:
-            month_name = 'Julio'
-        elif month == 8:
-            month_name = 'Agosto'
-        elif month == 9:
-            month_name = 'Septiembre'
-        elif month == 10:
-            month_name = 'Octubre'
-        elif month == 11:
-            month_name = 'Noviembre'
-        elif month == 12:
-            month_name = 'Diciembre'
+    def get_application_date(self, date):
+        application = date
+        if application:
+            day = application.day
+            month = application.month
+            year = application.year
+            month_name = ''
+            if month == 1:
+                month_name = 'Enero'
+            elif month == 2:
+                month_name = 'Febrero'
+            elif month == 3:
+                month_name = 'Marzo'
+            elif month == 4:
+                month_name = 'Abril'
+            elif month == 5:
+                month_name = 'Mayo'
+            elif month == 6:
+                month_name = 'Junio'
+            elif month == 7:
+                month_name = 'Julio'
+            elif month == 8:
+                month_name = 'Agosto'
+            elif month == 9:
+                month_name = 'Septiembre'
+            elif month == 10:
+                month_name = 'Octubre'
+            elif month == 11:
+                month_name = 'Noviembre'
+            elif month == 12:
+                month_name = 'Diciembre'
 
-        return str(day) + ' de ' + month_name + ' de ' + str(year)
+            return str(day) + ' de ' + month_name + ' de ' + str(year)
 
     def get_date(self):
         today = datetime.today().date()
@@ -198,6 +199,10 @@ class CheckbookRequest(models.Model):
 
     def get_trade_configuration_2(self):
         trade = self.env['trades.config'].search([('job_template', '=', 'check_req_2')], limit=1)
+        return trade
+
+    def get_trade_configuration_3(self):
+        trade = self.env['trades.config'].search([('job_template', '=', 'register_checks')], limit=1)
         return trade
 
 class CheckList(models.Model):
@@ -280,6 +285,20 @@ class CheckListLine(models.Model):
                                     "Withdrawn from circulation \n"))
         res = super(CheckListLine, self).write(vals)
         return res
+
+    def action_send_to_custody(self):
+        cancel_checks = self.env['cancel.checks']
+        for rec in self:
+            if rec.status == 'Cancelled' and rec.dependence_id:
+                cancel_checks.create({
+                    'check_folio':rec.folio,
+                    'dependency_id': rec.dependence_id.id,
+                    'check_status': rec.status,
+                    'bank_id': rec.bank_id.id if rec.bank_id else False,
+                    'bank_account_id': rec.bank_account_id.id if rec.bank_account_id else False,
+                    'checkbook_no': rec.checkbook_no,
+                    'check_log_id': rec.id
+                    })
 
 class ResBank(models.Model):
 

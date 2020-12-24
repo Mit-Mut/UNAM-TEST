@@ -200,7 +200,7 @@
             <field name="name">checklog.form.view</field>
             <field name="model">check.log</field>
             <field name="arch" type="xml">
-                <form create="false">
+                <form create="false" edit="false">
                     <header>
                         <field name="status" widget="statusbar"/>
                     </header>
@@ -243,6 +243,15 @@
                   parent="check_control_main_menu"
                   action="action_check_logs" sequence="3"/>
 
+
+        <record id="action_send_to_custody" model="ir.actions.server">
+            <field name="name">Send To Custody</field>
+            <field name="model_id" ref="jt_check_controls.model_check_log"/>
+            <field name="binding_model_id" ref="jt_check_controls.model_check_log"/>
+            <field name="state">code</field>
+            <field name="binding_view_types">list</field>
+            <field name="code">action = records.action_send_to_custody()</field>
+        </record>
 
     </data>
 </odoo>

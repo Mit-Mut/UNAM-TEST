@@ -31,21 +31,27 @@ class EmployeePayroll(models.Model):
     sub_dependancy_id = fields.Many2one(related="employee_id.sub_dependancy_id", string='Sub Dependency')
     program_code_id = fields.Many2one("program.code", string="Program Code")
 
-    def get_invoice_line_vals(self):
-        invoice_line_vals = super(EmployeePayroll,self).get_invoice_line_vals()
-        account_id = self.program_code_id and self.program_code_id.item_id and self.program_code_id.item_id.unam_account_id and self.program_code_id.item_id.unam_account_id.id or False
-        invoice_line_vals.update({'program_code_id':self.program_code_id and self.program_code_id.id or False})
-        if account_id:
-            invoice_line_vals.update({'account_id':account_id})
+    def get_invoice_line_vals(self,line):
+        invoice_line_vals = super(EmployeePayroll,self).get_invoice_line_vals(line)
+        if line.program_code_id:
+            account_id = line.program_code_id and line.program_code_id.item_id and line.program_code_id.item_id.unam_account_id and line.program_code_id.item_id.unam_account_id.id or False
+            invoice_line_vals.update({'program_code_id':line.program_code_id and line.program_code_id.id or False})
+            if account_id:
+                invoice_line_vals.update({'account_id':account_id})
+            else:
+                invoice_line_vals = {}
+        else:
+            invoice_line_vals = {}
+            
         return invoice_line_vals
     
     def get_payroll_payment_vals(self):
         vals = super(EmployeePayroll,self).get_payroll_payment_vals()
-        invoice_line_vals = self.get_invoice_line_vals() 
+        # invoice_line_vals = self.get_invoice_line_vals() 
         vals.update({'dependancy_id':self.dependancy_id and self.dependancy_id.id or False,
                      'sub_dependancy_id' : self.sub_dependancy_id and self.sub_dependancy_id.id or False,
                      'payment_place_id' : self.payment_place_id and self.payment_place_id.id or False,
-                     'invoice_line_ids':[(0,0,invoice_line_vals)]
+                     #'invoice_line_ids':[(0,0,invoice_line_vals)]
                      })
         
         return vals

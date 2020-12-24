@@ -44,15 +44,35 @@ class EmployeePayroll(models.Model):
             record.reference= self.env['ir.sequence'].next_by_code('seq.payroll.employee.reference')
             record.state = 'revised'
 
-    def get_invoice_line_vals(self):
+    def get_invoice_line_vals(self,line):
         invoice_line_vals = { 'quantity' : 1,
-                            'price_unit' : self.amount_payable,
+                            'price_unit' : line.amount,
                             }
         return invoice_line_vals
     
+    def get_deduction_invoice_line_vals(self,line):
+        invoice_line_vals = {}
+        
+        if line.credit_account_id:
+            invoice_line_vals = { 'quantity' : 1,
+                                'price_unit' : -line.amount,
+                                'account_id' : line.credit_account_id.id 
+                                }
+        return invoice_line_vals
+        
     def get_payroll_payment_vals(self):
+        invoice_line_vals = []
         journal = self.env.ref('jt_payroll_payment.payroll_payment_request_jour')
-        invoice_line_vals = self.get_invoice_line_vals()
+        for line in self.preception_line_ids:
+            line_vals = self.get_invoice_line_vals(line)
+            if line_vals:
+                invoice_line_vals.append((0,0,line_vals))
+        
+        for line in self.deduction_line_ids:
+            line_vals = self.get_deduction_invoice_line_vals(line)
+            if line_vals:
+                invoice_line_vals.append((0,0,line_vals))
+            
         partner_id = self.employee_id and self.employee_id.user_id and self.employee_id.user_id.partner_id and self.employee_id.user_id.partner_id.id or False 
         vals = {'payment_bank_id':self.bank_receiving_payment_id and self.bank_receiving_payment_id.id or False,
                 'payment_bank_account_id': self.receiving_bank_acc_pay_id and self.receiving_bank_acc_pay_id.id or False,
@@ -63,7 +83,7 @@ class EmployeePayroll(models.Model):
                 'type' : 'in_invoice',
                 'journal_id' : journal and journal.id or False,
                 'invoice_date' : fields.Date.today(),
-                'invoice_line_ids':[(0,0,invoice_line_vals)],
+                'invoice_line_ids':invoice_line_vals,
                 'fornight' : self.fornight,
                 'payroll_request_type' : self.request_type,
                 }

@@ -35,8 +35,9 @@ class ApproveBlankCheck(models.TransientModel):
             check_req.final_folio = self.final_folio
             check_req.state = 'approved'
             check_logs = self.env['check.log'].search([('checklist_id.checkbook_req_id', '=', self.checkbook_req_id.id),
-                                                       ('folio', '>=', self.intial_folio),
-                                                       ('folio', '<=', self.final_folio)])
+                                                ('folio', '>=', self.intial_folio),
+                                                ('folio', '!=', int(self.checkbook_req_id.print_sample_folio_number)),
+                                                ('folio', '<=', self.final_folio)])
             for log in check_logs:
                 log.status = 'Assigned for shipping'
 

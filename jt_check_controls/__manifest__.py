@@ -49,6 +49,9 @@
         'reports/blank_check_req_report.xml',
         'views/send_checks.xml',
         'reports/send_check_report.xml',
+        'reports/payment_batch_supplier.xml',
+        'wizard/confirm_printed_checks.xml',
+        'wizard/generate_sup_batch_check_layout.xml'
     ],
     'demo': [
     ],

@@ -1,11 +1,11 @@
 from datetime import datetime
 from odoo.exceptions import ValidationError
-
 from odoo import models, fields, api, _
 
 
 class SendChecks(models.Model):
     _name = 'send.checks'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = 'batch_folio'
     _description = 'Sending Checks To File'
 

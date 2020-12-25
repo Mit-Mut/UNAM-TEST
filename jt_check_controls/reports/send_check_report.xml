@@ -121,7 +121,7 @@
                                 <tbody class="check_folio_tbody">
                                     <t t-foreach="o.check_line_ids" t-as="line">
                                     <tr>
-                                        <td name="td_foilo"><span t-if="line.check_folio" t-field="line.check_folio"/>
+                                        <td name="td_foilo"><span t-if="line.check_log_id" t-field="line.check_log_id"/>
                                         </td>
                                         
                                     </tr>

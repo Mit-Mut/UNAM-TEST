@@ -21,7 +21,7 @@
 #
 ##############################################################################
 from odoo import models, _
-from datetime import datetime
+from datetime import datetime, timedelta
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tools.misc import formatLang
 from odoo.tools.misc import xlsxwriter
@@ -65,24 +65,6 @@ class IntegrationAirplaneTicket(models.AbstractModel):
         return templates
 
 
-    def get_header(self, options):
-
-        return[
-            
-            #  [
-                
-            #     {'name': _('INTEGRATION BOLETOS DE AVION PAPIIT'),'colspan':2},
-                
-
-            # ],
-
-            [
-                {'name': _('SALDO MES ANTERIOR JUNIO')},
-                {'name': _('CUENTA DE PESIVO:221.006.001.005')},
-
-            ]
-        ]
-
     def _format(self, value,figure_type):
         if self.env.context.get('no_format'):
             return value
@@ -104,12 +86,134 @@ class IntegrationAirplaneTicket(models.AbstractModel):
         value['name'] = round(value['name'], 1)
         return value
 
+    def _get_columns_name(self, options):
+        return [
+                {'name': ''},
+                {'name': ''},
+            ]
+
+    def get_month_name(self, month):
+        month_name = ''
+        if month == 1:
+            month_name = 'Enero'
+        elif month == 2:
+            month_name = 'Febrero'
+        elif month == 3:
+            month_name = 'Marzo'
+        elif month == 4:
+            month_name = 'Abril'
+        elif month == 5:
+            month_name = 'Mayo'
+        elif month == 6:
+            month_name = 'Junio'
+        elif month == 7:
+            month_name = 'Julio'
+        elif month == 8:
+            month_name = 'Agosto'
+        elif month == 9:
+            month_name = 'Septiembre'
+        elif month == 10:
+            month_name = 'Octubre'
+        elif month == 11:
+            month_name = 'Noviembre'
+        elif month == 12:
+            month_name = 'Diciembre'
+
+        return month_name.upper()
+
     def _get_lines(self, options, line_id=None):
         lines = []
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+
+        month_name = self.get_month_name(start.month)
+
+        prev = start.replace(day=1) - timedelta(days=1)
+        previous_month = self.get_month_name(prev.month)
+
+        lines.append({
+            'id': 'hierarchy_title',
+            'name' : 'INTEGRACIÓN BOLETOS DE AVION PAPIIT', 
+            'columns': [ 
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+            'class':'text-center',
+            'colspan':2,
+        })
+
+        lines.append({
+            'id': 'hierarchy_account',
+            'name' : '', 
+            'columns': [
+                        {'name': 'Cuenta de Pasivo:221.006.001.005'}, 
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+        open_bal = 0
+        debit_bal = 0
+        credit_bal = 0
+
+        account_id = self.env['account.account'].search([('code', '=', '221.006.001.005')], limit=1)
+        if account_id:
+            values= self.env['account.move.line'].search([('date','>=',start),('date','<=',end),('account_id', '=', account_id.id),('move_id.state', '=', 'posted')])
+            debit_bal = sum(x.debit for x in values)
+            credit_bal = sum(x.credit for x in values)
+            
+            values= self.env['account.move.line'].search([('date','<',start),('account_id', '=', account_id.id),('move_id.state', '=', 'posted')])
+            open_bal = sum(x.debit - x.credit for x in values)
+        
+        total_bal = open_bal - debit_bal + credit_bal
+        
+        
+        lines.append({
+            'id': 'hierarchy_open_bal',
+            'name' : 'SALDO MED ANTERIOR '+previous_month, 
+            'columns': [
+                         self._format({'name': open_bal},figure_type='float'),
+                        ],
+            'level': 3,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+
+        lines.append({
+            'id': 'hierarchy_debit',
+            'name' : 'PAGOS REALIZADOS MES DE '+month_name, 
+            'columns': [
+                         self._format({'name': debit_bal},figure_type='float'),
+                        ],
+            'level': 3,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+
+        lines.append({
+            'id': 'hierarchy_credit',
+            'name' : 'RECURSOS PORPAGAR MES DE '+month_name, 
+            'columns': [
+                         self._format({'name': credit_bal},figure_type='float'),
+                        ],
+            'level': 3,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+
+        lines.append({
+            'id': 'hierarchy_total',
+            'name' : 'SALDO MES DE '+month_name, 
+            'columns': [
+                         self._format({'name': total_bal},figure_type='float'),
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
         
         return lines
 

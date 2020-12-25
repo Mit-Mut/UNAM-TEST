@@ -23,6 +23,13 @@
             <field name="company_id" eval="False"/>
         </record>
 
+        <record id="sequence_generate_supp_Banamex_layout" model="ir.sequence">
+            <field name="name">Generate Banamex Supplier Batch Layout</field>
+            <field name="code">sup.batch.banamex.layout</field>
+            <field name="padding">6</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
         <record id="seq_generate_batch_folio" model="ir.sequence">
             <field name="name">Batch Folio</field>
             <field name="code">batch.folio</field>

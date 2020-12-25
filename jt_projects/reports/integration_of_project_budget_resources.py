@@ -132,7 +132,7 @@ class IntegrationOfBudgetResource(models.AbstractModel):
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
         
-        domain = [('proj_start_date','>=',start),('proj_end_date','<=',end),('PAPIIT_project_type','!=',False)]
+        domain = [('is_papiit_project','=',True),('proj_start_date','>=',start),('proj_end_date','<=',end),('PAPIIT_project_type','!=',False)]
                     
         project_ids = self.env['project.project'].search(domain)
 
@@ -223,30 +223,35 @@ class IntegrationOfBudgetResource(models.AbstractModel):
 
                 PAPIIT_ids = current_project_ids.filtered(lambda x:x.PAPIIT_project_type=='PAPIIT')
                 account_code = ''
-                debit = 0
-                credit = 0
-                balance = 0
+                debit = sum(x.allocated_amount for x in PAPIIT_ids)
+                credit = sum(x.exercised_amount for x in PAPIIT_ids)
+                balance = sum(x.final_amount for x in PAPIIT_ids)
                 
                 PAPIIT_configuration_id = self.env['remaining.resource'].search([('stage_id','=',stage.id),('year','=',year),('project_type','=','papit')],limit=1)
                 if PAPIIT_configuration_id and PAPIIT_configuration_id.account_id:
                     account_code = PAPIIT_configuration_id.account_id.code
-                    values= self.env['account.move.line'].search([('account_id', '=', PAPIIT_configuration_id.account_id.id),('move_id.state', '=', 'posted')])
-                    
-                    debit = sum(x.debit for x in values)
-                    credit = sum(x.credit for x in values)
-                    balance = credit - debit 
+#                     values= self.env['account.move.line'].search([('account_id', '=', PAPIIT_configuration_id.account_id.id),('move_id.state', '=', 'posted')])
+#                     
+#                     debit = sum(x.debit for x in values)
+#                     credit = sum(x.credit for x in values)
+#                     balance = credit - debit 
                 
                 auth_amt = 0
                 paid_amt = 0
                 exer_amt = 0
-                program_code_ids = PAPIIT_ids.mapped('program_code')
+                
+                budget_stage_ids = self.env['stage'].search([('project_id','in',PAPIIT_ids.ids)])
+                program_code_ids = self.env['program.code'].search([('stage_id','in',budget_stage_ids.ids),('year.name','=',str(year))])
+                
+                
+#                program_code_ids = PAPIIT_ids.mapped('program_code')
                 if program_code_ids:
-                    self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NULL and start_date >= %s and end_date <= %s", (tuple(program_code_ids.ids),start,end))
+                    self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NOT TRUE and start_date >= %s and end_date <= %s", (tuple(program_code_ids.ids),start,end))
                     my_datas = self.env.cr.fetchone()
                     if my_datas:
                         auth_amt = my_datas[0]
 
-                    self.env.cr.execute("select coalesce(sum(abs(line.balance)+abs(line.tax_price_cr)),0) from account_move_line line,account_move amove where line.program_code_id in %s and amove.id=line.move_id and amove.payment_state in %s and amove.invoice_date >= %s and amove.invoice_date <= %s", (tuple(program_code_ids.ids),('for_payment_procedure','payment_not_applied'),start,end))
+                    self.env.cr.execute("select coalesce(sum(ebl.available),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and start_date >= %s and end_date <= %s", (tuple(program_code_ids.ids),start,end))
                     my_datas = self.env.cr.fetchone()
                     if my_datas:
                         exer_amt = my_datas[0]
@@ -315,34 +320,36 @@ class IntegrationOfBudgetResource(models.AbstractModel):
                         'unfolded': True,
                     })
 
-
-
                 #====== PAPIME =================#
                 PAPIME_ids = current_project_ids.filtered(lambda x:x.PAPIIT_project_type=='PAPIME')
                 account_code = ''
-                debit = 0
-                credit = 0
-                balance = 0
+                debit = sum(x.allocated_amount for x in PAPIME_ids)
+                credit = sum(x.exercised_amount for x in PAPIME_ids)
+                balance = sum(x.final_amount for x in PAPIME_ids)
                 
                 PAPIME_configuration_id = self.env['remaining.resource'].search([('stage_id','=',stage.id),('year','=',year),('project_type','=','papime')],limit=1)
                 if PAPIME_configuration_id and PAPIME_configuration_id.account_id:
                     account_code = PAPIME_configuration_id.account_id.code
-                    values= self.env['account.move.line'].search([('account_id', '=', PAPIME_configuration_id.account_id.id),('move_id.state', '=', 'posted')])
-                    debit = sum(x.debit for x in values)
-                    credit = sum(x.credit for x in values)
-                    balance = credit - debit 
+#                     values= self.env['account.move.line'].search([('account_id', '=', PAPIME_configuration_id.account_id.id),('move_id.state', '=', 'posted')])
+#                     debit = sum(x.debit for x in values)
+#                     credit = sum(x.credit for x in values)
+#                     balance = credit - debit 
 
                 auth_amt = 0
                 paid_amt = 0
                 exer_amt = 0
-                program_code_ids = PAPIME_ids.mapped('program_code')
+                
+                budget_stage_ids = self.env['stage'].search([('project_id','in',PAPIME_ids.ids)])
+                program_code_ids = self.env['program.code'].search([('stage_id','in',budget_stage_ids.ids),('year.name','=',str(year))])
+                
+#                program_code_ids = PAPIME_ids.mapped('program_code')
                 if program_code_ids:
-                    self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NULL and start_date >= %s and end_date <= %s", (tuple(program_code_ids.ids),start,end))
+                    self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NOT TRUE and start_date >= %s and end_date <= %s", (tuple(program_code_ids.ids),start,end))
                     my_datas = self.env.cr.fetchone()
                     if my_datas:
                         auth_amt = my_datas[0]
 
-                    self.env.cr.execute("select coalesce(sum(abs(line.balance)+abs(line.tax_price_cr)),0) from account_move_line line,account_move amove where line.program_code_id in %s and amove.id=line.move_id and amove.payment_state in %s and amove.invoice_date >= %s and amove.invoice_date <= %s", (tuple(program_code_ids.ids),('for_payment_procedure','payment_not_applied'),start,end))
+                    self.env.cr.execute("select coalesce(sum(ebl.available),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and start_date >= %s and end_date <= %s", (tuple(program_code_ids.ids),start,end))
                     my_datas = self.env.cr.fetchone()
                     if my_datas:
                         exer_amt = my_datas[0]
@@ -413,29 +420,33 @@ class IntegrationOfBudgetResource(models.AbstractModel):
                 INFOCAB_ids = current_project_ids.filtered(lambda x:x.PAPIIT_project_type=='INFOCAB')
                 
                 account_code = ''
-                debit = 0
-                credit = 0
-                balance = 0
+                debit = sum(x.allocated_amount for x in INFOCAB_ids)
+                credit = sum(x.exercised_amount for x in INFOCAB_ids)
+                balance = sum(x.final_amount for x in INFOCAB_ids)
                 
                 INFOCAB_configuration_id = self.env['remaining.resource'].search([('stage_id','=',stage.id),('year','=',year),('project_type','=','infocab')],limit=1)
                 if INFOCAB_configuration_id and INFOCAB_configuration_id.account_id:
                     account_code = INFOCAB_configuration_id.account_id.code
-                    values= self.env['account.move.line'].search([('account_id', '=', INFOCAB_configuration_id.account_id.id),('move_id.state', '=', 'posted')])
-                    debit = sum(x.debit for x in values)
-                    credit = sum(x.credit for x in values)
-                    balance = credit - debit 
+#                     values= self.env['account.move.line'].search([('account_id', '=', INFOCAB_configuration_id.account_id.id),('move_id.state', '=', 'posted')])
+#                     debit = sum(x.debit for x in values)
+#                     credit = sum(x.credit for x in values)
+#                     balance = credit - debit 
 
                 auth_amt = 0
                 paid_amt = 0
                 exer_amt = 0
-                program_code_ids = INFOCAB_ids.mapped('program_code')
+
+                budget_stage_ids = self.env['stage'].search([('project_id','in',INFOCAB_ids.ids)])
+                program_code_ids = self.env['program.code'].search([('stage_id','in',budget_stage_ids.ids),('year.name','=',str(year))])
+                
+#                program_code_ids = INFOCAB_ids.mapped('program_code')
                 if program_code_ids:
-                    self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NULL and start_date >= %s and end_date <= %s", (tuple(program_code_ids.ids),start,end))
+                    self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NOT TRUE and start_date >= %s and end_date <= %s", (tuple(program_code_ids.ids),start,end))
                     my_datas = self.env.cr.fetchone()
                     if my_datas:
                         auth_amt = my_datas[0]
 
-                    self.env.cr.execute("select coalesce(sum(abs(line.balance)+abs(line.tax_price_cr)),0) from account_move_line line,account_move amove where line.program_code_id in %s and amove.id=line.move_id and amove.payment_state in %s and amove.invoice_date >= %s and amove.invoice_date <= %s", (tuple(program_code_ids.ids),('for_payment_procedure','payment_not_applied'),start,end))
+                    self.env.cr.execute("select coalesce(sum(ebl.available),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and start_date >= %s and end_date <= %s", (tuple(program_code_ids.ids),start,end))
                     my_datas = self.env.cr.fetchone()
                     if my_datas:
                         exer_amt = my_datas[0]

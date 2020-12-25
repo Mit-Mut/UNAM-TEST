@@ -1686,8 +1686,8 @@ msgid "Logo"
 msgstr ""
 
 #. module: jt_check_controls
-#: model:ir.model.fields,field_description:jt_check_controls.field_cancel_checks__lot_folio
-msgid "Lot Folio"
+#: model:ir.model.fields,field_description:jt_check_controls.field_cancel_checks__batch_folio
+msgid "Batch Folio"
 msgstr ""
 
 #. module: jt_check_controls

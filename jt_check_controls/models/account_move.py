@@ -6,7 +6,8 @@ class SupplierPaymentRequest(models.Model):
     _inherit = 'account.move'
 
     payment_state = fields.Selection(selection_add=[('payment_method_cancelled', 'Payment method cancelled'),
-                                                    ('rotated','Rotated')])
+                                                    ('rotated','Rotated'),
+                                                    ('assigned_payment_method','Assigned Payment Method')])
 
     def cancel_payment_method(self):
         for payment_req in self:

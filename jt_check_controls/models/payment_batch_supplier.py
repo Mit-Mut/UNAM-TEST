@@ -1,5 +1,6 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
+from datetime import datetime
 
 class PaymentBatchSupplier(models.Model):
 
@@ -18,14 +19,67 @@ class PaymentBatchSupplier(models.Model):
     intial_check_folio = fields.Many2one("check.log", compute='_get_check_data')
     final_check_folio = fields.Many2one("check.log", compute='_get_check_data')
     payment_req_ids = fields.One2many('check.payment.req', "payment_batch_id", "Check Payment Requests")
+    printed_checks = fields.Boolean("Printed checks")
+
+    def get_date(self):
+        today = datetime.today().date()
+        day = today.day
+        month = today.month
+        month_name = ''
+        if month == 1:
+            month_name = 'Enero'
+        elif month == 2:
+            month_name = 'Febrero'
+        elif month == 3:
+            month_name = 'Marzo'
+        elif month == 4:
+            month_name = 'Abril'
+        elif month == 5:
+            month_name = 'Mayo'
+        elif month == 6:
+            month_name = 'Junio'
+        elif month == 7:
+            month_name = 'Julio'
+        elif month == 8:
+            month_name = 'Agosto'
+        elif month == 9:
+            month_name = 'Septiembre'
+        elif month == 10:
+            month_name = 'Octubre'
+        elif month == 11:
+            month_name = 'Noviembre'
+        elif month == 12:
+            month_name = 'Diciembre'
+        year = today.year
+        return str(day) + ' de ' + month_name + ' de ' + str(year)
 
     def _get_check_data(self):
         for rec in self:
-            rec.amount_of_checkes = rec.payment_req_ids.filtered(lambda x: x.check_status == 'Printed')
+            rec.amount_of_checkes = len(rec.payment_req_ids.filtered(lambda x: x.check_status == 'Printed'))
             reqs = rec.payment_req_ids.filtered(lambda x: x.check_folio_id != False)
             if reqs:
                 rec.intial_check_folio = reqs[0].check_folio_id.id
                 rec.final_check_folio = reqs[-1].check_folio_id.id
+
+    def action_deliver_checks(self):
+        for rec in self:
+            for line in rec.payment_req_ids.filtered(lambda x: x.selected == True):
+                if line.check_folio_id.status == 'Printed':
+                    line.check_folio_id.status = 'Delivered'
+                line.selected = False
+
+    def action_layout_check_protection(self):
+        return {
+            'name': _('Generate Check Layout'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': False,
+            'res_model': 'generate.supp.check.layout',
+            'domain': [],
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {'default_batch_id': self.id}
+        }
 
     def action_assign_check_folio(self):
         check_log_obj = self.env['check.log']
@@ -34,19 +88,48 @@ class PaymentBatchSupplier(models.Model):
                 count = rec.payment_req_ids.filtered(lambda x:x.selected==True)
                 logs = check_log_obj.search([('checklist_id.checkbook_req_id', '=', rec.checkbook_req_id.id),
                                              ('status', '=', 'Available for printing')], limit=len(count)).ids
+                if len(logs) != len(count):
+                    raise ValidationError(_('No available for printing!'))
                 counter = 0
                 if logs:
-                    for line in self.payment_req_ids.filtered(lambda x:x.selected==True):
+                    for line in rec.payment_req_ids.filtered(lambda x:x.selected==True):
                         line.check_folio_id = logs[counter]
                         counter += 1
                         line.selected = False
+                    rec.printed_checks = True
                 if not logs:
                     raise ValidationError(_('No check available for printing!'))
+
+    def confirm_printed_checks(self):
+        self.ensure_one()
+        line_vals = []
+        for line in self.payment_req_ids:
+            if line.selected and line.check_status == 'Available for printing' and line.check_folio_id:
+                line_vals.append({
+                    'check_folio_id': line.check_folio_id.id if line.check_folio_id else False,
+                    'payment_id': line.payment_id.id if line.payment_id else False,
+                    'payment_req_id': line.payment_req_id.id if line.payment_req_id else False,
+                    'currency_id': line.currency_id.id if line.currency_id else False,
+                    'amount_to_pay': line.amount_to_pay,
+                    'check_status': line.check_status
+                })
+        return {
+            'name': _('Check Print'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': False,
+            'res_model': 'confirm.printed.check',
+            'domain': [],
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {'default_payment_req_ids': [(0, 0, val) for val in line_vals],
+                        'default_supplier_batch_id': self.id}
+        }
 
 class CheckPaymentRequests(models.Model):
 
     _name = 'check.payment.req'
-    _dscription = "Check Payment Request"
+    _description = "Check Payment Request"
 
     payment_batch_id = fields.Many2one('payment.batch.supplier')
     check_folio_id = fields.Many2one('check.log',"Check Folio")

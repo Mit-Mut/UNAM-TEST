@@ -21,7 +21,7 @@
 #
 ##############################################################################
 from odoo import models, _
-from datetime import datetime
+from datetime import datetime, timedelta
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tools.misc import formatLang
 from odoo.tools.misc import xlsxwriter
@@ -65,35 +65,35 @@ class IntegrationOfRemainingResourceByProgram(models.AbstractModel):
         return templates
 
 
-    def get_header(self, options):
-
-        return[
-
-            [
-                {'name': ''},
-                {'name': _('Cuenta de Pasivo:221.721.027'),
-                 'colspan': 1},
-                {'name': _('Cuenta de Pasivo:221.006.001.001'),
-                 'colspan': 1},
-                {'name': _('Cuenta de Pasivo:221.006.002.001'),
-                 'colspan': 1},
-                {'name': _('Cuenta de Pasivo:221.721.227'),
-                 'colspan': 1},
-                {'name': _('Cuenta de Pasivo:221.006.003.00'),
-                 'colspan': 1},
-
-            ],
-
-            [
-                {'name': _('RECURSOS')},
-                {'name': _('PAPIIT ETAPA 27(2016)')},
-                {'name': _('PAPIIT ETAPA 28(2017)')},
-                {'name': _('PAPIIT ETAPA 28(2017)')},
-                {'name': _('INFOCAB ETAPA 28(2016)')},
-                {'name': _('INFOCAB ETAPA 28(2017)')},
-                {'name': _('TOTAL DE RECURSOS')},
-            ]
-        ]
+#    def get_header(self, options):
+# 
+#         return[
+# 
+#             [
+#                 {'name': ''},
+#                 {'name': _('Cuenta de Pasivo:221.721.027'),
+#                  'colspan': 1},
+#                 {'name': _('Cuenta de Pasivo:221.006.001.001'),
+#                  'colspan': 1},
+#                 {'name': _('Cuenta de Pasivo:221.006.002.001'),
+#                  'colspan': 1},
+#                 {'name': _('Cuenta de Pasivo:221.721.227'),
+#                  'colspan': 1},
+#                 {'name': _('Cuenta de Pasivo:221.006.003.00'),
+#                  'colspan': 1},
+# 
+#             ],
+# 
+#             [
+#                 {'name': _('RECURSOS')},
+#                 {'name': _('PAPIIT ETAPA 27(2016)')},
+#                 {'name': _('PAPIIT ETAPA 28(2017)')},
+#                 {'name': _('PAPIIT ETAPA 28(2017)')},
+#                 {'name': _('INFOCAB ETAPA 28(2016)')},
+#                 {'name': _('INFOCAB ETAPA 28(2017)')},
+#                 {'name': _('TOTAL DE RECURSOS')},
+#             ]
+#         ]
 
     def _format(self, value,figure_type):
         if self.env.context.get('no_format'):
@@ -116,13 +116,198 @@ class IntegrationOfRemainingResourceByProgram(models.AbstractModel):
         value['name'] = round(value['name'], 1)
         return value
 
+    def get_month_name(self, month):
+        month_name = ''
+        if month == 1:
+            month_name = 'Enero'
+        elif month == 2:
+            month_name = 'Febrero'
+        elif month == 3:
+            month_name = 'Marzo'
+        elif month == 4:
+            month_name = 'Abril'
+        elif month == 5:
+            month_name = 'Mayo'
+        elif month == 6:
+            month_name = 'Junio'
+        elif month == 7:
+            month_name = 'Julio'
+        elif month == 8:
+            month_name = 'Agosto'
+        elif month == 9:
+            month_name = 'Septiembre'
+        elif month == 10:
+            month_name = 'Octubre'
+        elif month == 11:
+            month_name = 'Noviembre'
+        elif month == 12:
+            month_name = 'Diciembre'
+
+        return month_name.upper()
+
+    def _get_columns_name(self, options):
+
+        start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+
+        col_span = 2
+        
+        
+        project_type_list = ['papit','papime','infocab']
+        p_config_ids = self.env['remaining.resource'].search([('stage_id','!=',False),('year','<=',str(end.year))],order='year')
+        if p_config_ids:
+            for p in project_type_list:
+                p_type_ids =p_config_ids.filtered(lambda x:x.project_type==p)
+                for a in p_type_ids:
+                    col_span += 1
+
+        col_list = []
+        for r in range(col_span):
+            col_list.append({'name': ''})
+                    
+        return col_list
+
     def _get_lines(self, options, line_id=None):
         lines = []
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+
+        month_name = self.get_month_name(end.month)
+        col_span = 2
+
+        prev = start - timedelta(days=1)
+        previous_month = self.get_month_name(prev.month)
+                
+        col_account = []
+        col_stage = []
+        open_balance = []
+        debit_balance = []
+        credit_balance = []
+        total_balance = []
         
+        total_open_bal = 0
+        total_debit = 0
+        total_credit = 0
+        total = 0
+        
+        project_type_list = ['papit','papime','infocab']
+        p_config_ids = self.env['remaining.resource'].search([('stage_id','!=',False),('year','<=',str(end.year))],order='year')
+        if p_config_ids:
+            for p in project_type_list:
+                p_type_ids =p_config_ids.filtered(lambda x:x.project_type==p).sorted(key='stage_name')
+                for a in p_type_ids:
+                    col_span += 1
+                    account_code = 'Cuenta de Pasivo:'
+                    if a.account_id and a.account_id.code:
+                        account_code += a.account_id.code
+                    col_account.append({'name': account_code})
+                    movement = dict(a._fields['project_type'].selection).get(a.project_type)
+                    stage_name = ''
+                    if movement:
+                        stage_name = movement+" " 
+                    stage_name += "ETAPA "+str(a.stage_id.name)+"("+str(a.year)+")"
+                    col_stage.append({'name': stage_name})
+                    o_bal = 0
+                    d_bal = 0
+                    c_bal = 0
+                    
+                    if a.account_id:
+                        values= self.env['account.move.line'].search([('date','>=',start),('date','<=',end),('account_id', '=', a.account_id.id),('move_id.state', '=', 'posted')])
+                        d_bal = sum(x.debit for x in values)
+                        c_bal = sum(x.credit for x in values)
+                        
+                        values= self.env['account.move.line'].search([('date','<',start),('account_id', '=', a.account_id.id),('move_id.state', '=', 'posted')])
+                        o_bal = sum(x.debit - x.credit for x in values)
+                    
+                    t_bal = o_bal - d_bal + c_bal
+                    total_open_bal += o_bal
+                    total_debit += d_bal
+                    total_credit += c_bal
+                    total += t_bal
+                    
+                    open_balance.append(self._format({'name': o_bal},figure_type='float'))
+                    debit_balance.append(self._format({'name': d_bal},figure_type='float'))
+                    credit_balance.append(self._format({'name': c_bal},figure_type='float'))
+                    total_balance.append(self._format({'name': t_bal},figure_type='float'))
+                                                
+        col_account.append({'name': ''})
+        
+        col_stage.append({'name': 'TOTAL DE RECURSOS'})
+        open_balance.append(self._format({'name': total_open_bal},figure_type='float'))
+        debit_balance.append(self._format({'name': total_debit},figure_type='float'))
+        credit_balance.append(self._format({'name': total_credit},figure_type='float'))
+        total_balance.append(self._format({'name': total},figure_type='float'))
+        
+        lines.append({
+            'id': 'hierarchy_title',
+            'name' : 'INTEGRACIÓN DE RECURSOS REMANENTES POR PROGRAMA PAPIIT,PAPIME,INFOCAB AL '+str(end.day)+" / " +str(month_name) + " / "+str(end.year), 
+            'columns': [ 
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+            'class':'text-center',
+            'colspan':col_span,
+        })
+
+        lines.append({
+            'id': 'hierarchy_acc_name',
+            'name' : '', 
+            'columns':col_account,
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+
+        lines.append({
+            'id': 'hierarchy_STAGE',
+            'name' : 'RECURSOS', 
+            'columns': col_stage,
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+
+        lines.append({
+            'id': 'hierarchy_open_bal',
+            'name' : 'DISPONIBLES AL '+str(prev.day)+" / " +str(previous_month) + " / "+str(prev.year), 
+            'columns': open_balance,
+            'level': 3,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+
+        lines.append({
+            'id': 'hierarchy_debit_bal',
+            'name' : 'DISTRIBUCION MES DE '+str(month_name), 
+            'columns': debit_balance,
+            'level': 3,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+
+        lines.append({
+            'id': 'hierarchy_credit_bal',
+            'name' : 'DEVOLUCION DE RECOURSOS MES DE', 
+            'columns': credit_balance,
+            'level': 3,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+
+        lines.append({
+            'id': 'hierarchy_total_bal',
+            'name' : 'DISPONIBLES AL '+str(end.day)+" / " +str(month_name) + " / "+str(end.year), 
+            'columns': total_balance,
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+
         return lines
 
     def _get_report_name(self):

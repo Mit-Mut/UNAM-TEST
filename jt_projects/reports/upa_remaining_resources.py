@@ -130,7 +130,7 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
-        domain = [('proj_start_date','>=',start),('proj_end_date','<=',end),('PAPIIT_project_type','!=',False)]
+        domain = [('is_papiit_project','=',True),('proj_start_date','>=',start),('proj_end_date','<=',end),('PAPIIT_project_type','!=',False)]
                     
         project_ids = self.env['project.project'].search(domain)
 
@@ -239,9 +239,9 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
                 auth_amt = 0
                 exer_amt = 0
                 diff_amt = 0
-                program_code_ids = PAPIIT_ids.mapped('program_code')
+                #program_code_ids = PAPIIT_ids.mapped('program_code')
                 if program_code_ids:
-                    self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NULL and start_date >= %s and end_date <= %s", (tuple(program_code_ids.ids),start,end))
+                    self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NOT TRUE and start_date >= %s and end_date <= %s", (tuple(program_code_ids.ids),start,end))
                     my_datas = self.env.cr.fetchone()
                     if my_datas:
                         auth_amt = my_datas[0]
@@ -319,9 +319,9 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
                 auth_amt = 0
                 exer_amt = 0
                 diff_amt = 0
-                program_code_ids = PAPIME_ids.mapped('program_code')
+                #program_code_ids = PAPIME_ids.mapped('program_code')
                 if program_code_ids:
-                    self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NULL and start_date >= %s and end_date <= %s", (tuple(program_code_ids.ids),start,end))
+                    self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NOT TRUE and start_date >= %s and end_date <= %s", (tuple(program_code_ids.ids),start,end))
                     my_datas = self.env.cr.fetchone()
                     if my_datas:
                         auth_amt = my_datas[0]
@@ -400,9 +400,9 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
                 auth_amt = 0
                 exer_amt = 0
                 diff_amt = 0
-                program_code_ids = INFOCAB_ids.mapped('program_code')
+                #program_code_ids = INFOCAB_ids.mapped('program_code')
                 if program_code_ids:
-                    self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NULL and start_date >= %s and end_date <= %s", (tuple(program_code_ids.ids),start,end))
+                    self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NOT TRUE and start_date >= %s and end_date <= %s", (tuple(program_code_ids.ids),start,end))
                     my_datas = self.env.cr.fetchone()
                     if my_datas:
                         auth_amt = my_datas[0]

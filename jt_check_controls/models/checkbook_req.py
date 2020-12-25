@@ -296,7 +296,7 @@ class CheckListLine(models.Model):
                     'check_status': rec.status,
                     'bank_id': rec.bank_id.id if rec.bank_id else False,
                     'bank_account_id': rec.bank_account_id.id if rec.bank_account_id else False,
-                    'checkbook_no': rec.checkbook_no,
+                    'checkbook_no': rec.bank_id.checkbook_no if rec.bank_id else False,
                     'check_log_id': rec.id
                     })
 

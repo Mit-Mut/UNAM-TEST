@@ -74,4 +74,17 @@ class ReissueOfChecks(models.Model):
                 
     def action_reject(self):
         self.state = 'rejected'
+
+    def action_layout_check_cancel(self):
+        return {
+            'name': _('Generate Cancel Check Layout'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': False,
+            'res_model': 'generate.cancel.check.layout',
+            'domain': [],
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {'default_reissue_ids': [(6,0,self.ids)]},
+        }
         

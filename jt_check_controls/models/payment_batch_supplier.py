@@ -166,6 +166,8 @@ class CheckPaymentRequests(models.Model):
         'res.currency', default=lambda self: self.env.user.company_id.currency_id, string="Currency")
     amount_to_pay = fields.Monetary("Amount to Pay", currency_field='currency_id')
     selected = fields.Boolean("Select")
+    is_withdrawn_circulation = fields.Boolean(default=False,copy=False)
+    
     check_status = fields.Selection([('Checkbook registration', 'Checkbook registration'),
                           ('Assigned for shipping', 'Assigned for shipping'),
                           ('Available for printing', 'Available for printing'),

@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="external_layout_check_summary" name="external_layout_check_summary">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+
+        <div class="header">
+            <div class="row">
+                <div class="col-3">
+                    <img t-attf-src="data:image/png;base64,{{company.header_logo}}" style="width:120px;height:100px;margin-top:20px;margin-right:20px;margin-bottom:20px;"/>
+                </div>
+            
+                <div class="col-6 text-center">
+                    <span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span><br/>
+                    <span style="font-size:12px;">DIRECCIÓN GENERAL DE FINANZAS</span><br/>
+                    <span style="font-size:12px;">AREA DE TRAMIT:REC/04</span><br/>
+                    <span style="font-size:12px;">REPORTE SUMARIAS DE CHEQUES</span><br/>
+                </div>
+                <div class="col-3 text-left" style="vertical-align: bottom;">
+                    <span>Bank:</span><br/>
+                    <span>Bank Account:</span><br/>
+                    <span>Fecha de impresión  </span><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/> 
+                </div>
+                
+            </div>
+        </div>
+        <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+          <t t-raw="0"/>
+        </div>
+
+        <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
+            <div class="row">
+                <div class="col-6">
+                    <hr style="width:40%;color:black;"/><br/>
+                    <strong>RESPONSABLE DE IMPRESION</strong>
+                </div>
+                <div class="col-6">
+                    <hr/><br/>
+                    <strong>VO.BO.</strong>
+
+                </div>
+            </div>
+        </div>
+         
+        </template>
+
+
+        <template id="external_layout_payment_report" name="external_layout_payment_report">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+
+        <div class="header">
+            <div class="row">
+                <div class="col-3">
+                    <img t-attf-src="data:image/png;base64,{{company.header_logo}}" style="width:120px;height:100px;margin-top:20px;margin-right:20px;margin-bottom:20px;"/>
+                </div>
+            
+                <div class="col-6 text-center">
+                    <span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span><br/>
+                    <span style="font-size:12px;">DIRECCIÓN GENERAL DE FINANZAS</span><br/>
+                    <span style="font-size:12px;">PATRONATO UNIVERSITARIO</span><br/>
+                    <span style="font-size:12px;">AREA DE TRAMIT:PER/04</span><br/>
+                    <span style="font-size:12px;">REPORTE DE NOMINA</span><br/>
+                </div>
+                <div class="col-3 text-left" style="vertical-align: bottom;">
+                    <span>Bank:</span><br/>
+                    <span>Bank Account:</span><br/>
+                    <span>Fecha de impresión  </span><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/> 
+                </div>
+                
+                
+            </div>
+        </div>
+        <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+          <t t-raw="0"/>
+        </div>
+
+        <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
+            <div class="row">
+                <div class="col-6">
+                    <hr style="width:40%;color:black;"/><br/>
+                    <strong>RESPONSABLE DE IMPRESION</strong>
+                </div>
+                <div class="col-6">
+                    <hr/><br/>
+                    <strong>VO.BO.</strong>
+
+                </div>
+            </div>
+        </div>
+         
+        </template>
+
+
+        <template id="external_layout_check_protection" name="external_layout_check_protection">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+
+        <div class="header">
+            <div class="row">
+                <div class="col-3">
+                    <img t-attf-src="data:image/png;base64,{{company.header_logo}}" style="width:120px;height:100px;margin-top:20px;margin-right:20px;margin-bottom:20px;"/>
+                </div>
+            
+                <div class="col-6 text-center">
+                    <span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span><br/>
+                    <span style="font-size:12px;">PATRONATO UNIVERSITARIO</span><br/>
+                    <span style="font-size:12px;">DIRECCIÓN GENERAL DE FINANZAS</span><br/>
+                    <span style="font-size:12px;">COORDINACIÓN DE PAGOS</span><br/>
+                    <span style="font-size:12px;">REPORTE DE PROTECCIÓN DE CHEQUES DEL DIA </span><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/> <br/>
+                </div>
+               
+                
+                
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <span><strong>CHEQUES LIBERADOS:</strong></span>
+                </div>
+                <div class="col-6">
+                    <span><strong>IMPORTE TOTAL:</strong></span>
+                </div>
+                
+            </div>
+        </div>
+        <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+          <t t-raw="0"/>
+        </div>
+        </template>
+
+
+        <template id="external_payroll_wage_adjst" name="external_layout_payroll_wage_adjst">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+
+        <div class="header">
+            <div class="row">
+                <div class="col-3">
+                    <img t-attf-src="data:image/png;base64,{{company.header_logo}}" style="width:120px;height:100px;margin-top:20px;margin-right:20px;margin-bottom:20px;"/>
+                </div>
+            
+                <div class="col-6 text-center">
+                    <span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span><br/>
+                    <span style="font-size:12px;">PATRONATO UNIVERSITARIO</span><br/>
+                    <span style="font-size:12px;">TESORERIA</span><br/>
+                    <span style="font-size:12px;">AJUSTE EN SALARIOS DE QUINCENA
+                    </span><br/>
+                </div>
+                 <div class="col-3 text-left" style="vertical-align: bottom;">
+                    <span>Fecha de impresión  </span><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/> 
+                </div>
+               
+                
+                
+            </div>
+            
+        </div>
+        <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+          <t t-raw="0"/>
+        </div>
+        </template>
+
+
+    </data>
+</odoo>

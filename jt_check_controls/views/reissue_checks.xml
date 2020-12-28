@@ -137,6 +137,13 @@
                   action="action_cancellation_of_checks"
                   parent="jt_payroll_payment.menu_payment_finance" sequence="1"/>
 	
+        <record id="action_layout_cancel_check" model="ir.actions.server">
+            <field name="name">Check cancellation layout</field>
+            <field name="model_id" ref="jt_check_controls.model_reissue_checks"/>
+            <field name="binding_model_id" ref="jt_check_controls.model_reissue_checks"/>
+            <field name="state">code</field>
+            <field name="code">action = records.action_layout_check_cancel()</field>
+        </record>
 
     </data>
 </odoo>

@@ -42,17 +42,25 @@
         'wizard/approve_blank_check.xml',
         'security/ir.model.access.csv',
         'data/sequence.xml',
+        'data/mail_data.xml',
         'reports/check_request_1.xml',
         'reports/check_request_2.xml',
         'reports/check_registration.xml',
+        'reports/report_menu.xml',
         'views/cancel_checks.xml',
         'views/reissue_checks.xml',
+        'reports/header.xml',
         'reports/blank_check_req_report.xml',
         'views/send_checks.xml',
         'reports/send_check_report.xml',
         'reports/payment_batch_supplier.xml',
         'wizard/confirm_printed_checks.xml',
-        'wizard/generate_sup_batch_check_layout.xml'
+        'wizard/generate_sup_batch_check_layout.xml',
+        'wizard/generate_cancel_check_layout.xml',
+        'views/circulation_of_checks.xml',
+        'views/expiration_validity_check.xml',
+        
+
     ],
     'demo': [
     ],

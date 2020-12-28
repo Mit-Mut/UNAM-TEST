@@ -1,10 +1,12 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 class PaymentBatchSupplier(models.Model):
 
     _name = 'payment.batch.supplier'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Payment Batch Supplier"
     _rec_name = 'batch_folio'
 
@@ -20,6 +22,7 @@ class PaymentBatchSupplier(models.Model):
     final_check_folio = fields.Many2one("check.log", compute='_get_check_data')
     payment_req_ids = fields.One2many('check.payment.req', "payment_batch_id", "Check Payment Requests")
     printed_checks = fields.Boolean("Printed checks")
+    description_layout = fields.Text("Description Layout")
 
     def get_date(self):
         today = datetime.today().date()
@@ -60,6 +63,30 @@ class PaymentBatchSupplier(models.Model):
             if reqs:
                 rec.intial_check_folio = reqs[0].check_folio_id.id
                 rec.final_check_folio = reqs[-1].check_folio_id.id
+
+    def action_protected_checks(self):
+        today = datetime.today().date()
+        attch = self.env['ir.attachment']
+        for rec in self:
+            attachment = attch.search([('res_model', '=', 'payment.batch.supplier'), ('res_id', '=', rec.id)])
+            if not attachment:
+                raise ValidationError(_("The bank's response file for changing status must be attached to the checks"))
+            for line in rec.payment_req_ids.filtered(lambda x: x.selected == True):
+                if line.check_folio_id.status == 'Sent to protection':
+                    line.check_folio_id.status = 'Protected and in transit'
+                    line.check_folio_id.date_protection = today
+                    check_protection_term = 0
+                    if line.payment_batch_id.payment_issuing_bank_id.bank_id:
+                        check_protection_term = line.payment_batch_id.payment_issuing_bank_id.bank_id.check_protection_term
+                    line.check_folio_id.date_expiration = today + relativedelta(days=check_protection_term)
+                line.selected = False
+
+    def action_send_file_to_protection(self):
+        for rec in self:
+            for line in rec.payment_req_ids.filtered(lambda x: x.selected == True):
+                if line.check_folio_id.status == 'Delivered':
+                    line.check_folio_id.status = 'Sent to protection'
+                line.selected = False
 
     def action_deliver_checks(self):
         for rec in self:

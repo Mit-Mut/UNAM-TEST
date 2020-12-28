@@ -305,3 +305,4 @@ class ResBank(models.Model):
     _inherit = 'res.bank'
 
     check_validity = fields.Integer("Check Validity")
+    check_protection_term = fields.Integer("Check Protection Term")

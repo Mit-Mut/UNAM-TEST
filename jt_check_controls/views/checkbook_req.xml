@@ -10,6 +10,7 @@
                 <xpath expr="//group[@name='communication_details']" position="after">
                     <group>
                         <field name="check_validity"/>
+                        <field name="check_protection_term"/>
                     </group>
                 </xpath>
             </field>

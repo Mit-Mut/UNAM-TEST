@@ -22,7 +22,7 @@
                         <field name="printed_checks" invisible="1"/>
                         <button name="confirm_printed_checks" type="object" string="Confirm Printed Checks"
                                 class="oe_highlight"
-                                    attrs="{'invisible': [('printed_checks', '=', False)]}"/>
+                                attrs="{'invisible': [('printed_checks', '=', False)]}"/>
                     </header>
                     <sheet>
                         <group>
@@ -31,7 +31,7 @@
                                 <field name="payment_issuing_bank_id"/>
                                 <field name="payment_issuing_bank_acc_id"/>
                                 <field name="checkbook_req_id" context="{'from_approve_check':1}"
-                                    domain="[('bank_id', '=', payment_issuing_bank_id)]"/>
+                                       domain="[('bank_id', '=', payment_issuing_bank_id)]"/>
                                 <field name="type_of_payment_method" readonly="1"/>
                             </group>
                             <group>
@@ -39,6 +39,7 @@
                                 <field name="amount_of_checkes"/>
                                 <field name="intial_check_folio"/>
                                 <field name="final_check_folio"/>
+                                <field name="description_layout"/>
                             </group>
                         </group>
                         <notebook>
@@ -56,6 +57,11 @@
                             </page>
                         </notebook>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -67,7 +73,7 @@
             <field name="context">{'from_approve_check':1}</field>
         </record>
 
-         <menuitem id="payment_batch_main_menu" name="Payment Batch"
+        <menuitem id="payment_batch_main_menu" name="Payment Batch"
                   parent="check_control_main_menu" sequence="2"/>
 
         <menuitem id="payment_batch_supplier_menu" name="Payment Batch(Supplier)"
@@ -90,12 +96,28 @@
             <field name="code">action = records.action_deliver_checks()</field>
         </record>
 
-         <record id="action_layout_check_protection" model="ir.actions.server">
+        <record id="action_layout_check_protection" model="ir.actions.server">
             <field name="name">Layout Check Protection</field>
             <field name="model_id" ref="jt_check_controls.model_payment_batch_supplier"/>
             <field name="binding_model_id" ref="jt_check_controls.model_payment_batch_supplier"/>
             <field name="state">code</field>
             <field name="code">action = records.action_layout_check_protection()</field>
+        </record>
+
+        <record id="action_send_file_to_protection" model="ir.actions.server">
+            <field name="name">Send File to Protection</field>
+            <field name="model_id" ref="jt_check_controls.model_payment_batch_supplier"/>
+            <field name="binding_model_id" ref="jt_check_controls.model_payment_batch_supplier"/>
+            <field name="state">code</field>
+            <field name="code">action = records.action_send_file_to_protection()</field>
+        </record>
+
+        <record id="action_protected_checks" model="ir.actions.server">
+            <field name="name">Protected Checks</field>
+            <field name="model_id" ref="jt_check_controls.model_payment_batch_supplier"/>
+            <field name="binding_model_id" ref="jt_check_controls.model_payment_batch_supplier"/>
+            <field name="state">code</field>
+            <field name="code">action = records.action_protected_checks()</field>
         </record>
 
         <record id="action_payment_batch_supplier_finance" model="ir.actions.act_window">
@@ -106,7 +128,7 @@
         </record>
 
 
-         <menuitem id="payment_batch_supplier_menu_finance" name="Payment Batch(Supplier)"
+        <menuitem id="payment_batch_supplier_menu_finance" name="Payment Batch(Supplier)"
                   parent="jt_payroll_payment.menu_payment_finance"
                   action="action_payment_batch_supplier_finance" sequence="1"/>
 

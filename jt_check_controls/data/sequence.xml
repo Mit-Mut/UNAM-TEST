@@ -36,5 +36,11 @@
             <field name="company_id" eval="False"/>
         </record>
 
+        <record id="seq_reissue_check_folio" model="ir.sequence">
+            <field name="name">Reissue Check Folio</field>
+            <field name="code">reissue.check.folio</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
     </data>
 </odoo>

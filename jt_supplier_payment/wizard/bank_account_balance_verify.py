@@ -136,7 +136,8 @@ class BankBalanceCheck(models.TransientModel):
         #====== the Bank Journal, for the accounting impact of the "Exercised" Budget ======#
         if not self.journal_id.execercise_credit_account_id or not self.journal_id.conac_exe_credit_account_id \
             or not self.journal_id.execercise_debit_account_id or not self.journal_id.conac_exe_debit_account_id :
-            raise ValidationError("Please configure UNAM and CONAC Exercised account in Bank journal!")
+            raise ValidationError("Please configure UNAM and CONAC Exercised account in %s journal!" %
+                                  self.journal_id.name)
         
         invoice.line_ids = [(0, 0, {
                                      'account_id': self.journal_id.execercise_credit_account_id and self.journal_id.execercise_credit_account_id.id or False,

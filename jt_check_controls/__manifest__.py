@@ -46,6 +46,7 @@
         'reports/check_request_2.xml',
         'reports/check_registration.xml',
         'views/cancel_checks.xml',
+        'views/reissue_checks.xml',
         'reports/blank_check_req_report.xml',
         'views/send_checks.xml',
         'reports/send_check_report.xml',

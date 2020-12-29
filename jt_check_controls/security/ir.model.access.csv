@@ -15,5 +15,6 @@ access_send_checks,send_checks_access,model_send_checks,base.group_user,1,1,1,1
 access_send_checks_line,send_checks_line_access,model_send_checks_line,base.group_user,1,1,1,1
 access_reissue_checks,reissue_checks_access,model_reissue_checks,base.group_user,1,1,1,1
 access_expiration_validity_check,expiration_validity_check,model_expiration_validity_check,base.group_user,1,1,1,1
+access_available_check,available_check,model_available_check,base.group_user,1,1,1,1
 
 

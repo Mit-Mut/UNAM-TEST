@@ -22,4 +22,4 @@ class CheckAuthorizedByDependency(models.Model):
                                                    ('subdependence_id', '=', rec.subdependency_id.id),
                                                                    ('state', '=', 'confirmed')])
                 rec.checks_authorized_on_previous_app = sum(x.amount_checks for x in check_reqs)
-                rec.checks_remaining_to_auth = rec.max_authorized_checks - len(check_reqs)
+                rec.checks_remaining_to_auth = rec.max_authorized_checks - rec.checks_authorized_on_previous_app

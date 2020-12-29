@@ -29,7 +29,7 @@
     'maintainer': 'Jupical Technologies Pvt. Ltd.',
     'website': 'http://www.jupical.com',
     'license': 'AGPL-3',
-    'depends': ['jt_budget_mgmt'],
+    'depends': ['jt_budget_mgmt','jt_projects'],
     'data': [
         'views/minimum_checks.xml',
         'views/trades.xml',
@@ -54,12 +54,15 @@
         'views/send_checks.xml',
         'reports/send_check_report.xml',
         'reports/payment_batch_supplier.xml',
+        # 'reports/payroll_wage_adjustment.xml',
         'wizard/confirm_printed_checks.xml',
         'wizard/generate_sup_batch_check_layout.xml',
         'wizard/generate_cancel_check_layout.xml',
         'views/circulation_of_checks.xml',
         'views/expiration_validity_check.xml',
-        
+        'views/available_checks.xml',
+        'wizard/cancel_available_checks.xml',
+
 
     ],
     'demo': [

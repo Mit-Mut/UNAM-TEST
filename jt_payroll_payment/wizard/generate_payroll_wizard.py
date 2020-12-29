@@ -64,7 +64,7 @@ class GeneratePayrollWizard(models.TransientModel):
                     counter = 0
                     rfc = row[0].value
                     program_code = row[2].value
-                    
+                    payment_method = row[4].value
                     check_number = row[6].value
                     deposite_number = row[7].value
                     
@@ -84,6 +84,14 @@ class GeneratePayrollWizard(models.TransientModel):
                             result_dict = {}
                             line_data = []
                             exit_payroll_id = False
+                            
+                        payment_method_id = False    
+                        if payment_method:         
+                            if  type(payment_method) is int or type(payment_method) is float:
+                                payment_method = int(payment_method)
+                            payment_method_rec = self.env['l10n_mx_edi.payment.method'].search([('name','=',str(payment_method))],limit=1)
+                            if payment_method_rec:
+                                payment_method_id = payment_method_rec.id
                              
                         employee_id =self.env['hr.employee'].search([('rfc','=',rfc)],limit=1)
                         if employee_id:
@@ -99,6 +107,11 @@ class GeneratePayrollWizard(models.TransientModel):
                                     rec_deposite_number = int(deposite_number)
                                     
                             exit_payroll_id = self.env['employee.payroll.file'].search([('employee_id','=',employee_id.id),('id','in',self.payroll_process_id.payroll_ids.ids)],limit=1)
+                            if exit_payroll_id:
+                                exit_payroll_id.l10n_mx_edi_payment_method_id = payment_method_id
+                                exit_payroll_id.deposite_number = rec_deposite_number
+                                exit_payroll_id.check_number = rec_check_number
+                                
                             if not exit_payroll_id:
                                 result_dict.update({'payroll_processing_id':self.payroll_process_id.id,
                                                     'period_start' : self.payroll_process_id.period_start,
@@ -107,6 +120,7 @@ class GeneratePayrollWizard(models.TransientModel):
                                                     'employee_id':employee_id.id,
                                                     'deposite_number' : rec_deposite_number,
                                                     'check_number' : rec_check_number,
+                                                    'l10n_mx_edi_payment_method_id':payment_method_id,
                                                     'payment_request_type':'direct_employee'})
                     
                     program_id = False

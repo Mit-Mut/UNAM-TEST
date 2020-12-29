@@ -54,79 +54,50 @@
                             <t t-foreach="o.payment_req_ids" t-as="line">
                                 <t t-if="line.selected and line.check_folio_id and
                                     line.check_status == 'Available for printing'">
-                                    <div class="border">
-                                        <div class="row">
-                                            <div class="col-2" align="left">
-                                                <img t-if="company.logo" t-att-src="image_data_uri(company.logo)"
-                                                     style="max-height: 150px;" alt="Logo"/>
-                                            </div>
-                                            <div class="col-8" align="center" style="text-align:center">
-                                                <div class="border">
-                                                    <h3>UNIVERSIDAD NACIONAL AUTONOMA DE MEXICO</h3>
-                                                    <h4>PATRONATO UNIVERSITARIO</h4>
-                                                    <h4>TESORERIA</h4>
-                                                </div>
-                                                <h4>ACUSE DE RECIBO</h4>
-                                            </div>
-                                            <div class="col-2" align="left">
-                                                <t t-if="o.checkbook_req_id">
-                                                    <h2>
-                                                        <span t-esc="o.checkbook_req_id.checkbook_no"/>
-                                                    </h2>
-                                                </t>
-                                            </div>
-                                        </div>
+                                    <div>
                                         <div class="row">
                                             <div class="col-6" align="left" style="margin-left:5px;">
-                                                Benef:
+                                                <b>Benef:</b>
                                                 <t t-if="line.payment_req_id and line.payment_req_id.partner_id">
-                                                    <span t-esc="line.payment_req_id.partner_id.name"/>
+                                                    <b><span t-esc="line.payment_req_id.partner_id.name"/></b>
                                                 </t>
                                             </div>
                                             <div class="col-6" align="left" style="text-align:right">
-                                                A <span t-esc="o.get_date()"/> <br/>
-                                                    R.F.C.: <span t-esc="line.payment_req_id.rfc"/>
+                                                <b>A <span t-esc="o.get_date()"/> <br/>
+                                                    R.F.C.: <span t-esc="line.payment_req_id.rfc"/></b>
                                             </div>
                                         </div>
-                                        <table class="table" style="text-align:center">
+                                        <br/>
+                                        <table style="text-align:center" width="100%">
                                             <tbody>
                                                 <tr>
-                                                    <td style="border-right:1px solid #ced4da;
-                                                              border-bottom:1px solid #ced4da;">
-                                                        <b>CHEQUE NUMERO</b><br/>
+                                                    <td width="33%">
                                                         <span t-esc="line.check_folio_id.folio"/>
                                                     </td>
-                                                    <td style="border-right:1px solid #ced4da;
-                                                              border-bottom:1px solid #ced4da;">
-                                                        <b>NETO A PAGAR MONEDA NACIONAL</b><br/>
+                                                    <td width="33%">
                                                          <t t-if="line.payment_req_id">
-                                                            <span t-esc="line.payment_req_id.amount_total"
+                                                            <span t-esc="line.amount_to_pay"
                                                             t-options='{"widget": "monetary",
                                                             "display_currency": line.currency_id}'/>
                                                          </t>
                                                     </td>
-                                                    <td style="border-right:1px solid #ced4da;
-                                                              border-bottom:1px solid #ced4da;">
-                                                        <b>NUMERO De FOLIO</b><br/>
+                                                    <td width="33%">
                                                     <t t-if="line.payment_req_id">
                                                         <span t-esc="line.payment_req_id.name"/>
                                                     </t> </td>
                                                 </tr>
                                             </tbody>
                                         </table>
+                                        <br/>
                                          <t t-if="line.payment_req_id">
                                              <span style="margin-left:5px;">(</span>
                                              <span
-                                           t-esc="line.payment_req_id.currency_id.amount_to_text(line.payment_req_id.amount_total)"/>)
+                                           t-esc="line.payment_req_id.currency_id.with_context(from_supplier_payment_batch_report=True).amount_to_text(line.amount_to_pay)"/> )
                                          </t>
-                                        <div style="margin-left:70px"><br/><br/><br/>
-                                            <span>NOMBRE:                ___________________________________________</span>
-                                            <br/><br/><br/>
-                                            <span>FIRMA DE RECIBIDO:     ___________________________________________</span>
-                                        </div>
-                                        <br/><br/>
+                                        <br/>
+                                        <hr/>
+                                        <br/>
                                     </div>
-                                <br/><br/><br/><br/>
                                 </t>
                             </t>
                         </div>

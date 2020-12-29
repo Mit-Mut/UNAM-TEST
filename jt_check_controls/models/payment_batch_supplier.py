@@ -1,10 +1,62 @@
-from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from odoo.exceptions import ValidationError
+
+from odoo import models, fields, api, tools, _
+try:
+    from num2words import num2words
+except ImportError:
+    _logger.warning("The num2words python library is not installed, amount-to-text features won't be fully available.")
+    num2words = None
+
+
+class ResCurrency(models.Model):
+    _inherit = "res.currency"
+
+    def amount_to_text(self, amount):
+        self.ensure_one()
+
+        def _num2words(number, lang):
+            try:
+                return num2words(number, lang=lang).title()
+            except NotImplementedError:
+                return num2words(number, lang='en').title()
+
+        if num2words is None:
+            logging.getLogger(__name__).warning("The library 'num2words' is missing, cannot render textual amounts.")
+            return ""
+
+        formatted = "%.{0}f".format(self.decimal_places) % amount
+        parts = formatted.partition('.')
+        integer_value = int(parts[0])
+        fractional_value = int(parts[2] or 0)
+
+        lang_code = self.env.context.get('lang') or self.env.user.lang
+        lang = self.env['res.lang'].with_context(active_test=False).search([('code', '=', lang_code)])
+        amount_words = tools.ustr('{amt_value} {amt_word}').format(
+            amt_value=_num2words(integer_value, lang=lang.iso_code),
+            amt_word=self.currency_unit_label,
+        )
+
+        if fractional_value == 0:
+            amount_words += ' 00/100 M.N.'
+
+        if not self.is_zero(amount - integer_value):
+            context = self._context
+            if 'from_supplier_payment_batch_report' in context and \
+                    'lang' in context and (context.get('lang') == 'es_MX' or context.get('lang') == 'es_MX'):
+                amount_in_word = amount_words + ' ' + str(fractional_value) + '/100' + ' M.N.'
+                amount_words = amount_in_word
+            else:
+                amount_words += ' ' + _('and') + tools.ustr(' {amt_value} {amt_word}').format(
+                    amt_value=_num2words(fractional_value, lang=lang.iso_code),
+                    amt_word=self.currency_subunit_label,
+                )
+
+        return amount_words
+
 
 class PaymentBatchSupplier(models.Model):
-
     _name = 'payment.batch.supplier'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Payment Batch Supplier"
@@ -25,9 +77,9 @@ class PaymentBatchSupplier(models.Model):
     description_layout = fields.Text("Description Layout")
 
     def get_date(self):
-        today = datetime.today().date()
-        day = today.day
-        month = today.month
+        date = self.payment_date or datetime.today().date()
+        day = date.day
+        month = date.month
         month_name = ''
         if month == 1:
             month_name = 'Enero'
@@ -53,12 +105,14 @@ class PaymentBatchSupplier(models.Model):
             month_name = 'Noviembre'
         elif month == 12:
             month_name = 'Diciembre'
-        year = today.year
+        year = date.year
         return str(day) + ' de ' + month_name + ' de ' + str(year)
 
     def _get_check_data(self):
         for rec in self:
-            rec.amount_of_checkes = len(rec.payment_req_ids.filtered(lambda x: x.check_status == 'Printed'))
+            rec.amount_of_checkes = len(rec.payment_req_ids.filtered(lambda x: x.check_status in ('Printed',
+                                                                                                  'Delivered',
+                                                                                                  'Protected and in transit')))
             reqs = rec.payment_req_ids.filtered(lambda x: x.check_folio_id != False)
             if reqs:
                 rec.intial_check_folio = reqs[0].check_folio_id.id
@@ -112,15 +166,17 @@ class PaymentBatchSupplier(models.Model):
         check_log_obj = self.env['check.log']
         for rec in self:
             if rec.checkbook_req_id:
-                count = rec.payment_req_ids.filtered(lambda x:x.selected==True)
+                count = rec.payment_req_ids.filtered(lambda x: x.selected == True)
                 logs = check_log_obj.search([('checklist_id.checkbook_req_id', '=', rec.checkbook_req_id.id),
                                              ('status', '=', 'Available for printing')], limit=len(count)).ids
                 if len(logs) != len(count):
                     raise ValidationError(_('No available for printing!'))
                 counter = 0
                 if logs:
-                    for line in rec.payment_req_ids.filtered(lambda x:x.selected==True):
+                    for line in rec.payment_req_ids.filtered(lambda x: x.selected == True):
                         line.check_folio_id = logs[counter]
+                        line.check_folio_id.check_amount = line.amount_to_pay
+                        line.payment_req_id.check_folio_id = line.check_folio_id.id
                         counter += 1
                         line.selected = False
                     rec.printed_checks = True
@@ -153,36 +209,37 @@ class PaymentBatchSupplier(models.Model):
                         'default_supplier_batch_id': self.id}
         }
 
-class CheckPaymentRequests(models.Model):
 
+class CheckPaymentRequests(models.Model):
     _name = 'check.payment.req'
     _description = "Check Payment Request"
 
     payment_batch_id = fields.Many2one('payment.batch.supplier')
-    check_folio_id = fields.Many2one('check.log',"Check Folio")
+    check_folio_id = fields.Many2one('check.log', "Check Folio")
     payment_id = fields.Many2one('account.payment')
     payment_req_id = fields.Many2one('account.move')
     currency_id = fields.Many2one(
         'res.currency', default=lambda self: self.env.user.company_id.currency_id, string="Currency")
     amount_to_pay = fields.Monetary("Amount to Pay", currency_field='currency_id')
     selected = fields.Boolean("Select")
-    is_withdrawn_circulation = fields.Boolean(default=False,copy=False)
-    
+    is_withdrawn_circulation = fields.Boolean(default=False, copy=False)
+
     check_status = fields.Selection([('Checkbook registration', 'Checkbook registration'),
-                          ('Assigned for shipping', 'Assigned for shipping'),
-                          ('Available for printing', 'Available for printing'),
-                          ('Printed', 'Printed'), ('Delivered', 'Delivered'),
-                          ('In transit', 'In transit'), ('Sent to protection','Sent to protection'),
-                          ('Protected and in transit','Protected and in transit'),
-                          ('Protected', 'Protected'), ('Detained','Detained'),
-                          ('Withdrawn from circulation','Withdrawn from circulation'),
-                          ('Cancelled', 'Cancelled'),
-                          ('Canceled in custody of Finance', 'Canceled in custody of Finance'),
-                          ('On file','On file'),('Destroyed','Destroyed'),
-                          ('Reissued', 'Reissued'),('Charged','Charged')], related='check_folio_id.status', store=True)
+                                     ('Assigned for shipping', 'Assigned for shipping'),
+                                     ('Available for printing', 'Available for printing'),
+                                     ('Printed', 'Printed'), ('Delivered', 'Delivered'),
+                                     ('In transit', 'In transit'), ('Sent to protection', 'Sent to protection'),
+                                     ('Protected and in transit', 'Protected and in transit'),
+                                     ('Protected', 'Protected'), ('Detained', 'Detained'),
+                                     ('Withdrawn from circulation', 'Withdrawn from circulation'),
+                                     ('Cancelled', 'Cancelled'),
+                                     ('Canceled in custody of Finance', 'Canceled in custody of Finance'),
+                                     ('On file', 'On file'), ('Destroyed', 'Destroyed'),
+                                     ('Reissued', 'Reissued'), ('Charged', 'Charged')], related='check_folio_id.status',
+                                    store=True)
+
 
 class BankBalanceCheck(models.TransientModel):
-
     _inherit = 'bank.balance.check'
 
     def schedule_payment(self):
@@ -219,4 +276,3 @@ class BankBalanceCheck(models.TransientModel):
                 'payment_req_ids': [(0, 0, val) for val in move_val_list]
             })
         return res
-

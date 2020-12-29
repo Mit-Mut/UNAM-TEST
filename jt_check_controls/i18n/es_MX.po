@@ -252,12 +252,6 @@ msgstr ""
 "                            <span style=\"margin-left: 30px;\">\n"
 "                                - La caja sin fleje ya que cuando las transportan se toman las cajas por los flejes y ocasionan hendiduras en las cajas por lo que se maltratan los paquetes interiores.\n"
 "                            </span><br/>\n"
-"                            <span>\n"
-"                                Favor de apegarse estrictamente a las características técnicas de fondo y forma, así como medidas de seguridad del cheque aprobado, así mismo contenga la leyenda “LA VIGENCIA DE ESTE CHEQUE ES DE [variable] DÍAS” EN EL ANVERSO Y REVERSO DEL DOCUMENTO..\"\n"
-"                            </span><br/>\n"
-"                            <span>\n"
-"                               Sin otro particular y esperando vernos favorecidos con su atención al presente, nos despedimos de usted con un cordial saludo.\n"
-"                            </span><br/>"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_2_template
@@ -604,11 +598,13 @@ msgstr "<span>Folio inicial</span>"
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.blank_check_request_template
 msgid ""
-"<span>Nice Stay</span><br/>\n"
-"                        <span>BY MY RACE WILL SPEAK THE SPIRIT</span>"
+"<span>Nice Stay</span>\n"
+"                                        <br/>\n"
+"                                        <span>\"BY MY RACE WILL SPEAK THE SPIRIT\"</span>"
 msgstr ""
-"<span>Bonita estancia</span><br/>\n"
-"                        <span>POR MI RAZA HABLARÁ EL ESPÍRITU</span>"
+"<span>Atentamente</span>\n"
+"                                        <br/>\n"
+"                                        <span>\"POR MI RAZA HABLARÁ EL ESPÍRITU\"</span>"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
@@ -619,9 +615,18 @@ msgstr "<span>No. De Cuenta</span>"
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_2_template
-#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_blank_req_check
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.blank_check_request_template
 msgid "<span>Present:</span>"
 msgstr "<span>Presente:</span>"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.blank_check_request_template
+msgid ""
+"<span>Through this conduit and in attention to your trade with the aforementioned\n"
+"                                        reference, I allow you to give you the following checks</span>"
+msgstr ""
+"<span>Por este conducto y en atención a su oficio con la referencia antes citada, me "
+"permito hacerle entrega de los siguientes cheques</span>"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_registration
@@ -637,7 +642,7 @@ msgstr "<span>mismos que deberán iniciar a partir del folio</span>"
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.blank_check_request_template
 msgid "<span>University City, Cdmx.,</span>"
-msgstr "Ciudad Universitaria, Cdmx.,"
+msgstr "Ciudad Universitaria, Cd. Mx,"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.blank_check_request_template
@@ -1381,7 +1386,7 @@ msgstr "Fecha de Vencimiento"
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_blank_req_check
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_registration
 msgid "FINANCIAL OPERATIONS DEPARTMENT"
-msgstr "DEPARTAMENTO DE OPERACIONES FINANCIERAS"
+msgstr "Departamento de Operación Financiera"
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_payment_batch_supplier__final_check_folio
@@ -1399,7 +1404,7 @@ msgstr "Folio final"
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_blank_req_check
 msgid "Finance Sub-Direction"
-msgstr "Subdirección de Finanzas"
+msgstr "Dirección de Ingresos y Operación Financiera"
 
 #. module: jt_check_controls
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__approve_blank_check__department__financial_transaction
@@ -1813,7 +1818,7 @@ msgstr "Observaciones"
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_blank_req_check
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_registration
 msgid "Of. No."
-msgstr "De. No."
+msgstr "Of. No."
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_blank_checks_request__delivery_of_checks
@@ -1839,8 +1844,8 @@ msgid "Only one record have this option!"
 msgstr "¡Sólo un disco tiene esta opción!"
 
 #. module: jt_check_controls
-#: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__general_status__paid_out
-msgid "Paid Out"
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__general_status__paid
+msgid "Paid"
 msgstr ""
 
 #. module: jt_check_controls
@@ -2071,13 +2076,13 @@ msgstr "ASUNTO: SOLICITUD DE ALTA DE CHEQUES"
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_blank_req_check
 msgid "SUBJECT: Delivery of check format"
-msgstr ""
+msgstr "Asunto: Entrega de formato de cheques"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_2_template
 msgid "SUBJECT: REQUEST FOR CHECKS"
-msgstr "TEMA: Entrega de formato de cheque"
+msgstr "Asunto: Solicitud de cheques"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.checkbook_req_form_view
@@ -2205,7 +2210,7 @@ msgstr "PATRONATO UNIVERSITARIO"
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_blank_req_check
 msgid "UNIVERSITY PATRONATE"
-msgstr "PATROCINIO DE LA UNIVERSIDAD"
+msgstr "PATRONATO UNIVERSITARIO"
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_cancel_checks__message_unread

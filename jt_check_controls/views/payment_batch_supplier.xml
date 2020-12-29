@@ -48,9 +48,9 @@
                                     <tree editable="bottom">
                                         <field name="selected"/>
                                         <field name="check_folio_id"/>
-                                        <field name="payment_id"/>
-                                        <field name="payment_req_id"/>
-                                        <field name="amount_to_pay"/>
+                                        <field name="payment_id" readonly="1" force_save="1"/>
+                                        <field name="payment_req_id" readonly="1" force_save="1"/>
+                                        <field name="amount_to_pay" readonly="1" force_save="1"/>
                                         <field name="check_status"/>
                                     </tree>
                                 </field>

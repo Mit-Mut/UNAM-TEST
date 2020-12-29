@@ -30,6 +30,7 @@ import base64
 from odoo.tools import config, date_utils, get_lang
 import lxml.html
 from datetime import datetime ,timedelta,date
+import json
 
 class InvestmentFundsinProductiveAccounts(models.AbstractModel):
     _name = "jt_investment.investment.funds.productive.accounts"
@@ -73,6 +74,17 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                 'code': j.name,
                 'selected': journal_map.get(j.id, j.id in default_group_ids),
             })
+
+    # Set columns based on dynamic options
+    def print_xlsx(self, options,test):
+        return {
+                'type': 'ir_actions_account_report_download',
+                'data': {'model': self.env.context.get('model'),
+                         'options': json.dumps(options),
+                         'output_format': 'xlsx',
+                         'financial_id': self.env.context.get('id'),
+                         }
+                }
 
     def _get_reports_buttons(self):
         return [

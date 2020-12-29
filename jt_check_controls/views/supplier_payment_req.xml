@@ -29,8 +29,29 @@
                     <attribute name="attrs">{'readonly': [('payment_state', 'not in', ('draft', 'rotated')),
                                         ('is_from_reschedule_payment','=',False)]}</attribute>
                 </field>
+                <field name="batch_folio" position="after">
+                    <field name="check_folio_id" readonly="1"/>
+                    <field name="check_status"/>
+                </field>
             </field>
         </record>
 
+		<!--  Project Payment Request Views -->
+        <record id="payment_req_form_view_inherit_for_check" model="ir.ui.view">
+            <field name="name">payment.req.form.view.inherit.for.check</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="jt_projects.payment_req_form_view_inherit"/>
+            <field name="arch" type="xml">
+            	<xpath expr="//button[@name='action_reschedule']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('payment_state', 'not in', ('payment_not_applied','payment_method_cancelled'))]}</attribute>
+            		
+            	</xpath>
+                <field name="status" position="after">
+                    <field name="check_folio_id" readonly="1"/>
+                    <field name="check_status"/>
+                </field>
+			</field>
+		</record>
+		
     </data>
 </odoo>

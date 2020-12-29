@@ -158,8 +158,10 @@ class CheckbookRequest(models.Model):
                 month_name = 'Noviembre'
             elif month == 12:
                 month_name = 'Diciembre'
-
-            return str(day) + ' de ' + month_name + ' de ' + str(year)
+            if 'check_registration' in self._context:
+                return str(day) + ' de ' + month_name
+            else:
+                return str(day) + ' de ' + month_name + ' de ' + str(year)
 
     def get_date(self):
         today = datetime.today().date()
@@ -238,6 +240,7 @@ class CheckListLine(models.Model):
     date_protection = fields.Date("Protection Date")
     date_expiration = fields.Date("Expiration Date")
     date_cancellation = fields.Date("Cancellation Date")
+    is_physical_check = fields.Boolean("Do you have the physical check?",copy=False,default=False)
     currency_id = fields.Many2one(
         'res.currency', default=lambda self: self.env.user.company_id.currency_id, string="Currency")
     check_amount = fields.Monetary("Check Amount", currency_field='currency_id')
@@ -265,8 +268,23 @@ class CheckListLine(models.Model):
     general_status = fields.Selection([('available', 'Available'),
                                        ('assigned', 'Assigned'),
                                        ('cancelled', 'Cancelled'),
-                                       ('paid_out', 'Paid Out')])
-    
+                                       ('paid', 'Paid')], compute='_compute_general_status')
+
+    def _compute_general_status(self):
+        for rec in self:
+            if rec.status in ('Checkbook registration', 'Assigned for shipping', 'Available for printing'):
+                rec.general_status = 'available'
+            elif rec.status in ('Printed', 'Protected and in transit', 'Protected', 'Sent to protection',
+                                'Delivered', 'In transit'):
+                rec.general_status = 'assigned'
+            elif rec.status in ('Cancelled', 'Withdrawn from circulation', 'Reissued', 'Canceled in custody of Finance',
+                                'On file', 'Destroyed'):
+                rec.general_status = 'cancelled'
+            elif rec.status in ('Charged'):
+                rec.general_status = 'paid'
+            else:
+                rec.general_status = False
+
     def write(self, vals):
         if self.status == 'Cancelled' and vals.get('status') in ('Checkbook registration', 'Assigned for shipping',
           'Available for printing', 'Printed', 'Delivered', 'In transit', 'Sent to protection',

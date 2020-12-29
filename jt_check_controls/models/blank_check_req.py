@@ -106,7 +106,7 @@ class BlankCheckRequest(models.Model):
 
     def get_trade_configuration(self):
         trade = self.env['trades.config'].search(
-            [('job_template', '=', 'check_req_1')], limit=1)
+            [('job_template', '=', 'check_delivery_document')], limit=1)
         return trade
 
     def action_reject(self):

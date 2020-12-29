@@ -68,8 +68,12 @@ class BankBalanceCheck(models.TransientModel):
      
     def get_payment_data(self,rec,data):
         payment_date = False
-        if rec.invoice_date:
-            payment_date = rec.get_patment_date(30,rec.invoice_date)
+        if rec.invoice_payment_term_id:
+            result = rec.invoice_payment_term_id.compute(rec.amount_total, rec.invoice_date, rec.currency_id)
+            if result:
+                payment_date = result[0][0]
+        elif rec.invoice_date and not rec.invoice_payment_term_id:
+            payment_date = rec.get_patment_date(30, rec.invoice_date)
         payment_request_type = False
         if rec.is_payroll_payment_request:
             payment_request_type = 'payroll_payment'
@@ -167,7 +171,8 @@ class BankBalanceCheck(models.TransientModel):
             rec.action_post()
             rec.payment_issuing_bank_id = self.journal_id.id
             self.create_journal_line_for_payment_procedure(rec)
-            payment_record = self.env['account.payment.register'].with_context(active_ids=rec.ids).create({'journal_id':self.journal_id.id,'invoice_ids':[(6, 0, rec.ids)]})
+            payment_record = self.env['account.payment.register'].with_context(active_ids=rec.ids).\
+                create({'journal_id':self.journal_id.id,'invoice_ids':[(6, 0, rec.ids)]})
             Payment = self.env['account.payment']
             datas = payment_record.get_payments_vals()
             for data in datas:

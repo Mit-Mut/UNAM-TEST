@@ -79,7 +79,7 @@
                                 <field name="observations" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
                             <group>
-                                <field name="checkbook_no" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="checkbook_no" readonly="1" force_save="1"/>
                                 <field name="intial_folio" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="final_folio" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="confirmation_letter" attrs="{'readonly': [('state', '!=', 'draft')]}"/>

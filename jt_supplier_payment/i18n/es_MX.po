@@ -1057,7 +1057,7 @@ msgstr ""
 #. module: jt_supplier_payment
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_account_payment__sit_file_key
 msgid "File Key"
-msgstr "Clave de expediente"
+msgstr "File Key"
 
 #. module: jt_supplier_payment
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_generate_bank_layout__file_name

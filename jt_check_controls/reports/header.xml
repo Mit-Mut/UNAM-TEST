@@ -166,6 +166,59 @@
         </div>
         </template>
 
+        <template id="external_layout_check_amounts" name="external_layout_check_amounts">
+            <t t-if="not o" t-set="o" t-value="doc"/>
+
+            <t t-if="not company">
+                <!-- Multicompany -->
+                <t t-if="company_id">
+                    <t t-set="company" t-value="company_id"/>
+                </t>
+                <t t-elif="o and 'company_id' in o">
+                    <t t-set="company" t-value="o.company_id.sudo()"/>
+                </t>
+                <t t-else="else">
+                    <t t-set="company" t-value="res_company"/>
+                </t>
+            </t>
+
+            <div class="header">
+                <div class="row">
+                    <div class="col-3">
+                        <img t-attf-src="data:image/png;base64,{{company.header_logo}}" style="width:120px;height:100px;margin-top:20px;margin-right:20px;margin-bottom:20px;"/>
+                    </div>
+                
+                    <div class="col-6 text-center">
+                        <span style="font-size:16px;">DIRECCIÓN GENERAL DE FINANZAS</span><br/>
+                        <span style="font-size:12px;">PATRONATO UNIVERSITARIO</span><br/>
+                        <span style="font-size:12px;">Tesorería</span><br/>
+                    </div>
+
+                </div>
+                <div>
+                    <p style="font-style:bold;">REPORTE DE LOS INFORMES DE LOS CHEQUES DE NOMINA DE SUELDO Y PENSIÓN ALIMENTICIA</p><br/>
+                    <center><p>QNA</p></center>
+                </div>
+            </div>
+            <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+              <t t-raw="0"/>
+            </div>
+            <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
+                <div class="row">
+                    <div class="col-6" style="font-size:10px;">
+                        <span style="display: inline;">SOLICITADO POR:<hr style="width:50%;background-color:black;" /></span><br/>
+                        <span style="display: inline;">AUTORIZADO POR:<hr style='width:50%;background-color:black;' /></span><br/>
+                        
+                    </div>
+                    
+                    <div class="col-6 text-right" style="font-size:10px;">
+                        <span style="margin-left:20px;">Fecha de impresión : </span><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/> <br/>
+                        <span style="margin-left:20px;">PARA LA COORDINACIÓN DE OPERACIÓN POR BANCA ELECTRÓNICA</span>
+                    </div>
+                </div>
+            </div>
+        </template>
+
 
         <template id="external_payroll_wage_adjst" name="external_layout_payroll_wage_adjst">
         <t t-if="not o" t-set="o" t-value="doc"/>
@@ -211,5 +264,81 @@
         </template>
 
 
-    </data>
+        <template id="external_layout_check_protection_control_certificate" name="external_layout_check_protection_control_certificate">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+
+        <div class="header">
+            <div class="row">
+                <div class="col-3">
+                    <img t-attf-src="data:image/png;base64,{{company.header_logo}}" style="width:120px;height:100px;margin-top:20px;margin-right:20px;margin-bottom:20px;"/>
+                </div>
+            
+                <div class="col-6 text-center">
+                    <span style="font-size:15px;">DIRECCIÓN GENERAL DE FINANZAS</span><br/>
+                    <span style="font-size:12px;">PATRONATO UNIVERSITARIO</span><br/>
+                    <span style="font-size:12px;">TESORERIA</span><br/>
+                    <span style="font-size:15px;">CÉDULA CONTROL DE PROTECCIÓN DE CHEQUES</span><br/>
+                    <span style="font-size:12px;">QUINCENA</span><br/>
+                    <span style="font-size:12px;">CUENTA DE CARGO</span><br/>
+                   
+                </div>
+            </div>
+        </div>
+        
+           
+        <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+          <t t-raw="0"/>
+           
+        </div>
+        <div class="footer" height="auto">
+            <div class="row">
+                <div class="col-6">
+                    <hr style="width:40%;color:black;"/><br/>
+                    <span style="font-size:10px;">CHECK OVERALL TOTAL PAYROLL REPORT</span>
+                    <hr style="width:40%;color:black;"/><br/>
+                    <span style="font-size:10px;">VERIFICATION AND AUTHORIZATION OF CONTROL CARD FOR DELIVERY TO THE COORDINATION OF OPERATION AND ELECTRONIC BANKING</span><br/>
+                    <hr style="width:40%;color:black;margin-left:10px;"/><br/>
+                    <span style="font-size:8px;">Authorization</span>
+                </div>
+                <div class="col-6">
+                    <hr/><br/>
+                    <span style="text-align:justify;font-size:10px;">REVIEW OF STRUCTURE, AMOUNT, NUMBER OF CHECKS AND SHEETS OF FILE S OF CHECK PROTECTION AGAINST CEDULA CONTROL AND TRADE OF DELIVERY OF PAYROLL, CHECKS, VOUCHERS AND DEPOSIT NOTIFICATIONS</span>
+                    <hr/><br/>
+                    <span style="text-align:justify;font-size:10px;">VALIDATION, TRANSMISSION OF PROTECTION FILE AND CONSULTATION OF CHECK PROTECTION REPORT</span><br/>
+                    <span style="font-size:8px;font-style:bold;">Fecha de impresión : </span><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/>
+                </div>
+            </div>
+        </div>
+    </template>
+
+
+             <!-- <div class="row">
+                <div class="col-3">
+                    <hr style="width:40%;color:black;"/><br/>
+                    <span style="font-size:10px;">VERIFICATION AND AUTHORIZATION OF CONTROL CARD FOR DELIVERY TO THE COORDINATION OF OPERATION AND ELECTRONIC BANKING</span>
+                </div>
+                <div class="col-3" style="margin-top:40px;">
+                    <span style="font-size:8px;">Authorization</span>
+                </div>
+                <div class="col-6">
+                    <hr/><br/>
+                    <span style="text-align:justify;font-size:10px;">VALIDATION, TRANSMISSION OF PROTECTION FILE AND CONSULTATION OF CHECK PROTECTION REPORT</span><br/>
+                    <span style="font-size:8px;font-style:bold;">Fecha de impresión : </span><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/>
+                </div>
+            </div> -->
+    
+</data>
 </odoo>

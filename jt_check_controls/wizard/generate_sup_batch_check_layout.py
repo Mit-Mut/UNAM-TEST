@@ -33,7 +33,7 @@ class GenerateSupplierCheckLayout(models.TransientModel):
             if self.layout == 'Banamex':
                 file_name = 'banamex.txt'
                 file_data += '01'
-                file_data += bank.branch_number
+                file_data += bank.branch_number if bank.branch_number else ''
                 file_data += bank.bank_account_id.acc_number.zfill(18) if bank.bank_account_id else '000000000000000000'
                 file_data += '000008505585'
                 file_data += '0001'
@@ -44,7 +44,7 @@ class GenerateSupplierCheckLayout(models.TransientModel):
                 for line in batch.payment_req_ids.filtered(lambda x: x.selected == True and \
                                                          x.check_status == 'Delivered'):
                     file_data += '02'
-                    file_data += bank.branch_number
+                    file_data += bank.branch_number if bank.branch_number else ''
                     file_data += bank.bank_account_id.acc_number.zfill(18) if bank.bank_account_id \
                         else '000000000000000000'
                     reqs = batch.payment_req_ids.filtered(lambda x: x.check_folio_id != False)
@@ -66,7 +66,7 @@ class GenerateSupplierCheckLayout(models.TransientModel):
                 file_data += '1'
                 file_data += '/'
                 file_data += bank.bank_account_id.acc_number.zfill(18) if bank.bank_account_id \
-                    else '000000000000000000'
+                        and bank.bank_account_id.acc_number else '000000000000000000'
                 file_data += '/'
                 total_rec = len(batch.payment_req_ids.filtered(lambda x: x.selected == True and \
                                                              x.check_status == 'Delivered'))
@@ -146,7 +146,7 @@ class GenerateSupplierCheckLayout(models.TransientModel):
                 for line in batch.payment_req_ids.filtered(lambda x: x.selected == True and \
                                                                      x.check_status == 'Delivered'):
                     file_data += 'A'
-                    file_data += bank.branch_number
+                    file_data += bank.branch_number if bank.branch_number else ''
                     file_data += 'M'
                     file_data += str(bank.bank_account_id.acc_number).zfill(10) if bank.bank_account_id and \
                         bank.bank_account_id.acc_number else ''
@@ -175,10 +175,6 @@ class GenerateSupplierCheckLayout(models.TransientModel):
                 file_data += '                     '
                 file_data += '5'
                 file_data += '\n'
-
-
-
-
 
             gentextfile = base64.b64encode(bytes(file_data, 'utf-8'))
             self.file_data = gentextfile

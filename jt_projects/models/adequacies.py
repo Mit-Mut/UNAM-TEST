@@ -29,7 +29,6 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
-
 class Adequacies(models.Model):
     _inherit = 'adequacies'
 
@@ -130,7 +129,29 @@ class ProgramCode(models.Model):
     parent_program_id = fields.Many2one('program.code','Parent Program Code')
     conacyt_project_id = fields.Many2one('project.project','CONACYT Project',copy=False)
     conacyt_code = fields.Boolean(string="CONACYT Code",copy=False,default=False)
-     
+    project_id = fields.Many2one('project.project','Project Number')
+    
+    @api.onchange('project_id')
+    def onchange_project_id(self):
+        project_type_id = False
+        stage_id = False
+        agreement_type_id = False
+        
+        if self.project_id:
+            p_id = self.env['project.type'].search([('project_id','=',self.project_id.id)],limit=1)
+            if p_id:
+                project_type_id = p_id.id
+            s_id = self.env['stage'].search([('project_id','=',self.project_id.id)],limit=1)
+            if s_id:
+                stage_id = s_id.id
+            a_id = self.env['agreement.type'].search([('project_id','=',self.project_id.id)],limit=1)
+            if a_id:
+                agreement_type_id = a_id.id
+             
+        self.project_type_id = project_type_id
+        self.stage_id = stage_id
+        self.agreement_type_id = agreement_type_id
+        
     @api.onchange('parent_program_id')
     def onchange_parent_program_id(self):
         if self.parent_program_id:

@@ -35,7 +35,7 @@ class CumulativeComparison(models.AbstractModel):
 
     _name = "jt_projects.cumulative.comparison"
     _inherit = "account.coa.report"
-    _description = "Cumulative Comparison"
+    _description = "ACCUMULATED CHECKS"
 
     filter_date = {'mode': 'range', 'filter': 'this_month'}
     filter_comparison = None
@@ -85,7 +85,7 @@ class CumulativeComparison(models.AbstractModel):
             value['class'] = 'number'
             return value
         if figure_type == 'percents':
-            value['name'] = str(round(value['name'] * 100, 1)) + '%'
+            value['name'] = str(round(value['name'], 2)) + '%'
             value['class'] = 'number'
             return value
         value['name'] = round(value['name'], 1)
@@ -241,7 +241,9 @@ class CumulativeComparison(models.AbstractModel):
                 
                 for p in overdue_project:
                     overdue_account_balance += sum(x.ministering_amount for x in p.project_ministrations_ids)
-                
+                    verification_ids = self.env['expense.verification'].search([('status','=','approve'),('project_id','=',p.id)])
+                    overdue_account_balance -= sum(x.amount_total for x in verification_ids)
+                    
                 bank_account_ids = overdue_project.mapped('bank_account_id.default_debit_account_id')
                 values = self.env['account.move.line'].search([('date', '<=', end), (
                     'account_id', 'in', bank_account_ids.ids), ('move_id.state', '=', 'posted')])
@@ -251,13 +253,36 @@ class CumulativeComparison(models.AbstractModel):
                 total_account_bal += overdue_account_balance
                 total_bank_bal += overdue_bank_balance
                 
+        
+                #==== Current Projects===========#        
+                current_project = project_records.filtered(lambda x:not x.check_project_due)
+                current_account_balance = 0
+                
+                for p in current_project:
+                    current_account_balance += sum(x.ministering_amount for x in p.project_ministrations_ids)
+                    verification_ids = self.env['expense.verification'].search([('status','=','approve'),('project_id','=',p.id)])
+                    current_account_balance -= sum(x.amount_total for x in verification_ids)
+                
+                bank_account_ids = current_project.mapped('bank_account_id.default_debit_account_id')
+                values = self.env['account.move.line'].search([('date', '<=', end), (
+                    'account_id', 'in', bank_account_ids.ids), ('move_id.state', '=', 'posted')])
+                current_bank_balance = sum(x.debit - x.credit for x in values)
+        
+                total_current_due_project += len(current_project)
+                total_account_bal += current_account_balance
+                total_bank_bal += current_bank_balance
+
+                overdue_per = 0
+                if total_account_bal:
+                    overdue_per = (overdue_account_balance*100)/total_account_bal
+                    
                 lines.append({
                     'id': 'hierarchy_1_col_overdue',
                     'name':len(overdue_project),
                     'columns': [{'name': 'PROYECTOS VENCIDOS'},
                                 self._format({'name': overdue_account_balance}, figure_type='float'),
                                 self._format({'name': overdue_bank_balance}, figure_type='float'),
-                                {'name': ''},
+                                self._format({'name': overdue_per}, figure_type='percents'),
                                 {'name': ''},
                                 {'name': ''},
                                 {'name': ''},
@@ -269,22 +294,10 @@ class CumulativeComparison(models.AbstractModel):
                     'unfolded': True,
                     'colspan':2,
                 })
-        
-                #==== Current Projects===========#        
-                current_project = project_records.filtered(lambda x:not x.check_project_due)
-                current_account_balance = 0
-                
-                for p in current_project:
-                    current_account_balance += sum(x.ministering_amount for x in p.project_ministrations_ids)
-                
-                bank_account_ids = current_project.mapped('bank_account_id.default_debit_account_id')
-                values = self.env['account.move.line'].search([('date', '<=', end), (
-                    'account_id', 'in', bank_account_ids.ids), ('move_id.state', '=', 'posted')])
-                current_bank_balance = sum(x.debit - x.credit for x in values)
-        
-                total_current_due_project += len(current_project)
-                total_account_bal += current_account_balance
-                total_bank_bal += current_bank_balance
+
+                current_per = 0
+                if total_account_bal:
+                    current_per = (current_account_balance*100)/total_account_bal
         
                 lines.append({
                     'id': 'hierarchy_1_col_current',
@@ -292,7 +305,7 @@ class CumulativeComparison(models.AbstractModel):
                     'columns': [{'name': 'PROYECTOS VIGENTES'},
                                 self._format({'name': current_account_balance}, figure_type='float'),
                                 self._format({'name': current_bank_balance}, figure_type='float'),
-                                {'name': ''},
+                                self._format({'name': current_per}, figure_type='percents'),
                                 {'name': ''},
                                 {'name': ''},
                                 {'name': ''},
@@ -343,6 +356,8 @@ class CumulativeComparison(models.AbstractModel):
                 
                 for p in zero_balance_project:
                     zero_account_balance += sum(x.ministering_amount for x in p.project_ministrations_ids)
+                    verification_ids = self.env['expense.verification'].search([('status','=','approve'),('project_id','=',p.id)])
+                    zero_account_balance -= sum(x.amount_total for x in verification_ids)
                 
                 
                 total_zero_account_bal += zero_account_balance
@@ -448,6 +463,9 @@ class CumulativeComparison(models.AbstractModel):
                         account_balance = sum(x.debit - x.credit for x in values)
                     
                     minis_amount = sum(x.ministering_amount for x in project.project_ministrations_ids)
+                    verification_ids = self.env['expense.verification'].search([('status','=','approve'),('project_id','=',project.id)])
+                    minis_amount -= sum(x.amount_total for x in verification_ids)
+                    
                     diff = minis_amount - account_balance
                     
                     
@@ -497,7 +515,7 @@ class CumulativeComparison(models.AbstractModel):
 
 
     def _get_report_name(self):
-        return _("Cumulative Comparison")
+        return _("ACCUMULATED CHECKS")
 
     def get_xlsx(self, options, response=None):
         output = io.BytesIO()

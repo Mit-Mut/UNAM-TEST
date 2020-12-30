@@ -166,7 +166,7 @@ class IntegrationAirplaneTicket(models.AbstractModel):
             credit_bal = sum(x.credit for x in values)
             
             values= self.env['account.move.line'].search([('date','<',start),('account_id', '=', account_id.id),('move_id.state', '=', 'posted')])
-            open_bal = sum(x.debit - x.credit for x in values)
+            open_bal = sum(x.credit - x.debit  for x in values)
         
         total_bal = open_bal - debit_bal + credit_bal
         

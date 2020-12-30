@@ -62,6 +62,7 @@
         'views/expiration_validity_check.xml',
         'views/available_checks.xml',
         'wizard/cancel_available_checks.xml',
+        'reports/filter_template.xml',
 
 
     ],

@@ -34,33 +34,37 @@ class GenerateSupplierCheckLayout(models.TransientModel):
                 file_name = 'banamex.txt'
                 file_data += '01'
                 file_data += bank.branch_number if bank.branch_number else ''
-                file_data += bank.bank_account_id.acc_number.zfill(18) if bank.bank_account_id else '000000000000000000'
+                file_data += bank.bank_account_id.acc_number.zfill(20) if bank.bank_account_id else '00000000000000000000'
                 file_data += '000008505585'
                 file_data += '0001'
                 file_data += str(self.env['ir.sequence'].next_by_code('sup.batch.banamex.layout'))
-                file_data += '00000000000'
+                file_data += '000000000000'
                 file_data += '\n'
                 total_amt = 0
                 for line in batch.payment_req_ids.filtered(lambda x: x.selected == True and \
                                                          x.check_status == 'Delivered'):
                     file_data += '02'
                     file_data += bank.branch_number if bank.branch_number else ''
-                    file_data += bank.bank_account_id.acc_number.zfill(18) if bank.bank_account_id \
-                        else '000000000000000000'
+                    file_data += bank.bank_account_id.acc_number.zfill(20) if bank.bank_account_id \
+                        else '00000000000000000000'
                     reqs = batch.payment_req_ids.filtered(lambda x: x.check_folio_id != False)
                     if reqs:
                         file_data += str(reqs[0].check_folio_id.folio).zfill(7)
                     else:
                         file_data += '0000000'
                     file_data += '01'
-                    file_data += str(line.amount_to_pay).replace('.','').zfill(14)
-                    file_data += '0000000000'
+                    line_amt = str(round(line.amount_to_pay, 2)).split('.')
+                    file_data += str(line_amt[0]).zfill(12)
+                    file_data += str(line_amt[1]) if len(str(line_amt[1])) == 2 else str(line_amt[1]) + '0'
+                    file_data += '00000000000'
                     file_data += '\n'
                     total_amt += line.amount_to_pay
                 file_data += '03'
                 file_data += str(len(batch.payment_req_ids.filtered(lambda x: x.selected == True and \
-                                                         x.check_status != 'Delivered'))).zfill(6)
-                file_data += str(round(total_amt, 2)).replace('.','').zfill(14)
+                                                         x.check_status == 'Delivered'))).zfill(6)
+                total_amt = str(round(total_amt, 2)).split('.')
+                file_data += str(total_amt[0]).zfill(14)
+                file_data += str(total_amt[1]) if len(str(total_amt[1])) == 2 else str(total_amt[1]) + '0'
             elif self.layout == 'BBVA Bancomer':
                 file_name = 'bbva.txt'
                 file_data += '1'

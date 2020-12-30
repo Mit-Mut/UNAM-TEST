@@ -67,6 +67,7 @@
         'views/project_stage_view.xml',
         'views/project_custom_type_view.xml',
         'wizard/program_code_create_view.xml',
+        'views/income_invoice_view.xml',
     ],
     'application': False,
     'installable': True,

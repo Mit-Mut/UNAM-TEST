@@ -31,13 +31,13 @@ from odoo.tools import config, date_utils, get_lang
 import lxml.html
 
 
-class Payroll(models.AbstractModel):
+class CheckCardFolioPaymentIssue(models.AbstractModel):
 
-    _name = "jt_check_controls.payroll_report"
+    _name = "jt_check_controls.check_card_for_folios_and_issue_payments"
     _inherit = "account.coa.report"
-    _description = "Payroll Report"
+    _description = "Check card for folios and issued payments"
 
-    filter_date = {'mode': 'range', 'filter': 'this_month'}
+    filter_date = {'mode': 'range'}
     filter_comparison = None
     filter_all_entries = None
     filter_journals = None
@@ -45,12 +45,8 @@ class Payroll(models.AbstractModel):
     filter_unfold_all = None
     filter_cash_basis = None
     filter_hierarchy = None
-    filter_bank = None
     filter_unposted_in_period = None
     MAX_LINES = None
-    filter_bank = True
-    filter_upa_catalog = True
-    filter_bank_account = True
 
     def _get_reports_buttons(self):
         return [
@@ -60,85 +56,13 @@ class Payroll(models.AbstractModel):
              'action': 'print_xlsx', 'file_export_type': _('XLSX')},
         ]
 
-    @api.model
-    def _get_filter_bank(self):
-        return self.env['res.bank'].search([])
-
-    @api.model
-    def _init_filter_bank(self, options, previous_options=None):
-        if self.filter_bank is None:
-            return
-        if previous_options and previous_options.get('bank'):
-            journal_map = dict((opt['id'], opt['selected']) for opt in previous_options[
-                               'bank'] if opt['id'] != 'divider' and 'selected' in opt)
-        else:
-            journal_map = {}
-        options['bank'] = []
-
-        default_group_ids = []
-
-        for j in self._get_filter_bank():
-            options['bank'].append({
-                'id': j.id,
-                'name': j.name,
-                'code': j.name,
-                'selected': journal_map.get(j.id, j.id in default_group_ids),
-            })
-
-    @api.model
-    def _get_filter_upa_catalog(self):
-        return self.env['policy.keys'].search([])
-
-    @api.model
-    def _init_filter_upa_catalog(self, options, previous_options=None):
-        if self.filter_upa_catalog is None:
-            print("none")
-            return
-        if previous_options and previous_options.get('upa_catalog'):
-            journal_map = dict((opt['id'], opt['selected']) for opt in previous_options[
-                               'upa_catalog'] if opt['id'] != 'divider' and 'selected' in opt)
-        else:
-            journal_map = {}
-        options['upa_catalog'] = []
-
-        default_group_ids = []
-
-        for j in self._get_filter_upa_catalog():
-            options['upa_catalog'].append({
-                'id': j.id,
-                'name': j.origin,
-                'code': j.origin,
-                'selected': journal_map.get(j.id, j.id in default_group_ids),
-            })
-
-    @api.model
-    def _get_filter_bank_account(self):
-        return self.env['account.journal'].search([])
-
-    @api.model
-    def _init_filter_bank_account(self, options, previous_options=None):
-        if self.filter_bank_account is None:
-            return
-        if previous_options and previous_options.get('bank_account'):
-            journal_map = dict((opt['id'], opt['selected']) for opt in previous_options[
-                               'bank_account'] if opt['id'] != 'divider' and 'selected' in opt)
-        else:
-            journal_map = {}
-        options['bank_account'] = []
-
-        default_group_ids = []
-
-        for j in self._get_filter_bank_account():
-            options['bank_account'].append({
-                'id': j.id,
-                'name': j.name,
-                'code': j.name,
-                'selected': journal_map.get(j.id, j.id in default_group_ids),
-            })
+    def _get_lines(self, options, line_id=None):
+        lines = []
+        return lines
 
     def _get_templates(self):
         templates = super(
-            Payroll, self)._get_templates()
+            CheckCardFolioPaymentIssue, self)._get_templates()
         templates[
             'main_table_header_template'] = 'account_reports.main_table_header'
         templates['main_template'] = 'account_reports.main_template'
@@ -146,24 +70,18 @@ class Payroll(models.AbstractModel):
 
     def _get_columns_name(self, options):
         return [
-            {'name': _('Folio')},
-            {'name': _('Beneficiary')},
-            {'name': _('Cheque')},
-            {'name': _('Matter')},
-            {'name': _('Total printed folios')},
-            {'name': _('FIRMA')},
+            {'name': _('Folio inicial')},
+            {'name': _('Folio final')},
+            {'name': _('Total')},
             {'name': _('')},
             {'name': _('')},
             {'name': _('')},
+
 
         ]
 
-    def _get_lines(self, options, line_id=None):
-        lines = []
-        return lines
-
     def _get_report_name(self):
-        return _("Payroll Report")
+        return _("Check card for folios and issued payments")
 
     def get_pdf(self, options, minimal_layout=True):
         # As the assets are generated during the same transaction as the rendering of the
@@ -210,7 +128,7 @@ class Payroll(models.AbstractModel):
                 'res_company': self.env.company,
             })
             header = self.env['ir.actions.report'].render_template(
-                "jt_check_controls.external_layout_payment_report", values=rcontext)
+                "jt_check_controls.external_layout_check_card_for_folios", values=rcontext)
             # Ensure that headers and footer are correctly encoded
             header = header.decode('utf-8')
             spec_paperformat_args = {}
@@ -307,17 +225,10 @@ class Payroll(models.AbstractModel):
                                'image_data': image_data, 'x_offset': 8, 'y_offset': 3, 'x_scale': 0.6, 'y_scale': 0.6})
 
         col += 1
-        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nDIRECCIÓN GENERAL DE FINANZAS\nPATRONATO UNIVERSITARIO
-        \nAREA DE TRAMIT:PER/04\nREPORTE DE NOMINA'''
+        header_title = '''CEDULA DE COMPROBACIÓN DE FOLIOS Y PAGOS EMITIDOS\nQNA'''
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)
         y_offset += 6
-        col = 1
-        currect_time_msg = "Fecha y hora de impresión: "
-        currect_time_msg += datetime.today().strftime('%d/%m/%Y %H:%M')
-        sheet.merge_range(y_offset, col, y_offset, col + 6,
-                          currect_time_msg, currect_date_style)
-        y_offset += 1
         for row in self.get_header(options):
             x = 0
             for column in row:

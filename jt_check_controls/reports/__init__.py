@@ -25,3 +25,4 @@ from . import payroll_report
 from . import check_protection
 from . import check_protection_control_certificate
 from . import amounts_payroll_check
+from . import check_card_for_folios_payment_issue

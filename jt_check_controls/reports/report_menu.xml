@@ -2,10 +2,7 @@
 <odoo>
     <data>
        
-
-   
-
-        <!-- check control submenu -->
+         <!-- check control submenu -->
         <menuitem
             id="report_main_menu"
             name="Reports"
@@ -90,14 +87,14 @@
 
         <!-- Check card for folios and issued payments-->
 
-        <!-- <record id="action_card_for_folio_issued_payment" model="ir.actions.client">
+        <record id="action_card_for_folio_issued_payment" model="ir.actions.client">
             <field name="name"> Check card for folios and issued payments</field>
             <field name="tag">account_report</field>
             <field name="context" eval="{'model':'jt_check_controls.check_card_for_folios_and_issue_payments'}" />
-        </record> -->
+        </record>
 
         <!-- Check card for folios and issued payments-->
-<!--         <menuitem
+        <menuitem
             id="check_folios_issued_payments_report_submenu"
             name="Check card for folios and issued payments"
             action="action_card_for_folio_issued_payment"
@@ -105,7 +102,7 @@
             sequence="2"
             
         />
- -->
+
 
          <!--  Check protection control card detailing check sheet-->
 

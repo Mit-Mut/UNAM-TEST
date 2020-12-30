@@ -40,13 +40,12 @@
                     </div>
                     <div class="col-11" align="left" style="font-weight:bold;">
                         <t t-if="trade">
-                            <t t-foreach="trade.copied_employee_ids" t-as="employee">
-                                <t t-if="employee.employee_id">
-                                    <t style="font-size:15px" t-esc="employee.title"/>.
-                                    <t style="font-size:15px" t-esc="employee.employee_id.name"/>-
-                                    <t style="font-size:15px" t-esc="employee.job_title"/>
-                                    <br/>
-                                </t>
+                            <t t-if="trade.general_director_title">
+                                <span style="font-size:15px;" t-esc="trade.general_director_title"/>
+                                <span style="font-size:15px;">.</span>
+                            </t>
+                            <t t-if="trade.general_director_id">
+                                <span style="font-size:15px;" t-esc="trade.general_director_id.name"/>
                             </t>
                         </t>
                     </div>
@@ -69,7 +68,15 @@
                         <br/>
                         <t t-set="trade" t-value="o.get_trade_configuration()"/>
                         <p>L.I.C.
-                            <span t-field="trade.general_director_id.name"/>
+                            <t t-if="trade">
+                                <t t-if="trade.revenue_director_title">
+                                    <span style="font-size:15px;" t-esc="trade.revenue_director_title"/>
+                                    <span style="font-size:15px;">.</span>
+                                </t>
+                                <t t-if="trade.revenue_dirctor_id">
+                                    <span style="font-size:15px;" t-esc="trade.revenue_dirctor_id.name"/>
+                                </t>
+                            </t>
                         </p>
                         <br/>
                         <strong>DIRECTOR GENERAL</strong>
@@ -163,8 +170,8 @@
                                                         <span t-if="o.bank_account_id" t-field="o.bank_account_id"/>
                                                     </td>
                                                     <td name="td_concept">
-                                                        <span t-if="o.bank_account_id"
-                                                              t-field="o.bank_account_id.concept_id"/>
+                                                        <span t-if="o.reason_request"
+                                                              t-field="o.reason_request"/>
                                                     </td>
                                                     <td name="td_inital_folio">
                                                         <span t-if="o.intial_folio" t-field="o.intial_folio"/>

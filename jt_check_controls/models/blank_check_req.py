@@ -64,9 +64,18 @@ class BlankCheckRequest(models.Model):
         if self.dependence_id and self.subdependence_id:
             auth = self.env['check.authorized.dependency'].search([('dependency_id', '=', self.dependence_id.id),
                                                                    ('subdependency_id', '=', self.subdependence_id.id)], limit=1)
-            if auth and self.amount_checks > auth.max_authorized_checks:
+            if auth and self.amount_checks > auth.checks_remaining_to_auth:
                 raise ValidationError(
                     _('Value of Amount of checks does not more than authorized.'))
+
+    @api.constrains('dependence_id', 'subdependence_id')
+    def _check_dependence_checks(self):
+        if self.dependence_id and self.subdependence_id:
+            auth = self.env['check.authorized.dependency'].search([('dependency_id', '!=', self.dependence_id.id),
+                                                                   ('subdependency_id', '!=', self.subdependence_id.id)], limit=1)
+            if auth:
+                raise ValidationError(
+                    _('The dependency is not authorized to request checks'))
 
     def action_request(self):
         self.ensure_one()

@@ -159,6 +159,16 @@
             	<field name="year" position='before'>
             		<field name="parent_program_id" invisible="not context.get('from_project_module',False)" domain="[('state','=','validated')]"/>
             	</field>
+
+            	<field name="name_portfolio" position='after'>
+            		<field name="project_id"  attrs="{'readonly': [('state', '=', 'validated')]}"/>
+            	</field>
+
+            	<field name="project_number" position='attributes'>
+            		<attribute name="invisible">1</attribute>  
+            	</field>
+            	
+            	
  			</field>
  		</record>    
     </data>

@@ -193,9 +193,10 @@ class PensionPaymentLine(models.Model):
     deposit_number = fields.Char('Deposit Number')
     check_number = fields.Char('Check Number')
     total_pension = fields.Float('Total Pension')
+    
     journal_id = fields.Many2one('account.journal','Account number')
-    bank_acc_number = fields.Char(related='journal_id.bank_acc_number',string='Account number')
-    bank_id = fields.Many2one(related='journal_id.bank_id')
+    bank_acc_number = fields.Many2one('res.partner.bank',string='Account number')
+    bank_id = fields.Many2one('res.bank','Bank')
 
 class AdditionalPaymentsLine(models.Model):
     

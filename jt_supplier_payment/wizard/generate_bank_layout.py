@@ -158,8 +158,7 @@ class GenerateBankLayout(models.TransientModel):
             file_data +=str(currect_time.year)[:2]
             file_data +=str(currect_time.hour).zfill(2)
             file_data +=str(currect_time.minute).zfill(2)
-            file_data +="\n"
-            
+            file_data +="\r\n"
         gentextfile = base64.b64encode(bytes(file_data,'utf-8'))
         self.file_data = gentextfile
         self.file_name = file_name
@@ -229,7 +228,7 @@ class GenerateBankLayout(models.TransientModel):
                 
                 reason_payment += " "+month_name+" "+payment_year
             file_data += reason_payment.ljust(30, " ")     
-            file_data +="\n"      
+            file_data +="\r\n"      
         gentextfile = base64.b64encode(bytes(file_data,'utf-8'))
         self.file_data = gentextfile
         self.file_name = file_name
@@ -332,7 +331,7 @@ class GenerateBankLayout(models.TransientModel):
                     file_data += 'H'
                 elif payment.net_cash_availability=='CECOBAN':
                     file_data += 'M'
-            file_data +="\n"      
+            file_data +="\r\n"      
                                      
         gentextfile = base64.b64encode(bytes(file_data,'utf-8'))
         self.file_data = gentextfile
@@ -375,7 +374,7 @@ class GenerateBankLayout(models.TransientModel):
         file_data += ''.ljust(3)
         #======== FILLER =========
         file_data += ''.ljust(1251)
-        file_data +="\n"
+        file_data +="\r\n"
 
         #============= Payment  Details =========#              
         for payment in self.payment_ids:
@@ -548,7 +547,7 @@ class GenerateBankLayout(models.TransientModel):
             file_data += ''.ljust(30)
             #====== Date of last document event=======#
             file_data += '0001-01-01'
-            file_data +="\n"
+            file_data +="\r\n"
         gentextfile = base64.b64encode(bytes(file_data,'utf-8'))
         self.file_data = gentextfile
         self.file_name = file_name
@@ -597,7 +596,7 @@ class GenerateBankLayout(models.TransientModel):
                 file_data += '     '
             else:
                 file_data += '           '
-            file_data +="\n"
+            file_data +="\r\n"
         gentextfile = base64.b64encode(bytes(file_data,'utf-8'))
         self.file_data = gentextfile
         self.file_name = file_name
@@ -1320,7 +1319,7 @@ class GenerateBankLayout(models.TransientModel):
         file_data +=str(currect_time.month).zfill(2)
         file_data +=str(currect_time.day).zfill(2)
         file_data +=str(currect_time.year)
-        file_data += "\n"
+        file_data += "\r\n"
         next_no = 2
         total_record = len(self.payment_ids) 
         total_amount = 0
@@ -1351,7 +1350,7 @@ class GenerateBankLayout(models.TransientModel):
             file_data +=str(amount[0]).zfill(16)
             file_data +=str(amount[1])
             
-            file_data += "\n"
+            file_data += "\r\n"
         #===== Type Of Reg=========#
         file_data += "3"
         #===== Sequence Number =======#
@@ -1403,7 +1402,7 @@ class GenerateBankLayout(models.TransientModel):
         file_data += '17:00'
         #===== Batch Reference =====#
         file_data += ''.ljust(34)
-        file_data += "\n"
+        file_data += "\r\n"
         for payment in self.payment_ids:
             #===== Beneficiary Account =======#
             if payment.payment_bank_account_id:
@@ -1430,7 +1429,7 @@ class GenerateBankLayout(models.TransientModel):
             file_data += payment_ref.ljust(34)
             #===== Name of the Benefiaciry =====#
             file_data += payment.partner_id.name.ljust(35)
-            file_data += "\n"
+            file_data += "\r\n"
             
         gentextfile = base64.b64encode(bytes(file_data,'utf-8'))
         self.file_data = gentextfile
@@ -1469,7 +1468,7 @@ class GenerateBankLayout(models.TransientModel):
         file_data +=str(currect_time.year)[:2]
         file_data +=str(currect_time.month).zfill(2)
         file_data +=str(currect_time.day).zfill(2)
-        file_data += "\n"
+        file_data += "\r\n"
         next_number = 1
         for payment in self.payment_ids:
             #====== Record identifier ======#
@@ -1520,7 +1519,7 @@ class GenerateBankLayout(models.TransientModel):
             #==== Filler =====#
             file_data += ''.ljust(4)
             
-            file_data += "\n"
+            file_data += "\r\n"
             
         gentextfile = base64.b64encode(bytes(file_data,'utf-8'))
         self.file_data = gentextfile
@@ -1569,7 +1568,7 @@ class GenerateBankLayout(models.TransientModel):
         
         #===== Filler ========#
         file_data += ''.ljust(142)
-        file_data += '\n'
+        file_data += '\r\n'
         
         for payment in self.payment_ids:
             #======== Identifier ====#
@@ -1631,7 +1630,7 @@ class GenerateBankLayout(models.TransientModel):
             #==== Reason for payment ======= #
             file_data += ''.ljust(40)
             
-            file_data += '\n'
+            file_data += '\r\n'
         gentextfile = base64.b64encode(bytes(file_data,'utf-8'))
         self.file_data = gentextfile
         self.file_name = file_name
@@ -1676,7 +1675,7 @@ class GenerateBankLayout(models.TransientModel):
         #===== File authorization number =======#
         file_data += ''.ljust(12)
         
-        file_data += '\n'
+        file_data += '\r\n'
         #======== Second  Heading ========#
         #==== Records Type ====#
         file_data += "2"
@@ -1710,7 +1709,7 @@ class GenerateBankLayout(models.TransientModel):
         #==== Return Amount====#
         file_data += "".ljust(18)
         
-        file_data += "\n"
+        file_data += "\r\n"
         row_count = 1
         for payment in self.payment_ids:
             #==== Record Type ======#
@@ -1839,7 +1838,7 @@ class GenerateBankLayout(models.TransientModel):
         #==== Filler ======#
         file_data += ''.ljust(332)
         
-        file_data += '\n'
+        file_data += '\r\n'
         #======= Block ​ header (second header, second row of the file) ====#
         #=== File Type =======#
         file_data += 'EE'
@@ -1862,7 +1861,7 @@ class GenerateBankLayout(models.TransientModel):
         #==== Filler =======#
         file_data += ''.ljust(336)
         
-        file_data += '\n'
+        file_data += '\r\n'
         sequence_no = 1
         for payment in self.payment_ids:
             #===== File Type ========#
@@ -1961,7 +1960,7 @@ class GenerateBankLayout(models.TransientModel):
             file_data += ''.zfill(5)
             #===== Filler ========#
             file_data += ''.ljust(22)
-            file_data += '\n'
+            file_data += '\r\n'
             
         #====== Block trailer does ​ (penultimate row of the file) =====#
         
@@ -1986,7 +1985,7 @@ class GenerateBankLayout(models.TransientModel):
         file_data += ''.zfill(195)
         #==== Filler=====#
         file_data += ''.ljust(123)
-        file_data += "\n"
+        file_data += "\r\n"
         #======= Trailer file does ​ (last row of the file) =======#
         
         #==== File Type =====#
@@ -2060,7 +2059,7 @@ class GenerateBankLayout(models.TransientModel):
         file_data += ''.zfill(1)
         #====== Filler========#
         file_data += ''.rjust(77)
-        file_data += "\n"
+        file_data += "\r\n"
 
         for payment in self.payment_ids:
             #====== Type of record ========#
@@ -2132,7 +2131,7 @@ class GenerateBankLayout(models.TransientModel):
             file_data += ''.zfill(8)
             #===== Filler =====#
             file_data += ''.ljust(18)
-            file_data += '\n'
+            file_data += '\r\n'
     
         gentextfile = base64.b64encode(bytes(file_data,'utf-8'))
         self.file_data = gentextfile

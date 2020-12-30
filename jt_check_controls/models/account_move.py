@@ -46,3 +46,19 @@ class SupplierPaymentRequest(models.Model):
                 move.check_folio_id.status = 'Charged'
         return res
 
+
+    @api.depends('name', 'state')
+    def name_get(self):
+        res = super(SupplierPaymentRequest, self).name_get()
+        if self.env.context and self.env.context.get('show_folio_name', False):
+            result = []
+            for rec in self:
+                if rec.folio:
+                    name = str(rec.folio) or ''
+                    result.append((rec.id, name))
+                else:
+                    result.append(
+                        (rec.id, rec._get_move_display_name(show_ref=True)))
+            return result and result or res
+        else:
+            return res

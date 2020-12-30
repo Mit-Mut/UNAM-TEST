@@ -217,10 +217,11 @@ class GeneratePayrollWizard(models.TransientModel):
                     rfc = row[0].value
                     ben_name = row[2].value
                     payment_method = row[3].value
-                    bank_account = row[4].value
-                    deposite = row[5].value
-                    check_no = row[6].value
-                    total_pension = row[7].value
+                    bank_key = row[4].value
+                    check_no = row[5].value
+                    deposite = row[6].value
+                    bank_account = row[7].value
+                    total_pension = row[8].value
                     
                     if rfc:
 
@@ -252,8 +253,8 @@ class GeneratePayrollWizard(models.TransientModel):
                     deposite_data = ''
                     check_no_data = ''
                     payment_method_id = False
-                    journal_id = False
-                    
+                    bank_account_id = False
+                    bank_id = False
                     if ben_name:
                         per_rec = self.env['res.partner'].search([('name','=',ben_name)],limit=1)
                         if per_rec:
@@ -265,7 +266,7 @@ class GeneratePayrollWizard(models.TransientModel):
                     if check_no:         
                         if  type(check_no) is int or type(check_no) is float:
                             check_no_data = int(check_no)
-
+                            
                     if payment_method:         
                         if  type(payment_method) is int or type(payment_method) is float:
                             payment_method = int(payment_method)
@@ -276,11 +277,19 @@ class GeneratePayrollWizard(models.TransientModel):
                     if bank_account:
                         if  type(bank_account) is int or type(bank_account) is float:
                             bank_account = int(bank_account)
-                        bank_account_rec = self.env['account.journal'].search([('bank_acc_number','=',str(bank_account))],limit=1)
+                        bank_account_rec = self.env['res.partner.bank'].search([('acc_number','=',str(bank_account))],limit=1)
                         if bank_account_rec:
-                            journal_id = bank_account_rec.id
+                            bank_account_id = bank_account_rec.id
+
+                    if bank_key:
+                        if  type(bank_key) is int or type(bank_key) is float:
+                            bank_key = int(bank_key)
+                        bank_rec = self.env['res.bank'].search([('l10n_mx_edi_code','=',str(bank_key))],limit=1)
+                        if bank_rec:
+                            bank_id = bank_rec.id
+                    
                              
-                    line_data.append((0,0,{'journal_id':journal_id,'l10n_mx_edi_payment_method_id':payment_method_id,'partner_id':partner_id,'deposit_number':deposite_data,'check_number':check_no_data,'total_pension':total_pension})) 
+                    line_data.append((0,0,{'bank_id':bank_id,'bank_acc_number':bank_account_id,'l10n_mx_edi_payment_method_id':payment_method_id,'partner_id':partner_id,'deposit_number':deposite_data,'check_number':check_no_data,'total_pension':total_pension})) 
 
                 if exit_payroll_id and line_data:
                     exit_payroll_id.write({'pension_payment_line_ids':line_data})

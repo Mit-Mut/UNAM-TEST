@@ -54,6 +54,8 @@
                                 <field name="bank_id"/>
                                 <field name="bank_account_id"/>
                                 <field name="move_id" attrs="{'readonly':[('state','!=','draft')]}" domain="[('payment_state','=','for_payment_procedure'),('is_payment_request', '=', True),('type', '=', 'in_invoice')]"/>
+                                <field name="folio_against_receipt"  context="{'show_folio_name':True}" attrs="{'readonly':[('state','!=','draft')]}" domain="[('payment_state','=','for_payment_procedure'),('is_payment_request', '=', True),('type', '=', 'in_invoice')]"/>
+                                <field name="folio_against_receipt_name"/>
                                 <field name="partner_id"/>
                                 <field name="observations" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="dependence_id"/>

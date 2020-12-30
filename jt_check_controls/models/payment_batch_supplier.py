@@ -75,6 +75,19 @@ class PaymentBatchSupplier(models.Model):
     payment_req_ids = fields.One2many('check.payment.req', "payment_batch_id", "Check Payment Requests")
     printed_checks = fields.Boolean("Printed checks")
     description_layout = fields.Text("Description Layout")
+    selected = fields.Boolean("Select All")
+
+    @api.onchange('select_all')
+    def select_lines(self):
+        for line in self.payment_req_ids:
+            line.selected = True
+        self.selected = True
+
+    @api.onchange('deselect_all')
+    def deselect_lines(self):
+        for line in self.payment_req_ids:
+            line.selected = False
+        self.selected = False
 
     def get_date(self):
         date = self.payment_date or datetime.today().date()
@@ -238,6 +251,16 @@ class CheckPaymentRequests(models.Model):
                                      ('Reissued', 'Reissued'), ('Charged', 'Charged')], related='check_folio_id.status',
                                     store=True)
 
+    @api.constrains('check_folio_id')
+    def _check_number(self):
+        for rec in self:
+            if rec.check_folio_id:
+                exit_lines = self.env['check.payment.req'].search([('check_folio_id','=',rec.check_folio_id.id),('id','!=',rec.id)])
+    #             if self.env.user.lang == 'es_MX':
+    #                 raise ValidationError(_('El número de Actividad Institucional debe ser un valor numérico'))
+    #             else:
+                if exit_lines:
+                    raise ValidationError(_('This check folio already assing to other payment request'))
 
 class BankBalanceCheck(models.TransientModel):
     _inherit = 'bank.balance.check'

@@ -801,7 +801,7 @@ msgstr "Asignado"
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__assigned_for_shipping
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__assigned_for_shipping
 msgid "Assigned for shipping"
-msgstr "Asignado para el envío"
+msgstr "Disponible"
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_cancel_checks__message_attachment_count
@@ -811,13 +811,13 @@ msgstr "Conteo de archivos adjuntos"
 #. module: jt_check_controls
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__general_status__available
 msgid "Available"
-msgstr "Reservado"
+msgstr "Disponible"
 
 #. module: jt_check_controls
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__available_for_printing
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__available_for_printing
 msgid "Available for printing"
-msgstr "Disponible para su impresión"
+msgstr "Disponible"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.checkbook_req_form_view
@@ -1078,7 +1078,7 @@ msgstr "Chequera No."
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__checkbook_registration
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__checkbook_registration
 msgid "Checkbook registration"
-msgstr "Registro de la chequera"
+msgstr "Disponible"
 
 #. module: jt_check_controls
 #: model:ir.actions.act_window,name:jt_check_controls.action_checkbook_req
@@ -1846,7 +1846,7 @@ msgstr "¡Sólo un disco tiene esta opción!"
 #. module: jt_check_controls
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__general_status__paid
 msgid "Paid"
-msgstr ""
+msgstr "Pagado"
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_check_payment_req__payment_id

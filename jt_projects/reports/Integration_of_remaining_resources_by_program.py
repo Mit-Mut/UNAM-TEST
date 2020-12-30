@@ -221,7 +221,7 @@ class IntegrationOfRemainingResourceByProgram(models.AbstractModel):
                         c_bal = sum(x.credit for x in values)
                         
                         values= self.env['account.move.line'].search([('date','<',start),('account_id', '=', a.account_id.id),('move_id.state', '=', 'posted')])
-                        o_bal = sum(x.debit - x.credit for x in values)
+                        o_bal = sum(x.credit - x.debit  for x in values)
                     
                     t_bal = o_bal - d_bal + c_bal
                     total_open_bal += o_bal

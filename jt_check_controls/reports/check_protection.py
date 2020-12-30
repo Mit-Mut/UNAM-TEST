@@ -48,12 +48,6 @@ class CheckProtection(models.AbstractModel):
     filter_unposted_in_period = None
     MAX_LINES = None
 
-    # filter_project_type = [
-    #     {'id': 'conacyt', 'name': ('CONACYT'), 'selected': False},
-    #     {'id': 'concurrent', 'name': ('Concurrent'), 'selected': False},
-    #     {'id': 'other', 'name': ('Other'), 'selected': False},
-    # ]
-
     def _get_reports_buttons(self):
         return [
             {'name': _('Print Preview'), 'sequence': 1,
@@ -83,6 +77,7 @@ class CheckProtection(models.AbstractModel):
             {'name': _('')},
 
         ]
+
     def _get_lines(self, options, line_id=None):
         lines = []
         return lines

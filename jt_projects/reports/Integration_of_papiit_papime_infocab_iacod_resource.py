@@ -179,7 +179,7 @@ class IntegrationPapiitPapimeInfocabIacod(models.AbstractModel):
             credit_bal1 = sum(x.credit for x in values)
             
             values= self.env['account.move.line'].search([('date','<',start),('account_id', '=', account_id.id),('move_id.state', '=', 'posted')])
-            open_bal1 = sum(x.debit - x.credit for x in values)
+            open_bal1 = sum(x.credit - x.debit for x in values)
         
         total_bal1 = open_bal1 - debit_bal1 + credit_bal1
 
@@ -195,7 +195,7 @@ class IntegrationPapiitPapimeInfocabIacod(models.AbstractModel):
             credit_bal2 = sum(x.credit for x in values)
             
             values= self.env['account.move.line'].search([('date','<',start),('account_id', '=', account_id.id),('move_id.state', '=', 'posted')])
-            open_bal2 = sum(x.debit - x.credit for x in values)
+            open_bal2 = sum(x.credit - x.debit  for x in values)
         
         total_bal2 = open_bal2 - debit_bal2 + credit_bal2
 
@@ -211,7 +211,7 @@ class IntegrationPapiitPapimeInfocabIacod(models.AbstractModel):
             credit_bal3 = sum(x.credit for x in values)
             
             values= self.env['account.move.line'].search([('date','<',start),('account_id', '=', account_id.id),('move_id.state', '=', 'posted')])
-            open_bal3 = sum(x.debit - x.credit for x in values)
+            open_bal3 = sum(x.credit - x.debit  for x in values)
         
         total_bal3 = open_bal3 - debit_bal3 + credit_bal3
 
@@ -227,7 +227,7 @@ class IntegrationPapiitPapimeInfocabIacod(models.AbstractModel):
             credit_bal4 = sum(x.credit for x in values)
             
             values= self.env['account.move.line'].search([('date','<',start),('account_id', '=', account_id.id),('move_id.state', '=', 'posted')])
-            open_bal4 = sum(x.debit - x.credit for x in values)
+            open_bal4 = sum(x.credit - x.debit for x in values)
         
         total_bal4 = open_bal4 - debit_bal4 + credit_bal4
 
@@ -243,7 +243,7 @@ class IntegrationPapiitPapimeInfocabIacod(models.AbstractModel):
             credit_bal5 = sum(x.credit for x in values)
             
             values= self.env['account.move.line'].search([('date','<',start),('account_id', '=', account_id.id),('move_id.state', '=', 'posted')])
-            open_bal5 = sum(x.debit - x.credit for x in values)
+            open_bal5 = sum(x.credit - x.debit  for x in values)
         
         total_bal5 = open_bal5 - debit_bal5 + credit_bal5
         

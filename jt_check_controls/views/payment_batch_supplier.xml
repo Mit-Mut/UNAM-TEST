@@ -6,7 +6,7 @@
             <field name="name">payment.batch.supplier.tree.view</field>
             <field name="model">payment.batch.supplier</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree create='0'>
                     <field name="batch_folio"/>
                     <field name="checkbook_req_id"/>
                 </tree>
@@ -17,7 +17,7 @@
             <field name="name">payment.batch.supp.form.view</field>
             <field name="model">payment.batch.supplier</field>
             <field name="arch" type="xml">
-                <form>
+                <form create='0'>
                     <header>
                         <field name="printed_checks" invisible="1"/>
                         <button name="confirm_printed_checks" type="object" string="Confirm Printed Checks"
@@ -42,6 +42,11 @@
                                 <field name="description_layout"/>
                             </group>
                         </group>
+                            <button name="select_lines" type="object" string="Select All"
+                            attrs="{'invisible':[('selected', '=', True)]}"/>
+                            <button name="deselect_lines" type="object" string="Deselect All"
+                            attrs="{'invisible':[('selected', '=', False)]}"/>
+                            <field name="selected" invisible="1"/>
                         <notebook>
                             <page name="check_payment_requests" string="Check Payment Requests">
                                 <field name="payment_req_ids" nolabel="1">

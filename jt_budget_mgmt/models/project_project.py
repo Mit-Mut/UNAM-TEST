@@ -55,7 +55,10 @@ class ProjectProject(models.Model):
     @api.constrains('number')
     def _check_number(self):
         if self.number and not str(self.number).isnumeric():
-            raise ValidationError(_('The Number must be numeric value'))
+            if self.env.user.lang == 'es_MX':
+                raise ValidationError(_('El número de Actividad Institucional debe ser un valor numérico'))
+            else:
+                raise ValidationError(_('The Project Number must be a numerical value'))
 
     @api.constrains('stage_identifier')
     def _check_stage_identifier(self):

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="search_template_bank_account">
+        <a type="button" class="dropdown-toggle" data-toggle="dropdown">
+            <span class="fa fa-book"/>
+            Bank Account:
+            <t t-set="selected_bank_account" t-value="options.get('name_journal_group') or ', '.join(c.get('name') for c in options['bank_account'] if c.get('selected'))"/>
+            <t t-if="selected_bank_account">
+                <t t-esc="selected_bank_account"/>
+            </t>
+            <t t-else="">
+                <span>All</span>
+            </t>
+        </a>
+         
+        <div class="dropdown-menu o_filters_menu" role="menu">
+            <t t-foreach="options['bank_account']" t-as="j">
+                <t t-if="j.get('id') == 'divider'">
+                    <div role="separator" class="dropdown-divider"/>
+                    <b role="menuitem" class="ml4 dropdown-item-text"><t t-esc="j.get('name')"/></b>
+                    <div role="separator" class="dropdown-divider"/>
+                </t>
+                <t t-if="j.get('id') != 'divider'">
+                    <t>
+                        <a role="menuitem" class="dropdown-item js_account_report_choice_filter" t-att-title="j.get('name')" t-att-data-id="j.get('id')" data-filter="bank_account">
+                            <t t-esc="j.get('name')"/>
+                        </a>
+                    </t>
+                </t>
+            </t>
+        </div>
+        
+    </template>
+
+    <template id="search_template_jt_check_controls" inherit_id="account_reports.search_template">
+        <xpath expr="." position="inside">
+            <div class="btn-group o_dropdown o_account_reports_filter_fund" t-if="options.get('bank_account') != None">
+                <t t-call="jt_check_controls.search_template_bank_account"/>
+            </div>
+        </xpath>
+    </template>
+
+
+    <!-- upa catalog -->
+    <template id="search_template_upa_catalog">
+        <a type="button" class="dropdown-toggle" data-toggle="dropdown">
+            <span class="fa fa-book"/>
+            upa catalog:
+            <t t-set="selected_upa_catalog" t-value="options.get('name_journal_group') or ', '.join(c.get('name') for c in options['upa_catalog'] if c.get('selected'))"/>
+            <t t-if="selected_upa_catalog">
+                <t t-esc="selected_upa_catalog"/>
+            </t>
+            <t t-else="">
+                <span>All</span>
+            </t>
+        </a>
+         
+        <div class="dropdown-menu o_filters_menu" role="menu">
+            <t t-foreach="options['upa_catalog']" t-as="j">
+                <t t-if="j.get('id') == 'divider'">
+                    <div role="separator" class="dropdown-divider"/>
+                    <b role="menuitem" class="ml4 dropdown-item-text"><t t-esc="j.get('name')"/></b>
+                    <div role="separator" class="dropdown-divider"/>
+                </t>
+                <t t-if="j.get('id') != 'divider'">
+                    <t>
+                        <a role="menuitem" class="dropdown-item js_account_report_choice_filter" t-att-title="j.get('name')" t-att-data-id="j.get('id')" data-filter="upa_catalog">
+                            <t t-esc="j.get('name')"/>
+                        </a>
+                    </t>
+                </t>
+            </t>
+        </div>
+        
+    </template>
+
+    <template id="upa_catalog_search_template_jt_check_controls" inherit_id="account_reports.search_template">
+        <xpath expr="." position="inside">
+            <div class="btn-group o_dropdown o_account_reports_filter_fund" t-if="options.get('bank_account') != None">
+                <t t-call="jt_check_controls.search_template_upa_catalog"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>

@@ -22,6 +22,9 @@ class ReissueOfChecks(models.Model):
     bank_account_id = fields.Many2one(related='check_log_id.bank_account_id')
     
     move_id = fields.Many2one('account.move','Payment request')
+    folio_against_receipt = fields.Many2one('account.move','Folio against Receipt')
+    folio_against_receipt_name = fields.Char(related='folio_against_receipt.folio',string='Folio')
+    
     reason_reissue = fields.Text("Reason for Reissue")
     reason_cancellation = fields.Text("Reason for Cancellation")
     reason_rejection = fields.Text("Reason for rejection")
@@ -38,12 +41,34 @@ class ReissueOfChecks(models.Model):
     
     state = fields.Selection([('draft','Draft'),('request','Request'),('approved','Approved'),('rejected','Rejected')],default='draft',string='Status')
 
+    @api.onchange('move_id')
+    def onchange_move_id(self):
+        if self.move_id:
+            self.folio_against_receipt = self.move_id.id
+            self.check_log_id = self.move_id.check_folio_id and self.move_id.check_folio_id.id or False
+
+    @api.onchange('folio_against_receipt')
+    def onchange_folio_against_receipt(self):
+        if self.folio_against_receipt:
+            self.move_id = self.folio_against_receipt.id
+            self.check_log_id = self.folio_against_receipt.check_folio_id and self.folio_against_receipt.check_folio_id.id or False
+
+    @api.onchange('check_log_id')
+    def onchange_check_log_id(self):
+        if self.check_log_id:
+            move_id = self.env['account.move'].search([('check_folio_id','=',self.check_log_id.id)],limit=1)
+            if move_id:
+                self.move_id = move_id.id
+                self.folio_against_receipt = move_id.id
+                        
     @api.depends('type_of_request')
     def get_check_log_ids(self):
         for rec in self:
             log_list = []
             if rec.type_of_request=='check_reissue':
-                check_ids = self.env['check.log'].search([('status','in',('Protected and in transit','Cancelled'))])
+                check_ids = self.env['check.log'].search([('status','in',('Delivered','Protected and in transit','Cancelled'))])
+                move_ids = self.env['account.move'].search([('check_folio_id','in',check_ids.ids),('payment_state','in',('payment_method_cancelled','assigned_payment_method'))])
+                check_ids = move_ids.mapped('check_folio_id') 
                 log_list = check_ids.ids
             if rec.type_of_request=='check_cancellation':
                 check_ids = self.env['check.log'].search([('status','in',('Protected and in transit','Printed','Detained','Withdrawn from circulation'))])

@@ -333,7 +333,7 @@
                                 <!-- Internal note -->
                                 <field name="narration" placeholder="Add an internal note..." nolabel="1" height="50"/>
                             </page>
-                             <page id="aml_tab" string="Journal Items" groups="account.group_account_user" attrs="{'invisible':[('payment_state','in',('draft','registered','approved_payment'))]}">
+                             <page id="aml_tab" string="Journal Items" groups="account.group_account_user">
                                 <field name="line_ids"
                                 		attrs="{'readonly': [('payment_state', '!=', 'draft')]}"
                                        context="{'default_type': context.get('default_type'), 'line_ids': line_ids, 'journal_id': journal_id, 'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id != company_currency_id and currency_id or False}">

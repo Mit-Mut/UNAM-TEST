@@ -181,9 +181,9 @@ class PaymentBatchSupplier(models.Model):
             if rec.checkbook_req_id:
                 count = rec.payment_req_ids.filtered(lambda x: x.selected == True)
                 logs = check_log_obj.search([('checklist_id.checkbook_req_id', '=', rec.checkbook_req_id.id),
-                                             ('status', '=', 'Available for printing')], limit=len(count)).ids
+                        ('status', 'in', ('Available for printing', 'Checkbook registration'))], limit=len(count)).ids
                 if len(logs) != len(count):
-                    raise ValidationError(_('No available for printing!'))
+                    raise ValidationError(_('Not enough check available to assign printing!'))
                 counter = 0
                 if logs:
                     for line in rec.payment_req_ids.filtered(lambda x: x.selected == True):
@@ -194,11 +194,14 @@ class PaymentBatchSupplier(models.Model):
                         line.selected = False
                     rec.printed_checks = True
                 if not logs:
-                    raise ValidationError(_('No check available for printing!'))
+                    raise ValidationError(_('No check available to assign!'))
 
     def confirm_printed_checks(self):
         self.ensure_one()
         line_vals = []
+        selected = self.payment_req_ids.filtered(lambda x: x.selected == True)
+        if not selected:
+            raise ValidationError(_("Select Check Payment Requests to confirm!"))
         for line in self.payment_req_ids:
             if line.selected and line.check_status == 'Available for printing' and line.check_folio_id:
                 line_vals.append({
@@ -261,6 +264,13 @@ class CheckPaymentRequests(models.Model):
     #             else:
                 if exit_lines:
                     raise ValidationError(_('This check folio already assing to other payment request'))
+
+    def select_lines(self):
+        for line in self:
+            if line.selected:
+                line.selected = False
+            else:
+                line.selected = True
 
 class BankBalanceCheck(models.TransientModel):
     _inherit = 'bank.balance.check'

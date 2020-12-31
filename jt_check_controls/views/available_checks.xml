@@ -42,10 +42,37 @@
             </field>
         </record>
 
+        <record id="available_check_search" model="ir.ui.view">
+            <field name="name">available.check.search</field>
+            <field name="model">available.check</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                	
+                	<field name="check_folio_id"/>
+                	<field name="checkbook_no"/>
+                	<field name="general_status"/>
+                	<field name="dependence_id"/>
+                	<field name="subdependence_id"/>
+                	
+                	<filter  string="Available" name="available_check"
+                        domain="[('general_status', '=', 'available')]"/>
+
+                    <group expand="1" string="Group By">
+                    	<filter string="General Status" name='general_status' context="{'group_by':'general_status'}"/>
+                        <filter string="Checkbook No" name='checkbook_no' context="{'group_by':'checkbook_no'}"/>
+                        <filter string="Dependence" name='dependence_id' context="{'group_by':'dependence_id'}"/>
+                        <filter string="Subdependence" name='subdependence_id' context="{'group_by':'subdependence_id'}"/>
+                    </group>
+                        
+				</search>
+			</field>
+		</record>
+
         <record id="action_available_check" model="ir.actions.act_window">
             <field name="name">Available Checks</field>
             <field name="res_model">available.check</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_available_check':1}</field>
         </record>
 
         <menuitem id="menu_available_check" name="Available Checks"

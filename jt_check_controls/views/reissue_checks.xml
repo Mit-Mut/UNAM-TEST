@@ -41,6 +41,7 @@
                             <group>
                                 <field name="type_of_request" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="check_log_ids" invisible="1"/>
+                                <field name="checkbook_req_id" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="check_log_id" attrs="{'readonly':[('state','!=','draft')]}" domain="[('id','in',check_log_ids)]"/>
                                 <field name="check_amount"/>
                                 <field name="status"/>
@@ -53,8 +54,8 @@
                             <group>
                                 <field name="bank_id"/>
                                 <field name="bank_account_id"/>
-                                <field name="move_id" attrs="{'readonly':[('state','!=','draft')]}" domain="[('payment_state','=','for_payment_procedure'),('is_payment_request', '=', True),('type', '=', 'in_invoice')]"/>
-                                <field name="folio_against_receipt"  context="{'show_folio_name':True}" attrs="{'readonly':[('state','!=','draft')]}" domain="[('payment_state','=','for_payment_procedure'),('is_payment_request', '=', True),('type', '=', 'in_invoice')]"/>
+                                <field name="move_id" attrs="{'readonly':[('state','!=','draft')]}" domain="[('payment_state','in',('payment_method_cancelled','assigned_payment_method')),('is_payment_request', '=', True),('type', '=', 'in_invoice')]"/>
+                                <field name="folio_against_receipt"  context="{'show_folio_name':True}" attrs="{'readonly':[('state','!=','draft')]}" domain="[('payment_state','=',('payment_method_cancelled','assigned_payment_method')),('is_payment_request', '=', True),('type', '=', 'in_invoice')]"/>
                                 <field name="folio_against_receipt_name"/>
                                 <field name="partner_id"/>
                                 <field name="observations" attrs="{'readonly':[('state','!=','draft')]}"/>

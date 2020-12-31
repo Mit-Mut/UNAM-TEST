@@ -50,7 +50,7 @@ class ExpirationValidityCheck(models.Model):
     status = fields.Selection(related='check_folio_id.status',string='Check status')
     check_validity = fields.Integer(related='check_folio_id.bank_id.bank_id.check_validity',string='Days of validity')
     
-    payment_method_name = fields.Char('Payment Name')
+    #payment_method_name = fields.Char('Payment Name')
     
     def init(self):
         tools.drop_view_if_exists(self.env.cr,self._table)
@@ -72,9 +72,10 @@ class ExpirationValidityCheck(models.Model):
         )    
     
     def action_withdrawn_from_circulation(self):
-        if self.payment_req_id:
-            self.payment_req_id.payment_state = 'payment_method_cancelled'
-        if self.check_folio_id:
-            self.check_folio_id.status = 'Withdrawn from circulation'
-            self.check_payment_req_id.is_withdrawn_circulation = True         
+        for rec in self:
+            if rec.payment_req_id:
+                rec.payment_req_id.payment_state = 'payment_method_cancelled'
+            if rec.check_folio_id:
+                rec.check_folio_id.status = 'Withdrawn from circulation'
+                rec.check_payment_req_id.is_withdrawn_circulation = True         
                     

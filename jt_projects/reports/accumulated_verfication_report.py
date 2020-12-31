@@ -237,7 +237,7 @@ class AccumulatedVerficationRecorded(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_3',
-            'name': 'Accumulated' + ' ' + month_name,
+            'name': _('Accumulated') + ' ' + month_name,
             'columns': [self._format({'name': total_443}, figure_type='float'),
                         self._format({'name': total_448}, figure_type='float'),
                         self._format({'name': total_449}, figure_type='float'),
@@ -299,14 +299,14 @@ class AccumulatedVerficationRecorded(models.AbstractModel):
         stage_name = self.get_stage_no(start)
         
         
-        stage_month_name = 'Stage '+stage_name+' Accumulated of ' + first_month_name +"-"+last_month_name 
+        stage_month_name = _('Stage ')+stage_name+_(' Accumulated of ') + first_month_name +"-"+last_month_name 
         
         lines.append({
             'id': 'hierarchy_3',
-            'name': 'Concept',
-            'columns': [{'name': 'Accumulated'},
+            'name': _('Concept'),
+            'columns': [{'name': _('Accumulated')},
                         {'name': stage_month_name},
-                        {'name': 'Total'},
+                        {'name': _('Total')},
                         ],
             'level': 2,
             'unfoldable': False,
@@ -316,7 +316,7 @@ class AccumulatedVerficationRecorded(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_4',
-            'name': 'Accounting accounts (443,448 and 449) that affect Income / Expense',
+            'name': _('Accounting accounts (443,448 and 449) that affect Income / Expense'),
             'columns': [self._format({'name': previous_acc}, figure_type='float'),
                         self._format({'name': current_acc},
                                      figure_type='float'),
@@ -331,7 +331,7 @@ class AccumulatedVerficationRecorded(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_5',
-            'name': 'Concepts that do not affect Income / Expenditure',
+            'name': _('Concepts that do not affect Income / Expenditure'),
             'columns': [self._format({'name': previous_219_411_amount}, figure_type='float'),
                         self._format(
                             {'name': current_219_411_amount}, figure_type='float'),
@@ -346,7 +346,7 @@ class AccumulatedVerficationRecorded(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_6',
-            'name': 'Total Checked',
+            'name': _('Total Checked'),
             'columns': [self._format({'name': previous_acc + previous_219_411_amount}, figure_type='float'),
                         self._format(
                             {'name': current_acc + current_219_411_amount}, figure_type='float'),

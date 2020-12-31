@@ -1,0 +1,334 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* jt_projects
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-12-31 05:39+0000\n"
+"PO-Revision-Date: 2020-12-31 05:39+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/integration_curr_exp_project.py:0
+#, python-format
+msgid "% Total overdue"
+msgstr "% Total expirados"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/cumulative_comparison.py:0
+#: model:ir.actions.client,name:jt_projects.action_cumulative_comparision
+#: model:ir.model,name:jt_projects.model_jt_projects_cumulative_comparison
+#: model:ir.ui.menu,name:jt_projects.menu_cumulative_comparison
+#, python-format
+msgid "ACCUMULATED CHECKS"
+msgstr "Comprobaciones acumuladas"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/integration_current_project.py:0
+#, python-format
+msgid "Accounting Balance at"
+msgstr "Saldo contable al"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/integration_current_project.py:0
+#, python-format
+msgid "Accounting account of various debtors"
+msgstr "Cuenta contable de varios deudores"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/accounting_and_bank_account_balances.py:0
+#: model:ir.actions.client,name:jt_projects.action_accounting_bank_balance_report
+#: model:ir.model,name:jt_projects.model_jt_projects_bank_account_balances
+#: model:ir.ui.menu,name:jt_projects.menu_accounting_and_bank_account_balances
+#, python-format
+msgid "Accounting and bank account balances"
+msgstr "Saldos contables y de cuentas bancarias"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/accumulated_verfication_report.py:0
+#: model:ir.actions.client,name:jt_projects.action_accumulated_verfication_report
+#: model:ir.model,name:jt_projects.model_jt_projects_accumulated_verification_recorded
+#: model:ir.ui.menu,name:jt_projects.menu_accumulated_verfication_recorded
+#, python-format
+msgid "Accumulated verification recorded in Income / Expense"
+msgstr "​ Comprobación acumulada registrado en Ingreso/Gatos"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/integration_current_project.py:0
+#, python-format
+msgid "Active project control system balances"
+msgstr "Saldos activos del sistema de control de proyectos"
+
+#. module: jt_projects
+#: model:ir.model.fields,field_description:jt_projects.field_request_accounts__bank_acc_number_id
+#: model:ir.model.fields,field_description:jt_projects.field_request_confirm__bank_acc_number_id
+msgid "Bank Account"
+msgstr "Cuenta bancaria"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/accounting_and_bank_account_balances.py:0
+#, python-format
+msgid "Bank account"
+msgstr "Cuenta bancaria"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/accounting_and_bank_account_balances.py:0
+#: code:addons/jt_projects/reports/integration_current_project.py:0
+#, python-format
+msgid "Checked"
+msgstr "Comprobado"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/comparison_of_balance_check.py:0
+#: model:ir.actions.client,name:jt_projects.action_comparison_of_balance_report
+#: model:ir.model,name:jt_projects.model_jt_projects_comparison_balances_check
+#: model:ir.ui.menu,name:jt_projects.menu_comparison_balances_to_check
+#, python-format
+msgid "Comparison of balances to check"
+msgstr "Comparativo de saldos a comprobar"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/remaining_resources.py:0
+#: model:ir.model.fields,field_description:jt_projects.field_account_move_line__concept
+#: model:ir.model.fields,field_description:jt_projects.field_remaining_resource__concept
+#, python-format
+msgid "Concept"
+msgstr "Concepto"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/integration_current_project.py:0
+#, python-format
+msgid "Countable balance"
+msgstr "Saldo contable"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/integration_curr_exp_project.py:0
+#, python-format
+msgid "Current projects"
+msgstr "Proyectos vigentes"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/accounting_and_bank_account_balances.py:0
+#, python-format
+msgid "Dependence"
+msgstr "Dependencia"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/accounting_and_bank_account_balances.py:0
+#, python-format
+msgid "End"
+msgstr "Fin"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/integration_curr_exp_project.py:0
+#, python-format
+msgid "Entity"
+msgstr "Entidad"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/accounting_and_bank_account_balances.py:0
+#, python-format
+msgid "Financing"
+msgstr "Financiación"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/integration_airplan_ticket_papiit.py:0
+#: model:ir.actions.client,name:jt_projects.action_airplane_ticket_papiit
+#: model:ir.model,name:jt_projects.model_jt_projects_integration_airplane_ticket
+#: model:ir.ui.menu,name:jt_projects.menu_integration_airplane_tickets_papiit
+#, python-format
+msgid "Integration airplane tickets PAPIIT"
+msgstr "Integración boletos de avión PAPIIT"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/integration_program_budgetary_resource_remanants.py:0
+#: model:ir.actions.client,name:jt_projects.action_budget_resources_remnants
+#: model:ir.model,name:jt_projects.model_jt_projects_budget_resources_remanats
+#: model:ir.ui.menu,name:jt_projects.menu_integration_of_budgetary_resources_remnants
+#, python-format
+msgid "Integration by program of budgetary resources and remnants"
+msgstr "Integración por programa de recursos presupuestales y remanentes"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/Integration_of_papiit_papime_infocab_iacod_resource.py:0
+#: model:ir.actions.client,name:jt_projects.action_integration_papiit_pime_infocab_iacod
+#: model:ir.model,name:jt_projects.model_jt_projects_integration_papiit_papime_infocab_iacod
+#: model:ir.ui.menu,name:jt_projects.menu_integration_of_papiit_papime_infocab_iacod
+#, python-format
+msgid "Integration of PAPIIT, PAPIME, INFOCAB, IACOD editions resources"
+msgstr "Integración recursos ediciones PAPIIT, PAPIME, INFOCAB"
+
+#. module: jt_projects
+#: model:ir.ui.menu,name:jt_projects.menu_integration_of_remaining_resource_upa
+msgid "Integration of Remaining Resources"
+msgstr "Integración de recursos remanentes"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/integration_curr_exp_project.py:0
+#: model:ir.actions.client,name:jt_projects.action_integration_of_curr_expired_projects
+#: model:ir.model,name:jt_projects.model_jt_projects_integration_current_expired_project
+#: model:ir.ui.menu,name:jt_projects.menu_integration_of_curr_expired_projects
+#, python-format
+msgid "Integration of current and expired projects"
+msgstr "Integración de proyectos vigentes y vencidos"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/integration_current_project.py:0
+#: model:ir.actions.client,name:jt_projects.action_conacyt_report
+#: model:ir.model,name:jt_projects.model_jt_projects_integration_of_curr_resarch_project
+#: model:ir.ui.menu,name:jt_projects.menu_integration_of_current_research_project
+#, python-format
+msgid "Integration of current research projects"
+msgstr "​ Integración proyectos de investigación vigentes"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/integration_of_project_budget_resources.py:0
+#: model:ir.actions.client,name:jt_projects.action_budget_resources
+#: model:ir.model,name:jt_projects.model_jt_projects_budget_resources
+#: model:ir.ui.menu,name:jt_projects.menu_integration_of_project_budget_resource
+#, python-format
+msgid "Integration of projects with budget resources"
+msgstr "Integración de proyectos con recursos presupuestales"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/Integration_of_remaining_resources_by_program.py:0
+#: model:ir.actions.client,name:jt_projects.action_integration_of_remaining_resources_by_program
+#: model:ir.model,name:jt_projects.model_jt_projects_integration_remaining_resources_program
+#: model:ir.ui.menu,name:jt_projects.menu_integration_of_remaining_resource_papiit_pime_infocab
+#, python-format
+msgid "Integration of remaining resources by program PAPIIT, PAPIME, INFOCAB"
+msgstr "Integración de recursos remanentes por programa"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/integration_of_remnants.py:0
+#: model:ir.actions.client,name:jt_projects.action_integration_of_remnants
+#: model:ir.model,name:jt_projects.model_jt_projects_integration_remnants
+#: model:ir.ui.menu,name:jt_projects.menu_integration_of_remnants_papiit_papime_infocab
+#, python-format
+msgid "Integration of remnants by PAPIIT, PAPIME, INFOCAB Stage"
+msgstr "Integración remanentes por Etapa PAPIIT, PAPIME, INFOCAB"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/integration_current_project.py:0
+#, python-format
+msgid "Ministered"
+msgstr "Ministrado"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/integration_curr_exp_project.py:0
+#, python-format
+msgid "No. Overdue projects"
+msgstr "No. de proyectos expirados"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/integration_curr_exp_project.py:0
+#, python-format
+msgid "No. of current projects"
+msgstr "No. de proyectos vigentes"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/integration_curr_exp_project.py:0
+#, python-format
+msgid "No. of projects with zero balance,with active bank account"
+msgstr "No. de proyectos con saldo cero, con cuenta bancaria activa"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/accounting_and_bank_account_balances.py:0
+#: code:addons/jt_projects/reports/remaining_resources.py:0
+#: model:ir.actions.act_window,name:jt_projects.action_project_budget_stage1
+#: model:ir.actions.act_window,name:jt_projects.action_project_custom_stage
+#: model:ir.model,name:jt_projects.model_stage
+#: model:ir.model.fields,field_description:jt_projects.field_account_move__stage
+#: model:ir.model.fields,field_description:jt_projects.field_account_move_line__stage
+#: model:ir.model.fields,field_description:jt_projects.field_expense_verification__custom_stage_id
+#: model:ir.model.fields,field_description:jt_projects.field_project_custom_stage__name
+#: model:ir.model.fields,field_description:jt_projects.field_project_program_code__stage_id
+#: model:ir.model.fields,field_description:jt_projects.field_project_project__custom_stage_id
+#: model:ir.model.fields,field_description:jt_projects.field_project_project__stage_identifier_id
+#: model:ir.model.fields,field_description:jt_projects.field_remaining_resource__stage_id
+#: model:ir.model.fields,field_description:jt_projects.field_remaining_resource__stage_name
+#: model:ir.model.fields,field_description:jt_projects.field_stage__name
+#: model:ir.ui.menu,name:jt_projects.menu_project_custom_stage
+#, python-format
+msgid "Stage"
+msgstr "Etapa"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/integration_current_project.py:0
+#, python-format
+msgid "Stage / Year"
+msgstr "Etapa / Año"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/accounting_and_bank_account_balances.py:0
+#, python-format
+msgid "Start"
+msgstr "Inicio"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/accounting_and_bank_account_balances.py:0
+#, python-format
+msgid "State"
+msgstr "Estado"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/accounting_and_bank_account_balances.py:0
+#: code:addons/jt_projects/reports/integration_current_project.py:0
+#, python-format
+msgid "To check"
+msgstr "Por comprobar"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/integration_current_project.py:0
+#, python-format
+msgid "Total of (Number of projects)"
+msgstr "Total de Proyectos"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/integration_curr_exp_project.py:0
+#, python-format
+msgid "Total projects"
+msgstr "Total proyectos"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/accumulated_verfication_report.py:0
+#, python-format
+msgid "Accumulated"
+msgstr "Acumulado"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/accumulated_verfication_report.py:0
+#, python-format
+msgid " Accumulated of "
+msgstr "Acumulado de"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/accumulated_verfication_report.py:0
+#, python-format
+msgid "Stage "
+msgstr "Etapa"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/accumulated_verfication_report.py:0
+#, python-format
+msgid "Accounting accounts (443,448 and 449) that affect Income / Expense"
+msgstr "Cuentas contables (443,448 y 449) que afectan Ingresos / Gastos"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/accumulated_verfication_report.py:0
+#, python-format
+msgid "Concepts that do not affect Income / Expenditure"
+msgstr "Conceptos que no afectan Ingresos / Gastos"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/accumulated_verfication_report.py:0
+#, python-format
+msgid "Total Checked"
+msgstr "Total comprobado"

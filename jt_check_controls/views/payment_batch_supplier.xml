@@ -51,6 +51,7 @@
                             <page name="check_payment_requests" string="Check Payment Requests">
                                 <field name="payment_req_ids" nolabel="1">
                                     <tree editable="bottom">
+			                            <button name="select_lines" type="object" string='Select/Deselect'></button>
                                         <field name="selected"/>
                                         <field name="check_folio_id"/>
                                         <field name="payment_id" readonly="1" force_save="1"/>

@@ -150,7 +150,11 @@
     <!--
     	Program Code View 
      -->
- 
+
+		<record model="ir.actions.act_window" id="jt_budget_mgmt.action_program_code">
+		      <field name="context">{'from_conacyt':True}</field>
+		 </record> 
+		 
          <record id="program_code_form_view_inherit" model="ir.ui.view">
             <field name="name">program.code.form.view.inherit</field>
             <field name="model">program.code</field>
@@ -161,11 +165,20 @@
             	</field>
 
             	<field name="name_portfolio" position='after'>
-            		<field name="project_id"  attrs="{'readonly': [('state', '=', 'validated')]}"/>
+            		<field name="project_id" context="{'from_conacyt':True}"  attrs="{'readonly': [('state', '=', 'validated')]}"/>
             	</field>
 
             	<field name="project_number" position='attributes'>
             		<attribute name="invisible">1</attribute>  
+            	</field>
+            	<field name="project_type_id" position='attributes'>
+            		<attribute name="readonly">1</attribute>
+            		<attribute name="force_save">1</attribute>  
+            		
+            	</field>
+            	<field name="stage_id" position='attributes'>
+            		<attribute name="readonly">1</attribute>  
+            		<attribute name="force_save">1</attribute>
             	</field>
             	
             	

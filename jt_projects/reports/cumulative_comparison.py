@@ -172,9 +172,14 @@ class CumulativeComparison(models.AbstractModel):
                 
                 for c in con_project_ids:
                     con_amount += sum(x.ministering_amount for x in c.project_ministrations_ids)
+                    verification_ids = self.env['expense.verification'].search([('status','=','approve'),('project_id','=',c.id)])
+                    con_amount -= sum(x.amount_total for x in verification_ids)
+
 
                 for c in other_project_ids:
                     other_amount += sum(x.ministering_amount for x in c.project_ministrations_ids)
+                    verification_ids = self.env['expense.verification'].search([('status','=','approve'),('project_id','=',c.id)])
+                    other_amount -= sum(x.amount_total for x in verification_ids)
                     
                 lines.append({
                     'id': 'hierarchy_' + str(stage.id)+str(year),

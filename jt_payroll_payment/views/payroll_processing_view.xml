@@ -122,6 +122,7 @@
                                 <field name="reference" readonly="1"/>
                                 <field name="name" readonly="1"/>
                                 <field name="l10n_mx_edi_payment_method_id"/>
+                                <field name="bank_key"/>
                                 <field name="deposite_number"/>
                                 <field name="check_number"/>
                                 <field name="adjustment_case_id"/>

@@ -198,7 +198,10 @@ class InegrationOfExpAndCurrProject(models.AbstractModel):
                     x.amount_total for x in overdue_verification_expense)
 
                 overdue_amount = over_due_ministring_amount - overdue_open_verification_amounts
-
+                amt_over_per = 0
+                if over_due_ministring_amount:
+                    amt_over_per = (overdue_amount*100)/over_due_ministring_amount
+                    
                 total_project += expired_project
                 active_project = 0
                 for pr in open_project_ids:
@@ -224,11 +227,11 @@ class InegrationOfExpAndCurrProject(models.AbstractModel):
                 gt_total_open_verification_amount += open_verification_amounts
                 gt_total_expired_project += expired_project
                 gt_total_over_dua += overdue_amount
-                gt_total_per = 0
+                gt_total_per += amt_over_per
                 gt_total_active += active_project
                 gt_total_all_project += total_project
 
-                temp_lines.append({
+                lines.append({
                     'id': 'projects' + str(dep.id) + str(sub.id),
                     'name': count,
                     'columns': [{'name': entity},
@@ -239,8 +242,7 @@ class InegrationOfExpAndCurrProject(models.AbstractModel):
                                 {'name': expired_project, 'class': 'number'},
                                 self._format(
                                     {'name': overdue_amount}, figure_type='float'),
-                                self._format(
-                                    {'name': 0.0}, figure_type='float'),
+                                self._format({'name': amt_over_per},figure_type='percents'),
                                 {'name': active_project, 'class': 'number'},
                                 {'name': total_project, 'class': 'number'},
                                 ],
@@ -249,18 +251,18 @@ class InegrationOfExpAndCurrProject(models.AbstractModel):
                     'unfolded': True,
                 })
         
-        for l in temp_lines:
-            col_list = l.get('columns',[])
-            over_due = col_list[5]
-            amt_over_due = over_due.get('no_format_name',0)
-            amt_over_per = 0.0 
-            if gt_total_over_dua:
-                amt_over_per = (amt_over_due * 100)/ gt_total_over_dua
-
-            gt_total_per += amt_over_per
-            col_list[6] = self._format({'name': amt_over_per},figure_type='percents')
-            
-            lines.append(l)
+#         for l in temp_lines:
+#             col_list = l.get('columns',[])
+#             over_due = col_list[5]
+#             amt_over_due = over_due.get('no_format_name',0)
+#             amt_over_per = 0.0 
+#             if gt_total_over_dua:
+#                 amt_over_per = (amt_over_due * 100)/ gt_total_over_dua
+# 
+#             gt_total_per += amt_over_per
+#             col_list[6] = self._format({'name': amt_over_per},figure_type='percents')
+#             
+#             lines.append(l)
                         
         lines.append({
             'id': 'projects_total',
@@ -476,7 +478,7 @@ class InegrationOfExpAndCurrProject(models.AbstractModel):
                 'res_company': self.env.company,
             })
             header = self.env['ir.actions.report'].render_template(
-                "jt_projects.external_integration_of_current_research_projects", values=rcontext)
+                "jt_projects.external_integration_of_current_exp_projects", values=rcontext)
             # Ensure that headers and footer are correctly encoded
             header = header.decode('utf-8')
             spec_paperformat_args = {}

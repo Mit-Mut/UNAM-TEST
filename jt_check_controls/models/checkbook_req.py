@@ -268,8 +268,9 @@ class CheckListLine(models.Model):
     general_status = fields.Selection([('available', 'Available'),
                                        ('assigned', 'Assigned'),
                                        ('cancelled', 'Cancelled'),
-                                       ('paid', 'Paid')], compute='_compute_general_status')
+                                       ('paid', 'Paid')], compute='_compute_general_status',store=True)
 
+    @api.depends('status')
     def _compute_general_status(self):
         for rec in self:
             if rec.status in ('Checkbook registration', 'Assigned for shipping', 'Available for printing'):

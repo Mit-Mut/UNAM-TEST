@@ -9,7 +9,7 @@
                 <tree>
                     <field name="key"/>
                     <field name="name"/>
-                    <field name="fund_id" string="Fund Name"/>
+                    <field name="fund_id" string="Fund Name" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -23,7 +23,7 @@
                         <group>
                             <field name="key"/>
                             <field name="name"/>
-                            <field name="fund_id"/>
+                            <field name="fund_id" invisible="1"/>
                         </group>
                     </sheet>
                     <div class="oe_chatter">

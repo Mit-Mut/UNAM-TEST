@@ -19,7 +19,13 @@ class GenerateSupplierCheckLayout(models.TransientModel):
     def action_generate(self):
         batch = self.batch_id
         if batch:
-            if batch.payment_issuing_bank_id.name.upper() != self.layout.upper():
+            if not batch.payment_issuing_bank_id:
+                raise ValidationError(_('Please select Payment Issuing Bank into records'))
+
+            if batch.payment_issuing_bank_id and not batch.payment_issuing_bank_id.bank_id:
+                raise ValidationError(_('Please select Bank into Payment Issuing Bank'))
+                
+            if batch.payment_issuing_bank_id.bank_id.name.upper() != self.layout.upper():
                 raise ValidationError(_('The selected layout does NOT match the bank of the selected records" and no '
                                         'layout can be generated until the correct bank is selected.'))
             invalid_req = batch.payment_req_ids.filtered(lambda x: x.selected == True and \
@@ -92,18 +98,25 @@ class GenerateSupplierCheckLayout(models.TransientModel):
                     file_data += 'A'
                     file_data += '/'
                     file_data += str(round(line.amount_to_pay,2)).replace('.','').zfill(15)
+                    file_data += '/'
                     file_data += "\n"
             elif self.layout == 'Santander':
                 file_name = 'santander.txt'
                 for line in batch.payment_req_ids.filtered(lambda x: x.selected == True and \
                                                          x.check_status == 'Delivered'):
-                    file_data += bank.bank_account_id.acc_number.ljust(18) if bank.bank_account_id \
-                        else '000000000000000000'
+                    file_data += bank.bank_account_id.acc_number.ljust(16) if bank.bank_account_id \
+                        else '0000000000000000'
                     file_data += str(line.check_folio_id.folio).ljust(7)
                     file_data += '             '
                     file_data += line.payment_req_id.partner_id.name.ljust(60) if line.payment_req_id.partner_id else \
                     '                                                            '
-                    file_data += str(line.amount_to_pay).replace('.','').zfill(14)
+                    amount = round(line.amount_to_pay, 2)
+                    amount = "%.2f" % line.amount_to_pay            
+                    amount = str(amount).split('.')
+                    file_data +=str(amount[0]).zfill(14)
+                    file_data +=str(amount[1])
+                    
+                    #file_data += str(line.amount_to_pay).replace('.','').zfill(14)
                     today_date = datetime.date.today().strftime("%d-%m-%Y")
                     file_data += str(today_date).replace('-','/')
                     check_protection_term = 0

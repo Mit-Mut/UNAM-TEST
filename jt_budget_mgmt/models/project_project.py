@@ -56,7 +56,7 @@ class ProjectProject(models.Model):
     def _check_number(self):
         if self.number and not str(self.number).isnumeric():
             if self.env.user.lang == 'es_MX':
-                raise ValidationError(_('El número de Actividad Institucional debe ser un valor numérico'))
+                raise ValidationError(_('El Número de Proyecto debe de ser un valor numérico'))
             else:
                 raise ValidationError(_('The Project Number must be a numerical value'))
 

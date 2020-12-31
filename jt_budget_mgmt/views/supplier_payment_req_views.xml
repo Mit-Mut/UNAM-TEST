@@ -49,13 +49,13 @@
                        position="after">
                     <field name="program_code_id" invisible="1"/>
                 </xpath>
+                <!--  
                 <xpath expr="//page[@id='aml_tab']" position="after">
                              <page id="conac_aml_tab" string="Journal Items" groups="account.group_account_user" attrs="{'invisible':[('payment_state','not in',('draft','registered','approved_payment'))]}">
                                 <field name="conac_line_ids"
                                 		attrs="{'readonly': [('payment_state', '!=', 'draft')]}"
                                        context="{'default_type': context.get('default_type'), 'line_ids': line_ids, 'journal_id': journal_id, 'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id != company_currency_id and currency_id or False}">
                                     <tree editable="bottom" string="Journal Items" decoration-muted="display_type in ('line_section', 'line_note')" default_order="sequence, date desc, move_name desc, id">
-                                        <!-- Displayed fields -->
                                         <field name="account_id"
                                                attrs="{
                                                     'required': [('display_type', 'not in', ('line_section', 'line_note'))],
@@ -109,7 +109,6 @@
                                         <field name="country_id" invisible="1"/>
                                         <field name="tag_ids" widget="many2many_tags" string="Tax Grids" optional="show" domain="[('country_id', '=', country_id), ('applicability', '=', 'taxes')]"/>
 
-                                        <!-- Others fields -->
                                         <field name="type_of_bussiness_line" invisible="1"/>
                                         <field name="egress_key_id" invisible="1"/>
                                         <field name="turn_type" invisible="1"/>
@@ -140,7 +139,6 @@
                                         <field name="exclude_from_invoice_tab" invisible="1"/>
                                         <field name="account_internal_type" invisible="1"/>
                                     </tree>
-                                    <!-- Form view to cover mobile use -->
                                     <form>
                                       <group>
                                         <field name="type_of_bussiness_line" invisible="1"/>
@@ -168,6 +166,7 @@
                             </page>
                 	
                 </xpath>
+                -->
             </field>
         </record>
 

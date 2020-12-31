@@ -22,6 +22,7 @@ class ApproveBlankCheck(models.TransientModel):
     @api.onchange('bank_account_id')
     def onchange_bank_account_id(self):
         if self.bank_account_id:
+            self.checkbook_req_id = False
             self.checkbook_no = self.bank_account_id.checkbook_no
 
     def apply(self):

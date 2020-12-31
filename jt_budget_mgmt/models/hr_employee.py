@@ -27,9 +27,9 @@ class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
     dependancy_id = fields.Many2one('dependency', string='Dependency')
-    dependancy_description = fields.Text(related="dependancy_id.description",string="Dependency Description")
+    dependancy_description = fields.Text(related="payment_place_id.des_dependency",string="Dependency Description")
     sub_dependancy_id = fields.Many2one('sub.dependency', 'Sub Dependency')
-    sub_dependancy_id_description = fields.Text(related="sub_dependancy_id.description",string="Sub dependency     Description")
+    sub_dependancy_id_description = fields.Text(related="payment_place_id.des_sub_dependency",string="Sub dependency     Description")
 
     @api.onchange('payment_place_id')
     def onchange_payment_place_id_dep(self):

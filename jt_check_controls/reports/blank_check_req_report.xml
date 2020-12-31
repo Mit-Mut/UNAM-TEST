@@ -35,10 +35,8 @@
                 </div>
                 <div class="row">
                     <t t-set="trade" t-value="o.get_trade_configuration()"/>
-                    <div class="col-1" align="left">
-                        <span style="font-size:15px;font-weight:bold;">L.I.C.</span>
-                    </div>
-                    <div class="col-11" align="left" style="font-weight:bold;">
+                   
+                    <div class="col-12" align="left" style="font-weight:bold;">
                         <t t-if="trade">
                             <t t-if="trade.general_director_title">
                                 <span style="font-size:15px;" t-esc="trade.general_director_title"/>
@@ -67,7 +65,7 @@
                         <br/>
                         <br/>
                         <t t-set="trade" t-value="o.get_trade_configuration()"/>
-                        <p>L.I.C.
+                        <p>
                             <t t-if="trade">
                                 <t t-if="trade.revenue_director_title">
                                     <span style="font-size:15px;" t-esc="trade.revenue_director_title"/>
@@ -118,10 +116,11 @@
         <template id="blank_check_request_template">
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="o">
-                    <t t-if="o.state == 'approved'">
+                    <t t-if="o.state in  ['approved','confirmed']">
+
                         <t t-call="jt_check_controls.external_layout_blank_req_check">
                             <div class="page">
-                                <br/><br/><br/><br/><br/><br/><br/><br/>
+                                <br/><br/><br/> <br/><!--<br/><br/><br/><br/> -->
 
                                 <p style="margin-top:0;margin-bottom:0;font-size:15px;">
                                     <span>Present:</span>
@@ -167,7 +166,7 @@
                                                               t-field="o.bank_account_id.bank_id"/>
                                                     </td>
                                                     <td name="td_bank_account">
-                                                        <span t-if="o.bank_account_id" t-field="o.bank_account_id"/>
+                                                        <span t-if="o.bank_account_id" t-field="o.bank_account_id.bank_account_id.acc_number"/>
                                                     </td>
                                                     <td name="td_concept">
                                                         <span t-if="o.reason_request"

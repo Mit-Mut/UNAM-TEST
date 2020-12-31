@@ -33,10 +33,14 @@ class AvailableCheck(models.Model):
     
     check_folio_id = fields.Many2one('check.log',"Check number")
     
-    dependence_id = fields.Many2one(related='check_folio_id.dependence_id')
-    subdependence_id = fields.Many2one(related='check_folio_id.subdependence_id')
-    checkbook_no = fields.Char(related='check_folio_id.checkbook_no')
-    general_status = fields.Selection(related='check_folio_id.general_status')
+    dependence_id = fields.Many2one('dependency', "Dependence")
+    subdependence_id = fields.Many2one('sub.dependency', "Subdependence")
+    checkbook_no = fields.Char("Checkbook No")
+    general_status = fields.Selection([('available', 'Available'),
+                                       ('assigned', 'Assigned'),
+                                       ('cancelled', 'Cancelled'),
+                                       ('paid', 'Paid')])
+
     reason_cancellation = fields.Text(related='check_folio_id.reason_cancellation')
     is_physical_check = fields.Boolean(related='check_folio_id.is_physical_check')
     
@@ -45,7 +49,11 @@ class AvailableCheck(models.Model):
         self.env.cr.execute('''
             CREATE OR REPLACE VIEW %s AS (
                 select cl.id as id,
-                cl.id as check_folio_id
+                cl.id as check_folio_id,
+                cl.dependence_id as dependence_id,
+                cl.subdependence_id as subdependence_id,
+                cl.checkbook_no as checkbook_no,
+                cl.general_status as general_status
                 from check_log cl                
                 where cl.general_status = 'available'
                             )'''% (self._table) 

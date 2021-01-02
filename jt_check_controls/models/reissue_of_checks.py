@@ -41,7 +41,8 @@ class ReissueOfChecks(models.Model):
     date_protection = fields.Date(related='check_log_id.date_protection',string="Expedition date")
     
     state = fields.Selection([('draft','Draft'),('request','Request'),('approved','Approved'),('rejected','Rejected')],default='draft',string='Status')
-
+    type_of_batch = fields.Selection([('supplier','Supplier'),('project','Project'),('nominal','Nominal')],string="Type Of Batch")
+    
     @api.onchange('move_id')
     def onchange_move_id(self):
         if self.move_id:

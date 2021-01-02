@@ -76,7 +76,8 @@ class PaymentBatchSupplier(models.Model):
     printed_checks = fields.Boolean("Printed checks")
     description_layout = fields.Text("Description Layout")
     selected = fields.Boolean("Select All")
-
+    type_of_batch = fields.Selection([('supplier','Supplier'),('project','Project'),('nominal','Nominal')],string="Type Of Batch")
+       
     @api.onchange('select_all')
     def select_lines(self):
         for line in self.payment_req_ids:
@@ -288,14 +289,33 @@ class BankBalanceCheck(models.TransientModel):
                     })
                 else:
                     batch_data.update({invoice.batch_folio: [invoice]})
+            if invoice.is_project_payment == True and invoice.l10n_mx_edi_payment_method_id \
+                    and invoice.l10n_mx_edi_payment_method_id.id == check_payment_method:
+                if invoice.batch_folio in batch_data.keys():
+                    batch_data.update({
+                        invoice.batch_folio: batch_data.get(invoice.batch_folio) + [invoice]
+                    })
+                else:
+                    batch_data.update({invoice.batch_folio: [invoice]})
 
         for folio, moves in batch_data.items():
             batch_folio = folio
             moves_list = []
             bank_id = self.journal_id.id if self.journal_id else False
             bank_acc_id = self.bank_account_id.id if self.bank_account_id else False
+            type_of_batch = False
             for move in moves:
+                if move.is_payroll_payment_request:
+                    type_of_batch = 'nominal'
+                elif move.is_payment_request:
+                    type_of_batch = 'supplier'
+                elif move.is_different_payroll_request:
+                    type_of_batch = 'nominal'
+                elif move.is_project_payment:
+                    type_of_batch = 'project'
+                
                 moves_list.append(move)
+                
             move_val_list = []
             for move in moves_list:
                 payment = self.env['account.payment'].search([('payment_request_id', '=', move.id)], limit=1)
@@ -306,6 +326,7 @@ class BankBalanceCheck(models.TransientModel):
                 'payment_issuing_bank_id': bank_id,
                 'payment_issuing_bank_acc_id': bank_acc_id,
                 'type_of_payment_method': 'checks',
+                'type_of_batch':type_of_batch,
                 'payment_req_ids': [(0, 0, val) for val in move_val_list]
             })
         return res

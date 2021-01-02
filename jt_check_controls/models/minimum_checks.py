@@ -20,3 +20,7 @@ class MinimumCheck(models.Model):
         else:
             self.bank_account_id = False
             self.checkbook_no = False
+
+
+
+

@@ -20,23 +20,4 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from odoo import models, fields, api, _
-from odoo.exceptions import UserError
-
-class Preception(models.Model):
-
-    _name = 'preception'
-    _description = "Preception"
-    _rec_name = 'key'
-
-    key = fields.Char("Key")
-    concept = fields.Char("Concept")
-
-class Deduction(models.Model):
-
-    _name = 'deduction'
-    _description = "Deduction"
-    _rec_name = 'key'
-
-    key = fields.Char("Key")
-    concept = fields.Char("Concept")
+from . import weight_income_report

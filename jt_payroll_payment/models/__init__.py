@@ -10,5 +10,3 @@ from . import payment_request
 from . import upa_document_type
 from . import payroll_payment_invoice
 from . import account_journal
-from . import adjustment_cases
-from . import payroll_processing

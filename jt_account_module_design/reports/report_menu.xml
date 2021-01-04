@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Weight Income Report. menu  -->
+        <record id="action_weight_income_report" model="ir.actions.client">
+            <field name="name">weight income report</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'account.revenue.report'}" />
+        </record>
+
+        <!-- weight income  submenu -->
+        <menuitem
+            id="weight_income_report_submenu"
+            name="Weight Income Report"
+            parent="account.menu_finance_reports"
+            action = "action_weight_income_report"
+            sequence="88"
+        />
+
+    </data>
+</odoo>

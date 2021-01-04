@@ -20,23 +20,23 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from odoo import models, fields, api, _
-from odoo.exceptions import UserError
-
-class Preception(models.Model):
-
-    _name = 'preception'
-    _description = "Preception"
-    _rec_name = 'key'
-
-    key = fields.Char("Key")
-    concept = fields.Char("Concept")
-
-class Deduction(models.Model):
-
-    _name = 'deduction'
-    _description = "Deduction"
-    _rec_name = 'key'
-
-    key = fields.Char("Key")
-    concept = fields.Char("Concept")
+{
+    'name': 'Tax Transaction',
+    'summary': 'Tax Transaction',
+    'version': '13.0.0.1.0',
+    'category': 'Invoicing',
+    'author': 'Jupical Technologies Pvt. Ltd.',
+    'maintainer': 'Jupical Technologies Pvt. Ltd.',
+    'website': 'http://www.jupical.com',
+    'license': 'AGPL-3',
+    'depends': ['account_accountant','jt_budget_mgmt'],
+    'data': [
+        'views/conagua_view.xml',
+        'views/lfpiorpi_view.xml',
+        'views/monthly_declaration_view.xml',
+        'security/ir.model.access.csv',
+    ],
+    'application': False,
+    'installable': True,
+    'auto_install': False,
+}

@@ -42,7 +42,22 @@ class ReissueOfChecks(models.Model):
     
     state = fields.Selection([('draft','Draft'),('request','Request'),('approved','Approved'),('rejected','Rejected')],default='draft',string='Status')
     type_of_batch = fields.Selection([('supplier','Supplier'),('project','Project'),('nominal','Nominal')],string="Type Of Batch")
+
+    type_of_reissue_id = fields.Many2one('type.of.reissue','Reissue type')
+    fornight = fields.Selection(related='move_id.fornight',string='Fornight')
+    employee_number = fields.Char(string='Employee number',compute='get_employee_number')
     
+    def get_employee_number(self):
+        for rec in self:
+            emp_no = False
+            if rec.partner_id:
+                user_id = self.env['res.users'].search([('partner_id','=',rec.partner_id.id)],limit=1)
+                if user_id:
+                    emp_id = self.env['hr.employee'].search([('user_id','=',rec.user_id.id)],limit=1)
+                    if emp_id:
+                        emp_no = emp_id.worker_number
+            rec.employee_number = emp_no
+              
     @api.onchange('move_id')
     def onchange_move_id(self):
         if self.move_id:

@@ -428,9 +428,6 @@ class AccountMove(models.Model):
         self.ensure_one()
         self.payment_state = 'draft'
 
-    def action_confirm_different_payroll(self):
-        self.payment_state = 'approved_payment'
-        
     def action_reschedule(self):
         return {
             'name': 'Reschecule Request',

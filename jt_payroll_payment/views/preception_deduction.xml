@@ -20,26 +20,10 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
-                    	<group>
-	                        <group>
-	                            <field name="key"/>
-	                        </group>
-	                        <group>
-	                        	<field name="concept"/>
-	                        </group>
+                        <group>
+                            <field name="key"/>
+                            <field name="concept"/>
                         </group>
-                        <notebook>
-                        	<page string="Accounting">
-                        		<group>
-                        			<group>
-                        				<field name="credit_account_id"/>
-                        			</group>
-                        			<group>
-                        				<field name="debit_account_id"/>
-                        			</group>
-                        		</group>
-                        	</page>
-                        </notebook>
                     </sheet>
                 </form>
             </field>
@@ -75,8 +59,8 @@
                 </search>
             </field>
         </record>
-<!-- 
-        form view for preception
+
+        <!-- form view for preception-->
         <record id="preception_form_view" model="ir.ui.view">
             <field name="name">preception.form.view</field>
             <field name="model">preception</field>
@@ -92,7 +76,7 @@
             </field>
         </record>
 
-        tree view for preception
+        <!-- tree view for preception -->
         <record id="preception_tree_view" model="ir.ui.view">
             <field name="name">preception.tree.view</field>
             <field name="model">preception</field>
@@ -104,7 +88,7 @@
             </field>
         </record>
 
-        search view for deduction
+        <!-- search view for deduction -->
         <record id="deduction_search_view" model="ir.ui.view">
             <field name="name">deduction.search.view</field>
             <field name="model">deduction</field>
@@ -115,7 +99,7 @@
                 </search>
             </field>
         </record>
- -->
+
         <!-- form view for deduction-->
         <record id="deduction_form_view" model="ir.ui.view">
             <field name="name">deduction.form.view</field>
@@ -123,27 +107,10 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
-                    	<group>
                         <group>
                             <field name="key"/>
+                            <field name="concept"/>
                         </group>
-                        <group>
-                        	<field name="concept"/>
-                        </group>
-						</group>
-                        <notebook>
-                        	<page string="Accounting">
-                        		<group>
-                        			<group>
-                        				<field name="credit_account_id"/>
-                        			</group>
-                        			<group>
-                        				<field name="debit_account_id"/>
-                        			</group>
-                        		</group>
-                        	</page>
-                        </notebook>
-                        
                     </sheet>
                 </form>
             </field>

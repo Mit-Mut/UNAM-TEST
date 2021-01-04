@@ -20,17 +20,23 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from odoo import models, fields, api, _
-from odoo.exceptions import UserError
+{
+    'name': 'Account report design',
+    'summary': 'Account Base',
+    'version': '13.0.0.1.0',
+    'category': 'Invoicing',
+    'author': 'Jupical Technologies Pvt. Ltd.',
+    'maintainer': 'Jupical Technologies Pvt. Ltd.',
+    'website': 'http://www.jupical.com',
+    'license': 'AGPL-3',
+    'depends': ['account_accountant', 'l10n_mx'],
+    'data': [
 
-class AdjustmentCases(models.Model):
+        'reports/header.xml',
+        'reports/report_menu.xml',
+    ],
 
-    _name = 'adjustment.cases'
-    _description = "AdjustmentCases"
-    _rec_name = 'case'
-
-
-    case = fields.Selection([('A','A'),('D','D'),('R','R'),('F','F'),('H','H'),('B','B'),('V','V'),('C','C'),('E','E')],string="Case")
-    description = fields.Text('Description')
-    
-    
+    'application': False,
+    'installable': True,
+    'auto_install': False,
+}

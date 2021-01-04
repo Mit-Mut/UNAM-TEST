@@ -23,26 +23,5 @@
             </field>
         </record>
 
-        <record id="employee_payroll_file_form_processing_inherit" model="ir.ui.view">
-            <field name="name">employee.payroll.file.inherit.view.inherit</field>
-            <field name="model">employee.payroll.file</field>
-            <field name="inherit_id" ref="jt_payroll_payment.employee_payroll_file_form_processing"/>
-            <field name="arch" type="xml">
-                <xpath expr="//notebook/page/field[@name='preception_line_ids']/tree/field[@name='description']" position="after">
-                	<field name="program_code_id"/>
-				</xpath>
-                <xpath expr="//notebook/page/field[@name='preception_line_ids']/form/group/field[@name='description']" position="after">
-                	<field name="program_code_id"/>
-				</xpath>
-
-                <xpath expr="//notebook/page[@name='additional_payments_line']/field[@name='additional_payments_line_ids']/tree/field[@name='details']" position="after">
-                	<field name="program_code_id"/>
-				</xpath>
-                <xpath expr="//notebook/page[@name='additional_payments_line']/field[@name='additional_payments_line_ids']/form/group/field[@name='details']" position="after">
-                	<field name="program_code_id"/>
-				</xpath>
-				
-			</field>
-		</record>
     </data>
 </odoo>

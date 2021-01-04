@@ -8,6 +8,19 @@
             <field name="context" eval="{'model': 'account.revenue.report'}" />
         </record>
 
+        <record id="action_state_partimonial_report" model="ir.actions.client">
+            <field name="name">State Paritmonial Situation</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'jt_account_design.state.partimonial.situation'}" />
+        </record>
+
+        <record id="action_income_expenses_report" model="ir.actions.client">
+            <field name="name">Income Exprenses and Investment</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'jt_account_design.state.income.expenses'}" />
+        </record>
+
+
         <!-- weight income  submenu -->
         <menuitem
             id="weight_income_report_submenu"
@@ -16,6 +29,19 @@
             action = "action_weight_income_report"
             sequence="88"
         />
-
+        <menuitem
+            id="state_partimonial_report"
+            name="State Partimonial Report"
+            parent="account.menu_finance_reports"
+            action = "action_state_partimonial_report"
+            sequence="89"
+        />
+        <menuitem
+            id="state_income_expenses_report"
+            name="Income Expenses and Investment"
+            parent="account.menu_finance_reports"
+            action = "action_income_expenses_report"
+            sequence="100"
+        />
     </data>
 </odoo>

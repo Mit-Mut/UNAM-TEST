@@ -1,8 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!-- Weight Income report -->
-        <template id="external_layout_weight_income" name="external_layout_weight_income_report">
+        <!-- State partimonial situation report header-->
+        <template id="external_layout_state_partimonial" name="external_layout_state_partimonial">
+            <t t-if="not o" t-set="o" t-value="doc"/>
+
+            <t t-if="not company">
+                <!-- Multicompany -->
+                <t t-if="company_id">
+                    <t t-set="company" t-value="company_id"/>
+                </t>
+                <t t-elif="o and 'company_id' in o">
+                    <t t-set="company" t-value="o.company_id.sudo()"/>
+                </t>
+                <t t-else="else">
+                    <t t-set="company" t-value="res_company"/>
+                </t>
+            </t>
+
+            <div class="header">
+                <div class="row">
+                    <div class="col-3">
+                        <img t-attf-src="data:image/png;base64,{{company.header_logo}}"
+                             style="width:120px;height:100px;margin-top:20px;margin-right:20px;margin-bottom:20px;"/>
+                    </div>
+
+                    <div class="col-6 text-center">
+                        <b>
+                            <span style="font-size:14px;">NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO GENERAL DIRECTORATE OF BUDGET CONTROL-ACCOUNTING GENERAL
+                            </span>
+                        </b>
+                        <br/>
+<<<<<<< HEAD
+                        <span style="font-size:14px;">INTEGRATION OF SOME ITEMS OF THE STATE OF PATRIMONIAL SITUATION TO THE 
+                            <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%B')"/>  OF THE
+                            <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y')"/>
+                        </span><br/>
+                        <span>
+                            (PESOS)
+                        </span>
+=======
+                        <span>REPORTE DE INGRESOS POR EL PERÍODO AL <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d')"/> DE <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%B DEL %Y')"/>  Y <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d DE %B DEL %Y')"/> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
+                 t-att-data-oe-lang="o and o.env.context.get('lang')">
+                <t t-raw="0"/>
+            </div>
+
+        </template>       
+
+         <!-- Detail Statement of Income,Expenses and Investments Report -->
+        <template id="external_layout_income_exp_and_invest" name="external_layout_income_exp_and_invest">
             <t t-if="not o" t-set="o" t-value="doc"/>
 
             <t t-if="not company">
@@ -29,7 +79,9 @@
                         <b><span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span></b><br/>
                             <span style="font-size:14px;">DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL</span>
                         <br/>
-                        <span>REPORTE DE INGRESOS POR EL PERÍODO AL <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d')"/> DE <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%B DEL %Y')"/>  Y <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d DE %B DEL %Y')"/> </span>
+                        
+                        <span>ESTADO DE INGRESOS,GASTOS E INVERSIONES DETALLADO DEL <t t-esc="context_timestamp(datetime.datetime.now()).strftime('DEL %d %B')"/> AL <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%B DEL %Y')"/></span>
+>>>>>>> 1bd4d12fbaa758aeb5daed5e912ca2980a140eac
                     </div>
                 </div>
             </div>
@@ -37,7 +89,13 @@
                  t-att-data-oe-lang="o and o.env.context.get('lang')">
                 <t t-raw="0"/>
             </div>
+<<<<<<< HEAD
+        </template>         
+    </data>
+</odoo>
+=======
 
         </template>
 </data>
 </odoo>
+>>>>>>> 1bd4d12fbaa758aeb5daed5e912ca2980a140eac

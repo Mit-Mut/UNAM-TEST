@@ -53,7 +53,7 @@
 
         <menuitem id="menu_tribune_operations" name="Tribune Operations" parent="account_accountant.menu_accounting" sequence="5"/>
 
-        <menuitem id="menu_other_declarations" name="Other Declarations" parent="jt_tax_transaction.menu_tribune_operations" sequence="2"/>
+        <menuitem id="menu_other_declarations" name="Other Declarations" parent="jt_tax_transaction.menu_tribune_operations" sequence="3"/>
         <menuitem id="conagua_menu" name="CONAGUA" parent="jt_tax_transaction.menu_other_declarations" action="action_declaration_conagua" sequence="1"/>
 
     </data>

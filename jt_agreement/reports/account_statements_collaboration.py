@@ -96,6 +96,7 @@ class AccountStatementsCollaboration(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         lines = []
+        
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(

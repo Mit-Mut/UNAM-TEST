@@ -9,7 +9,7 @@ class BankAccountConcept(models.Model):
     bank_account_id = fields.Many2one('res.partner.bank','Bank Accounts')
 
 class ResBank(models.Model):
-
+	
     _inherit = 'res.partner.bank'
 
     for_finance = fields.Boolean("Finance")

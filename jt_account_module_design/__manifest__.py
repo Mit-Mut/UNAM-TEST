@@ -31,9 +31,9 @@
     'license': 'AGPL-3',
     'depends': ['account_accountant', 'l10n_mx'],
     'data': [
-
         'reports/header.xml',
         'reports/report_menu.xml',
+        'reports/income_expenses_header.xml',
     ],
 
     'application': False,

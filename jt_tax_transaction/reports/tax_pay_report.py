@@ -30,14 +30,13 @@ import base64
 from odoo.tools import config, date_utils, get_lang
 import lxml.html
 
+class TaxReport(models.AbstractModel):
 
-class CheckSummary(models.AbstractModel):
-
-    _name = "jt_check_controls.check_summary"
+    _name = "jt_tax_transaction.taxpay.report"
     _inherit = "account.coa.report"
-    _description = "Checks Summary"
+    _description = "​Tax Report to Enter/Pay"
 
-    filter_date = {'mode': 'range', 'filter': 'this_month'}
+    filter_date = {'mode': 'range'}
     filter_comparison = None
     filter_all_entries = None
     filter_journals = None
@@ -47,84 +46,6 @@ class CheckSummary(models.AbstractModel):
     filter_hierarchy = None
     filter_unposted_in_period = None
     MAX_LINES = None
-    filter_bank = True
-    filter_upa_catalog = True
-    filter_bank_account = True
-
-    @api.model
-    def _get_filter_bank(self):
-        return self.env['res.bank'].search([])
-
-    @api.model
-    def _init_filter_bank(self, options, previous_options=None):
-        if self.filter_bank is None:
-            return
-        if previous_options and previous_options.get('bank'):
-            journal_map = dict((opt['id'], opt['selected']) for opt in previous_options[
-                               'bank'] if opt['id'] != 'divider' and 'selected' in opt)
-        else:
-            journal_map = {}
-        options['bank'] = []
-
-        default_group_ids = []
-
-        for j in self._get_filter_bank():
-            options['bank'].append({
-                'id': j.id,
-                'name': j.name,
-                'code': j.name,
-                'selected': journal_map.get(j.id, j.id in default_group_ids),
-            })
-
-    @api.model
-    def _get_filter_upa_catalog(self):
-        return self.env['policy.keys'].search([])
-
-    @api.model
-    def _init_filter_upa_catalog(self, options, previous_options=None):
-        if self.filter_upa_catalog is None:
-            return
-        if previous_options and previous_options.get('upa_catalog'):
-            journal_map = dict((opt['id'], opt['selected']) for opt in previous_options[
-                               'upa_catalog'] if opt['id'] != 'divider' and 'selected' in opt)
-        else:
-            journal_map = {}
-        options['upa_catalog'] = []
-
-        default_group_ids = []
-
-        for j in self._get_filter_upa_catalog():
-            options['upa_catalog'].append({
-                'id': j.id,
-                'name': j.origin,
-                'code': j.origin,
-                'selected': journal_map.get(j.id, j.id in default_group_ids),
-            })
-
-    @api.model
-    def _get_filter_bank_account(self):
-        return self.env['res.partner.bank'].search([])
-
-    @api.model
-    def _init_filter_bank_account(self, options, previous_options=None):
-        if self.filter_bank_account is None:
-            return
-        if previous_options and previous_options.get('bank_account'):
-            journal_map = dict((opt['id'], opt['selected']) for opt in previous_options[
-                               'bank_account'] if opt['id'] != 'divider' and 'selected' in opt)
-        else:
-            journal_map = {}
-        options['bank_account'] = []
-
-        default_group_ids = []
-
-        for j in self._get_filter_bank_account():
-            options['bank_account'].append({
-                'id': j.id,
-                'name': j.acc_number,
-                'code': j.acc_number,
-                'selected': journal_map.get(j.id, j.id in default_group_ids),
-            })
 
     def _get_reports_buttons(self):
         return [
@@ -132,121 +53,60 @@ class CheckSummary(models.AbstractModel):
              'action': 'print_pdf', 'file_export_type': _('PDF')},
             {'name': _('Export (XLSX)'), 'sequence': 2,
              'action': 'print_xlsx', 'file_export_type': _('XLSX')},
+            {'name': _('Closing Journal Entry'), 'sequence': 3,
+             'action': 'print_xlsx', 'file_export_type': _('XLSX')},
+            {'name': _('Save'), 'sequence': 4,
+             'action': 'print_xlsx', 'file_export_type': _('XLSX')},
         ]
-
     def _get_templates(self):
         templates = super(
-            CheckSummary, self)._get_templates()
+            TaxReport, self)._get_templates()
         templates[
             'main_table_header_template'] = 'account_reports.main_table_header'
         templates['main_template'] = 'account_reports.main_template'
         return templates
 
+    # def _get_columns_name(self, options):
+    #     return [
+    #         {'name': _('ISR withholding wages minus subsidy')},
+    #         {'name': _('ISR withholding for assimilable to wages')},
+    #         {'name': _('ISR withheld by professional services')},
+    #         {'name': _('ISR withheld by lease')},
+    #         {'name': _('VAT withheld')},
+    #         {'name': _('IEPS payable')},
+    #         {'name': _('VAT payable')},
+    #         {'name': _('Total taxes payable')},
+    #     ]
+    # @api.model
+    # def _get_columns_name(self, options):
+    #     return [{'name': ''}, {'name': _('Balance'), 'class': 'number'}]
+
     def _get_columns_name(self, options):
         return [
-            {'name': _('Folio')},
-            {'name': _('Cheque')},
-            {'name': _('Beneficiario')},
-            {'name': _('Importe')},
+            {
+                'id': 'tax_pay_report%s' % index,
+                'name': name,
+                'level': level,
+                'class': 'o_account_reports_totals_below_sections' if self.env.company.totals_below_sections else '',
+                'columns': [{'name': 0.0, 'class': 'number'}],
+            } for index, level, name in [
+                (0, 0, _('ISR withholding wages minus subsidy')),
+                (1, 0, _('ISR withholding for assimilable to wages')),
+                (2, 0, _('ISR withheld by professional services')),
+                (3, 0, _('ISR withheld by lease')),
+                (4, 0, _('VAT withheld')),
+                (5, 0, _('IEPS payable')),
+                (6, 0, _('VAT payable')),
+                (7, 0, _('Total taxes payable')),
+            ]
         ]
-
-    def _format(self, value,figure_type):
-        if self.env.context.get('no_format'):
-            return value
-        value['no_format_name'] = value['name']
-        
-        currency_id = self.env.company.currency_id
-        if figure_type == 'float':
-            
-            if currency_id.is_zero(value['name']):
-                # don't print -0.0 in reports
-                value['name'] = abs(value['name'])
-                value['class'] = 'number text-muted'
-            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id)
-            value['class'] = 'number'
-            return value
-        if figure_type == 'percents':
-            value['name'] = str(round(value['name'] * 100, 1)) + '%'
-            value['class'] = 'number'
-            return value
-        value['name'] = round(value['name'], 1)
-        return value
 
     def _get_lines(self, options, line_id=None):
         lines = []
-        
-        domain = []
-        bank_list = []
-        bank_account_list = []
-        upa_list = []
-        
-        start = datetime.strptime(
-            str(options['date'].get('date_from')), '%Y-%m-%d').date()
-        end = datetime.strptime(
-            options['date'].get('date_to'), '%Y-%m-%d').date()
-            
-        domain =domain + [('invoice_date','>=',start),('invoice_date','<=',end)]
-        
-        for bank in options.get('bank'):
-            if bank.get('selected',False)==True:
-                bank_list.append(bank.get('id',0))
-        if bank_list:
-            domain += [('payment_bank_id','in',bank_list)]
-
-        for bank_account in options.get('bank_account'):
-            if bank_account.get('selected',False)==True:
-                bank_account_list.append(bank_account.get('id',0))
-        if bank_account_list:
-            domain += [('payment_issuing_bank_acc_id','in',bank_account_list)]
-
-        for upa_catalog in options.get('upa_catalog'):
-            if upa_catalog.get('selected',False)==True:
-                upa_list.append(upa_catalog.get('id',0))
-        if upa_list:
-            domain += [('upa_key','in',upa_list)]
-        
-        check_payment_method = self.env.ref('l10n_mx_edi.payment_method_cheque').id
-        if check_payment_method:
-            domain += [('l10n_mx_edi_payment_method_id','=',check_payment_method)]
-            
-        supplier_domain = domain + [('payment_state','=','for_payment_procedure'),('type', '=', 'in_invoice'), ('is_payment_request', '=', True)]
-        invoice_ids = self.env['account.move'].search(supplier_domain)
-
-        project_domain = domain + [('payment_state','=','for_payment_procedure'),('type', '=', 'in_invoice'), ('is_project_payment', '=', True)]
-        invoice_ids += self.env['account.move'].search(project_domain)
-        
-        total = 0
-        
-        for inv in invoice_ids:
-            total += inv.amount_total  
-            lines.append({
-                'id': 'hierarchy' + str(inv.id),
-                'name' : inv.folio, 
-                'columns': [ {'name': inv.check_folio_id and inv.check_folio_id.folio or ''},
-                            {'name': inv.partner_id and inv.partner_id.name or ''},
-                            self._format({'name': inv.amount_total},figure_type='float'),
-                            ],
-                'level': 3,
-                'unfoldable': False,
-                'unfolded': True,
-            })
-
-        lines.append({
-            'id': 'hierarchy_total',
-            'name' : 'TOTAL', 
-            'columns': [{'name': ''},
-                        {'name': ''},
-                        self._format({'name': total},figure_type='float'),
-                        ],
-            'level': 1,
-            'unfoldable': False,
-            'unfolded': True,
-        })
-            
         return lines
 
     def _get_report_name(self):
-        return _("Check  Summary")
+        return _("Tax Report to Enter/Pay")
 
     def get_pdf(self, options, minimal_layout=True):
         # As the assets are generated during the same transaction as the rendering of the
@@ -293,7 +153,7 @@ class CheckSummary(models.AbstractModel):
                 'res_company': self.env.company,
             })
             header = self.env['ir.actions.report'].render_template(
-                "jt_check_controls.external_layout_check_summary", values=rcontext)
+                "jt_check_controls.external_layout_check_amounts", values=rcontext)
             # Ensure that headers and footer are correctly encoded
             header = header.decode('utf-8')
             spec_paperformat_args = {}
@@ -390,17 +250,13 @@ class CheckSummary(models.AbstractModel):
                                'image_data': image_data, 'x_offset': 8, 'y_offset': 3, 'x_scale': 0.6, 'y_scale': 0.6})
 
         col += 1
-        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nDIRECCIÓN GENERAL DE FINANZAS\nAREA DE TRAMIT:REC/04\nREPORTE SUMARIAS DE CHEQUES'''
+        header_title = '''DIRECCIÓN GENERAL DE FINANZAS\nPATRONATO UNIVERSITARIO\nTESORERIA\nREPORTE DE LOS INFORMES DE LOS CHEQUES DE NOMINA DE SUELDO Y PENSIÓN ALIMENTICIA'''
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)
         y_offset += 6
         col = 1
-        currect_time_msg = "Fecha de impresión: "
+        currect_time_msg = "Fecha y hora de impresión: "
         currect_time_msg += datetime.today().strftime('%d/%m/%Y %H:%M')
-        currect_time_msg += "\n"
-        currect_time_msg += "Bank:"
-        currect_time_msg += "\n"
-        currect_time_msg += "Bank Account:"
         sheet.merge_range(y_offset, col, y_offset, col + 6,
                           currect_time_msg, currect_date_style)
         y_offset += 1

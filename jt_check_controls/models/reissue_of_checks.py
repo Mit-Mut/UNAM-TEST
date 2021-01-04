@@ -112,10 +112,9 @@ class ReissueOfChecks(models.Model):
         self.state = 'approved'
         if self.check_log_id:
             self.check_log_id.status = 'Reissued'
-            moves = self.env['account.move'].search([('check_folio_id', '=', self.check_log_id.id),
-                                                   ('is_payment_request', '=', True)])
-            for moves in moves:
-                moves.payment_state = 'payment_method_cancelled'
+            moves = self.env['account.move'].search([('check_folio_id', '=', self.check_log_id.id)])
+            for move in moves:
+                move.payment_state = 'payment_method_cancelled'
             
         if self.check_log_id and self.type_of_request=='check_cancellation':    
             self.check_log_id.status = 'Cancelled'

@@ -57,6 +57,24 @@ class MonthlyDeclaration(models.Model):
     payment_ref = fields.Binary("Payment references")
     payment_proof = fields.Binary("Proof of payment")
     sat_receipt = fields.Binary("SAT acknowledgement of receipt")
+    state = fields.Selection([('draft', 'Draft'), ('declared', 'Declared'),
+                              ('requested', 'Requested'), ('paid', 'Paid'),
+                              ('rejected', 'Rejected')
+                             ], string="Status", default='draft')
 
     _sql_constraints = [
         ('folio_uniq', 'unique(folio)', 'The folio must be unique.')]
+
+
+    def action_requested(self):
+        self.ensure_one()
+        self.state = 'requested'
+
+    @api.model
+    def create(self,vals):
+        vals['state'] = 'declared'
+        return super(MonthlyDeclaration, self).create(vals)
+
+    def write(self,vals):
+        vals['state'] = 'declared'
+        return super(MonthlyDeclaration, self).write(vals)

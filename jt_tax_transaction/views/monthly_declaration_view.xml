@@ -20,6 +20,13 @@
             <field name="model">declaration.month</field>
             <field name="arch" type="xml">
                 <form>
+                    <header>
+                        <!-- <button name="action_draft" type="object" string="Generate Request" class="oe_highlight"
+                                attrs="{'invisible': [('state', '!=', 'draft')]}"/> -->
+                        <button name="action_requested" type="object" string="payment Request" class="oe_highlight"
+                                attrs="{'invisible': [('state', '!=', 'declared')]}"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
                     <sheet>
                     
                         <group>
@@ -54,7 +61,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="month_declaration_menu" name="Monthly Declaration" parent="jt_tax_transaction.menu_tribune_operations" action="action_declaration_monthly" sequence="1"/>
+        <menuitem id="month_declaration_menu" name="Monthly Declaration" parent="jt_tax_transaction.menu_tribune_operations" action="action_declaration_monthly" sequence="2"/>
 
     </data>
 </odoo>

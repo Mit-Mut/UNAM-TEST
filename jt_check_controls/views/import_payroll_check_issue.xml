@@ -27,7 +27,7 @@
             <field name="name">import.payroll.check.issue.form.view</field>
             <field name="model">import.payroll.check.issue</field>
             <field name="arch" type="xml">
-                <form create='0' edit='0'>
+                <form>
                     <sheet>
                     
                         <group>

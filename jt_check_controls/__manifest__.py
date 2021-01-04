@@ -64,7 +64,10 @@
         'wizard/cancel_available_checks.xml',
         'reports/filter_template.xml',
         'views/payment_batch_project.xml',
-
+        'views/payment_batch_payroll.xml',
+        'views/type_of_reissue.xml',
+        'views/import_payroll_check_issue.xml',
+        'reports/delivery_ticket.xml',
 
     ],
     'demo': [

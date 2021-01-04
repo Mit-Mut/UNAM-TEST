@@ -113,7 +113,7 @@ class Payroll(models.AbstractModel):
 
     @api.model
     def _get_filter_bank_account(self):
-        return self.env['account.journal'].search([])
+        return self.env['res.partner.bank'].search([])
 
     @api.model
     def _init_filter_bank_account(self, options, previous_options=None):
@@ -131,8 +131,8 @@ class Payroll(models.AbstractModel):
         for j in self._get_filter_bank_account():
             options['bank_account'].append({
                 'id': j.id,
-                'name': j.name,
-                'code': j.name,
+                'name': j.acc_number,
+                'code': j.acc_number,
                 'selected': journal_map.get(j.id, j.id in default_group_ids),
             })
 
@@ -147,20 +147,37 @@ class Payroll(models.AbstractModel):
     def _get_columns_name(self, options):
         return [
             {'name': _('Folio')},
-            {'name': _('Beneficiary')},
             {'name': _('Cheque')},
-            {'name': _('Matter')},
-            {'name': _('Total printed folios')},
-            {'name': _('FIRMA')},
-            {'name': _('')},
-            {'name': _('')},
-            {'name': _('')},
-
+            {'name': _('Beneficiario')},
+            {'name': _('Importe')},
         ]
 
+    def _format(self, value,figure_type):
+        if self.env.context.get('no_format'):
+            return value
+        value['no_format_name'] = value['name']
+        
+        currency_id = self.env.company.currency_id
+        if figure_type == 'float':
+            
+            if currency_id.is_zero(value['name']):
+                # don't print -0.0 in reports
+                value['name'] = abs(value['name'])
+                value['class'] = 'number text-muted'
+            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id)
+            value['class'] = 'number'
+            return value
+        if figure_type == 'percents':
+            value['name'] = str(round(value['name'] * 100, 1)) + '%'
+            value['class'] = 'number'
+            return value
+        value['name'] = round(value['name'], 1)
+        return value
+
     def _get_lines(self, options, line_id=None):
-        lines = []
+        lines = []            
         return lines
+
 
     def _get_report_name(self):
         return _("Payroll Report")

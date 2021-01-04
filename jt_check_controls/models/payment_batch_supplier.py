@@ -298,6 +298,16 @@ class BankBalanceCheck(models.TransientModel):
                 else:
                     batch_data.update({invoice.batch_folio: [invoice]})
 
+            if invoice.is_payroll_payment_request == True and invoice.l10n_mx_edi_payment_method_id \
+                    and invoice.l10n_mx_edi_payment_method_id.id == check_payment_method:
+                if invoice.batch_folio in batch_data.keys():
+                    batch_data.update({
+                        invoice.batch_folio: batch_data.get(invoice.batch_folio) + [invoice]
+                    })
+                else:
+                    batch_data.update({invoice.batch_folio: [invoice]})
+
+
         for folio, moves in batch_data.items():
             batch_folio = folio
             moves_list = []

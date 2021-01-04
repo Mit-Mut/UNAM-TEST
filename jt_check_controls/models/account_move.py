@@ -62,3 +62,39 @@ class SupplierPaymentRequest(models.Model):
             return result and result or res
         else:
             return res
+
+    def get_ticket_data(self):
+        dependancy_ids = self.mapped('dependancy_id')
+        ticket_data = []
+        for dep in dependancy_ids:
+            sub_inv_ids = self.filtered(lambda x:x.dependancy_id.id==dep.id)
+            sub_dep_ids = sub_inv_ids.mapped('sub_dependancy_id')
+            for sub in sub_dep_ids:
+                inv_ids = self.filtered(lambda x:x.dependancy_id.id==dep.id and x.sub_dependancy_id.id==sub.id)
+                dep_name = dep.description+ ' and ' + sub.description
+                payment_id = self.env['payment.place'].search([('dependancy_id','=',dep.id),('sub_dependancy_id','=',sub.id)],limit=1)
+                clave_no = ''
+                if payment_id:
+                    clave_no = payment_id.name
+                
+                    
+                folio_min = min(x.check_folio_id.folio for x in inv_ids)
+                folio_max = max(x.check_folio_id.folio for x in inv_ids)
+                fornight = ''
+                if not folio_min:
+                    folio_min = ''
+                if not folio_max:
+                    folio_max = ''
+                     
+                if inv_ids:
+                    fornight_inv_id = inv_ids.filtered(lambda x:x.fornight)
+                    if fornight_inv_id:
+                        fornight = str(fornight_inv_id[0].fornight)
+                        if fornight_inv_id.invoice_date:
+                            fornight += "/"+str(fornight_inv_id.invoice_date.year)
+                            
+                ticket_data.append({'dep_name':dep_name,'clave_no':clave_no,'folio_min':folio_min,'folio_max':folio_max,'fornight':fornight})
+                
+        return ticket_data
+        
+        

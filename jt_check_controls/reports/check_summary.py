@@ -103,12 +103,11 @@ class CheckSummary(models.AbstractModel):
 
     @api.model
     def _get_filter_bank_account(self):
-        return self.env['account.journal'].search([])
+        return self.env['res.partner.bank'].search([])
 
     @api.model
     def _init_filter_bank_account(self, options, previous_options=None):
         if self.filter_bank_account is None:
-            print("none")
             return
         if previous_options and previous_options.get('bank_account'):
             journal_map = dict((opt['id'], opt['selected']) for opt in previous_options[
@@ -122,8 +121,8 @@ class CheckSummary(models.AbstractModel):
         for j in self._get_filter_bank_account():
             options['bank_account'].append({
                 'id': j.id,
-                'name': j.name,
-                'code': j.name,
+                'name': j.acc_number,
+                'code': j.acc_number,
                 'selected': journal_map.get(j.id, j.id in default_group_ids),
             })
 
@@ -147,19 +146,103 @@ class CheckSummary(models.AbstractModel):
         return [
             {'name': _('Folio')},
             {'name': _('Cheque')},
-            {'name': _('Beneficiary')},
-            {'name': _('Matter')},
-            {'name': _('Total')},
-            {'name': _('')},
-            {'name': _('')},
-            {'name': _('')},
-            {'name': _('')},
-            {'name': _('')},
-
+            {'name': _('Beneficiario')},
+            {'name': _('Importe')},
         ]
+
+    def _format(self, value,figure_type):
+        if self.env.context.get('no_format'):
+            return value
+        value['no_format_name'] = value['name']
+        
+        currency_id = self.env.company.currency_id
+        if figure_type == 'float':
+            
+            if currency_id.is_zero(value['name']):
+                # don't print -0.0 in reports
+                value['name'] = abs(value['name'])
+                value['class'] = 'number text-muted'
+            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id)
+            value['class'] = 'number'
+            return value
+        if figure_type == 'percents':
+            value['name'] = str(round(value['name'] * 100, 1)) + '%'
+            value['class'] = 'number'
+            return value
+        value['name'] = round(value['name'], 1)
+        return value
 
     def _get_lines(self, options, line_id=None):
         lines = []
+        
+        domain = []
+        bank_list = []
+        bank_account_list = []
+        upa_list = []
+        
+        start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+            
+        domain =domain + [('invoice_date','>=',start),('invoice_date','<=',end)]
+        
+        for bank in options.get('bank'):
+            if bank.get('selected',False)==True:
+                bank_list.append(bank.get('id',0))
+        if bank_list:
+            domain += [('payment_bank_id','in',bank_list)]
+
+        for bank_account in options.get('bank_account'):
+            if bank_account.get('selected',False)==True:
+                bank_account_list.append(bank_account.get('id',0))
+        if bank_account_list:
+            domain += [('payment_issuing_bank_acc_id','in',bank_account_list)]
+
+        for upa_catalog in options.get('upa_catalog'):
+            if upa_catalog.get('selected',False)==True:
+                upa_list.append(upa_catalog.get('id',0))
+        if upa_list:
+            domain += [('upa_key','in',upa_list)]
+        
+        check_payment_method = self.env.ref('l10n_mx_edi.payment_method_cheque').id
+        if check_payment_method:
+            domain += [('l10n_mx_edi_payment_method_id','=',check_payment_method)]
+            
+        supplier_domain = domain + [('payment_state','=','for_payment_procedure'),('type', '=', 'in_invoice'), ('is_payment_request', '=', True)]
+        invoice_ids = self.env['account.move'].search(supplier_domain)
+
+        project_domain = domain + [('payment_state','=','for_payment_procedure'),('type', '=', 'in_invoice'), ('is_project_payment', '=', True)]
+        invoice_ids += self.env['account.move'].search(project_domain)
+        
+        total = 0
+        
+        for inv in invoice_ids:
+            total += inv.amount_total  
+            lines.append({
+                'id': 'hierarchy' + str(inv.id),
+                'name' : inv.folio, 
+                'columns': [ {'name': inv.check_folio_id and inv.check_folio_id.folio or ''},
+                            {'name': inv.partner_id and inv.partner_id.name or ''},
+                            self._format({'name': inv.amount_total},figure_type='float'),
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        lines.append({
+            'id': 'hierarchy_total',
+            'name' : 'TOTAL', 
+            'columns': [{'name': ''},
+                        {'name': ''},
+                        self._format({'name': total},figure_type='float'),
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+            
         return lines
 
     def _get_report_name(self):

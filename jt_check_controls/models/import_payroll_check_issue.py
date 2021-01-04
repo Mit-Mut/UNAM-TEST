@@ -6,6 +6,7 @@ class ImportPayrollCheckIssue(models.Model):
 
     _name = 'import.payroll.check.issue'
     _description = "Import Payroll Check Issue"
+    _rec_name = 'case'
     
     case = fields.Selection([('R','R'),('F','F'),('H','H'),('C','C')],string='Case')
     original_check_id = fields.Many2one('check.log','Original check number')
@@ -22,13 +23,30 @@ class ImportPayrollCheckIssue(models.Model):
     upload_date = fields.Date(string="File Upload Date",default=datetime.today())
     
     def action_update_check_and_amount(self):
-        print ("Den")
-#         for rec in self:
-#             if rec.new_amount > 0:
-#                 if rec.original_check_id:
-#                     move_id = self.env['account.move'].search([('check_folio_id','=',rec.original_check_id.id)],limit=1)
-#                     if move_id:
-#                         if rec.new_check_id:
-#                             move_id = rec.new_check_id.id
-                            
-                    
+        for rec in self:
+            if rec.new_amount > 0:
+                if rec.original_check_id:
+                    move_id = self.env['account.move'].search([('check_folio_id','=',rec.original_check_id.id)],limit=1)
+                    if move_id: 
+                        move_id.action_draft()
+#                         if move_id.invoice_line_ids:
+#                             move_id.invoice_line_ids[0].price_unit = rec.new_amount
+#                             move_id.invoice_line_ids[0]._get_price_total_and_subtotal(price_unit=rec.new_amount)
+#                             move_id.invoice_line_ids[0]._onchange_price_subtotal()
+#                             move_id.invoice_line_ids[0]._onchange_balance()
+#                             move_id.invoice_line_ids[0]._onchange_recompute_dynamic_lines()
+#                             move_id._onchange_invoice_line_ids()
+                        move_id.action_register()
+                        if rec.new_check_id:
+                            move_id.check_folio_id = rec.new_check_id.id
+                            rec.new_check_id.status = 'Printed'
+                    rec.original_check_id.status = 'Reissued'
+            if rec.new_amount==0:
+                if rec.original_check_id:
+                    move_id = self.env['account.move'].search([('check_folio_id','=',rec.original_check_id.id)],limit=1)
+                    if move_id: 
+                        if rec.new_check_id:
+                            move_id.check_folio_id = rec.new_check_id.id
+                            rec.new_check_id.status = 'Printed'
+                    rec.original_check_id.status = 'Reissued'
+                

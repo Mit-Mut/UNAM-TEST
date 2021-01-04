@@ -46,7 +46,7 @@
     <template id="search_template_upa_catalog">
         <a type="button" class="dropdown-toggle" data-toggle="dropdown">
             <span class="fa fa-book"/>
-            upa catalog:
+            UPA Catalog:
             <t t-set="selected_upa_catalog" t-value="options.get('name_journal_group') or ', '.join(c.get('name') for c in options['upa_catalog'] if c.get('selected'))"/>
             <t t-if="selected_upa_catalog">
                 <t t-esc="selected_upa_catalog"/>

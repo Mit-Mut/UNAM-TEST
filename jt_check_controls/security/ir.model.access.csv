@@ -16,5 +16,6 @@ access_send_checks_line,send_checks_line_access,model_send_checks_line,base.grou
 access_reissue_checks,reissue_checks_access,model_reissue_checks,base.group_user,1,1,1,1
 access_expiration_validity_check,expiration_validity_check,model_expiration_validity_check,base.group_user,1,1,1,1
 access_available_check,available_check,model_available_check,base.group_user,1,1,1,1
-
+access_type_of_reissue,type_of_reissue,model_type_of_reissue,base.group_user,1,1,1,1
+access_import_payroll_check_issue,import_payroll_check_issue,model_import_payroll_check_issue,base.group_user,1,1,1,1
 

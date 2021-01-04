@@ -10,3 +10,5 @@ from . import send_checks
 from . import reissue_of_checks
 from . import expiration_validity_check
 from . import available_checks
+from . import type_of_reissue
+from . import import_payroll_check_issue

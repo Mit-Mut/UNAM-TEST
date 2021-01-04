@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="external_layout_delievery_ticket">
+            <t t-call="web.basic_layout">
+                <div class="page m-0" style="border:1px solid black;border-spacing: 0;background-color:#A9A9A9;">
+                    <div class="row">
+                        <div class="col-6">
+                            <span>TELEFONO <hr style="margin-left:80px;width:55%;background-color:black;"/></span>
+                        </div>
+                        <div class="col-6">
+                            <span>CLAVE <hr style="margin-left:80px;width:50%;background-color:black;"/></span>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-6">
+                            <span>DEPENDENCIA <hr style="margin-left:115px;width:100%;background-color:black;"/></span>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-12">
+                            <p style="text-align:justify;">RECIBI DEL DEPARTMENTO DE PAGO DE NOMINA Y PRESTACIONES DE LA DIRECCION GENERAL DE FINANZAS LOS SIGUIENTES DOCUMENTOS DE PENSION ALIMENTICIA PAPA EL PAGO DE NOMINA.</p>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-6">
+                            <span> CHEQUES DE FOLIO <hr style="margin-left:170px;width:40%;background-color:black;"/></span> 
+                        </div>
+                        <div class="col-6">
+                            <span style="margin-left:20px;"> AL <hr style="margin-left:80px;width:40%;background-color:black;"/></span> 
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <span>HOJAS NOMINA DEL FOLIO<hr style="margin-left:210px;width:60%;background-color:black;"/></span>
+
+                        </div>
+                        <div class="col-6">
+                            <span style="margin-left:50px;"> AL <hr style="margin-left:90px;width:40%;background-color:black;"/></span> 
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                           <span>CORRESPONDIENTS A LA QUINCENA<hr style="margin-left:270px;width:40%;background-color:black;"/></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                           <span>REVISO<hr style="margin-left:80px;width:40%;background-color:black;"/></span>
+                        </div>
+                        <div class="col-6">
+                           <span>FECHA<hr style="margin-left:80px;width:40%;background-color:black;"/></span>
+                        </div>
+                    </div>
+                    <br/><br/>
+                    <div class="row">
+                        <div class="col-6">
+                        <hr style="width:50%;background-color:black;"/><br/><span>NOMBRE COMPLETO</span>
+                        </div>
+                        <div class="col-6">
+                           <hr style="width:50%;background-color:black;"/><br/><span>FIRMA</span>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+        <record id="paperformat_delivery_ticket" model="report.paperformat">
+            <field name="name">Delivery Ticket</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="page_height">142</field>
+            <field name="page_width">150</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">5</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">0</field>
+        </record>
+
+        <report 
+            id="delivery_ticket_action"
+            model="account.move"
+            string="Delivery Ticket"
+            report_type="qweb-pdf"
+            name="jt_check_controls.external_layout_delievery_ticket"
+            file="jt_check_controls.external_layout_delievery_ticket"
+            print_report_name="object.name"
+            paperformat="paperformat_delivery_ticket"
+        />
+
+    </data>
+</odoo>

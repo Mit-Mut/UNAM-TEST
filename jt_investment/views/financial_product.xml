@@ -28,8 +28,10 @@
             <field name="domain">[('type','=','investment')]</field>
             <field name="context">{'default_type':'investment'}</field>
         </record>
-
+<!-- 
         <menuitem id="menu_product_income" name="Financial Product" sequence="1"
-            parent="submenu_menu_investment_config" action="ation_financial_product"/>        
+            parent="submenu_menu_investment_config" action="ation_financial_product"/>
+ -->
+                     
 	</data>
 </odoo>

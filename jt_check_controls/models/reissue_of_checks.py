@@ -46,7 +46,7 @@ class ReissueOfChecks(models.Model):
     type_of_reissue_id = fields.Many2one('type.of.reissue','Reissue type')
     fornight = fields.Selection(related='move_id.fornight',string='Fornight')
     employee_number = fields.Char(string='Employee number',compute='get_employee_number')
-    
+
     def get_employee_number(self):
         for rec in self:
             emp_no = False
@@ -84,11 +84,13 @@ class ReissueOfChecks(models.Model):
         for rec in self:
             log_list = []
             if rec.type_of_request=='check_reissue':
-                check_ids = self.env['check.log'].search([('status','in',('Delivered','Protected and in transit','Cancelled'))])
+                check_ids = self.env['check.log'].search([('status','in',('Delivered','Protected and in transit',
+                                                                          'Cancelled'))])
                 if rec.checkbook_req_id:
                     check_ids = check_ids.filtered(lambda x:x.checklist_id.checkbook_req_id.id==rec.checkbook_req_id.id)
-                move_ids = self.env['account.move'].search([('check_folio_id','in',check_ids.ids),('payment_state','in',('payment_method_cancelled','assigned_payment_method'))])
-                check_ids = move_ids.mapped('check_folio_id') 
+                move_ids = self.env['account.move'].search([('check_folio_id','in',check_ids.ids),
+                                    ('payment_state','in',('payment_method_cancelled','assigned_payment_method'))])
+                check_ids += move_ids.mapped('check_folio_id')
                 log_list = check_ids.ids
             if rec.type_of_request=='check_cancellation':
                 check_ids = self.env['check.log'].search([('status','in',('Protected and in transit','Printed','Detained','Withdrawn from circulation'))])

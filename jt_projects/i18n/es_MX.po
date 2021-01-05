@@ -307,13 +307,13 @@ msgstr "Acumulado"
 #: code:addons/jt_projects/reports/accumulated_verfication_report.py:0
 #, python-format
 msgid " Accumulated of "
-msgstr "Acumulado de"
+msgstr " Acumulado de "
 
 #. module: jt_projects
 #: code:addons/jt_projects/reports/accumulated_verfication_report.py:0
 #, python-format
 msgid "Stage "
-msgstr "Etapa"
+msgstr "Etapa "
 
 #. module: jt_projects
 #: code:addons/jt_projects/reports/accumulated_verfication_report.py:0
@@ -332,3 +332,9 @@ msgstr "Conceptos que no afectan Ingresos / Gastos"
 #, python-format
 msgid "Total Checked"
 msgstr "Total comprobado"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/integration_curr_exp_project.py:0
+#, python-format
+msgid "Overdue projects"
+msgstr "Proyectos vencidos"

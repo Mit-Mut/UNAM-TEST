@@ -32,19 +32,29 @@ class PaymentPlace(models.Model):
     des_dependency = fields.Text("Dependency Description")
     des_sub_dependency = fields.Text("Sub Dependency Description")
 
+    @api.onchange('dependancy_id')
+    def onchange_dep_id(self):
+        if self.dependancy_id:
+            self.des_dependency = self.dependancy_id.description
+            self.sub_dependancy_id = False
+            self.des_sub_dependency = ''
+        else:
+            self.des_dependency = ''
+
+    @api.onchange('sub_dependancy_id')
+    def onchange_sub_dep_id(self):
+        if self.sub_dependancy_id:
+            self.des_sub_dependency = self.sub_dependancy_id.description
+        else:
+            self.des_sub_dependency = ''
+
     @api.onchange('dependancy_id', 'sub_dependancy_id','place')
     def onchange_dep_sub_dep(self):
         name = ''        
         if self.dependancy_id:
             name += self.dependancy_id.dependency
-            self.des_dependency = self.dependancy_id.description
-        else:
-            self.des_dependency = ''
         if self.sub_dependancy_id:
             name += self.sub_dependancy_id.sub_dependency
-            self.des_sub_dependency = self.sub_dependancy_id.description
-        else:
-            self.des_sub_dependency = ''
         if self.place:
             name += self.place 
         self.name = name

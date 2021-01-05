@@ -140,24 +140,31 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
         for y in year_list_tuple:
             year_list.append(str(y))
         
-
         gt_total_auth = 0
         gt_total_exer = 0
         gt_total_diff = 0
         gt_total_len = 0
         gt_total_account_amount = 0 
-        stage_ids = project_ids.mapped('custom_stage_id')
+
+        rec_ids = self.env['remaining.resource'].search([],order='year')
+        stage_ids = rec_ids.mapped('stage_id').sorted(key='name') 
+        
+        #stage_ids = project_ids.mapped('custom_stage_id')
         for stage in stage_ids:
+            stage_rec_ids = rec_ids.filtered(lambda x:x.stage_id.id==stage.id)
             for year in year_list:
                 total_auth = 0
                 total_exer = 0
                 total_diff = 0
                 total_len = 0
                 total_account_amount = 0
+                stage_year_rec_ids = stage_rec_ids.filtered(lambda x:x.stage_id.id==stage.id and x.year==year)
+                if not stage_year_rec_ids:
+                    continue
                 
                 current_project_ids = project_ids.filtered(lambda x:x.custom_stage_id.id==stage.id and str(x.proj_start_date.year)==year)
-                if not current_project_ids:
-                    continue
+#                 if not current_project_ids:
+#                     continue
 
                 lines.append({
                         'id': 'hierarchy_blank' + str(stage.id)+str(year),
@@ -231,7 +238,7 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
                 if PAPIIT_configuration_id and PAPIIT_configuration_id.account_id:
                     account_code = PAPIIT_configuration_id.account_id.code
                     values= self.env['account.move.line'].search([('date','>=',start),('date','<=',end),('account_id', '=', PAPIIT_configuration_id.account_id.id),('move_id.state', '=', 'posted')])
-                    account_amount = sum(x.debit-x.credit for x in values)
+                    account_amount = sum(x.credit - x.debit for x in values)
                 
                 budget_stage_ids = self.env['stage'].search([('project_id','in',PAPIIT_ids.ids)])
                 program_code_ids = self.env['program.code'].search([('stage_id','in',budget_stage_ids.ids),('year.name','=',str(year))])
@@ -311,7 +318,7 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
                 if PAPIME_configuration_id and PAPIME_configuration_id.account_id:
                     account_code = PAPIME_configuration_id.account_id.code
                     values= self.env['account.move.line'].search([('date','>=',start),('date','<=',end),('account_id', '=', PAPIME_configuration_id.account_id.id),('move_id.state', '=', 'posted')])
-                    account_amount = sum(x.debit-x.credit for x in values)
+                    account_amount = sum(x.credit - x.debit for x in values)
                                
                 budget_stage_ids = self.env['stage'].search([('project_id','in',PAPIME_ids.ids)])
                 program_code_ids = self.env['program.code'].search([('stage_id','in',budget_stage_ids.ids),('year.name','=',str(year))])
@@ -391,7 +398,7 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
                 if INFOCAB_configuration_id and INFOCAB_configuration_id.account_id:
                     account_code = INFOCAB_configuration_id.account_id.code
                     values= self.env['account.move.line'].search([('date','>=',start),('date','<=',end),('account_id', '=', INFOCAB_configuration_id.account_id.id),('move_id.state', '=', 'posted')])
-                    account_amount = sum(x.debit-x.credit for x in values)
+                    account_amount = sum(x.credit - x.debit for x in values)
                 
                                
                 budget_stage_ids = self.env['stage'].search([('project_id','in',INFOCAB_ids.ids)])

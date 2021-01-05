@@ -33,7 +33,7 @@ import lxml.html
 
 class WeightIncomeReport(models.AbstractModel):
 
-    _name = "account.revenue.report"
+    _name = "jt_account_module_design.revenue.report"
     _inherit = "account.coa.report"
     _description = "Revenue Report"
 
@@ -223,19 +223,18 @@ class WeightIncomeReport(models.AbstractModel):
                                'image_data': image_data, 'x_offset': 8, 'y_offset': 3, 'x_scale': 0.6, 'y_scale': 0.6})
 
         col += 1
-        currect_time_msg = "UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO"
-        currect_time_msg += "\n"
-        currect_time_msg += "DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL"
-        currect_time_msg += "\n"
-        currect_time_msg += "REPORTE DE INGRESOS POR EL PERÍODO AL"
-        currect_time_msg += datetime.today().strftime('%d DE')
-        currect_time_msg += datetime.today().strftime('%B DEL %Y')
-        currect_time_msg += datetime.today().strftime('Y %d DE %B DEL %Y')
-
-        header_title = currect_time_msg
+        header_title = "UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO"
+        header_title += "\n"
+        header_title += "DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL"
+        header_title += "\n"
+        header_title += "REPORTE DE INGRESOS POR EL PERÍODO AL"
+        header_title += datetime.today().strftime('%d DE')
+        header_title += datetime.today().strftime('%B DEL %Y')
+        header_title += datetime.today().strftime('Y %d DE %B DEL %Y')
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)
-        y_offset += 1
+        y_offset += 6
+
         for row in self.get_header(options):
             x = 0
             for column in row:

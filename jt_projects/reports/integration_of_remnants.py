@@ -166,9 +166,17 @@ class IntegrationOfRemnants(models.AbstractModel):
         for y in year_list_tuple:
             year_list.append(str(y))
         
-        stage_ids = project_ids.mapped('custom_stage_id')
+        rec_ids = self.env['remaining.resource'].search([],order='year')
+        stage_ids = rec_ids.mapped('stage_id').sorted(key='name') 
+        
+#        stage_ids = project_ids.mapped('custom_stage_id')
         for stage in stage_ids:
+            stage_rec_ids = rec_ids.filtered(lambda x:x.stage_id.id==stage.id)
             for year in year_list:
+                stage_year_rec_ids = stage_rec_ids.filtered(lambda x:x.stage_id.id==stage.id and x.year==year)
+                if not stage_year_rec_ids:
+                    continue
+                
                 lines.append({
                     'id': 'hierarchy_title' + str(stage.id)+str(year),
                     'name' : 'INTEGRACIÓN DE REMANENTES ETAPA '+stage.name+" PAPIIT,PAPIME,INFOCAB", 
@@ -200,7 +208,7 @@ class IntegrationOfRemnants(models.AbstractModel):
                 PAPIME_final = 0
                 INFOCAB_final = 0
                 
-                PAPIIT_configuration_id = self.env['remaining.resource'].search([('stage_id','=',stage.id),('year','=',year),('project_type','=','papit')],limit=1)
+                PAPIIT_configuration_id = stage_year_rec_ids.search([('stage_id','=',stage.id),('year','=',year),('project_type','=','papit')],limit=1)
                 if PAPIIT_configuration_id and PAPIIT_configuration_id.account_id:
                     PAPIIT_account_code = PAPIIT_configuration_id.account_id.code
                     values= self.env['account.move.line'].search([('date','>=',start),('date','<=',end),('account_id', '=', PAPIIT_configuration_id.account_id.id),('move_id.state', '=', 'posted')])
@@ -210,7 +218,7 @@ class IntegrationOfRemnants(models.AbstractModel):
                     values= self.env['account.move.line'].search([('date','<',start),('account_id', '=', PAPIIT_configuration_id.account_id.id),('move_id.state', '=', 'posted')])
                     PAPIIT_open_bal = sum(x.debit - x.credit for x in values)
                     
-                PAPIME_configuration_id = self.env['remaining.resource'].search([('stage_id','=',stage.id),('year','=',year),('project_type','=','papime')],limit=1)
+                PAPIME_configuration_id = stage_year_rec_ids.search([('stage_id','=',stage.id),('year','=',year),('project_type','=','papime')],limit=1)
                 if PAPIME_configuration_id and PAPIME_configuration_id.account_id:
                     PAPIME_account_code = PAPIME_configuration_id.account_id.code
                     values= self.env['account.move.line'].search([('date','>=',start),('date','<=',end),('account_id', '=', PAPIME_configuration_id.account_id.id),('move_id.state', '=', 'posted')])
@@ -220,7 +228,7 @@ class IntegrationOfRemnants(models.AbstractModel):
                     values= self.env['account.move.line'].search([('date','<',start),('account_id', '=', PAPIME_configuration_id.account_id.id),('move_id.state', '=', 'posted')])
                     PAPIME_open_bal = sum(x.debit - x.credit for x in values)
                     
-                INFOCAB_configuration_id = self.env['remaining.resource'].search([('stage_id','=',stage.id),('year','=',year),('project_type','=','infocab')],limit=1)
+                INFOCAB_configuration_id = stage_year_rec_ids.search([('stage_id','=',stage.id),('year','=',year),('project_type','=','infocab')],limit=1)
                 if INFOCAB_configuration_id and INFOCAB_configuration_id.account_id:
                     INFOCAB_account_code = INFOCAB_configuration_id.account_id.code
                     values= self.env['account.move.line'].search([('date','>=',start),('date','<=',end),('account_id', '=', INFOCAB_configuration_id.account_id.id),('move_id.state', '=', 'posted')])

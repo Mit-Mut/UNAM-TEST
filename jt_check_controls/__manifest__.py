@@ -58,6 +58,7 @@
         'wizard/confirm_printed_checks.xml',
         'wizard/generate_sup_batch_check_layout.xml',
         'wizard/generate_cancel_check_layout.xml',
+        'wizard/bank_balance_check.xml',
         'views/circulation_of_checks.xml',
         'views/expiration_validity_check.xml',
         'views/available_checks.xml',
@@ -68,6 +69,7 @@
         'views/type_of_reissue.xml',
         'views/import_payroll_check_issue.xml',
         'reports/delivery_ticket.xml',
+        'reports/payroll_adjustment.xml',
 
     ],
     'demo': [

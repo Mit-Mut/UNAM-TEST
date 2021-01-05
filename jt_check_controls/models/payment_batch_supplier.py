@@ -155,6 +155,7 @@ class PaymentBatchSupplier(models.Model):
                 if line.check_folio_id.status == 'Delivered':
                     line.check_folio_id.status = 'Sent to protection'
                 line.selected = False
+            rec.selected = False
 
     def action_deliver_checks(self):
         for rec in self:
@@ -162,6 +163,7 @@ class PaymentBatchSupplier(models.Model):
                 if line.check_folio_id.status == 'Printed':
                     line.check_folio_id.status = 'Delivered'
                 line.selected = False
+            rec.selected = False
 
     def action_layout_check_protection(self):
         return {
@@ -178,12 +180,15 @@ class PaymentBatchSupplier(models.Model):
 
     def action_assign_check_folio(self):
         check_log_obj = self.env['check.log']
+        check_payment_req_obj = self.env['check.payment.req']
         for rec in self:
             if rec.checkbook_req_id:
                 count = rec.payment_req_ids.filtered(lambda x: x.selected == True)
                 logs = check_log_obj.search([('checklist_id.checkbook_req_id', '=', rec.checkbook_req_id.id),
-                        ('status', 'in', ('Available for printing', 'Checkbook registration'))], limit=len(count)).ids
-                if len(logs) != len(count):
+                        ('status', 'in', ('Available for printing', 'Checkbook registration'))]).ids
+                exit_logs = check_payment_req_obj.search([('check_folio_id', 'in', logs)]).mapped('check_folio_id').ids
+                logs = list(set(logs)^set(exit_logs))
+                if len(logs) < len(count):
                     raise ValidationError(_('Not enough check available to assign printing!'))
                 counter = 0
                 if logs:
@@ -196,6 +201,7 @@ class PaymentBatchSupplier(models.Model):
                     rec.printed_checks = True
                 if not logs:
                     raise ValidationError(_('No check available to assign!'))
+            rec.selected = False
 
     def confirm_printed_checks(self):
         self.ensure_one()

@@ -31,11 +31,11 @@ from odoo.tools import config, date_utils, get_lang
 import lxml.html
 
 
-class Payroll(models.AbstractModel):
+class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
 
-    _name = "jt_check_controls.payroll_report"
+    _name = "jt_account_module_design.stat.inc.exp.inv.report"
     _inherit = "account.coa.report"
-    _description = "Payroll Report"
+    _description = "Detail Statements of Income,expenses and investments"
 
     filter_date = {'mode': 'range', 'filter': 'this_month'}
     filter_comparison = None
@@ -45,12 +45,8 @@ class Payroll(models.AbstractModel):
     filter_unfold_all = None
     filter_cash_basis = None
     filter_hierarchy = None
-    filter_bank = None
     filter_unposted_in_period = None
     MAX_LINES = None
-    filter_bank = True
-    filter_upa_catalog = True
-    filter_bank_account = True
 
     def _get_reports_buttons(self):
         return [
@@ -60,85 +56,9 @@ class Payroll(models.AbstractModel):
              'action': 'print_xlsx', 'file_export_type': _('XLSX')},
         ]
 
-    @api.model
-    def _get_filter_bank(self):
-        return self.env['res.bank'].search([])
-
-    @api.model
-    def _init_filter_bank(self, options, previous_options=None):
-        if self.filter_bank is None:
-            return
-        if previous_options and previous_options.get('bank'):
-            journal_map = dict((opt['id'], opt['selected']) for opt in previous_options[
-                               'bank'] if opt['id'] != 'divider' and 'selected' in opt)
-        else:
-            journal_map = {}
-        options['bank'] = []
-
-        default_group_ids = []
-
-        for j in self._get_filter_bank():
-            options['bank'].append({
-                'id': j.id,
-                'name': j.name,
-                'code': j.name,
-                'selected': journal_map.get(j.id, j.id in default_group_ids),
-            })
-
-    @api.model
-    def _get_filter_upa_catalog(self):
-        return self.env['policy.keys'].search([])
-
-    @api.model
-    def _init_filter_upa_catalog(self, options, previous_options=None):
-        if self.filter_upa_catalog is None:
-            print("none")
-            return
-        if previous_options and previous_options.get('upa_catalog'):
-            journal_map = dict((opt['id'], opt['selected']) for opt in previous_options[
-                               'upa_catalog'] if opt['id'] != 'divider' and 'selected' in opt)
-        else:
-            journal_map = {}
-        options['upa_catalog'] = []
-
-        default_group_ids = []
-
-        for j in self._get_filter_upa_catalog():
-            options['upa_catalog'].append({
-                'id': j.id,
-                'name': j.origin,
-                'code': j.origin,
-                'selected': journal_map.get(j.id, j.id in default_group_ids),
-            })
-
-    @api.model
-    def _get_filter_bank_account(self):
-        return self.env['res.partner.bank'].search([])
-
-    @api.model
-    def _init_filter_bank_account(self, options, previous_options=None):
-        if self.filter_bank_account is None:
-            return
-        if previous_options and previous_options.get('bank_account'):
-            journal_map = dict((opt['id'], opt['selected']) for opt in previous_options[
-                               'bank_account'] if opt['id'] != 'divider' and 'selected' in opt)
-        else:
-            journal_map = {}
-        options['bank_account'] = []
-
-        default_group_ids = []
-
-        for j in self._get_filter_bank_account():
-            options['bank_account'].append({
-                'id': j.id,
-                'name': j.acc_number,
-                'code': j.acc_number,
-                'selected': journal_map.get(j.id, j.id in default_group_ids),
-            })
-
     def _get_templates(self):
         templates = super(
-            Payroll, self)._get_templates()
+            DetailStatementOfIncomeExpensesandInvestment, self)._get_templates()
         templates[
             'main_table_header_template'] = 'account_reports.main_table_header'
         templates['main_template'] = 'account_reports.main_template'
@@ -146,109 +66,26 @@ class Payroll(models.AbstractModel):
 
     def _get_columns_name(self, options):
         return [
-            {'name': _('Folio')},
-            {'name': _('Cheque')},
-            {'name': _('Beneficiario')},
-            {'name': _('Importe')},
-        ]
+            {'name': _('Annexed')},
+            {'name': _('ASSIGNED ADVICE')},
+            {'name': _('Transfers')},
+            {'name': _('Assigned')},
+            {'name': _('CONTABLE EXERCISE')},
+            {'name': _('EXTRAORDINARY INCOMES')},
+            {'name': _('EXTRA BOOKS')},
+            {'name': _('Exercised')},
+            {'name': _('Percentage')},
+            {'name': _('EXERCISE PENDANT')},
+            {'name': _('REMNANT OF EXERCISE')},
 
-    def _format(self, value,figure_type):
-        if self.env.context.get('no_format'):
-            return value
-        value['no_format_name'] = value['name']
-        
-        currency_id = self.env.company.currency_id
-        if figure_type == 'float':
-            
-            if currency_id.is_zero(value['name']):
-                # don't print -0.0 in reports
-                value['name'] = abs(value['name'])
-                value['class'] = 'number text-muted'
-            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id)
-            value['class'] = 'number'
-            return value
-        if figure_type == 'percents':
-            value['name'] = str(round(value['name'] * 100, 1)) + '%'
-            value['class'] = 'number'
-            return value
-        value['name'] = round(value['name'], 1)
-        return value
+        ]
 
     def _get_lines(self, options, line_id=None):
         lines = []
-        
-        domain = []
-        bank_list = []
-        bank_account_list = []
-        upa_list = []
-        
-        start = datetime.strptime(
-            str(options['date'].get('date_from')), '%Y-%m-%d').date()
-        end = datetime.strptime(
-            options['date'].get('date_to'), '%Y-%m-%d').date()
-            
-        domain =domain + [('invoice_date','>=',start),('invoice_date','<=',end)]
-        
-        for bank in options.get('bank'):
-            if bank.get('selected',False)==True:
-                bank_list.append(bank.get('id',0))
-        if bank_list:
-            domain += [('payment_bank_id','in',bank_list)]
-
-        for bank_account in options.get('bank_account'):
-            if bank_account.get('selected',False)==True:
-                bank_account_list.append(bank_account.get('id',0))
-        if bank_account_list:
-            domain += [('payment_issuing_bank_acc_id','in',bank_account_list)]
-
-        for upa_catalog in options.get('upa_catalog'):
-            if upa_catalog.get('selected',False)==True:
-                upa_list.append(upa_catalog.get('id',0))
-        if upa_list:
-            domain += [('upa_key','in',upa_list)]
-        
-        check_payment_method = self.env.ref('l10n_mx_edi.payment_method_cheque').id
-        if check_payment_method:
-            domain += [('l10n_mx_edi_payment_method_id','=',check_payment_method)]
-            
-        payroll_domain = domain + [('payment_state','=','for_payment_procedure'),('type', '=', 'in_invoice'), ('is_payroll_payment_request', '=', True)]
-        invoice_ids = self.env['account.move'].search(payroll_domain)
-
-        
-        total = 0
-        
-        for inv in invoice_ids:
-            total += inv.amount_total  
-            lines.append({
-                'id': 'hierarchy' + str(inv.id),
-                'name' : inv.folio, 
-                'columns': [ {'name': inv.check_folio_id and inv.check_folio_id.folio or ''},
-                            {'name': inv.partner_id and inv.partner_id.name or ''},
-                            self._format({'name': inv.amount_total},figure_type='float'),
-                            ],
-                'level': 3,
-                'unfoldable': False,
-                'unfolded': True,
-            })
-
-        lines.append({
-            'id': 'hierarchy_total',
-            'name' : 'TOTAL', 
-            'columns': [{'name': ''},
-                        {'name': ''},
-                        self._format({'name': total},figure_type='float'),
-                        ],
-            'level': 1,
-            'unfoldable': False,
-            'unfolded': True,
-        })
-            
         return lines
-                
-
 
     def _get_report_name(self):
-        return _("Payroll Report")
+        return _("Detail Statement of Income,Expenses and Investments Report")
 
     def get_pdf(self, options, minimal_layout=True):
         # As the assets are generated during the same transaction as the rendering of the
@@ -295,7 +132,7 @@ class Payroll(models.AbstractModel):
                 'res_company': self.env.company,
             })
             header = self.env['ir.actions.report'].render_template(
-                "jt_check_controls.external_layout_payment_report", values=rcontext)
+                "jt_account_module_design.external_layout_income_exp_and_invest", values=rcontext)
             # Ensure that headers and footer are correctly encoded
             header = header.decode('utf-8')
             spec_paperformat_args = {}
@@ -392,17 +229,24 @@ class Payroll(models.AbstractModel):
                                'image_data': image_data, 'x_offset': 8, 'y_offset': 3, 'x_scale': 0.6, 'y_scale': 0.6})
 
         col += 1
-        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nDIRECCIÓN GENERAL DE FINANZAS\nPATRONATO UNIVERSITARIO
-        \nAREA DE TRAMIT:PER/04\nREPORTE DE NOMINA'''
+        start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+
+        header_title = "UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO"
+        header_title += "\n"
+        header_title += "DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL"
+        header_title += "\n"
+        header_title += "ESTADO DE INGRESOS,"
+        header_title += "GASTOS E INVERSIONES DETALLADO"
+        header_title += "AL"
+        header_title += str(start)
+        header_title += str(end)
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)
         y_offset += 6
-        col = 1
-        currect_time_msg = "Fecha y hora de impresión: "
-        currect_time_msg += datetime.today().strftime('%d/%m/%Y %H:%M')
-        sheet.merge_range(y_offset, col, y_offset, col + 6,
-                          currect_time_msg, currect_date_style)
-        y_offset += 1
+
         for row in self.get_header(options):
             x = 0
             for column in row:

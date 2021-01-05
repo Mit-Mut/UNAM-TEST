@@ -24,8 +24,8 @@ class GenerateSupplierCheckLayout(models.TransientModel):
 
             if batch.payment_issuing_bank_id and not batch.payment_issuing_bank_id.bank_id:
                 raise ValidationError(_('Please select Bank into Payment Issuing Bank'))
-                
-            if batch.payment_issuing_bank_id.bank_id.name.upper() != self.layout.upper():
+
+            if batch.payment_issuing_bank_id.name.upper() != self.layout.upper():
                 raise ValidationError(_('The selected layout does NOT match the bank of the selected records" and no '
                                         'layout can be generated until the correct bank is selected.'))
             invalid_req = batch.payment_req_ids.filtered(lambda x: x.selected == True and \
@@ -130,8 +130,8 @@ class GenerateSupplierCheckLayout(models.TransientModel):
                 file_name = 'inbursa.txt'
                 total_rec = len(batch.payment_req_ids.filtered(lambda x: x.selected == True and \
                                                          x.check_status == 'Delivered'))
-                file_data += str(total_rec)
-                file_data += '    '
+                file_data += str(total_rec).zfill(5)
+                file_data += '        '
                 total_amt = sum(line.amount_to_pay for line in batch.payment_req_ids.filtered(lambda x: x.selected == True and \
                                                          x.check_status == 'Delivered'))
                 file_data += str(round(total_amt, 2)).zfill(15)
@@ -140,16 +140,16 @@ class GenerateSupplierCheckLayout(models.TransientModel):
                                                          x.check_status == 'Delivered'):
                     today_date = datetime.date.today().strftime("%Y-%m-%d")
                     file_data += str(today_date).replace('-', '/')
-                    file_data += '    '
+                    file_data += '        '
                     file_data += batch.payment_issuing_bank_id.bank_account_id.acc_number if \
                         batch.payment_issuing_bank_id.bank_account_id else ''
-                    file_data += '    '
+                    file_data += '        '
                     file_data += str(line.check_folio_id.folio).zfill(13)
-                    file_data += '    '
+                    file_data += '        '
                     file_data += line.payment_req_id.partner_id.name.ljust(45) if line.payment_req_id.partner_id else ''
-                    file_data += '    '
+                    file_data += '        '
                     file_data += str(line.amount_to_pay).zfill(15)
-                    file_data += '    '
+                    file_data += '        '
                     file_data += batch.description_layout if batch.description_layout else ''
                     file_data += '\n'
             elif self.layout == 'Scotiabank':
@@ -199,6 +199,7 @@ class GenerateSupplierCheckLayout(models.TransientModel):
             selected_req = batch.payment_req_ids.filtered(lambda x: x.selected == True)
             for re in selected_req:
                 re.selected = False
+            batch.selected = False
             return {
                 'name': _('Generate Layout'),
                 'view_type': 'form',

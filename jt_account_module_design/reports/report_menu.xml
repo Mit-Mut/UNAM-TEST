@@ -20,6 +20,31 @@
             <field name="context" eval="{'model': 'jt_account_design.state.income.expenses'}" />
         </record>
 
+        <!-- Detailed Statement of Income, Expenses and Investments summary action  -->
+        <record id="action_state_income_expense_invest_summary_action" model="ir.actions.client">
+            <field name="name">Detailed Statement of Income, Expenses and Investments Summary report</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model':'jt_account_module_design.stat.inc.exp.inv.summary.report'}" />
+        </record>
+
+        <!-- Detailed Statement of Income, Expenses and Investments action  -->
+        <record id="action_state_income_expense_invest_action" model="ir.actions.client">
+            <field name="name">Detailed Statement of Income, Expenses and Investments report</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model':'jt_account_module_design.stat.inc.exp.inv.report'}" />
+        </record>
+
+
+                 <!-- Miles revenue Report. menu  -->
+        <record id="action_miles_income_report" model="ir.actions.client">
+            <field name="name">Miles Revenue report</field>
+            <field name="tag">account_report</field>
+            <field name=
+                "context" eval="{'model': 'jt_account_module_design.miles.revenue.report'}" />
+        </record>
+
+
+
 
         <!-- weight income  submenu -->
         <menuitem
@@ -29,6 +54,8 @@
             action = "action_weight_income_report"
             sequence="88"
         />
+
+        <!-- state patrimonial report -->
         <menuitem
             id="state_partimonial_report"
             name="State Partimonial Report"
@@ -36,12 +63,45 @@
             action = "action_state_partimonial_report"
             sequence="89"
         />
+  
+
+        <!-- Detailed Statement of Income, Expenses and Investments submenu -->
         <menuitem
+            id="Detailed_Statement_of_Income_Expenses_and_Investments_submenu"
+            name="Detailed Statement of Income, Expenses and Investments Report"
+            parent="account.menu_finance_reports"
+            action = "action_state_income_expense_invest_action"
+            sequence="90"
+        />
+
+
+
+        <!-- Detailed Statement of Income, Expenses and Investments summary submenu -->
+        <menuitem
+            id="action_state_income_expense_invest_summary_submenu"
+            name="Detailed Statement of Income, Expenses and Investments Summary"
+            parent="account.menu_finance_reports"
+            action = "action_state_income_expense_invest_summary_action"
+            sequence="91"
+        />
+
+                <!-- Miles revenue  submenu -->
+        <menuitem
+            id="miles_revenue_report_submenu"
+            name="Miles Revenue Report"
+            parent="account.menu_finance_reports"
+            action = "action_miles_income_report"
+            sequence="92"
+        />
+
+              <menuitem
             id="state_income_expenses_report"
             name="Income Expenses and Investment"
             parent="account.menu_finance_reports"
             action = "action_income_expenses_report"
-            sequence="100"
+            sequence="93"
         />
+
+
     </data>
 </odoo>

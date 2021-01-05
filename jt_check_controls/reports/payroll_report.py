@@ -175,8 +175,76 @@ class Payroll(models.AbstractModel):
         return value
 
     def _get_lines(self, options, line_id=None):
-        lines = []            
+        lines = []
+        
+        domain = []
+        bank_list = []
+        bank_account_list = []
+        upa_list = []
+        
+        start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+            
+        domain =domain + [('invoice_date','>=',start),('invoice_date','<=',end)]
+        
+        for bank in options.get('bank'):
+            if bank.get('selected',False)==True:
+                bank_list.append(bank.get('id',0))
+        if bank_list:
+            domain += [('payment_bank_id','in',bank_list)]
+
+        for bank_account in options.get('bank_account'):
+            if bank_account.get('selected',False)==True:
+                bank_account_list.append(bank_account.get('id',0))
+        if bank_account_list:
+            domain += [('payment_issuing_bank_acc_id','in',bank_account_list)]
+
+        for upa_catalog in options.get('upa_catalog'):
+            if upa_catalog.get('selected',False)==True:
+                upa_list.append(upa_catalog.get('id',0))
+        if upa_list:
+            domain += [('upa_key','in',upa_list)]
+        
+        check_payment_method = self.env.ref('l10n_mx_edi.payment_method_cheque').id
+        if check_payment_method:
+            domain += [('l10n_mx_edi_payment_method_id','=',check_payment_method)]
+            
+        payroll_domain = domain + [('payment_state','=','for_payment_procedure'),('type', '=', 'in_invoice'), ('is_payroll_payment_request', '=', True)]
+        invoice_ids = self.env['account.move'].search(payroll_domain)
+
+        
+        total = 0
+        
+        for inv in invoice_ids:
+            total += inv.amount_total  
+            lines.append({
+                'id': 'hierarchy' + str(inv.id),
+                'name' : inv.folio, 
+                'columns': [ {'name': inv.check_folio_id and inv.check_folio_id.folio or ''},
+                            {'name': inv.partner_id and inv.partner_id.name or ''},
+                            self._format({'name': inv.amount_total},figure_type='float'),
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        lines.append({
+            'id': 'hierarchy_total',
+            'name' : 'TOTAL', 
+            'columns': [{'name': ''},
+                        {'name': ''},
+                        self._format({'name': total},figure_type='float'),
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+            
         return lines
+                
 
 
     def _get_report_name(self):

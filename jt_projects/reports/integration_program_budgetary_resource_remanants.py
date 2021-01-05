@@ -144,15 +144,22 @@ class IntegrationOfBudgetResourceRemanats(models.AbstractModel):
         for y in year_list_tuple:
             year_list.append(str(y))
         
+
+        rec_ids = self.env['remaining.resource'].search([],order='year')
+        stage_ids = rec_ids.mapped('stage_id').sorted(key='name') 
         
-        stage_ids = project_ids.mapped('custom_stage_id')
+        #stage_ids = project_ids.mapped('custom_stage_id')
         for stage in stage_ids:
+            stage_rec_ids = rec_ids.filtered(lambda x:x.stage_id.id==stage.id)
+            
             for year in year_list:
-                
-                current_project_ids = project_ids.filtered(lambda x:x.custom_stage_id.id==stage.id and str(x.proj_start_date.year)==year)
-                if not current_project_ids:
+                stage_year_rec_ids = stage_rec_ids.filtered(lambda x:x.stage_id.id==stage.id and x.year==year)
+                if not stage_year_rec_ids:
                     continue
                 
+                current_project_ids = project_ids.filtered(lambda x:x.custom_stage_id.id==stage.id and str(x.proj_start_date.year)==year)
+#                 if not current_project_ids:
+#                     continue
                 lines.append({
                         'id': 'hierarchy_blank' + str(stage.id)+str(year),
                         'name' : '', 

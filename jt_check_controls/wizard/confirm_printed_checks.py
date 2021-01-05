@@ -20,6 +20,7 @@ class ConfirmPrintedCheck(models.TransientModel):
                     line.payment_req_id.payment_state = 'assigned_payment_method'
                     line.selected = False
             batch.printed_checks = False
+            batch.selected = False
 
     def action_no(self):
         self.is_cancel_req = True
@@ -54,6 +55,7 @@ class ConfirmPrintedCheck(models.TransientModel):
                     line.check_folio_id.reason_cancellation = 'Print Error'
                     line.selected = False
             batch.printed_checks = False
+            batch.selected = False
 
 class CheckPaymentRequests(models.TransientModel):
 

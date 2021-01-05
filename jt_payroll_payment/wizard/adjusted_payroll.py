@@ -196,8 +196,8 @@ class AdjustedPayrollWizard(models.TransientModel):
                     total_pension = row[8].value
                     
                     partner_id = False
-                    deposite_data = ''
-                    check_no_data = ''
+                    deposite_data = deposite
+                    check_no_data = check_no
                     
                     if ben_name:
                         per_rec = self.env['res.partner'].search([('name','=',ben_name)],limit=1)

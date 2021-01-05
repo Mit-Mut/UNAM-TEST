@@ -52,38 +52,38 @@
                                 </t>
                             </t>
                             <t t-foreach="o.payment_req_ids" t-as="line">
-                                <t t-if="line.selected and line.check_folio_id and
-                                    line.check_status == 'Available for printing'">
+                                <t t-if="line.selected and line.check_folio_id and line.check_status == 'Available for printing'">
                                     <div>
                                         <div class="row">
                                             <div class="col-6" align="left" style="margin-left:5px;">
                                                 <b>Benef:</b>
-                                                <t t-if="line.payment_req_id and line.payment_req_id.partner_id">
+                                                	<t t-if="line.payment_req_id">
                                                     <b><span t-esc="line.payment_req_id.partner_id.name"/></b>
-                                                </t>
+                                                	</t>
                                             </div>
                                             <div class="col-6" align="left" style="text-align:right">
-                                                <b>A <span t-esc="o.get_date()"/> <br/>
-                                                    R.F.C.: <span t-esc="line.payment_req_id.rfc"/></b>
+                                                <b>CIUDAD DE MEXICO A <span t-esc="o.get_date()"/> <br/>
+                                                    R.F.C.: <span t-esc="line.payment_req_id.ref"/></b>
                                             </div>
                                         </div>
                                         <br/>
                                         <table style="text-align:center" width="100%">
                                             <tbody>
                                                 <tr>
+                                                    
+                                                    <td width="33%">
+                                                         <t t-if="line.payment_req_id">
+                                                            <span t-esc="line.payment_req_id.name"/>
+                                                         </t>
+                                                    </td>
                                                     <td width="33%">
                                                         <span t-esc="line.check_folio_id.folio"/>
                                                     </td>
                                                     <td width="33%">
-                                                         <t t-if="line.payment_req_id">
-                                                            <span t-esc="line.amount_to_pay"
+                                                    <t t-if="line.payment_req_id">
+                                                        <span t-esc="line.amount_to_pay"
                                                             t-options='{"widget": "monetary",
                                                             "display_currency": line.currency_id}'/>
-                                                         </t>
-                                                    </td>
-                                                    <td width="33%">
-                                                    <t t-if="line.payment_req_id">
-                                                        <span t-esc="line.payment_req_id.name"/>
                                                     </t> </td>
                                                 </tr>
                                             </tbody>

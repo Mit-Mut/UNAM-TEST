@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_bank_balance_check_inherit_check" model="ir.ui.view">
+            <field name="name">check.control.bank.balance.check.view</field>
+            <field name="model">bank.balance.check</field>
+            <field name="inherit_id" ref="jt_supplier_payment.view_bank_balance_check"/>
+            <field name="arch" type="xml">
+                <field name="minimum_balance" position="after">
+                    <field name="check_balance_in_transit"
+                           attrs="{'invisible':[('is_balance','=',False)]}" readonly="1"/>
+                    <field name="balance_available"
+                           attrs="{'invisible':[('is_balance','=',False)]}" readonly="1"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -6,68 +6,52 @@
             	<span t-set="ticket_data" t-value="docs.get_ticket_data()"/>
             	<t t-foreach="ticket_data" t-as="line">
 	                <div class="page m-0" style="border:1px solid black;border-spacing: 0;background-color:#A9A9A9;">
-	                    <div class="row">
-	                        <div class="col-6">
-	                            <span>TELEFONO <hr style="margin-left:80px;width:55%;background-color:black;"/></span>
-	                        </div>
-	                        <div class="col-6">
-	                            <span>CLAVE <u><span t-esc="line['clave_no']"/></u></span>
-	                        </div>
-	                    </div>
-	                    <br/>
-	                    <div class="row">
-	                        <div class="col-6">
-	                            <span>DEPENDENCIA <u><span t-esc="line['dep_name']"/></u></span>
-	                        </div>
-	                    </div>
-	                    <br/>
-	                    <div class="row">
-	                        <div class="col-12">
-	                            <p style="text-align:justify;">RECIBI DEL DEPARTMENTO DE PAGO DE NOMINA Y PRESTACIONES DE LA DIRECCION GENERAL DE FINANZAS LOS SIGUIENTES DOCUMENTOS DE PENSION ALIMENTICIA PAPA EL PAGO DE NOMINA.</p>
-	                        </div>
-	                    </div>
-	                    <br/>
-	                    <div class="row">
-	                        <div class="col-6">
-	                            <span> CHEQUES DE FOLIO <u><span t-esc="line['folio_min']"/></u></span> 
-	                        </div>
-	                        <div class="col-6">
-	                            <span style="margin-left:20px;"> AL <u><span t-esc="line['folio_max']"/></u></span> 
-	                        </div>
-	                    </div>
-	                    <div class="row">
-	                        <div class="col-6">
-	                            <span>HOJAS NOMINA DEL FOLIO<hr style="margin-left:210px;width:60%;background-color:black;"/></span>
-	
-	                        </div>
-	                        <div class="col-6">
-	                            <span style="margin-left:50px;"> AL <hr style="margin-left:90px;width:40%;background-color:black;"/></span> 
-	                        </div>
-	                    </div>
-	                    <div class="row">
-	                        <div class="col-12">
-	                           <span>CORRESPONDIENTS A LA QUINCENA <u><span t-esc="line['fornight']"/></u></span>
-	                        </div>
-	                    </div>
-	                    <div class="row">
-	                        <div class="col-6">
-	                           <span>REVISO<hr style="margin-left:80px;width:40%;background-color:black;"/></span>
-	                        </div>
-	                        <div class="col-6">
-	                           <span>FECHA<hr style="margin-left:80px;width:40%;background-color:black;"/></span>
-	                        </div>
-	                    </div>
-	                    <br/><br/>
-	                    <div class="row">
-	                        <div class="col-6">
-	                        <hr style="width:50%;background-color:black;"/><br/><span>NOMBRE COMPLETO</span>
-	                        </div>
-	                        <div class="col-6">
-	                           <hr style="width:50%;background-color:black;"/><br/><span>FIRMA</span>
-	                        </div>
-	                    </div>
-	                </div>
-	              </t>
+	                   <table style="font-size:15px;" cellspacing="15" cellspadding="5">
+                            <tr>
+                                <td>TELEFONO</td>
+                                <td>_____________</td>
+                                <td>CLAVE</td>
+                                <td><u><span t-esc="line['clave_no']"/></u></td>
+                            </tr>   
+                            <br/>
+                            <tr>
+                                <td>DEPENDENCIA</td>
+                                <td colspan="2  "><u><span t-esc="line['dep_name']"/></u></td>
+                            </tr>   
+                            <tr>
+                                <td colspan="4"> <p style="text-align:justify;">RECIBI DEL DEPARTMENTO DE PAGO DE NOMINA Y PRESTACIONES DE LA DIRECCION GENERAL DE FINANZAS LOS SIGUIENTES DOCUMENTOS DE PENSION ALIMENTICIA PAPA EL PAGO DE NOMINA.</p></td>
+                            </tr>
+                            <tr>
+                                <td>CHEQUES DE FOLIO</td>
+                                <td><u><span t-esc="line['folio_min']"/></u></td>
+                                <td> AL <u><span t-esc="line['folio_max']"/></u></td>
+                            </tr>      
+                            <tr>
+                                <td>HOJAS NOMINA DEL FOLIO</td>
+                                <td>______________________</td>
+                                <td> AL </td>
+                                <td>______________________</td>
+                            </tr>      
+                            <tr>
+                                <td colspan="2">CORRESPONDIENTS A LA QUINCENA </td>
+                                <td colspan="2"><u><span t-esc="line['fornight']"/></u></td>
+                            </tr>
+                            <tr>
+                                <td>REVISO</td>
+                                <td>______________</td>
+                                <td>FECHA</td>
+                                <td>______________</td>
+                            </tr>
+                            <br/><br/>
+                            <tr>
+                                <td colspan="2" style="margin-top:10px;"><div class="text-right"><hr style="width:50%;background-color:black;align:left;"/><br/><span style="text-align:right;">NOMBRE COMPLETO</span></div></td>
+                                <td colspan="2"><div class="text-right"><hr style="width:50%;background-color:black;align:left;"/><br/><span style="text-align:right;">FIRMA</span></div></td>
+                            </tr>
+                              
+                            
+                        </table>                  
+                    </div>
+                </t>
             </t>
         </template>
         
@@ -75,7 +59,7 @@
             <field name="name">Delivery Ticket</field>
             <field name="default" eval="True"/>
             <field name="format">custom</field>
-            <field name="page_height">142</field>
+            <field name="page_height">105</field>
             <field name="page_width">150</field>
             <field name="orientation">Portrait</field>
             <field name="margin_top">5</field>
@@ -94,7 +78,7 @@
             name="jt_check_controls.external_layout_delievery_ticket"
             file="jt_check_controls.external_layout_delievery_ticket"
             print_report_name="object.name"
-            paperformat="paperformat_delivery_ticket"
+            paperformat = "jt_check_controls.paperformat_delivery_ticket"
         />
 
     </data>

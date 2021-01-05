@@ -1,6 +1,7 @@
 from odoo import models, fields, api,_
 from datetime import date
 from odoo.exceptions import ValidationError, UserError
+from odoo.osv import expression
 
 class ProjectRegistry(models.Model):
     _inherit = 'project.project'
@@ -210,6 +211,17 @@ class ProjectRegistry(models.Model):
 
     def calculate_project_overdue(self):
         print("calll")
+
+    @api.model
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
+        args = args or []
+        domain = []
+        if name:
+            domain = ['|', ('number', operator, name), ('name', operator, name)]
+            if operator in expression.NEGATIVE_TERM_OPERATORS:
+                domain = ['&', '!'] + domain[1:]
+        project_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
+        return models.lazy_name_get(self.browse(project_ids).with_user(name_get_uid))
 
     def name_get(self):
         result = []

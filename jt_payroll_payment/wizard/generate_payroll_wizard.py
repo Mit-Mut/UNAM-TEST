@@ -68,7 +68,7 @@ class GeneratePayrollWizard(models.TransientModel):
                     bank_key = row[5].value
                     check_number = row[6].value
                     deposite_number = row[7].value
-                    
+                    bank_account = row[8].value
                     pre_key = row[9].value
                     amount = row[10].value
                     
@@ -87,6 +87,7 @@ class GeneratePayrollWizard(models.TransientModel):
                             exit_payroll_id = False
                             
                         payment_method_id = False    
+                        
                         if payment_method:         
                             if  type(payment_method) is int or type(payment_method) is float:
                                 payment_method = int(payment_method)
@@ -96,9 +97,11 @@ class GeneratePayrollWizard(models.TransientModel):
                              
                         employee_id =self.env['hr.employee'].search([('rfc','=',rfc)],limit=1)
                         if employee_id:
-                            rec_check_number = False
-                            rec_deposite_number = False
-                            rec_bank_key = False
+                            rec_check_number = check_number
+                            rec_deposite_number = deposite_number
+                            rec_bank_key = bank_key
+                            bank_account_id = False
+                            
                             if check_number:
                                 if  type(check_number) is int or type(check_number) is float:
                                     rec_check_number = int(check_number)
@@ -110,6 +113,13 @@ class GeneratePayrollWizard(models.TransientModel):
                             if bank_key:
                                 if  type(bank_key) is int or type(bank_key) is float:
                                     rec_bank_key = int(bank_key)
+
+                            if bank_account:
+                                if  type(bank_account) is int or type(bank_account) is float:
+                                    bank_account = int(bank_account)
+                                bank_account_rec = self.env['res.partner.bank'].search([('acc_number','=',str(bank_account))],limit=1)
+                                if bank_account_rec:
+                                    bank_account_id = bank_account_rec.id
                                     
                             exit_payroll_id = self.env['employee.payroll.file'].search([('employee_id','=',employee_id.id),('id','in',self.payroll_process_id.payroll_ids.ids)],limit=1)
                             if exit_payroll_id:
@@ -117,6 +127,7 @@ class GeneratePayrollWizard(models.TransientModel):
                                 exit_payroll_id.deposite_number = rec_deposite_number
                                 exit_payroll_id.check_number = rec_check_number
                                 exit_payroll_id.bank_key = rec_bank_key
+                                exit_payroll_id.receiving_bank_acc_pay_id = bank_account_id
                                 
                             if not exit_payroll_id:
                                 result_dict.update({'payroll_processing_id':self.payroll_process_id.id,
@@ -128,6 +139,7 @@ class GeneratePayrollWizard(models.TransientModel):
                                                     'deposite_number' : rec_deposite_number,
                                                     'check_number' : rec_check_number,
                                                     'l10n_mx_edi_payment_method_id':payment_method_id,
+                                                    'receiving_bank_acc_pay_id' : bank_account_id,
                                                     'payment_request_type':'direct_employee'})
                     
                     program_id = False
@@ -218,8 +230,8 @@ class GeneratePayrollWizard(models.TransientModel):
                     
             #======================== pension_payment ================# 
             if self.type_of_movement == 'pension_payment':
+                
                 for rowx, row in enumerate(map(sheet.row, range(1, sheet.nrows)), 1):
-                    
                     counter = 0
                     rfc = row[0].value
                     ben_name = row[2].value
@@ -229,6 +241,7 @@ class GeneratePayrollWizard(models.TransientModel):
                     deposite = row[6].value
                     bank_account = row[7].value
                     total_pension = row[8].value
+
                     
                     if rfc:
 
@@ -257,8 +270,8 @@ class GeneratePayrollWizard(models.TransientModel):
                                                     'payment_request_type':'direct_employee'})
                     
                     partner_id = False
-                    deposite_data = ''
-                    check_no_data = ''
+                    deposite_data = deposite
+                    check_no_data = check_no
                     payment_method_id = False
                     bank_account_id = False
                     bank_id = False
@@ -295,7 +308,6 @@ class GeneratePayrollWizard(models.TransientModel):
                         if bank_rec:
                             bank_id = bank_rec.id
                     
-                             
                     line_data.append((0,0,{'bank_id':bank_id,'bank_acc_number':bank_account_id,'l10n_mx_edi_payment_method_id':payment_method_id,'partner_id':partner_id,'deposit_number':deposite_data,'check_number':check_no_data,'total_pension':total_pension})) 
 
                 if exit_payroll_id and line_data:

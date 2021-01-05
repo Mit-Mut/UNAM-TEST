@@ -138,7 +138,7 @@ class EmployeePayroll(models.Model):
     @api.onchange('employee_id') 
     def onchange_partner_bak_account(self):
         if self.employee_id and self.employee_id.bank_ids:
-            self.receiving_bank_acc_pay_id = self.employee_id.bank_ids[0].id
+            #self.receiving_bank_acc_pay_id = self.employee_id.bank_ids[0].id
             self.bank_receiving_payment_id= self.employee_id.bank_ids[0].bank_id and self.employee_id.bank_ids[0].bank_id.id or False
         else:
             self.receiving_bank_acc_pay_id = False

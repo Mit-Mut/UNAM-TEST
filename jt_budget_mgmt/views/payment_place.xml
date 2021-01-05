@@ -10,7 +10,7 @@
                 <field name="name" position="before">
                     <field name="dependancy_id"/>
                     <field name="des_dependency"/>
-                    <field name="sub_dependancy_id"/>
+                    <field name="sub_dependancy_id" domain="[('dependency_id', '=', dependancy_id)]"/>
                     <field name="des_sub_dependency"/>
                 </field>
             </field>

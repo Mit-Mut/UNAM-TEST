@@ -83,7 +83,7 @@
             <field name="res_model">reissue.checks</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('type_of_batch','=','supplier')]</field>
-            <field name="context">{'default_type_of_batch':'supplier'}</field>
+            <field name="context">{'default_type_of_batch':'supplier', 'from_approve_check':1   }</field>
         </record>
 
         <menuitem id="menu_request_for_changes_to_the_check_supplier" name="Suppliers"
@@ -194,7 +194,8 @@
                             	<field name="type_of_batch" invisible="1"/>
                                 <field name="type_of_request" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="check_log_ids" invisible="1"/>
-                                <field name="checkbook_req_id" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="checkbook_req_id" attrs="{'readonly':[('state','!=','draft')]}"
+                                    context="{'from_approve_check':1}"/>
                                 <field name="check_log_id" attrs="{'readonly':[('state','!=','draft')]}" domain="[('id','in',check_log_ids)]"/>
                                 <field name="check_amount"/>
                                 <field name="status"/>
@@ -233,7 +234,7 @@
             <field name="res_model">reissue.checks</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('type_of_batch','=','project')]</field>
-            <field name="context">{'default_type_of_batch':'project'}</field>
+            <field name="context">{'default_type_of_batch':'project', 'from_approve_check':1}</field>
         </record>
 
 		<record id="action_project_reissue_of_checks_link_tree" model="ir.actions.act_window.view">

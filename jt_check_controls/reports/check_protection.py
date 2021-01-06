@@ -80,6 +80,39 @@ class CheckProtection(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         lines = []
+        domain = []
+        start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+            
+        domain = domain + [('date_protection','>=',start),('date_protection','<=',end),('module','!=',False)]
+        
+         
+        check_log_ids = self.env['check.log'].search(domain)
+        deps = check_log_ids.mapped('module')
+        deps = set(deps)
+        deps = list(deps)
+        
+        total_amount = 0
+        for module in deps:
+            rec_ids = check_log_ids.filtered(lambda x:x.module==module)
+            total_rec = len(rec_ids)
+            amount = sum(x.check_amount for x in rec_ids)
+            total_amount += amount
+
+#             lines.append({
+#                 'id': 'hierarchy' + str(module),
+#                 'name' : module, 
+#                 'columns': [ {'name': inv.check_folio_id and inv.check_folio_id.folio or ''},
+#                             {'name': inv.partner_id and inv.partner_id.name or ''},
+#                             self._format({'name': inv.amount_total},figure_type='float'),
+#                             ],
+#                 'level': 3,
+#                 'unfoldable': False,
+#                 'unfolded': True,
+#             })
+             
         return lines
 
     def _get_report_name(self):

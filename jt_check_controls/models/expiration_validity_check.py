@@ -23,6 +23,7 @@
 from odoo import models, fields, api, _,tools
 from datetime import datetime, timedelta,date
 from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT, format_date
+from odoo.exceptions import UserError, ValidationError,Warning
 
 class ExpirationValidityCheck(models.Model):
     
@@ -73,6 +74,10 @@ class ExpirationValidityCheck(models.Model):
     
     def action_withdrawn_from_circulation(self):
         for rec in self:
+            today = datetime.today().date() 
+            if rec.date_expiration >= today:
+                raise Warning(_("Aún no expira la protección del cheque"))
+            
             if rec.payment_req_id:
                 rec.payment_req_id.payment_state = 'payment_method_cancelled'
             if rec.check_folio_id:

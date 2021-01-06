@@ -37,7 +37,7 @@ class ConfirmCheckBook(models.TransientModel):
                     'bank_id': check_req.bank_id.id if check_req.bank_id else False,
                     'bank_account_id': check_req.bank_account_id.id if check_req.bank_account_id else False,
                     'checkbook_no': check_req.checkbook_no,
-                    'dependence_id': check_req.dependence_id.id if check_req.dependence_id else False,
-                    'subdependence_id': check_req.subdependence_id.id if check_req.subdependence_id else False
+                    # 'dependence_id': check_req.dependence_id.id if check_req.dependence_id else False,
+                    # 'subdependence_id': check_req.subdependence_id.id if check_req.subdependence_id else False
                 })]
             check_req.state = 'confirmed'

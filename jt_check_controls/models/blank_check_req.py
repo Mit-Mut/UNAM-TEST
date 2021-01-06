@@ -195,4 +195,10 @@ class DistributionModules(models.Model):
 
     @api.onchange('intial_filio', 'final_folio')
     def onchange_folios(self):
-        self.amounts_of_checks = self.final_folio.folio - self.intial_filio.folio
+        if self.final_folio and self.intial_filio:
+            amount_of_checks = self.final_folio.folio - self.intial_filio.folio
+            if amount_of_checks == 0:
+                self.amounts_of_checks = 1
+            else:
+                self.amounts_of_checks = amount_of_checks + 1
+

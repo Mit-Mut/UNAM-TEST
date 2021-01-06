@@ -38,6 +38,7 @@ class SupplierPaymentRequest(models.Model):
     def action_rotated(self):
         self.ensure_one()
         self.payment_state = 'rotated'
+        self.batch_folio = ''
 
     def write(self, vals):
         res = super(SupplierPaymentRequest, self).write(vals)

@@ -29,7 +29,7 @@
 	                        </group>
                         </group>
                         <notebook>
-                        	<page string="Accounting">
+                        	<page string="Accounting" invisible="1">
                         		<group>
                         			<group>
                         				<field name="credit_account_id"/>

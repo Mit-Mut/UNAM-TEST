@@ -308,7 +308,7 @@ class GeneratePayrollWizard(models.TransientModel):
                         if bank_rec:
                             bank_id = bank_rec.id
                     
-                    line_data.append((0,0,{'bank_id':bank_id,'bank_acc_number':bank_account_id,'l10n_mx_edi_payment_method_id':payment_method_id,'partner_id':partner_id,'deposit_number':deposite_data,'check_number':check_no_data,'total_pension':total_pension})) 
+                    line_data.append((0,0,{'bank_key':bank_key,'bank_id':bank_id,'bank_acc_number':bank_account_id,'l10n_mx_edi_payment_method_id':payment_method_id,'partner_id':partner_id,'deposit_number':deposite_data,'check_number':check_no_data,'total_pension':total_pension})) 
 
                 if exit_payroll_id and line_data:
                     exit_payroll_id.write({'pension_payment_line_ids':line_data})

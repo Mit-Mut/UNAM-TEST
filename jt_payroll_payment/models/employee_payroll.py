@@ -45,7 +45,21 @@ class Employee(models.Model):
             emp.user_id = user_id.id
             emp.emp_partner_id = user_id.partner_id and user_id.partner_id.id or False
              
-             
+class HRJob(models.Model):
+    _inherit = 'hr.job'
+    
+    def name_get(self):
+        result = []
+        for rec in self:
+            name = rec.name or ''
+            if self.env.context:
+                if rec.category_key and (self.env.context.get('show_category_name',False)):
+                    name = rec.category_key.name
+            result.append((rec.id, name))
+        return result
+    
+    
+                 
 class EmployeePayroll(models.Model):
 
     _name = 'employee.payroll.file'
@@ -165,7 +179,20 @@ class PreceptionLine(models.Model):
     preception_id = fields.Many2one('preception','Key To Perception')
     description = fields.Char(related='preception_id.concept',string="Description")
     amount = fields.Float("Matter")
-    
+    account_id = fields.Many2one('account.account','Account')
+
+    @api.onchange('program_code_id')
+    def onchange_program_code(self):
+        if self.program_code_id and self.program_code_id.item_id and self.program_code_id.item_id.unam_account_id:
+            self.account_id = self.program_code_id.item_id.unam_account_id.id
+    @api.model
+    def create(self,vals):
+        res = super(PreceptionLine,self).create(vals)
+        for r in res:
+            if r.program_code_id and r.program_code_id.item_id and r.program_code_id.item_id.unam_account_id:
+                r.account_id = r.program_code_id.item_id.unam_account_id.id
+            
+        return res
 class deductionLine(models.Model):
     
     _name = 'deduction.line'
@@ -198,7 +225,8 @@ class PensionPaymentLine(models.Model):
     journal_id = fields.Many2one('account.journal','Account number')
     bank_acc_number = fields.Many2one('res.partner.bank',string='Account number')
     bank_id = fields.Many2one('res.bank','Bank')
-
+    bank_key = fields.Char("Bank Key")
+    
 class AdditionalPaymentsLine(models.Model):
     
     _name = 'additional.payments.line'

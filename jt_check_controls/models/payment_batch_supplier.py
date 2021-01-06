@@ -185,7 +185,7 @@ class PaymentBatchSupplier(models.Model):
             if rec.checkbook_req_id:
                 count = rec.payment_req_ids.filtered(lambda x: x.selected == True)
                 logs = check_log_obj.search([('checklist_id.checkbook_req_id', '=', rec.checkbook_req_id.id),
-                        ('status', 'in', ('Available for printing', 'Checkbook registration'))]).ids
+                        ('status', '=', 'Available for printing')]).ids
                 exit_logs = check_payment_req_obj.search([('check_folio_id', 'in', logs)]).mapped('check_folio_id').ids
                 logs = list(set(logs)^set(exit_logs))
                 if len(logs) < len(count):

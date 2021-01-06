@@ -219,9 +219,9 @@ class AdjustedPayrollWizard(models.TransientModel):
                         
                     if employee_id:
                         emp_payroll_ids = self.payroll_process_id.payroll_ids.filtered(lambda x:x.employee_id.id==employee_id)
-                        
+                    
                     for rec in emp_payroll_ids:
-                        if payment_method and bank_account:
+                        if payment_method:
                             payment_method_id = False
                             journal_id = False
                             bank_id = False
@@ -254,14 +254,15 @@ class AdjustedPayrollWizard(models.TransientModel):
                                 if bank_rec:
                                     bank_id = bank_rec.id
                             
-                            if payment_method_id and bank_id:
-                                lines = rec.pension_payment_line_ids.filtered(lambda x:x.l10n_mx_edi_payment_method_id.id==payment_method_id and x.bank_id.id == bank_id)
+                            if payment_method_id:
+                                lines = rec.pension_payment_line_ids.filtered(lambda x:x.l10n_mx_edi_payment_method_id.id==payment_method_id and x.bank_key == bank_key)
                                 for line in lines:
                                     line.total_pension = total_pension
                                     line.partner_id = partner_id 
                                     line.deposit_number = deposite_data
                                     line.check_number = check_no_data
                                     line.bank_acc_number = bank_account_id
+                                    line.bank_key = bank_key
                                 
                                 if not lines:
                                     rec.write({'pension_payment_line_ids':[(0,0,{'partner_id':partner_id,
@@ -271,6 +272,7 @@ class AdjustedPayrollWizard(models.TransientModel):
                                                                                  'total_pension':total_pension,
                                                                                  'deposit_number':deposite_data,
                                                                                  'check_number' : check_no_data,
+                                                                                 'bank_key':bank_key,
                                                                                  })]})
                                     
                                     

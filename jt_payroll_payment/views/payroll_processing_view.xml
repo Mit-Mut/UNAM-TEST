@@ -140,12 +140,14 @@
                         			<tree>
                         				<field name="preception_id"/>
                         				<field name="description"/>
+                        				<field name="account_id"/>
                         				<field name="amount"/>
                         			</tree>
                         			<form>
                         				<group>
 	                        				<field name="preception_id"/>
 	                        				<field name="description"/>
+	                        				<field name="account_id"/>
 	                        				<field name="amount"/>
                         				</group>
                         			</form>
@@ -180,6 +182,7 @@
                         				<field name="l10n_mx_edi_payment_method_id"/>
                         				<field name="journal_id" invisible="1"/>
                         				<field name="bank_acc_number"/>
+                        				<field name="bank_key"/>
                         				<field name="bank_id"/>
                         				<field name="deposit_number"/>
                         				<field name="check_number"/>
@@ -192,6 +195,7 @@
 	                        				<field name="l10n_mx_edi_payment_method_id"/>
 	                        				<field name="journal_id" invisible="1"/>
 	                        				<field name="bank_acc_number"/>
+	                        				<field name="bank_key"/>
 	                        				<field name="bank_id"/>
 	                        				<field name="deposit_number"/>
 	                        				<field name="check_number"/>

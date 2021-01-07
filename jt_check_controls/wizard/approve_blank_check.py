@@ -41,4 +41,5 @@ class ApproveBlankCheck(models.TransientModel):
                                                 ('folio', '<=', self.final_folio)])
             for log in check_logs:
                 log.status = 'Assigned for shipping'
-
+                log.dependence_id = check_req.dependence_id and check_req.dependence_id.id or False
+                log.subdependence_id = check_req.subdependence_id and check_req.subdependence_id.id or False 

@@ -556,6 +556,7 @@ class IntegrationOfRemnants(models.AbstractModel):
             period_name += ","
             period_name += "("
             period_name += str(start_date.year)
+            period_name += ","
             period_name += str(end_date.year)
             period_name += ")"
             rcontext.update({

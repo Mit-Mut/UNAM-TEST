@@ -162,8 +162,8 @@ class EmployeePayroll(models.Model):
     def create(self,vals):
         res  = super(EmployeePayroll,self).create(vals)
         if res.employee_id and res.employee_id.bank_ids:
-            if not res.receiving_bank_acc_pay_id:
-                res.receiving_bank_acc_pay_id = res.employee_id.bank_ids[0].id
+#             if not res.receiving_bank_acc_pay_id:
+#                 res.receiving_bank_acc_pay_id = res.employee_id.bank_ids[0].id
             if not res.bank_receiving_payment_id:
                 res.bank_receiving_payment_id= res.employee_id.bank_ids[0].bank_id and res.employee_id.bank_ids[0].bank_id.id or False
         

@@ -369,7 +369,7 @@ class GeneratePayrollWizard(models.TransientModel):
                         if details=='U':
                             details_data = 'U'
                     if job_id:
-                        job_rec = self.env['hr.job'].search([('name','=',job_id)],limit=1)
+                        job_rec = self.env['hr.job'].search([('category_key.name','=',job_id)],limit=1)
                         if job_rec:
                             job_data = job_rec.id
                     

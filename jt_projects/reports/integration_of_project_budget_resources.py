@@ -239,8 +239,8 @@ class IntegrationOfBudgetResource(models.AbstractModel):
                 PAPIIT_ids = current_project_ids.filtered(
                     lambda x: x.PAPIIT_project_type == 'PAPIIT')
                 account_code = ''
-                debit = sum(x.allocated_amount for x in PAPIIT_ids)
-                credit = sum(x.exercised_amount for x in PAPIIT_ids)
+                credit = sum(x.allocated_amount for x in PAPIIT_ids)
+                debit = sum(x.exercised_amount for x in PAPIIT_ids)
                 balance = sum(x.final_amount for x in PAPIIT_ids)
 
                 PAPIIT_configuration_id = stage_year_rec_ids.search(
@@ -258,12 +258,12 @@ class IntegrationOfBudgetResource(models.AbstractModel):
                     paid_amt = 0
                     exer_amt = 0
 
-                    budget_stage_ids = self.env['stage'].search(
-                        [('project_id', 'in', PAPIIT_ids.ids)])
+#                     budget_stage_ids = self.env['stage'].search(
+#                         [('project_id', 'in', PAPIIT_ids.ids)])
+                    papiit_subprogram_81 = self.env['sub.program'].search([('sub_program','=','81')])
                     program_code_ids = self.env['program.code'].search(
-                        [('stage_id', 'in', budget_stage_ids.ids), ('year.name', '=', str(year))])
+                        [('sub_program_id', 'in', papiit_subprogram_81.ids), ('year.name', '=', str(year))])
 
-    #                program_code_ids = PAPIIT_ids.mapped('program_code')
                     if program_code_ids:
                         self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NOT TRUE and start_date >= %s and end_date <= %s", (tuple(
                             program_code_ids.ids), start, end))
@@ -348,8 +348,9 @@ class IntegrationOfBudgetResource(models.AbstractModel):
                 PAPIME_ids = current_project_ids.filtered(
                     lambda x: x.PAPIIT_project_type == 'PAPIME')
                 account_code = ''
-                debit = sum(x.allocated_amount for x in PAPIME_ids)
-                credit = sum(x.exercised_amount for x in PAPIME_ids)
+                
+                credit = sum(x.allocated_amount for x in PAPIME_ids)
+                debit = sum(x.exercised_amount for x in PAPIME_ids)
                 balance = sum(x.final_amount for x in PAPIME_ids)
 
                 PAPIME_configuration_id = stage_year_rec_ids.search(
@@ -366,12 +367,12 @@ class IntegrationOfBudgetResource(models.AbstractModel):
                     paid_amt = 0
                     exer_amt = 0
 
-                    budget_stage_ids = self.env['stage'].search(
-                        [('project_id', 'in', PAPIME_ids.ids)])
+#                     budget_stage_ids = self.env['stage'].search(
+#                         [('project_id', 'in', PAPIME_ids.ids)])
+                    papime_subprogram_82 = self.env['sub.program'].search([('sub_program','=','82')])
                     program_code_ids = self.env['program.code'].search(
-                        [('stage_id', 'in', budget_stage_ids.ids), ('year.name', '=', str(year))])
+                        [('sub_program_id', 'in', papime_subprogram_82.ids), ('year.name', '=', str(year))])
 
-    #                program_code_ids = PAPIME_ids.mapped('program_code')
                     if program_code_ids:
                         self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NOT TRUE and start_date >= %s and end_date <= %s", (tuple(
                             program_code_ids.ids), start, end))
@@ -455,8 +456,9 @@ class IntegrationOfBudgetResource(models.AbstractModel):
                     lambda x: x.PAPIIT_project_type == 'INFOCAB')
 
                 account_code = ''
-                debit = sum(x.allocated_amount for x in INFOCAB_ids)
-                credit = sum(x.exercised_amount for x in INFOCAB_ids)
+                
+                credit =sum(x.allocated_amount for x in INFOCAB_ids)
+                debit =  sum(x.exercised_amount for x in INFOCAB_ids)
                 balance = sum(x.final_amount for x in INFOCAB_ids)
 
                 INFOCAB_configuration_id = stage_year_rec_ids.search(
@@ -473,10 +475,11 @@ class IntegrationOfBudgetResource(models.AbstractModel):
                     paid_amt = 0
                     exer_amt = 0
 
-                    budget_stage_ids = self.env['stage'].search(
-                        [('project_id', 'in', INFOCAB_ids.ids)])
+#                     budget_stage_ids = self.env['stage'].search(
+#                         [('project_id', 'in', INFOCAB_ids.ids)])
+                    infocab_subprogram_86 = self.env['sub.program'].search([('sub_program','=','86')])
                     program_code_ids = self.env['program.code'].search(
-                        [('stage_id', 'in', budget_stage_ids.ids), ('year.name', '=', str(year))])
+                        [('sub_program_id', 'in', infocab_subprogram_86.ids), ('year.name', '=', str(year))])
 
     #                program_code_ids = INFOCAB_ids.mapped('program_code')
                     if program_code_ids:

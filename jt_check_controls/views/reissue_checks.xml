@@ -52,14 +52,14 @@
                                 <field name="is_physical_check" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="reason_reissue"  attrs="{'readonly':[('state','!=','draft')],'invisible':[('type_of_request','!=','check_reissue')]}"/>
                                 <field name="reason_cancellation" attrs="{'readonly':[('state','!=','draft')],'invisible':[('type_of_request','!=','check_cancellation')]}"/>
-                                <field name="reason_rejection" attrs="{'invisible':[('state','!=','rejected')]}"/>
+                                <field name="reason_rejection" attrs="{'invisible':[('state','!=','rejected')],'required':[('state','=','rejected')]}"/>
                             </group>
                             <group>
                                 <field name="bank_id"/>
                                 <field name="bank_account_id"/>
                                 <field name="move_id" attrs="{'readonly':[('state','!=','draft')]}" domain="[('payment_state','in',('payment_method_cancelled','assigned_payment_method')),('is_payment_request', '=', True),('type', '=', 'in_invoice')]"/>
                                 <field name="folio_against_receipt"  context="{'show_folio_name':True}" attrs="{'readonly':[('state','!=','draft')]}" domain="[('payment_state','=',('payment_method_cancelled','assigned_payment_method')),('is_payment_request', '=', True),('type', '=', 'in_invoice')]"/>
-                                <field name="folio_against_receipt_name"/>
+                                <field name="folio_against_receipt_name" invisible="1"/>
                                 <field name="partner_id"/>
                                 <field name="observations" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="dependence_id"/>
@@ -83,7 +83,7 @@
             <field name="res_model">reissue.checks</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('type_of_batch','=','supplier')]</field>
-            <field name="context">{'default_type_of_batch':'supplier', 'from_approve_check':1   }</field>
+            <field name="context">{'show_name_and_folio_name':True,'default_type_of_batch':'supplier', 'from_approve_check':1   }</field>
         </record>
 
         <menuitem id="menu_request_for_changes_to_the_check_supplier" name="Suppliers"
@@ -124,7 +124,7 @@
             <field name="name">Cancellation of checks</field>
             <field name="res_model">reissue.checks</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'default_type_of_batch':'supplier'}</field>
+            <field name="context">{'show_name_and_folio_name':True,'default_type_of_batch':'supplier', 'from_approve_check':1}</field>
             <field name="domain">[('type_of_batch','=','supplier'),('state','=','approved'),('type_of_request','=','check_cancellation')]</field>
         </record>
 
@@ -203,14 +203,14 @@
                                 <field name="is_physical_check" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="reason_reissue"  attrs="{'readonly':[('state','!=','draft')],'invisible':[('type_of_request','!=','check_reissue')]}"/>
                                 <field name="reason_cancellation" attrs="{'readonly':[('state','!=','draft')],'invisible':[('type_of_request','!=','check_cancellation')]}"/>
-                                <field name="reason_rejection" attrs="{'invisible':[('state','!=','rejected')]}"/>
+                                <field name="reason_rejection" attrs="{'invisible':[('state','!=','rejected')],'required':[('state','=','rejected')]}"/>
                             </group>
                             <group>
                                 <field name="bank_id"/>
                                 <field name="bank_account_id"/>
                                 <field name="move_id" attrs="{'readonly':[('state','!=','draft')]}" domain="[('payment_state','in',('payment_method_cancelled','assigned_payment_method')),('is_project_payment', '=', True),('type', '=', 'in_invoice')]"/>
                                 <field name="folio_against_receipt"  context="{'show_folio_name':True}" attrs="{'readonly':[('state','!=','draft')]}" domain="[('payment_state','=',('payment_method_cancelled','assigned_payment_method')),('is_project_payment', '=', True),('type', '=', 'in_invoice')]"/>
-                                <field name="folio_against_receipt_name"/>
+                                <field name="folio_against_receipt_name" invisible="1"/>
                                 <field name="partner_id"/>
                                 <field name="observations" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="dependence_id"/>
@@ -234,7 +234,7 @@
             <field name="res_model">reissue.checks</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('type_of_batch','=','project')]</field>
-            <field name="context">{'default_type_of_batch':'project', 'from_approve_check':1}</field>
+            <field name="context">{'show_name_and_folio_name':True,'default_type_of_batch':'project', 'from_approve_check':1}</field>
         </record>
 
 		<record id="action_project_reissue_of_checks_link_tree" model="ir.actions.act_window.view">
@@ -303,14 +303,14 @@
                                 <field name="is_physical_check" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="reason_reissue"  attrs="{'readonly':[('state','!=','draft')],'invisible':[('type_of_request','!=','check_reissue')]}"/>
                                 <field name="reason_cancellation" attrs="{'readonly':[('state','!=','draft')],'invisible':[('type_of_request','!=','check_cancellation')]}"/>
-                                <field name="reason_rejection" attrs="{'invisible':[('state','!=','rejected')]}"/>
+                                <field name="reason_rejection" attrs="{'invisible':[('state','!=','rejected')],'required':[('state','=','rejected')]}"/>
                             </group>
                             <group>
                                 <field name="bank_id"/>
                                 <field name="bank_account_id"/>
                                 <field name="move_id" attrs="{'readonly':[('state','!=','draft')]}" domain="[('payment_state','in',('payment_method_cancelled','assigned_payment_method')),('is_payroll_payment_request', '=', True),('type', '=', 'in_invoice')]"/>
                                 <field name="folio_against_receipt"  context="{'show_folio_name':True}" attrs="{'readonly':[('state','!=','draft')]}" domain="[('payment_state','=',('payment_method_cancelled','assigned_payment_method')),('is_payroll_payment_request', '=', True),('type', '=', 'in_invoice')]"/>
-                                <field name="folio_against_receipt_name"/>
+                                <field name="folio_against_receipt_name" invisible="1"/>
                                 <field name="partner_id"/>
                                 <field name="fornight"/>
                                 <field name="employee_number"/>
@@ -336,7 +336,7 @@
             <field name="res_model">reissue.checks</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('type_of_batch','=','nominal')]</field>
-            <field name="context">{'default_type_of_batch':'nominal'}</field>
+            <field name="context">{'show_name_and_folio_name':True,'default_type_of_batch':'nominal'}</field>
         </record>
 
 		<record id="action_payroll_reissue_of_checks_link_tree" model="ir.actions.act_window.view">

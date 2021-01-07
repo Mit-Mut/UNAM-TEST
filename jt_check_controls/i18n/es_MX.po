@@ -2326,3 +2326,43 @@ msgid ""
 msgstr ""
 "que se identificó con _________________________________\n"
 "                            _________________, para lo cual se anexa copia de su identificación."
+
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.sending_check_to_file_template
+msgid "<span>Check Folio</span>"
+msgstr "Folio de cheque"
+
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.sending_check_to_file_template
+msgid "<strong>Area and position:</strong>"
+msgstr "Área y puesto:"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.sending_check_to_file_template
+msgid "<strong>Batch Folio:</strong>"
+msgstr "Folio de lote:"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.sending_check_to_file_template
+msgid "<strong>Date:</strong>"
+msgstr "Fecha:"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.sending_check_to_file_template
+msgid "<strong>List of integrated checks:</strong>"
+msgstr "Número de cheques totales:"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.sending_check_to_file_template
+msgid "<strong>Responsible for shipping:</strong>"
+msgstr "Responsable del envío:"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_request_field
+msgid ""
+"UNIVERSITY \n"
+"                            BOARD OF \n"
+"                            TRUSTEES"
+msgstr "PATRONATO UNIVERSITARIO \n"

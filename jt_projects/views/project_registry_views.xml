@@ -105,11 +105,14 @@
                                 <field name="number" required="1" attrs="{'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="responsible_name"  attrs="{'required':[('is_papiit_project','!=',True)],'readonly': [('status', '!=', 'open')]}"/>
                                 <field name="rfc" attrs="{'readonly': [('status', '!=', 'open')]}"/>
-                                <field name="is_related_agreement" attrs="{'invisible':[('is_papiit_project','=',False)],'readonly': [('status', '!=', 'open')]}"/>
-								<field name="base_id" attrs="{'invisible':[('is_related_agreement','=',False)]}"/>
-                                <field name="number_agreement" readonly="1" force_save="1" attrs="{'invisible':[('is_related_agreement','=',False)]}"/>
-                                <field name="name_agreement" readonly="1" force_save="1" attrs="{'invisible':[('is_related_agreement','=',False)]}"/>
-                                <field name="agreement_type_id" invisible="1"/>
+                               <!--  <field name="is_related_agreement" attrs="{'invisible':[('is_papiit_project','=',False)],'readonly': [('status', '!=', 'open')]}"/> -->
+								
+
+                                <field name="base_id" string="Agreement Number" required="1" />
+                               <field name="agreement_type" string="Agreement Type" required="1" />
+                                <field name="name_agreement" readonly="1" force_save="1"/>
+                                
+                                
 
                                 <field name="PAPIIT_project_type"  attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
                                 <field name="technical_support_id" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>

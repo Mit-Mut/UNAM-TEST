@@ -106,7 +106,7 @@
         </template>
 
         <!-- integration of project budget resources -->
-        <template id="external_int_of_project_budget_resources" name="external_integration_of_upi_papiit_projects">
+        <template id="external_int_of_project_budget_resources" name="external_int_of_project_budget_resources">
             <t t-if="not o" t-set="o" t-value="doc"/>
 
             <t t-if="not company">
@@ -314,7 +314,7 @@
 
         <!-- header template of Integration of remnants by PAPIIT, PAPIME, INFOCAB Stage
 -->
-        <template id="external_integration_of_remnants_by_papiit_papime_infocab" name="external_integration_of_program_papiit_papime_infocab">
+        <template id="external_integration_of_remnants_by_papiit_papime_infocab" name="external_integration_of_remnants_by_papiit_papime_infocab">
             <t t-if="not o" t-set="o" t-value="doc"/>
 
             <t t-if="not company">

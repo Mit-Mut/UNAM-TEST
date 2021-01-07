@@ -231,7 +231,8 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
                     'unfoldable': False,
                     'unfolded': True,
                 })
-
+                
+                
                 #====== PAPIIT =================#
 
                 PAPIIT_ids = current_project_ids.filtered(
@@ -246,10 +247,11 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
                         'account_id', '=', PAPIIT_configuration_id.account_id.id), ('move_id.state', '=', 'posted')])
                     account_amount = sum(x.credit - x.debit for x in values)
 
-                budget_stage_ids = self.env['stage'].search(
-                    [('project_id', 'in', PAPIIT_ids.ids)])
+#                 budget_stage_ids = self.env['stage'].search(
+#                     [('project_id', 'in', PAPIIT_ids.ids)])
+                papiit_subprogram_81 = self.env['sub.program'].search([('sub_program','=','81')])
                 program_code_ids = self.env['program.code'].search(
-                    [('stage_id', 'in', budget_stage_ids.ids), ('year.name', '=', str(year))])
+                    [('sub_program_id', 'in', papiit_subprogram_81.ids), ('year.name', '=', str(year))])
 
                 auth_amt = 0
                 exer_amt = 0
@@ -334,10 +336,11 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
                         'account_id', '=', PAPIME_configuration_id.account_id.id), ('move_id.state', '=', 'posted')])
                     account_amount = sum(x.credit - x.debit for x in values)
 
-                budget_stage_ids = self.env['stage'].search(
-                    [('project_id', 'in', PAPIME_ids.ids)])
+#                 budget_stage_ids = self.env['stage'].search(
+#                     [('project_id', 'in', PAPIME_ids.ids)])
+                papime_subprogram_82 = self.env['sub.program'].search([('sub_program','=','82')])
                 program_code_ids = self.env['program.code'].search(
-                    [('stage_id', 'in', budget_stage_ids.ids), ('year.name', '=', str(year))])
+                    [('sub_program_id', 'in', papime_subprogram_82.ids), ('year.name', '=', str(year))])
 
                 auth_amt = 0
                 exer_amt = 0
@@ -423,10 +426,11 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
                         'account_id', '=', INFOCAB_configuration_id.account_id.id), ('move_id.state', '=', 'posted')])
                     account_amount = sum(x.credit - x.debit for x in values)
 
-                budget_stage_ids = self.env['stage'].search(
-                    [('project_id', 'in', INFOCAB_ids.ids)])
+#                 budget_stage_ids = self.env['stage'].search(
+#                     [('project_id', 'in', INFOCAB_ids.ids)])
+                infocab_subprogram_86 = self.env['sub.program'].search([('sub_program','=','86')])
                 program_code_ids = self.env['program.code'].search(
-                    [('stage_id', 'in', budget_stage_ids.ids), ('year.name', '=', str(year))])
+                    [('sub_program_id', 'in', infocab_subprogram_86.ids), ('year.name', '=', str(year))])
 
                 auth_amt = 0
                 exer_amt = 0

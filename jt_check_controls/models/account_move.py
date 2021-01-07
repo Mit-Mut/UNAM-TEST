@@ -37,7 +37,7 @@ class SupplierPaymentRequest(models.Model):
 
     def action_rotated(self):
         self.ensure_one()
-        self.payment_state = 'rotated'
+        self.payment_state = 'registered'
         self.batch_folio = ''
 
     def write(self, vals):
@@ -51,16 +51,31 @@ class SupplierPaymentRequest(models.Model):
     @api.depends('name', 'state')
     def name_get(self):
         res = super(SupplierPaymentRequest, self).name_get()
-        if self.env.context and self.env.context.get('show_folio_name', False):
+        if self.env.context and self.env.context.get('show_name_and_folio_name', False):
             result = []
             for rec in self:
                 if rec.folio:
-                    name = str(rec.folio) or ''
+                    name = ''
+                    if rec.name:
+                        name = rec.name 
+                    name = name + "("+str(rec.folio)+")" or ''
                     result.append((rec.id, name))
                 else:
                     result.append(
                         (rec.id, rec._get_move_display_name(show_ref=True)))
             return result and result or res
+
+        elif self.env.context and self.env.context.get('show_folio_name', False):
+            result = []
+            for rec in self:
+                if rec.folio:
+                    name = rec.folio
+                    result.append((rec.id, name))
+                else:
+                    result.append(
+                        (rec.id, rec._get_move_display_name(show_ref=True)))
+            return result and result or res
+        
         else:
             return res
 

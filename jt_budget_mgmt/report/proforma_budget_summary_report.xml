@@ -21,7 +21,7 @@
                                 background-color: white;
                             }
                         </style>
-
+                        <!-- Column heading -->
                         <center id='tbl_wo'>
                             <h3>Proforma Budget Summary Report</h3>
                             <table class="cust_tbl table table-bordered" width="100%">

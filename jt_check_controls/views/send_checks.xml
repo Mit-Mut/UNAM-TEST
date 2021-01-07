@@ -5,7 +5,7 @@
 			<field name="name">send.checks.form.view</field>
 			<field name="model">send.checks</field>
 			<field name="arch" type="xml">
-				<form create="false" edit="false">
+				<form create="false">
 					<header>
 						<button name="action_reject" type="object" string="Reject" class="oe_highlight"
                                 attrs="{'invisible': [('status', '!=', 'draft')]}"/>

@@ -20,41 +20,52 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from odoo import models, fields, api, _,tools
-from datetime import datetime, timedelta,date
+from odoo import models, fields, api, _, tools
+from datetime import datetime, timedelta, date
 from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT, format_date
-from odoo.exceptions import UserError, ValidationError,Warning
+from odoo.exceptions import UserError, ValidationError, Warning
+
 
 class ExpirationValidityCheck(models.Model):
-    
+
     _name = 'expiration.validity.check'
     _description = 'Expiration Validity Check'
     _auto = False
-    _rec_name='check_no'
-    
-    check_folio_id = fields.Many2one('check.log',"Check number")
-    check_payment_req_id = fields.Many2one('check.payment.req','Check Payment Request')
+    _rec_name = 'check_no'
+
+    check_folio_id = fields.Many2one('check.log', "Check number")
+    checkbook_no = fields.Many2one(related='check_folio_id.checklist_id.checkbook_req_id', string="Checkbook No.")
+    check_payment_req_id = fields.Many2one(
+        'check.payment.req', 'Check Payment Request')
     payment_req_id = fields.Many2one('account.move')
-    payment_name = fields.Char(related='payment_req_id.name',string='Application number')
-    check_no = fields.Integer(related='check_folio_id.folio',string='Check number')
+    payment_name = fields.Char(
+        related='payment_req_id.name', string='Application number')
+    check_no = fields.Integer(
+        related='check_folio_id.folio', string='Check number')
     currency_id = fields.Many2one(related='payment_req_id.currency_id')
-    
+
     dependence_id = fields.Many2one(related='check_folio_id.dependence_id')
-    subdependence_id = fields.Many2one(related='check_folio_id.subdependence_id')
-    
-    partner_id = fields.Many2one(related='payment_req_id.partner_id',string='Beneficiary')
+    subdependence_id = fields.Many2one(
+        related='check_folio_id.subdependence_id')
+
+    partner_id = fields.Many2one(
+        related='payment_req_id.partner_id', string='Beneficiary')
     amount = fields.Monetary(related='payment_req_id.amount_total')
 
-    date_printing = fields.Date(related='check_folio_id.date_printing',string='Check issue date')
-    date_expiration = fields.Date(related='check_folio_id.date_expiration',string='Effective date')
-    
-    status = fields.Selection(related='check_folio_id.status',string='Check status')
-    check_validity = fields.Integer(related='check_folio_id.bank_id.bank_id.check_validity',string='Days of validity')
-    
+    date_printing = fields.Date(
+        related='check_folio_id.date_printing', string='Check issue date')
+    date_expiration = fields.Date(
+        related='check_folio_id.date_expiration', string='Effective date')
+
+    status = fields.Selection(
+        related='check_folio_id.status', string='Check status')
+    check_validity = fields.Integer(
+        related='check_folio_id.bank_id.bank_id.check_validity', string='Days of validity')
+
     #payment_method_name = fields.Char('Payment Name')
-    
+
     def init(self):
-        tools.drop_view_if_exists(self.env.cr,self._table)
+        tools.drop_view_if_exists(self.env.cr, self._table)
         self.env.cr.execute('''
             CREATE OR REPLACE VIEW %s AS (
                 select line.id as id,
@@ -69,18 +80,17 @@ class ExpirationValidityCheck(models.Model):
                 AND am.id=line.payment_req_id 
                 AND cl.status = 'Protected and in transit'
                 AND cl.id = line.check_folio_id
-                            )'''% (self._table) 
-        )    
-    
+                            )''' % (self._table)
+                            )
+
     def action_withdrawn_from_circulation(self):
         for rec in self:
-            today = datetime.today().date() 
+            today = datetime.today().date()
             if rec.date_expiration >= today:
                 raise Warning(_("Aún no expira la protección del cheque"))
-            
+
             if rec.payment_req_id:
                 rec.payment_req_id.payment_state = 'payment_method_cancelled'
             if rec.check_folio_id:
                 rec.check_folio_id.status = 'Withdrawn from circulation'
-                rec.check_payment_req_id.is_withdrawn_circulation = True         
-                    
+                rec.check_payment_req_id.is_withdrawn_circulation = True

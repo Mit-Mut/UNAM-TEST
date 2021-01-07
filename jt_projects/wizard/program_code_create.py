@@ -58,6 +58,11 @@ class ProjectProgramCode(models.TransientModel):
     desc_sub_dependency = fields.Text(
         string='Sub-dependency Description', related="sub_dependency_id.description")
 
+
+
+
+
+
     # Item Relation
     item_id = fields.Many2one(
         'expenditure.item', string='Item')
@@ -143,14 +148,13 @@ class ProjectProgramCode(models.TransientModel):
                                'validated': [('readonly', True)]})
     desc_stage = fields.Text(string='Stage Description',
                              related='stage_id.desc_stage')
-
     # Agreement Relation
     agreement_type_id = fields.Many2one('agreement.type', string='Type of Agreement', states={
                                         'validated': [('readonly', True)]})
-    name_agreement = fields.Text(
-        string='Name type of Agreement', related='agreement_type_id.name_agreement')
+    name_agreement = fields.Char(
+        string='Name type of Agreement', related='agreement_type_id.name')
     number_agreement = fields.Char(
-        string='Agreement number', related='agreement_type_id.number_agreement')
+        string='Agreement number', related='agreement_type_id.number')
 
     @api.constrains('program_code')
     def _check_program_code(self):
@@ -256,3 +260,18 @@ class ProjectProgramCode(models.TransientModel):
         program_code_id = self.env['program.code'].create(vals)
         self.conacyt_project_id.program_code = program_code_id.id
         self.conacyt_project_id.is_code_create = True 
+
+
+    @api.onchange('project_type_id')
+    def set_project_details(self):
+
+        if self.project_type_id and self.project_type_id.project_id:
+            project = self.project_type_id.project_id
+            stage = self.env['stage'].search([('project_id','=',project.id)])
+            if stage:
+                self.stage_id = stage.id      
+
+            agreement_type = self.env['agreement.type'].search([('project_id','=',project.id)])
+            print ("agreement_type ::",agreement_type)
+            if agreement_type:
+                self.agreement_type_id = agreement_type.id

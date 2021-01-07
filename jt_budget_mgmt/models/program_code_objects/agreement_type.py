@@ -31,8 +31,8 @@ class AgreementType(models.Model):
 
     project_id = fields.Many2one(
         'project.project', string='Type of Agreement')
-    name = fields.Text(string='Name', related="project_id.name_agreement")
-    number = fields.Char(string='Number', related="project_id.number_agreement")
+    name = fields.Text(string='Name', )
+    number = fields.Char(string='Number',)
     project_type_identifier = fields.Char(string='Project Type Identifier',
                                           related="project_id.project_type_identifier")
     desc_stage = fields.Text(string='Description', related="project_id.desc_stage")

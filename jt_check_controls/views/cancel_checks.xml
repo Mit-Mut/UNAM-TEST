@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding='utf-8'?>
 <odoo>
-	<data>
-		<record id="cancel_checks_form" model="ir.ui.view">
+    <data>
+        <record id="cancel_checks_form" model="ir.ui.view">
             <field name="name">checklog.form.view</field>
             <field name="model">cancel.checks</field>
             <field name="arch" type="xml">
@@ -16,21 +16,15 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="check_folio"
-                                 attrs="{'readonly': [('status', '!=', 'draft')]}"/>
-                                <field name="check_status"
-                                attrs="{'readonly': [('status', '!=', 'draft')]}"/>
-                                <field name="dependency_id"
-                                attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                                <field name="check_folio" readonly="1"/>
+                                <field name="check_status" readonly="1"/>
+                                <field name="dependency_id" readonly="1"/>
                                 <field name="batch_folio" readonly="1"/>
                             </group>
                             <group>
-                                <field name="bank_id"
-                                attrs="{'readonly': [('status', '!=', 'draft')]}"/>
-                                <field name="bank_account_id"
-                                attrs="{'readonly': [('status', '!=', 'draft')]}"/>
-                                <field name="checkbook_no"
-                                attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                                <field name="bank_id" readonly="1"/>
+                                <field name="bank_account_id" readonly="1"/>
+                                <field name="checkbook_no" readonly="1"/>
                                 <field name="observation"
                                 attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                             </group>
@@ -51,16 +45,16 @@
             <field name="model">cancel.checks</field>
             <field name="arch" type="xml">
                 <tree create="false">
-                    <field name="check_folio"/>
-                    <field name="dependency_id"/>
-                    <field name="check_status"/>
-                    <field name="status"/>
-                    <field name="batch_folio"/>
+                    <field name="check_folio" attrs="{'invisible': [('check_status', 'not in', ['Cancelled','Canceled in custody of Finance'])]}"/>
+                    <field name="dependency_id" attrs="{'invisible': [('check_status', 'not in', ['Cancelled','Canceled in custody of Finance'])]}"/>
+                    <field name="check_status" attrs="{'invisible': [('check_status', 'not in', ['Cancelled','Canceled in custody of Finance'])]}"/>
+                    <field name="status" attrs="{'invisible': [('check_status', 'not in', ['Cancelled','Canceled in custody of Finance'])]}"/>
+                    <field name="batch_folio" attrs="{'invisible': [('check_status', 'not in', ['Cancelled','Canceled in custody of Finance'])]}"/>
                 </tree>
             </field>
         </record>
 
-		<record id="action_cancel_checks" model="ir.actions.act_window">
+        <record id="action_cancel_checks" model="ir.actions.act_window">
             <field name="name">Cancel Checks</field>
             <field name="res_model">cancel.checks</field>
             <field name="view_mode">tree,form</field>
@@ -91,5 +85,5 @@
             <field name="code">action = records.action_request_send_checks()</field>
         </record>
 
-	</data>
+    </data>
 </odoo>

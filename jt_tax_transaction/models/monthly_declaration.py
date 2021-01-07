@@ -66,15 +66,28 @@ class MonthlyDeclaration(models.Model):
         ('folio_uniq', 'unique(folio)', 'The folio must be unique.')]
 
 
+    @api.model 
+    def create(self, values):            
+        if values.get('state'):    
+            values['state'] = 'declared'     
+        return super(MonthlyDeclaration, self ).create (values)
+
     def action_requested(self):
-        self.ensure_one()
         self.state = 'requested'
 
-    @api.model
-    def create(self,vals):
-        vals['state'] = 'declared'
-        return super(MonthlyDeclaration, self).create(vals)
 
-    def write(self,vals):
-        vals['state'] = 'declared'
-        return super(MonthlyDeclaration, self).write(vals)
+    # def generate_request(self):
+    #     self.state = 'requested'
+    #     record = {
+    #         'invoice_date': self.filling_date,
+    #     }
+    #     self.env['account.move'].create(record)
+
+
+    # def write(self,values):
+    #     record = super(MonthlyDeclaration, self).write(values)
+    #     if 'state' in values and values['state'] == 'requested':
+    #         self.env['account.move'].create({
+    #             'invoice_date': self.filling_date,
+    #         })
+    #     return record

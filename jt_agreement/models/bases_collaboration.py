@@ -1575,6 +1575,7 @@ class Project(models.Model):
         for rec in self:
             name = rec.name
             if rec.number_agreement and self.env.context and self.env.context.get('from_agreement', True):
+               
                 name = rec.number_agreement
             result.append((rec.id, name))
         return result

@@ -147,6 +147,8 @@
             print_report_name="object.name"
             paperformat="jt_agreement.paperformat_bases_collaboration"
             menu="False"
+
         />
+
     </data>
 </odoo>

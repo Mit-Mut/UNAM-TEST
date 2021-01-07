@@ -284,16 +284,29 @@ class GenerateCancelCheckLayout(models.TransientModel):
         self.file_name = file_name
             
     def action_generate(self):
-        for check in self.reissue_ids:
-
-            if check.state != 'approved' or not check.type_of_request != 'check_cancellation':
-                raise ValidationError(_('Confirm that the status of all selected checks is "Approved" and Type of Request is "Check Cancellation", therefore no '
+        for check in self.reissue_ids:            
+            if check.state != 'approved':
+                raise ValidationError(_('Confirm that the status of all selected checks is "Approved", therefore no '
                                         'layout can be generated until the status is not Approved'))
-            
-            if check.bank_id and check.bank_id.name.upper() != self.layout.upper():
+
+            if check.type_of_request != 'check_cancellation':
+                raise ValidationError(_('Confirm that the all selected checks Type of Request is "Check Cancellation", therefore no '
+                                        'layout can be generated until the Type of Request is not Check Cancellation'))
+
+            if check.status != 'Cancelled':
+                raise ValidationError(_('Confirm that all selected checks Status is "Cancelled", therefore no '
+                                        'layout can be generated until the Check Status is not Cancelled'))
+
+            if not check.bank_id:
+                raise ValidationError(_('Please select Payment Issuing Bank into records'))
+
+            if check.bank_id and not check.bank_id.bank_id:
+                raise ValidationError(_('Please select Bank into Payment Issuing Bank'))
+
+            if check.bank_id.bank_id.name.upper() != self.layout.upper():
                 raise ValidationError(_('The selected layout does NOT match the bank of the selected records" and no '
                                         'layout can be generated until the correct bank is selected.'))
-
+            
         if self.layout == 'Banamex':
             self.banamex_cancel_check_file_format()
         elif self.layout == 'BBVA Bancomer Net Cash':

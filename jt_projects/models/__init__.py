@@ -1,4 +1,5 @@
 from . import rejection_checks
+from . import agreement_type
 from . import project_registry
 from . import request_account
 from . import request_transfer

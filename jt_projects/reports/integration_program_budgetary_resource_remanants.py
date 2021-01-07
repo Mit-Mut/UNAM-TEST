@@ -267,10 +267,11 @@ class IntegrationOfBudgetResourceRemanats(models.AbstractModel):
                     lambda x: x.PAPIIT_project_type == 'PAPIIT' and x.project_status == 'open')
                 PAPIIT_auth_amt = 0
 
-                budget_stage_ids = self.env['stage'].search(
-                    [('project_id', 'in', PAPIIT_ids.ids)])
+#                 budget_stage_ids = self.env['stage'].search(
+#                     [('project_id', 'in', PAPIIT_ids.ids)])
+                papiit_subprogram_81 = self.env['sub.program'].search([('sub_program','=','81')])
                 program_code_ids = self.env['program.code'].search(
-                    [('stage_id', 'in', budget_stage_ids.ids), ('year.name', '=', str(year))])
+                    [('sub_program_id', 'in', papiit_subprogram_81.ids), ('year.name', '=', str(year))])
 
                 #program_code_ids = PAPIIT_ids.mapped('program_code')
                 if program_code_ids:
@@ -295,10 +296,12 @@ class IntegrationOfBudgetResourceRemanats(models.AbstractModel):
                     lambda x: x.PAPIIT_project_type == 'PAPIME' and x.project_status == 'open')
                 PAPIME_auth_amt = 0
 
-                budget_stage_ids = self.env['stage'].search(
-                    [('project_id', 'in', PAPIME_ids.ids)])
+#                 budget_stage_ids = self.env['stage'].search(
+#                     [('project_id', 'in', PAPIME_ids.ids)])
+                papime_subprogram_82 = self.env['sub.program'].search([('sub_program','=','82')])
                 program_code_ids = self.env['program.code'].search(
-                    [('stage_id', 'in', budget_stage_ids.ids), ('year.name', '=', str(year))])
+                    [('sub_program_id', 'in', papime_subprogram_82.ids), ('year.name', '=', str(year))])
+
 
 #                program_code_ids = PAPIME_ids.mapped('program_code')
                 if program_code_ids:
@@ -323,12 +326,12 @@ class IntegrationOfBudgetResourceRemanats(models.AbstractModel):
 
                 INFOCAB_auth_amt = 0
 
-                budget_stage_ids = self.env['stage'].search(
-                    [('project_id', 'in', INFOCAB_ids.ids)])
+#                 budget_stage_ids = self.env['stage'].search(
+#                     [('project_id', 'in', INFOCAB_ids.ids)])
+                infocab_subprogram_86 = self.env['sub.program'].search([('sub_program','=','86')])
                 program_code_ids = self.env['program.code'].search(
-                    [('stage_id', 'in', budget_stage_ids.ids), ('year.name', '=', str(year))])
+                    [('sub_program_id', 'in', infocab_subprogram_86.ids), ('year.name', '=', str(year))])
 
-#                program_code_ids = INFOCAB_ids.mapped('program_code')
                 if program_code_ids:
                     self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NOT TRUE and start_date >= %s and end_date <= %s", (tuple(
                         program_code_ids.ids), start, end))

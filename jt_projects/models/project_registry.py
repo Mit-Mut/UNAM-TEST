@@ -45,7 +45,8 @@ class ProjectRegistry(models.Model):
 
     is_code_create = fields.Boolean('Code Created',copy=False,default=False)
     
-    agreement_type_id = fields.Many2one("agreement.type", "Agreement Type")
+    agreement_type = fields.Char("Agreement Type", related="base_id.agreement_type_id.code")
+    agreement_type_id = fields.Many2one("Agreement-Type", related="base_id.agreement_type_id")
 
     resource_type = fields.Selection(
         [('R', 'R (Remnant)'), ('P', 'P (Budget)')], string="Resource Type")
@@ -287,6 +288,14 @@ class ProjectRegistry(models.Model):
         }
 
     def create_program_code(self):
+
+        #Creating master of agreement catelog that is used in program code
+        agreement_type_obj = self.env['agreement.type']
+        agreement = agreement_type_obj.search([('project_id','=',self.id),
+                                                ('base_id','=',self.base_id.id)], limit=1)
+        if not agreement:
+            self.env['agreement.type'].create({'project_id':self.id,'base_id':self.base_id.id})
+
         stage_id = False
         type_id = False
         stage = self.env['stage'].search([('project_id','=',self.id)],limit=1)

@@ -218,7 +218,7 @@ class IntegrationOfBudgetResource(models.AbstractModel):
                     'id': 'hierarchy_col' + str(stage.id) + str(year),
                     'name': 'SUBPROGRAMAS',
                     'columns': [
-                            {'name': 'ASIGNADOS Y AUTHORIZADOS ' +
+                            {'name': _('ASIGNADOS Y AUTHORIZADOS ') +
                                 stage.name + "(" + year + ")"},
                         {'name': 'DISTRIBUIDOS ETAPA ' +
                             stage.name + "(" + year + ")"},
@@ -795,7 +795,7 @@ class IntegrationOfBudgetResource(models.AbstractModel):
                 "jt_projects.external_int_of_project_budget_resources", values=rcontext)
             # Ensure that headers and footer are correctly encoded
             header = header.decode('utf-8')
-            spec_paperformat_args = {}
+            spec_paperformat_args = {'data-report-margin-top': 40, 'data-report-header-spacing': 40}
             # Default header and footer in case the user customized
             # web.external_layout and removed the header/footer
             headers = header.encode()

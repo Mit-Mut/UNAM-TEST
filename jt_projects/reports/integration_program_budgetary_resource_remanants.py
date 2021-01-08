@@ -414,7 +414,7 @@ class IntegrationOfBudgetResourceRemanats(models.AbstractModel):
 
                 lines.append({
                     'id': 'hierarchy_assign' + str(stage.id) + str(year),
-                    'name': 'PROYECTOS PRESUPUESTALED DESACTIVADOS A SOLICITUD DE LA DGAPA',
+                    'name': _('PROYECTOS PRESUPUESTALED DESACTIVADOS A SOLICITUD DE LA DGAPA'),
                     'columns': [
                         self._format({'name': PAPIIT_des_auth_amt},
                                      figure_type='float'),
@@ -444,7 +444,7 @@ class IntegrationOfBudgetResourceRemanats(models.AbstractModel):
 
                 lines.append({
                     'id': 'hierarchy_assign' + str(stage.id) + str(year),
-                    'name': 'DISTRIBUCIÓN PRESUPUESTAL AL ' + str(options.get('date', {}).get('string', '')),
+                    'name': 'DISTRIBUCIÓN PRESUPUESTAL  ' + str(options.get('date', {}).get('string', '')),
                     'columns': [
                         self._format({'name': PAPIIT_dist_auth_amt},
                                      figure_type='float'),
@@ -592,7 +592,7 @@ class IntegrationOfBudgetResourceRemanats(models.AbstractModel):
 
                 lines.append({
                     'id': 'hierarchy_total' + str(stage.id) + str(year),
-                    'name': 'DISTRIBUCIÓN REMANTES ETAPA AL ' + options.get('date', {}).get('string', ' '),
+                    'name': 'DISTRIBUCIÓN REMANTES ETAPA ' + options.get('date', {}).get('string', ' '),
                     'columns': [
                         {'name': ''},
                         self._format(
@@ -804,7 +804,7 @@ class IntegrationOfBudgetResourceRemanats(models.AbstractModel):
                 "jt_projects.external_int_of_project_budget_resources", values=rcontext)
             # Ensure that headers and footer are correctly encoded
             header = header.decode('utf-8')
-            spec_paperformat_args = {}
+            spec_paperformat_args = {'data-report-margin-top': 40, 'data-report-header-spacing': 40}
             # Default header and footer in case the user customized
             # web.external_layout and removed the header/footer
             headers = header.encode()

@@ -893,3 +893,19 @@ class ControlAssignedAmountsLines(models.Model):
             for line in self:
                 line.available = vals.get('assigned')
         return super(ControlAssignedAmountsLines, self).write(vals)
+
+    @api.constrains('start_date')
+    def _check_start_date(self):
+        for rec in self:
+            if rec.start_date and rec.assigned_amount_id and rec.assigned_amount_id.budget_id:
+                if rec.assigned_amount_id.budget_id.from_date:
+                    if rec.assigned_amount_id.budget_id.from_date.year != rec.start_date.year: 
+                        raise ValidationError('Quarterly Seasonality and budget year should not different!')
+
+    @api.constrains('end_date')
+    def _check_end_date(self):
+        for rec in self:
+            if rec.end_date and rec.assigned_amount_id and rec.assigned_amount_id.budget_id:
+                if rec.assigned_amount_id.budget_id.to_date:
+                    if rec.assigned_amount_id.budget_id.to_date.year != rec.end_date.year: 
+                        raise ValidationError('Quarterly Seasonality and budget year should not different!')

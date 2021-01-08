@@ -80,7 +80,16 @@ class ProjectRegistry(models.Model):
 
     base_id = fields.Many2one('bases.collaboration','Type of Agreement')
 
-    
+
+    @api.model
+    def create(self, vals):
+        res = super(ProjectRegistry,self).create(vals)
+        for r in res:
+            if r.base_id:
+                budget_type_agreement_id = self.env['agreement.type'].search([('project_id','=',r.id)],limit=1)
+                if budget_type_agreement_id:
+                    budget_type_agreement_id.base_id = r.base_id.id 
+        return res 
     @api.onchange('custom_stage_id')
     def onchange_custom_stage_id(self):
         if self.custom_stage_id:

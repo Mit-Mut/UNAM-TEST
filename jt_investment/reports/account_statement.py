@@ -72,7 +72,7 @@ class InvestmentAccountStatement(models.AbstractModel):
             {'name': _('Saldo Inicial')},
             {'name': _('Incrementos')},
             {'name': _('Retiros')},
-            {'name': _('Saldo Final')},
+             {'name': _('Saldo Final')},
         ]
 
     def _format(self, value, figure_type,digit):

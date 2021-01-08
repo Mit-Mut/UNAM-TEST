@@ -86,3 +86,5 @@ class SendChecksLines(models.Model):
 
     check_log_id = fields.Many2one('check.log', string="Check Folio")
     dependency_id = fields.Many2one('dependency', string="Dependency")
+    checkbook_no = fields.Many2one(related='check_log_id.checklist_id.checkbook_req_id', string="Checkbook No.")
+    

@@ -72,6 +72,8 @@ class BankBalanceCheck(models.TransientModel):
             result = rec.invoice_payment_term_id.compute(rec.amount_total, rec.invoice_date, rec.currency_id)
             if result:
                 payment_date = result[0][0]
+        elif not rec.invoice_payment_term_id and rec.invoice_date_due:
+            payment_date = rec.invoice_date_due
         elif rec.invoice_date and not rec.invoice_payment_term_id:
             payment_date = rec.get_patment_date(30, rec.invoice_date)
         payment_request_type = False

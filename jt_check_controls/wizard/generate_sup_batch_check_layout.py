@@ -45,7 +45,7 @@ class GenerateSupplierCheckLayout(models.TransientModel):
                 file_data += '0001'
                 file_data += str(self.env['ir.sequence'].next_by_code('sup.batch.banamex.layout'))
                 file_data += '000000000000'
-                file_data += '\n'
+                file_data += '\r\n'
                 total_amt = 0
                 for line in batch.payment_req_ids.filtered(lambda x: x.selected == True and \
                                                          x.check_status == 'Delivered'):
@@ -63,7 +63,7 @@ class GenerateSupplierCheckLayout(models.TransientModel):
                     file_data += str(line_amt[0]).zfill(12)
                     file_data += str(line_amt[1]) if len(str(line_amt[1])) == 2 else str(line_amt[1]) + '0'
                     file_data += '00000000000'
-                    file_data += '\n'
+                    file_data += '\r\n'
                     total_amt += line.amount_to_pay
                 file_data += '03'
                 file_data += str(len(batch.payment_req_ids.filtered(lambda x: x.selected == True and \
@@ -90,7 +90,7 @@ class GenerateSupplierCheckLayout(models.TransientModel):
                 today_date = datetime.date.today().strftime("%Y-%m-%d")
                 file_data += str(today_date)
                 file_data += '/'
-                file_data += "\n"
+                file_data += "\r\n"
                 for line in batch.payment_req_ids.filtered(lambda x: x.selected == True and \
                                                                      x.check_status == 'Delivered'):
                     file_data += str(line.check_folio_id.folio).zfill(7)
@@ -99,7 +99,7 @@ class GenerateSupplierCheckLayout(models.TransientModel):
                     file_data += '/'
                     file_data += str(round(line.amount_to_pay,2)).replace('.','').zfill(15)
                     file_data += '/'
-                    file_data += "\n"
+                    file_data += "\r\n"
             elif self.layout == 'Santander':
                 file_name = 'santander.txt'
                 for line in batch.payment_req_ids.filtered(lambda x: x.selected == True and \
@@ -125,17 +125,17 @@ class GenerateSupplierCheckLayout(models.TransientModel):
                     payment_deadline = datetime.date.today() + relativedelta(days=check_protection_term)
                     payment_deadline = payment_deadline.strftime("%d-%m-%Y")
                     file_data += str(payment_deadline).replace('-','/')
-                    file_data += "\n"
+                    file_data += "\r\n"
             elif self.layout == 'Inbursa':
                 file_name = 'inbursa.txt'
                 total_rec = len(batch.payment_req_ids.filtered(lambda x: x.selected == True and \
                                                          x.check_status == 'Delivered'))
                 file_data += str(total_rec).zfill(5)
-                file_data += ' '
+                file_data += '        '
                 total_amt = sum(line.amount_to_pay for line in batch.payment_req_ids.filtered(lambda x: x.selected == True and \
                                                          x.check_status == 'Delivered'))
                 file_data += ('%.2f'%total_amt).zfill(15)
-                file_data += '\n'
+                file_data += '\r\n'
                 for line in batch.payment_req_ids.filtered(lambda x: x.selected == True and \
                                                          x.check_status == 'Delivered'):
                     today_date = datetime.date.today()
@@ -145,18 +145,18 @@ class GenerateSupplierCheckLayout(models.TransientModel):
                     file_data +=str(today_date.month).zfill(2)
                     file_data +=str(today_date.day).zfill(2)
                     
-                    file_data += ' '
+                    file_data += '        '
                     file_data += batch.payment_issuing_bank_id.bank_account_id.acc_number if \
                         batch.payment_issuing_bank_id.bank_account_id else ''
-                    file_data += ' '
+                    file_data += '        '
                     file_data += str(line.check_folio_id.folio).zfill(13)
-                    file_data += ' '
+                    file_data += '        '
                     file_data += line.payment_req_id.partner_id.name.ljust(45) if line.payment_req_id.partner_id else ''
-                    file_data += ' '
+                    file_data += '        '
                     file_data += ('%.2f'%line.amount_to_pay).zfill(15)
-                    file_data += '  '
+                    file_data += '        '
                     file_data += batch.description_layout if batch.description_layout else ''
-                    file_data += '\n'
+                    file_data += '\r\n'
             elif self.layout == 'Scotiabank':
                 file_name = 'scotiabank.txt'
                 file_data += 'H'
@@ -164,7 +164,7 @@ class GenerateSupplierCheckLayout(models.TransientModel):
                 file_data += str(today_date).replace('-', '')
                 file_data += ''.ljust(140)
                 file_data += '1'
-                file_data += '\n'
+                file_data += '\r\n'
                 for line in batch.payment_req_ids.filtered(lambda x: x.selected == True and \
                                                                      x.check_status == 'Delivered'):
                     file_data += 'A'
@@ -176,16 +176,25 @@ class GenerateSupplierCheckLayout(models.TransientModel):
                     file_data += str(bank.bank_account_id.acc_number).zfill(10) if bank.bank_account_id and \
                         bank.bank_account_id.acc_number else ''
                     file_data += str(line.check_folio_id.folio).zfill(10)
-                    file_data += ('%.2f'%line.amount_to_pay).zfill(15)
+#                    file_data += ('%.2f'%line.amount_to_pay).zfill(15)
+
+                    #====== Amount Data =========
+                    #amount = round(line.amount_to_pay, 2)
+                    amount = "%.2f" % line.amount_to_pay            
+                    amount = str(amount).split('.')
+                    file_data +=str(amount[0]).zfill(13)
+                    file_data +=str(amount[1])
+                    
                     file_data += line.payment_req_id.partner_id.name.ljust(60) if line.payment_req_id.partner_id else ''
                     file_data += ''.ljust(49)
                     file_data += '3'
-                    file_data += '\n'
+                    file_data += '\r\n'
                 file_data += 'P'
                 file_data += str(len(batch.payment_req_ids.filtered(lambda x: x.selected == True and \
                                                                      x.check_status == 'Delivered'))).zfill(9)
                 sum_of_check_folio = sum(line.check_folio_id.folio for line in batch.payment_req_ids.filtered(lambda x: x.selected == True and \
                                                          x.check_status == 'Delivered'))
+                file_data += str(batch.checkbook_req_id.checkbook_no).zfill(15)
                 file_data += str(sum_of_check_folio).zfill(15)
                 total = sum(line.amount_to_pay for line in batch.payment_req_ids.filtered(lambda x: x.selected == True \
                                                             and x.check_status == 'Delivered'))
@@ -195,13 +204,13 @@ class GenerateSupplierCheckLayout(models.TransientModel):
                 file_data += '0'.zfill(18)
                 file_data += str(len(batch.payment_req_ids.filtered(lambda x: x.selected == True and \
                                                                               x.check_status == 'Delivered'))).zfill(10)
-                file_data += str(batch.checkbook_req_id.checkbook_no).zfill(15)
+                
                 total = sum(line.amount_to_pay for line in batch.payment_req_ids.filtered(lambda x: x.selected == True \
                                                                         and x.check_status == 'Delivered'))
                 file_data += str(round(total, 2)).replace('.','').zfill(18)
                 file_data += '                     '
                 file_data += '5'
-                file_data += '\n'
+                file_data += '\r\n'
 
             gentextfile = base64.b64encode(bytes(file_data, 'utf-8'))
             self.file_data = gentextfile

@@ -70,6 +70,7 @@
         'views/import_payroll_check_issue.xml',
         'reports/delivery_ticket.xml',
         'reports/payroll_adjustment.xml',
+        'wizard/reissue_reject_reason.xml',
 
     ],
     'demo': [

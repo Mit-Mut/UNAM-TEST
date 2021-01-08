@@ -298,6 +298,21 @@
         sequence="1"
         action="action_proforma_budget_summary"/>
 
+	<!-- Details budget summary -->
+    <record id="action_details_budget_summary_report" model="ir.actions.client">
+        <field name="name">Details Budget Summary</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'model': 'details.budget.summary.report.onscreen'}" />
+    </record>
+
+    
+    <menuitem
+        id="menu_details_budget_summary_report"
+        name="Details Budget Summary"
+        parent="menu_reports"
+        sequence="1"
+        action="action_details_budget_summary_report"/>
+
     <menuitem
         id="request_summary_report"
         name="Response Report"

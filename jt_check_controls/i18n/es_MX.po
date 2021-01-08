@@ -2156,6 +2156,7 @@ msgstr "Presentado"
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_2_template
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_blank_req_check
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_check_registration
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_header_request_field
 msgid "TREASURY"
 msgstr "TESORERÍA"
 

@@ -63,7 +63,7 @@
                                             </div>
                                             <div class="col-6" align="left" style="text-align:right">
                                                 <b><span t-esc="o.get_date()"/> <br/>
-                                                    R.F.C.: <span t-esc="line.payment_req_id.ref"/></b>
+                                                    R.F.C.: <span t-esc="line.payment_req_id.rfc"/></b>
                                             </div>
                                         </div>
                                         <br/>
@@ -129,7 +129,15 @@
                                         <table style="text-align:center" width="100%">
                                             <tbody>
                                                 <tr>
-                                                    
+                                                    <div class="row">
+                                                        <div class="col-6" align="left" style="margin-left:5px;">
+                                                            <t t-if="line.payment_req_id">
+                                                            <b><span t-esc="line.payment_req_id.partner_id.name"/></b>
+                                                            </t>
+                                                        </div>
+                                                        <div class="col-6" align="left" style="text-align:right">
+                                                        </div>
+                                                    </div>
                                                     <td width="33%">
                                                          <t t-if="line.payment_req_id">
                                                             <span t-esc="line.payment_req_id.name"/>

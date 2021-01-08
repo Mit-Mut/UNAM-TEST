@@ -205,7 +205,7 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
 
                 lines.append({
                     'id': 'hierarchy_col_2' + str(stage.id) + str(year),
-                    'name': 'RESOURCES STAGE ' + stage.name + "(" + year + ")",
+                    'name': _('RESOURCES STAGE ') + stage.name + "(" + year + ")",
                     'columns': [
                             {'name': ''},
                     ],
@@ -744,7 +744,8 @@ class IntegrationOfUPARemainingResource(models.AbstractModel):
                 "jt_projects.external_int_of_project_budget_resources", values=rcontext)
             # Ensure that headers and footer are correctly encoded
             header = header.decode('utf-8')
-            spec_paperformat_args = {}
+            #spec_paperformat_args = {}
+            spec_paperformat_args = {'data-report-margin-top': 40, 'data-report-header-spacing': 40}
             # Default header and footer in case the user customized
             # web.external_layout and removed the header/footer
             headers = header.encode()

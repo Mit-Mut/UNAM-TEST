@@ -9,7 +9,7 @@ class GenerateCancelCheckLayout(models.TransientModel):
     _name = 'generate.cancel.check.layout'
     _description = 'Generate Cancel Check Layout'
 
-    layout = fields.Selection([('Banamex', 'Banamex'), ('BBVA Bancomer Net Cash', 'BBVA Bancomer Net Cash'),
+    layout = fields.Selection([('Banamex', 'Banamex'), ('BBVA Bancomer', 'BBVA Bancomer'),
                                 ('Santander', 'Santander')], string="Layout")
     file_name = fields.Char('Filename')
     file_data = fields.Binary('Download')
@@ -21,10 +21,19 @@ class GenerateCancelCheckLayout(models.TransientModel):
         
         #===Transaction Type ====#
         file_data += '01'
-        #===Branch Account Number ====#
-        file_data += '0650'
+        branch_no = '0000'
+        if self.reissue_ids:
+            check = self.reissue_ids[0]
+            
+        if check.bank_id and check.bank_id.branch_number:
+            branch_no = check.bank_id.branch_number.zfill(4)
+        file_data += branch_no
         #===Destination Account ====#
-        file_data += '0000000000007274674'
+        bank_account = '00000000000000000000'
+        if check.bank_account_id and check.bank_account_id.acc_number:
+            bank_account = check.bank_account_id.acc_number.zfill(20)
+             
+        file_data += bank_account
         #===Client ====#
         file_data += '000008505585'
         #===File Format ====#
@@ -33,7 +42,7 @@ class GenerateCancelCheckLayout(models.TransientModel):
         file_data += '000001'
         #===Future use ====#
         file_data += '00000000000'
-        file_data +="\n"
+        file_data +="\r\n"
         
         total_rec = len(self.reissue_ids)
         total_amount = 0
@@ -42,9 +51,16 @@ class GenerateCancelCheckLayout(models.TransientModel):
             #===Transaction Type ====#
             file_data += '02'
             #===Branch Account Number ====#
-            file_data += '0650'
+            branch_no = '0000'
+            if check.bank_id and check.bank_id.branch_number:
+                branch_no = check.bank_id.branch_number.zfill(4)
+            file_data += branch_no
             #===Destination Account ====#
-            file_data += '0000000000007274674'
+            bank_account = '00000000000000000000'
+            if check.bank_account_id and check.bank_account_id.acc_number:
+                bank_account = check.bank_account_id.acc_number.zfill(20)
+                 
+            file_data += bank_account
             
             temp_log = ''
             if check.check_log_id and check.check_log_id.folio:
@@ -66,7 +82,7 @@ class GenerateCancelCheckLayout(models.TransientModel):
             total_amount += check.check_amount
             #=====Future use=========#
             file_data += '0000000000'
-            file_data +="\n"
+            file_data +="\r\n"
         
         #=======TRAILER =======#
         
@@ -89,7 +105,7 @@ class GenerateCancelCheckLayout(models.TransientModel):
 
     def BBVA_cancel_check_file_format(self):
         file_data = ''
-        file_name = 'BBVA Bancomer Net Cash.txt'
+        file_name = 'BBVA Bancomer.txt'
         
         #====== Number of account ==#
         file_data += '1/'
@@ -98,7 +114,7 @@ class GenerateCancelCheckLayout(models.TransientModel):
         if self.reissue_ids and self.reissue_ids[0].bank_account_id:
             bank_account = self.reissue_ids[0].bank_account_id.acc_number
             
-        bank_account.zfill(18)
+        file_data += bank_account.zfill(18)
         file_data += '/'
         total_rec = len(self.reissue_ids)
         total_amount = sum(x.check_amount for x in self.reissue_ids) 
@@ -120,8 +136,8 @@ class GenerateCancelCheckLayout(models.TransientModel):
         file_data +=str(currect_time.year) + "-" 
         file_data +=str(currect_time.month).zfill(2) + "-"
         file_data +=str(currect_time.day).zfill(2)
-        
-        file_data += '\n'        
+        file_data += '/'
+        file_data += '\r\n'        
                
         for check in self.reissue_ids:
             temp_log = ''
@@ -141,7 +157,8 @@ class GenerateCancelCheckLayout(models.TransientModel):
             amount = str(amount).split('.')
             file_data +=str(amount[0]).zfill(13)
             file_data +=str(amount[1])
-            file_data += '\n'
+            file_data += '/'
+            file_data += '\r\n'
             
         gentextfile = base64.b64encode(bytes(file_data, 'utf-8'))
         self.file_data = gentextfile
@@ -169,7 +186,7 @@ class GenerateCancelCheckLayout(models.TransientModel):
         #===== Key movement =====#
         file_data += '1'
 
-        file_data += '\n'
+        file_data += '\r\n'
         
         total_amount = 0
         
@@ -221,7 +238,7 @@ class GenerateCancelCheckLayout(models.TransientModel):
             #======= Key Movement=====
             file_data += '3'
             
-            file_data += '\n'
+            file_data += '\r\n'
         
         #====Trailer========#
         
@@ -309,7 +326,7 @@ class GenerateCancelCheckLayout(models.TransientModel):
             
         if self.layout == 'Banamex':
             self.banamex_cancel_check_file_format()
-        elif self.layout == 'BBVA Bancomer Net Cash':
+        elif self.layout == 'BBVA Bancomer':
             self.BBVA_cancel_check_file_format()
         elif self.layout == 'Santander':
             self.santander_cancel_check_file_format()

@@ -476,3 +476,32 @@ msgstr ""
 "                        <br/>\n"
 "                        <span style=\"font-size:12px;\">INTEGRACIÓN DE RECURSOS REMANENTES POR PROGRAMA PAPIIT, PAPIME, INFOCAB</span>\n"
 "                        <br/>"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/remaining_resources.py:0
+#: code:addons/jt_projects/reports/upa_remaining_resources.py:0
+#: model:ir.actions.client,name:jt_projects.action_upa_resource_remaining_config
+#: model:ir.model,name:jt_projects.model_jt_projects_integration_remaining_resources
+#: model:ir.model,name:jt_projects.model_jt_projects_upa_papiit_remaining_resources
+#: model:ir.model,name:jt_projects.model_remaining_resource
+#, python-format
+msgid "Integration of remaining resources"
+msgstr "INTEGRACIÓN DE RECURSOS REMANENTES"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/integration_of_project_budget_resources.py:0
+#, python-format
+msgid "ASIGNADOS Y AUTHORIZADOS "
+msgstr "ASIGNADOS Y AUTORIZADOS "
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/integration_program_budgetary_resource_remanants.py:0
+#, python-format
+msgid "PROYECTOS PRESUPUESTALED DESACTIVADOS A SOLICITUD DE LA DGAPA"
+msgstr "PROYECTOS PRESUPUESTALES DESACTIVADOS A SOLICITUD DE LA DGAPA"
+
+#. module: jt_projects
+#: code:addons/jt_projects/reports/upa_remaining_resources.py:0
+#, python-format
+msgid "RESOURCES STAGE "
+msgstr "RECURSOS ETAPA "

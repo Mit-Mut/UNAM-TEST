@@ -125,6 +125,18 @@ class ReissueOfChecks(models.Model):
             self.move_id.cancel_payment_method()
                 
     def action_reject(self):
+        return {
+            'name': _('Reject Reason'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': False,
+            'res_model': 'reissue.reject.reason.wizard',
+            'domain': [],
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {'default_reissue_checks_id': self.id},
+        }
+    def action_set_reject(self):
         self.state = 'rejected'
 
     def action_layout_check_cancel(self):

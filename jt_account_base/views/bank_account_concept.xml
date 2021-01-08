@@ -6,7 +6,7 @@
             <field name="name">bank.account.concept.tree.view</field>
             <field name="model">bank.account.concept</field>
             <field name="arch" type="xml">
-            	<tree>
+            	<tree delete="0">
          				<field name="name"/>
          				<field name="bank_account_id"/>
             	</tree>
@@ -16,7 +16,7 @@
             <field name="name">bank.account.concept.view</field>
             <field name="model">bank.account.concept</field>
              <field name="arch" type="xml">
-             	<form>	
+             	<form delete="0">	
              		<group>
              			<group>
              				<field name="name" required="1"/>

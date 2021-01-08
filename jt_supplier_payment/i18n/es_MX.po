@@ -429,7 +429,7 @@ msgstr ""
 #. module: jt_supplier_payment
 #: model:ir.model.fields.selection,name:jt_supplier_payment.selection__account_move__payment_state__approved_payment
 msgid "Approved for payment"
-msgstr "Aprobado para pago"
+msgstr "Aprobada para pago"
 
 #. module: jt_supplier_payment
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_bank_transfer_request__area_req_transfer
@@ -648,7 +648,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:jt_supplier_payment.view_payment_declined_wizard
 #, python-format
 msgid "Cancel"
-msgstr "Cancelar"
+msgstr "Cancelada"
 
 #. module: jt_supplier_payment
 #: model:ir.model.fields.selection,name:jt_supplier_payment.selection__account_payment__payment_state__cancelled
@@ -1552,7 +1552,7 @@ msgstr ""
 #. module: jt_supplier_payment
 #: model:ir.model.fields.selection,name:jt_supplier_payment.selection__account_move__payment_state__paid
 msgid "Paid"
-msgstr "Pagado"
+msgstr "Pagada"
 
 #. module: jt_supplier_payment
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_generate_batch_sheet__payment_type
@@ -1859,7 +1859,7 @@ msgstr "Registro"
 #. module: jt_supplier_payment
 #: model:ir.model.fields.selection,name:jt_supplier_payment.selection__account_move__payment_state__registered
 msgid "Registered"
-msgstr "Registrado"
+msgstr "Registrada"
 
 #. module: jt_supplier_payment
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_payment_declined_wizard__is_reject
@@ -1872,7 +1872,7 @@ msgstr "Rehcazar"
 #: model:ir.model.fields.selection,name:jt_supplier_payment.selection__bank_transfer_request__state__rejected
 #: model_terms:ir.ui.view,arch_db:jt_supplier_payment.inherited_view_account_payment_search
 msgid "Rejected"
-msgstr "Rechazado"
+msgstr "Registrada"
 
 #. module: jt_supplier_payment
 #: model:ir.model.fields.selection,name:jt_supplier_payment.selection__account_payment__jp_charges__remitter

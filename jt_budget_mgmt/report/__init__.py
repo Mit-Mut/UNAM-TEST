@@ -22,3 +22,4 @@
 ##############################################################################
 from . import proforma_budget_summary_report
 from . import total_payment_amounts
+from . import detail_budget_summary_report

@@ -4561,3 +4561,23 @@ msgstr ""
 #: model:ir.model.fields.selection,name:jt_investment.selection__maturity_report__rrule_type__yearly
 msgid "yearly"
 msgstr "anual"
+
+#. module: jt_income
+#: model_terms:ir.ui.view,arch_db:jt_income.inherited_account_journal_form_view
+msgid "Estimate Income"
+msgstr "Ingreso Estimado"
+
+#. module: jt_income
+#: model_terms:ir.ui.view,arch_db:jt_income.inherited_account_journal_form_view
+msgid "Income to run"
+msgstr "Ingreso por Ejecutar"
+
+#. module: jt_income
+#: model_terms:ir.ui.view,arch_db:jt_income.inherited_account_journal_form_view
+msgid "Accrued Income"
+msgstr "Ingreso Acumulado"
+
+#. module: jt_income
+#: model_terms:ir.ui.view,arch_db:jt_income.inherited_account_journal_form_view
+msgid "Recover Income"
+msgstr "Ingreso Recaudado"

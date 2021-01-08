@@ -316,7 +316,7 @@ class IntegrationOfRemnants(models.AbstractModel):
 
                 lines.append({
                     'id': 'hierarchy_credit' + str(stage.id) + str(year),
-                    'name': 'INTEGRAR A PROYECTOS MES DE ' + month_name,
+                    'name': 'DEVOLUCIÓN DE RECURSOS NO EJERCIDOS PENDIENTES DE INTEGRAR A PROYECTOS MES DE ' + month_name,
                     'columns': [
                         self._format({'name': PAPIIT_credit},
                                      figure_type='float'),
@@ -569,7 +569,7 @@ class IntegrationOfRemnants(models.AbstractModel):
                 "jt_projects.external_integration_of_remnants_by_papiit_papime_infocab", values=rcontext)
             # Ensure that headers and footer are correctly encoded
             header = header.decode('utf-8')
-            spec_paperformat_args = {}
+            spec_paperformat_args = {'data-report-margin-top': 40, 'data-report-header-spacing': 40}
             # Default header and footer in case the user customized
             # web.external_layout and removed the header/footer
             headers = header.encode()

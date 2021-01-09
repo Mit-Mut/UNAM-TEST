@@ -102,11 +102,13 @@ class AccountPayment(models.Model):
 
     @api.constrains('payment_date')
     def check_payment_date(self):
-        if self.payment_request_type:
-            non_business_day = self.env['calendar.payment.regis'].search([('type_pay','=','Non Business Day'),
-                                                                          ('date','=',self.payment_date)])
-            if non_business_day:
-                raise UserError(_('Not allow to schedule payment for non-working days.'))
+        for rec in self: 
+            if rec.payment_request_type and rec.payment_request_type != 'supplier_payment':
+
+                non_business_day = self.env['calendar.payment.regis'].search([('type_pay','=','Non Business Day'),
+                                                                              ('date','=',rec.payment_date)])
+                if non_business_day:
+                    raise UserError(_('Not allow to schedule payment for non-working days.'))
                 
     @api.model
     def create(self,vals):

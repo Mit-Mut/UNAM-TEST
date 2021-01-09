@@ -176,6 +176,12 @@
             		<attribute name="force_save">1</attribute>  
             		
             	</field>
+                <field name="agreement_type_id" position='attributes'>
+                    <attribute name="readonly">1</attribute>
+                    <attribute name="force_save">1</attribute>  
+                    
+                </field>
+
             	<field name="stage_id" position='attributes'>
             		<attribute name="readonly">1</attribute>  
             		<attribute name="force_save">1</attribute>

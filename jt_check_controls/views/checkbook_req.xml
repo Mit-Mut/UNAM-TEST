@@ -21,7 +21,7 @@
             <field name="model">checkbook.request</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="name"/>
+                    <field name="name" attrs="{'invisible': [('state', '=', 'cancelled')]}"/>
                     <field name="application_no"/>
                     <field name="checkbook_no"/>
                     <field name="state"/>
@@ -62,7 +62,7 @@
                             <label for="name" class="oe_edit_only"/>
                             <h1>
                                 <field name="name" required="1"
-                                       attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                       attrs="{'invisible': [('state', '=', 'cancelled')], 'readonly': [('state', '!=', 'draft')]}"/>
                             </h1>
                         </div>
                         <group>
@@ -82,7 +82,8 @@
                                 <field name="checkbook_no" readonly="1" force_save="1"/>
                                 <field name="intial_folio" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="final_folio" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="confirmation_letter" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="confirmation_letter" filename="file_name"/>
+                                <field name="file_name" invisible="1"/>
                                 <field name="are_test_prin_formats_sent"
                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="dependence_id"
@@ -129,7 +130,7 @@
             <field name="name">checklist.form.view</field>
             <field name="model">checklist</field>
             <field name="arch" type="xml">
-                <form>
+                <form create="false" edit="false">
                     <group>
                         <field name="checkbook_no"/>
                         <field name="received_boxes"/>

@@ -10,3 +10,4 @@ class AgreementType(models.Model):
     base_id = fields.Many2one('bases.collaboration','Type of Agreement')
     name = fields.Char(string='Name', related="base_id.name")
     number = fields.Char(string='Number', related="base_id.convention_no")
+ 

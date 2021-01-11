@@ -20,8 +20,8 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from odoo import models, api, _
-from datetime import datetime
+from odoo import models, _
+from datetime import datetime, timedelta
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tools.misc import formatLang
 from odoo.tools.misc import xlsxwriter
@@ -36,9 +36,9 @@ class TaxReport(models.AbstractModel):
     _inherit = "account.coa.report"
     _description = "​Tax Report to Enter/Pay"
 
-    filter_date = {'mode': 'range'}
-    filter_comparison = None
-    filter_all_entries = None
+    filter_date = {'mode': 'range', 'filter': 'last_month'}
+    filter_comparison = {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
+    filter_all_entries = False
     filter_journals = None
     filter_analytic = None
     filter_unfold_all = None
@@ -66,43 +66,297 @@ class TaxReport(models.AbstractModel):
         templates['main_template'] = 'account_reports.main_template'
         return templates
 
-    # def _get_columns_name(self, options):
-    #     return [
-    #         {'name': _('ISR withholding wages minus subsidy')},
-    #         {'name': _('ISR withholding for assimilable to wages')},
-    #         {'name': _('ISR withheld by professional services')},
-    #         {'name': _('ISR withheld by lease')},
-    #         {'name': _('VAT withheld')},
-    #         {'name': _('IEPS payable')},
-    #         {'name': _('VAT payable')},
-    #         {'name': _('Total taxes payable')},
-    #     ]
-    # @api.model
-    # def _get_columns_name(self, options):
-    #     return [{'name': ''}, {'name': _('Balance'), 'class': 'number'}]
+    def _format(self, value,figure_type):
+        if self.env.context.get('no_format'):
+            return value
+        value['no_format_name'] = value['name']
+        
+        if figure_type == 'float':
+            currency_id = self.env.company.currency_id
+            if currency_id.is_zero(value['name']):
+                # don't print -0.0 in reports
+                value['name'] = abs(value['name'])
+                value['class'] = 'number text-muted'
+            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id)
+            value['class'] = 'number'
+            return value
+        if figure_type == 'percents':
+            value['name'] = str(round(value['name'] * 100, 1)) + '%'
+            value['class'] = 'number'
+            return value
+        value['name'] = round(value['name'], 1)
+        return value
 
     def _get_columns_name(self, options):
         return [
-            {
-                'id': 'tax_pay_report%s' % index,
-                'name': name,
-                'level': level,
-                'class': 'o_account_reports_totals_below_sections' if self.env.company.totals_below_sections else '',
-                'columns': [{'name': 0.0, 'class': 'number'}],
-            } for index, level, name in [
-                (0, 0, _('ISR withholding wages minus subsidy')),
-                (1, 0, _('ISR withholding for assimilable to wages')),
-                (2, 0, _('ISR withheld by professional services')),
-                (3, 0, _('ISR withheld by lease')),
-                (4, 0, _('VAT withheld')),
-                (5, 0, _('IEPS payable')),
-                (6, 0, _('VAT payable')),
-                (7, 0, _('Total taxes payable')),
-            ]
+
+            {'name': ''},
+            {'name': ''},
         ]
+    def get_month_name(self, month):
+        month_name = ''
+        if month == 1:
+            month_name = 'Enero'
+        elif month == 2:
+            month_name = 'Febrero'
+        elif month == 3:
+            month_name = 'Marzo'
+        elif month == 4:
+            month_name = 'Abril'
+        elif month == 5:
+            month_name = 'Mayo'
+        elif month == 6:
+            month_name = 'Junio'
+        elif month == 7:
+            month_name = 'Julio'
+        elif month == 8:
+            month_name = 'Agosto'
+        elif month == 9:
+            month_name = 'Septiembre'
+        elif month == 10:
+            month_name = 'Octubre'
+        elif month == 11:
+            month_name = 'Noviembre'
+        elif month == 12:
+            month_name = 'Diciembre'
+
+        return month_name.upper()
 
     def _get_lines(self, options, line_id=None):
         lines = []
+
+        start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+
+        month_name = self.get_month_name(start.month)
+
+        prev = start.replace(day=1) - timedelta(days=1)
+        previous_month = self.get_month_name(prev.month)
+
+        #===============220.001.001============#
+        open_bal1 = 0
+        debit_bal1 = 0
+        credit_bal1 = 0
+
+        account_id = self.env['account.account'].search([('code', '=', '220.001.001')], limit=1)
+        if account_id:
+            values= self.env['account.move.line'].search([('account_id', '=', account_id.id),('move_id.state', '=', 'posted')])
+            debit_bal1 = sum(x.debit for x in values)
+            credit_bal1 = sum(x.credit for x in values)
+            
+            values= self.env['account.move.line'].search([('account_id', '=', account_id.id),('move_id.state', '=', 'posted')])
+            open_bal1 = sum(x.credit - x.debit for x in values)
+    
+        #===============115.001.001============#
+        open_bal2 = 0
+        debit_bal2 = 0
+        credit_bal2 = 0
+
+        account_id = self.env['account.account'].search([('code', '=', '115.001.001')], limit=1)
+        if account_id:
+            values= self.env['account.move.line'].search([('account_id', '=', account_id.id),('move_id.state', '=', 'posted')])
+            debit_bal2 = sum(x.debit for x in values)
+            credit_bal2 = sum(x.credit for x in values)
+            
+            values= self.env['account.move.line'].search([('account_id', '=', account_id.id),('move_id.state', '=', 'posted')])
+            open_bal2 = sum(x.credit - x.debit for x in values)
+
+        total_bal1 = open_bal1 - open_bal2
+
+        #===============221.001.001.002 ============#
+        open_bal3 = 0
+        debit_bal3 = 0
+        credit_bal3 = 0
+
+        account_id = self.env['account.account'].search([('code', '=', '221.001.001.002')], limit=1)
+        if account_id:
+            values= self.env['account.move.line'].search([('account_id', '=', account_id.id),('move_id.state', '=', 'posted')])
+            debit_bal3 = sum(x.debit for x in values)
+            credit_bal3 = sum(x.credit for x in values)
+            
+            values= self.env['account.move.line'].search([('account_id', '=', account_id.id),('move_id.state', '=', 'posted')])
+            open_bal3 = sum(x.credit - x.debit for x in values)
+
+        #===============221.001.002 ============#
+        open_bal4 = 0
+        debit_bal4 = 0
+        credit_bal4 = 0
+
+        account_id = self.env['account.account'].search([('code', '=', '221.001.002')], limit=1)
+        if account_id:
+            values= self.env['account.move.line'].search([('account_id', '=', account_id.id),('move_id.state', '=', 'posted')])
+            debit_bal4 = sum(x.debit for x in values)
+            credit_bal4 = sum(x.credit for x in values)
+            
+            values= self.env['account.move.line'].search([('account_id', '=', account_id.id),('move_id.state', '=', 'posted')])
+            open_bal4 = sum(x.credit - x.debit for x in values)
+
+        #===============221.001.004 ============#
+        open_bal5 = 0
+        debit_bal5 = 0
+        credit_bal5 = 0
+
+        account_id = self.env['account.account'].search([('code', '=', '221.001.004')], limit=1)
+        if account_id:
+            values= self.env['account.move.line'].search([('account_id', '=', account_id.id),('move_id.state', '=', 'posted')])
+            debit_bal5 = sum(x.debit for x in values)
+            credit_bal5 = sum(x.credit for x in values)
+            
+            values= self.env['account.move.line'].search([('account_id', '=', account_id.id),('move_id.state', '=', 'posted')])
+            open_bal5 = sum(x.credit - x.debit for x in values)
+
+        #===============221.001.005 ============#
+        open_bal6 = 0
+        debit_bal6 = 0
+        credit_bal6 = 0
+
+        account_id = self.env['account.account'].search([('code', '=', '221.001.005')], limit=1)
+        if account_id:
+            values= self.env['account.move.line'].search([('account_id', '=', account_id.id),('move_id.state', '=', 'posted')])
+            debit_bal6 = sum(x.debit for x in values)
+            credit_bal6 = sum(x.credit for x in values)
+            
+            values= self.env['account.move.line'].search([('account_id', '=', account_id.id),('move_id.state', '=', 'posted')])
+            open_bal6 = sum(x.credit - x.debit for x in values)
+
+        #===============221.001.006 ============#
+        open_bal7 = 0
+        debit_bal7 = 0
+        credit_bal7 = 0
+
+        account_id = self.env['account.account'].search([('code', '=', '221.001.006')], limit=1)
+        if account_id:
+            values= self.env['account.move.line'].search([('account_id', '=', account_id.id),('move_id.state', '=', 'posted')])
+            debit_bal7 = sum(x.debit for x in values)
+            credit_bal7 = sum(x.credit for x in values)
+            
+            values= self.env['account.move.line'].search([('account_id', '=', account_id.id),('move_id.state', '=', 'posted')])
+            open_bal7 = sum(x.credit - x.debit for x in values)
+
+        total_taxes = total_bal1 + open_bal3 + open_bal4 + open_bal4 + open_bal5 + open_bal6 + open_bal7
+
+
+        lines.append({
+            'id': 'hierarchy_account1',
+            'name' : 'ISR withholding wages minus subsidy', 
+            'columns': [
+                         self._format({'name': total_bal1},figure_type='float'),
+                        ],
+            'level': 10,
+            'unfoldable': False,
+            'unfolded': True,
+            'class':'text-left',
+        })
+
+        lines.append({
+            'id': 'hierarchy_account2',
+            'name' : '220.001.001 ' + 'Income tax Withholding for salaries', 
+            'columns': [
+                         ({'name': open_bal1}),
+                        ],
+            'level': 5,
+            'unfoldable': False,
+            'unfolded': True,
+            'class':'text-left',
+        })
+
+        lines.append({
+            'id': 'hierarchy_account3',
+            'name' : '115.001.001 ' + 'employee subsidy', 
+            'columns': [
+                         ({'name': open_bal2}),
+                        ],
+            'level': 5,
+            'unfoldable': False,
+            'unfolded': True,
+            'class':'text-left',
+        })
+
+        lines.append({
+            'id': 'hierarchy_account4',
+            'name' : '221.001.001.002 ' +'ISR withholding for assimilable to wages', 
+            'columns': [
+                         self._format({'name': open_bal3},figure_type='float'),
+                        ],
+            'level': 10,
+            'unfoldable': False,
+            'unfolded': True,
+            'class':'text-left',
+        })
+
+        lines.append({
+            'id': 'hierarchy_account5',
+            'name' : '221.001.002 ' + 'ISR withheld by professional services', 
+            'columns': [
+                         self._format({'name': open_bal4},figure_type='float'),
+                        ],
+            'level': 10,
+            'unfoldable': False,
+            'unfolded': True,
+            'class':'text-left',
+        })
+
+        lines.append({
+            'id': 'hierarchy_account6',
+            'name' : '221.001.002 ' + 'ISR withheld by lease', 
+            'columns': [
+                         self._format({'name': open_bal4},figure_type='float'),
+                        ],
+            'level': 10,
+            'unfoldable': False,
+            'unfolded': True,
+            'class':'text-left',
+        })
+
+        lines.append({
+            'id': 'hierarchy_account7',
+            'name' : 'VAT withheld', 
+            'columns': [
+                         self._format({'name': open_bal5},figure_type='float'),
+                        ],
+            'level': 10,
+            'unfoldable': False,
+            'unfolded': True,
+            'class':'text-left',
+        })
+
+        lines.append({
+            'id': 'hierarchy_account8',
+            'name' : 'IEPS payable', 
+            'columns': [
+                         self._format({'name': open_bal6},figure_type='float'),
+                        ],
+            'level': 10,
+            'unfoldable': False,
+            'unfolded': True,
+            'class':'text-left',
+        })
+
+        lines.append({
+            'id': 'hierarchy_account9',
+            'name' : 'VAT payable', 
+            'columns': [
+                         self._format({'name': open_bal7},figure_type='float'),
+                        ],
+            'level': 10,
+            'unfoldable': False,
+            'unfolded': True,
+            'class':'text-left',
+        })
+
+        lines.append({
+            'id': 'hierarchy_account11',
+            'name' : 'Total taxes payable', 
+            'columns': [
+                         self._format({'name': total_taxes},figure_type='float'),
+                        ],
+            'level': 10,
+            'unfoldable': False,
+            'unfolded': True,
+            'class':'text-left',
+        })
         return lines
 
     def _get_report_name(self):

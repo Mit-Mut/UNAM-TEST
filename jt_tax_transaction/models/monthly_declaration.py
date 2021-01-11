@@ -74,20 +74,3 @@ class MonthlyDeclaration(models.Model):
 
     def action_requested(self):
         self.state = 'requested'
-
-
-    # def generate_request(self):
-    #     self.state = 'requested'
-    #     record = {
-    #         'invoice_date': self.filling_date,
-    #     }
-    #     self.env['account.move'].create(record)
-
-
-    # def write(self,values):
-    #     record = super(MonthlyDeclaration, self).write(values)
-    #     if 'state' in values and values['state'] == 'requested':
-    #         self.env['account.move'].create({
-    #             'invoice_date': self.filling_date,
-    #         })
-    #     return record

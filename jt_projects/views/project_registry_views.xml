@@ -111,9 +111,7 @@
                                 <field name="base_id" string="Agreement Number" required="1" />
                                <field name="agreement_type" string="Agreement Type" required="1" />
                                 <field name="name_agreement" readonly="1" force_save="1"/>
-                                
-                                
-
+                                <field name="number_agreement" invisible="1" force_save="1"/>                                
                                 <field name="PAPIIT_project_type"  attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
                                 <field name="technical_support_id" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>
                                 <field name="administrative_manager_id" attrs="{'invisible':[('is_papiit_project','=',False)]}"/>

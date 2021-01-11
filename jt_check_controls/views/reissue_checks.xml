@@ -42,7 +42,7 @@
                             	<field name="type_of_batch" invisible="1"/>
                                 <field name="type_of_request" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="check_log_ids" invisible="1"/>
-                                <field name="checkbook_req_id" attrs="{'readonly':[('state','!=','draft')]}"
+                                <field name="checkbook_req_id" domain="[('state','!=','cancelled')]" attrs="{'readonly':[('state','!=','draft')]}"
                                     context="{'from_approve_check': 1}"/>
                                 <field name="check_log_id" attrs="{'readonly':[('state','!=','draft')]}"
                                        domain="[('id','in',check_log_ids)]"/>
@@ -194,7 +194,7 @@
                             	<field name="type_of_batch" invisible="1"/>
                                 <field name="type_of_request" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="check_log_ids" invisible="1"/>
-                                <field name="checkbook_req_id" attrs="{'readonly':[('state','!=','draft')]}"
+                                <field name="checkbook_req_id" domain="[('state','!=','cancelled')]" attrs="{'readonly':[('state','!=','draft')]}"
                                     context="{'from_approve_check':1}"/>
                                 <field name="check_log_id" attrs="{'readonly':[('state','!=','draft')]}" domain="[('id','in',check_log_ids)]"/>
                                 <field name="check_amount"/>
@@ -295,7 +295,7 @@
                                 <field name="type_of_request" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="type_of_reissue_id" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="check_log_ids" invisible="1"/>
-                                <field name="checkbook_req_id" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="checkbook_req_id" domain="[('state','!=','cancelled')]" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="check_log_id" attrs="{'readonly':[('state','!=','draft')]}" domain="[('id','in',check_log_ids)]"/>
                                 <field name="check_amount"/>
                                 <field name="status"/>

@@ -4581,3 +4581,52 @@ msgstr "Ingreso Acumulado"
 #: model_terms:ir.ui.view,arch_db:jt_income.inherited_account_journal_form_view
 msgid "Recover Income"
 msgstr "Ingreso Recaudado"
+
+#. module: jt_income
+#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__accrued_income_debit_account_id
+#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__estimate_income_debit_account_id
+#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__income_run_debit_account_id
+#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__recover_income_debit_account_id
+#: model:ir.model.fields,field_description:jt_income.field_account_journal__accrued_income_debit_account_id
+#: model:ir.model.fields,field_description:jt_income.field_account_journal__estimate_income_debit_account_id
+#: model:ir.model.fields,field_description:jt_income.field_account_journal__income_run_debit_account_id
+#: model:ir.model.fields,field_description:jt_income.field_account_journal__recover_income_debit_account_id
+msgid "Default Debit Account"
+msgstr "Cuenta de débito por defecto"
+
+#. module: jt_income
+#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__accrued_income_credit_account_id
+#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__estimate_income_credit_account_id
+#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__income_run_credit_account_id
+#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__recover_income_credit_account_id
+#: model:ir.model.fields,field_description:jt_income.field_account_journal__accrued_income_credit_account_id
+#: model:ir.model.fields,field_description:jt_income.field_account_journal__estimate_income_credit_account_id
+#: model:ir.model.fields,field_description:jt_income.field_account_journal__income_run_credit_account_id
+#: model:ir.model.fields,field_description:jt_income.field_account_journal__recover_income_credit_account_id
+msgid "Default Credit Account"
+msgstr "Cuenta de crédito por defecto"
+
+#. module: jt_income
+#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__conac_accrued_income_debit_account_id
+#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__conac_estimate_income_debit_account_id
+#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__conac_income_run_debit_account_id
+#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__conac_recover_income_debit_account_id
+#: model:ir.model.fields,field_description:jt_income.field_account_journal__conac_accrued_income_debit_account_id
+#: model:ir.model.fields,field_description:jt_income.field_account_journal__conac_estimate_income_debit_account_id
+#: model:ir.model.fields,field_description:jt_income.field_account_journal__conac_income_run_debit_account_id
+#: model:ir.model.fields,field_description:jt_income.field_account_journal__conac_recover_income_debit_account_id
+msgid "CONAC Debit Account"
+msgstr "Cuenta de débito de CONAC"
+
+#. module: jt_income
+#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__conac_accrued_income_credit_account_id
+#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__conac_estimate_income_credit_account_id
+#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__conac_income_run_credit_account_id
+#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__conac_recover_income_credit_account_id
+#: model:ir.model.fields,field_description:jt_income.field_account_journal__conac_accrued_income_credit_account_id
+#: model:ir.model.fields,field_description:jt_income.field_account_journal__conac_estimate_income_credit_account_id
+#: model:ir.model.fields,field_description:jt_income.field_account_journal__conac_income_run_credit_account_id
+#: model:ir.model.fields,field_description:jt_income.field_account_journal__conac_recover_income_credit_account_id
+msgid "CONAC Credit Account"
+msgstr "Cuenta de crédito de CONAC"
+

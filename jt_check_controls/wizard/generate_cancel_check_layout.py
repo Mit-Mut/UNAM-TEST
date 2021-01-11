@@ -10,7 +10,7 @@ class GenerateCancelCheckLayout(models.TransientModel):
     _description = 'Generate Cancel Check Layout'
 
     layout = fields.Selection([('Banamex', 'Banamex'), ('BBVA Bancomer', 'BBVA Bancomer'),
-                                ('Santander', 'Santander')], string="Layout")
+                                ('Scotiabank', 'Scotiabank')], string="Layout")
     file_name = fields.Char('Filename')
     file_data = fields.Binary('Download')
     reissue_ids = fields.Many2many('reissue.checks','reissue_checks_bank_layout_rel','check_layout_id','reissue_id','Reissue')
@@ -165,9 +165,9 @@ class GenerateCancelCheckLayout(models.TransientModel):
         self.file_name = file_name
             
 
-    def santander_cancel_check_file_format(self):
+    def scotiabank_cancel_check_file_format(self):
         file_data = ''
-        file_name = 'Santander.txt'
+        file_name = 'Scotiabank.txt'
 
         #===== Type of Registration =====#
         file_data += 'H'
@@ -328,8 +328,8 @@ class GenerateCancelCheckLayout(models.TransientModel):
             self.banamex_cancel_check_file_format()
         elif self.layout == 'BBVA Bancomer':
             self.BBVA_cancel_check_file_format()
-        elif self.layout == 'Santander':
-            self.santander_cancel_check_file_format()
+        elif self.layout == 'Scotiabank':
+            self.scotiabank_cancel_check_file_format()
                     
         return {
             'name': _('Generate Bank Layout'),

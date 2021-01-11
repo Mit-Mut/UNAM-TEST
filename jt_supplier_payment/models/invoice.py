@@ -457,6 +457,8 @@ class AccountMove(models.Model):
     def get_patment_date(self, total_days, invoice_date):
 
         next_date = invoice_date + timedelta(days=total_days)
+        if self.is_payment_request:
+            return next_date 
         non_business_day_ids = self.get_non_business_day(
             invoice_date, next_date)
         if non_business_day_ids:

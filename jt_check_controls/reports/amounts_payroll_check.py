@@ -70,13 +70,85 @@ class PayrollCheckAmounts(models.AbstractModel):
             {'name': _('BANCO')},
             {'name': _('IMPORTE')},
             {'name': _('FECHA')},
-            {'name': _('')},
-            {'name': _('')},
-
         ]
+
+    def _format(self, value,figure_type):
+        if self.env.context.get('no_format'):
+            return value
+        value['no_format_name'] = value['name']
+        
+        currency_id = self.env.company.currency_id
+        if figure_type == 'float':
+            
+            if currency_id.is_zero(value['name']):
+                # don't print -0.0 in reports
+                value['name'] = abs(value['name'])
+                value['class'] = 'number text-muted'
+            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id)
+            value['class'] = 'number'
+            return value
+        if figure_type == 'percents':
+            value['name'] = str(round(value['name'] * 100, 1)) + '%'
+            value['class'] = 'number'
+            return value
+        value['name'] = round(value['name'], 1)
+        return value
 
     def _get_lines(self, options, line_id=None):
         lines = []
+        domain = []
+        start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+            
+        domain = domain + [('payment_date','>=',start),('payment_date','<=',end),('type_of_batch','=','nominal')]
+         
+        payment_issue_ids = self.env['payment.batch.supplier'].search(domain)
+        journal_ids = payment_issue_ids.mapped('payment_issuing_bank_id')
+        total_amount = 0
+        for journal in journal_ids:
+            j_payment_issue_ids = payment_issue_ids.filtered(lambda x:x.payment_issuing_bank_id.id==journal.id)
+            bank_account_ids = j_payment_issue_ids.mapped('payment_issuing_bank_acc_id')
+            for bank_account in bank_account_ids:
+                b_payment_issue_ids = j_payment_issue_ids.filtered(lambda x:x.payment_issuing_bank_acc_id.id==bank_account.id).sorted(key='payment_date')
+                date_list = b_payment_issue_ids.mapped('payment_date')
+                date_list = set(date_list)
+                date_list = list(date_list)
+                for d in date_list:
+                    date_payment_issue_ids = j_payment_issue_ids.filtered(lambda x:x.payment_date==d)
+                    amount = 0
+                    for payment_batch in date_payment_issue_ids:
+                        
+                        amount += sum(x.amount_to_pay for x in payment_batch.payment_req_ids)
+                    total_amount += amount
+                    
+                    lines.append({
+                        'id': 'account_' + str(bank_account.id),
+                        'name' : bank_account.acc_number, 
+                        'columns': [ {'name': journal.name},
+                                    self._format({'name': amount},figure_type='float'),
+                                    {'name': d,},
+                                    
+                                    ],
+                        'level': 3,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+
+        lines.append({
+            'id': 'total',
+            'name' : '', 
+            'columns': [{'name': ''},
+                        self._format({'name': total_amount},figure_type='float'),
+                        {'name': ''},
+                        
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+                
         return lines
 
     def _get_report_name(self):

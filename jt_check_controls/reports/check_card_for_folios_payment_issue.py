@@ -47,6 +47,36 @@ class CheckCardFolioPaymentIssue(models.AbstractModel):
     filter_hierarchy = None
     filter_unposted_in_period = None
     MAX_LINES = None
+    filter_fortnight = [
+        {'id': '01', 'name': ('01'), 'selected': False},
+        {'id': '02', 'name': ('02'), 'selected': False},
+        {'id': '03', 'name': ('03'), 'selected': False},
+        {'id': '04', 'name': ('04'), 'selected': False},
+        {'id': '05', 'name': ('05'), 'selected': False},
+        {'id': '06', 'name': ('06'), 'selected': False},
+        {'id': '07', 'name': ('07'), 'selected': False},
+        {'id': '08', 'name': ('08'), 'selected': False},
+        {'id': '09', 'name': ('09'), 'selected': False},
+        {'id': '10', 'name': ('10'), 'selected': False},
+        {'id': '11', 'name': ('11'), 'selected': False},
+        {'id': '12', 'name': ('12'), 'selected': False},
+        {'id': '13', 'name': ('13'), 'selected': False},
+        {'id': '14', 'name': ('14'), 'selected': False},
+        {'id': '15', 'name': ('15'), 'selected': False},
+        {'id': '16', 'name': ('16'), 'selected': False},
+        {'id': '17', 'name': ('17'), 'selected': False},
+        {'id': '18', 'name': ('18'), 'selected': False},
+        {'id': '19', 'name': ('19'), 'selected': False},
+        {'id': '20', 'name': ('20'), 'selected': False},
+        {'id': '21', 'name': ('21'), 'selected': False},
+        {'id': '22', 'name': ('22'), 'selected': False},
+        {'id': '23', 'name': ('23'), 'selected': False},
+        {'id': '24', 'name': ('24'), 'selected': False},
+
+
+        
+    ]
+
 
     def _get_reports_buttons(self):
         return [
@@ -70,18 +100,127 @@ class CheckCardFolioPaymentIssue(models.AbstractModel):
 
     def _get_columns_name(self, options):
         return [
-            {'name': _('Folio inicial')},
-            {'name': _('Folio final')},
-            {'name': _('Total')},
             {'name': _('')},
             {'name': _('')},
             {'name': _('')},
-
-
         ]
 
+    def _format(self, value,figure_type):
+        if self.env.context.get('no_format'):
+            return value
+        value['no_format_name'] = value['name']
+        
+        currency_id = self.env.company.currency_id
+        if figure_type == 'float':
+            
+            if currency_id.is_zero(value['name']):
+                # don't print -0.0 in reports
+                value['name'] = abs(value['name'])
+                value['class'] = 'number text-muted'
+            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id)
+            value['class'] = 'number'
+            return value
+        if figure_type == 'percents':
+            value['name'] = str(round(value['name'] * 100, 1)) + '%'
+            value['class'] = 'number'
+            return value
+        value['name'] = round(value['name'], 1)
+        return value
+
+    def _get_lines(self, options, line_id=None):
+        lines = []
+        domain = []
+        start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+            
+        domain = domain + [('payment_date','>=',start),('payment_date','<=',end),('type_of_batch','=','nominal')]
+        
+         
+        payment_issue_ids = self.env['payment.batch.supplier'].search(domain)
+        journal_ids = payment_issue_ids.mapped('payment_issuing_bank_id')
+        
+        total_amount = 0
+        total_check = 0 
+        for journal in journal_ids:
+            lines.append({
+                'id': 'bank_name'+str(journal.id),
+                'name' : journal.name, 
+                'columns': [ 
+                            {'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+            lines.append({
+                'id': 'bank_header'+str(journal.id),
+                'name' : _('Folio inicial'), 
+                'columns': [ 
+                            {'name': _('Folio final')},
+                            {'name': _('Total')},
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+            
+            bank_total = 0
+            rec_ids = payment_issue_ids.filtered(lambda x:x.payment_issuing_bank_id.id==journal.id)
+            for rec in rec_ids: 
+                folio_first = 0
+                folio_final = 0
+                if rec.final_check_folio:
+                    folio_final = rec.final_check_folio.folio
+                if rec.intial_check_folio:
+                    folio_first = rec.intial_check_folio.folio
+                amount = folio_final - folio_first 
+                total_amount += amount
+                bank_total += amount
+                
+                lines.append({
+                    'id': 'hierarchy_rec' + str(rec.id),
+                    'name' : rec.intial_check_folio and rec.intial_check_folio.folio or '', 
+                    'columns': [ {'name': rec.final_check_folio and rec.final_check_folio.folio or ''},
+                                self._format({'name': amount},figure_type='float'),
+                                ],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+
+            bank_name = 'TOTAL CHEQUES '+str(journal.name)
+            lines.append({
+                'id': 'total'+str(journal.id),
+                'name' : '', 
+                'columns': [ 
+                            {'name': bank_name},
+                            self._format({'name': bank_total},figure_type='float'),
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        lines.append({
+            'id': 'total',
+            'name' : '', 
+            'columns': [ 
+                        {'name': _('TOTAL CHEQUES BANCOS')},
+                        self._format({'name': total_amount},figure_type='float'),
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+             
+        return lines
+
     def _get_report_name(self):
-        return _("Check card for folios and issued payments")
+        return _("Certificate of verification of folios and payments issued")
 
     def get_pdf(self, options, minimal_layout=True):
         # As the assets are generated during the same transaction as the rendering of the
@@ -91,14 +230,12 @@ class CheckCardFolioPaymentIssue(models.AbstractModel):
         # table.
         # This scenario happens when you want to print a PDF report for the first time, as the
         # assets are not in cache and must be generated. To workaround this issue, we manually
-        # commit the writes in the `ir.attachment` table. It is done thanks to
-        # a key in the context.
+        # commit the writes in the `ir.attachment` table. It is done thanks to a key in the context.
         minimal_layout = False
         if not config['test_enable']:
             self = self.with_context(commit_assetsbundle=True)
 
-        base_url = self.env['ir.config_parameter'].sudo().get_param(
-            'report.url') or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('report.url') or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         rcontext = {
             'mode': 'print',
             'base_url': base_url,
@@ -111,29 +248,22 @@ class CheckCardFolioPaymentIssue(models.AbstractModel):
         )
         body_html = self.with_context(print_mode=True).get_html(options)
 
-        body = body.replace(b'<body class="o_account_reports_body_print">',
-                            b'<body class="o_account_reports_body_print">' + body_html)
+        body = body.replace(b'<body class="o_account_reports_body_print">', b'<body class="o_account_reports_body_print">' + body_html)
         if minimal_layout:
             header = ''
-            footer = self.env['ir.actions.report'].render_template(
-                "web.internal_layout", values=rcontext)
-            spec_paperformat_args = {
-                'data-report-margin-top': 10, 'data-report-header-spacing': 10}
-            footer = self.env['ir.actions.report'].render_template(
-                "web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
+            footer = self.env['ir.actions.report'].render_template("web.internal_layout", values=rcontext)
+            spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 10}
+            footer = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
         else:
             rcontext.update({
-                'css': '',
-                'o': self.env.user,
-                'res_company': self.env.company,
-            })
-            header = self.env['ir.actions.report'].render_template(
-                "jt_check_controls.external_layout_check_card_for_folios", values=rcontext)
-            # Ensure that headers and footer are correctly encoded
-            header = header.decode('utf-8')
+                    'css': '',
+                    'o': self.env.user,
+                    'res_company': self.env.company,
+                })
+            header = self.env['ir.actions.report'].render_template("jt_check_controls.external_layout_check_card_for_folios", values=rcontext)
+            header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
             spec_paperformat_args = {}
-            # Default header and footer in case the user customized
-            # web.external_layout and removed the header/footer
+            # Default header and footer in case the user customized web.external_layout and removed the header/footer
             headers = header.encode()
             footer = b''
             # parse header as new header contains header, body and footer
@@ -143,13 +273,11 @@ class CheckCardFolioPaymentIssue(models.AbstractModel):
 
                 for node in root.xpath(match_klass.format('header')):
                     headers = lxml.html.tostring(node)
-                    headers = self.env['ir.actions.report'].render_template(
-                        "web.minimal_layout", values=dict(rcontext, subst=True, body=headers))
+                    headers = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=headers))
 
                 for node in root.xpath(match_klass.format('footer')):
                     footer = lxml.html.tostring(node)
-                    footer = self.env['ir.actions.report'].render_template(
-                        "web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
+                    footer = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
 
             except lxml.etree.XMLSyntaxError:
                 headers = header.encode()
@@ -160,12 +288,13 @@ class CheckCardFolioPaymentIssue(models.AbstractModel):
         if len(self.with_context(print_mode=True).get_header(options)[-1]) > 5:
             landscape = True
 
-            return self.env['ir.actions.report']._run_wkhtmltopdf(
-                [body],
-                header=header, footer=footer,
-                landscape=landscape,
-                specific_paperformat_args=spec_paperformat_args
-            )
+        return self.env['ir.actions.report']._run_wkhtmltopdf(
+            [body],
+            header=header, footer=footer,
+            landscape=landscape,
+            specific_paperformat_args=spec_paperformat_args
+        )
+
 
     def get_xlsx(self, options, response=None):
         output = io.BytesIO()

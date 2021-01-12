@@ -207,15 +207,11 @@
                         	<page string="Additional payments" name="additional_payments_line">
                         		<field name="additional_payments_line_ids" readonly="1">
                         			<tree>
-                        				<field name="job_id"/>
-                        				<field name="description"/>
                         				<field name="details"/>
                         				<field name="amount"/>
                         			</tree>
                         			<form>
                         				<group>
-	                        				<field name="job_id"/>
-	                        				<field name="description"/>
 	                        				<field name="details"/>
 	                        				<field name="amount"/>
                         				</group>

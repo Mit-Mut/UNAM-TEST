@@ -180,6 +180,7 @@
     />
 
     <!-- menu for project type -->
+    <!-- 
     <menuitem
         id="menu_project_type"
         name="Project Type (TP)"
@@ -187,8 +188,9 @@
         action="action_project_type"
         sequence="15"
     />
-
+	 -->
     <!-- menu for stage -->
+    <!-- 
     <menuitem
         id="menu_stage"
         name="Stage (E)"
@@ -196,8 +198,9 @@
         action="action_stage"
         sequence="16"
     />
-
+	 -->
     <!-- menu for agreement type -->
+    <!-- 
     <menuitem
         id="menu_agreement_type"
         name="Type of agreement (TC)"
@@ -205,7 +208,7 @@
         action="action_agreement_type"
         sequence="17"
     />
-
+	 -->
     <!-- menu for budget -->
     <menuitem
         id="menu_budgets"

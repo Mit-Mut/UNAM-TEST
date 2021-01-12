@@ -130,44 +130,45 @@ class CheckProtection(models.AbstractModel):
         
         total_amount = 0
         total_check = 0 
-        for module in deps:
-            
-            rec_ids = check_log_ids.filtered(lambda x:x.module==module).sorted(key='date_protection')
-            date_list = rec_ids.mapped('date_protection')
-            date_list = set(date_list)
-            date_list = list(date_list)
-            for d in date_list:
+        if deps:
+            for module in deps:
                 
-                date_rec_ids = rec_ids.filtered(lambda x:x.date_protection==d)
-                total_rec = len(date_rec_ids)
-                amount = sum(x.check_amount for x in date_rec_ids)
-                total_amount += amount
-                total_check += total_rec
-                
-                lines.append({
-                    'id': 'hierarchy' + str(module),
-                    'name' : module, 
-                    'columns': [ {'name': d},
-                                {'name': total_rec,'class':'number'},
-                                self._format({'name': amount},figure_type='float'),
-                                ],
-                    'level': 3,
-                    'unfoldable': False,
-                    'unfolded': True,
-                })
+                rec_ids = check_log_ids.filtered(lambda x:x.module==module).sorted(key='date_protection')
+                date_list = rec_ids.mapped('date_protection')
+                date_list = set(date_list)
+                date_list = list(date_list)
+                for d in date_list:
+                    
+                    date_rec_ids = rec_ids.filtered(lambda x:x.date_protection==d)
+                    total_rec = len(date_rec_ids)
+                    amount = sum(x.check_amount for x in date_rec_ids)
+                    total_amount += amount
+                    total_check += total_rec
+                    
+                    lines.append({
+                        'id': 'hierarchy' + str(module),
+                        'name' : module, 
+                        'columns': [ {'name': d},
+                                    {'name': total_rec,'class':'number'},
+                                    self._format({'name': amount},figure_type='float'),
+                                    ],
+                        'level': 3,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
 
-        lines.append({
-            'id': 'hierarchy' + str(module),
-            'name' : _('Total'), 
-            'columns': [ {'name': ''},
-                        {'name': total_check,'class':'number'},
-                        self._format({'name': total_amount},figure_type='float'),
-                        ],
-            'level': 1,
-            'unfoldable': False,
-            'unfolded': True,
-        })
-             
+            lines.append({
+                'id': 'hierarchy' + str(module),
+                'name' : _('Total'), 
+                'columns': [ {'name': ''},
+                            {'name': total_check,'class':'number'},
+                            self._format({'name': total_amount},figure_type='float'),
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+                 
         return lines
 
     def _get_report_name(self):

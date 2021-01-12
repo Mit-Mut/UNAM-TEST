@@ -30,7 +30,7 @@ class AdjustmentCases(models.Model):
     _rec_name = 'case'
 
 
-    case = fields.Selection([('A','A'),('D','D'),('R','R'),('F','F'),('H','H'),('B','B'),('V','V'),('C','C'),('E','E')],string="Case")
+    case = fields.Selection([('A','A'),('D','D'),('R','R'),('F','F'),('H','H'),('B','B'),('V','V'),('C','C'),('E','E'),('P','P'),('Z','Z')],string="Case")
     description = fields.Text('Description')
     
     

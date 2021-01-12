@@ -393,12 +393,12 @@ class AccountMoveLine(models.Model):
             self.account_id = self.program_code_id.item_id.unam_account_id.id
             
 
-    @api.model
-    def _get_default_tax_account(self, repartition_line):
-        account = super(AccountMoveLine,self)._get_default_tax_account(repartition_line)
-        if self.program_code_id and self.program_code_id.item_id and self.program_code_id.item_id.unam_account_id:
-            return self.program_code_id.item_id.unam_account_id
-        return account
+#     @api.model
+#     def _get_default_tax_account(self, repartition_line):
+#         account = super(AccountMoveLine,self)._get_default_tax_account(repartition_line)
+#         if self.program_code_id and self.program_code_id.item_id and self.program_code_id.item_id.unam_account_id:
+#             return self.program_code_id.item_id.unam_account_id
+#         return account
 
 class BudgetLineMoveLinelinks(models.Model):
     

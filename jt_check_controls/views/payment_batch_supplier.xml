@@ -27,12 +27,12 @@
                     <sheet>
                         <group>
                             <group>
-                            	<field name="type_of_batch"/>
-                                <field name="batch_folio"/>
-                                <field name="payment_issuing_bank_id"/>
-                                <field name="payment_issuing_bank_acc_id"/>
+                            	<field name="type_of_batch" readonly="1" force_save="1"/>
+                                <field name="batch_folio" readonly="1" force_save="1"/>
+                                <field name="payment_issuing_bank_id" readonly="1" force_save="1"/>
+                                <field name="payment_issuing_bank_acc_id" readonly="1" force_save="1"/>
                                 <field name="checkbook_req_id" context="{'from_approve_check':1}"
-                                       domain="[('bank_id', '=', payment_issuing_bank_id)]"/>
+                                       domain="[('state','not in',('rejected','cancelled')),('bank_id', '=', payment_issuing_bank_id)]"/>
                                 <field name="type_of_payment_method" readonly="1"/>
                             </group>
                             <group>

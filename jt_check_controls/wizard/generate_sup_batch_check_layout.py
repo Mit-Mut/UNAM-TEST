@@ -199,16 +199,20 @@ class GenerateSupplierCheckLayout(models.TransientModel):
                 file_data += str(sum_of_check_folio).zfill(15)
                 total = sum(line.amount_to_pay for line in batch.payment_req_ids.filtered(lambda x: x.selected == True \
                                                             and x.check_status == 'Delivered'))
-                file_data += str(round(total, 2)).replace('.','').zfill(18)
+                amount = "%.2f" % total            
+                amount = str(amount).split('.')
+                file_data +=str(amount[0]).zfill(16)
+                file_data +=str(amount[1])
                 file_data += '0'.zfill(9)
                 file_data += '0'.zfill(15)
                 file_data += '0'.zfill(18)
                 file_data += str(len(batch.payment_req_ids.filtered(lambda x: x.selected == True and \
                                                                               x.check_status == 'Delivered'))).zfill(10)
                 
-                total = sum(line.amount_to_pay for line in batch.payment_req_ids.filtered(lambda x: x.selected == True \
-                                                                        and x.check_status == 'Delivered'))
-                file_data += str(round(total, 2)).replace('.','').zfill(18)
+                file_data += str(sum_of_check_folio).zfill(15)
+                
+                file_data +=str(amount[0]).zfill(16)
+                file_data +=str(amount[1])
                 file_data += '                     '
                 file_data += '5'
                 file_data += '\r\n'

@@ -32,6 +32,8 @@
                 <field name="batch_folio" position="after">
                     <field name="check_folio_id" readonly="1"/>
                     <field name="check_status"/>
+                    <field name="related_check_folio_id" invisible="1"/>
+                    <field name="related_check"/>
                 </field>
             </field>
         </record>

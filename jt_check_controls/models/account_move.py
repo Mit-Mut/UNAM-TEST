@@ -9,6 +9,8 @@ class SupplierPaymentRequest(models.Model):
                                                     ('rotated','Rotated'),
                                                     ('assigned_payment_method','Assigned Payment Method')])
     check_folio_id = fields.Many2one('check.log', "Check Sheet")
+    related_check_folio_id = fields.Many2one('check.log', "Related Check Sheet")
+    related_check = fields.Integer(related='related_check_folio_id.folio',string='Related Checks')
     check_status = fields.Selection([('Checkbook registration', 'Checkbook registration'),
                           ('Assigned for shipping', 'Assigned for shipping'),
                           ('Available for printing', 'Available for printing'),
@@ -36,9 +38,18 @@ class SupplierPaymentRequest(models.Model):
                 payment_req.action_cancel_budget()
 
     def action_rotated(self):
-        self.ensure_one()
-        self.payment_state = 'registered'
-        self.batch_folio = ''
+#         self.ensure_one()
+#         self.payment_state = 'registered'
+#         self.batch_folio = ''
+
+        return {
+            'name': 'Reschecule Request',
+            'view_mode': 'form',
+            'view_id': self.env.ref('jt_supplier_payment.reschedule_request_form_view').id,
+            'res_model': 'reschedule.request',
+            'type': 'ir.actions.act_window',
+            'target': 'new'
+        }
 
     def write(self, vals):
         res = super(SupplierPaymentRequest, self).write(vals)

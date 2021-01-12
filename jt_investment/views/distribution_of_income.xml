@@ -93,7 +93,7 @@
                         				<field name="final_balance" digits="[12,2]"/>
                         				<field name="income" digits="[12,5]" sum="total"/>
                         				<field name="rounded" digits="[12,2]" sum="total"/>
-                        				<field name="rate" digits="[12,2]"/>
+                        				<field name="rate" digits="[12,4]"/>
                         				<field name="days"/>
                         			</tree>
                         			<form create="0" edit="0" delete="0">

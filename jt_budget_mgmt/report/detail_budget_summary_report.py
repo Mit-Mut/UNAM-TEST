@@ -103,7 +103,34 @@ class DetailsBudgetSummaryReport(models.AbstractModel):
                         {'name': _("1st quarter expansion")},
                         {'name': _("2nd quarter expansion")},
                         {'name': _("3rd quarter expansion")},
-                        {'name': _("4th quarter expansion")},                        
+                        {'name': _("4th quarter expansion")},
+                        
+                        {'name': _("Annual reduction")},
+                        {'name': _("Reduction 1st quarter")},
+                        {'name': _("Reduction 2nd quarter")},
+                        {'name': _("Reduction 3rd quarter")},
+                        {'name': _("Reduction 4th quarter")},
+                        
+                        {'name': _("Annual modified")},
+                        {'name': _("Modified 1st quarter")},
+                        {'name': _("Modified 2nd quarter")},
+                        {'name': _("Modified 3rd quarter")},
+                        {'name': _("Modified 4th quarter")},
+                        
+                        {'name': _("Exercised annually")},
+                        {'name': _("Exercised January")},
+                        {'name': _("Exercised February")},
+                        {'name': _("Exercised March")},
+                        {'name': _("Exercised April")},
+                        {'name': _("Exercised May")},
+                        {'name': _("Exercised June")},
+                        {'name': _("Exercised July")},
+                        {'name': _("Exercised August")},
+                        {'name': _("Exercised September")},
+                        {'name': _("Exercised October")},
+                        {'name': _("Exercised November")},
+                        {'name': _("Exercised December")},
+                                                
                        ]
         return column_list
     
@@ -312,22 +339,69 @@ class DetailsBudgetSummaryReport(models.AbstractModel):
             end = s * 500
             
             selected_my_data = selected_my_data + my_datas[start:end]
-
+            
+        #===== 2nd =======    
         total_assign = 0
         total_assigned_1st = 0
         total_assigned_2nd = 0 
         total_assigned_3rd = 0
         total_assigned_4th = 0
-        
+        #===== 3nd =======
         total_annual_expansion = 0
         total_annual_expansion_q1 = 0
         total_annual_expansion_q2 = 0
         total_annual_expansion_q3 = 0
         total_annual_expansion_q4 = 0
+        #===== 4th =======
+        total_annual_reduction = 0
+        total_annual_reduction_q1 = 0
+        total_annual_reduction_q2 = 0
+        total_annual_reduction_q3 = 0
+        total_annual_reduction_q4 = 0
+        #===== 5th =======
+        total_authorized = 0   
+        total_authorized_q1 = 0   
+        total_authorized_q2 = 0   
+        total_authorized_q3 = 0   
+        total_authorized_q4 = 0   
         
         if not selected_line_pages:
             selected_my_data = my_datas[:500]
         for data in selected_my_data:
+            #==== 2nd section ====#
+            total_assign += data.get('assigned')
+            total_assigned_1st += data.get('assigned_1st')
+            total_assigned_2nd += data.get('assigned_2nd')
+            total_assigned_3rd += data.get('assigned_3rd')
+            total_assigned_4th += data.get('assigned_4th')
+            
+            total_standardization_expansion = data.get('standardization_expansion_q1') + data.get('standardization_expansion_q2')+data.get('standardization_expansion_q3')+data.get('standardization_expansion_q4')
+            #==== 3nd section ====#
+            total_annual_expansion += data.get('annual_expansion')+total_standardization_expansion
+            total_annual_expansion_q1 += data.get('annual_expansion_q1')+data.get('standardization_expansion_q1')
+            total_annual_expansion_q2 += data.get('annual_expansion_q2')+data.get('standardization_expansion_q2')
+            total_annual_expansion_q3 += data.get('annual_expansion_q3')+data.get('standardization_expansion_q3')
+            total_annual_expansion_q4 += data.get('annual_expansion_q4')+data.get('standardization_expansion_q4')
+            #==== 4th section ====#
+            total_standardization_reduction = data.get('standardization_reduction_q1') + data.get('standardization_reduction_q2') + data.get('standardization_reduction_q3') + data.get('standardization_reduction_q4')
+            total_annual_reduction += data.get('annual_reduction') + total_standardization_reduction
+            total_annual_reduction_q1 += data.get('annual_reduction_q1') + data.get('standardization_reduction_q1')
+            total_annual_reduction_q2 += data.get('annual_reduction_q2') + data.get('standardization_reduction_q2')
+            total_annual_reduction_q3 += data.get('annual_reduction_q3') + data.get('standardization_reduction_q3')
+            total_annual_reduction_q4 += data.get('annual_reduction_q4') + data.get('standardization_reduction_q4')
+
+            #==== 5th section ====#
+            authorized_q1 = data.get('assigned_1st') + data.get('annual_expansion_q1',0) + data.get('standardization_expansion_q1') - data.get('annual_reduction_q1',0) - data.get('standardization_reduction_q1',0)
+            authorized_q2 = data.get('assigned_2nd') + data.get('annual_expansion_q2',0) + data.get('standardization_expansion_q2') - data.get('annual_reduction_q2',0) - data.get('standardization_reduction_q2',0)
+            authorized_q3 = data.get('assigned_3rd') + data.get('annual_expansion_q3',0) + data.get('standardization_expansion_q3') - data.get('annual_reduction_q3',0) - data.get('standardization_reduction_q3',0)
+            authorized_q4 = data.get('assigned_4th') + data.get('annual_expansion_q4',0) + data.get('standardization_expansion_q4') - data.get('annual_reduction_q4',0) - data.get('standardization_reduction_q4',0)
+            authorized = authorized_q1 + authorized_q2 + authorized_q3 + authorized_q4
+            total_authorized += authorized   
+            total_authorized_q1 += authorized_q1   
+            total_authorized_q2 += authorized_q2   
+            total_authorized_q3 += authorized_q3   
+            total_authorized_q4 += authorized_q4   
+            
             lines.append({
                 'id': 'hierarchy1',
                 'name': data.get('year'),
@@ -357,29 +431,45 @@ class DetailsBudgetSummaryReport(models.AbstractModel):
                             self._format({'name': data.get('assigned_3rd')},figure_type='float'),
                             self._format({'name': data.get('assigned_4th')},figure_type='float'),
                             
-                            self._format({'name': data.get('annual_expansion')},figure_type='float'),
-                            self._format({'name': data.get('annual_expansion_q1')},figure_type='float'),
-                            self._format({'name': data.get('annual_expansion_q2')},figure_type='float'),
-                            self._format({'name': data.get('annual_expansion_q3')},figure_type='float'),
-                            self._format({'name': data.get('annual_expansion_q4')},figure_type='float'),
+                            self._format({'name': data.get('annual_expansion')+total_standardization_expansion},figure_type='float'),
+                            self._format({'name': data.get('annual_expansion_q1')+data.get('standardization_expansion_q1')},figure_type='float'),
+                            self._format({'name': data.get('annual_expansion_q2')+data.get('standardization_expansion_q2')},figure_type='float'),
+                            self._format({'name': data.get('annual_expansion_q3')+data.get('standardization_expansion_q3')},figure_type='float'),
+                            self._format({'name': data.get('annual_expansion_q4')+data.get('standardization_expansion_q4')},figure_type='float'),
+                            
+                            self._format({'name': data.get('annual_reduction')+total_standardization_reduction},figure_type='float'),
+                            self._format({'name': data.get('annual_reduction_q1')+data.get('standardization_reduction_q1')},figure_type='float'),
+                            self._format({'name': data.get('annual_reduction_q2')+data.get('standardization_reduction_q2')},figure_type='float'),
+                            self._format({'name': data.get('annual_reduction_q3')+data.get('standardization_reduction_q3')},figure_type='float'),
+                            self._format({'name': data.get('annual_reduction_q4')+data.get('standardization_reduction_q4')},figure_type='float'),
+
+                            self._format({'name': authorized},figure_type='float'),
+                            self._format({'name': authorized_q1},figure_type='float'),
+                            self._format({'name': authorized_q2},figure_type='float'),
+                            self._format({'name': authorized_q3},figure_type='float'),
+                            self._format({'name': authorized_q4},figure_type='float'),
+                            
+                            self._format({'name': 0.0},figure_type='float'),
+                            self._format({'name': 0.0},figure_type='float'),
+                            self._format({'name': 0.0},figure_type='float'),
+                            self._format({'name': 0.0},figure_type='float'),
+                            self._format({'name': 0.0},figure_type='float'),
+                            self._format({'name': 0.0},figure_type='float'),
+                            self._format({'name': 0.0},figure_type='float'),
+                            self._format({'name': 0.0},figure_type='float'),
+                            self._format({'name': 0.0},figure_type='float'),
+                            self._format({'name': 0.0},figure_type='float'),
+                            self._format({'name': 0.0},figure_type='float'),
+                            self._format({'name': 0.0},figure_type='float'),
+                            self._format({'name': 0.0},figure_type='float'),
+
                             
                             ],
                 'level': 3,
                 'unfoldable': False,
                 'unfolded': True,
             })
-            total_assign += data.get('assigned')
-            total_assigned_1st += data.get('assigned_1st')
-            total_assigned_2nd += data.get('assigned_2nd')
-            total_assigned_3rd += data.get('assigned_3rd')
-            total_assigned_4th += data.get('assigned_4th')
             
-            total_annual_expansion += data.get('annual_expansion')
-            total_annual_expansion_q1 += data.get('annual_expansion_q1')
-            total_annual_expansion_q2 += data.get('annual_expansion_q2')
-            total_annual_expansion_q3 += data.get('annual_expansion_q3')
-            total_annual_expansion_q4 += data.get('annual_expansion_q4')
-
         lines.append({
             'id': 'hierarchy1',
             'name': '',
@@ -414,6 +504,32 @@ class DetailsBudgetSummaryReport(models.AbstractModel):
                         self._format({'name': total_annual_expansion_q2},figure_type='float'),
                         self._format({'name': total_annual_expansion_q3},figure_type='float'),
                         self._format({'name': total_annual_expansion_q4},figure_type='float'),
+
+                        self._format({'name': total_annual_reduction},figure_type='float'),
+                        self._format({'name': total_annual_reduction_q1},figure_type='float'),
+                        self._format({'name': total_annual_reduction_q2},figure_type='float'),
+                        self._format({'name': total_annual_reduction_q3},figure_type='float'),
+                        self._format({'name': total_annual_reduction_q4},figure_type='float'),
+
+                        self._format({'name': total_authorized},figure_type='float'),
+                        self._format({'name': total_authorized_q1},figure_type='float'),
+                        self._format({'name': total_authorized_q2},figure_type='float'),
+                        self._format({'name': total_authorized_q3},figure_type='float'),
+                        self._format({'name': total_authorized_q4},figure_type='float'),
+
+                        self._format({'name': 0.0},figure_type='float'),
+                        self._format({'name': 0.0},figure_type='float'),
+                        self._format({'name': 0.0},figure_type='float'),
+                        self._format({'name': 0.0},figure_type='float'),
+                        self._format({'name': 0.0},figure_type='float'),
+                        self._format({'name': 0.0},figure_type='float'),
+                        self._format({'name': 0.0},figure_type='float'),
+                        self._format({'name': 0.0},figure_type='float'),
+                        self._format({'name': 0.0},figure_type='float'),
+                        self._format({'name': 0.0},figure_type='float'),
+                        self._format({'name': 0.0},figure_type='float'),
+                        self._format({'name': 0.0},figure_type='float'),
+                        self._format({'name': 0.0},figure_type='float'),
                         
                         ],
             'level': 1,

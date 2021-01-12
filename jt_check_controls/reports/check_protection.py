@@ -47,6 +47,23 @@ class CheckProtection(models.AbstractModel):
     filter_hierarchy = None
     filter_unposted_in_period = None
     MAX_LINES = None
+    filter_department = [
+        {'id': 'General Directorate of Personnel', 'name': ('General Staff Address'), 'selected': False},
+        {'id': 'Payment coordination', 'name': ('Payment coordination'), 'selected': False},
+        {'id': 'ACATLAN', 'name': ('ACATLAN'), 'selected': False},
+        {'id': 'ARAGON', 'name': ('ARAGON'), 'selected': False},
+        {'id': 'CUAUTITLAN', 'name': ('CUAUTITLAN'), 'selected': False},
+        {'id': 'CUERNAVACA', 'name': ('CUERNAVACA'), 'selected': False},
+        {'id': 'COVE', 'name': ('COVE'), 'selected': False},
+        {'id': 'IZTACALA', 'name': ('IZTACALA'), 'selected': False},
+        {'id': 'JURIQUILLA', 'name': ('JURIQUILLA'), 'selected': False},
+        {'id': 'LION', 'name': ('LION'), 'selected': False},
+        {'id': 'MORELIA', 'name': ('MORELIA'), 'selected': False},
+        {'id': 'YUCATAN', 'name': ('YUCATAN'), 'selected': False},
+        
+        
+    ]
+   
 
     def _get_reports_buttons(self):
         return [
@@ -70,13 +87,30 @@ class CheckProtection(models.AbstractModel):
             {'name': _('Unit')},
             {'name': _('Date')},
             {'name': _('Number of checks')},
-            {'name': _('Importe')},
-            {'name': _('')},
-            {'name': _('')},
-            {'name': _('')},
-            {'name': _('')},
-
+            {'name': _('Amount')},
         ]
+
+    def _format(self, value,figure_type):
+        if self.env.context.get('no_format'):
+            return value
+        value['no_format_name'] = value['name']
+        
+        currency_id = self.env.company.currency_id
+        if figure_type == 'float':
+            
+            if currency_id.is_zero(value['name']):
+                # don't print -0.0 in reports
+                value['name'] = abs(value['name'])
+                value['class'] = 'number text-muted'
+            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id)
+            value['class'] = 'number'
+            return value
+        if figure_type == 'percents':
+            value['name'] = str(round(value['name'] * 100, 1)) + '%'
+            value['class'] = 'number'
+            return value
+        value['name'] = round(value['name'], 1)
+        return value
 
     def _get_lines(self, options, line_id=None):
         lines = []
@@ -95,24 +129,46 @@ class CheckProtection(models.AbstractModel):
         deps = list(deps)
         
         total_amount = 0
-        for module in deps:
-            rec_ids = check_log_ids.filtered(lambda x:x.module==module)
-            total_rec = len(rec_ids)
-            amount = sum(x.check_amount for x in rec_ids)
-            total_amount += amount
+        total_check = 0 
+        if deps:
+            for module in deps:
+                
+                rec_ids = check_log_ids.filtered(lambda x:x.module==module).sorted(key='date_protection')
+                date_list = rec_ids.mapped('date_protection')
+                date_list = set(date_list)
+                date_list = list(date_list)
+                for d in date_list:
+                    
+                    date_rec_ids = rec_ids.filtered(lambda x:x.date_protection==d)
+                    total_rec = len(date_rec_ids)
+                    amount = sum(x.check_amount for x in date_rec_ids)
+                    total_amount += amount
+                    total_check += total_rec
+                    
+                    lines.append({
+                        'id': 'hierarchy' + str(module),
+                        'name' : module, 
+                        'columns': [ {'name': d},
+                                    {'name': total_rec,'class':'number'},
+                                    self._format({'name': amount},figure_type='float'),
+                                    ],
+                        'level': 3,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
 
-#             lines.append({
-#                 'id': 'hierarchy' + str(module),
-#                 'name' : module, 
-#                 'columns': [ {'name': inv.check_folio_id and inv.check_folio_id.folio or ''},
-#                             {'name': inv.partner_id and inv.partner_id.name or ''},
-#                             self._format({'name': inv.amount_total},figure_type='float'),
-#                             ],
-#                 'level': 3,
-#                 'unfoldable': False,
-#                 'unfolded': True,
-#             })
-             
+            lines.append({
+                'id': 'hierarchy' + str(module),
+                'name' : _('Total'), 
+                'columns': [ {'name': ''},
+                            {'name': total_check,'class':'number'},
+                            self._format({'name': total_amount},figure_type='float'),
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+                 
         return lines
 
     def _get_report_name(self):
@@ -126,14 +182,12 @@ class CheckProtection(models.AbstractModel):
         # table.
         # This scenario happens when you want to print a PDF report for the first time, as the
         # assets are not in cache and must be generated. To workaround this issue, we manually
-        # commit the writes in the `ir.attachment` table. It is done thanks to
-        # a key in the context.
+        # commit the writes in the `ir.attachment` table. It is done thanks to a key in the context.
         minimal_layout = False
         if not config['test_enable']:
             self = self.with_context(commit_assetsbundle=True)
 
-        base_url = self.env['ir.config_parameter'].sudo().get_param(
-            'report.url') or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('report.url') or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         rcontext = {
             'mode': 'print',
             'base_url': base_url,
@@ -146,29 +200,22 @@ class CheckProtection(models.AbstractModel):
         )
         body_html = self.with_context(print_mode=True).get_html(options)
 
-        body = body.replace(b'<body class="o_account_reports_body_print">',
-                            b'<body class="o_account_reports_body_print">' + body_html)
+        body = body.replace(b'<body class="o_account_reports_body_print">', b'<body class="o_account_reports_body_print">' + body_html)
         if minimal_layout:
             header = ''
-            footer = self.env['ir.actions.report'].render_template(
-                "web.internal_layout", values=rcontext)
-            spec_paperformat_args = {
-                'data-report-margin-top': 10, 'data-report-header-spacing': 10}
-            footer = self.env['ir.actions.report'].render_template(
-                "web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
+            footer = self.env['ir.actions.report'].render_template("web.internal_layout", values=rcontext)
+            spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 10}
+            footer = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
         else:
             rcontext.update({
-                'css': '',
-                'o': self.env.user,
-                'res_company': self.env.company,
-            })
-            header = self.env['ir.actions.report'].render_template(
-                "jt_check_controls.external_layout_check_protection", values=rcontext)
-            # Ensure that headers and footer are correctly encoded
-            header = header.decode('utf-8')
+                    'css': '',
+                    'o': self.env.user,
+                    'res_company': self.env.company,
+                })
+            header = self.env['ir.actions.report'].render_template("jt_check_controls.external_layout_check_protection", values=rcontext)
+            header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
             spec_paperformat_args = {}
-            # Default header and footer in case the user customized
-            # web.external_layout and removed the header/footer
+            # Default header and footer in case the user customized web.external_layout and removed the header/footer
             headers = header.encode()
             footer = b''
             # parse header as new header contains header, body and footer
@@ -178,13 +225,11 @@ class CheckProtection(models.AbstractModel):
 
                 for node in root.xpath(match_klass.format('header')):
                     headers = lxml.html.tostring(node)
-                    headers = self.env['ir.actions.report'].render_template(
-                        "web.minimal_layout", values=dict(rcontext, subst=True, body=headers))
+                    headers = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=headers))
 
                 for node in root.xpath(match_klass.format('footer')):
                     footer = lxml.html.tostring(node)
-                    footer = self.env['ir.actions.report'].render_template(
-                        "web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
+                    footer = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
 
             except lxml.etree.XMLSyntaxError:
                 headers = header.encode()
@@ -195,12 +240,12 @@ class CheckProtection(models.AbstractModel):
         if len(self.with_context(print_mode=True).get_header(options)[-1]) > 5:
             landscape = True
 
-            return self.env['ir.actions.report']._run_wkhtmltopdf(
-                [body],
-                header=header, footer=footer,
-                landscape=landscape,
-                specific_paperformat_args=spec_paperformat_args
-            )
+        return self.env['ir.actions.report']._run_wkhtmltopdf(
+            [body],
+            header=header, footer=footer,
+            landscape=landscape,
+            specific_paperformat_args=spec_paperformat_args
+        )
 
         def get_xlsx(self, options, response=None):
             output = io.BytesIO()

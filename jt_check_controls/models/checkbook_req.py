@@ -20,6 +20,7 @@ class CheckbookRequest(models.Model):
     intial_folio = fields.Integer("Initial Folio")
     final_folio = fields.Integer("Final Folio")
     confirmation_letter = fields.Binary("Confirmation Letter")
+    file_name = fields.Char("File Name")
     are_test_prin_formats_sent = fields.Boolean("Are test print formats sent?")
     dependence_id = fields.Many2one('dependency', "Dependence")
     subdependence_id = fields.Many2one('sub.dependency', "Subdependence")
@@ -308,10 +309,10 @@ class CheckListLine(models.Model):
     def action_send_to_custody(self):
         cancel_checks = self.env['cancel.checks']
         for rec in self:
-            if rec.status == 'Cancelled' and rec.dependence_id:
+            if rec.status == 'Cancelled':
                 cancel_checks.create({
                     'check_folio':rec.folio,
-                    'dependency_id': rec.dependence_id.id,
+                    'dependency_id': rec.dependence_id and rec.dependence_id.id or False,
                     'check_status': rec.status,
                     'bank_id': rec.bank_id.id if rec.bank_id else False,
                     'bank_account_id': rec.bank_account_id.id if rec.bank_account_id else False,

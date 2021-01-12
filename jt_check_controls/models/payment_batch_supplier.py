@@ -131,7 +131,10 @@ class PaymentBatchSupplier(models.Model):
             if reqs:
                 rec.intial_check_folio = reqs[0].check_folio_id.id
                 rec.final_check_folio = reqs[-1].check_folio_id.id
-
+            else:
+                rec.intial_check_folio = False
+                rec.final_check_folio = False
+                
     def action_protected_checks(self):
         today = datetime.today().date()
         attch = self.env['ir.attachment']
@@ -195,6 +198,8 @@ class PaymentBatchSupplier(models.Model):
                     for line in rec.payment_req_ids.filtered(lambda x: x.selected == True):
                         line.check_folio_id = logs[counter]
                         line.check_folio_id.check_amount = line.amount_to_pay
+                        if line.payment_req_id and line.payment_req_id.check_folio_id:
+                            line.payment_req_id.related_check_folio_id = line.payment_req_id.check_folio_id.id
                         line.payment_req_id.check_folio_id = line.check_folio_id.id
                         counter += 1
                         line.selected = False

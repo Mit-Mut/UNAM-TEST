@@ -1,5 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <template id="search_template_department">
+        <a type="button" class="dropdown-toggle" data-toggle="dropdown">
+            <span class="fa"/>
+            Department:
+            <t t-set="selected_department" t-value="options.get('name_journal_group') or ', '.join(c.get('name') for c in options['department'] if c.get('selected'))"/>
+            <t t-if="selected_department">
+                <t t-esc="selected_department"/>
+            </t>
+            <t t-else="">
+                
+            </t>
+        </a>
+         
+        <div class="dropdown-menu o_filters_menu" role="menu">
+            <t t-foreach="options['department']" t-as="j">
+                <t t-if="j.get('id') == 'divider'">
+                    <div role="separator" class="dropdown-divider"/>
+                    <b role="menuitem" class="ml4 dropdown-item-text"><t t-esc="j.get('name')"/></b>
+                    <div role="separator" class="dropdown-divider"/>
+                </t>
+                <t t-if="j.get('id') != 'divider'">
+                    <t>
+                        <a role="menuitem" class="dropdown-item js_account_report_choice_filter" t-att-title="j.get('name')" t-att-data-id="j.get('id')" data-filter="project_type">
+                            <t t-esc="j.get('name')"/>
+                        </a>
+                    </t>
+                </t>
+            </t>
+        </div>
+        
+    </template>
+
+     <template id="search_template_jt_check_controls_department" inherit_id="account_reports.search_template">
+        <xpath expr="." position="inside">
+            <div class="btn-group o_dropdown o_account_reports_filter_product_type" t-if="options.get('department') != None">
+                <t t-call="jt_check_controls.search_template_department"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="search_template_fortnight">
+        <a type="button" class="dropdown-toggle" data-toggle="dropdown">
+            <span class="fa"/>
+            Fortnight:
+            <t t-set="selected_fortnight" t-value="options.get('name_journal_group') or ', '.join(c.get('name') for c in options['fortnight'] if c.get('selected'))"/>
+            <t t-if="selected_fortnight">
+                <t t-esc="selected_fortnight"/>
+            </t>
+            <t t-else="">
+                
+            </t>
+        </a>
+         
+        <div class="dropdown-menu o_filters_menu" role="menu">
+            <t t-foreach="options['fortnight']" t-as="j">
+                <t t-if="j.get('id') == 'divider'">
+                    <div role="separator" class="dropdown-divider"/>
+                    <b role="menuitem" class="ml4 dropdown-item-text"><t t-esc="j.get('name')"/></b>
+                    <div role="separator" class="dropdown-divider"/>
+                </t>
+                <t t-if="j.get('id') != 'divider'">
+                    <t>
+                        <a role="menuitem" class="dropdown-item js_account_report_choice_filter" t-att-title="j.get('name')" t-att-data-id="j.get('id')" data-filter="fortnight">
+                            <t t-esc="j.get('name')"/>
+                        </a>
+                    </t>
+                </t>
+            </t>
+        </div>
+        
+    </template>
+
+    <template id="search_template_jt_check_controls_fortnight" inherit_id="account_reports.search_template">
+        <xpath expr="." position="inside">
+            <div class="btn-group o_dropdown o_account_reports_filter_product_type" t-if="options.get('fortnight') != None">
+                <t t-call="jt_check_controls.search_template_fortnight"/>
+            </div>
+        </xpath>
+    </template>
+
+
 
     <template id="search_template_bank_account">
         <a type="button" class="dropdown-toggle" data-toggle="dropdown">

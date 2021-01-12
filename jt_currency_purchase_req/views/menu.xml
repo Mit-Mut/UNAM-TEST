@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+
+        <!-- calender payment posting menus-->
+        <menuitem id="menu_cale_pay_post" name="Calendar for payment posting"
+                  sequence="99" parent="jt_payroll_payment.menu_payment_finance_setting"/>
+
+
+         <!--  Federal Grant Registeration menus-->
+        <menuitem id="menu_federal_grant_registeration" name="Federal Grant Registeration"
+                  sequence="7" parent="jt_payroll_payment.menu_payment_finance"/>
+
+		    <!--  Calender Of Assigned amount menus-->
+        <menuitem id="jt_budget_mgmt.menu_control_assigned_amounts" name="Calender Of Assigned Amount"
+                  sequence="0" parent="menu_federal_grant_registeration"
+                  />
+
+        <!--Account management menu-->
+        <menuitem id="menu_account_management" name="Account Management"
+                  sequence="8" parent="jt_payroll_payment.menu_payment_finance"/>
+
+       <!--  Movement type menu-->
+        <menuitem id="menu_movement_type" name="Movement Type"
+                  sequence="0" parent="menu_account_management"/>
+
+            <!-- request for new account  menu-->
+        <menuitem id="menu_request_account" name="Request for new account"
+                  sequence="0" parent="menu_movement_type"
+                  action="jt_projects.open_request_accounts_action"
+                  />
+
+        <!-- account modification menu-->
+        <menuitem id="menu_account_modification" name="Account modification"
+                  sequence="1" parent="menu_movement_type"/>
+
+        <!-- account cancellation menu-->
+        <menuitem id="menu_account_cacellation" name="Account Cancellation"
+                  sequence="2" parent="menu_movement_type" action="jt_projects.cancellation_request_action"/>
+
+    </data>
+</odoo>

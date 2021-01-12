@@ -92,14 +92,12 @@ class CheckProtectionControlCertificate(models.AbstractModel):
         # table.
         # This scenario happens when you want to print a PDF report for the first time, as the
         # assets are not in cache and must be generated. To workaround this issue, we manually
-        # commit the writes in the `ir.attachment` table. It is done thanks to
-        # a key in the context.
+        # commit the writes in the `ir.attachment` table. It is done thanks to a key in the context.
         minimal_layout = False
         if not config['test_enable']:
             self = self.with_context(commit_assetsbundle=True)
 
-        base_url = self.env['ir.config_parameter'].sudo().get_param(
-            'report.url') or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('report.url') or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         rcontext = {
             'mode': 'print',
             'base_url': base_url,
@@ -112,29 +110,22 @@ class CheckProtectionControlCertificate(models.AbstractModel):
         )
         body_html = self.with_context(print_mode=True).get_html(options)
 
-        body = body.replace(b'<body class="o_account_reports_body_print">',
-                            b'<body class="o_account_reports_body_print">' + body_html)
+        body = body.replace(b'<body class="o_account_reports_body_print">', b'<body class="o_account_reports_body_print">' + body_html)
         if minimal_layout:
             header = ''
-            footer = self.env['ir.actions.report'].render_template(
-                "web.internal_layout", values=rcontext)
-            spec_paperformat_args = {
-                'data-report-margin-top': 10, 'data-report-header-spacing': 10}
-            footer = self.env['ir.actions.report'].render_template(
-                "web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
+            footer = self.env['ir.actions.report'].render_template("web.internal_layout", values=rcontext)
+            spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 10}
+            footer = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
         else:
             rcontext.update({
-                'css': '',
-                'o': self.env.user,
-                'res_company': self.env.company,
-            })
-            header = self.env['ir.actions.report'].render_template(
-                "jt_check_controls.external_layout_check_protection_control_certificate", values=rcontext)
-            # Ensure that headers and footer are correctly encoded
-            header = header.decode('utf-8')
+                    'css': '',
+                    'o': self.env.user,
+                    'res_company': self.env.company,
+                })
+            header = self.env['ir.actions.report'].render_template("jt_check_controls.external_layout_check_protection_control_certificate", values=rcontext)
+            header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
             spec_paperformat_args = {}
-            # Default header and footer in case the user customized
-            # web.external_layout and removed the header/footer
+            # Default header and footer in case the user customized web.external_layout and removed the header/footer
             headers = header.encode()
             footer = b''
             # parse header as new header contains header, body and footer
@@ -144,13 +135,11 @@ class CheckProtectionControlCertificate(models.AbstractModel):
 
                 for node in root.xpath(match_klass.format('header')):
                     headers = lxml.html.tostring(node)
-                    headers = self.env['ir.actions.report'].render_template(
-                        "web.minimal_layout", values=dict(rcontext, subst=True, body=headers))
+                    headers = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=headers))
 
                 for node in root.xpath(match_klass.format('footer')):
                     footer = lxml.html.tostring(node)
-                    footer = self.env['ir.actions.report'].render_template(
-                        "web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
+                    footer = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
 
             except lxml.etree.XMLSyntaxError:
                 headers = header.encode()
@@ -161,12 +150,12 @@ class CheckProtectionControlCertificate(models.AbstractModel):
         if len(self.with_context(print_mode=True).get_header(options)[-1]) > 5:
             landscape = True
 
-            return self.env['ir.actions.report']._run_wkhtmltopdf(
-                [body],
-                header=header, footer=footer,
-                landscape=landscape,
-                specific_paperformat_args=spec_paperformat_args
-            )
+        return self.env['ir.actions.report']._run_wkhtmltopdf(
+            [body],
+            header=header, footer=footer,
+            landscape=landscape,
+            specific_paperformat_args=spec_paperformat_args
+        )
 
     def get_xlsx(self, options, response=None):
         output = io.BytesIO()

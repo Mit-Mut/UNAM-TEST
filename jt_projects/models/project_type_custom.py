@@ -10,6 +10,14 @@ class ProjectTypeCustom(models.Model):
     name = fields.Char(string='Identifier', size=2)
     description = fields.Text(string='Description')
 
+    @api.constrains('name')
+    def _check_name(self):
+        for record in self :
+            p_type_id = self.env['project.type.custom'].search([('id', '!=', record.id),('name','=',record.name)],limit=1)
+            if p_type_id :
+                raise ValidationError(_('Project Type Value Must Be Unique'))
+                
+
 class BudgetProjectType(models.Model):
     
     _inherit = 'project.type'

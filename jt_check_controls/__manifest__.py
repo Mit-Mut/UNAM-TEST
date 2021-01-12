@@ -71,6 +71,7 @@
         'reports/delivery_ticket.xml',
         'reports/payroll_adjustment.xml',
         'wizard/reissue_reject_reason.xml',
+        'views/place_of_payment.xml',
 
     ],
     'demo': [

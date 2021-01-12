@@ -312,7 +312,7 @@ class TaxReport(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_account7',
-            'name' : 'VAT withheld', 
+            'name' : '220.001.004 ' + 'VAT withheld', 
             'columns': [
                          self._format({'name': open_bal5},figure_type='float'),
                         ],
@@ -324,7 +324,7 @@ class TaxReport(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_account8',
-            'name' : 'IEPS payable', 
+            'name' : '220.001.005 ' + 'IEPS payable', 
             'columns': [
                          self._format({'name': open_bal6},figure_type='float'),
                         ],
@@ -336,7 +336,7 @@ class TaxReport(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_account9',
-            'name' : 'VAT payable', 
+            'name' : '220.001.006 ' + 'VAT payable', 
             'columns': [
                          self._format({'name': open_bal7},figure_type='float'),
                         ],

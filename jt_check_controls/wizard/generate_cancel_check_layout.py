@@ -189,18 +189,22 @@ class GenerateCancelCheckLayout(models.TransientModel):
         file_data += '\r\n'
         
         total_amount = 0
-        
+        total_check_folio = 0
         for check in self.reissue_ids:
             #===== Registration =====#
             file_data += 'B'
             
-            branch_number = ''
-            if check.bank_id and check.bank_id.branch_number:
-                branch_number = check.bank_id.branch_number
+            branch_number = '   '
+
+            if check.bank_id and check.bank_id.branch_number and len(check.bank_id.branch_number) > 3:
+                branch_number = check.bank_id.branch_number[-3:]
+            elif check.bank_id and check.bank_id.branch_number:
+                branch_number = check.bank_id.branch_number if check.bank_id.branch_number else ''
+            
             file_data += branch_number
 
             #===== Account Currency=====#
-            file_data += 'M'
+            file_data += '1'
             
             #===== Bank Account ====#
             bank_account = ''
@@ -212,6 +216,7 @@ class GenerateCancelCheckLayout(models.TransientModel):
             #====== Check Folio ======#
             temp_log = ''
             if check.check_log_id and check.check_log_id.folio:
+                total_check_folio += check.check_log_id.folio
                 temp_log =  check.check_log_id.folio
                 file_data += str(temp_log).zfill(10)
             else:
@@ -230,7 +235,7 @@ class GenerateCancelCheckLayout(models.TransientModel):
             partner_name = ''
             if check.partner_id:
                 partner_name = check.partner_id.name
-            file_data += partner_name.rjust(60)
+            file_data += partner_name.ljust(60)
             
             #======= Fillrer=====
             file_data += ''.ljust(49)
@@ -246,24 +251,22 @@ class GenerateCancelCheckLayout(models.TransientModel):
         file_data += 'P'
 
         #======= Total highs =====
-        file_data += ''.ljust(9)
+        file_data += ''.zfill(9)
 
         #======= Checksum of Check Numbers =====
-        file_data += ''.ljust(15)
+        file_data += ''.zfill(15)
 
         #======= Sum Of amounts =====
-        file_data += ''.ljust(18)
+        file_data += ''.zfill(18)
         
         #======= Total Records =====
         total_rec= len(self.reissue_ids)
         file_data +=str(total_rec).zfill(9)
         
         #===== Checksum (Low) ===#
-        amount = round(total_amount, 2)
-        amount = "%.2f" % total_amount            
+        amount = "%.2f" % total_check_folio            
         amount = str(amount).split('.')
-        file_data +=str(amount[0]).zfill(13)
-        file_data +=str(amount[1])
+        file_data +=str(amount[0]).zfill(15)
 
         #===== Sum of amounts (Low) ===#    
         amount = round(total_amount, 2)
@@ -273,14 +276,12 @@ class GenerateCancelCheckLayout(models.TransientModel):
         file_data +=str(amount[1])
         
         #===== Total high and lows===#
-        file_data +=str(total_rec).zfill(9)
+        file_data +=str(total_rec).zfill(10)
 
         #===== Checksum (Low) ===#
-        amount = round(total_amount, 2)
-        amount = "%.2f" % total_amount            
+        amount = "%.2f" % total_check_folio            
         amount = str(amount).split('.')
-        file_data +=str(amount[0]).zfill(13)
-        file_data +=str(amount[1])
+        file_data +=str(amount[0]).zfill(15)
 
         #===== Sum of amounts (Low) ===#    
         amount = round(total_amount, 2)

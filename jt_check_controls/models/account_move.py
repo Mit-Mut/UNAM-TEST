@@ -9,8 +9,8 @@ class SupplierPaymentRequest(models.Model):
                                                     ('rotated','Rotated'),
                                                     ('assigned_payment_method','Assigned Payment Method')])
     check_folio_id = fields.Many2one('check.log', "Check Sheet")
-    related_check_folio_id = fields.Many2one('check.log', "Related Check Sheet")
-    related_check = fields.Integer(related='related_check_folio_id.folio',string='Related Checks')
+    related_check_folio_ids = fields.Many2many('check.log','rel_move_check_log','check_id','move_id',string="Related Check Sheets")
+    related_check_history = fields.Char("Related Check Sheet")
     check_status = fields.Selection([('Checkbook registration', 'Checkbook registration'),
                           ('Assigned for shipping', 'Assigned for shipping'),
                           ('Available for printing', 'Available for printing'),
@@ -34,6 +34,9 @@ class SupplierPaymentRequest(models.Model):
                     payment_req.payment_issuing_bank_id = False
                     payment_req.payment_issuing_bank_account_id = False
                     payment_req.l10n_mx_edi_payment_method_id = False
+                    payment_ids = self.env['account.payment'].search([('payment_state','=','for_payment_procedure'),('payment_request_id','=',payment_req.id)])
+                    for payment in payment_ids:
+                        payment.cancel()
             if payment_req.payment_state == 'rotated' and payment_req.is_payment_request == True:
                 payment_req.action_cancel_budget()
 

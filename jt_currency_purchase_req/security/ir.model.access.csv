@@ -1,2 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_comission_profit,comission_profit_access,model_comission_profit,base.group_user,1,1,1,1
+access_auth_sign,auth_sign_access,model_auth_sign,,1,1,1,1
+access_finance_sender_recipient_trades,finance_sender_recipient_trades_access,model_finance_sender_recipient_trades,,1,1,1,1

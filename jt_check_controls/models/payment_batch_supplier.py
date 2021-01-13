@@ -188,18 +188,26 @@ class PaymentBatchSupplier(models.Model):
             if rec.checkbook_req_id:
                 count = rec.payment_req_ids.filtered(lambda x: x.selected == True)
                 logs = check_log_obj.search([('checklist_id.checkbook_req_id', '=', rec.checkbook_req_id.id),
-                        ('status', '=', 'Available for printing')]).ids
+                        ('status', '=', 'Available for printing')],order='folio').ids
                 exit_logs = check_payment_req_obj.search([('check_folio_id', 'in', logs)]).mapped('check_folio_id').ids
                 logs = list(set(logs)^set(exit_logs))
                 if len(logs) < len(count):
                     raise ValidationError(_('Not enough check available to assign printing!'))
                 counter = 0
                 if logs:
+                    logs = check_log_obj.search([('id','in',logs)],order='folio')
                     for line in rec.payment_req_ids.filtered(lambda x: x.selected == True):
                         line.check_folio_id = logs[counter]
                         line.check_folio_id.check_amount = line.amount_to_pay
                         if line.payment_req_id and line.payment_req_id.check_folio_id:
-                            line.payment_req_id.related_check_folio_id = line.payment_req_id.check_folio_id.id
+                            previous_data = line.payment_req_id.related_check_history
+                            if previous_data:
+                                previous_data += ","+str(line.payment_req_id.check_folio_id.folio)
+                            else:
+                                previous_data = str(line.payment_req_id.check_folio_id.folio)
+                                
+                            line.payment_req_id.related_check_history = previous_data      
+                            line.payment_req_id.related_check_folio_ids =  [(4, line.payment_req_id.check_folio_id.id)]   
                         line.payment_req_id.check_folio_id = line.check_folio_id.id
                         counter += 1
                         line.selected = False
@@ -310,6 +318,15 @@ class BankBalanceCheck(models.TransientModel):
                     batch_data.update({invoice.batch_folio: [invoice]})
 
             if invoice.is_payroll_payment_request == True and invoice.l10n_mx_edi_payment_method_id \
+                    and invoice.l10n_mx_edi_payment_method_id.id == check_payment_method:
+                if invoice.batch_folio in batch_data.keys():
+                    batch_data.update({
+                        invoice.batch_folio: batch_data.get(invoice.batch_folio) + [invoice]
+                    })
+                else:
+                    batch_data.update({invoice.batch_folio: [invoice]})
+
+            if invoice.is_different_payroll_request == True and invoice.l10n_mx_edi_payment_method_id \
                     and invoice.l10n_mx_edi_payment_method_id.id == check_payment_method:
                 if invoice.batch_folio in batch_data.keys():
                     batch_data.update({

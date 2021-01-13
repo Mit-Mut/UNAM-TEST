@@ -86,10 +86,6 @@ class CheckCardFolioPaymentIssue(models.AbstractModel):
              'action': 'print_xlsx', 'file_export_type': _('XLSX')},
         ]
 
-    def _get_lines(self, options, line_id=None):
-        lines = []
-        return lines
-
     def _get_templates(self):
         templates = super(
             CheckCardFolioPaymentIssue, self)._get_templates()

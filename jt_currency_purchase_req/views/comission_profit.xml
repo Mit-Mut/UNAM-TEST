@@ -19,7 +19,7 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                            <button name="approve" string="Approve" class="oe_highlight" attrs="{'invisible':[('id','=',False),('status','=','approved')]}" type="object"/>
+                            <button name="approve" string="Approve" class="oe_highlight" attrs="{'invisible':[('id','=',False),('status','!=','draft')]}" type="object"/>
             
                             <field name="status" widget="statusbar"/>
                         </header>

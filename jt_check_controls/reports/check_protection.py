@@ -48,8 +48,6 @@ class CheckProtection(models.AbstractModel):
     filter_unposted_in_period = None
     MAX_LINES = None
     filter_department = [
-        {'id': 'General Directorate of Personnel', 'name': ('General Staff Address'), 'selected': False},
-        {'id': 'Payment coordination', 'name': ('Payment coordination'), 'selected': False},
         {'id': 'ACATLAN', 'name': ('ACATLAN'), 'selected': False},
         {'id': 'ARAGON', 'name': ('ARAGON'), 'selected': False},
         {'id': 'CUAUTITLAN', 'name': ('CUAUTITLAN'), 'selected': False},

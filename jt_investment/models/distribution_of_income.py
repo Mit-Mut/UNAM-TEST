@@ -1,6 +1,7 @@
 from odoo import models, fields, api , _
 from datetime import datetime
 from odoo.exceptions import UserError
+from datetime import timedelta
 
 class DistributionOfIncome(models.Model):
 
@@ -52,7 +53,41 @@ class DistributionOfIncome(models.Model):
             if rec.state not in ['draft']:
                 raise UserError(_('You can delete only draft status data.'))
         return super(DistributionOfIncome, self).unlink()
-    
+
+    def get_avg_rate(self,inv):
+        rate = 0
+        day_diff = self.end_date - self.start_date
+        day_diff = day_diff.days+1
+        new_date = self.start_date
+        count = 0
+        for r in range(day_diff):
+            count += 1
+            period_rate_id = self.env['investment.period.rate'].search([('rate_date','=',new_date),('product_type','=','TIIE')],limit=1)
+            if period_rate_id:
+                if inv.term_variable == 28:
+                    rate += period_rate_id.rate_days_28
+                elif inv.term_variable == 91:
+                    rate += period_rate_id.rate_days_91
+                elif inv.term_variable == 182:
+                    rate += period_rate_id.rate_days_182
+                
+            else:
+                period_rate_id = self.env['investment.period.rate'].search([('rate_date','<',new_date),('product_type','=','TIIE')],limit=1,order='rate_date desc')
+                if period_rate_id:
+                    if inv.term_variable == 28:
+                        rate += period_rate_id.rate_days_28
+                    elif inv.term_variable == 91:
+                        rate += period_rate_id.rate_days_91
+                    elif inv.term_variable == 182:
+                        rate += period_rate_id.rate_days_182
+            
+            new_date =  self.start_date + timedelta(days=count)
+        if day_diff > 0:
+            rate = rate/day_diff
+        else:
+            rate = 0
+        return rate
+
     def create_line_records(self,line,opt_line,capital,cal_vals,pre_line,days):
         inc = 0
         withdrawal = 0
@@ -82,7 +117,7 @@ class DistributionOfIncome(models.Model):
             rate = inv.interest_rate + inv.extra_percentage
             
         elif inv.is_variable_rate:
-            v_rate = 0
+            v_rate = self.get_avg_rate(inv)
             if opt_line==line:
                 term = (self.end_date - line.date_required).days + 1
                 
@@ -93,44 +128,43 @@ class DistributionOfIncome(models.Model):
                     #term = opt_line.date_required.day - line.date_required.day
             
             #term = inv.term_variable
-            if inv.investment_rate_id:
-                other_rate_id = False
-                if not other_rate_id: 
-                    if inv.term_variable == 28 and inv.investment_rate_id.rate_days_28:
-                        v_rate = inv.investment_rate_id.rate_days_28
-                        other_rate_id = True
-                    else:
-                        other_rate_id = self.env['investment.period.rate'].search([('rate_days_28','>',0),('rate_date','<=',inv.investment_rate_id.rate_date),('product_type','=',inv.investment_rate_id.product_type)],limit=1,order='rate_date desc')
-                        if other_rate_id:
-                            v_rate = other_rate_id.rate_days_28
-                        other_rate_id = True
-                        
-                if not other_rate_id:
-                    if inv.term_variable == 91 and inv.investment_rate_id.rate_days_91:
-                        v_rate = inv.investment_rate_id.rate_days_91
-                        other_rate_id = True
-                    else:
-                        other_rate_id = self.env['investment.period.rate'].search([('rate_days_91','>',0),('rate_date','<=',inv.investment_rate_id.rate_date),('product_type','=',inv.investment_rate_id.product_type)],limit=1,order='rate_date desc')
-                        if other_rate_id:
-                            v_rate = other_rate_id.rate_days_91
-                        other_rate_id = True
-                        
-                if not other_rate_id:                                    
-                    if inv.term_variable == 182 and inv.investment_rate_id.rate_days_182:
-                        v_rate = inv.investment_rate_id.rate_days_182
-                        other_rate_id = True
-                    else:
-                        other_rate_id = self.env['investment.period.rate'].search([('rate_days_182','>',0),('rate_date','<=',inv.investment_rate_id.rate_date),('product_type','=',inv.investment_rate_id.product_type)],limit=1,order='rate_date desc')
-                        if other_rate_id:
-                            v_rate = other_rate_id.rate_days_182
-                        other_rate_id = True
+#             if inv.investment_rate_id:
+#                 other_rate_id = False
+#                 if not other_rate_id: 
+#                     if inv.term_variable == 28 and inv.investment_rate_id.rate_days_28:
+#                         v_rate = inv.investment_rate_id.rate_days_28
+#                         other_rate_id = True
+#                     else:
+#                         other_rate_id = self.env['investment.period.rate'].search([('rate_days_28','>',0),('rate_date','<=',inv.investment_rate_id.rate_date),('product_type','=',inv.investment_rate_id.product_type)],limit=1,order='rate_date desc')
+#                         if other_rate_id:
+#                             v_rate = other_rate_id.rate_days_28
+#                         other_rate_id = True
+#                         
+#                 if not other_rate_id:
+#                     if inv.term_variable == 91 and inv.investment_rate_id.rate_days_91:
+#                         v_rate = inv.investment_rate_id.rate_days_91
+#                         other_rate_id = True
+#                     else:
+#                         other_rate_id = self.env['investment.period.rate'].search([('rate_days_91','>',0),('rate_date','<=',inv.investment_rate_id.rate_date),('product_type','=',inv.investment_rate_id.product_type)],limit=1,order='rate_date desc')
+#                         if other_rate_id:
+#                             v_rate = other_rate_id.rate_days_91
+#                         other_rate_id = True
+#                         
+#                 if not other_rate_id:                                    
+#                     if inv.term_variable == 182 and inv.investment_rate_id.rate_days_182:
+#                         v_rate = inv.investment_rate_id.rate_days_182
+#                         other_rate_id = True
+#                     else:
+#                         other_rate_id = self.env['investment.period.rate'].search([('rate_days_182','>',0),('rate_date','<=',inv.investment_rate_id.rate_date),('product_type','=',inv.investment_rate_id.product_type)],limit=1,order='rate_date desc')
+#                         if other_rate_id:
+#                             v_rate = other_rate_id.rate_days_182
+#                         other_rate_id = True
                         
             rate = v_rate + inv.extra_percentage
         
         final_balance = capital + inc - withdrawal
         income = (((final_balance * rate)/100)/360)*term
         
-        print ("=====Term====",term)
         cal_vals.append([0, 0, 
                     {
                      'fund_id':line.investment_fund_id and line.investment_fund_id.fund_id and line.investment_fund_id.fund_id.id or False,
@@ -178,7 +212,6 @@ class DistributionOfIncome(models.Model):
     #         self.variable_rate = total_rate/total_days
     
     def get_previous_capital(self,cal_vals,pre_lines,capital_next_line,inv,fund,base):
-        print ("====",capital_next_line)
         
         if capital_next_line and capital_next_line.date_required:
             term = (capital_next_line.date_required - self.start_date).days 
@@ -223,7 +256,7 @@ class DistributionOfIncome(models.Model):
                         if other_rate_id:
                             v_rate = other_rate_id.rate_days_182
                         other_rate_id = True
-                        
+            v_rate = self.get_avg_rate(inv)
             rate = v_rate + inv.extra_percentage
         capital = 0
         for line in pre_lines:

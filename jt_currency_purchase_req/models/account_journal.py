@@ -20,24 +20,24 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Currency Purchase Request',
-    'summary': 'Account Base',
-    'version': '13.0.0.1.0',
-    'category': 'Invoicing',
-    'author': 'Jupical Technologies Pvt. Ltd.',
-    'maintainer': 'Jupical Technologies Pvt. Ltd.',
-    'website': 'http://www.jupical.com',
-    'license': 'AGPL-3',
-    'depends': ['jt_finance'],
-    'data': [
-        'security/ir.model.access.csv',
-        'views/menu.xml',
-        'views/comission_profit.xml',
-        'views/account_journal_view.xml',
-        'views/sender_reciept_trade_view.xml',
-    ],
-    'application': False,
-    'installable': True,
-    'auto_install': False,
-}
+from odoo import models, fields
+class AccountJournal(models.Model):
+
+    _inherit = 'account.journal'
+
+    account_type = fields.Selection([('fixed', 'Fixed'), ('operational_fund', 'Operational Fund')],
+                                    string='Account Type')
+    dependency_id = fields.Many2one('dependency', "Dependency Key")
+    auth_sign_ids = fields.One2many('auth.sign','journal_id')
+
+class  AuthorizedSign(models.Model):
+
+	_name = 'auth.sign'
+	_description = 'Authorized Signature'
+
+	journal_id = fields.Many2one('account.journal')
+	employee_id = fields.Many2one('hr.employee','Name')
+	poistion = fields.Many2one('hr.job','Position')
+	movement = fields.Selection([('high','High'),('low','Low')],string='Movement')
+	type_of_signature = fields.Char('Type Of Signature')
+	ownership = fields.Char('Ownership')

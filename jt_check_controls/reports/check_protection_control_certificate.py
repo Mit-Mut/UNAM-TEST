@@ -48,6 +48,102 @@ class CheckProtectionControlCertificate(models.AbstractModel):
     filter_unposted_in_period = None
     MAX_LINES = None
 
+    filter_bank = True
+    #filter_upa_catalog = None
+    #filter_bank_account = True
+    
+    filter_fortnight = [
+        {'id': '01', 'name': ('01'), 'selected': False},
+        {'id': '02', 'name': ('02'), 'selected': False},
+        {'id': '03', 'name': ('03'), 'selected': False},
+        {'id': '04', 'name': ('04'), 'selected': False},
+        {'id': '05', 'name': ('05'), 'selected': False},
+        {'id': '06', 'name': ('06'), 'selected': False},
+        {'id': '07', 'name': ('07'), 'selected': False},
+        {'id': '08', 'name': ('08'), 'selected': False},
+        {'id': '09', 'name': ('09'), 'selected': False},
+        {'id': '10', 'name': ('10'), 'selected': False},
+        {'id': '11', 'name': ('11'), 'selected': False},
+        {'id': '12', 'name': ('12'), 'selected': False},
+        {'id': '13', 'name': ('13'), 'selected': False},
+        {'id': '14', 'name': ('14'), 'selected': False},
+        {'id': '15', 'name': ('15'), 'selected': False},
+        {'id': '16', 'name': ('16'), 'selected': False},
+        {'id': '17', 'name': ('17'), 'selected': False},
+        {'id': '18', 'name': ('18'), 'selected': False},
+        {'id': '19', 'name': ('19'), 'selected': False},
+        {'id': '20', 'name': ('20'), 'selected': False},
+        {'id': '21', 'name': ('21'), 'selected': False},
+        {'id': '22', 'name': ('22'), 'selected': False},
+        {'id': '23', 'name': ('23'), 'selected': False},
+        {'id': '24', 'name': ('24'), 'selected': False},
+    ]
+
+    filter_department = [
+        {'id': 'ACATLAN', 'name': ('ACATLAN'), 'selected': False},
+        {'id': 'ARAGON', 'name': ('ARAGON'), 'selected': False},
+        {'id': 'CUAUTITLAN', 'name': ('CUAUTITLAN'), 'selected': False},
+        {'id': 'CUERNAVACA', 'name': ('CUERNAVACA'), 'selected': False},
+        {'id': 'COVE', 'name': ('COVE'), 'selected': False},
+        {'id': 'IZTACALA', 'name': ('IZTACALA'), 'selected': False},
+        {'id': 'JURIQUILLA', 'name': ('JURIQUILLA'), 'selected': False},
+        {'id': 'LION', 'name': ('LION'), 'selected': False},
+        {'id': 'MORELIA', 'name': ('MORELIA'), 'selected': False},
+        {'id': 'YUCATAN', 'name': ('YUCATAN'), 'selected': False},
+        
+        
+    ]
+
+    @api.model
+    def _get_filter_bank(self):
+        return self.env['res.bank'].search([])
+
+    @api.model
+    def _init_filter_bank(self, options, previous_options=None):
+        if self.filter_bank is None:
+            return
+        if previous_options and previous_options.get('bank'):
+            journal_map = dict((opt['id'], opt['selected']) for opt in previous_options[
+                               'bank'] if opt['id'] != 'divider' and 'selected' in opt)
+        else:
+            journal_map = {}
+        options['bank'] = []
+
+        default_group_ids = []
+
+        for j in self._get_filter_bank():
+            options['bank'].append({
+                'id': j.id,
+                'name': j.name,
+                'code': j.name,
+                'selected': journal_map.get(j.id, j.id in default_group_ids),
+            })
+
+#     @api.model
+#     def _get_filter_bank_account(self):
+#         return self.env['res.partner.bank'].search([])
+# 
+#     @api.model
+#     def _init_filter_bank_account(self, options, previous_options=None):
+#         if self.filter_bank_account is None:
+#             return
+#         if previous_options and previous_options.get('bank_account'):
+#             journal_map = dict((opt['id'], opt['selected']) for opt in previous_options[
+#                                'bank_account'] if opt['id'] != 'divider' and 'selected' in opt)
+#         else:
+#             journal_map = {}
+#         options['bank_account'] = []
+# 
+#         default_group_ids = []
+# 
+#         for j in self._get_filter_bank_account():
+#             options['bank_account'].append({
+#                 'id': j.id,
+#                 'name': j.acc_number,
+#                 'code': j.acc_number,
+#                 'selected': journal_map.get(j.id, j.id in default_group_ids),
+#             })
+
     def _get_reports_buttons(self):
         return [
             {'name': _('Print Preview'), 'sequence': 1,
@@ -67,18 +163,305 @@ class CheckProtectionControlCertificate(models.AbstractModel):
     def _get_columns_name(self, options):
         return [
 
-            {'name': _('Concepts')},
-            {'name': _('')},
-            {'name': _('')},
+            {'name': _('Concepts'),'class':'text-center'},
             {'name': _('Importe')},
-            {'name': _('Number of checks')},
-            {'name': _('')},
-            {'name': _('')},
+            {'name': _('Number of checks'),'class':'number'},
 
         ]
 
+    def _format(self, value,figure_type):
+        if self.env.context.get('no_format'):
+            return value
+        value['no_format_name'] = value['name']
+        
+        currency_id = self.env.company.currency_id
+        if figure_type == 'float':
+            
+            if currency_id.is_zero(value['name']):
+                # don't print -0.0 in reports
+                value['name'] = abs(value['name'])
+                value['class'] = 'number text-muted'
+            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id)
+            value['class'] = 'number'
+            return value
+        if figure_type == 'percents':
+            value['name'] = str(round(value['name'] * 100, 1)) + '%'
+            value['class'] = 'number'
+            return value
+        value['name'] = round(value['name'], 1)
+        return value
+
     def _get_lines(self, options, line_id=None):
         lines = []
+        start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+        
+        salary_payroll_ids = self.env['account.move'].search([('invoice_date','>=',start),('invoice_date','<=',end),('is_payroll_payment_request', '=', True),('check_folio_id','!=',False)])
+        diff_payroll_ids = self.env['account.move'].search([('invoice_date','>=',start),('invoice_date','<=',end),('is_different_payroll_request', '=', True),('check_folio_id','!=',False)])
+        
+        check_folio_ids = salary_payroll_ids.mapped('check_folio_id')
+        deps = check_folio_ids.mapped('module')
+        deps = set(deps)
+        deps = list(deps)
+        salary_amount = 0
+        total_check = 0
+
+
+        lines.append({
+            'id': 'salary_nomina',
+            'name' : '(REPORTE DE TOTALES GENERALES DE NÓMINA DE SUELDOS)', 
+            'level': 3,
+            'unfoldable': False,
+            'unfolded': True,
+            'colspan':3
+        })
+        lines.append({
+            'id': 'salary_folio',
+            'name' : 'FOLIOS VER OFICIO ANEXO DE ENTREGA DE NÓMINA,VALES,CHEQUES Y NOTIFICACIONES DE DEPÓSITO', 
+            'level': 3,
+            'unfoldable': False,
+            'unfolded': True,
+            'colspan':3
+        })
+        lines.append({
+            'id': 'salary_bank',
+            'name' : 'ENLACE BANCA ELECTRONICA', 
+            'columns': [{'name': ''},
+                        {'name': ''},
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })     
+        lines.append({
+            'id': 'salary_date',
+            'name' : '', 
+            'level': 3,
+            'unfoldable': False,
+            'unfolded': True,
+            'colspan':3
+        })
+
+        lines.append({
+            'id': 'salary_date',
+            'name' : 'NO DE SECUENCIA DE REGISTRO DE CHEQUE SEGURIDAD No.________________FECHA_________________', 
+            'level': 3,
+            'unfoldable': False,
+            'unfolded': True,
+            'colspan':3
+        })
+
+        lines.append({
+            'id': 'salary_date',
+            'name' : 'CONSULTA DE ARCHIVOS DE CHEQUERA SEGURIDAD FECHA_________________', 
+            'level': 3,
+            'unfoldable': False,
+            'unfolded': True,
+            'colspan':3
+        })           
+
+        lines.append({
+            'id': 'salary_date',
+            'name' : '', 
+            'level': 3,
+            'unfoldable': False,
+            'unfolded': True,
+            'colspan':3
+        })           
+
+        lines.append({
+            'id': 'salary_date',
+            'name' : 'FOLIOS DE CHEQUES DE NOMINA UTILIZADOS:', 
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+            'colspan':3
+        })           
+                   
+        for module in deps:
+            module_salary_ids = salary_payroll_ids.filtered(lambda x:x.check_folio_id.module==module)
+            module_check_ids = module_salary_ids.mapped('check_folio_id')
+            
+            min_folio = ''
+            max_folio = ''
+            if module_check_ids:
+                min_folio = min(m.folio for m in module_check_ids)
+                max_folio = max(m.folio for m in module_check_ids)
+            
+            salary_amount += sum(x.amount_total for x in module_salary_ids)
+            total_check += len(module_check_ids)
+            
+            lines.append({
+                'id': 'Module'+str(module),
+                'name' : 'CAMPUS '+str(module) +" DEL Folio "+str(min_folio) + " AL " +str(max_folio), 
+                'columns': [{'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+        salary_list = [{
+                'id': 'Module',
+                'name' : 'CIFRAS DE SUELDO', 
+                'columns': [self._format({'name': salary_amount},figure_type='float'),
+                            {'name': total_check,'class':'number'},
+                            
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+                'class':'text-center'
+            }]    
+        lines = salary_list + lines
+        #========================= Different Payroll Payment ============================###
+
+        check_folio_ids = diff_payroll_ids.mapped('check_folio_id')
+        deps = check_folio_ids.mapped('module')
+        deps = set(deps)
+        deps = list(deps)
+        salary_amount = 0
+        total_check = 0
+        diff_lines = []
+        diff_lines.append({
+            'id': 'salary_nomina',
+            'name' : '(REPORTE DE NOMINA DE PENSIONADOS)', 
+            'level': 3,
+            'unfoldable': False,
+            'unfolded': True,
+            'colspan':3
+        })
+        diff_lines.append({
+            'id': 'salary_folio',
+            'name' : 'FOLIOS VER OFICIO ANEXO DE ENTREGA DE NÓMINA,VALES,CHEQUES Y NOTIFICACIONES DE DEPÓSITO', 
+            'level': 3,
+            'unfoldable': False,
+            'unfolded': True,
+            'colspan':3
+        })
+        diff_lines.append({
+            'id': 'salary_bank',
+            'name' : 'ENLACE BANCA ELECTRONICA', 
+            'columns': [{'name': ''},
+                        {'name': ''},
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })     
+        diff_lines.append({
+            'id': 'salary_date',
+            'name' : '', 
+            'level': 3,
+            'unfoldable': False,
+            'unfolded': True,
+            'colspan':3
+        })
+
+        diff_lines.append({
+            'id': 'salary_date',
+            'name' : 'NO DE SECUENCIA DE REGISTRO DE CHEQUE SEGURIDAD No.________________FECHA_________________', 
+            'level': 3,
+            'unfoldable': False,
+            'unfolded': True,
+            'colspan':3
+        })
+
+        diff_lines.append({
+            'id': 'salary_date',
+            'name' : 'CONSULTA DE ARCHIVOS DE CHEQUERA SEGURIDAD FECHA_________________', 
+            'level': 3,
+            'unfoldable': False,
+            'unfolded': True,
+            'colspan':3
+        })           
+
+        diff_lines.append({
+            'id': 'salary_date',
+            'name' : '', 
+            'level': 3,
+            'unfoldable': False,
+            'unfolded': True,
+            'colspan':3
+        })           
+
+        diff_lines.append({
+            'id': 'salary_date',
+            'name' : 'FOLIOS DE CHEQUES DE PENSION UTILIZADOS:', 
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+            'colspan':3
+        })           
+                   
+        for module in deps:
+            module_salary_ids = diff_payroll_ids.filtered(lambda x:x.check_folio_id.module==module)
+            module_check_ids = module_salary_ids.mapped('check_folio_id')
+            
+            min_folio = ''
+            max_folio = ''
+            if module_check_ids:
+                min_folio = min(m.folio for m in module_check_ids)
+                max_folio = max(m.folio for m in module_check_ids)
+            
+            salary_amount += sum(x.amount_total for x in module_salary_ids)
+            total_check += len(module_check_ids)
+            
+            diff_lines.append({
+                'id': 'Module'+str(module),
+                'name' : 'CAMPUS '+str(module) +" DEL Folio "+str(min_folio) + " AL " +str(max_folio), 
+                'columns': [{'name': ''},
+                            {'name': ''},
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+        salary_list = [{
+                'id': 'Module',
+                'name' : 'CIFRAS DE PENSION ALIMENTICIA', 
+                'columns': [self._format({'name': salary_amount},figure_type='float'),
+                            {'name': total_check,'class':'number'},
+                            
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+                'class':'text-center'
+            }]    
+        diff_lines = salary_list + diff_lines
+        lines = lines + diff_lines
+
+        lines.append({
+            'id': 'last_0',
+            'name' : '', 
+            'level': 3,
+            'unfoldable': False,
+            'unfolded': True,
+            'colspan':3
+        })
+
+
+        lines.append({
+            'id': 'last_1',
+            'name' : 'FOLIO DE CHEQUES DE NOMINAL VERIFICADOS DEL_______________ AL _______________ FECHA _______________', 
+            'level': 3,
+            'unfoldable': False,
+            'unfolded': True,
+            'colspan':3
+        })
+
+        lines.append({
+            'id': 'last_2',
+            'name' : 'FOLIO DE CHEQUES DE PENSION ALIMENTCIA VERIFICADOS DEL_______________ AL _______________ FECHA _______________', 
+            'level': 3,
+            'unfoldable': False,
+            'unfolded': True,
+            'colspan':3
+        })              
+                      
         return lines
 
     def _get_report_name(self):

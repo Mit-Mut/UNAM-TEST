@@ -107,7 +107,7 @@
          <!--  Check protection control card detailing check sheet-->
 
         <record id="action_check_protection_control_certificate" model="ir.actions.client">
-            <field name="name"> Check protection control card </field>
+            <field name="name"> Check Protection Control Certificate </field>
             <field name="tag">account_report</field>
             <field name="context" eval="{'model':'jt_check_controls.check_protection_control_control_certificate'}" />
         </record>
@@ -124,7 +124,7 @@
          <!-- Reporting the amounts of payroll checks-->
 
         <record id="action_amounts_of_payroll_checks" model="ir.actions.client">
-            <field name="name">amounts of payroll checks </field>
+            <field name="name">Report of payroll check amounts </field>
             <field name="tag">account_report</field>
             <field name="context" eval="{'model':'jt_check_controls.amount_of_payroll_checks'}" />
         </record>
@@ -132,7 +132,7 @@
         <!-- Reporting the amounts of payroll checks -->
         <menuitem
             id="amount_of_payroll_check_submenu"
-            name="Reporting the amounts of payroll checks"
+            name="Report of payroll check amounts"
             action="action_amounts_of_payroll_checks"
             parent="report_main_menu"
             sequence="5"/>

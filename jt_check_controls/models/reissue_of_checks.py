@@ -90,12 +90,29 @@ class ReissueOfChecks(models.Model):
                     check_ids = check_ids.filtered(lambda x:x.checklist_id.checkbook_req_id.id==rec.checkbook_req_id.id)
                 move_ids = self.env['account.move'].search([('check_folio_id','in',check_ids.ids),
                                     ('payment_state','in',('payment_method_cancelled','assigned_payment_method'))])
-                check_ids += move_ids.mapped('check_folio_id')
+                if rec.type_of_batch == 'supplier':
+                    move_ids = move_ids.filtered(lambda x:x.is_payment_request)
+                elif rec.type_of_batch == 'project':
+                    move_ids = move_ids.filtered(lambda x:x.is_project_payment)
+                elif rec.type_of_batch == 'nominal':
+                    move_ids = move_ids.filtered(lambda x:x.is_payroll_payment_request or x.is_different_payroll_request)
+                
+                check_ids = move_ids.mapped('check_folio_id')
                 log_list = check_ids.ids
+                
             if rec.type_of_request=='check_cancellation':
                 check_ids = self.env['check.log'].search([('status','in',('Protected and in transit','Printed','Detained','Withdrawn from circulation'))])
                 if rec.checkbook_req_id:
                     check_ids = check_ids.filtered(lambda x:x.checklist_id.checkbook_req_id.id==rec.checkbook_req_id.id)
+                    move_ids = self.env['account.move'].search([('check_folio_id','in',check_ids.ids)])
+                    if rec.type_of_batch == 'supplier':
+                        move_ids = move_ids.filtered(lambda x:x.is_payment_request)
+                    elif rec.type_of_batch == 'project':
+                        move_ids = move_ids.filtered(lambda x:x.is_project_payment)
+                    elif rec.type_of_batch == 'nominal':
+                        move_ids = move_ids.filtered(lambda x:x.is_payroll_payment_request or x.is_different_payroll_request)
+                    
+                    check_ids = move_ids.mapped('check_folio_id')
                 log_list = check_ids.ids
             
             rec.check_log_ids= [(6, 0, log_list)]

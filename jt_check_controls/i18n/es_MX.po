@@ -801,7 +801,7 @@ msgstr "Asignado"
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__assigned_for_shipping
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__assigned_for_shipping
 msgid "Assigned for shipping"
-msgstr "Disponible"
+msgstr "Asignado para envío"
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_cancel_checks__message_attachment_count
@@ -817,7 +817,7 @@ msgstr "Disponible"
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__available_for_printing
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__available_for_printing
 msgid "Available for printing"
-msgstr "Disponible"
+msgstr "Disponible para impresión"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.checkbook_req_form_view
@@ -937,7 +937,7 @@ msgstr "Cambiar  estado de controles autorizados"
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__charged
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__charged
 msgid "Charged"
-msgstr "Cargado"
+msgstr "Cobrado"
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_check_log__check_amount
@@ -1078,7 +1078,7 @@ msgstr "Chequera No."
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__checkbook_registration
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__checkbook_registration
 msgid "Checkbook registration"
-msgstr "Disponible"
+msgstr "Alta de chequera"
 
 #. module: jt_check_controls
 #: model:ir.actions.act_window,name:jt_check_controls.action_checkbook_req
@@ -1315,7 +1315,7 @@ msgstr "Destruido"
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__detained
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__detained
 msgid "Detained"
-msgstr "Detenido"
+msgstr "Retenido"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_blank_req_check
@@ -1834,7 +1834,7 @@ msgstr "oficina de indemnización"
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__on_file
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__on_file
 msgid "On file"
-msgstr ""
+msgstr "En archivo"
 
 #. module: jt_check_controls
 #: code:addons/jt_check_controls/models/trades.py:0
@@ -1988,7 +1988,7 @@ msgstr "Cheques de registro"
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__reissued
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__reissued
 msgid "Reissued"
-msgstr "Reeditado"
+msgstr "Reexpedido"
 
 #. module: jt_check_controls
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__send_checks__status__reject
@@ -2113,7 +2113,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__sent_to_protection
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__sent_to_protection
 msgid "Sent to protection"
-msgstr "Enviado a la protección"
+msgstr "Enviado a protección"
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_blank_checks_request__state
@@ -2249,7 +2249,7 @@ msgstr "Historial de comunicaciones del sitio web"
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__withdrawn_from_circulation
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__withdrawn_from_circulation
 msgid "Withdrawn from circulation"
-msgstr ""
+msgstr "Retirado de circulación"
 
 #. module: jt_check_controls
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__approve_blank_check__department__yucatan

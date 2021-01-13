@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="employee_payroll_file_inherit" model="ir.ui.view">
+            <field name="name">employee.payroll.file.inherit.view</field>
+            <field name="model">employee.payroll.file</field>
+            <field name="inherit_id" ref="jt_payroll_payment.employee_payroll_file_form"/>
+            <field name="arch" type="xml">
+                <field name="employee_number" position="after">
+                    <field name="dependancy_id"/>
+                    <field name="sub_dependancy_id"/>
+                </field>
+                <xpath expr="//sheet" position="inside">
+                    <notebook>
+                        <page string="Accounting" name="accounting">
+                            <group>
+                                <field name="program_code_id" attrs="{'readonly':[('state','=','done')]}"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

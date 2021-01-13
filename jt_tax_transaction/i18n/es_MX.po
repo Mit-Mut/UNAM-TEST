@@ -1,0 +1,112 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* jt_tax_transaction
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-01-02 09:22+0000\n"
+"PO-Revision-Date: 2021-01-02 09:22+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_conagua__folio
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_lfpiorpi__folio
+msgid "Folio"
+msgstr "Folio"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_conagua__year
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_lfpiorpi__year
+msgid "Year"
+msgstr "Año"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_conagua__month
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_lfpiorpi__month
+msgid "Month"
+msgstr "Mes"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_conagua__filling_date
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_lfpiorpi__filling_date
+msgid "Filling date"
+msgstr "Fecha de presentación"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_conagua__programatic_code_id
+msgid "Programmatic code"
+msgstr "Código programático"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_conagua__observations
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_lfpiorpi__observations
+msgid "Observations"
+msgstr "Observaciones"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_conagua__application_office
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_lfpiorpi__application_office
+msgid "Application Office"
+msgstr "Oficio de solicitud"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_conagua__meter_reading
+msgid "Meter reading"
+msgstr "Lectura medidor"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_conagua__laboratory_analysis
+msgid "Laboratory analysis"
+msgstr "Análisis de laboratorio"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_conagua__statement
+msgid "Statement"
+msgstr "Declaración"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_conagua__accused
+msgid "Accused"
+msgstr "Acuse"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_conagua__payment_proof
+msgid "Proof of payment"
+msgstr "Comprobante de pago"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_lfpiorpi__dgpu_file
+msgid "DGPU file"
+msgstr "Archivo DGPU"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_lfpiorpi__statement_draft
+msgid "Statement draft"
+msgstr "Borrador de declaración"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_lfpiorpi__shipping_ack
+msgid "Shipping acknowledgement"
+msgstr "Acuse de envío"
+
+#. module: jt_tax_transaction
+#: model:ir.ui.menu,name:jt_tax_transaction.lfpiorpi_menu
+msgid "LFPIORPI Forms"
+msgstr "Formulario LFPIORPI"
+
+#. module: jt_tax_transaction
+#: model:ir.ui.menu,name:jt_tax_transaction.menu_other_declarations
+msgid "Other Declarations"
+msgstr "Otras declaraciones"
+
+#. module: jt_tax_transaction
+#: model:ir.ui.menu,name:jt_tax_transaction.menu_tribune_operations
+msgid "Tribune Operations"
+msgstr "Operaciones del Tribunal"

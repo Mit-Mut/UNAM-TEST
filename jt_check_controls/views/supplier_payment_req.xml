@@ -51,6 +51,9 @@
                 <field name="status" position="after">
                     <field name="check_folio_id" readonly="1"/>
                     <field name="check_status"/>
+                    <field name="related_check_folio_ids" invisible="1"/>
+                    <field name="related_check_history" readonly="1"/>
+                    
                 </field>
 			</field>
 		</record>

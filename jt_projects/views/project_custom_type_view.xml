@@ -90,13 +90,14 @@
             <field name="view_id" ref="project_type_custom_tree_view_budget"/>
             <field name="act_window_id" ref="action_project_type_custom_budget"/>
         </record>
-
+	<!-- 
          <menuitem id="menu_project_type_custom_budget" 
                   name="Type Of Project"  
                   action="action_project_type_custom_budget"
                   parent="jt_budget_mgmt.menu_code_catalog"
                   sequence="15"
                   />
+      -->
 	<!-- Budget Project Type -->
 
     	<record id="project_type_form_view_project" model="ir.ui.view">

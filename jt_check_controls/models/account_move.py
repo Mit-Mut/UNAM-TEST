@@ -34,9 +34,12 @@ class SupplierPaymentRequest(models.Model):
                     payment_req.payment_issuing_bank_id = False
                     payment_req.payment_issuing_bank_account_id = False
                     payment_req.l10n_mx_edi_payment_method_id = False
-                    payment_ids = self.env['account.payment'].search([('payment_state','=','for_payment_procedure'),('payment_request_id','=',payment_req.id)])
+                    payment_ids = self.env['account.payment'].search([('payment_state','=','for_payment_procedure'),
+                                                                      ('payment_request_id','=',payment_req.id)])
                     for payment in payment_ids:
                         payment.cancel()
+                    if payment_req.check_folio_id:
+                        payment_req.check_folio_id.status = 'Cancelled'
             if payment_req.payment_state == 'rotated' and payment_req.is_payment_request == True:
                 payment_req.action_cancel_budget()
 
@@ -46,7 +49,7 @@ class SupplierPaymentRequest(models.Model):
 #         self.batch_folio = ''
 
         return {
-            'name': 'Reschecule Request',
+            'name': _('Reschedule Request'),
             'view_mode': 'form',
             'view_id': self.env.ref('jt_supplier_payment.reschedule_request_form_view').id,
             'res_model': 'reschedule.request',
@@ -101,7 +104,7 @@ class SupplierPaymentRequest(models.Model):
             sub_dep_ids = sub_inv_ids.mapped('sub_dependancy_id')
             for sub in sub_dep_ids:
                 inv_ids = self.filtered(lambda x:x.dependancy_id.id==dep.id and x.sub_dependancy_id.id==sub.id)
-                dep_name = dep.description+ ' and ' + sub.description
+                dep_name = sub.sub_dependency + ' and ' + sub.description
                 payment_id = self.env['payment.place'].search([('dependancy_id','=',dep.id),('sub_dependancy_id','=',sub.id)],limit=1)
                 clave_no = ''
                 if payment_id:
@@ -120,8 +123,8 @@ class SupplierPaymentRequest(models.Model):
                     fornight_inv_id = inv_ids.filtered(lambda x:x.fornight)
                     if fornight_inv_id:
                         fornight = str(fornight_inv_id[0].fornight)
-                        if fornight_inv_id.invoice_date:
-                            fornight += "/"+str(fornight_inv_id.invoice_date.year)
+                        if fornight_inv_id[0].invoice_date:
+                            fornight += "/"+str(fornight_inv_id[0].invoice_date.year)
                             
                 ticket_data.append({'dep_name':dep_name,'clave_no':clave_no,'folio_min':folio_min,'folio_max':folio_max,'fornight':fornight})
                 

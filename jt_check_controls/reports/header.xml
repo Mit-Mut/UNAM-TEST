@@ -31,8 +31,8 @@
                     <span style="font-size:12px;">REPORTE SUMARIAS DE CHEQUES</span><br/>
                 </div>
                 <div class="col-3 text-left" style="vertical-align: bottom;">
-                    <span>Bank:</span><br/>
-                    <span>Bank Account:</span><br/>
+                    <span>Bank:<span t-esc="bank_name"/></span><br/>
+                    <span>Bank Account:<span t-esc="bank_account_name"/></span><br/>
                     <span>Fecha de impresión  </span><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/> 
                 </div>
                 

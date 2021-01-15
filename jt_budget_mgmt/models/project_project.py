@@ -141,17 +141,31 @@ class ProjectProject(models.Model):
     def unlink(self):
         for project in self:
             user_lang = self.env.user.lang
-            project_type = self.env['project.type'].search([('project_id', '=', project.id)], limit=1)
+            project_type = self.env['project.type'].search([('project_id', '=', project.id)])
             if project_type:
-                if user_lang == 'es_MX':
-                    raise ValidationError('¡No puede eliminar proyectos asignados con el catálogo Tipo de Proyecto!!')
+                program_ids = self.env['program.code'].search([('project_type_id','in',project_type.ids)])
+                if program_ids:
+                    if user_lang == 'es_MX':
+                        raise ValidationError('¡No puede eliminar proyectos asignados con el catálogo Tipo de Proyecto!!')
+                    else:
+                        raise ValidationError('You can not delete project which are mapped with project types!')
                 else:
-                    raise ValidationError('You can not delete project which are mapped with project types!')
-                
-            stage = self.env['stage'].search([('project_id', '=', project.id)], limit=1)
+                    project_type.unlink()
+                    
+            stage = self.env['stage'].search([('project_id', '=', project.id)])
             if stage:
-                raise ValidationError('You can not delete project which are mapped with stage identifier!')
-            agreement_type = self.env['agreement.type'].search([('project_id', '=', project.id)], limit=1)
+                program_ids = self.env['program.code'].search([('stage_id','in',stage.ids)])
+                if program_ids:
+                    raise ValidationError('You can not delete project which are mapped with stage identifier!')
+                else:
+                    stage.unlink()
+                
+            agreement_type = self.env['agreement.type'].search([('project_id', '=', project.id)])
             if agreement_type:
-                raise ValidationError('You can not delete project which are mapped with agreement types!')
+                program_ids = self.env['program.code'].search([('agreement_type_id','in',agreement_type.ids)])
+                if program_ids:
+                    raise ValidationError('You can not delete project which are mapped with agreement types!')
+                else:
+                    agreement_type.unlink()
+                    
         return super(ProjectProject, self).unlink()

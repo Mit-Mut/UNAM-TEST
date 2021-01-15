@@ -67,17 +67,10 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
     def _get_columns_name(self, options):
         return [
             {'name': _('Annexed')},
-            {'name': _('ASSIGNED ADVICE')},
-            {'name': _('Transfers')},
             {'name': _('Assigned')},
-            {'name': _('CONTABLE EXERCISE')},
-            {'name': _('EXTRAORDINARY INCOMES')},
-            {'name': _('EXTRA BOOKS')},
             {'name': _('Exercised')},
             {'name': _('Percentage')},
             {'name': _('EXERCISE PENDANT')},
-            {'name': _('REMNANT OF EXERCISE')},
-
         ]
 
     def _get_lines(self, options, line_id=None):

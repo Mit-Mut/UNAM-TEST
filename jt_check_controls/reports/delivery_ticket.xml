@@ -19,21 +19,27 @@
                                 <td colspan="2  "><u><span t-esc="line['dep_name']"/></u></td>
                             </tr>   
                             <tr>
-                                <td colspan="4"> <p style="text-align:justify;">RECIBI DEL DEPARTMENTO DE PAGO DE NOMINA Y PRESTACIONES DE LA DIRECCION GENERAL DE FINANZAS LOS SIGUIENTES DOCUMENTOS DE PENSION ALIMENTICIA PAPA EL PAGO DE NOMINA.</p></td>
+                                <td colspan="4"> <p style="text-align:justify;">“RECIBÍ DEL DEPARTAMENTO DE PAGO DE NÓMINA Y PRESTACIONES DE LA DIRECCIÓN GENERAL DE FINANZAS LOS SIGUIENTES DOCUMENTOS PARA EL PAGO DE NÓMINA:.</p></td>
                             </tr>
                             <tr>
                                 <td>CHEQUES DE FOLIO</td>
                                 <td><u><span t-esc="line['folio_min']"/></u></td>
                                 <td> AL <u><span t-esc="line['folio_max']"/></u></td>
+                            </tr>
+                            <tr>
+                                <td>Vales de despensa:</td>
+                                <td>DEL______________________</td>
+                                <td> AL </td>
+                                <td>______________________</td>
                             </tr>      
                             <tr>
-                                <td>HOJAS NOMINA DEL FOLIO</td>
+                                <td>HOJAS NÓMINA</td>
                                 <td>______________________</td>
                                 <td> AL </td>
                                 <td>______________________</td>
                             </tr>      
                             <tr>
-                                <td colspan="2">CORRESPONDIENTS A LA QUINCENA </td>
+                                <td colspan="2">CORRESPONDIENTES A LA QUINCENA </td>
                                 <td colspan="2"><u><span t-esc="line['fornight']"/></u></td>
                             </tr>
                             <tr>
@@ -44,8 +50,13 @@
                             </tr>
                             <br/><br/>
                             <tr>
-                                <td colspan="2" style="margin-top:10px;"><div class="text-right"><hr style="width:50%;background-color:black;align:left;"/><br/><span style="text-align:right;">NOMBRE COMPLETO</span></div></td>
-                                <td colspan="2"><div class="text-right"><hr style="width:50%;background-color:black;align:left;"/><br/><span style="text-align:right;">FIRMA</span></div></td>
+                                <td colspan="2" style="margin-top:50px;">
+                                    <br/><br/>
+                                    <div class="text-right">______________________________________________________<br/><span style="text-align:right;margin-left:5px;">NOMBRE COMPLETO</span></div></td>
+                                <td colspan="2" style="margin-top:50px;">
+                                    <br/><br/>
+                                    
+                                    <div class="text-right" >________________________________<br/><span style="text-align:right;margin-left:5px;">FIRMA</span></div></td>
                             </tr>
                               
                             
@@ -59,7 +70,7 @@
             <field name="name">Delivery Ticket</field>
             <field name="default" eval="True"/>
             <field name="format">custom</field>
-            <field name="page_height">105</field>
+            <field name="page_height">100</field>
             <field name="page_width">150</field>
             <field name="orientation">Portrait</field>
             <field name="margin_top">5</field>
@@ -67,7 +78,7 @@
             <field name="margin_left">0</field>
             <field name="margin_right">0</field>
             <field name="header_line" eval="False"/>
-            <field name="header_spacing">0</field>
+            <field name="header_spacing">10</field>
         </record>
 
         <report 

@@ -32,6 +32,7 @@ class Conagua(models.Model):
     folio = fields.Integer(string='Folio')
     year = fields.Selection([(str(num), str(num)) for num in range(
         2000, (datetime.now().year) + 80)], string='Year')
+    year_id = fields.Many2one('year.configuration',compute="get_year",store=True)
     month = fields.Selection([
         ('january', 'January'),
         ('february', 'February'),
@@ -57,4 +58,18 @@ class Conagua(models.Model):
 
     _sql_constraints = [
         ('folio_uniq', 'unique(folio)', 'The folio must be unique.')]
+
+
+
+    @api.depends('year')
+    def get_year(self):
+        for rec in self:
+            if rec.year:
+                y = self.env['year.configuration'].search([('name','=',rec.year)],limit=1)
+                if y:
+                    rec.year_id = y.id
+                else:
+                    rec.year_id = False
+            else:
+                rec.year_id = False
     

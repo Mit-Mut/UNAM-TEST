@@ -662,7 +662,7 @@ class IntegrationOfBudgetResourceRemanats(models.AbstractModel):
         y_offset = 0
         col = 0
 
-        sheet.merge_range(y_offset, col, 6, col, '', super_col_style)
+        sheet.merge_range(y_offset, col, 16, col, '', super_col_style)
         if self.env.user and self.env.user.company_id and self.env.user.company_id.header_logo:
             filename = 'logo.png'
             image_data = io.BytesIO(base64.standard_b64decode(
@@ -671,16 +671,19 @@ class IntegrationOfBudgetResourceRemanats(models.AbstractModel):
                                'image_data': image_data, 'x_offset': 8, 'y_offset': 3, 'x_scale': 0.6, 'y_scale': 0.6})
 
         col += 1
-        header_title = '''UNIVERSITY BOARD \n TREASURY\nGENERAL DIRECTORATE OF BUDGETARY CONTROL\nGENERAL ACCOUNTING\nRESEARCH PROJECT CONTROL DEPARTMENT\nREPORT ON CURRENT RESEARCH PROJECTS OF THE\nPAPIIT, PAPIME AND INFOCAB PROGRAMS'''
+        if self.env.user.lang == 'es_MX':
+            header_title = _('''PATRONATO UNIVERSITARIO TESORERÍA\nDIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL\nCONTADURÍA GENERAL\nDEPARTAMENTO DE CONTROL DE PROYECTOS DE INVESTIGACIÓN\nINFORME DE PROYECTOS DE INVESTIGACIÓN VIGENTES DE LOS PROGRAMAS\nPAPIIT, PAPIME E INFOCAB''')
+        else:
+            header_title = _('''UNIVERSITY BOARD TREASURY\nGENERAL DIRECTORATE OF BUDGETARY CONTROL\nGENERAL ACCOUNTING\nRESEARCH PROJECT CONTROL DEPARTMENT\nREPORT ON CURRENT RESEARCH PROJECTS OF THE\nPAPIIT, PAPIME AND INFOCAB PROGRAMS''')
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)
         y_offset += 6
         col = 1
         currect_time_msg = "Fecha y hora de impresión: "
         currect_time_msg += datetime.today().strftime('%d/%m/%Y %H:%M')
-        sheet.merge_range(y_offset, col, y_offset, col + 6,
+        sheet.merge_range(y_offset, col, y_offset+10, col + 6,
                           currect_time_msg, currect_date_style)
-        y_offset += 1
+        y_offset += 10
         for row in self.get_header(options):
             x = 0
             for column in row:

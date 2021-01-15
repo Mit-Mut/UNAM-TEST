@@ -2041,7 +2041,7 @@ msgstr "Solicitado"
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.supplier_payment_req_inherit_for_check
 msgid "Reschedule"
-msgstr ""
+msgstr "Reprogramar"
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_cancel_checks__activity_user_id
@@ -2367,3 +2367,18 @@ msgid ""
 "                            BOARD OF \n"
 "                            TRUSTEES"
 msgstr "PATRONATO UNIVERSITARIO \n"
+
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_check_summary
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_payment_report
+msgid ""
+"<span>Bank:</span><br/>\n"
+"                    <span>Bank Account:</span><br/>\n"
+"                    <span>Fecha de impresión  </span>"
+msgstr ""
+"<span>Banco:</span><br/>\n"
+"                    <span>Cuenta bancaria:</span><br/>\n"
+"                    <span>Fecha de impresión  </span>"
+
+

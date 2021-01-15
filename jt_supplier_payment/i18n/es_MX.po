@@ -1934,8 +1934,17 @@ msgstr "Transferencia requerida"
 #: model_terms:ir.ui.view,arch_db:jt_supplier_payment.different_payroll_payment_req_form_view
 #: model_terms:ir.ui.view,arch_db:jt_supplier_payment.inherited_view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:jt_supplier_payment.payment_req_form_view
+#: model_terms:ir.ui.view,arch_db:jt_supplier_payment.reschedule_request_form_view
 msgid "Reschedule"
-msgstr ""
+msgstr "Reprogramar"
+
+#. module: jt_supplier_payment
+#: code:addons/jt_supplier_payment/models/invoice.py:0
+#: model:ir.model,name:jt_supplier_payment.model_reschedule_request
+#: model_terms:ir.ui.view,arch_db:jt_supplier_payment.reschedule_request_form_view
+#, python-format
+msgid "Reschedule Request"
+msgstr "Solicitud de Reprogramación"
 
 #. module: jt_supplier_payment
 #: model_terms:ir.ui.view,arch_db:jt_supplier_payment.different_payroll_payment_req_form_view

@@ -430,7 +430,7 @@ class AccountMove(models.Model):
 
     def action_reschedule(self):
         return {
-            'name': 'Reschecule Request',
+            'name': _('Reschedule Request'),
             'view_mode': 'form',
             'view_id': self.env.ref('jt_supplier_payment.reschedule_request_form_view').id,
             'res_model': 'reschedule.request',

@@ -90,14 +90,14 @@
             <field name="view_id" ref="project_custom_stage_tree_view_budget"/>
             <field name="act_window_id" ref="action_project_custom_stage_budget"/>
         </record>
-
+		<!-- 
          <menuitem id="menu_project_custom_stage_budget" 
                   name="Stage"  
                   action="action_project_custom_stage_budget"
                   parent="jt_budget_mgmt.menu_code_catalog"
                   sequence="16"
                   />
-
+			 -->
 	<!-- Budget Stage -->
 
         <!-- form view for stage model -->

@@ -257,15 +257,16 @@ class CheckListLine(models.Model):
     status = fields.Selection([('Checkbook registration', 'Checkbook registration'),
                           ('Assigned for shipping', 'Assigned for shipping'),
                           ('Available for printing', 'Available for printing'),
-                          ('Printed', 'Printed'), ('Delivered', 'Delivered'),
-                          ('In transit', 'In transit'), ('Sent to protection','Sent to protection'),
-                          ('Protected and in transit','Protected and in transit'),
-                          ('Protected', 'Protected'), ('Detained','Detained'),
-                          ('Withdrawn from circulation','Withdrawn from circulation'),
+                          ('Printed', 'Printed'), ('Sent to protection','Sent to protection'),
+                          ('Protected', 'Protected'), ('In transit', 'In transit'), ('Detained','Detained'),
+                          ('Withdrawn from circulation', 'Withdrawn from circulation'),
                           ('Cancelled', 'Cancelled'),
                           ('Canceled in custody of Finance', 'Canceled in custody of Finance'),
-                          ('On file','On file'),('Destroyed','Destroyed'),
-                          ('Reissued', 'Reissued'),('Charged','Charged')])
+                          ('On file', 'On file'), ('Destroyed','Destroyed'),
+                          ('Reissued', 'Reissued'), ('Charged', 'Charged'),
+                          ('Delivered', 'Delivered'),
+                          ('Protected and in transit','Protected and in transit')
+                         ])
     general_status = fields.Selection([('available', 'Available'),
                                        ('assigned', 'Assigned'),
                                        ('cancelled', 'Cancelled'),

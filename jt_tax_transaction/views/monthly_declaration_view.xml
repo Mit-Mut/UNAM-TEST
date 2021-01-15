@@ -35,7 +35,8 @@
                                 <field name="year"/>
                                 <field name="month"/>
                                 <field name="filling_date"/>
-                                <field name="programatic_code_id"/>
+                                <field name="year_id" invisible="1"/>
+                                <field name="programatic_code_id" domain="[('year','=',year_id)]"/>
                                 <field name="observations"/>
                                 <field name="amount_payable"/>
                                 <field name="capture_line"/>

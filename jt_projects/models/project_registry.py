@@ -45,8 +45,8 @@ class ProjectRegistry(models.Model):
 
     is_code_create = fields.Boolean('Code Created',copy=False,default=False)
     
-    agreement_type = fields.Char("Agreement Type", related="base_id.agreement_type_id.code")
-    agreement_type_id = fields.Many2one("Agreement-Type", related="base_id.agreement_type_id")
+    #agreement_type = fields.Char("Agreement Type", related="base_id.agreement_type_id.code")
+    agreement_type_id = fields.Many2one(related="base_id.agreement_type_id")
 
     resource_type = fields.Selection(
         [('R', 'R (Remnant)'), ('P', 'P (Budget)')], string="Resource Type")
@@ -80,6 +80,20 @@ class ProjectRegistry(models.Model):
 
     base_id = fields.Many2one('bases.collaboration','Type of Agreement')
 
+    @api.constrains('number')
+    def _project_number_unique(self):
+        for record in self:
+            project_id = self.env['project.project'].search([('id', '!=', record.id),('number','=',record.number)],limit=1)
+            if project_id:
+                raise ValidationError(_('The Project Number Value Must Be Unique'))
+
+    @api.constrains('number_agreement','agreement_type')
+    def _project_number_agreement_type_unique(self):
+        for record in self:
+            if record.number_agreement and record.agreement_type:
+                project_id = self.env['project.project'].search([('id', '!=', record.id),('agreement_type','=',record.agreement_type),('number_agreement','=',record.number_agreement)],limit=1)
+                if project_id:
+                    raise ValidationError(_('The combination of the Agreement Type and Agreement Number fields must be unique'))
 
     @api.model
     def create(self, vals):
@@ -169,7 +183,7 @@ class ProjectRegistry(models.Model):
             self.desc_stage = self.program_code.desc_stage
             self.number = self.program_code.project_number
             self.custom_project_type_id = self.program_code.project_type_id and self.program_code.project_type_id.project_id and self.program_code.project_type_id.project_id.custom_project_type_id and self.program_code.project_type_id.project_id.custom_project_type_id.id or False
-            self.agreement_type_id = self.program_code.agreement_type_id.id
+            #self.agreement_type_id = self.program_code.agreement_type_id.id
             self.name_agreement = self.program_code.name_agreement
             self.number_agreement = self.program_code.number_agreement
             self.dependency_id = self.program_code.dependency_id.id

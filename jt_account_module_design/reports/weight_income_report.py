@@ -33,7 +33,7 @@ import lxml.html
 
 class WeightIncomeReport(models.AbstractModel):
 
-    _name = "jt_account_module_design.revenue.report"
+    _name = "jt_account_module_design.weight.income.report"
     _inherit = "account.coa.report"
     _description = "Revenue Report"
 

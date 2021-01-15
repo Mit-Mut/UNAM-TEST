@@ -74,8 +74,90 @@ class StatePartimonialSituation(models.AbstractModel):
             {'name': _('Total')},
         ]
 
+    def _format(self, value, figure_type):
+        if self.env.context.get('no_format'):
+            return value
+        value['no_format_name'] = value['name']
+
+        if figure_type == 'float':
+            currency_id = self.env.company.currency_id
+            if currency_id.is_zero(value['name']):
+                # don't print -0.0 in reports
+                value['name'] = abs(value['name'])
+                value['class'] = 'number text-muted'
+            value['name'] = formatLang(
+                self.env, value['name'], currency_obj=currency_id)
+            value['class'] = 'number'
+            return value
+        if figure_type == 'percents':
+            value['name'] = str(round(value['name'] * 100, 1)) + '%'
+            value['class'] = 'number'
+            return value
+        value['name'] = round(value['name'], 1)
+        return value
+
     def _get_lines(self, options, line_id=None):
         lines = []
+
+        if options.get('all_entries') is False:
+            move_state_domain = ('move_id.state', '=', 'posted')
+        else:
+            move_state_domain = ('move_id.state', '!=', 'cancel')
+
+        start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+        
+        account_ids = self.env['account.account'].search([])
+        group_ids = account_ids.mapped('group_id')
+        for group in group_ids:
+            total_balance = 0
+            lines.append({
+                'id': 'group' + str(group.id),
+                'name': group.name,
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+                'colspan':5,
+                'class':'text-center'
+            })
+            acc_ids = account_ids.filtered(lambda x:x.group_id.id==group.id)
+            for acc in acc_ids:
+                balance = 0
+                values= self.env['account.move.line'].search([('date', '>=', start),('date', '<=', end),('account_id', '=', acc.id),move_state_domain])
+                balance = sum(x.debit-x.credit for x in values)
+                total_balance += balance
+                
+                lines.append({
+                    'id': 'account' + str(acc.id),
+                    'name': acc.code,
+                    'columns': [{'name': acc.name},
+                                self._format({'name': balance},figure_type='float'),
+                                {'name': ''},
+                                self._format({'name': balance},figure_type='float'),
+                                ],
+                    
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+
+            lines.append({
+                'id': 'group_total' + str(group.id),
+                'name': 'TOTAL',
+                'columns': [{'name': ''},
+                            self._format({'name': total_balance},figure_type='float'),
+                            {'name': ''},
+                            self._format({'name': total_balance},figure_type='float'),
+                            ],
+                
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+                
+             
         return lines    
 
     def _get_report_name(self):

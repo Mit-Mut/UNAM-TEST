@@ -199,8 +199,9 @@
         sequence="16"
     />
 	 -->
+	 
     <!-- menu for agreement type -->
-    <!-- 
+   
     <menuitem
         id="menu_agreement_type"
         name="Type of agreement (TC)"
@@ -208,7 +209,7 @@
         action="action_agreement_type"
         sequence="17"
     />
-	 -->
+	
     <!-- menu for budget -->
     <menuitem
         id="menu_budgets"

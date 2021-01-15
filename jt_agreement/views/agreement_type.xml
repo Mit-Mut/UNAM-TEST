@@ -92,13 +92,13 @@
             <field name="view_id" ref="agreement_agreement_type_tree_view_budget"/>
             <field name="act_window_id" ref="action_agreement_agreement_type_budget"/>
         </record>
-
+	<!-- 
          <menuitem id="menu_agreement_agreement_type_budget" 
                   name="Type Of Agreement"  
                   action="action_agreement_agreement_type_budget"
                   parent="jt_budget_mgmt.menu_code_catalog"
                   sequence="17"
                   />
-		
+		 -->
     </data>
 </odoo>

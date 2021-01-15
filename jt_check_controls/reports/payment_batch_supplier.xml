@@ -51,7 +51,47 @@
                                     <t t-set="company" t-value="res_company"/>
                                 </t>
                             </t>
-                            <t t-foreach="o.payment_req_ids" t-as="line">
+                            <t t-foreach="o.payment_req_ids" t-as="line" t-if="o.type_of_batch == 'nominal'">
+                                <t t-if="line.selected and line.check_folio_id and line.check_status == 'Available for printing'">
+                                    <div>
+                                        <div class="row">
+                                            <div class="col-12" align="left" style="margin-left:5px;text-align:right" >
+                                                <b><span t-esc="o.get_date()"/> <br/>
+                                                   </b>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6" align="left" style="margin-left:5px;">
+                                                <b><span t-esc="line.payment_req_id.rfc"/></b><br/>
+                                                <b>Benef:</b>
+                                                    <t t-if="line.payment_req_id">
+                                                    <b><span t-esc="line.payment_req_id.partner_id.name"/></b>                                                    
+                                                    </t>
+
+                                            </div>
+                                            <div class="col-6" align="left" style="margin-left:5px;text-align:right">
+                                                <t t-if="line.payment_req_id">
+                                                        <span t-esc="line.amount_to_pay"
+                                                            t-options='{"widget": "monetary",
+                                                            "display_currency": line.currency_id}'/>
+                                                    </t>
+                                            </div>
+                                        </div>
+                                        <br/>
+                                        
+                                        <br/>
+                                         <t t-if="line.payment_req_id">
+                                             <span style="margin-left:5px;">(</span>
+                                             <span
+                                           t-esc="line.payment_req_id.currency_id.with_context(from_supplier_payment_batch_report=True).amount_to_text(line.amount_to_pay)"/> )
+                                         </t>
+                                        <br/>
+                                        <hr/>
+                                        <br/>
+                                    </div>
+                                </t>
+                            </t>
+                                <t t-foreach="o.payment_req_ids" t-as="line" t-if="o.type_of_batch in ('supplier','project')">
                                 <t t-if="line.selected and line.check_folio_id and line.check_status == 'Available for printing'">
                                     <div>
                                         <div class="row">

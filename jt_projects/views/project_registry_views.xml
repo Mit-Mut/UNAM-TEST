@@ -17,12 +17,12 @@
             		<attribute name="required">0</attribute>
             		<attribute name="invisible">1</attribute>
             	</field>
-
+				<!-- 
             	<field name="agreement_type" position="attributes">
             		<attribute name="required">0</attribute>
             		<attribute name="invisible">1</attribute>
             	</field>
-
+				 -->
             	<field name="stage_identifier" position="before">
             		<field name="custom_stage_id" required="1"/>
             	</field>
@@ -33,7 +33,7 @@
             	</field>
             	
             	<field name="agreement_type" position="before">
-            		<field name="base_id"/>
+            		<field name="base_id" invisible="1"/>
             	</field>
             </field>
         </record>
@@ -108,7 +108,7 @@
                                <!--  <field name="is_related_agreement" attrs="{'invisible':[('is_papiit_project','=',False)],'readonly': [('status', '!=', 'open')]}"/> -->
 								
 
-                                <field name="base_id" string="Agreement"  />
+                                <field name="base_id" string="Agreement"  invisible="1"/>
                                <field name="agreement_type" string="Agreement Type" required="1" />
                                 <field name="name_agreement" required="1" />
                                 <field name="number_agreement" required="1"/>                                

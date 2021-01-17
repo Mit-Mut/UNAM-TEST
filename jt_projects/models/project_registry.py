@@ -11,7 +11,7 @@ class ProjectRegistry(models.Model):
                                      ('concurrent', 'Concurrent'),
                                      ('other', 'Other projects with checkbook')], "Project Type")
     project_type_identifier_id = fields.Many2one(
-        'project.type', string="Project Type Identifier")
+        'project.type', string="PTI")
 
     proj_start_date = fields.Date("Start Date")
     proj_end_date = fields.Date("End Date")
@@ -46,7 +46,7 @@ class ProjectRegistry(models.Model):
     is_code_create = fields.Boolean('Code Created',copy=False,default=False)
     
     #agreement_type = fields.Char("Agreement Type", related="base_id.agreement_type_id.code")
-    agreement_type_id = fields.Many2one(related="base_id.agreement_type_id")
+    agreement_type_id = fields.Many2one(related="base_id.agreement_type_id",string="AT")
 
     resource_type = fields.Selection(
         [('R', 'R (Remnant)'), ('P', 'P (Budget)')], string="Resource Type")
@@ -65,7 +65,7 @@ class ProjectRegistry(models.Model):
     co_responsible_rfc = fields.Char(
         related='co_responsible_id.rfc', string='Co-responsible RFC')
     responsible_name = fields.Many2one('hr.employee', 'Responsible name')
-    stage_identifier_id = fields.Many2one('stage', string="Stage")
+    stage_identifier_id = fields.Many2one('stage', string="S")
 
     project_ministrations_ids = fields.One2many(
         'project.ministrations', 'project_id', string='Project Ministrations')
@@ -78,7 +78,7 @@ class ProjectRegistry(models.Model):
     project_status = fields.Selection(
         [('open', 'Open'), ('close', 'Close')], string="Project Status")
 
-    base_id = fields.Many2one('bases.collaboration','Type of Agreement')
+    base_id = fields.Many2one('bases.collaboration','TOA')
 
     @api.constrains('number')
     def _project_number_unique(self):
@@ -97,6 +97,16 @@ class ProjectRegistry(models.Model):
 
     @api.model
     def create(self, vals):
+        if vals.get('custom_stage_id',False):
+            custom_stage_id = self.env['project.custom.stage'].browse(vals.get('custom_stage_id',False))
+            if custom_stage_id:
+                vals.update({'stage_identifier':custom_stage_id.name,'desc_stage':custom_stage_id.description})
+
+        if vals.get('custom_project_type_id',False):
+            custom_project_type_id = self.env['project.type.custom'].browse(vals.get('custom_project_type_id',False))
+            if custom_project_type_id:
+                vals.update({'project_type_identifier':custom_project_type_id.name})
+                
         res = super(ProjectRegistry,self).create(vals)
         for r in res:
             if r.base_id:

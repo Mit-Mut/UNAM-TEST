@@ -29,9 +29,9 @@ class ProjectProject(models.Model):
     _inherit = 'project.project'
 
     project_type_identifier = fields.Char(
-        string='Project Type Identifier', size=2)
+        string='PTI', size=2)
     number = fields.Char(string='Number', size=6)
-    stage_identifier = fields.Char(string="Stage Identifier", size=2)
+    stage_identifier = fields.Char(string="SI", size=2)
     desc_stage = fields.Text(string='Description Stage')
     agreement_type = fields.Char(string='Agreement Type', size=2)
     name_agreement = fields.Text(string='Name Agreement')

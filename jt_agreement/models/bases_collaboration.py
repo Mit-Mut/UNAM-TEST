@@ -761,6 +761,7 @@ class Beneficiary(models.Model):
     is_contact = fields.Boolean('Contact',copy=False,default=False
                                  )
     bank_id = fields.Many2one('res.partner.bank', "Bank")
+    bank_account_ids = fields.Many2many('res.partner.bank','rel_bank_account_ben','account_id','ben_id',compute='get_bank_account_ids')
     account_number = fields.Char("Account Number")
     currency_id = fields.Many2one(
         'res.currency', default=lambda self: self.env.user.company_id.currency_id)
@@ -772,6 +773,15 @@ class Beneficiary(models.Model):
         "Validity of the Final Beneficiary")
     withdrawal_sch_date = fields.Date("Withdrawal scheduling date")
     sequence = fields.Integer()
+
+    @api.depends('is_contact', 'is_employee', 'partner_id','employee_id')
+    def get_bank_account_ids(self):
+        for rec in self:
+            if rec.is_contact and rec.partner_id:
+                rec.bank_account_ids = [
+                    (6, 0, rec.partner_id.bank_ids.ids)]
+            else:
+                rec.bank_account_ids = [(6, 0, rec.employee_id.bank_ids.ids)]
 
     @api.onchange('is_employee')
     def onchange_is_employee(self):
@@ -1018,6 +1028,8 @@ class RequestOpenBalance(models.Model):
                 for emp in rec.trust_id.beneficiary_ids.mapped('employee_id'):
                     if emp.user_id and emp.user_id.partner_id:
                         partner_ids.append(emp.user_id.partner_id.id)
+                for pat in rec.trust_id.beneficiary_ids.mapped('partner_id'):
+                    partner_ids.append(pat.id)
             rec.trust_beneficiary_ids = [(6, 0, partner_ids)]
 
     @api.depends('bases_collaboration_id', 'bases_collaboration_id.beneficiary_ids', 'bases_collaboration_id.beneficiary_ids.employee_id')
@@ -1028,6 +1040,8 @@ class RequestOpenBalance(models.Model):
                 for emp in rec.bases_collaboration_id.beneficiary_ids.mapped('employee_id'):
                     if emp.user_id and emp.user_id.partner_id:
                         partner_ids.append(emp.user_id.partner_id.id)
+                for pat in rec.bases_collaboration_id.beneficiary_ids.mapped('partner_id'):
+                    partner_ids.append(pat.id)
             rec.bases_collaboration_beneficiary_ids = [(6, 0, partner_ids)]
 
     @api.model

@@ -109,21 +109,20 @@ class StatePartimonialSituation(models.AbstractModel):
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
         
-        account_ids = self.env['account.account'].search([])
-        group_ids = account_ids.mapped('group_id')
-        for group in group_ids:
+        concept_ids = self.env['integration.statement.asset'].search([])
+        for con in concept_ids:
             total_balance = 0
             lines.append({
-                'id': 'group' + str(group.id),
-                'name': group.name,
+                'id': 'concept',
+                'name': con.concept,
                 'level': 1,
                 'unfoldable': False,
                 'unfolded': True,
                 'colspan':5,
                 'class':'text-center'
             })
-            acc_ids = account_ids.filtered(lambda x:x.group_id.id==group.id)
-            for acc in acc_ids:
+            account_ids = con.account_ids
+            for acc in account_ids:
                 balance = 0
                 values= self.env['account.move.line'].search([('date', '>=', start),('date', '<=', end),('account_id', '=', acc.id),move_state_domain])
                 balance = sum(x.debit-x.credit for x in values)
@@ -144,7 +143,7 @@ class StatePartimonialSituation(models.AbstractModel):
                 })
 
             lines.append({
-                'id': 'group_total' + str(group.id),
+                'id': 'group_total',
                 'name': 'TOTAL',
                 'columns': [{'name': ''},
                             self._format({'name': total_balance},figure_type='float'),

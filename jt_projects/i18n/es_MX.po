@@ -240,6 +240,12 @@ msgid "No. of projects with zero balance,with active bank account"
 msgstr "No. de proyectos con saldo cero, con cuenta bancaria activa"
 
 #. module: jt_projects
+#: model:ir.model.fields,field_description:jt_projects.field_project_project__stage_identifier_id
+#, python-format
+msgid "S"
+msgstr "S"
+
+#. module: jt_projects
 #: code:addons/jt_projects/reports/accounting_and_bank_account_balances.py:0
 #: code:addons/jt_projects/reports/remaining_resources.py:0
 #: model:ir.actions.act_window,name:jt_projects.action_project_budget_stage1
@@ -251,7 +257,6 @@ msgstr "No. de proyectos con saldo cero, con cuenta bancaria activa"
 #: model:ir.model.fields,field_description:jt_projects.field_project_custom_stage__name
 #: model:ir.model.fields,field_description:jt_projects.field_project_program_code__stage_id
 #: model:ir.model.fields,field_description:jt_projects.field_project_project__custom_stage_id
-#: model:ir.model.fields,field_description:jt_projects.field_project_project__stage_identifier_id
 #: model:ir.model.fields,field_description:jt_projects.field_remaining_resource__stage_id
 #: model:ir.model.fields,field_description:jt_projects.field_remaining_resource__stage_name
 #: model:ir.model.fields,field_description:jt_projects.field_stage__name

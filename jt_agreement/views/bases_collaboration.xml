@@ -297,8 +297,9 @@
                                             	<field name="is_contact" invisible="1"/>
                                                 <field name="employee_id" attrs="{'required':[('is_employee','=',True)],'invisible':[('is_employee','=',False)]}"/>
                                                 <field name="partner_id" domain="[('beneficiary_type','=','scholar')]" attrs="{'required':[('is_contact','=',True)],'invisible':[('is_contact','=',False)]}"/>
+                                                <field name="bank_account_ids" invisible="1"/>
                                                 <field name="bank_id" context="{'from_agreement':1}"
-                                                  domain="[('employee_id', '=', employee_id)]" required="1"/>
+                                                  domain="[('id', 'in', bank_account_ids)]" required="1"/>
                                                 <field name="account_number" required="1"/>
                                                 <field name="amount" required="1"/>
                                                 <field name="validity_start" required="1"/>
@@ -312,8 +313,9 @@
 		                                            	<field name="is_contact"/>
 		                                                <field name="employee_id" attrs="{'required':[('is_employee','=',True)],'invisible':[('is_employee','=',False)]}"/>
 		                                                <field name="partner_id" domain="[('beneficiary_type','=','scholar')]" attrs="{'required':[('is_contact','=',True)],'invisible':[('is_contact','=',False)]}"/>
+		                                                <field name="bank_account_ids" invisible="1"/>
                                                         <field name="bank_id"
-                                                               domain="[('employee_id', '=', employee_id)]"
+                                                               domain="[('id', 'in', bank_account_ids)]"
                                                                context="{'from_agreement':1}" required="1"/>
                                                         <field name="account_number" required="1"/>
                                                         <field name="payment_rule_id" required="1"/>

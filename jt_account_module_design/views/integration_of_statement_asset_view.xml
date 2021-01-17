@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="integration_asset_form_view" model="ir.ui.view">
+			<field name="name">Integration Asset Form View</field>
+            <field name="model">integration.statement.asset</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="concept"/>
+                            <field name="account_ids" widget="many2many_tags"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+		</record>
+
+        <record id="integration_asset_tree_view" model="ir.ui.view">
+            <field name="name">Integration Asset Tree view</field>
+            <field name="model">integration.statement.asset</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="concept"/>
+                    <field name="account_ids"/>
+                </tree>
+            </field>
+         </record>
+
+         <record id="integration_asset_action" model="ir.actions.act_window">
+            <field name="name">Integration Of statement assets</field>
+            <field name="res_model">integration.statement.asset</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="integration_asset_menu" name="Integration of some items of the Statement of Assets"  action="integration_asset_action" parent="account.menu_finance_configuration" sequence="101"/>
+
+	</data>
+</odoo>

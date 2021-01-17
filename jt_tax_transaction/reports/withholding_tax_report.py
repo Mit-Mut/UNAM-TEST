@@ -36,21 +36,22 @@ class WithholdingTaxReport(models.AbstractModel):
     _inherit = "account.coa.report"
     _description = "​ Withholding tax report"
 
-    filter_date = {'mode': 'range', 'filter': 'last_month'}
-    filter_comparison = {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
-    filter_all_entries = False
-    filter_journals = True
-    filter_analytic = True
+    filter_date = {'mode': 'range', 'filter': 'this_month'}
+    filter_comparison = None
+    filter_all_entries = True
+    filter_journals = None
+    filter_analytic = None
+    filter_unfold_all = None
+    filter_cash_basis = None
+    filter_hierarchy = None
+    filter_unposted_in_period = None
+    MAX_LINES = None
 
     def _get_reports_buttons(self):
         return [
             {'name': _('Print Preview'), 'sequence': 1,
              'action': 'print_pdf', 'file_export_type': _('PDF')},
             {'name': _('Export (XLSX)'), 'sequence': 2,
-             'action': 'print_xlsx', 'file_export_type': _('XLSX')},
-            {'name': _('Closing Journal Entry'), 'sequence': 3,
-             'action': 'print_xlsx', 'file_export_type': _('XLSX')},
-            {'name': _('Save'), 'sequence': 4,
              'action': 'print_xlsx', 'file_export_type': _('XLSX')},
         ]
 
@@ -97,58 +98,54 @@ class WithholdingTaxReport(models.AbstractModel):
     def _get_lines(self, options, line_id=None):
         lines = []    
 
-        lines.append({
-            'id': 'isr_ret',
-            'name' : 'Assimilated ISR retention', 
-            'columns': [
-                        ],
-            'level': 1,
-            'unfolded': True,
-            'class':'text-left',
-        })
+        if options.get('all_entries') is False:
+            move_state_domain = ('move_id.state', '=', 'posted')
+        else:
+            move_state_domain = ('move_id.state', '!=', 'cancel')
 
-        lines.append({
-            'id': 'vat_fees',
-            'name' : 'VAT Withholding Fees 10.67%', 
-            'columns': [
-                         
-                        ],
-            'level': 1,
-            'unfolded': True,
-            'class':'text-left',
-        })
+        start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
 
-        lines.append({
-            'id': 'isr_fees',
-            'name' : 'ISR Withholding Fees 10%', 
-            'columns': [
-                         
-                        ],
-            'level': 1,
-            'unfolded': True,
-            'class':'text-left',
-        })
+        tax_ids = self.env['account.tax'].search([])
+        
+        for tax in tax_ids:
+            total_balance = 0
+            total_tax = 0
+            move_lines= self.env['account.move.line'].search([('date', '>=', start),('date', '<=', end),('tax_line_id', '=', tax.id),move_state_domain])
+            if move_lines:    
+                tax_line_list = []
+                for line in move_lines:
+                    tax_line_list.append({
+                        'id': 'line'+str(line.id),
+                        'name' : line.ref, 
+                        'columns': [
+                                    {'name': line.date},
+                                    {'name': line.move_id.name},
+                                    self._format({'name': line.tax_base_amount},figure_type='float'),
+                                    self._format({'name': line.debit+line.credit},figure_type='float'),
+                                    ],
+                        'level': 3,
+                        'unfolded': True,
+                        'parent_id': 'tax_name'+str(tax.id),
+                    })
+                    total_balance += line.tax_base_amount
+                    total_tax += line.debit+line.credit
 
-        lines.append({
-            'id': 'isr_lease',
-            'name' : 'ISR Retention Lease 10%', 
-            'columns': [
-                         
-                        ],
-            'level': 1,
-            'unfolded': True,
-            'class':'text-left',
-        })
-
-        lines.append({
-            'id': 'vat_lease',
-            'name' : 'VAT Withholding Lease 10.67%', 
-            'columns': [
-                         
-                        ],
-            'level': 1,
-            'unfoldable': True,
-            'class':'text-left',
-        })
+                tax_list=[{
+                    'id': 'tax_name'+str(tax.id),
+                    'name' : tax.name, 
+                    'columns': [
+                                {'name': ''},
+                                {'name': ''},
+                                self._format({'name': total_balance},figure_type='float'),
+                                self._format({'name': total_tax},figure_type='float'),
+                                ],
+                    'level': 1,
+                    'unfoldable': True,
+                    'unfolded': False,
+                }]
+                lines += tax_list + tax_line_list     
 
         return lines

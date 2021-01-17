@@ -29,9 +29,10 @@
     'maintainer': 'Jupical Technologies Pvt. Ltd.',
     'website': 'http://www.jupical.com',
     'license': 'AGPL-3',
-    'depends': ['jt_finance'],
+    'depends': ['jt_finance','jt_budget_mgmt','jt_projects'],
     'data': [
         'security/ir.model.access.csv',
+        'views/account_request.xml',
         'views/menu.xml',
         'views/comission_profit.xml',
         'views/account_journal_view.xml',

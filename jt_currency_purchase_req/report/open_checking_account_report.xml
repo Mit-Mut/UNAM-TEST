@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="external_layout_header_open_checking_account">
+            <div t-attf-class="header o_company_#{company.id}_layout">
+            </div>
+            <div t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout"
+                 t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
+                 t-att-data-oe-lang="o and o.env.context.get('lang')">
+                <t t-raw="0"/>
+            </div>
+            <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
+            </div>
+        </template>
+
+        <template id="external_layout_open_checking_account">
+            <t t-if="not o" t-set="o" t-value="doc"/>
+
+            <t t-if="not company">
+                <!-- Multicompany -->
+                <t t-if="company_id">
+                    <t t-set="company" t-value="company_id"/>
+                </t>
+                <t t-elif="o and 'company_id' in o">
+                    <t t-set="company" t-value="o.company_id.sudo()"/>
+                </t>
+                <t t-else="else">
+                    <t t-set="company" t-value="res_company"/>
+                </t>
+            </t>
+            <t t-call="jt_currency_purchase_req.external_layout_header_open_checking_account">
+                <t t-raw="0"/>
+            </t>
+        </template>
+        <template id="open_checking_account_template">
+            <t t-call="web.html_container">
+                <!-- <t t-foreach="docs" t-as="o"> -->
+                    <t t-call="jt_currency_purchase_req.external_layout_open_checking_account">
+                        <div class="page">
+                            <t t-if="not o" t-set="o" t-value="doc"/>
+
+                            <t t-if="not company">
+                            <!-- Multicompany -->                                
+                                <t t-if="company_id">
+                                    <t t-set="company" t-value="company_id"/>
+                                </t>
+                                <t t-elif="o and 'company_id' in o">
+                                    <t t-set="company" t-value="o.company_id.sudo()"/>
+                                </t>
+                                <t t-else="else">
+                                    <t t-set="company" t-value="res_company"/>
+                                </t>
+                            </t>
+                            <div class="row">
+                                <div class="col-2" align="left">
+                                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)"
+                                         style="max-height: 150px;" alt="Logo"/>
+                                </div>
+                                <div class="col-4" style="padding-left:15px;padding-top:7px;padding-right:0px;">
+                                    <p style="margin-top:0;margin-bottom:0;font-size:15px;">UNIVERSITY BOARD OF
+                                        TRUSTEES
+                                    </p>
+                                    <p style="margin-top:0;margin-bottom:0;font-size:15px;">
+                                        TREASURY
+                                    </p>
+                                </div>
+                                <div class="col-6" align="right" style="padding-right:0;padding-left:0px;">
+                                    <img src="/jt_check_controls/static/src/img/dgf.png"
+                                         style="max-height:100px;width:54%"/>
+                                    <p style="margin-top:0;margin-bottom:0;font-size:15px;">
+                                        GENERAL DIRECTORATE OF FINANCE
+                                    </p>
+                                    <p style="margin-top:0;margin-bottom:0;font-size:15px;">
+                                        DIRECTORATE OF INCOME AND FINANCIAL OPERATIONS
+                                    </p>
+                                    <p style="margin-top:0;margin-bottom:0;font-size:15px;">
+                                        <t t-esc="o.folio_legal"/>
+                                    </p>
+                                    <p style="margin-top:0;margin-bottom:0;font-size:15px;">
+                                        SUBJECT: REQUEST FOR CHECKS
+                                    </p>
+                                </div>
+                            </div>
+                            <br/><br/>
+                            <div class="row">
+                                <div class="col-12 text-right" align="right" style="vertical-align: bottom;padding-right:0;padding-left:0px;">
+                                    <b><span>Fecha de impresión  </span><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/> </b>
+                                </div>
+                            </div>
+                            <br/><br/><br/><br/>
+                            <div class="row">
+                                <div class="col-12">
+                                    <table class="table" name="payroll_check_table">
+                                    <thead>
+                                        <tr>
+                                            <t t-set="colspan" t-value="8"/>
+                                            <th name="th_rfc" class="text-left">
+                                                <span>RFC</span>
+                                            </th>
+                                            
+                                            <th name="th_nombre" class="text-left">
+                                                <span>Nombre</span>
+                                            </th>
+                                            <th name="th_quincena" class="text-left">
+                                                <span>Quincena</span>
+                                            </th>
+                                            <th name="th_number_de_cheque" class="text-left">
+                                                <span>Número cheque </span>
+                                            </th>
+                                            <th name="th_unit" class="text-left">
+                                                <span>Nuevo número cheque</span>
+                                            </th>
+                                            <th class="text-left" name="th_matter">
+                                                <span>Importe</span>
+                                            </th>
+                                            <th class="text-left" name="th_firma">
+                                                <span>FIRMA</span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="payroll_adjustment_tbody">
+                                        <t t-set="count" t-value="0"/>
+                                        <t t-set="amount_total" t-value="0.00"/>
+                                        <t t-foreach="docs" t-as="doc">
+                                            <tr>
+                                                
+                                                <t t-set="count" t-value="count + 1"/>
+                                                <td name="td_rfc"><span t-field="doc.rfc"/></td>
+                                                <td name="td_name" class="text-right">
+                                                    <span t-field="doc.display_name"/>
+                                                </td>
+                                                <td name="td_new_fortnight" class="text-right">
+                                                    <span t-field="doc.new_fortnight"/>
+                                                </td>
+                                                <td name="td_original_check_no" class="text-right">
+                                                    <span t-field="doc.original_check_id"/>
+                                                </td>
+                                                <td name="td_new_check" class="text-right">
+                                                    <span t-field="doc.new_check_id"/>
+                                                </td>
+                                                <td name="td_new_amount" class="text-right" t-if="doc.new_amount > 0">
+                                                    <span t-field="doc.new_amount"/>
+                                                    <t t-set="amount_total" t-value="doc.new_amount + amount_total"/>
+                                                    
+                                                </td>
+                                                <td name="td_new_amount" class="text-right" t-if="doc.new_amount == 0">
+                                                    <span t-field="doc.original_amount"/>
+                                                    <t t-set="amount_total" t-value="doc.original_amount + amount_total"/>
+                                                </td>
+                                                <td name="td_firma" class="text-right">
+                                                    <span>__________________</span>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                            <tr>
+                                                <th>Total Folios Impresos:<span t-esc="count"/></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th>TOTAL:</th>
+                                                <th><span t-esc="amount_total"/> </th>
+                                            </tr>
+                                    </tbody>
+                                </table>
+                                
+                                <!-- <div class="col-6" align="left">
+                                    <span align="left" style="text-align:left;">Total Folios<br/>
+                                    <span style="text-align:left;">Impresos:</span>:<span
+                                        t-esc="count"/></span>
+                                </div>
+                                <div class="col-6 text-right" style="margin-left:20px;" align="center">
+                                    <span style="text-align:center;">TOTAL</span><span
+                                        t-esc="amount_total"/></span>
+                                </div>
+    -->                         </div>
+                        </div>
+                    </div>
+                <!-- </t> -->
+            </t>
+        </t>
+    </template>
+                        
+
+                        
+
+        <record id="paperformat_opening_checking_account" model="report.paperformat">
+            <field name="name">Opening Checking Account</field>
+            <field name="default" eval="True"/>
+            <field name="orientation">Portrait</field>
+            <field name="format">A4</field>
+            <field name="margin_top">2</field>
+            <field name="margin_bottom">10</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">35</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <report
+                id="open_checking_account_action"
+                model="trades.config"
+                string="Open a Checking Account"
+                report_type="qweb-pdf"
+                name="jt_currency_purchase_req.payroll_adjustment_template"
+                file="jt_currency_purchase_req.payroll_adjustment_template"
+                paperformat="jt_check_controls.paperformat_payroll_check_issue"
+        />
+    </data>
+</odoo>

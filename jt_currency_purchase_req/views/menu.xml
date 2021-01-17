@@ -28,7 +28,7 @@
             <!-- request for new account  menu-->
         <menuitem id="menu_request_account" name="Request for new account"
                   sequence="0" parent="menu_movement_type"
-                  action="jt_projects.open_request_accounts_action"
+                  action="jt_currency_purchase_req.fiance_request_accounts_action"
                   />
 
         <!-- account modification menu-->

@@ -29,11 +29,12 @@
     'maintainer': 'Jupical Technologies Pvt. Ltd.',
     'website': 'http://www.jupical.com',
     'license': 'AGPL-3',
-    'depends': ['account_accountant', 'l10n_mx'],
+    'depends': ['account_accountant', 'l10n_mx','jt_projects'],
     'data': [
         'reports/header.xml',
         'reports/report_menu.xml',
         'reports/income_expenses_header.xml',
+        'views/account_request_inherit.xml',
     ],
 
     'application': False,

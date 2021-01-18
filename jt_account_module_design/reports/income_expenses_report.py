@@ -64,20 +64,169 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
         return templates
 
     def _get_columns_name(self, options):
-        current_year = datetime.now().year
-        prev_year = datetime.now().year - 1 
+
+        start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+        
+        prev_year = start.year - 1 
         return [
-            {'name': _('Anexo')},
             {'name': _('Concepto')},
-            {'name': _('Ejercido año actual') + ' ' + str(current_year)},
+            {'name': _('Ejercido año actual') + ' ' + str(start.year)},
             {'name': _('Ejercido año anterior') + ' ' + str(prev_year)},
             {'name': _('Variación')},
             {'name': _('Porcentaje') +('(%)')},
         ]
 
+    def _format(self, value, figure_type):
+        if self.env.context.get('no_format'):
+            return value
+        value['no_format_name'] = value['name']
+
+        if figure_type == 'float':
+            currency_id = self.env.company.currency_id
+            if currency_id.is_zero(value['name']):
+                # don't print -0.0 in reports
+                value['name'] = abs(value['name'])
+                value['class'] = 'number text-muted'
+            value['name'] = formatLang(
+                self.env, value['name'], currency_obj=currency_id)
+            value['class'] = 'number'
+            return value
+        if figure_type == 'percents':
+            value['name'] = str(round(value['name'] * 100, 1)) + '%'
+            value['class'] = 'number'
+            return value
+        value['name'] = round(value['name'], 1)
+        return value
+
     def _get_lines(self, options, line_id=None):
         lines = []
-        return lines    
+        start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+
+        if options.get('all_entries') is False:
+            move_state_domain = ('move_id.state', '=', 'posted')
+        else:
+            move_state_domain = ('move_id.state', '!=', 'cancel')
+
+        domain = [('date', '>=', start),('date', '<=', end),move_state_domain]
+        pre_domain = [('date', '<', start),move_state_domain]
+        
+        concept_ids = self.env['detailed.statement.income'].search([('inc_exp_type','!=',False)])
+        
+        list_data = ['income','expenses']
+        
+        remant_exercised = 0
+        remant_exercised_pre = 0
+        remant_variation = 0
+        count = 1
+        for type in list_data:
+            type_concept_ids = concept_ids.filtered(lambda x:x.inc_exp_type == type)
+            if type_concept_ids:
+
+                lines.append({
+                    'id': type,
+                    'name': str(type).upper(),
+                    'columns': [
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                ],
+    
+                    'level': 1,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+                count += 1
+                total_exercised = 0
+                total_exercised_pre = 0
+                total_variation = 0
+                for con in type_concept_ids:
+                    account_ids = con.account_ids
+                    
+
+                    values= self.env['account.move.line'].search(domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', account_ids.ids)])
+                    exercised = sum(x.debit-x.credit for x in values)
+                    exercised = exercised/1000
+                    total_exercised += exercised
+
+                    values= self.env['account.move.line'].search(pre_domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', account_ids.ids)])
+                    exercised_pre= sum(x.debit-x.credit for x in values)
+                    exercised_pre = exercised_pre/1000
+                    
+                    total_exercised_pre += exercised_pre
+                    
+                    variation = exercised - exercised_pre
+                    total_variation += variation
+                    
+                    if type == 'income':
+                        remant_exercised += exercised
+                        remant_exercised_pre += exercised_pre
+                        remant_variation += variation
+                        
+                    elif type == 'expenses':
+                        remant_exercised -= exercised
+                        remant_exercised_pre -= exercised_pre
+                        remant_variation -= variation
+                        
+                    per = 0
+                    if exercised != 0:
+                        per = (variation*100)/exercised
+                    
+                    lines.append({
+                        'id': 'con' + str(con.id),
+                        'name': con.concept,
+                        'columns': [
+                                    self._format({'name': exercised},figure_type='float'),
+                                    self._format({'name': exercised_pre},figure_type='float'),
+                                    self._format({'name': variation},figure_type='float'),
+                                    {'name':per,'class':'number'},
+                                    
+                                    ],
+        
+                        'level': 3,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+    
+                lines.append({
+                    'id': 'group_total',
+                    'name': 'SUMA',
+                    'columns': [
+                                self._format({'name': total_exercised},figure_type='float'),
+                                self._format({'name': total_exercised_pre},figure_type='float'),
+                                self._format({'name': total_variation},figure_type='float'),
+                                {'name':''},
+                                ],
+                    
+                    'level': 1,
+                    'unfoldable': False,
+                    'unfolded': True,
+                    'class':'text-right'
+                })
+
+        lines.append({
+            'id': 'REMNANT',
+            'name': 'REMNANT',
+            'columns': [
+                        self._format({'name': remant_exercised},figure_type='float'),
+                        self._format({'name': remant_exercised_pre},figure_type='float'),
+                        self._format({'name': remant_variation},figure_type='float'),
+                        {'name':''},
+                        ],
+            
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+            #'class':'text-right'
+        })
+        
+        return lines
 
     def _get_report_name(self):
         return _("State Of Income Expenses and Investment")

@@ -2761,8 +2761,12 @@ msgid "Project Type (TP)"
 msgstr "Tipo de Proyecto (TP)"
 
 #. module: jt_budget_mgmt
-#: model:ir.model.fields,field_description:jt_budget_mgmt.field_agreement_type__project_type_identifier
 #: model:ir.model.fields,field_description:jt_budget_mgmt.field_project_project__project_type_identifier
+msgid "PTI"
+msgstr "PTI"
+
+#. module: jt_budget_mgmt
+#: model:ir.model.fields,field_description:jt_budget_mgmt.field_agreement_type__project_type_identifier
 #: model:ir.model.fields,field_description:jt_budget_mgmt.field_project_type__project_type_identifier
 #: model:ir.model.fields,field_description:jt_budget_mgmt.field_stage__project_type_identifier
 #: model_terms:ir.ui.view,arch_db:jt_budget_mgmt.program_code_search_view
@@ -3187,10 +3191,14 @@ msgid "Stage Description"
 msgstr "Descripción de Etapa"
 
 #. module: jt_budget_mgmt
+#: model:ir.model.fields,field_description:jt_budget_mgmt.field_project_project__stage_identifier
+msgid "SI"
+msgstr "SI"
+
+#. module: jt_budget_mgmt
 #: model:ir.model.fields,field_description:jt_budget_mgmt.field_agreement_type__stage_identifier
 #: model:ir.model.fields,field_description:jt_budget_mgmt.field_control_assigned_amounts_lines__stage
 #: model:ir.model.fields,field_description:jt_budget_mgmt.field_expenditure_budget_line__stage
-#: model:ir.model.fields,field_description:jt_budget_mgmt.field_project_project__stage_identifier
 #: model:ir.model.fields,field_description:jt_budget_mgmt.field_project_type__stage_identifier
 #: model:ir.model.fields,field_description:jt_budget_mgmt.field_stage__stage_identifier
 #: model:ir.model.fields,field_description:jt_budget_mgmt.field_standardization_line__stage

@@ -71,11 +71,164 @@ class WeightIncomeReport(models.AbstractModel):
             {'name': _('Balance')},
             {'name': _('Adjustment')},
             {'name': _('Adjusted')},
-            {'name': _('TOTAL REVENUE')},
-            {'name': _('TOTAL EGRESSES')}]
+            ]
+
+    def _format(self, value, figure_type):
+        if self.env.context.get('no_format'):
+            return value
+        value['no_format_name'] = value['name']
+
+        if figure_type == 'float':
+            currency_id = self.env.company.currency_id
+            if currency_id.is_zero(value['name']):
+                # don't print -0.0 in reports
+                value['name'] = abs(value['name'])
+                value['class'] = 'number text-muted'
+            value['name'] = formatLang(
+                self.env, value['name'], currency_obj=currency_id)
+            value['class'] = 'number'
+            return value
+        if figure_type == 'percents':
+            value['name'] = str(round(value['name'] * 100, 1)) + '%'
+            value['class'] = 'number'
+            return value
+        value['name'] = round(value['name'], 1)
+        return value
 
     def _get_lines(self, options, line_id=None):
         lines = []
+
+        start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+
+        if options.get('all_entries') is False:
+            move_state_domain = ('move_id.state', '=', 'posted')
+        else:
+            move_state_domain = ('move_id.state', '!=', 'cancel')
+
+        domain = [('date', '>=', start),('date', '<=', end),move_state_domain]
+
+        concept_ids = self.env['miles.revenue'].search([])
+        gt_total_balance1_inc = 0
+        gt_total_balance2_inc = 0
+        gt_total_balance3_inc = 0
+
+        gt_total_balance1_exp = 0
+        gt_total_balance2_exp = 0
+        gt_total_balance3_exp = 0
+        
+        for con in concept_ids:
+            total_balance1 = 0
+            total_balance2 = 0
+            total_balance3 = 0
+            lines.append({
+                'id': 'concept',
+                'name': con.concept,
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+                'colspan':5,
+                'class':'text-center'
+            })
+            account_ids = con.account_ids
+            for acc in account_ids:
+                balance = 0
+                values= self.env['account.move.line'].search(domain + [('account_id', '=', acc.id)])
+                balance = sum(x.debit-x.credit for x in values)
+                
+                adjustment = 0
+                adjusted = balance - adjustment
+                                
+                if acc.user_type_id and acc.user_type_id.type == 'receivable':
+                    gt_total_balance1_inc += balance
+                    gt_total_balance2_inc += adjustment
+                    gt_total_balance3_inc += adjusted
+                if acc.user_type_id and acc.user_type_id.type == 'payable':
+                    gt_total_balance1_exp += balance
+                    gt_total_balance2_exp += adjustment
+                    gt_total_balance3_exp += adjusted
+                    
+                total_balance1 += balance
+                total_balance2 += adjustment
+                total_balance3 += adjusted
+                
+                lines.append({
+                    'id': 'account' + str(acc.id),
+                    'name': acc.code,
+                    'columns': [{'name': acc.name},
+                                self._format({'name': balance},figure_type='float'),
+                                self._format({'name': adjustment},figure_type='float'),
+                                self._format({'name': adjusted},figure_type='float'),
+                                ],
+
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+
+            lines.append({
+                'id': 'group_total',
+                'name': '',
+                'columns': [{'name': 'SUMA'},
+                            self._format({'name': total_balance1},figure_type='float'),
+                            self._format({'name': total_balance2},figure_type='float'),
+                            self._format({'name': total_balance3},figure_type='float'),
+                            ],
+                
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+                'class':'text-right'
+            })
+
+        lines.append({
+            'id': 'TOTAL REVENUE',
+            'name': 'TOTAL REVENUE',
+            'columns': [{'name': ''},
+                        self._format({'name': gt_total_balance1_inc},figure_type='float'),
+                        self._format({'name': gt_total_balance2_inc},figure_type='float'),
+                        self._format({'name': gt_total_balance3_inc},figure_type='float'),
+                        ],
+            
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+            #'class':'text-right'
+        })
+
+        lines.append({
+            'id': 'TOTAL EGRESSES',
+            'name': 'TOTAL EGRESSES',
+            'columns': [{'name': ''},
+                        self._format({'name': gt_total_balance1_exp},figure_type='float'),
+                        self._format({'name': gt_total_balance2_exp},figure_type='float'),
+                        self._format({'name': gt_total_balance3_exp},figure_type='float'),
+                        ],
+            
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+            #'class':'text-right'
+        })
+
+
+        lines.append({
+            'id': 'Remnants',
+            'name': 'Remnants',
+            'columns': [{'name': ''},
+                        self._format({'name': gt_total_balance1_inc - gt_total_balance1_exp},figure_type='float'),
+                        self._format({'name': gt_total_balance2_inc - gt_total_balance2_exp},figure_type='float'),
+                        self._format({'name': gt_total_balance3_inc - gt_total_balance3_exp},figure_type='float'),
+                        ],
+            
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+            #'class':'text-right'
+        })
+        
         return lines
 
     def _get_report_name(self):

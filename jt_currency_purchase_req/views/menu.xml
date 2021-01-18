@@ -8,6 +8,12 @@
                   sequence="99" parent="jt_payroll_payment.menu_payment_finance_setting"/>
 
 
+             
+        <!-- Resource Requests for Foreign Exchange Purchase menus-->
+        <menuitem id="menu_resource_req_foreign_ex_purchase" name="Resource Requests for Foreign Exchange Purchase"
+                  sequence="100" parent="jt_payroll_payment.menu_payment_finance_setting"/>
+
+ 
          <!--  Federal Grant Registeration menus-->
         <menuitem id="menu_federal_grant_registeration" name="Federal Grant Registeration"
                   sequence="7" parent="jt_payroll_payment.menu_payment_finance"/>
@@ -28,7 +34,7 @@
             <!-- request for new account  menu-->
         <menuitem id="menu_request_account" name="Request for new account"
                   sequence="0" parent="menu_movement_type"
-                  action="jt_projects.open_request_accounts_action"
+                  action="jt_currency_purchase_req.fiance_request_accounts_action"
                   />
 
         <!-- account modification menu-->

@@ -66,7 +66,7 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
 
     def _get_columns_name(self, options):
         return [
-            {'name': _('Annexed')},
+            {'name': _('Concepto')},
             {'name': _('ASSIGNED ADVICE')},
             {'name': _('Transfers')},
             {'name': _('Assigned')},
@@ -76,14 +76,222 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
             {'name': _('Exercised')},
             {'name': _('Percentage')},
             {'name': _('EXERCISE PENDANT')},
-            {'name': _('REMNANT OF EXERCISE')},
 
         ]
 
+    def _format(self, value, figure_type):
+        if self.env.context.get('no_format'):
+            return value
+        value['no_format_name'] = value['name']
+
+        if figure_type == 'float':
+            currency_id = self.env.company.currency_id
+            if currency_id.is_zero(value['name']):
+                # don't print -0.0 in reports
+                value['name'] = abs(value['name'])
+                value['class'] = 'number text-muted'
+            value['name'] = formatLang(
+                self.env, value['name'], currency_obj=currency_id)
+            value['class'] = 'number'
+            return value
+        if figure_type == 'percents':
+            value['name'] = str(round(value['name'] * 100, 1)) + '%'
+            value['class'] = 'number'
+            return value
+        value['name'] = round(value['name'], 1)
+        return value
+
     def _get_lines(self, options, line_id=None):
         lines = []
-        return lines
 
+        start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+
+        if options.get('all_entries') is False:
+            move_state_domain = ('move_id.state', '=', 'posted')
+        else:
+            move_state_domain = ('move_id.state', '!=', 'cancel')
+
+        domain = [('date', '>=', start),('date', '<=', end),move_state_domain]
+        
+        concept_ids = self.env['detailed.statement.income'].search([('inc_exp_type','!=',False)])
+        
+        
+        list_data = ['income','expenses']
+        
+        remant_authorized = 0
+        remant_transfers = 0
+        remant_assign = 0
+        remant_contable_exercised = 0
+        remant_e_income = 0
+        remant_extra_book = 0
+        remant_exercised = 0
+        remant_to_exercised = 0
+        
+        for type in list_data:
+            type_concept_ids = concept_ids.filtered(lambda x:x.inc_exp_type == type)
+            if type_concept_ids:
+
+                lines.append({
+                    'id': type,
+                    'name': str(type).upper(),
+                    'columns': [
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                ],
+    
+                    'level': 1,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+                
+                
+                
+                
+                total_per = 0
+                
+                total_authorized = 0
+                total_transfers = 0
+                total_assign = 0
+                total_contable_exercised = 0
+                total_e_income = 0
+                total_extra_book = 0
+                total_exercised = 0
+                total_to_exercised = 0
+                
+                for con in type_concept_ids:
+                    account_ids = con.account_ids
+                    
+                    values= self.env['account.move.line'].search(domain + [('budget_id','!=',False),('account_id', 'in', account_ids.ids)])
+                    authorized = sum(x.debit-x.credit for x in values)
+                    authorized = authorized/1000
+                    
+                    total_authorized += authorized
+                    
+                    transfers = 0
+                    total_transfers += transfers
+
+                    values= self.env['account.move.line'].search(domain + [('adequacy_id','!=',False),('account_id', 'in', account_ids.ids)])
+                    assign = sum(x.debit-x.credit for x in values)
+                    assign = assign/1000
+                    total_assign += assign
+                    
+                    contable_exercised = 0
+                    total_contable_exercised += contable_exercised
+
+                    e_income = 0
+                    total_e_income += e_income
+                    
+                    extra_book = 0
+                    total_extra_book += extra_book
+                    
+                    values= self.env['account.move.line'].search(domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', account_ids.ids)])
+                    exercised = sum(x.debit-x.credit for x in values)
+                    exercised = exercised/1000
+                    total_exercised += exercised
+
+                    values= self.env['account.move.line'].search(domain + [('budget_id','!=',False),('account_id', 'in', account_ids.ids)])
+                    to_exercised = sum(x.debit-x.credit for x in values)
+                    to_exercised = to_exercised/1000
+                    
+                    total_to_exercised += to_exercised
+                     
+                    if type == 'income':
+                        remant_authorized += authorized
+                        remant_transfers += transfers
+                        remant_assign += assign
+                        remant_contable_exercised += contable_exercised
+                        remant_e_income += e_income
+                        remant_extra_book += extra_book
+                        remant_exercised += exercised
+                        remant_to_exercised += to_exercised
+                        
+                    elif type == 'expenses':
+                        remant_authorized -= authorized
+                        remant_transfers -= transfers
+                        remant_assign -= assign
+                        remant_contable_exercised += contable_exercised
+                        remant_e_income -= e_income
+                        remant_extra_book -= extra_book
+                        remant_exercised -= exercised
+                        remant_to_exercised -= to_exercised
+                        
+                    per = 0
+                    if assign > 0:
+                        per = (exercised*100)/assign
+                    
+                    lines.append({
+                        'id': 'con' + str(con.id),
+                        'name': con.concept,
+                        'columns': [
+                                    self._format({'name': authorized},figure_type='float'),
+                                    self._format({'name': transfers},figure_type='float'),
+                                    self._format({'name': assign},figure_type='float'),
+                                    self._format({'name': contable_exercised},figure_type='float'),
+                                    self._format({'name': e_income},figure_type='float'),
+                                    self._format({'name': extra_book},figure_type='float'),
+                                    self._format({'name': exercised},figure_type='float'),
+                                    {'name': per,'class':'number'},
+                                    self._format({'name': to_exercised},figure_type='float'),
+                                    ],
+        
+                        'level': 3,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+    
+                lines.append({
+                    'id': 'group_total',
+                    'name': 'SUMA',
+                    'columns': [
+                                self._format({'name': total_authorized},figure_type='float'),
+                                self._format({'name': total_transfers},figure_type='float'),
+                                self._format({'name': total_assign},figure_type='float'),
+                                self._format({'name': total_contable_exercised},figure_type='float'),
+                                self._format({'name': total_e_income},figure_type='float'),
+                                self._format({'name': total_extra_book},figure_type='float'),
+                                self._format({'name': total_exercised},figure_type='float'),
+                                {'name': ''},
+                                self._format({'name': total_to_exercised},figure_type='float'),
+                                ],
+                    
+                    'level': 1,
+                    'unfoldable': False,
+                    'unfolded': True,
+                    'class':'text-right'
+                })
+
+        lines.append({
+            'id': 'REMNANT',
+            'name': 'REMNANT',
+            'columns': [
+                        self._format({'name': remant_authorized},figure_type='float'),
+                        self._format({'name': remant_transfers},figure_type='float'),
+                        self._format({'name': remant_assign},figure_type='float'),
+                        self._format({'name': remant_contable_exercised},figure_type='float'),
+                        self._format({'name': remant_e_income},figure_type='float'),
+                        self._format({'name': remant_extra_book},figure_type='float'),
+                        self._format({'name': remant_exercised},figure_type='float'),
+                        {'name': ''},
+                        self._format({'name': remant_to_exercised},figure_type='float'),
+                        ],
+            
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+            'class':'text-right'
+        })
+                
+        return lines
     def _get_report_name(self):
         return _("Detail Statement of Income,Expenses and Investments Report")
 

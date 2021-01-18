@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="external_layout_header_check_registration">
+            <div t-attf-class="header o_company_#{company.id}_layout">
+                <div class="row">
+                    <div class="col-2" align="left">
+                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)"
+                             style="max-height: 150px;" alt="Logo"/>
+                    </div>
+                    <div class="col-4" style="padding-left:15px;margin-left:10px;padding-top:7px;padding-right:0px;">
+                        <img src="/jt_currency_purchase_req/static/src/img/dgf.png"
+                             style="max-height:100px;width:54%"/>
+                    </div>
+                    <div class="col-6" align="right" style="padding-right:0;padding-left:0px;">
+                        
+                        <p style="margin-top:0;margin-bottom:0;font-size:15px;">UNIVERSITY PATRONAGE -
+TREASURY</p>
+                        
+                        <p style="margin-top:0;margin-bottom:0;font-size:15px;">
+                            GENERAL ADDRESS OF FINANZAS
+                        </p>
+                        <p style="margin-top:0;margin-bottom:0;font-size:15px;">
+                            INCOME DIRECTION AND FINANCIAL OPERATION
+                        </p>
+                        <p style="margin-top:0;margin-bottom:0;font-size:15px;">
+                            Oficio No:<br/>
+                            No. Solicitude:<br/>
+                            Asunsto:<br/>
+                            Dependencia: 
+                        </p>
+    
+                    </div>
+                </div>
+               
+            </div>
+            <div t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout"
+                 t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
+                 t-att-data-oe-lang="o and o.env.context.get('lang')">
+                <t t-raw="0"/>
+            </div>
+            <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
+                <div class="row">
+                    <div class="col-8" align="left" style="font-size:15px">
+                        <span>"Thank you in advance for the attention paid, we stay with you".</span><br/>
+                        <span style="font-size:15px">
+                        Kind regards,                            <br/>
+                        </span>
+                        <span style="font-size:15px">
+                            "BY MY RACE THE SPIRIT WILL SPEAK"
+                        </span><br/>
+                        <span style="font-size:15px">
+                            University City, Cd. Mx.                            <br/>
+<!--                             <t t-esc="o.get_application_date(o.appliaction_date)"/>
+ -->                        </span>
+                    </div>
+                    <div class="col-4" align="right">
+                      
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-6" align="left">
+                            <span style="font-size:15px">Treasurer of the UNAM</span>
+                    </div>
+                    <div class="col-6" align="right">
+                            <span style="font-size:15px">General Director Of Finance</span>
+                    </div>
+                </div>
+                <br/>
+                <br/>
+                <br/>
+                
+                
+            </div>
+        </template>
+
+        <template id="external_layout_check_registration">
+            <t t-if="not o" t-set="o" t-value="doc"/>
+
+            <t t-if="not company">
+                <!-- Multicompany -->
+                <t t-if="company_id">
+                    <t t-set="company" t-value="company_id"/>
+                </t>
+                <t t-elif="o and 'company_id' in o">
+                    <t t-set="company" t-value="o.company_id.sudo()"/>
+                </t>
+                <t t-else="else">
+                    <t t-set="company" t-value="res_company"/>
+                </t>
+            </t>
+            <t t-call="jt_currency_purchase_req.external_layout_header_check_registration">
+                <t t-raw="0"/>
+            </t>
+        </template>
+
+        <template id="office_cancellation_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <!--                    <t t-if="o.state == 'approved'">-->
+                    <t t-call="jt_currency_purchase_req.external_layout_check_registration">
+                        <div class="page">
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <span></span>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <record id="paperformat_office_cancellation" model="report.paperformat">
+            <field name="name">Office Cancellation Checking Account</field>
+            <field name="default" eval="True"/>
+            <field name="orientation">Portrait</field>
+            <field name="format">A4</field>
+            <field name="margin_top">40</field>
+            <field name="margin_bottom">80</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">35</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <report
+                id="open_cancellation_checking_account_action"
+                model="finance.sender.recipient.trades"
+                string="Office Cancellation Checking Account"
+                report_type="qweb-pdf"
+                name="jt_currency_purchase_req.office_cancellation_template"
+                file="jt_currency_purchase_req.office_cancellation_template"
+                paperformat="jt_currency_purchase_req.paperformat_office_cancellation"
+        />
+
+    </data>
+</odoo>

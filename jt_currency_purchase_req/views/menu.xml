@@ -8,6 +8,12 @@
                   sequence="99" parent="jt_payroll_payment.menu_payment_finance_setting"/>
 
 
+             
+        <!-- Resource Requests for Foreign Exchange Purchase menus-->
+        <menuitem id="menu_resource_req_foreign_ex_purchase" name="Resource Requests for Foreign Exchange Purchase"
+                  sequence="100" parent="jt_payroll_payment.menu_payment_finance_setting"/>
+
+ 
          <!--  Federal Grant Registeration menus-->
         <menuitem id="menu_federal_grant_registeration" name="Federal Grant Registeration"
                   sequence="7" parent="jt_payroll_payment.menu_payment_finance"/>

@@ -8,15 +8,8 @@
                 <form>
                     <sheet>
                         <group>
-                            <group>
-                                <field name="concept"/>
-                                <field name="year"/>
-                                <field name="stage"/>
-                            </group>
-                            <group>
-                                <field name="project_type"/>
-                                <field name="account_ids" widget="many2many_tags"/>
-                            </group>
+                            <field name="concept" required="1"/>
+                            <field name="account_ids" widget="many2many_tags"/>
                         </group>
                     </sheet>
                 </form>
@@ -28,11 +21,8 @@
             <field name="model">miles.revenue</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="concept"/>
-                    <field name="year"/>
-                    <field name="stage"/>
-                    <field name="project_type"/>
-                    <field name="account_ids"/>
+                    <field name="concept" />
+                    <field name="account_ids" widget="many2many_tags"/>
                 </tree>
             </field>
          </record>
@@ -43,7 +33,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="miles_revenue_menu" name="Miles Revenue"  action="miles_revenue_action" parent="account.menu_finance_configuration" sequence="102"/>
+        <menuitem id="miles_revenue_menu" name="Miles Revenue"  action="miles_revenue_action" parent="menu_conf_item" sequence="2"/>
 
 	</data>
 </odoo>

@@ -8,20 +8,20 @@
                         <img t-if="company.logo" t-att-src="image_data_uri(company.logo)"
                              style="max-height: 150px;" alt="Logo"/>
                     </div>
-                    <div class="col-4" style="padding-left:15px;padding-top:7px;padding-right:0px;">
-                        <p style="margin-top:0;margin-bottom:0;font-size:15px;">UNIVERSITY BOARD OF TRUSTEES</p>
-                        <p style="margin-top:0;margin-bottom:0;font-size:15px;">
-                            TREASURY
-                        </p>
-                    </div>
-                    <div class="col-6" align="right" style="padding-right:0;padding-left:0px;">
+                    <div class="col-4" style="padding-left:15px;margin-left:10px;padding-top:7px;padding-right:0px;">
                         <img src="/jt_currency_purchase_req/static/src/img/dgf.png"
                              style="max-height:100px;width:54%"/>
+                    </div>
+                    <div class="col-6" align="right" style="padding-right:0;padding-left:0px;">
+                        
+                        <p style="margin-top:0;margin-bottom:0;font-size:15px;">UNIVERSITY PATRONAGE -
+TREASURY</p>
+                        
                         <p style="margin-top:0;margin-bottom:0;font-size:15px;">
-                            GENERAL DIRECTORATE OF FINANCE
+                            GENERAL ADDRESS OF FINANZAS
                         </p>
                         <p style="margin-top:0;margin-bottom:0;font-size:15px;">
-                            DIRECTORATE OF REVENUE AND FINANCIAL OPERATIONS
+                            INCOME DIRECTION AND FINANCIAL OPERATION
                         </p>
                         <p style="margin-top:0;margin-bottom:0;font-size:15px;">
                             Oficio No:<br/>
@@ -42,23 +42,20 @@
             <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
                 <div class="row">
                     <div class="col-8" align="left" style="font-size:15px">
-                        <span>Sin Particular ,agradecemos la atencion a la presente y aprovechamos la oportunidad para enviarle un cordial saludo.</span><br/>
+                        <span>"Thank you in advance for the attention paid, we stay with you".</span><br/>
                         <span style="font-size:15px">
-                            Kind regards,
-                            <br/>
+                        Kind regards,                            <br/>
                         </span>
                         <span style="font-size:15px">
                             "BY MY RACE THE SPIRIT WILL SPEAK"
                         </span><br/>
                         <span style="font-size:15px">
-                            Ciudad Universitaria, Cd. Mx., A
-                            <br/>
+                            University City, Cd. Mx.                            <br/>
 <!--                             <t t-esc="o.get_application_date(o.appliaction_date)"/>
  -->                        </span>
                     </div>
                     <div class="col-4" align="right">
-                        <img src="/jt_currency_purchase_req/static/src/img/sign.png"
-                             style="max-height:100px;width:50%"/>
+                      
                     </div>
                 </div>
                 <br/>
@@ -98,7 +95,7 @@
             </t>
         </template>
 
-        <template id="check_registration_template">
+        <template id="office_cancellation_template">
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="o">
                     <!--                    <t t-if="o.state == 'approved'">-->
@@ -119,8 +116,8 @@
             </t>
         </template>
 
-        <record id="paperformat_check_registration" model="report.paperformat">
-            <field name="name">Check Registration</field>
+        <record id="paperformat_office_cancellation" model="report.paperformat">
+            <field name="name">Office Cancellation Checking Account</field>
             <field name="default" eval="True"/>
             <field name="orientation">Portrait</field>
             <field name="format">A4</field>
@@ -134,13 +131,13 @@
         </record>
 
         <report
-                id="open_checking_account_action"
+                id="open_cancellation_checking_account_action"
                 model="finance.sender.recipient.trades"
-                string="Open a Checking Account"
+                string="Office Cancellation Checking Account"
                 report_type="qweb-pdf"
-                name="jt_currency_purchase_req.check_registration_template"
-                file="jt_currency_purchase_req.check_registration_template"
-                paperformat="jt_currency_purchase_req.paperformat_check_registration"
+                name="jt_currency_purchase_req.office_cancellation_template"
+                file="jt_currency_purchase_req.office_cancellation_template"
+                paperformat="jt_currency_purchase_req.paperformat_office_cancellation"
         />
 
     </data>

@@ -25,15 +25,13 @@
                 <xpath expr="//field[@name='bank_acc_number_id']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
-                <xpath expr="//page[@name='accounting_notes']" position="attributes">
+                <xpath expr="//notebook/page[1]" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
                 <xpath expr="//field[@name='project_stage_identifier']" position="after">
                     <field name="bank_id" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                 </xpath>
-                
             </field>
         </record>
-
     </data>
 </odoo>

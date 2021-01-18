@@ -9,14 +9,12 @@
                              style="max-height: 150px;" alt="Logo"/>
                     </div>
                     <div class="col-4" style="padding-left:15px;padding-top:7px;padding-right:0px;">
-                        <p style="margin-top:0;margin-bottom:0;font-size:15px;">UNIVERSITY BOARD OF TRUSTEES</p>
-                        <p style="margin-top:0;margin-bottom:0;font-size:15px;">
-                            TREASURY
-                        </p>
-                    </div>
-                    <div class="col-6" align="right" style="padding-right:0;padding-left:0px;">
                         <img src="/jt_currency_purchase_req/static/src/img/dgf.png"
                              style="max-height:100px;width:54%"/>
+                    </div>
+                    <div class="col-6" align="right" style="padding-right:0;padding-left:0px;">
+                        
+                        <p style="margin-top:0;margin-bottom:0;font-size:15px;">UNIVERSITY BOARD OF TRUSTEES-TREASURY</p>
                         <p style="margin-top:0;margin-bottom:0;font-size:15px;">
                             GENERAL DIRECTORATE OF FINANCE
                         </p>
@@ -56,9 +54,8 @@
 <!--                             <t t-esc="o.get_application_date(o.appliaction_date)"/>
  -->                        </span>
                     </div>
-                    <div class="col-4" align="right">
-                        <img src="/jt_currency_purchase_req/static/src/img/sign.png"
-                             style="max-height:100px;width:50%"/>
+                    <div class="col-4" align="right" style="margin-top:30px;">
+                        <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d DE %B DEL %Y')"/>
                     </div>
                 </div>
                 <br/>
@@ -98,7 +95,7 @@
             </t>
         </template>
 
-        <template id="check_registration_template">
+        <template id="updating_signature_template">
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="o">
                     <!--                    <t t-if="o.state == 'approved'">-->
@@ -119,8 +116,8 @@
             </t>
         </template>
 
-        <record id="paperformat_check_registration" model="report.paperformat">
-            <field name="name">Check Registration</field>
+        <record id="paperformat_updating_signature" model="report.paperformat">
+            <field name="name">Office Of Updating Signature</field>
             <field name="default" eval="True"/>
             <field name="orientation">Portrait</field>
             <field name="format">A4</field>
@@ -134,13 +131,13 @@
         </record>
 
         <report
-                id="open_checking_account_action"
+                id="updating_signature_action"
                 model="finance.sender.recipient.trades"
-                string="Open a Checking Account"
+                string="Office Of Updating Signature"
                 report_type="qweb-pdf"
-                name="jt_currency_purchase_req.check_registration_template"
-                file="jt_currency_purchase_req.check_registration_template"
-                paperformat="jt_currency_purchase_req.paperformat_check_registration"
+                name="jt_currency_purchase_req.updating_signature_template"
+                file="jt_currency_purchase_req.updating_signature_template"
+                paperformat="jt_currency_purchase_req.paperformat_updating_signature"
         />
 
     </data>

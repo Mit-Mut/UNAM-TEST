@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="cancel_payment_method" model="ir.actions.server">
+            <field name="name">Cancel Payment Method</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="state">code</field>
+            <field name="code">action = records.cancel_payment_method()</field>
+        </record>
+
+        <record id="supplier_payment_req_inherit_for_check" model="ir.ui.view">
+            <field name="name">supplier.payment.req.inherit.for.check</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="jt_supplier_payment.payment_req_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button name="action_rotated" string="Reschedule" class="oe_highlight" type="object"
+                                attrs="{'invisible': [('payment_state', '!=', 'payment_method_cancelled')]}"/>
+                </xpath>
+                <field name="payment_bank_id" position="attributes">
+                    <attribute name="attrs">{'readonly': [('payment_state', 'not in', ('draft', 'rotated'))]}</attribute>
+                </field>
+                  <field name="payment_bank_account_id" position="attributes">
+                    <attribute name="attrs">{'readonly': [('payment_state', 'not in', ('draft', 'rotated'))]}</attribute>
+                </field>
+                 <field name="l10n_mx_edi_payment_method_id" position="attributes">
+                    <attribute name="attrs">{'readonly': [('payment_state', 'not in', ('draft', 'rotated')),
+                                        ('is_from_reschedule_payment','=',False)]}</attribute>
+                </field>
+                <field name="batch_folio" position="after">
+                    <field name="check_folio_id" readonly="1"/>
+                    <field name="check_status"/>
+                    <field name="related_check_folio_id" invisible="1"/>
+                    <field name="related_check"/>
+                </field>
+            </field>
+        </record>
+
+		<!--  Project Payment Request Views -->
+        <record id="payment_req_form_view_inherit_for_check" model="ir.ui.view">
+            <field name="name">payment.req.form.view.inherit.for.check</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="jt_projects.payment_req_form_view_inherit"/>
+            <field name="arch" type="xml">
+            	<xpath expr="//button[@name='action_reschedule']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('payment_state', 'not in', ('payment_not_applied','payment_method_cancelled'))]}</attribute>
+            		
+            	</xpath>
+                <field name="status" position="after">
+                    <field name="check_folio_id" readonly="1"/>
+                    <field name="check_status"/>
+                </field>
+			</field>
+		</record>
+		
+    </data>
+</odoo>

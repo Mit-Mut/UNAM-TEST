@@ -131,6 +131,16 @@ class ProgramCode(models.Model):
     conacyt_code = fields.Boolean(string="CONACYT Code",copy=False,default=False)
     project_id = fields.Many2one('project.project','Project Number')
     
+    @api.model
+    def create(self,vals):
+        res = super(ProgramCode,self).create(vals)
+        for r in res:
+            if r.project_number and not r.project_id:
+                project_id = self.env['project.project'].search([('number','=',r.project_number)],limit=1)
+                if project_id:
+                    r.project_id = project_id.id
+        return res
+     
     @api.onchange('project_id')
     def onchange_project_id(self):
         project_type_id = False

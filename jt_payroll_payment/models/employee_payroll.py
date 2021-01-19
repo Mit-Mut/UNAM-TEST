@@ -148,7 +148,8 @@ class EmployeePayroll(models.Model):
         help='Indicates the way the payment was/will be received, where the '
         'options could be: Cash, Nominal Check, Credit Card, etc.')
 
-        
+    is_pension_payment_request = fields.Boolean("Pension Payment",default=False,copy=False)
+            
     @api.onchange('employee_id') 
     def onchange_partner_bak_account(self):
         if self.employee_id and self.employee_id.bank_ids:

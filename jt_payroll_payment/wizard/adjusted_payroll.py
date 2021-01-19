@@ -82,7 +82,7 @@ class AdjustedPayrollWizard(models.TransientModel):
                         
                     for rec in emp_payroll_ids:
                         rec.adjustment_case_id = case_id and case_id.id or False
-                        if case=='A' or case=='R' or case=='F' or case=='Z' or case=='H' or case=='E' or case=='V' or case=='C':
+                        if case=='A' or case=='R' or case=='F' or case=='Z' or case=='H' or case=='E' or case=='S' or case=='V' or case=='C':
                             if check_no:
                                 if  type(check_no) is int or type(check_no) is float:
                                     check_no = int(check_no)

@@ -139,6 +139,7 @@ class GeneratePayrollWizard(models.TransientModel):
                                                     'deposite_number' : rec_deposite_number,
                                                     'check_number' : rec_check_number,
                                                     'l10n_mx_edi_payment_method_id':payment_method_id,
+                                                    'is_pension_payment_request' : True,
                                                     'receiving_bank_acc_pay_id' : bank_account_id,
                                                     'payment_request_type':'direct_employee'})
                     
@@ -206,6 +207,7 @@ class GeneratePayrollWizard(models.TransientModel):
                                                     'fornight' : self.payroll_process_id.fornight,
                                                     'employee_id':employee_id.id,
                                                     'net_salary':net_salary,
+                                                    'is_pension_payment_request' : True,
                                                     'payment_request_type':'direct_employee'})
                     
                     if ded_key:
@@ -267,6 +269,7 @@ class GeneratePayrollWizard(models.TransientModel):
                                                     'period_end' : self.payroll_process_id.period_end,
                                                     'fornight' : self.payroll_process_id.fornight,
                                                     'employee_id':employee_id.id,
+                                                    'is_pension_payment_request' : True,
                                                     'payment_request_type':'direct_employee'})
                     
                     partner_id = False
@@ -357,6 +360,7 @@ class GeneratePayrollWizard(models.TransientModel):
                                                     'period_end' : self.payroll_process_id.period_end,
                                                     'fornight' : self.payroll_process_id.fornight,
                                                     'employee_id':employee_id.id,
+                                                    'is_pension_payment_request' : True,
                                                     'payment_request_type':'direct_employee'})
                     
                     job_data = False
@@ -425,6 +429,7 @@ class GeneratePayrollWizard(models.TransientModel):
                                                     'period_end' : self.payroll_process_id.period_end,
                                                     'fornight' : self.payroll_process_id.fornight,
                                                     'employee_id':employee_id.id,
+                                                    'is_pension_payment_request' : True,
                                                     'payment_request_type':'direct_employee'})
                     
                     partner_id = False

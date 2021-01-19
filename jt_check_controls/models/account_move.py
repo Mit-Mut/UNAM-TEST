@@ -104,7 +104,7 @@ class SupplierPaymentRequest(models.Model):
             sub_dep_ids = sub_inv_ids.mapped('sub_dependancy_id')
             for sub in sub_dep_ids:
                 inv_ids = self.filtered(lambda x:x.dependancy_id.id==dep.id and x.sub_dependancy_id.id==sub.id)
-                dep_name = sub.sub_dependency + ' and ' + sub.description
+                dep_name = sub.description
                 payment_id = self.env['payment.place'].search([('dependancy_id','=',dep.id),('sub_dependancy_id','=',sub.id)],limit=1)
                 clave_no = ''
                 if payment_id:

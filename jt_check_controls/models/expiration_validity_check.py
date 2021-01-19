@@ -91,6 +91,10 @@ class ExpirationValidityCheck(models.Model):
 
             if rec.payment_req_id:
                 rec.payment_req_id.payment_state = 'payment_method_cancelled'
+                payment_ids = self.env['account.payment'].search([('payment_state', '=', 'for_payment_procedure'),
+                                                                  ('payment_request_id', '=', rec.payment_req_id.id)])
+                for payment in payment_ids:
+                    payment.cancel()
             if rec.check_folio_id:
                 rec.check_folio_id.status = 'Withdrawn from circulation'
                 rec.check_payment_req_id.is_withdrawn_circulation = True

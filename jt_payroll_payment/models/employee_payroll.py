@@ -45,7 +45,21 @@ class Employee(models.Model):
             emp.user_id = user_id.id
             emp.emp_partner_id = user_id.partner_id and user_id.partner_id.id or False
              
-             
+class HRJob(models.Model):
+    _inherit = 'hr.job'
+    
+    def name_get(self):
+        result = []
+        for rec in self:
+            name = rec.name or ''
+            if self.env.context:
+                if rec.category_key and (self.env.context.get('show_category_name',False)):
+                    name = rec.category_key.name
+            result.append((rec.id, name))
+        return result
+    
+    
+                 
 class EmployeePayroll(models.Model):
 
     _name = 'employee.payroll.file'
@@ -110,11 +124,36 @@ class EmployeePayroll(models.Model):
     move_id = fields.Many2one('account.move','Payroll Payments')
     payment_place_id = fields.Many2one(related="employee_id.payment_place_id",string="Place of payment")
     payroll_register_user_id = fields.Many2one('res.users',default=lambda self: self.env.user,copy=False,string="User who registers")
+
+    payroll_processing_id = fields.Many2one('custom.payroll.processing','Payroll Processing')
+    preception_line_ids = fields.One2many('preception.line','payroll_id')
+    deduction_line_ids = fields.One2many('deduction.line','payroll_id')
+    pension_payment_line_ids = fields.One2many('pension.payment.line','payroll_id')
+    additional_payments_line_ids = fields.One2many('additional.payments.line','payroll_id')
+    additional_pension_payments_line_ids = fields.One2many('additional.pension.payments.line','payroll_id')
+
     
+    rfc = fields.Char(related='employee_id.rfc')
+    job_id = fields.Many2one(related='employee_id.job_id',string='Category key')
+    deposite_number = fields.Char("Deposit number")
+    check_number = fields.Char("Check number")
+    bank_key = fields.Char("Bank Key")
+    adjustment_case_id = fields.Many2one('adjustment.cases','Adjustment Cases')
+    net_salary = fields.Float("Net Salary")
+    casualties_and_cancellations = fields.Selection([('B','B'),('BD','BD'),('BDEF','BDEF')],string='Casualties And Cancellations',tracking=True)
+    
+    l10n_mx_edi_payment_method_id = fields.Many2one(
+        'l10n_mx_edi.payment.method',
+        string='Payment Method',
+        help='Indicates the way the payment was/will be received, where the '
+        'options could be: Cash, Nominal Check, Credit Card, etc.')
+
+    is_pension_payment_request = fields.Boolean("Pension Payment",default=False,copy=False)
+            
     @api.onchange('employee_id') 
     def onchange_partner_bak_account(self):
         if self.employee_id and self.employee_id.bank_ids:
-            self.receiving_bank_acc_pay_id = self.employee_id.bank_ids[0].id
+            #self.receiving_bank_acc_pay_id = self.employee_id.bank_ids[0].id
             self.bank_receiving_payment_id= self.employee_id.bank_ids[0].bank_id and self.employee_id.bank_ids[0].bank_id.id or False
         else:
             self.receiving_bank_acc_pay_id = False
@@ -124,9 +163,88 @@ class EmployeePayroll(models.Model):
     def create(self,vals):
         res  = super(EmployeePayroll,self).create(vals)
         if res.employee_id and res.employee_id.bank_ids:
-            if not res.receiving_bank_acc_pay_id:
-                res.receiving_bank_acc_pay_id = res.employee_id.bank_ids[0].id
+#             if not res.receiving_bank_acc_pay_id:
+#                 res.receiving_bank_acc_pay_id = res.employee_id.bank_ids[0].id
             if not res.bank_receiving_payment_id:
                 res.bank_receiving_payment_id= res.employee_id.bank_ids[0].bank_id and res.employee_id.bank_ids[0].bank_id.id or False
         
         return res
+    
+
+class PreceptionLine(models.Model):
+    
+    _name = 'preception.line'
+    
+    payroll_id = fields.Many2one('employee.payroll.file','Payroll')
+    
+    preception_id = fields.Many2one('preception','Key To Perception')
+    description = fields.Char(related='preception_id.concept',string="Description")
+    amount = fields.Float("Matter")
+    account_id = fields.Many2one('account.account','Account')
+
+    @api.onchange('program_code_id')
+    def onchange_program_code(self):
+        if self.program_code_id and self.program_code_id.item_id and self.program_code_id.item_id.unam_account_id:
+            self.account_id = self.program_code_id.item_id.unam_account_id.id
+    @api.model
+    def create(self,vals):
+        res = super(PreceptionLine,self).create(vals)
+        for r in res:
+            if r.program_code_id and r.program_code_id.item_id and r.program_code_id.item_id.unam_account_id:
+                r.account_id = r.program_code_id.item_id.unam_account_id.id
+            
+        return res
+class deductionLine(models.Model):
+    
+    _name = 'deduction.line'
+    
+    payroll_id = fields.Many2one('employee.payroll.file','Payroll')
+    
+    deduction_id = fields.Many2one('deduction','Key To Perception')
+    description = fields.Char(related='deduction_id.concept',string="Description")
+    amount = fields.Float("Matter")
+    net_salary = fields.Float("Net Salary")
+    credit_account_id = fields.Many2one(related='deduction_id.credit_account_id',string='Ledger account')
+    
+class PensionPaymentLine(models.Model):
+    
+    _name = 'pension.payment.line'
+    
+    payroll_id = fields.Many2one('employee.payroll.file','Payroll')
+    
+    partner_id = fields.Many2one('res.partner','Beneficiary')
+    rfc = fields.Char(related='partner_id.vat',string='Beneficiary RFC')
+    l10n_mx_edi_payment_method_id = fields.Many2one(
+        'l10n_mx_edi.payment.method',
+        string='Payment Method',
+        help='Indicates the way the payment was/will be received, where the '
+        'options could be: Cash, Nominal Check, Credit Card, etc.')
+    deposit_number = fields.Char('Deposit Number')
+    check_number = fields.Char('Check Number')
+    total_pension = fields.Float('Total Pension')
+    
+    journal_id = fields.Many2one('account.journal','Account number')
+    bank_acc_number = fields.Many2one('res.partner.bank',string='Account number')
+    bank_id = fields.Many2one('res.bank','Bank')
+    bank_key = fields.Char("Bank Key")
+    
+class AdditionalPaymentsLine(models.Model):
+    
+    _name = 'additional.payments.line'
+    
+    payroll_id = fields.Many2one('employee.payroll.file','Payroll')
+    
+    job_id = fields.Many2one('hr.job','Category Key')
+    description = fields.Text(related='job_id.description',string='Description')
+    details = fields.Selection([('N','N'),('U','U')],string='Detail')
+    amount = fields.Float('Matter')
+
+class AdditionalPensionPaymentsLine(models.Model):
+    
+    _name = 'additional.pension.payments.line'
+    
+    payroll_id = fields.Many2one('employee.payroll.file','Payroll')
+    
+    partner_id = fields.Many2one('res.partner','Beneficiary')
+    amount = fields.Float('Matter')
+        

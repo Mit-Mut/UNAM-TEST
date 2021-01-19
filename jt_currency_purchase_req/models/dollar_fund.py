@@ -20,28 +20,20 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from odoo import models, fields, api, _
-from odoo.exceptions import UserError
+from odoo import models, fields
+class DollarFund(models.Model):
 
-class Preception(models.Model):
+    _name = 'dollar.fund'
+    _description = 'Dollar Fund'
 
-    _name = 'preception'
-    _description = "Preception"
-    _rec_name = 'key'
-
-    key = fields.Char("Key")
-    concept = fields.Char("Concept")
-    credit_account_id = fields.Many2one('account.account','Credit Account')
-    debit_account_id = fields.Many2one('account.account','Debit account')
+    amount = fields.Char('Amount')
+    currency_id = fields.Many2one('res.currency', default=lambda self: self.env.user.company_id.currency_id, string="Currency")
+    attach_invoice = fields.Binary("Field to attach invoice")
+    status = fields.Selection([('draft','Draft'),('approve','Approved')],string='Status',default='draft')
     
-class Deduction(models.Model):
+    def approve(self):
 
-    _name = 'deduction'
-    _description = "Deduction"
-    _rec_name = 'key'
+        for record in self:
 
-    key = fields.Char("Key")
-    concept = fields.Char("Concept")
-    credit_account_id = fields.Many2one('account.account','Credit Account')
-    debit_account_id = fields.Many2one('account.account','Debit account')
-    
+            record.status = 'approve'
+

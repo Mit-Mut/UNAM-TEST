@@ -23,25 +23,14 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
-class Preception(models.Model):
+class AdjustmentCases(models.Model):
 
-    _name = 'preception'
-    _description = "Preception"
-    _rec_name = 'key'
+    _name = 'adjustment.cases'
+    _description = "AdjustmentCases"
+    _rec_name = 'case'
 
-    key = fields.Char("Key")
-    concept = fields.Char("Concept")
-    credit_account_id = fields.Many2one('account.account','Credit Account')
-    debit_account_id = fields.Many2one('account.account','Debit account')
+
+    case = fields.Selection([('A','A'),('D','D'),('R','R'),('F','F'),('H','H'),('B','B'),('V','V'),('C','C'),('E','E'),('P','P'),('Z','Z'),('S','S')],string="Case")
+    description = fields.Text('Description')
     
-class Deduction(models.Model):
-
-    _name = 'deduction'
-    _description = "Deduction"
-    _rec_name = 'key'
-
-    key = fields.Char("Key")
-    concept = fields.Char("Concept")
-    credit_account_id = fields.Many2one('account.account','Credit Account')
-    debit_account_id = fields.Many2one('account.account','Debit account')
     

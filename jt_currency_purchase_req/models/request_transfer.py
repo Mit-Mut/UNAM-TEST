@@ -20,28 +20,11 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from odoo import models, fields, api, _
-from odoo.exceptions import UserError
+from odoo import models, fields
+class RequestTransfer(models.Model):
 
-class Preception(models.Model):
+    _inherit = 'request.open.balance.finance'
+    _description = 'Request Transfer'
 
-    _name = 'preception'
-    _description = "Preception"
-    _rec_name = 'key'
-
-    key = fields.Char("Key")
-    concept = fields.Char("Concept")
-    credit_account_id = fields.Many2one('account.account','Credit Account')
-    debit_account_id = fields.Many2one('account.account','Debit account')
-    
-class Deduction(models.Model):
-
-    _name = 'deduction'
-    _description = "Deduction"
-    _rec_name = 'key'
-
-    key = fields.Char("Key")
-    concept = fields.Char("Concept")
-    credit_account_id = fields.Many2one('account.account','Credit Account')
-    debit_account_id = fields.Many2one('account.account','Debit account')
-    
+    manger = fields.Char(string="Manager's Name")
+    worker = fields.Char(string="Worker's Name")

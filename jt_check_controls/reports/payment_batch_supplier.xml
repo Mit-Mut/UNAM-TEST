@@ -61,15 +61,15 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-6" align="left" style="margin-left:5px;">
-                                                <b><span t-esc="line.payment_req_id.rfc"/></b><br/>
+                                            <div class="col-6" align="left" style="margin-left:5px;margin-top:15px;">
+                                                <p><strong><span t-esc="line.payment_req_id.rfc"/> </strong><br/>
                                                 <b>Benef:</b>
-                                                    <t t-if="line.payment_req_id">
-                                                    <b><span t-esc="line.payment_req_id.partner_id.name"/></b>                                                    
-                                                    </t>
+                                                <t t-if="line.payment_req_id">
+                                            <span t-esc="line.payment_req_id.partner_id.name"/></t></p>               
+                                                    
 
                                             </div>
-                                            <div class="col-6" align="left" style="margin-left:5px;text-align:right">
+                                            <div class="col-6" align="left" style="margin-left:5px;text-align:right;margin-top:25px;">
                                                 <t t-if="line.payment_req_id">
                                                         <span t-esc="line.amount_to_pay"
                                                             t-options='{"widget": "monetary",
@@ -77,8 +77,6 @@
                                                     </t>
                                             </div>
                                         </div>
-                                        <br/>
-                                        
                                         <br/>
                                          <t t-if="line.payment_req_id">
                                              <span style="margin-left:5px;">(</span>

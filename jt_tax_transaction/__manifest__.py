@@ -34,6 +34,7 @@
         'views/conagua_view.xml',
         'views/lfpiorpi_view.xml',
         'views/monthly_declaration_view.xml',
+        'views/diot_view.xml',
         'reports/report_menu.xml',
         'security/ir.model.access.csv',
     ],

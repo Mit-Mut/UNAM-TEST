@@ -1168,6 +1168,10 @@ class RequestOpenBalance(models.Model):
                 if emp_id:
                     beneficiary = self.env['collaboration.beneficiary'].search([
                         ('collaboration_id', '=', self.bases_collaboration_id.id), ('employee_id', '=', emp_id.id)])
+        if not beneficiary and self.beneficiary_id and self.bases_collaboration_id:
+            beneficiary = self.env['collaboration.beneficiary'].search([
+                ('collaboration_id', '=', self.bases_collaboration_id.id), ('partner_id', '=', self.beneficiary_id.id)])
+            
         if payment_reqs:
             return {
                 'name': 'Payment Requests',

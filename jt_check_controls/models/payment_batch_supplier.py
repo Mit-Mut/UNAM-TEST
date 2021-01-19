@@ -91,36 +91,37 @@ class PaymentBatchSupplier(models.Model):
         self.selected = False
 
     def get_date(self):
-        date = self.payment_date or datetime.today().date()
-        day = date.day
-        month = date.month
-        month_name = ''
-        if month == 1:
-            month_name = 'Enero'
-        elif month == 2:
-            month_name = 'Febrero'
-        elif month == 3:
-            month_name = 'Marzo'
-        elif month == 4:
-            month_name = 'Abril'
-        elif month == 5:
-            month_name = 'Mayo'
-        elif month == 6:
-            month_name = 'Junio'
-        elif month == 7:
-            month_name = 'Julio'
-        elif month == 8:
-            month_name = 'Agosto'
-        elif month == 9:
-            month_name = 'Septiembre'
-        elif month == 10:
-            month_name = 'Octubre'
-        elif month == 11:
-            month_name = 'Noviembre'
-        elif month == 12:
-            month_name = 'Diciembre'
-        year = date.year
-        return str(day) + ' de ' + month_name + ' de ' + str(year)
+        date = self.payment_date and self.payment_date or False
+        if date:
+            day = date.day
+            month = date.month
+            month_name = ''
+            if month == 1:
+                month_name = 'Enero'
+            elif month == 2:
+                month_name = 'Febrero'
+            elif month == 3:
+                month_name = 'Marzo'
+            elif month == 4:
+                month_name = 'Abril'
+            elif month == 5:
+                month_name = 'Mayo'
+            elif month == 6:
+                month_name = 'Junio'
+            elif month == 7:
+                month_name = 'Julio'
+            elif month == 8:
+                month_name = 'Agosto'
+            elif month == 9:
+                month_name = 'Septiembre'
+            elif month == 10:
+                month_name = 'Octubre'
+            elif month == 11:
+                month_name = 'Noviembre'
+            elif month == 12:
+                month_name = 'Diciembre'
+            year = date.year
+            return str(day) + ' de ' + month_name + ' de ' + str(year)
 
     def _get_check_data(self):
         for rec in self:

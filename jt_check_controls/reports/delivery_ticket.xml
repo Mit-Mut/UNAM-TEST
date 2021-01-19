@@ -16,15 +16,15 @@
                             <br/>
                             <tr>
                                 <td>DEPENDENCIA</td>
-                                <td colspan="2  "><u><span t-esc="line['dep_name']"/></u></td>
+                                <td colspan="4"><u><span t-esc="line['dep_name']"/></u></td>
                             </tr>   
                             <tr>
                                 <td colspan="4"> <p style="text-align:justify;">“RECIBÍ DEL DEPARTAMENTO DE PAGO DE NÓMINA Y PRESTACIONES DE LA DIRECCIÓN GENERAL DE FINANZAS LOS SIGUIENTES DOCUMENTOS PARA EL PAGO DE NÓMINA:.</p></td>
                             </tr>
                             <tr>
                                 <td>CHEQUES DE FOLIO</td>
-                                <td><u><span t-esc="line['folio_min']"/></u></td>
-                                <td> AL <u><span t-esc="line['folio_max']"/></u></td>
+                                <td><u> <span t-esc="line['folio_min']"/></u></td>
+                                <td colspan="2"> AL <u> <span t-esc="line['folio_max']"/></u></td>
                             </tr>
                             <tr>
                                 <td>Vales de despensa:</td>

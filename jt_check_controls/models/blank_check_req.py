@@ -22,7 +22,7 @@ class BlankCheckRequest(models.Model):
     print_sample_folio_number = fields.Integer("Print Sample Folio Number")
     delivery_of_checks = fields.Binary(
         "Office of delivery of checks to dependency")
-    check_request = fields.Binary("Check Request")
+    # check_request = fields.Binary("Check Request")
     state = fields.Selection([('draft', 'Draft'), ('requested', 'Requested'),
                               ('approved', 'Approved'),
                               ('confirmed', 'Confirmed'),
@@ -48,6 +48,8 @@ class BlankCheckRequest(models.Model):
     final_folio = fields.Integer("Final Folio")
     distribution_of_module_ids = fields.One2many(
         'check.distribution.modules', 'request_id')
+    log_ids = fields.Many2many('check.log', string="Logs")
+    applied_distribution = fields.Boolean("Applied Distribution", copy=False)
 
     @api.model
     def create(self, vals):
@@ -167,13 +169,19 @@ class BlankCheckRequest(models.Model):
 
     def action_apply_distribution(self):
         self.ensure_one()
+        logs = []
         for rec in self.distribution_of_module_ids:
             check_logs = self.env['check.log'].search(
                 [('checklist_id.checkbook_req_id', '=', self.checkbook_req_id.id),
                  ('folio', '>=', rec.intial_filio.folio),
                  ('folio', '<=', rec.final_folio.folio)])
             for log in check_logs:
-                log.module = rec.module
+                if log.id not  in logs:
+                    logs.append(log.id)
+                    log.module = rec.module
+                else:
+                    raise ValidationError(_('You cannot assign module in same folio!'))
+        self.applied_distribution = True
 
 
 class DistributionModules(models.Model):
@@ -201,4 +209,3 @@ class DistributionModules(models.Model):
                 self.amounts_of_checks = 1
             else:
                 self.amounts_of_checks = amount_of_checks + 1
-

@@ -148,14 +148,14 @@ class WeightIncomeReport(models.AbstractModel):
                 total_balance2 += adjustment
                 total_balance3 += adjusted
 
-                if acc.user_type_id and acc.user_type_id.type == 'receivable':
-                    gt_total_balance1_inc += balance
-                    gt_total_balance2_inc += adjustment
-                    gt_total_balance3_inc += adjusted
-                if acc.user_type_id and acc.user_type_id.type == 'payable':
-                    gt_total_balance1_exp += balance
-                    gt_total_balance2_exp += adjustment
-                    gt_total_balance3_exp += adjusted
+#                if acc.user_type_id and acc.user_type_id.type == 'receivable':
+                gt_total_balance1_inc += balance
+                gt_total_balance2_inc += adjustment
+                gt_total_balance3_inc += adjusted
+#                 if acc.user_type_id and acc.user_type_id.type == 'payable':
+#                     gt_total_balance1_exp += balance
+#                     gt_total_balance2_exp += adjustment
+#                     gt_total_balance3_exp += adjusted
                 
                 lines.append({
                     'id': 'account' + str(acc.id),
@@ -200,7 +200,13 @@ class WeightIncomeReport(models.AbstractModel):
             'unfolded': True,
             #'class':'text-right'
         })
-
+        account_ids = self.env['account.account'].search([('user_type_id.name','=','Expenses')])
+        exp_ids= self.env['account.move.line'].search(domain + [('account_id', 'in', account_ids.ids)])
+        gt_total_balance1_exp = sum(x.debit-x.credit for x in exp_ids)
+        gt_total_balance1_exp = gt_total_balance1_exp/1000
+        gt_total_balance2_exp = 0
+        gt_total_balance3_exp = gt_total_balance1_exp
+        
         lines.append({
             'id': 'TOTAL EGRESSES',
             'name': 'TOTAL EGRESSES',

@@ -63,8 +63,8 @@ class AccountMove(models.Model):
             self.sub_dependancy_id = False
                 
     def action_register(self):
-        for move in self:
-            invoice_lines = move.invoice_line_ids.filtered(lambda x:not x.program_code_id)
+        for move in self.filtered(lambda x:not x.is_different_payroll_request and not x.is_pension_payment_request):
+            invoice_lines = move.invoice_line_ids.filtered(lambda x:not x.program_code_id and x.price_unit > 0)
             if invoice_lines:
                 raise ValidationError("Please add program code into invoice lines")
         return super(AccountMove,self).action_register()
@@ -193,7 +193,7 @@ class AccountMove(models.Model):
         if self.env.user.lang == 'es_MX':
             budget_msg = "Suficiencia Presupuestal"
             
-        for line in self.invoice_line_ids:
+        for line in self.invoice_line_ids.filtered(lambda x:x.program_code_id):
             total_available_budget = 0
             if line.program_code_id:
                 budget_line = self.env['expenditure.budget.line']
@@ -242,7 +242,9 @@ class AccountMove(models.Model):
                 line_amount = line.debit + line.tax_price_cr
             else: 
                 line_amount = line.credit + line.tax_price_cr
-                
+            
+            print ("Line amount====",line_amount)    
+            
             if total_available_budget < line_amount:
                 is_check = True
                 program_name = ''

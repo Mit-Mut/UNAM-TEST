@@ -64,6 +64,7 @@
         'reports/payroll_bank_deposite_slip.xml',
         'reports/filtered_report_template.xml',
         'reports/menu_reports.xml',
+        'views/pension_payment_request.xml',
     ],
     'application': False,
     'installable': True,

@@ -20,28 +20,34 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from odoo import models, fields, api, _
-from odoo.exceptions import UserError
+from odoo import models, fields
+class Quotes(models.Model):
 
-class Preception(models.Model):
+    _name = 'quote'
+    _description = 'Quotes'
 
-    _name = 'preception'
-    _description = "Preception"
-    _rec_name = 'key'
-
-    key = fields.Char("Key")
-    concept = fields.Char("Concept")
-    credit_account_id = fields.Many2one('account.account','Credit Account')
-    debit_account_id = fields.Many2one('account.account','Debit account')
+    bank_id = fields.Many2one('res.bank','Bank')
+    bank_account_id = fields.Many2one('account.journal','Retirement account')
+    exchange_rate = fields.Date('Date')
+    no_of_currencies = fields.Float('Number Of Currencies')
+    bank_ref = fields.Char('Bank Reference')
+    shedule_date = fields.Date('Shedule Date')
+    currency_id = fields.Many2one('res.currency', default=lambda self: self.env.user.company_id.currency_id, string="Currency")
+    amount = fields.Monetary("Amount", currency_field='currency_id')
+    status = fields.Selection([('draft','Draft'),('approve','Approved'),('reject','Rejected'),('validate','Validated')],string='Status',default='draft')
     
-class Deduction(models.Model):
+    def approve(self):
 
-    _name = 'deduction'
-    _description = "Deduction"
-    _rec_name = 'key'
+        for record in self:
 
-    key = fields.Char("Key")
-    concept = fields.Char("Concept")
-    credit_account_id = fields.Many2one('account.account','Credit Account')
-    debit_account_id = fields.Many2one('account.account','Debit account')
-    
+            record.status = 'approve'
+
+    def reject(self):
+        for record in self:
+            record.status = 'reject'
+
+
+    def validate(self):
+
+        for record in self:
+            record.status = 'validate'

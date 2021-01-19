@@ -19,6 +19,7 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
+                        <field name="applied_distribution" invisible="1"/>
                         <button name="action_request" type="object" string="Generate Request" class="oe_highlight"
                                 attrs="{'invisible': [('state', '!=', 'draft')]}"/>
                         <button name="action_approve" type="object" string="Approve" class="oe_highlight"
@@ -29,7 +30,8 @@
                                 attrs="{'invisible': [('state', '!=', 'approved')]}"/>
                         <button name="action_apply_distribution" type="object" string="Apply Distribution"
                                 class="oe_highlight"
-                                attrs="{'invisible': ['|', ('state', '!=', 'confirmed'),
+                                attrs="{'invisible': ['|', '|', ('applied_distribution', '=', True),
+                                ('state', '!=', 'confirmed'),
                                 ('department', '!=', 'Financial transaction')]}"/>
                         <field name="state" widget="statusbar"/>
                     </header>
@@ -56,7 +58,7 @@
                             'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="delivery_of_checks"
                                        attrs="{'invisible': [('state', 'in', ('draft', 'requested'))]}"/>
-                                <field name="check_request" attrs="{'invisible': [('state', 'in', ('draft'))]}"/>
+<!--                                <field name="check_request" attrs="{'invisible': [('state', 'in', ('draft'))]}"/>-->
                                 <field name="department" readonly="1"
                                        attrs="{'invisible': [('state', 'in', ('draft', 'requested'))]}"/>
                                 <field name="bank_account_id" readonly="1"
@@ -67,6 +69,7 @@
                                        attrs="{'invisible': [('state', 'in', ('draft', 'requested'))]}"/>
                                 <field name="final_folio" readonly="1"
                                        attrs="{'invisible': [('state', 'in', ('draft', 'requested'))]}"/>
+                                <field name="log_ids" invisible="1"/>
                             </group>
                         </group>
                         <notebook>
@@ -74,14 +77,17 @@
                                 attrs="{'invisible': ['|', ('state', 'in', ('draft', 'requested', 'approved')),
                                     ('department', '!=', 'Financial transaction')]}">
                                 <field name="distribution_of_module_ids" nolabel="1"
-                                    context="{'default_checkbook_req_id':checkbook_req_id}">
+                                       attrs="{'readonly': [('applied_distribution', '=', True)]}"
+                                    context="{'default_checkbook_req_id':checkbook_req_id, 'log_ids': log_ids}">
                                     <tree editable="bottom">
                                         <field name="module" required="1"/>
                                         <field name="checkbook_req_id" invisible="1"/>
                                         <field name="intial_filio" required="1"
-                                               domain="[('checklist_id.checkbook_req_id', '=', checkbook_req_id)]"/>
+                                               domain="[('id', 'in', context.get('log_ids'))]"
+                                               options="{'no_create_edit':True,'no_create':True}"/>
                                         <field name="final_folio" required="1"
-                                               domain="[('checklist_id.checkbook_req_id', '=', checkbook_req_id)]"/>
+                                               domain="[('id', 'in', context.get('log_ids'))]"
+                                               options="{'no_create_edit':True,'no_create':True}"/>
                                         <field name="amounts_of_checks" required="1"/>
                                     </tree>
                                 </field>

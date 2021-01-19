@@ -539,11 +539,11 @@ class ExpenditureBudget(models.Model):
                                 lambda coit: coit['federal_part'] == conversion_item_str and coit['item_id'][0] == item,
                                 dpc_obj))
                             conversion_item = conversion_item[0]['id'] if conversion_item else False
-                    if not conversion_item:
-                        failed_row += str(line_vals) + \
-                                      "------>> Invalid SHCP Games(CONPA) Format\n"
-                        failed_line_ids.append(line.id)
-                        continue
+#                     if not conversion_item:
+#                         failed_row += str(line_vals) + \
+#                                       "------>> Invalid SHCP Games(CONPA) Format\n"
+#                         failed_line_ids.append(line.id)
+#                         continue
 
                     # Validation Expense Type
                     expense_type = False

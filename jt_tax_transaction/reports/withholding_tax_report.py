@@ -113,7 +113,7 @@ class WithholdingTaxReport(models.AbstractModel):
         for tax in tax_ids:
             total_balance = 0
             total_tax = 0
-            move_lines= self.env['account.move.line'].search([('date', '>=', start),('date', '<=', end),('tax_line_id', '=', tax.id),move_state_domain])
+            move_lines= self.env['account.move.line'].search([('date', '>=', start),('date', '<=', end),('move_id.invoice_payment_state','=','paid'),('tax_line_id', '=', tax.id),move_state_domain])
             if move_lines:    
                 tax_line_list = []
                 for line in move_lines:

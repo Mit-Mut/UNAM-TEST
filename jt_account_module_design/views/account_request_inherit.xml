@@ -20,7 +20,9 @@
                     <attribute name="required">False</attribute>
                 </xpath>
                 <xpath expr="//field[@name='bank_account_id']" position="attributes">
-                    <attribute name="invisible">1</attribute>
+                    <attribute name="string">Bank Account</attribute>
+                    <attribute name="context">{'from_account_design':True}</attribute>
+                    
                 </xpath>
                 <xpath expr="//field[@name='bank_acc_number_id']" position="attributes">
                     <attribute name="invisible">1</attribute>
@@ -28,10 +30,43 @@
                 <xpath expr="//notebook/page[1]" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
-                <xpath expr="//field[@name='project_stage_identifier']" position="after">
+                <xpath expr="//field[@name='bank_account_id']" position="before">
                     <field name="bank_id" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                 </xpath>
             </field>
         </record>
+
+        <record id="cancellation_request_view_form_view" model="ir.ui.view">
+            <field name="name">cancellation.request.form.view.inh</field>
+            <field name="model">request.accounts</field>
+            <field name="inherit_id" ref="jt_projects.cancellation_request_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group/group/field[@name='ministrations_amount']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='authorized_amount']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='bank_account_id']" position="attributes">
+                    <attribute name="string">Bank Account</attribute>
+                    <attribute name="context">{'from_account_design':True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='bank_acc_number_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                 <xpath expr="//field[@name='bank_account_id']" position="before">
+                    <field name="bank_id" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                </xpath>
+            </field>
+        </record>
+        
+        <record id="jt_projects.open_request_accounts_action" model="ir.actions.act_window">
+        	<field name="context">{'from_account_design':True,'from_conacyt':1,'default_move_type' : 'account open'}</field>
+        </record>
+        <record id="jt_projects.cancellation_request_action" model="ir.actions.act_window">
+        	<field name="context">{'from_account_design':True,'from_conacyt':1,'default_move_type' : 'account cancel'}</field>
+        </record>
+        
+        
     </data>
 </odoo>

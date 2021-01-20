@@ -20,7 +20,8 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from odoo import models, fields
+from odoo import models, fields,api,_
+from odoo.exceptions import ValidationError, UserError
 class Quotes(models.Model):
 
     _name = 'quote'
@@ -28,12 +29,12 @@ class Quotes(models.Model):
 
     bank_id = fields.Many2one('res.bank','Bank')
     bank_account_id = fields.Many2one('account.journal','Retirement account')
-    exchange_rate = fields.Date('Date')
+    exchange_rate = fields.Many2one('res.currency.rate',string='Exchange Rate',default=lambda self: fields.Datetime.now())
     no_of_currencies = fields.Float('Number Of Currencies')
     bank_ref = fields.Char('Bank Reference')
     shedule_date = fields.Date('Shedule Date')
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.user.company_id.currency_id, string="Currency")
-    amount = fields.Monetary("Amount", currency_field='currency_id')
+    amount = fields.Monetary("Amount",compute="_compute_amount",currency_field='currency_id')
     status = fields.Selection([('draft','Draft'),('approve','Approved'),('reject','Rejected'),('validate','Validated')],string='Status',default='draft')
     
     def approve(self):
@@ -51,3 +52,18 @@ class Quotes(models.Model):
 
         for record in self:
             record.status = 'validate'
+
+    @api.depends('no_of_currencies','exchange_rate')
+    def _compute_amount(self):
+        for rec in self:
+            rec.amount = rec.no_of_currencies * rec.exchange_rate.rate
+            
+
+
+
+    @api.constrains('shedule_date')
+    def _project_number_unique(self):
+        for record in self:
+            create_date = self.create_date.date()
+            if  create_date > record.shedule_date:
+                raise ValidationError(_('date should be after deterioration to the posting date'))

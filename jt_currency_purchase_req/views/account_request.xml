@@ -24,6 +24,8 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
+                        <button name="generate_request" string="Generate Request" class="oe_highlight"
+                                type="object" attrs="{'invisible': [('status', '!=', 'eraser')]}"/>
                         <button name="%(jt_projects.action_request_confirmation)d" string="Confirm" class="oe_highlight"
                                 type="action" attrs="{'invisible': [('status', '!=', 'request')]}"/>
                         <button name="%(jt_projects.action_request_Rejection)d" string="Reject" class="oe_highlight"
@@ -31,8 +33,8 @@
                         <field name="status" widget="statusbar" statusbar_visible="eraser,request,confirmed,rejected"/>
                     </header>
                     <sheet>
-                        <group>
-                            <group colspan="4">
+                        <group colspan="4">
+                            <group >
                                 <field name="invoice"  attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="project_id" domain="[('project_type', '=', 'conacyt')]"
                                 context="{'from_conacyt':1}" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
@@ -42,7 +44,7 @@
                                 <field name="project_stage_identifier" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 
                             </group>
-                            <group colspan="4">
+                            <group>
                                 <field name="observations" readonly="1" attrs="{'invisible': [('status', '!=', 'rejected')]}"/>
                                 <field name="bank_account_id" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="bank_acc_number_id" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
@@ -55,7 +57,7 @@
                             </group>
                         </group>
                         <notebook>
-                        	<page string="Accounting Notes">
+                        	<page string="Accounting Notes" invisible="1">
                         		<field name="move_line_ids" readonly="1"/>
                         	</page>
                         </notebook>                        

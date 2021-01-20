@@ -18,7 +18,7 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                            <button name="request" string="Request" attrs="{'invisible':[('id','=',False),('status','!=','draft')]}" class="oe_highlight" type="object"/>
+                            <button name="request" string="Request" attrs="{'invisible':[('status','!=','draft')]}" class="oe_highlight" type="object"/>
             
                             <field name="status" widget="statusbar"/>
                         </header>

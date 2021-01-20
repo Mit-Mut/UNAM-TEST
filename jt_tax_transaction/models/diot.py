@@ -51,6 +51,7 @@ class Diot(models.Model):
     observations = fields.Char(string='Observations')
     txt_file = fields.Binary("TXT file")
     dec_file = fields.Binary("DEC file")
+    diot_archive = fields.Binary("DIOT ARCHIVE")
     ackn_acceptance = fields.Binary("Acknowledgement of acceptance", attachment=True)
     shipping_ackn = fields.Binary("Shipping acknowledgement", attachment=True)
     file_name = fields.Char("File Name")
@@ -60,7 +61,7 @@ class Diot(models.Model):
     
     @api.constrains('shipping_ackn', 'file_name')
     def get_data(self):
-        if not self.file_name.endswith('.pdf'):     # check if file pdf
+        if self.file_name and not self.file_name.endswith('.pdf'):     # check if file pdf
             raise ValidationError('Cannot upload file different from .pdf file')
         else:
             pass

@@ -9,7 +9,7 @@
                 <t t-esc="selected_department"/>
             </t>
             <t t-else="">
-                
+                All
             </t>
         </a>
          
@@ -22,7 +22,7 @@
                 </t>
                 <t t-if="j.get('id') != 'divider'">
                     <t>
-                        <a role="menuitem" class="dropdown-item js_account_report_choice_filter" t-att-title="j.get('name')" t-att-data-id="j.get('id')" data-filter="project_type">
+                        <a role="menuitem" class="dropdown-item js_account_report_choice_filter" t-att-title="j.get('name')" t-att-data-id="j.get('id')" data-filter="department">
                             <t t-esc="j.get('name')"/>
                         </a>
                     </t>
@@ -49,7 +49,7 @@
                 <t t-esc="selected_fortnight"/>
             </t>
             <t t-else="">
-                
+                All
             </t>
         </a>
          

@@ -84,10 +84,10 @@ class CheckProtectionControlCertificate(models.AbstractModel):
         {'id': 'ARAGON', 'name': ('ARAGON'), 'selected': False},
         {'id': 'CUAUTITLAN', 'name': ('CUAUTITLAN'), 'selected': False},
         {'id': 'CUERNAVACA', 'name': ('CUERNAVACA'), 'selected': False},
-        {'id': 'COVE', 'name': ('COVE'), 'selected': False},
+        {'id': 'COVE', 'name': ('ENSENADA'), 'selected': False},
         {'id': 'IZTACALA', 'name': ('IZTACALA'), 'selected': False},
         {'id': 'JURIQUILLA', 'name': ('JURIQUILLA'), 'selected': False},
-        {'id': 'LION', 'name': ('LION'), 'selected': False},
+        {'id': 'LION', 'name': ('LEON'), 'selected': False},
         {'id': 'MORELIA', 'name': ('MORELIA'), 'selected': False},
         {'id': 'YUCATAN', 'name': ('YUCATAN'), 'selected': False},
         
@@ -193,15 +193,44 @@ class CheckProtectionControlCertificate(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         lines = []
+        domain = []
+        bank_list = []
+        fortnight_domain = []
+        
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+
         
-        salary_payroll_ids = self.env['account.move'].search([('invoice_date','>=',start),('invoice_date','<=',end),('is_payroll_payment_request', '=', True),('check_folio_id','!=',False)])
-        diff_payroll_ids = self.env['account.move'].search([('invoice_date','>=',start),('invoice_date','<=',end),('is_different_payroll_request', '=', True),('check_folio_id','!=',False)])
+        fortnight_select = options.get('fortnight')
+        for fortnight in fortnight_select:
+            if fortnight.get('selected',False):
+                fortnight_domain.append(fortnight.get('id'))
+        if fortnight_domain:
+            domain += [('fornight','in',fortnight_domain)]
+
+        for bank in options.get('bank'):
+            if bank.get('selected',False)==True:
+                bank_list.append(bank.get('id',0))
+        if bank_list:
+            domain += [('payment_bank_id','in',bank_list)]
+        
+        department_domain = []
+        
+        department_select = options.get('department')
+        for department in department_select:
+            if department.get('selected',False):
+                department_domain.append(department.get('id'))
+       
+        domain = domain + [('invoice_date','>=',start),('invoice_date','<=',end),('check_folio_id','!=',False)]
+        salary_payroll_ids = self.env['account.move'].search(domain + [('is_payroll_payment_request', '=', True)])
+        diff_payroll_ids = self.env['account.move'].search(domain + [('is_different_payroll_request', '=', True)])
         
         check_folio_ids = salary_payroll_ids.mapped('check_folio_id')
+        if check_folio_ids and department_domain:
+            check_folio_ids = check_folio_ids.filtered(lambda x:x.module in department_domain)
+            
         deps = check_folio_ids.mapped('module')
         deps = set(deps)
         deps = list(deps)

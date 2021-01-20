@@ -48,8 +48,7 @@ class BlankCheckRequest(models.Model):
     final_folio = fields.Integer("Final Folio")
     distribution_of_module_ids = fields.One2many(
         'check.distribution.modules', 'request_id')
-    log_ids = fields.Many2many('check.log', string="Logs")
-    applied_distribution = fields.Boolean("Applied Distribution", copy=False)
+    log_ids = fields.Many2many('check.log', string="Logs", copy=False)
 
     @api.model
     def create(self, vals):
@@ -169,20 +168,16 @@ class BlankCheckRequest(models.Model):
 
     def action_apply_distribution(self):
         self.ensure_one()
-        logs = []
-        for rec in self.distribution_of_module_ids:
-            check_logs = self.env['check.log'].search(
-                [('checklist_id.checkbook_req_id', '=', self.checkbook_req_id.id),
-                 ('folio', '>=', rec.intial_filio.folio),
-                 ('folio', '<=', rec.final_folio.folio)])
-            for log in check_logs:
-                if log.id not  in logs:
-                    logs.append(log.id)
-                    log.module = rec.module
-                else:
-                    raise ValidationError(_('You cannot assign module in same folio!'))
-        self.applied_distribution = True
-
+        return {
+            'name': _('Apply Distribution'),
+            'view_mode': 'form',
+            'view_id': self.env.ref('jt_check_controls.apply_distribution_form').id,
+            'res_model': 'apply.distribution.modules',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {'log_ids': self.log_ids.ids if self.log_ids else [],
+                        'default_checkbook_req_id': self.checkbook_req_id.id if self.checkbook_req_id else False}
+        }
 
 class DistributionModules(models.Model):
     _name = 'check.distribution.modules'
@@ -200,12 +195,3 @@ class DistributionModules(models.Model):
     intial_filio = fields.Many2one('check.log', "Intial Folio")
     final_folio = fields.Many2one('check.log', "Final Folio")
     amounts_of_checks = fields.Integer("Amounts of Checks")
-
-    @api.onchange('intial_filio', 'final_folio')
-    def onchange_folios(self):
-        if self.final_folio and self.intial_filio:
-            amount_of_checks = self.final_folio.folio - self.intial_filio.folio
-            if amount_of_checks == 0:
-                self.amounts_of_checks = 1
-            else:
-                self.amounts_of_checks = amount_of_checks + 1

@@ -19,7 +19,6 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        <field name="applied_distribution" invisible="1"/>
                         <button name="action_request" type="object" string="Generate Request" class="oe_highlight"
                                 attrs="{'invisible': [('state', '!=', 'draft')]}"/>
                         <button name="action_approve" type="object" string="Approve" class="oe_highlight"
@@ -30,8 +29,7 @@
                                 attrs="{'invisible': [('state', '!=', 'approved')]}"/>
                         <button name="action_apply_distribution" type="object" string="Apply Distribution"
                                 class="oe_highlight"
-                                attrs="{'invisible': ['|', '|', ('applied_distribution', '=', True),
-                                ('state', '!=', 'confirmed'),
+                                attrs="{'invisible': ['|', ('state', '!=', 'confirmed'),
                                 ('department', '!=', 'Financial transaction')]}"/>
                         <field name="state" widget="statusbar"/>
                     </header>
@@ -76,18 +74,13 @@
                             <page name="distribution_to_module" string="Distribution to Modules"
                                 attrs="{'invisible': ['|', ('state', 'in', ('draft', 'requested', 'approved')),
                                     ('department', '!=', 'Financial transaction')]}">
-                                <field name="distribution_of_module_ids" nolabel="1"
-                                       attrs="{'readonly': [('applied_distribution', '=', True)]}"
+                                <field name="distribution_of_module_ids" nolabel="1" readonly="1"
                                     context="{'default_checkbook_req_id':checkbook_req_id, 'log_ids': log_ids}">
                                     <tree editable="bottom">
                                         <field name="module" required="1"/>
                                         <field name="checkbook_req_id" invisible="1"/>
-                                        <field name="intial_filio" required="1"
-                                               domain="[('id', 'in', context.get('log_ids'))]"
-                                               options="{'no_create_edit':True,'no_create':True}"/>
-                                        <field name="final_folio" required="1"
-                                               domain="[('id', 'in', context.get('log_ids'))]"
-                                               options="{'no_create_edit':True,'no_create':True}"/>
+                                        <field name="intial_filio" required="1"/>
+                                        <field name="final_folio" required="1"/>
                                         <field name="amounts_of_checks" required="1"/>
                                     </tree>
                                 </field>

@@ -30,13 +30,14 @@
                             <group>
                                 <field name="bank_id" required="1"/>
                                 <field name="bank_account_id"/>
-                                <field name="no_of_currencies" required="1"/>
                                 <field name="bank_ref"/>
+                                <field name="shedule_date" required="1"/>
                             </group>
                             <group>
-                                <field name="amount"/>
+                                <field name="no_of_currencies" required="1"/>
+                                <field name="exchange_rate"/>
                                 <field name="currency_id"/>
-                                <field name="shedule_date" required="1"/>
+                                <field name="amount"/>
                             </group>
                         </group>
                        

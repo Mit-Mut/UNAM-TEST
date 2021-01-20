@@ -42,8 +42,8 @@
                   sequence="1" parent="menu_movement_type"/>
 
         <!-- account cancellation menu-->
-        <menuitem id="menu_account_cacellation" name="Account Cancellation"
+        <!-- <menuitem id="menu_account_cacellation" name="Account Cancellation"
                   sequence="2" parent="menu_movement_type" action="jt_projects.cancellation_request_action"/>
-
+ -->
     </data>
 </odoo>

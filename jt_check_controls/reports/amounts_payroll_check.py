@@ -48,6 +48,33 @@ class PayrollCheckAmounts(models.AbstractModel):
     filter_unposted_in_period = None
     MAX_LINES = None
 
+    filter_fortnight = [
+        {'id': '01', 'name': ('01'), 'selected': False},
+        {'id': '02', 'name': ('02'), 'selected': False},
+        {'id': '03', 'name': ('03'), 'selected': False},
+        {'id': '04', 'name': ('04'), 'selected': False},
+        {'id': '05', 'name': ('05'), 'selected': False},
+        {'id': '06', 'name': ('06'), 'selected': False},
+        {'id': '07', 'name': ('07'), 'selected': False},
+        {'id': '08', 'name': ('08'), 'selected': False},
+        {'id': '09', 'name': ('09'), 'selected': False},
+        {'id': '10', 'name': ('10'), 'selected': False},
+        {'id': '11', 'name': ('11'), 'selected': False},
+        {'id': '12', 'name': ('12'), 'selected': False},
+        {'id': '13', 'name': ('13'), 'selected': False},
+        {'id': '14', 'name': ('14'), 'selected': False},
+        {'id': '15', 'name': ('15'), 'selected': False},
+        {'id': '16', 'name': ('16'), 'selected': False},
+        {'id': '17', 'name': ('17'), 'selected': False},
+        {'id': '18', 'name': ('18'), 'selected': False},
+        {'id': '19', 'name': ('19'), 'selected': False},
+        {'id': '20', 'name': ('20'), 'selected': False},
+        {'id': '21', 'name': ('21'), 'selected': False},
+        {'id': '22', 'name': ('22'), 'selected': False},
+        {'id': '23', 'name': ('23'), 'selected': False},
+        {'id': '24', 'name': ('24'), 'selected': False},
+    ]
+
     def _get_reports_buttons(self):
         return [
             {'name': _('Print Preview'), 'sequence': 1,
@@ -97,6 +124,13 @@ class PayrollCheckAmounts(models.AbstractModel):
     def _get_lines(self, options, line_id=None):
         lines = []
         domain = []
+        fortnight_domain = []
+        
+        fortnight_select = options.get('fortnight')
+        for fortnight in fortnight_select:
+            if fortnight.get('selected',False):
+                fortnight_domain.append(fortnight.get('id'))
+            
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
@@ -105,6 +139,10 @@ class PayrollCheckAmounts(models.AbstractModel):
         domain = domain + [('payment_date','>=',start),('payment_date','<=',end),('type_of_batch','=','nominal')]
          
         payment_issue_ids = self.env['payment.batch.supplier'].search(domain)
+        if fortnight_domain and payment_issue_ids:
+            batch_lines_ids = self.env['check.payment.req'].search([('payment_batch_id','in',payment_issue_ids.ids),('payment_req_id.fornight','in',fortnight_domain)])
+            payment_issue_ids = batch_lines_ids.mapped('payment_batch_id')
+            
         journal_ids = payment_issue_ids.mapped('payment_issuing_bank_id')
         total_amount = 0
         for journal in journal_ids:

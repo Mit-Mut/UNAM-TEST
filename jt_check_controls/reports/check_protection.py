@@ -47,19 +47,18 @@ class CheckProtection(models.AbstractModel):
     filter_hierarchy = None
     filter_unposted_in_period = None
     MAX_LINES = None
+    
     filter_department = [
-        {'id': 'ACATLAN', 'name': ('ACATLAN'), 'selected': False},
-        {'id': 'ARAGON', 'name': ('ARAGON'), 'selected': False},
-        {'id': 'CUAUTITLAN', 'name': ('CUAUTITLAN'), 'selected': False},
-        {'id': 'CUERNAVACA', 'name': ('CUERNAVACA'), 'selected': False},
-        {'id': 'COVE', 'name': ('COVE'), 'selected': False},
-        {'id': 'IZTACALA', 'name': ('IZTACALA'), 'selected': False},
-        {'id': 'JURIQUILLA', 'name': ('JURIQUILLA'), 'selected': False},
-        {'id': 'LION', 'name': ('LION'), 'selected': False},
-        {'id': 'MORELIA', 'name': ('MORELIA'), 'selected': False},
-        {'id': 'YUCATAN', 'name': ('YUCATAN'), 'selected': False},
-        
-        
+        {'id': 'ACATLAN', 'name': _('ACATLAN'), 'selected': False},
+        {'id': 'ARAGON', 'name': _('ARAGON'), 'selected': False},
+        {'id': 'CUAUTITLAN', 'name': _('CUAUTITLAN'), 'selected': False},
+        {'id': 'CUERNAVACA', 'name': _('CUERNAVACA'), 'selected': False},
+        {'id': 'COVE', 'name': _('ENSENADA'), 'selected': False},
+        {'id': 'IZTACALA', 'name': _('IZTACALA'), 'selected': False},
+        {'id': 'JURIQUILLA', 'name': _('JURIQUILLA'), 'selected': False},
+        {'id': 'LION', 'name': _('LEON'), 'selected': False},
+        {'id': 'MORELIA', 'name': _('MORELIA'), 'selected': False},
+        {'id': 'YUCATAN', 'name': _('YUCATAN'), 'selected': False},
     ]
    
 
@@ -117,6 +116,15 @@ class CheckProtection(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+        
+        department_domain = []
+        
+        department_select = options.get('department')
+        for department in department_select:
+            if department.get('selected',False):
+                department_domain.append(department.get('id'))
+        if department_domain:
+            domain = domain + [('module','in',department_domain)]
             
         domain = domain + [('date_protection','>=',start),('date_protection','<=',end),('module','!=',False)]
         

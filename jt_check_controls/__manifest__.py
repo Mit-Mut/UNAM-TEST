@@ -72,6 +72,8 @@
         'reports/payroll_adjustment.xml',
         'wizard/reissue_reject_reason.xml',
         'views/place_of_payment.xml',
+        'wizard/apply_distribution.xml',
+        'views/employee_payroll.xml',
 
     ],
     'demo': [

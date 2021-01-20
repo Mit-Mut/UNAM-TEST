@@ -130,11 +130,23 @@ class CheckCardFolioPaymentIssue(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+
+        fortnight_domain = []
+        
+        fortnight_select = options.get('fortnight')
+        for fortnight in fortnight_select:
+            if fortnight.get('selected',False):
+                fortnight_domain.append(fortnight.get('id'))
             
         domain = domain + [('payment_date','>=',start),('payment_date','<=',end),('type_of_batch','=','nominal')]
         
          
         payment_issue_ids = self.env['payment.batch.supplier'].search(domain)
+        
+        if fortnight_domain and payment_issue_ids:
+            batch_lines_ids = self.env['check.payment.req'].search([('payment_batch_id','in',payment_issue_ids.ids),('payment_req_id.fornight','in',fortnight_domain)])
+            payment_issue_ids = batch_lines_ids.mapped('payment_batch_id')
+        
         journal_ids = payment_issue_ids.mapped('payment_issuing_bank_id')
         
         total_amount = 0

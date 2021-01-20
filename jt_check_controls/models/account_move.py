@@ -8,9 +8,10 @@ class SupplierPaymentRequest(models.Model):
     payment_state = fields.Selection(selection_add=[('payment_method_cancelled', 'Payment method cancelled'),
                                                     ('rotated','Rotated'),
                                                     ('assigned_payment_method','Assigned Payment Method')])
-    check_folio_id = fields.Many2one('check.log', "Check Sheet")
-    related_check_folio_ids = fields.Many2many('check.log','rel_move_check_log','check_id','move_id',string="Related Check Sheets")
-    related_check_history = fields.Char("Related Check Sheet")
+    check_folio_id = fields.Many2one('check.log', "Check Sheet", copy=False)
+    related_check_folio_ids = fields.Many2many('check.log','rel_move_check_log','check_id','move_id',
+                                               string="Related Check Sheets", copy=False)
+    related_check_history = fields.Char("Related Check Sheet", copy=False)
     check_status = fields.Selection([('Checkbook registration', 'Checkbook registration'),
                           ('Assigned for shipping', 'Assigned for shipping'),
                           ('Available for printing', 'Available for printing'),
@@ -28,7 +29,6 @@ class SupplierPaymentRequest(models.Model):
         for payment_req in self:
             if payment_req.is_payment_request == True or payment_req.is_project_payment == True:
                 if payment_req.payment_state == 'for_payment_procedure':
-                    payment_req.payment_state = 'payment_method_cancelled'
                     payment_req.payment_bank_id = False
                     payment_req.payment_bank_account_id = False
                     payment_req.payment_issuing_bank_id = False
@@ -40,6 +40,10 @@ class SupplierPaymentRequest(models.Model):
                         payment.cancel()
                     if payment_req.check_folio_id:
                         payment_req.check_folio_id.status = 'Cancelled'
+                    check_payment_reqs = self.env['check.payment.req'].search([('payment_req_id', '=', payment_req.id)])
+                    for req in check_payment_reqs:
+                        req.unlink()
+                    payment_req.payment_state = 'payment_method_cancelled'
             if payment_req.payment_state == 'rotated' and payment_req.is_payment_request == True:
                 payment_req.action_cancel_budget()
 

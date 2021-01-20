@@ -63,8 +63,8 @@
                                         <div class="row">
                                             <div class="col-6" align="left" style="margin-left:5px;margin-top:15px;">
                                                 <p><strong><span t-esc="line.payment_req_id.rfc"/> </strong><br/>
-                                                <b>Benef:</b>
-                                                <t t-if="line.payment_req_id">
+    <!--                                                 <b>Benef:</b>
+ -->                                                <t t-if="line.payment_req_id">
                                             <span t-esc="line.payment_req_id.partner_id.name"/></t></p>               
                                                     
 
@@ -80,7 +80,7 @@
                                         <br/>
                                          <t t-if="line.payment_req_id">
                                              <span style="margin-left:5px;">(</span>
-                                             <span
+                                                 <span
                                            t-esc="line.payment_req_id.currency_id.with_context(from_supplier_payment_batch_report=True).amount_to_text(line.amount_to_pay)"/> )
                                          </t>
                                         <br/>
@@ -139,7 +139,7 @@
                                 </t>
                             </t>
                         </div>
-                        <div class="page">
+                        <div class="page" t-if="o.type_of_batch in ('supplier','project')">
                             <t t-if="not o" t-set="o" t-value="doc"/>
                             <t t-if="not company">
                                 <!-- Multicompany -->
@@ -153,7 +153,7 @@
                                     <t t-set="company" t-value="res_company"/>
                                 </t>
                             </t>
-                            <t t-foreach="o.payment_req_ids" t-as="line">
+                            <t t-foreach="o.payment_req_ids" t-as="line" t-if="o.type_of_batch in ('supplier','project')">
                                 <t t-if="line.selected and line.check_folio_id and line.check_status == 'Available for printing'">
                                     <div>
                                         <div class="row">

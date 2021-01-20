@@ -31,14 +31,17 @@
                     
                         <group>
                             <group>
+                            	<field name="partner_id" required="1" domain="[('beneficiary_type', 'in', ('national_provider','foreign_supplier'))]"/>
+                            	<field name="move_id" invisible="1"/>
 			                    <field name="folio"/>
                                 <field name="year"/>
                                 <field name="month"/>
-                                <field name="filling_date"/>
+                                <field name="filling_date" required="1"/>
                                 <field name="year_id" invisible="1"/>
-                                <field name="programatic_code_id" domain="[('year','=',year_id)]"/>
+                                <field name="programatic_code_id" domain="[('year','=',year_id),('budget_id.state','=','validate')]" required="1"/>
+                                <field name="egress_key_id" required="1"/>
                                 <field name="observations"/>
-                                <field name="amount_payable"/>
+                                <field name="amount_payable" required="1"/>
                                 <field name="capture_line"/>
                             </group>
                             <group>

@@ -29,6 +29,10 @@ class MonthlyDeclaration(models.Model):
     _description = 'Monthly declaration'
     _rec_name = 'folio'
 
+    partner_id = fields.Many2one('res.partner','Beneficiary of the payment')
+    move_id = fields.Many2one('account.move','Payment Request')
+    egress_key_id = fields.Many2one("egress.keys", string="Egress Key")
+    
     folio = fields.Integer(string='Folio')
     year = fields.Selection([(str(num), str(num)) for num in range(
         2000, (datetime.now().year) + 80)], string='Year')
@@ -83,5 +87,51 @@ class MonthlyDeclaration(models.Model):
             values['state'] = 'declared'     
         return super(MonthlyDeclaration, self ).create (values)
 
+    def get_invoice_line_vals(self):
+        invoice_line_vals = { 'quantity' : 1,
+                            'price_unit' : self.amount_payable,
+                            'program_code_id' : self.programatic_code_id.id,
+                            'egress_key_id' : self.egress_key_id.id
+                            }
+        return invoice_line_vals
+    
+    def get_payment_request_vals(self):
+        invoice_line_vals = []
+        journal = self.env.ref('jt_supplier_payment.payment_request_jour')
+        if self.programatic_code_id:
+            line_vals = self.get_invoice_line_vals()
+            if line_vals:
+                invoice_line_vals.append((0,0,line_vals))
+        
+                
+        partner_id = self.partner_id.id 
+        vals = {
+                #'payment_bank_id':self.bank_receiving_payment_id and self.bank_receiving_payment_id.id or False,
+                #'payment_bank_account_id': self.receiving_bank_acc_pay_id and self.receiving_bank_acc_pay_id.id or False,
+                #'payment_issuing_bank_id': self.payment_issuing_bank_id and self.payment_issuing_bank_id.id or False,
+                #'l10n_mx_edi_payment_method_id' : self.l10n_mx_edi_payment_method_id and self.l10n_mx_edi_payment_method_id.id or False,
+                'partner_id' : partner_id,
+                'type' : 'in_invoice',
+                'journal_id' : journal and journal.id or False,
+                'invoice_date' : self.filling_date,
+                'invoice_line_ids':invoice_line_vals,
+                'is_payment_request' : True,
+                'declaration_month_id' : self.id,
+                }
+        return vals
+
+    def create_payment_request(self):
+        payroll_payment_vals = self.get_payment_request_vals()
+        move_id = self.env['account.move'].create(payroll_payment_vals)
+        self.move_id = self.move_id.id
+        
     def action_requested(self):
         self.state = 'requested'
+        self.create_payment_request()
+        
+class AccountMove(models.Model):
+
+    _inherit = 'account.move'
+    
+    declaration_month_id = fields.Many2one('declaration.month','Declaration Month')
+    

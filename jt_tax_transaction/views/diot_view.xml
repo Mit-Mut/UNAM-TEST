@@ -32,6 +32,7 @@
                             <group>
                                 <field name="txt_file"/>
                                 <field name="dec_file"/>
+                                <field name="diot_archive"/>
                                 <field name="ackn_acceptance"/>
                                 <field name="shipping_ackn" filename="file_name"/>
                                 <field name="observations"/>

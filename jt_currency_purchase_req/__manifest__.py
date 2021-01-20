@@ -34,6 +34,7 @@
         'security/ir.model.access.csv',
         'views/account_request.xml',
         'views/menu.xml',
+        'views/account_cancellation_view.xml',
         'views/comission_profit.xml',
         'views/account_journal_view.xml',
         'views/sender_reciept_trade_view.xml',
@@ -41,6 +42,8 @@
         'views/quote_view.xml',
         'views/dollar_fund.xml',
         'views/trasfer_request.xml',
+        'views/project_menu.xml',
+        
         'report/open_checking_account_report.xml',
         'report/office_cancellation_check_account.xml',
         'report/office_other_formalities.xml',

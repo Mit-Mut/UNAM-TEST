@@ -57,9 +57,9 @@
                             </group>
                         </group>
                         <notebook>
-                        	<page string="Accounting Notes">
-                        		<field name="move_line_ids" readonly="1"/>
-                        	</page>
+                            <page string="Accounting Notes">
+                                <field name="move_line_ids" readonly="1"/>
+                            </page>
                         </notebook>
                     </sheet>
                 </form>
@@ -121,9 +121,9 @@
                             </group>
                         </group>
                         <notebook>
-                        	<page string="Accounting Notes">
-                        		<field name="move_line_ids" readonly="1"/>
-                        	</page>
+                            <page string="Accounting Notes">
+                                <field name="move_line_ids" readonly="1"/>
+                            </page>
                         </notebook>                        
                     </sheet>
                 </form>

@@ -171,104 +171,126 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                 for con in type_concept_ids:
                     account_ids = con.account_ids
                     
-                    values= self.env['account.move.line'].search(domain + [('budget_id','!=',False),('account_id', 'in', account_ids.ids)])
-                    authorized = sum(x.debit-x.credit for x in values)
-                    authorized = authorized/1000
-                    
-                    total_authorized += authorized
-                    
-                    transfers = 0
-                    total_transfers += transfers
-
-                    values= self.env['account.move.line'].search(domain + [('adequacy_id','!=',False),('account_id', 'in', account_ids.ids)])
-                    assign = sum(x.debit-x.credit for x in values)
-                    assign = assign/1000
-                    total_assign += assign
-                    
-                    contable_exercised = 0
-                    total_contable_exercised += contable_exercised
-
-                    e_income = 0
-                    total_e_income += e_income
-                    
-                    extra_book = 0
-                    total_extra_book += extra_book
-                    
-                    values= self.env['account.move.line'].search(domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', account_ids.ids)])
-                    exercised = sum(x.debit-x.credit for x in values)
-                    exercised = exercised/1000
-                    total_exercised += exercised
-
-                    values= self.env['account.move.line'].search(domain + [('budget_id','!=',False),('account_id', 'in', account_ids.ids)])
-                    to_exercised = sum(x.debit-x.credit for x in values)
-                    to_exercised = to_exercised/1000
-                    
-                    total_to_exercised += to_exercised
-                     
-                    if type == 'income':
-                        remant_authorized += authorized
-                        remant_transfers += transfers
-                        remant_assign += assign
-                        remant_contable_exercised += contable_exercised
-                        remant_e_income += e_income
-                        remant_extra_book += extra_book
-                        remant_exercised += exercised
-                        remant_to_exercised += to_exercised
-                        
-                    elif type == 'expenses':
-                        remant_authorized -= authorized
-                        remant_transfers -= transfers
-                        remant_assign -= assign
-                        remant_contable_exercised += contable_exercised
-                        remant_e_income -= e_income
-                        remant_extra_book -= extra_book
-                        remant_exercised -= exercised
-                        remant_to_exercised -= to_exercised
-                        
-                    per = 0
-                    if assign > 0:
-                        per = (exercised*100)/assign
-                    
                     lines.append({
                         'id': 'con' + str(con.id),
                         'name': con.concept,
                         'columns': [
-                                    self._format({'name': authorized},figure_type='float'),
-                                    self._format({'name': transfers},figure_type='float'),
-                                    self._format({'name': assign},figure_type='float'),
-                                    self._format({'name': contable_exercised},figure_type='float'),
-                                    self._format({'name': e_income},figure_type='float'),
-                                    self._format({'name': extra_book},figure_type='float'),
-                                    self._format({'name': exercised},figure_type='float'),
-                                    {'name': per,'class':'number'},
-                                    self._format({'name': to_exercised},figure_type='float'),
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
                                     ],
         
-                        'level': 3,
+                        'level': 2,
                         'unfoldable': False,
                         'unfolded': True,
+                        'class':'text-left'
                     })
-    
-                lines.append({
-                    'id': 'group_total',
-                    'name': 'SUMA',
-                    'columns': [
-                                self._format({'name': total_authorized},figure_type='float'),
-                                self._format({'name': total_transfers},figure_type='float'),
-                                self._format({'name': total_assign},figure_type='float'),
-                                self._format({'name': total_contable_exercised},figure_type='float'),
-                                self._format({'name': total_e_income},figure_type='float'),
-                                self._format({'name': total_extra_book},figure_type='float'),
-                                self._format({'name': total_exercised},figure_type='float'),
-                                {'name': ''},
-                                self._format({'name': total_to_exercised},figure_type='float'),
-                                ],
+
+                    for acc in account_ids:
+                        values= self.env['account.move.line'].search(domain + [('budget_id','!=',False),('account_id', 'in', account_ids.ids)])
+                        authorized = sum(x.debit-x.credit for x in values)
+                        authorized = authorized/1000
+                        
+                        total_authorized += authorized
+                        
+                        transfers = 0
+                        total_transfers += transfers
+
+                        values= self.env['account.move.line'].search(domain + [('adequacy_id','!=',False),('account_id', 'in', account_ids.ids)])
+                        assign = sum(x.debit-x.credit for x in values)
+                        assign = assign/1000
+                        total_assign += assign
+                        
+                        contable_exercised = 0
+                        total_contable_exercised += contable_exercised
+
+                        e_income = 0
+                        total_e_income += e_income
+                        
+                        extra_book = 0
+                        total_extra_book += extra_book
+                        
+                        values= self.env['account.move.line'].search(domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', account_ids.ids)])
+                        exercised = sum(x.debit-x.credit for x in values)
+                        exercised = exercised/1000
+                        total_exercised += exercised
+
+                        values= self.env['account.move.line'].search(domain + [('budget_id','!=',False),('account_id', 'in', account_ids.ids)])
+                        to_exercised = sum(x.debit-x.credit for x in values)
+                        to_exercised = to_exercised/1000
+                        
+                        total_to_exercised += to_exercised
+                         
+                        if type == 'income':
+                            remant_authorized += total_authorized
+                            remant_transfers += total_transfers
+                            remant_assign += total_assign
+                            remant_contable_exercised += total_contable_exercised
+                            remant_e_income += total_e_income
+                            remant_extra_book += total_extra_book
+                            remant_exercised += total_exercised
+                            remant_to_exercised += total_to_exercised
+                            
+                        elif type == 'expenses':
+                            remant_authorized -= total_authorized
+                            remant_transfers -= total_transfers
+                            remant_assign -= total_assign
+                            remant_contable_exercised += total_contable_exercised
+                            remant_e_income -= total_e_income
+                            remant_extra_book -= total_extra_book
+                            remant_exercised -= total_exercised
+                            remant_to_exercised -= total_to_exercised
+                            
+                        per = 0
+                        if assign > 0:
+                            per = (exercised*100)/assign
                     
-                    'level': 1,
-                    'unfoldable': False,
-                    'unfolded': True,
-                    'class':'text-right'
-                })
+                        lines.append({
+                            'id': 'account' + str(acc.id),
+                            'name': acc.code + acc.name,
+                            'columns': [
+                                        self._format({'name': authorized},figure_type='float'),
+                                        self._format({'name': transfers},figure_type='float'),
+                                        self._format({'name': assign},figure_type='float'),
+                                        self._format({'name': contable_exercised},figure_type='float'),
+                                        self._format({'name': e_income},figure_type='float'),
+                                        self._format({'name': extra_book},figure_type='float'),
+                                        self._format({'name': exercised},figure_type='float'),
+                                        {'name': per,'class':'number'},
+                                        self._format({'name': to_exercised},figure_type='float'),
+                                        ],
+            
+                            'level': 3,
+                            'unfoldable': False,
+                            'unfolded': True,
+                        })
+    
+                    lines.append({
+                        'id': 'group_total',
+                        'name': 'SUMA',
+                        'columns': [
+                                    self._format({'name': total_authorized},figure_type='float'),
+                                    self._format({'name': total_transfers},figure_type='float'),
+                                    self._format({'name': total_assign},figure_type='float'),
+                                    self._format({'name': total_contable_exercised},figure_type='float'),
+                                    self._format({'name': total_e_income},figure_type='float'),
+                                    self._format({'name': total_extra_book},figure_type='float'),
+                                    self._format({'name': total_exercised},figure_type='float'),
+                                    {'name': ''},
+                                    self._format({'name': total_to_exercised},figure_type='float'),
+                                    ],
+                        
+                        'level': 1,
+                        'unfoldable': False,
+                        'unfolded': True,
+                        'class':'text-right'
+                    })
 
         lines.append({
             'id': 'REMNANT',

@@ -6,6 +6,9 @@
             <field name="model">employee.payroll.file</field>
             <field name="inherit_id" ref="jt_payroll_payment.employee_payroll_file_form_processing"/>
             <field name="arch" type="xml">
+            <field name="check_number" position="attributes">
+            	<attribute name="invisible">1</attribute>
+            </field>
              <field name="check_number" position="after">
              	<field name="check_folio_id"/>
              	<field name="check_final_folio_id"/>

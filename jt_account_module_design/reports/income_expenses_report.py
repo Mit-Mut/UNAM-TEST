@@ -148,67 +148,85 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                 total_variation = 0
                 for con in type_concept_ids:
                     account_ids = con.account_ids
-                    
 
-                    values= self.env['account.move.line'].search(domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', account_ids.ids)])
-                    exercised = sum(x.debit-x.credit for x in values)
-                    exercised = exercised/1000
-                    total_exercised += exercised
-
-                    values= self.env['account.move.line'].search(pre_domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', account_ids.ids)])
-                    exercised_pre= sum(x.debit-x.credit for x in values)
-                    exercised_pre = exercised_pre/1000
-                    
-                    total_exercised_pre += exercised_pre
-                    
-                    variation = exercised - exercised_pre
-                    total_variation += variation
-                    
-                    if type == 'income':
-                        remant_exercised += exercised
-                        remant_exercised_pre += exercised_pre
-                        remant_variation += variation
-                        
-                    elif type == 'expenses':
-                        remant_exercised -= exercised
-                        remant_exercised_pre -= exercised_pre
-                        remant_variation -= variation
-                        
-                    per = 0
-                    if exercised != 0:
-                        per = (variation*100)/exercised
-                    
                     lines.append({
                         'id': 'con' + str(con.id),
                         'name': con.concept,
                         'columns': [
-                                    self._format({'name': exercised},figure_type='float'),
-                                    self._format({'name': exercised_pre},figure_type='float'),
-                                    self._format({'name': variation},figure_type='float'),
-                                    {'name':per,'class':'number'},
-                                    
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
                                     ],
         
-                        'level': 3,
+                        'level': 2,
                         'unfoldable': False,
                         'unfolded': True,
+                        'class':'text-left'
                     })
-    
-                lines.append({
-                    'id': 'group_total',
-                    'name': 'SUMA',
-                    'columns': [
-                                self._format({'name': total_exercised},figure_type='float'),
-                                self._format({'name': total_exercised_pre},figure_type='float'),
-                                self._format({'name': total_variation},figure_type='float'),
-                                {'name':''},
-                                ],
+
+                    for acc in account_ids:
                     
-                    'level': 1,
-                    'unfoldable': False,
-                    'unfolded': True,
-                    'class':'text-right'
-                })
+
+                        values= self.env['account.move.line'].search(domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', account_ids.ids)])
+                        exercised = sum(x.debit-x.credit for x in values)
+                        exercised = exercised/1000
+                        total_exercised += exercised
+
+                        values= self.env['account.move.line'].search(pre_domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', account_ids.ids)])
+                        exercised_pre= sum(x.debit-x.credit for x in values)
+                        exercised_pre = exercised_pre/1000
+                        
+                        total_exercised_pre += exercised_pre
+                        
+                        variation = exercised - exercised_pre
+                        total_variation += variation
+                        
+                        if type == 'income':
+                            remant_exercised += total_exercised
+                            remant_exercised_pre += total_exercised_pre
+                            remant_variation += total_variation
+                            
+                        elif type == 'expenses':
+                            remant_exercised -= total_exercised
+                            remant_exercised_pre -= total_exercised_pre
+                            remant_variation -= total_variation
+                            
+                        per = 0
+                        if exercised != 0:
+                            per = (variation*100)/exercised
+                        
+                        lines.append({
+                            'id': 'account' + str(acc.id),
+                            'name': acc.code + acc.name,
+                            'columns': [
+                                        self._format({'name': exercised},figure_type='float'),
+                                        self._format({'name': exercised_pre},figure_type='float'),
+                                        self._format({'name': variation},figure_type='float'),
+                                        {'name':per,'class':'number'},
+                                        
+                                        ],
+            
+                            'level': 3,
+                            'unfoldable': False,
+                            'unfolded': True,
+                        })
+    
+                    lines.append({
+                        'id': 'group_total',
+                        'name': 'SUMA',
+                        'columns': [
+                                    self._format({'name': total_exercised},figure_type='float'),
+                                    self._format({'name': total_exercised_pre},figure_type='float'),
+                                    self._format({'name': total_variation},figure_type='float'),
+                                    {'name':''},
+                                    ],
+                        
+                        'level': 1,
+                        'unfoldable': False,
+                        'unfolded': True,
+                        'class':'text-right'
+                    })
 
         lines.append({
             'id': 'REMNANT',
@@ -412,7 +430,7 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                     'res_company': self.env.company,
                 })
             # header = self.env['ir.actions.report'].render_template("jt_investment.external_layout_investment_funds_balances", values=rcontext)
-            header = self.env['ir.actions.report'].render_template("jt_account_module_design.external_layout_income_expenses", values=rcontext)
+            header = self.env['ir.actions.report'].render_template("jt_account_module_design.external_layout_state_partimonial", values=rcontext)
                
             header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
             spec_paperformat_args = {}

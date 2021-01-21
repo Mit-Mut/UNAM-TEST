@@ -30,7 +30,6 @@ import base64
 from odoo.tools import config, date_utils, get_lang
 import lxml.html
 
-
 class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
 
     _name = "jt_account_module_design.stat.inc.exp.inv.report"

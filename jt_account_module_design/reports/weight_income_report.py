@@ -30,7 +30,6 @@ import base64
 from odoo.tools import config, date_utils, get_lang
 import lxml.html
 
-
 class WeightIncomeReport(models.AbstractModel):
 
     _name = "jt_account_module_design.weight.income.report"
@@ -71,7 +70,8 @@ class WeightIncomeReport(models.AbstractModel):
             {'name': _('Balance')},
             {'name': _('Adjustment')},
             {'name': _('Adjusted')},
-            ]
+        
+        ]
 
     def _format(self, value, figure_type):
         if self.env.context.get('no_format'):
@@ -126,6 +126,7 @@ class WeightIncomeReport(models.AbstractModel):
             lines.append({
                 'id': 'concept',
                 'name': con.concept,
+                 'columns': [],
                 'level': 1,
                 'unfoldable': False,
                 'unfolded': True,
@@ -200,7 +201,7 @@ class WeightIncomeReport(models.AbstractModel):
 
         account_ids = self.env['account.account'].search([('user_type_id.name','=','Expenses')])
         exp_ids= self.env['account.move.line'].search(domain + [('account_id', 'in', account_ids.ids)])
-        gt_total_balance1_exp = sum(x.credit-x.debit for x in exp_ids)
+        gt_total_balance1_exp = sum(x.debit - x.credit for x in exp_ids)
         gt_total_balance2_exp = 0
         gt_total_balance3_exp = gt_total_balance1_exp
 
@@ -240,95 +241,17 @@ class WeightIncomeReport(models.AbstractModel):
     def _get_report_name(self):
         return _("Revenue Report")
 
-    def get_pdf(self, options, minimal_layout=True):
-        # As the assets are generated during the same transaction as the rendering of the
-        # templates calling them, there is a scenario where the assets are unreachable: when
-        # you make a request to read the assets while the transaction creating them is not done.
-        # Indeed, when you make an asset request, the controller has to read the `ir.attachment`
-        # table.
-        # This scenario happens when you want to print a PDF report for the first time, as the
-        # assets are not in cache and must be generated. To workaround this issue, we manually
-        # commit the writes in the `ir.attachment` table. It is done thanks to
-        # a key in the context.
-        minimal_layout = False
-        if not config['test_enable']:
-            self = self.with_context(commit_assetsbundle=True)
-
-        base_url = self.env['ir.config_parameter'].sudo().get_param(
-            'report.url') or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        rcontext = {
-            'mode': 'print',
-            'base_url': base_url,
-            'company': self.env.company,
-        }
-
-        body = self.env['ir.ui.view'].render_template(
-            "account_reports.print_template",
-            values=dict(rcontext),
-        )
-        body_html = self.with_context(print_mode=True).get_html(options)
-
-        body = body.replace(b'<body class="o_account_reports_body_print">',
-                            b'<body class="o_account_reports_body_print">' + body_html)
-        if minimal_layout:
-            header = ''
-            footer = self.env['ir.actions.report'].render_template(
-                "web.internal_layout", values=rcontext)
-            spec_paperformat_args = {
-                'data-report-margin-top': 10, 'data-report-header-spacing': 10}
-            footer = self.env['ir.actions.report'].render_template(
-                "web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
-        else:
-            rcontext.update({
-                'css': '',
-                'o': self.env.user,
-                'res_company': self.env.company,
-            })
-            header = self.env['ir.actions.report'].render_template(
-                "jt_account_module_design.external_layout_weight_income", values=rcontext)
-            # Ensure that headers and footer are correctly encoded
-            header = header.decode('utf-8')
-            spec_paperformat_args = {}
-            # Default header and footer in case the user customized
-            # web.external_layout and removed the header/footer
-            headers = header.encode()
-            footer = b''
-            # parse header as new header contains header, body and footer
-            try:
-                root = lxml.html.fromstring(header)
-                match_klass = "//div[contains(concat(' ', normalize-space(@class), ' '), ' {} ')]"
-
-                for node in root.xpath(match_klass.format('header')):
-                    headers = lxml.html.tostring(node)
-                    headers = self.env['ir.actions.report'].render_template(
-                        "web.minimal_layout", values=dict(rcontext, subst=True, body=headers))
-
-                for node in root.xpath(match_klass.format('footer')):
-                    footer = lxml.html.tostring(node)
-                    footer = self.env['ir.actions.report'].render_template(
-                        "web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
-
-            except lxml.etree.XMLSyntaxError:
-                headers = header.encode()
-                footer = b''
-            header = headers
-
-        landscape = False
-        if len(self.with_context(print_mode=True).get_header(options)[-1]) > 5:
-            landscape = True
-
-            return self.env['ir.actions.report']._run_wkhtmltopdf(
-                [body],
-                header=header, footer=footer,
-                landscape=landscape,
-                specific_paperformat_args=spec_paperformat_args
-            )
+    @api.model
+    def _get_super_columns(self, options):
+        date_cols = options.get('date') and [options['date']] or []
+        date_cols += (options.get('comparison') or {}).get('periods', [])
+        columns = reversed(date_cols)
+        return {'columns': columns, 'x_offset': 1, 'merge': 4}
 
     def get_xlsx(self, options, response=None):
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         sheet = workbook.add_worksheet(self._get_report_name()[:31])
-
         date_default_col1_style = workbook.add_format(
             {'font_name': 'Arial', 'font_size': 12, 'font_color': '#666666', 'indent': 2, 'num_format': 'yyyy-mm-dd'})
         date_default_style = workbook.add_format(
@@ -372,7 +295,6 @@ class WeightIncomeReport(models.AbstractModel):
         super_columns = self._get_super_columns(options)
         y_offset = 0
         col = 0
-
         sheet.merge_range(y_offset, col, 6, col, '', super_col_style)
         if self.env.user and self.env.user.company_id and self.env.user.company_id.header_logo:
             filename = 'logo.png'
@@ -380,20 +302,17 @@ class WeightIncomeReport(models.AbstractModel):
                 self.env.user.company_id.header_logo))
             sheet.insert_image(0, 0, filename, {
                                'image_data': image_data, 'x_offset': 8, 'y_offset': 3, 'x_scale': 0.6, 'y_scale': 0.6})
-
         col += 1
-        header_title = "UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO"
-        header_title += "\n"
-        header_title += "DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL"
-        header_title += "\n"
-        header_title += "REPORTE DE INGRESOS POR EL PERÍODO AL"
-        header_title += datetime.today().strftime('%d DE')
-        header_title += datetime.today().strftime('%B DEL %Y')
-        header_title += datetime.today().strftime('Y %d DE %B DEL %Y')
+        header_title = '''DIRECCIÓN GENERAL DE FINANZAS\nPATRONATO UNIVERSITARIO\nTESORERIA\nREPORTE DE LOS INFORMES DE LOS CHEQUES DE NOMINA DE SUELDO Y PENSIÓN ALIMENTICIA'''
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)
         y_offset += 6
-
+        col = 1
+        currect_time_msg = "Fecha y hora de impresión: "
+        currect_time_msg += datetime.today().strftime('%d/%m/%Y %H:%M')
+        sheet.merge_range(y_offset, col, y_offset, col + 6,
+                          currect_time_msg, currect_date_style)
+        y_offset += 1
         for row in self.get_header(options):
             x = 0
             for column in row:
@@ -412,12 +331,10 @@ class WeightIncomeReport(models.AbstractModel):
                     'prefetch_fields': False})
         # deactivating the prefetching saves ~35% on get_lines running time
         lines = self.with_context(ctx)._get_lines(options)
-
         if options.get('hierarchy'):
             lines = self._create_hierarchy(lines, options)
         if options.get('selected_column'):
             lines = self._sort_lines(lines, options)
-
         # write all data rows
         for y in range(0, len(lines)):
             level = lines[y].get('level')
@@ -442,7 +359,6 @@ class WeightIncomeReport(models.AbstractModel):
             else:
                 style = default_style
                 col1_style = default_col1_style
-
             # write the first column, with a specific style to manage the
             # indentation
             cell_type, cell_value = self._get_cell_type_value(lines[y])
@@ -451,7 +367,6 @@ class WeightIncomeReport(models.AbstractModel):
                     y + y_offset, 0, cell_value, date_default_col1_style)
             else:
                 sheet.write(y + y_offset, 0, cell_value, col1_style)
-
             # write all the remaining cells
             for x in range(1, len(lines[y]['columns']) + 1):
                 cell_type, cell_value = self._get_cell_type_value(
@@ -462,9 +377,83 @@ class WeightIncomeReport(models.AbstractModel):
                 else:
                     sheet.write(
                         y + y_offset, x + lines[y].get('colspan', 1) - 1, cell_value, style)
-
         workbook.close()
         output.seek(0)
         generated_file = output.read()
         output.close()
         return generated_file
+
+    def get_pdf(self, options, minimal_layout=True):
+        # As the assets are generated during the same transaction as the rendering of the
+        # templates calling them, there is a scenario where the assets are unreachable: when
+        # you make a request to read the assets while the transaction creating them is not done.
+        # Indeed, when you make an asset request, the controller has to read the `ir.attachment`
+        # table.
+        # This scenario happens when you want to print a PDF report for the first time, as the
+        # assets are not in cache and must be generated. To workaround this issue, we manually
+        # commit the writes in the `ir.attachment` table. It is done thanks to a key in the context.
+        minimal_layout = False
+        if not config['test_enable']:
+            self = self.with_context(commit_assetsbundle=True)
+
+        base_url = self.env['ir.config_parameter'].sudo().get_param('report.url') or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        rcontext = {
+            'mode': 'print',
+            'base_url': base_url,
+            'company': self.env.company,
+        }
+
+        body = self.env['ir.ui.view'].render_template(
+            "account_reports.print_template",
+            values=dict(rcontext),
+        )
+        body_html = self.with_context(print_mode=True).get_html(options)
+
+        body = body.replace(b'<body class="o_account_reports_body_print">', b'<body class="o_account_reports_body_print">' + body_html)
+        if minimal_layout:
+            header = ''
+            footer = self.env['ir.actions.report'].render_template("web.internal_layout", values=rcontext)
+            spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 10}
+            footer = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
+        else:
+            rcontext.update({
+                    'css': '',
+                    'o': self.env.user,
+                    'res_company': self.env.company,
+                })
+            # header = self.env['ir.actions.report'].render_template("jt_investment.external_layout_investment_funds_balances", values=rcontext)
+            header = self.env['ir.actions.report'].render_template("jt_account_module_design.external_layout_state_partimonial", values=rcontext)
+               
+            header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
+            spec_paperformat_args = {}
+            # Default header and footer in case the user customized web.external_layout and removed the header/footer
+            headers = header.encode()
+            footer = b''
+            # parse header as new header contains header, body and footer
+            try:
+                root = lxml.html.fromstring(header)
+                match_klass = "//div[contains(concat(' ', normalize-space(@class), ' '), ' {} ')]"
+
+                for node in root.xpath(match_klass.format('header')):
+                    headers = lxml.html.tostring(node)
+                    headers = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=headers))
+
+                for node in root.xpath(match_klass.format('footer')):
+                    footer = lxml.html.tostring(node)
+                    footer = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
+
+            except lxml.etree.XMLSyntaxError:
+                headers = header.encode()
+                footer = b''
+            header = headers
+
+        landscape = False
+        if len(self.with_context(print_mode=True).get_header(options)[-1]) > 5:
+            landscape = True
+
+        return self.env['ir.actions.report']._run_wkhtmltopdf(
+            [body],
+            header=header, footer=footer,
+            landscape=landscape,
+            specific_paperformat_args=spec_paperformat_args
+        )

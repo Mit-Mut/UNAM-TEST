@@ -212,6 +212,7 @@ class PaymentBatchSupplier(models.Model):
                         line.payment_req_id.check_folio_id = line.check_folio_id.id
                         counter += 1
                         line.selected = False
+                        line.payment_req_id.payment_state = 'assigned_payment_method'
                     rec.printed_checks = True
                 if not logs:
                     raise ValidationError(_('No check available to assign!'))

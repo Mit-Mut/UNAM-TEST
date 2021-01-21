@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+
+        <!-- Special Reports submenu -->
+        <menuitem
+            id="special_reports_submenu"
+            name="Special Reports"
+            parent="account_accountant.menu_accounting"
+            sequence="6"
+        />    
         <!-- Weight Income Report. menu  -->
         <record id="action_weight_income_report" model="ir.actions.client">
             <field name="name">weight income report</field>
@@ -46,22 +54,23 @@
 
 
 
+
         <!-- weight income  submenu -->
         <menuitem
             id="weight_income_report_submenu"
             name="Weight Income Report"
-            parent="account.menu_finance_reports"
+            parent="special_reports_submenu"
             action = "action_weight_income_report"
-            sequence="88"
+            sequence="1"
         />
 
         <!-- state patrimonial report -->
         <menuitem
             id="state_partimonial_report"
             name="State Partimonial Report"
-            parent="account.menu_finance_reports"
+            parent="special_reports_submenu"
             action = "action_state_partimonial_report"
-            sequence="89"
+            sequence="2"
         />
   
 
@@ -69,9 +78,9 @@
         <menuitem
             id="Detailed_Statement_of_Income_Expenses_and_Investments_submenu"
             name="Detailed Statement of Income, Expenses and Investments Report"
-            parent="account.menu_finance_reports"
+            parent="special_reports_submenu"
             action = "action_state_income_expense_invest_action"
-            sequence="90"
+            sequence="3"
         />
 
 
@@ -80,26 +89,26 @@
         <menuitem
             id="action_state_income_expense_invest_summary_submenu"
             name="Detailed Statement of Income, Expenses and Investments Summary"
-            parent="account.menu_finance_reports"
+            parent="special_reports_submenu"
             action = "action_state_income_expense_invest_summary_action"
-            sequence="91"
+            sequence="4"
         />
 
                 <!-- Miles revenue  submenu -->
         <menuitem
             id="miles_revenue_report_submenu"
             name="Miles Revenue Report"
-            parent="account.menu_finance_reports"
+            parent="special_reports_submenu"
             action = "action_miles_income_report"
-            sequence="92"
+            sequence="5"
         />
 
               <menuitem
             id="state_income_expenses_report"
             name="Income Expenses and Investment"
-            parent="account.menu_finance_reports"
+            parent="special_reports_submenu"
             action = "action_income_expenses_report"
-            sequence="93"
+            sequence="6"
         />
 
 

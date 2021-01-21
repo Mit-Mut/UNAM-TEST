@@ -22,18 +22,21 @@
                                 <td colspan="4"> <p style="text-align:justify;">“RECIBÍ DEL DEPARTAMENTO DE PAGO DE NÓMINA Y PRESTACIONES DE LA DIRECCIÓN GENERAL DE FINANZAS LOS SIGUIENTES DOCUMENTOS PARA EL PAGO DE NÓMINA:.</p></td>
                             </tr>
                             <tr>
-                                <td>CHEQUES DE FOLIO</td>
+                                <td colspan="2">CHEQUES DE FOLIO</td>
+                                <td></td>
                                 <td><u> <span t-esc="line['folio_min']"/></u></td>
                                 <td colspan="2"> AL <u> <span t-esc="line['folio_max']"/></u></td>
                             </tr>
                             <tr>
                                 <td colspan="2">VALES DE DESPENSA DEL FOLIO:</td>
-                                <td>DEL______________________</td>
+                                <td></td>
+                                <td>____________________</td>
                                 <td>AL ______________________</td>
                             </tr>      
                             <tr>
-                                <td colspan="2">HOJAS NÓMINA</td>
-                                <td>______________________</td>
+                                <td colspan="2">HOJAS NÓMINA DEL FOLIO</td>
+                                <td></td>
+                                <td>____________________</td>
                                 <td>AL______________________</td>
                             </tr>      
                             <tr>

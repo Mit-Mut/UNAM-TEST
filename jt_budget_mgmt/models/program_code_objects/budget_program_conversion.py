@@ -100,7 +100,7 @@ class BudgetProgramConversion(models.Model):
                     return False
                 else:
                     shcp = self.search(
-                        [('shcp.name', '=', shcp_str), ('unam_key_id', '=', program.id)], limit=1)
+                        [('shcp.name', '=', shcp_str)], limit=1)
                     if shcp:
                         return shcp
         return False

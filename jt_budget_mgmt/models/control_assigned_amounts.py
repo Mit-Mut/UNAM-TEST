@@ -357,8 +357,7 @@ class ControlAssignedAmounts(models.Model):
                         shcp_str = str(line.conversion_program)
                         if len(shcp_str) == 4 and (re.match("[A-Z]{1}\d{3}", str(shcp_str).upper())):
                             shcp = list(
-                                filter(lambda tmp: tmp['shcp'][1] == shcp_str and tmp['unam_key_id'][0] == program,
-                                       shcp_obj))
+                                filter(lambda tmp: tmp['shcp'][1] == shcp_str, shcp_obj))
                             shcp = shcp[0]['id'] if shcp else False
                     if not shcp:
                         failed_row += str(line_vals) + \

@@ -116,6 +116,7 @@ class StatePartimonialSituation(models.AbstractModel):
                 'id': 'concept',
                 'name': con.concept,
                 'level': 1,
+                 'columns': [],
                 'unfoldable': False,
                 'unfolded': True,
                 'colspan':5,

@@ -38,12 +38,13 @@
                   />
 
         <!-- account modification menu-->
-        <menuitem id="menu_account_modification" name="Account modification"
-                  sequence="1" parent="menu_movement_type"/>
+        <menuitem id="menu_account_modification" 
+                  name="Account modification"
+                  sequence="1" 
+                  parent="menu_movement_type"
+                  action="account_modification_action"
+                  />
 
-        <!-- account cancellation menu-->
-        <!-- <menuitem id="menu_account_cacellation" name="Account Cancellation"
-                  sequence="2" parent="menu_movement_type" action="jt_projects.cancellation_request_action"/>
- -->
+ 
     </data>
 </odoo>

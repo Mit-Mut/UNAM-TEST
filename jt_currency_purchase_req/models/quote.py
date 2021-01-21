@@ -53,10 +53,13 @@ class Quotes(models.Model):
         for record in self:
             record.status = 'validate'
 
-    @api.depends('no_of_currencies','exchange_rate')
+    @api.depends('no_of_currencies','exchange_rate','currency_id')
     def _compute_amount(self):
         for rec in self:
-            rec.amount = rec.no_of_currencies * rec.exchange_rate.rate
+            if rec.exchange_rate and rec.exchange_rate.rate:
+                rec.amount = (1/rec.exchange_rate.rate)*rec.no_of_currencies
+            else:
+                rec.amount = 0
             
 
 

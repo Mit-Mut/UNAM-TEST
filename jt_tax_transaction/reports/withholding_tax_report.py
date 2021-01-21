@@ -113,11 +113,24 @@ class WithholdingTaxReport(models.AbstractModel):
         journal_rec = self.env['account.journal'].search([('code','=','CBMX')],limit=1)
         if journal_rec:
             journal_id = journal_rec.id
-            
+        
+        account_ids = self.env['account.account']
+         
+        account_code_list = ['220,001,001,001','220,001,001,002','220,001,001,003','220,001,002,001',
+                             '220.001.002.002','220.001.002.003','220.001.002.004','220.001.002.005',
+                             '220.001.003.001','220.001.004.001','220.001.004.002','220.001.004.003',
+                             '220.001.004.004','220.001.004.005','220.001.004.006','220.001.005.001',
+                             '220.001.005.002'
+                             ]
+        for a in account_code_list:
+            account_id = self.env['account.account'].search([('code','=',a)],limit=1)
+            if account_id:
+               account_ids = account_ids + account_id
+                   
         for tax in tax_ids:
             total_balance = 0
             total_tax = 0
-            move_lines= self.env['account.move.line'].search([('date', '>=', start),('date', '<=', end),('move_id.journal_id','=',journal_id),('tax_line_id', '=', tax.id),move_state_domain])
+            move_lines= self.env['account.move.line'].search([('account_id','in',account_ids.ids),('date', '>=', start),('date', '<=', end),('move_id.journal_id','=',journal_id),('tax_line_id', '=', tax.id),move_state_domain])
             if move_lines:    
                 tax_line_list = []
                 for line in move_lines:

@@ -10,7 +10,7 @@ class ReissueOfChecks(models.Model):
     _rec_name = 'application_folio'
     
     application_folio = fields.Char('Application sheet')
-    type_of_request = fields.Selection([('check_reissue','Check Reissue'),('check_cancellation','Check Cancellation')],string='Type of Request')
+    type_of_request = fields.Selection([('check_reissue','Check Reissue'),('check_cancellation','Check Cancellation'),('check_adjustments','Check Adjustments')],string='Type of Request')
     checkbook_req_id = fields.Many2one("checkbook.request", "Checkbook")
     check_log_id = fields.Many2one('check.log','Check Folio')
     check_log_ids = fields.Many2many('check.log','rel_reissue_check_log','log_id','reissue_id',compute="get_check_log_ids")
@@ -53,7 +53,7 @@ class ReissueOfChecks(models.Model):
             if rec.partner_id:
                 user_id = self.env['res.users'].search([('partner_id','=',rec.partner_id.id)],limit=1)
                 if user_id:
-                    emp_id = self.env['hr.employee'].search([('user_id','=',rec.user_id.id)],limit=1)
+                    emp_id = self.env['hr.employee'].search([('user_id','=',user_id.id)],limit=1)
                     if emp_id:
                         emp_no = emp_id.worker_number
             rec.employee_number = emp_no

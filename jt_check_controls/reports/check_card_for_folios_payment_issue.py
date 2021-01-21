@@ -72,12 +72,21 @@ class CheckCardFolioPaymentIssue(models.AbstractModel):
         {'id': '22', 'name': ('22'), 'selected': False},
         {'id': '23', 'name': ('23'), 'selected': False},
         {'id': '24', 'name': ('24'), 'selected': False},
-
-
-        
     ]
-
-
+    
+    filter_department = [
+        {'id': 'ACATLAN', 'name': _('ACATLAN'), 'selected': False},
+        {'id': 'ARAGON', 'name': _('ARAGON'), 'selected': False},
+        {'id': 'CUAUTITLAN', 'name': _('CUAUTITLAN'), 'selected': False},
+        {'id': 'CUERNAVACA', 'name': _('CUERNAVACA'), 'selected': False},
+        {'id': 'COVE', 'name': _('ENSENADA'), 'selected': False},
+        {'id': 'IZTACALA', 'name': _('IZTACALA'), 'selected': False},
+        {'id': 'JURIQUILLA', 'name': _('JURIQUILLA'), 'selected': False},
+        {'id': 'LION', 'name': _('LEON'), 'selected': False},
+        {'id': 'MORELIA', 'name': _('MORELIA'), 'selected': False},
+        {'id': 'YUCATAN', 'name': _('YUCATAN'), 'selected': False},
+    ]
+    
     def _get_reports_buttons(self):
         return [
             {'name': _('Print Preview'), 'sequence': 1,
@@ -142,7 +151,20 @@ class CheckCardFolioPaymentIssue(models.AbstractModel):
         
          
         payment_issue_ids = self.env['payment.batch.supplier'].search(domain)
+        batch_lines_ids = self.env['check.payment.req'].search([('check_status','=','Sent to protection'),('payment_batch_id','in',payment_issue_ids.ids)])
+        payment_issue_ids = batch_lines_ids.mapped('payment_batch_id')
+
+        department_domain = []
         
+        department_select = options.get('department')
+        for department in department_select:
+            if department.get('selected',False):
+                department_domain.append(department.get('id'))
+                
+        if department_domain and payment_issue_ids:
+            batch_lines_ids = self.env['check.payment.req'].search([('payment_batch_id','in',payment_issue_ids.ids),('check_folio_id.module','in',department_domain)])
+            payment_issue_ids = batch_lines_ids.mapped('payment_batch_id')
+            
         if fortnight_domain and payment_issue_ids:
             batch_lines_ids = self.env['check.payment.req'].search([('payment_batch_id','in',payment_issue_ids.ids),('payment_req_id.fornight','in',fortnight_domain)])
             payment_issue_ids = batch_lines_ids.mapped('payment_batch_id')

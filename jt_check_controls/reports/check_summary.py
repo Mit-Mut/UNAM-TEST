@@ -216,10 +216,10 @@ class CheckSummary(models.AbstractModel):
         if check_payment_method:
             domain += [('l10n_mx_edi_payment_method_id','=',check_payment_method)]
             
-        supplier_domain = domain + [('payment_state','=','for_payment_procedure'),('type', '=', 'in_invoice'), ('is_payment_request', '=', True)]
+        supplier_domain = domain + [('payment_state','=','assigned_payment_method'),('type', '=', 'in_invoice'), ('is_payment_request', '=', True)]
         invoice_ids = self.env['account.move'].search(supplier_domain)
 
-        project_domain = domain + [('payment_state','=','for_payment_procedure'),('type', '=', 'in_invoice'), ('is_project_payment', '=', True)]
+        project_domain = domain + [('payment_state','=','assigned_payment_method'),('type', '=', 'in_invoice'), ('is_project_payment', '=', True)]
         invoice_ids += self.env['account.move'].search(project_domain)
         
         total = 0
@@ -290,9 +290,11 @@ class CheckSummary(models.AbstractModel):
         else:
             bank_list = []
             bank_account_list = []
+            upa_list = []
+            
             bank_name = ''
             bank_account_name = ''
-            
+            upa_catalog_name = ''
             for bank in options.get('bank'):
                 if bank.get('selected',False)==True:
                     bank_list.append(bank.get('id',0))
@@ -312,15 +314,23 @@ class CheckSummary(models.AbstractModel):
                 if not bank_list:
                     for bank in bank_account_ids.mapped('bank_id'):
                         bank_name += bank.name+","
-            
+                        
+            for upa_catalog in options.get('upa_catalog'):
+                if upa_catalog.get('selected',False)==True:
+                    upa_list.append(upa_catalog.get('id',0))
+            if upa_list:
+                upa_ids = self.env['policy.keys'].search([('id','in',upa_list)])
+                for upa in upa_ids:
+                    upa_catalog_name += upa.origin+","
             rcontext.update({
                     'css': '',
                     'o': self.env.user,
                     'res_company': self.env.company,
                     'bank_name' : bank_name,
-                    'bank_account_name' : bank_account_name
+                    'bank_account_name' : bank_account_name,
+                    'upa_catalog_name' : upa_catalog_name,
                 })
-            header = self.env['ir.actions.report'].render_template("jt_check_controls.external_layout_check_summary", values=rcontext)
+            header = self.env['ir.actions.report'].render_template("jt_check_controls.external_layout_of_check_summary", values=rcontext)
             header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
             spec_paperformat_args = {}
             # Default header and footer in case the user customized web.external_layout and removed the header/footer
@@ -556,6 +566,7 @@ class CheckSummary(models.AbstractModel):
             ]
 
         render_template = templates.get('main_template', 'account_reports.main_template')
+        
         if line_id is not None:
             render_template = templates.get('line_template', 'account_reports.line_template')
         html = self.env['ir.ui.view'].render_template(

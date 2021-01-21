@@ -8,6 +8,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="invoice"/>
+                    <field name="legal_number"/>
                     <field name="project_id"/>
                     <field name="project_name"/>
                     <field name="project_type_identifier"/>
@@ -26,7 +27,7 @@
                     <header>
                         <button name="generate_request" string="Generate Request" class="oe_highlight"
                                 type="object" attrs="{'invisible': [('status', '!=', 'eraser')]}"/>
-                        <button name="%(jt_projects.action_request_confirmation)d" string="Confirm" class="oe_highlight"
+                        <button name="%(jt_currency_purchase_req.action_request_open_account_confirmation)d" string="Confirm" class="oe_highlight"
                                 type="action" attrs="{'invisible': [('status', '!=', 'request')]}"/>
                         <button name="%(jt_projects.action_request_Rejection)d" string="Reject" class="oe_highlight"
                                 type="action" attrs="{'invisible': [('status', '!=', 'request')]}"/>
@@ -36,6 +37,7 @@
                         <group colspan="4">
                             <group >
                                 <field name="invoice"  attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="legal_number" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="project_id" domain="[('project_type', '=', 'conacyt')]"
                                 context="{'from_conacyt':1}" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="project_name" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
@@ -46,8 +48,8 @@
                             </group>
                             <group>
                                 <field name="observations" readonly="1" attrs="{'invisible': [('status', '!=', 'rejected')]}"/>
-                                <field name="bank_account_id" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="bank_acc_number_id" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="bank_id" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="bank_acc_number_id" invisible="1" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="no_contract" readonly="1"/>
                                 <field name="customer_number" invisible="1" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name='supporting_doc_name' invisible="1"/>

@@ -65,7 +65,7 @@
             <field name="context">{'hide_validate_button':True,'show_for_supplier_payment':True,
                 'default_type': 'in_invoice', 'default_is_payroll_payment_request': 1,
                 'from_move': 1}</field>
-            <field name="domain">[('payment_state','in',('draft','registered','approved_payment',
+            <field name="domain">[('payment_state','in',('draft','registered','approved_payment','for_payment_procedure',
                 'assigned_payment_method')),
                 ('type', '=', 'in_invoice'), ('is_payroll_payment_request', '=', True)]</field>
         </record>

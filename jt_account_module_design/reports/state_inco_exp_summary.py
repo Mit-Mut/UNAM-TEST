@@ -143,66 +143,84 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                 total_per = 0
                 for con in type_concept_ids:
                     account_ids = con.account_ids
-                    
-                    values= self.env['account.move.line'].search(domain + [('adequacy_id','!=',False),('account_id', 'in', account_ids.ids)])
-                    assign = sum(x.debit-x.credit for x in values)
-                    assign = assign/1000
-                    total_assign += assign
 
-                    values= self.env['account.move.line'].search(domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', account_ids.ids)])
-                    exercised = sum(x.debit-x.credit for x in values)
-                    exercised = exercised/1000
-                    total_exercised += exercised
-
-                    values= self.env['account.move.line'].search(domain + [('budget_id','!=',False),('account_id', 'in', account_ids.ids)])
-                    to_exercised = sum(x.debit-x.credit for x in values)
-                    to_exercised = to_exercised/1000
-                    
-                    total_to_exercised += to_exercised
-                    if type == 'income':
-                        remant_assign += assign
-                        remant_exercised += exercised
-                        remant_to_exercised += to_exercised
-                        
-                    elif type == 'expenses':
-                        remant_assign -= assign
-                        remant_exercised -= exercised
-                        remant_to_exercised -= to_exercised
-                        
-                    per = 0
-                    if assign > 0:
-                        per = (exercised*100)/assign
-                    
                     lines.append({
                         'id': 'con' + str(con.id),
                         'name': con.concept,
                         'columns': [
-                                    self._format({'name': assign},figure_type='float'),
-                                    self._format({'name': exercised},figure_type='float'),
-                                    {'name':per,'class':'number'},
-                                    self._format({'name': to_exercised},figure_type='float'),
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
                                     ],
         
-                        'level': 3,
+                        'level': 2,
                         'unfoldable': False,
                         'unfolded': True,
+                        'class':'text-left'
                     })
-    
-                lines.append({
-                    'id': 'group_total',
-                    'name': 'SUMA',
-                    'columns': [
-                                self._format({'name': total_assign},figure_type='float'),
-                                self._format({'name': total_exercised},figure_type='float'),
-                                {'name':''},
-                                self._format({'name': total_to_exercised},figure_type='float'),
-                                ],
+
+                    for acc in account_ids:
                     
-                    'level': 1,
-                    'unfoldable': False,
-                    'unfolded': True,
-                    'class':'text-right'
-                })
+                        values= self.env['account.move.line'].search(domain + [('adequacy_id','!=',False),('account_id', 'in', account_ids.ids)])
+                        assign = sum(x.debit-x.credit for x in values)
+                        assign = assign/1000
+                        total_assign += assign
+
+                        values= self.env['account.move.line'].search(domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', account_ids.ids)])
+                        exercised = sum(x.debit-x.credit for x in values)
+                        exercised = exercised/1000
+                        total_exercised += exercised
+
+                        values= self.env['account.move.line'].search(domain + [('budget_id','!=',False),('account_id', 'in', account_ids.ids)])
+                        to_exercised = sum(x.debit-x.credit for x in values)
+                        to_exercised = to_exercised/1000
+                        
+                        total_to_exercised += to_exercised
+                        if type == 'income':
+                            remant_assign += total_assign
+                            remant_exercised += total_exercised
+                            remant_to_exercised += total_to_exercised
+                            
+                        elif type == 'expenses':
+                            remant_assign -= total_assign
+                            remant_exercised -= total_exercised
+                            remant_to_exercised -= total_to_exercised
+                            
+                        per = 0
+                        if assign > 0:
+                            per = (exercised*100)/assign
+                        
+                        lines.append({
+                            'id': 'account' + str(acc.id),
+                            'name': acc.code + acc.name,
+                            'columns': [
+                                        self._format({'name': assign},figure_type='float'),
+                                        self._format({'name': exercised},figure_type='float'),
+                                        {'name':per,'class':'number'},
+                                        self._format({'name': to_exercised},figure_type='float'),
+                                        ],
+            
+                            'level': 3,
+                            'unfoldable': False,
+                            'unfolded': True,
+                        })
+    
+                    lines.append({
+                        'id': 'group_total',
+                        'name': 'SUMA',
+                        'columns': [
+                                    self._format({'name': total_assign},figure_type='float'),
+                                    self._format({'name': total_exercised},figure_type='float'),
+                                    {'name':''},
+                                    self._format({'name': total_to_exercised},figure_type='float'),
+                                    ],
+                        
+                        'level': 1,
+                        'unfoldable': False,
+                        'unfolded': True,
+                        'class':'text-right'
+                    })
 
         lines.append({
             'id': 'REMNANT',
@@ -233,14 +251,12 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
         # table.
         # This scenario happens when you want to print a PDF report for the first time, as the
         # assets are not in cache and must be generated. To workaround this issue, we manually
-        # commit the writes in the `ir.attachment` table. It is done thanks to
-        # a key in the context.
+        # commit the writes in the `ir.attachment` table. It is done thanks to a key in the context.
         minimal_layout = False
         if not config['test_enable']:
             self = self.with_context(commit_assetsbundle=True)
 
-        base_url = self.env['ir.config_parameter'].sudo().get_param(
-            'report.url') or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('report.url') or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         rcontext = {
             'mode': 'print',
             'base_url': base_url,
@@ -253,29 +269,24 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
         )
         body_html = self.with_context(print_mode=True).get_html(options)
 
-        body = body.replace(b'<body class="o_account_reports_body_print">',
-                            b'<body class="o_account_reports_body_print">' + body_html)
+        body = body.replace(b'<body class="o_account_reports_body_print">', b'<body class="o_account_reports_body_print">' + body_html)
         if minimal_layout:
             header = ''
-            footer = self.env['ir.actions.report'].render_template(
-                "web.internal_layout", values=rcontext)
-            spec_paperformat_args = {
-                'data-report-margin-top': 10, 'data-report-header-spacing': 10}
-            footer = self.env['ir.actions.report'].render_template(
-                "web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
+            footer = self.env['ir.actions.report'].render_template("web.internal_layout", values=rcontext)
+            spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 10}
+            footer = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
         else:
             rcontext.update({
-                'css': '',
-                'o': self.env.user,
-                'res_company': self.env.company,
-            })
-            header = self.env['ir.actions.report'].render_template(
-                "jt_account_module_design.external_layout_income_exp_and_invest", values=rcontext)
-            # Ensure that headers and footer are correctly encoded
-            header = header.decode('utf-8')
+                    'css': '',
+                    'o': self.env.user,
+                    'res_company': self.env.company,
+                })
+            # header = self.env['ir.actions.report'].render_template("jt_investment.external_layout_investment_funds_balances", values=rcontext)
+            header = self.env['ir.actions.report'].render_template("jt_account_module_design.external_layout_state_partimonial", values=rcontext)
+               
+            header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
             spec_paperformat_args = {}
-            # Default header and footer in case the user customized
-            # web.external_layout and removed the header/footer
+            # Default header and footer in case the user customized web.external_layout and removed the header/footer
             headers = header.encode()
             footer = b''
             # parse header as new header contains header, body and footer
@@ -285,13 +296,11 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
 
                 for node in root.xpath(match_klass.format('header')):
                     headers = lxml.html.tostring(node)
-                    headers = self.env['ir.actions.report'].render_template(
-                        "web.minimal_layout", values=dict(rcontext, subst=True, body=headers))
+                    headers = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=headers))
 
                 for node in root.xpath(match_klass.format('footer')):
                     footer = lxml.html.tostring(node)
-                    footer = self.env['ir.actions.report'].render_template(
-                        "web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
+                    footer = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
 
             except lxml.etree.XMLSyntaxError:
                 headers = header.encode()
@@ -302,12 +311,12 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
         if len(self.with_context(print_mode=True).get_header(options)[-1]) > 5:
             landscape = True
 
-            return self.env['ir.actions.report']._run_wkhtmltopdf(
-                [body],
-                header=header, footer=footer,
-                landscape=landscape,
-                specific_paperformat_args=spec_paperformat_args
-            )
+        return self.env['ir.actions.report']._run_wkhtmltopdf(
+            [body],
+            header=header, footer=footer,
+            landscape=landscape,
+            specific_paperformat_args=spec_paperformat_args
+        )
 
     def get_xlsx(self, options, response=None):
         output = io.BytesIO()

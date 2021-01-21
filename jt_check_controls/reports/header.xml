@@ -2,7 +2,7 @@
 <odoo>
     <data>
 
-        <template id="external_layout_check_summary" name="external_layout_check_summary">
+        <template id="external_layout_of_check_summary" name="external_layout_of_check_summary">
         <t t-if="not o" t-set="o" t-value="doc"/>
 
         <t t-if="not company">
@@ -27,12 +27,12 @@
                 <div class="col-6 text-center">
                     <span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span><br/>
                     <span style="font-size:12px;">DIRECCIÓN GENERAL DE FINANZAS</span><br/>
-                    <span style="font-size:12px;">AREA DE TRAMIT:REC/04</span><br/>
+                    <span style="font-size:12px;">ÁREA DE TRÁMITE:<span t-esc="upa_catalog_name"/></span><br/>
                     <span style="font-size:12px;">REPORTE SUMARIAS DE CHEQUES</span><br/>
                 </div>
                 <div class="col-3 text-left" style="vertical-align: bottom;">
-                    <span>Bank:<span t-esc="bank_name"/></span><br/>
-                    <span>Bank Account:<span t-esc="bank_account_name"/></span><br/>
+                    <span>Banco:<span t-esc="bank_name"/></span><br/>
+                    <span>Cuenta Bancaria:<span t-esc="bank_account_name"/></span><br/>
                     <span>Fecha de impresión  </span><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/> 
                 </div>
                 
@@ -130,12 +130,12 @@
                     <span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span><br/>
                     <span style="font-size:12px;">DIRECCIÓN GENERAL DE FINANZAS</span><br/>
                     <span style="font-size:12px;">PATRONATO UNIVERSITARIO</span><br/>
-                    <span style="font-size:12px;">AREA DE TRAMIT:PER/04</span><br/>
+                    <span style="font-size:12px;">ÁREA DE TRÁMITE:<span t-esc="upa_catalog_name"/></span><br/>
                     <span style="font-size:12px;">REPORTE DE NOMINA</span><br/>
                 </div>
                 <div class="col-3 text-left" style="vertical-align: bottom;">
-                    <span>Bank:</span><br/>
-                    <span>Bank Account:</span><br/>
+                    <span>Banco:<span t-esc="bank_name"/></span><br/>
+                    <span>Cuenta Bancaria:<span t-esc="bank_account_name"/></span><br/>
                     <span>Fecha de impresión  </span><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/> 
                 </div>
                 

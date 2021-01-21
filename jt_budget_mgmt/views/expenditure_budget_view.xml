@@ -98,7 +98,7 @@
                                         <field name="imported_sessional" invisible="1"/>
                                         <field name="state" invisible="1"/>
 
-                                        <field name="program_code_id" readonly="1"/>
+                                        <field name="program_code_id" readonly="1" context="{'from_conacyt':True}"/>
                                         <field name="dependency_id" readonly="1"/>
                                         <field name="sub_dependency_id" readonly="1"/>
                                         <field name="program_id" readonly="1"/>
@@ -123,7 +123,7 @@
 
                                             <field name="program_code_id"
                                                    attrs="{'invisible': ['|', ('state', 'in', ('draft', 'fail'))]}"
-                                                   readonly="1"/>
+                                                   readonly="1" context="{'from_conacyt':True}"/>
                                             <field name="dependency_id" invisible="1"/>
                                             <field name="sub_dependency_id" invisible="1"/>
                                             <field name="program_id" invisible="1"/>
@@ -173,7 +173,7 @@
                                         <field name="imported_sessional" invisible="1"/>
                                         <field name="state" invisible="1"/>
 
-                                        <field name="program_code_id"/>
+                                        <field name="program_code_id" context="{'from_conacyt':True}"/>
                                         <field name="dependency_id" invisible="1"/>
                                         <field name="sub_dependency_id" invisible="1"/>
                                         <field name="program_id" invisible="1"/>
@@ -222,7 +222,7 @@
                                             <field name="state" invisible="1"/>
 
                                             <field name="program_code_id"
-                                                   attrs="{'readonly': [('imported', '=', True)], 'invisible': ['|', ('state', 'in', ('draft', 'fail'))]}"/>
+                                                   attrs="{'readonly': [('imported', '=', True)], 'invisible': ['|', ('state', 'in', ('draft', 'fail'))]}" context="{'from_conacyt':True}"/>
                                             <field name="dependency_id" invisible="1"/>
                                             <field name="sub_dependency_id" invisible="1"/>
                                             <field name="program_id" invisible="1"/>

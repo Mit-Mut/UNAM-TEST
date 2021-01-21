@@ -73,10 +73,10 @@ class EmployeePayroll(models.Model):
             if line_vals:
                 invoice_line_vals.append((0,0,line_vals))
         is_payroll_payment_request = True
-        is_pension_payment_request = False
-        if self.is_pension_payment_request:
-            is_payroll_payment_request = False
-            is_pension_payment_request = True
+        is_pension_payment_request = True
+#         if self.is_pension_payment_request:
+#             is_payroll_payment_request = False
+#             is_pension_payment_request = True
                 
         partner_id = self.employee_id and self.employee_id.user_id and self.employee_id.user_id.partner_id and self.employee_id.user_id.partner_id.id or False 
         vals = {'payment_bank_id':self.bank_receiving_payment_id and self.bank_receiving_payment_id.id or False,

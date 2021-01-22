@@ -150,7 +150,6 @@ class Payroll(models.AbstractModel):
             {'name': _('Cheque')},
             {'name': _('Beneficiario')},
             {'name': _('Importe')},
-            {'name': _('Firma'),'class':'text-left'},
         ]
 
     def _format(self, value,figure_type):
@@ -228,7 +227,6 @@ class Payroll(models.AbstractModel):
                 'columns': [ {'name': inv.check_folio_id and inv.check_folio_id.folio or ''},
                             {'name': inv.partner_id and inv.partner_id.name or ''},
                             self._format({'name': inv.amount_total},figure_type='float'),
-                            {'name': '________________________________','class':'text-left'},
                             ],
                 'level': 3,
                 'unfoldable': False,
@@ -238,10 +236,9 @@ class Payroll(models.AbstractModel):
         lines.append({
             'id': 'hierarchy_total',
             'name' : 'TOTAL', 
-            'columns': [{'name': ''},
+            'columns': [{'name': total_check,'class':'number'},
+                        {'name': ''},
                         self._format({'name': total},figure_type='float'),
-                        {'name': total_check,'class':'number'},
-                        {'name': '','class':'text-left'},
                         ],
             'level': 1,
             'unfoldable': False,

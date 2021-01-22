@@ -111,7 +111,6 @@ class ReissueOfChecks(models.Model):
                         move_ids = move_ids.filtered(lambda x:x.is_project_payment)
                     elif rec.type_of_batch == 'nominal':
                         move_ids = move_ids.filtered(lambda x:x.is_payroll_payment_request or x.is_different_payroll_request)
-                    
                     check_ids = move_ids.mapped('check_folio_id')
                 log_list = check_ids.ids
             
@@ -133,12 +132,11 @@ class ReissueOfChecks(models.Model):
             self.check_log_id.status = 'Reissued'
             moves = self.env['account.move'].search([('check_folio_id', '=', self.check_log_id.id)])
             for move in moves:
-                move.payment_state = 'payment_method_cancelled'
                 payment_ids = self.env['account.payment'].search([('payment_state', '=', 'for_payment_procedure'),
                                                                   ('payment_request_id', '=', move.id)])
                 for payment in payment_ids:
                     payment.cancel()
-            
+                move.payment_state = 'payment_method_cancelled'
         if self.check_log_id and self.type_of_request=='check_cancellation':    
             self.check_log_id.status = 'Cancelled'
             

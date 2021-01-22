@@ -201,7 +201,7 @@ class WeightIncomeReport(models.AbstractModel):
 
         account_ids = self.env['account.account'].search([('user_type_id.name','=','Expenses')])
         exp_ids= self.env['account.move.line'].search(domain + [('account_id', 'in', account_ids.ids)])
-        gt_total_balance1_exp = sum(x.debit - x.credit for x in exp_ids)
+        gt_total_balance1_exp = sum(x.credit - x.debit for x in exp_ids)
         gt_total_balance2_exp = 0
         gt_total_balance3_exp = gt_total_balance1_exp
 

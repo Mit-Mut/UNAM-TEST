@@ -141,18 +141,18 @@ class TaxReport(models.AbstractModel):
 
         #===============220.001.001============#
         acc_amount_220_001_001_001 = 0
-        account_id = self.env['account.account'].search([('code', '=', '220,001,001,001')], limit=1)
+        account_id = self.env['account.account'].search([('code', '=', '220.001.001.001')], limit=1)
         if account_id:
             values= self.env['account.move.line'].search(domain + [('account_id', '=', account_id.id)])
-            acc_amount_220_001_001_001 = sum(x.debit - x.credit for x in values)
+            acc_amount_220_001_001_001 = sum(x.credit - x.debit for x in values)
     
         #===============115.001.001============#
         acc_amount_115_001_001 = 0
         
-        account_id = self.env['account.account'].search([('code', '=', '115,001,001')], limit=1)
+        account_id = self.env['account.account'].search([('code', '=', '115.001.001')], limit=1)
         if account_id:
             values= self.env['account.move.line'].search(domain + [('account_id', '=', account_id.id)])
-            acc_amount_115_001_001 = sum(x.debit - x.credit for x in values)
+            acc_amount_115_001_001 = sum(x.credit - x.debit for x in values)
 
         total_bal1 = acc_amount_220_001_001_001 - acc_amount_115_001_001
          
@@ -171,7 +171,7 @@ class TaxReport(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_account2',
-            'name' : '220,001,001,001 ' + 'Income tax Withholding for salaries', 
+            'name' : '220.001.001.001 ' + 'Income tax Withholding for salaries', 
             'columns': [
                           self._format({'name': acc_amount_220_001_001_001},figure_type='float'),  
                          {'name': ''},
@@ -185,7 +185,7 @@ class TaxReport(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_account3',
-            'name' : '115,001,001 ' + 'employee subsidy', 
+            'name' : '115.001.001 ' + 'employee subsidy', 
             'columns': [
                         self._format({'name': acc_amount_115_001_001},figure_type='float'),
                          {'name': ''},
@@ -197,11 +197,11 @@ class TaxReport(models.AbstractModel):
             'class':'text-left',
         })
 
-        #===============220,001,001,001 ============#
+        #===============220.001.001.001 ============#
         
         lines.append({
             'id': 'hierarchy_account4',
-            'name' : '220,001,001,001 ' +'ISR SALARIES PAYROLL', 
+            'name' : '220.001.001.001 ' +'ISR SALARIES PAYROLL', 
             'columns': [
                         {'name':''},
                          self._format({'name': acc_amount_220_001_001_001},figure_type='float'),
@@ -212,16 +212,16 @@ class TaxReport(models.AbstractModel):
             'class':'text-left',
         })
 
-        #===============220,001,001,002 ============#
+        #===============220.001.001.002 ============#
         acc_amount_220_001_001_002 = 0
-        account_id = self.env['account.account'].search([('code', '=', '220,001,001,002')], limit=1)
+        account_id = self.env['account.account'].search([('code', '=', '220.001.001.002')], limit=1)
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
-            acc_amount_220_001_001_002 = sum(x.debit - x.credit for x in values)
+            acc_amount_220_001_001_002 = sum(x.credit - x.debit for x in values)
         
         lines.append({
             'id': 'hierarchy_account5',
-            'name' : '220,001,001,002 ' +'ISR ASIMILATED FEES', 
+            'name' : '220.001.001.002 ' +'ISR ASIMILATED FEES', 
             'columns': [
                         {'name':''},
                          self._format({'name': acc_amount_220_001_001_002},figure_type='float'),
@@ -232,16 +232,16 @@ class TaxReport(models.AbstractModel):
             'class':'text-left',
         })
 
-        #===============220,001,001,003 ============#
+        #===============220.001.001.003 ============#
         acc_amount_220_001_001_003 = 0
-        account_id = self.env['account.account'].search([('code', '=', '220,001,001,003')], limit=1)
+        account_id = self.env['account.account'].search([('code', '=', '220.001.001.003')], limit=1)
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
-            acc_amount_220_001_001_003 = sum(x.debit - x.credit for x in values)
+            acc_amount_220_001_001_003 = sum(x.credit - x.debit for x in values)
         
         lines.append({
             'id': 'hierarchy_account6',
-            'name' : '220,001,001,003 ' +'ISR PAYMENT ADDITIONAL NOT TAXED', 
+            'name' : '220.001.001.003 ' +'ISR PAYMENT ADDITIONAL NOT TAXED', 
             'columns': [
                         {'name':''},
                          self._format({'name': acc_amount_220_001_001_003},figure_type='float'),
@@ -252,16 +252,16 @@ class TaxReport(models.AbstractModel):
             'class':'text-left',
         })
 
-        #===============220,001,002,001 ============#
+        #===============220.001.002.001 ============#
         acc_amount_220_001_002_001 = 0
-        account_id = self.env['account.account'].search([('code', '=', '220,001,002,001')], limit=1)
+        account_id = self.env['account.account'].search([('code', '=', '220.001.002.001')], limit=1)
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
-            acc_amount_220_001_002_001 = sum(x.debit - x.credit for x in values)
+            acc_amount_220_001_002_001 = sum(x.credit - x.debit for x in values)
         
         lines.append({
             'id': 'hierarchy_account7',
-            'name' : '220,001,002,001 ' +'ISR-SP HONORISTS 10%', 
+            'name' : '220.001.002.001 ' +'ISR-SP HONORISTS 10%', 
             'columns': [
                         {'name':''},
                          self._format({'name': acc_amount_220_001_002_001},figure_type='float'),
@@ -272,16 +272,16 @@ class TaxReport(models.AbstractModel):
             'class':'text-left',
         })
 
-        #===============220,001,002,002 ============#
+        #===============220.001.002.002 ============#
         acc_amount_220_001_002_002 = 0
-        account_id = self.env['account.account'].search([('code', '=', '220,001,002,002')], limit=1)
+        account_id = self.env['account.account'].search([('code', '=', '220.001.002.002')], limit=1)
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
-            acc_amount_220_001_002_002 = sum(x.debit - x.credit for x in values)
+            acc_amount_220_001_002_002 = sum(x.credit - x.debit for x in values)
         
         lines.append({
             'id': 'hierarchy_account8',
-            'name' : '220,001,002,002 ' +'ISR-SP COPYRIGHT', 
+            'name' : '220.001.002.002 ' +'ISR-SP COPYRIGHT', 
             'columns': [
                         {'name':''},
                          self._format({'name': acc_amount_220_001_002_002},figure_type='float'),
@@ -292,16 +292,16 @@ class TaxReport(models.AbstractModel):
             'class':'text-left',
         })
 
-        #===============220,001,002,003 ============#
+        #===============220.001.002.003 ============#
         acc_amount_220_001_002_003 = 0
-        account_id = self.env['account.account'].search([('code', '=', '220,001,002,003')], limit=1)
+        account_id = self.env['account.account'].search([('code', '=', '220.001.002.003')], limit=1)
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
-            acc_amount_220_001_002_003 = sum(x.debit - x.credit for x in values)
+            acc_amount_220_001_002_003 = sum(x.credit - x.debit for x in values)
         
         lines.append({
             'id': 'hierarchy_account9',
-            'name' : '220,001,002,003 ' +'ISR 25% RET. S / EXT FEES', 
+            'name' : '220.001.002.003 ' +'ISR 25% RET. S / EXT FEES', 
             'columns': [
                         {'name':''},
                          self._format({'name': acc_amount_220_001_002_003},figure_type='float'),
@@ -317,7 +317,7 @@ class TaxReport(models.AbstractModel):
         account_id = self.env['account.account'].search([('code', '=', '220.001.002.004')], limit=1)
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
-            acc_amount_220_001_002_004 = sum(x.debit - x.credit for x in values)
+            acc_amount_220_001_002_004 = sum(x.credit - x.debit for x in values)
         
         lines.append({
             'id': 'hierarchy_account10',
@@ -337,7 +337,7 @@ class TaxReport(models.AbstractModel):
         account_id = self.env['account.account'].search([('code', '=', '220.001.002.005')], limit=1)
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
-            acc_amount_220_001_002_005 = sum(x.debit - x.credit for x in values)
+            acc_amount_220_001_002_005 = sum(x.credit - x.debit for x in values)
         
         lines.append({
             'id': 'hierarchy_account11',
@@ -357,7 +357,7 @@ class TaxReport(models.AbstractModel):
         account_id = self.env['account.account'].search([('code', '=', '220.001.003.001')], limit=1)
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
-            acc_amount_220_001_003_001 = sum(x.debit - x.credit for x in values)
+            acc_amount_220_001_003_001 = sum(x.credit - x.debit for x in values)
         
         lines.append({
             'id': 'hierarchy_account12',
@@ -377,7 +377,7 @@ class TaxReport(models.AbstractModel):
         account_id = self.env['account.account'].search([('code', '=', '220.001.004.001')], limit=1)
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
-            acc_amount_220_001_004_001 = sum(x.debit - x.credit for x in values)
+            acc_amount_220_001_004_001 = sum(x.credit - x.debit for x in values)
         
         lines.append({
             'id': 'hierarchy_account13',
@@ -397,7 +397,7 @@ class TaxReport(models.AbstractModel):
         account_id = self.env['account.account'].search([('code', '=', '220.001.004.002')], limit=1)
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
-            acc_amount_220_001_004_002 = sum(x.debit - x.credit for x in values)
+            acc_amount_220_001_004_002 = sum(x.credit - x.debit for x in values)
         
         lines.append({
             'id': 'hierarchy_account14',
@@ -417,7 +417,7 @@ class TaxReport(models.AbstractModel):
         account_id = self.env['account.account'].search([('code', '=', '220.001.004.003')], limit=1)
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
-            acc_amount_220_001_004_003 = sum(x.debit - x.credit for x in values)
+            acc_amount_220_001_004_003 = sum(x.credit - x.debit for x in values)
         
         lines.append({
             'id': 'hierarchy_account15',
@@ -437,7 +437,7 @@ class TaxReport(models.AbstractModel):
         account_id = self.env['account.account'].search([('code', '=', '220.001.004.004')], limit=1)
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
-            acc_amount_220_001_004_004 = sum(x.debit - x.credit for x in values)
+            acc_amount_220_001_004_004 = sum(x.credit - x.debit for x in values)
         
         lines.append({
             'id': 'hierarchy_account16',
@@ -457,7 +457,7 @@ class TaxReport(models.AbstractModel):
         account_id = self.env['account.account'].search([('code', '=', '220.001.004.005')], limit=1)
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
-            acc_amount_220_001_004_005 = sum(x.debit - x.credit for x in values)
+            acc_amount_220_001_004_005 = sum(x.credit - x.debit for x in values)
         
         lines.append({
             'id': 'hierarchy_account17',
@@ -477,7 +477,7 @@ class TaxReport(models.AbstractModel):
         account_id = self.env['account.account'].search([('code', '=', '220.001.004.006')], limit=1)
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
-            acc_amount_220_001_004_006 = sum(x.debit - x.credit for x in values)
+            acc_amount_220_001_004_006 = sum(x.credit - x.debit for x in values)
         
         lines.append({
             'id': 'hierarchy_account18',
@@ -497,7 +497,7 @@ class TaxReport(models.AbstractModel):
         account_id = self.env['account.account'].search([('code', '=', '220.001.005.001')], limit=1)
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
-            acc_amount_220_001_005_001 = sum(x.debit - x.credit for x in values)
+            acc_amount_220_001_005_001 = sum(x.credit - x.debit for x in values)
         
         lines.append({
             'id': 'hierarchy_account19',
@@ -517,7 +517,7 @@ class TaxReport(models.AbstractModel):
         account_id = self.env['account.account'].search([('code', '=', '220.001.005.002')], limit=1)
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
-            acc_amount_220_001_005_002 = sum(x.debit - x.credit for x in values)
+            acc_amount_220_001_005_002 = sum(x.credit - x.debit for x in values)
         
         lines.append({
             'id': 'hierarchy_account20',
@@ -537,7 +537,7 @@ class TaxReport(models.AbstractModel):
         account_id = self.env['account.account'].search([('code', '=', '220.001.006.001')], limit=1)
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
-            acc_amount_220_001_006_001 = sum(x.debit - x.credit for x in values)
+            acc_amount_220_001_006_001 = sum(x.credit - x.debit for x in values)
         
         lines.append({
             'id': 'hierarchy_account21',
@@ -557,7 +557,7 @@ class TaxReport(models.AbstractModel):
         account_id = self.env['account.account'].search([('code', '=', '220.001.006.002')], limit=1)
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
-            acc_amount_220_001_006_002 = sum(x.debit - x.credit for x in values)
+            acc_amount_220_001_006_002 = sum(x.credit - x.debit for x in values)
         
         lines.append({
             'id': 'hierarchy_account22',
@@ -577,7 +577,7 @@ class TaxReport(models.AbstractModel):
         account_id = self.env['account.account'].search([('code', '=', '220.001.006.003')], limit=1)
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
-            acc_amount_220_001_006_003 = sum(x.debit - x.credit for x in values)
+            acc_amount_220_001_006_003 = sum(x.credit - x.debit for x in values)
         
         lines.append({
             'id': 'hierarchy_account23',

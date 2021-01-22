@@ -128,8 +128,17 @@ class GeneratePayrollWizard(models.TransientModel):
                                 exit_payroll_id.check_number = rec_check_number
                                 exit_payroll_id.bank_key = rec_bank_key
                                 exit_payroll_id.receiving_bank_acc_pay_id = bank_account_id
+                                if check_number:
+                                    log = self.env['check.log'].search([('folio', '=', check_number),
+                                                    ('bank_id.bank_id.l10n_mx_edi_code', '=', rec_bank_key)], limit=1)
+                                    if log:
+                                        exit_payroll_id.check_folio_id = log.id
                                 
                             if not exit_payroll_id:
+                                log = False
+                                if check_number:
+                                    log = self.env['check.log'].search([('folio', '=', check_number),
+                                                    ('bank_id.bank_id.l10n_mx_edi_code', '=', rec_bank_key)], limit=1)
                                 result_dict.update({'payroll_processing_id':self.payroll_process_id.id,
                                                     'period_start' : self.payroll_process_id.period_start,
                                                     'period_end' : self.payroll_process_id.period_end,
@@ -138,6 +147,7 @@ class GeneratePayrollWizard(models.TransientModel):
                                                     'bank_key' : rec_bank_key,
                                                     'deposite_number' : rec_deposite_number,
                                                     'check_number' : rec_check_number,
+                                                    'check_folio_id': log.id if log else False,
                                                     'l10n_mx_edi_payment_method_id':payment_method_id,
                                                     'is_pension_payment_request' : True,
                                                     'receiving_bank_acc_pay_id' : bank_account_id,

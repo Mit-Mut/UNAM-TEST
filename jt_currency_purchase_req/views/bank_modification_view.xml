@@ -8,8 +8,9 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="invoice"/>
-                    <field name="project_id"/>
-                    <field name="bank_account_id"/>
+                    <field name="modification_date"/>
+                    <!-- <field name="project_id"/>
+                    <field name="bank_account_id"/> -->
                     <field name="status"/>
 
                 </tree>
@@ -39,11 +40,11 @@
                                 <field name="invoice" string="Folio"  attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="modification_date" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="move_type" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="bank_account_id" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                               <!--  <field name="bank_account_id" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="bank_acc_number_id"/>
                                 <field name="project_id" domain="[('project_type', '=', 'conacyt')]"
                                 context="{'from_conacyt':1}" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                            </group>
+ -->                            </group>
                             <group>
                                 <field name="observations" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="reason_rejection" attrs="{'invisible': [('status', '!=', 'rejected')]}"/>
@@ -51,7 +52,15 @@
                             </group>
                         </group>                        
                     <notebook>
-                        <page name="update_data" string="Updated">
+                        <page name="update_data" string="Updated data" attrs="{'readonly': [('status', '!=', 'eraser')]}">
+                            <field name="request_line_ids" attrs="{'readonly': [('status', '!=', 'eraser')]}">
+                                <tree>
+                                    <field name="bank_account_id"/>
+                                    <field name="bank_acc_number_id"/>
+                                    <field name="project_id"/>
+                                    <field name="user_id"/>
+                                </tree>
+                            </field>
                         </page>
                     </notebook>
                     </sheet>

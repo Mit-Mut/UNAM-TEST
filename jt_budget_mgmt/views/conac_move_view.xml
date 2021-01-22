@@ -7,6 +7,14 @@
             <field name="model">account.move</field>
             <field name="inherit_id" ref="jt_conac.view_conac_move_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//group/group/field[@name='ref']" position="after">
+                    <field name="dependancy_id"/>
+                    <field name="sub_dependancy_id"/>
+                </xpath>
+                <xpath expr="//page[@id='aml_tab']//field[@name='line_ids']/tree/field[@name='partner_id']" position="after">
+                    <field name="program_code_id"/>
+                    <field name="account_ie_id"/>
+                </xpath>
                 <xpath expr="//page[@id='aml_tab']" position="after">
                       <page id="conac_aml_tab" string="Journal Items" groups="account.group_account_user" attrs="{'invisible':[('show_conac_line_views','=',False)]}">
                       	 <field name="payment_state" invisible="1"/>

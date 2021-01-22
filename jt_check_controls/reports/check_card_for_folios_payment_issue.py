@@ -149,9 +149,9 @@ class CheckCardFolioPaymentIssue(models.AbstractModel):
             
         domain = domain + [('payment_date','>=',start),('payment_date','<=',end),('type_of_batch','=','nominal')]
         
-         
         payment_issue_ids = self.env['payment.batch.supplier'].search(domain)
-        batch_lines_ids = self.env['check.payment.req'].search([('check_status','=','Sent to protection'),('payment_batch_id','in',payment_issue_ids.ids)])
+        batch_lines_ids = self.env['check.payment.req'].search([('check_status','=','Sent to protection'),
+                                                                ('payment_batch_id','in',payment_issue_ids.ids)])
         payment_issue_ids = batch_lines_ids.mapped('payment_batch_id')
 
         department_domain = []
@@ -160,17 +160,18 @@ class CheckCardFolioPaymentIssue(models.AbstractModel):
         for department in department_select:
             if department.get('selected',False):
                 department_domain.append(department.get('id'))
-                
+
         if department_domain and payment_issue_ids:
-            batch_lines_ids = self.env['check.payment.req'].search([('payment_batch_id','in',payment_issue_ids.ids),('check_folio_id.module','in',department_domain)])
+            batch_lines_ids = self.env['check.payment.req'].search([('payment_batch_id','in',payment_issue_ids.ids),
+                                                                    ('check_folio_id.module','in',department_domain)])
             payment_issue_ids = batch_lines_ids.mapped('payment_batch_id')
-            
+
         if fortnight_domain and payment_issue_ids:
             batch_lines_ids = self.env['check.payment.req'].search([('payment_batch_id','in',payment_issue_ids.ids),('payment_req_id.fornight','in',fortnight_domain)])
             payment_issue_ids = batch_lines_ids.mapped('payment_batch_id')
         
         journal_ids = payment_issue_ids.mapped('payment_issuing_bank_id')
-        
+
         total_amount = 0
         total_check = 0 
         for journal in journal_ids:
@@ -200,27 +201,38 @@ class CheckCardFolioPaymentIssue(models.AbstractModel):
             
             bank_total = 0
             rec_ids = payment_issue_ids.filtered(lambda x:x.payment_issuing_bank_id.id==journal.id)
-            for rec in rec_ids: 
-                folio_first = 0
-                folio_final = 0
-                if rec.final_check_folio:
-                    folio_final = rec.final_check_folio.folio
-                if rec.intial_check_folio:
-                    folio_first = rec.intial_check_folio.folio
-                amount = folio_final - folio_first 
-                total_amount += amount
-                bank_total += amount
-                
-                lines.append({
-                    'id': 'hierarchy_rec' + str(rec.id),
-                    'name' : rec.intial_check_folio and rec.intial_check_folio.folio or '', 
-                    'columns': [ {'name': rec.final_check_folio and rec.final_check_folio.folio or ''},
-                                self._format({'name': amount},figure_type='float'),
-                                ],
-                    'level': 3,
-                    'unfoldable': False,
-                    'unfolded': True,
-                })
+            for rec in rec_ids:
+                if all([x.check_status == 'Sent to protection' for x in rec.payment_req_ids]):
+                    amount = sum(line.amount_to_pay for line in rec.payment_req_ids)
+                    total_amount += amount
+                    bank_total += amount
+
+                    lines.append({
+                        'id': 'hierarchy_rec' + str(rec.id),
+                        'name' : rec.intial_check_folio and rec.intial_check_folio.folio or '',
+                        'columns': [ {'name': rec.final_check_folio and rec.final_check_folio.folio or ''},
+                                    self._format({'name': amount},figure_type='float'),
+                                    ],
+                        'level': 3,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+                else:
+                    for line in rec.payment_req_ids.filtered(lambda r: r.check_status == 'Sent to protection'):
+                        amount = line.amount_to_pay
+                        total_amount += amount
+                        bank_total += amount
+
+                        lines.append({
+                            'id': 'hierarchy_rec' + str(rec.id),
+                            'name': line.check_folio_id and line.check_folio_id.folio or '',
+                            'columns': [{'name': line.check_folio_id and line.check_folio_id.folio or ''},
+                                        self._format({'name': amount}, figure_type='float'),
+                                        ],
+                            'level': 3,
+                            'unfoldable': False,
+                            'unfolded': True,
+                        })
 
             bank_name = 'TOTAL CHEQUES '+str(journal.name)
             lines.append({

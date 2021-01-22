@@ -126,7 +126,7 @@ class StatePartimonialSituation(models.AbstractModel):
             for acc in account_ids:
                 balance = 0
                 values= self.env['account.move.line'].search([('date', '>=', start),('date', '<=', end),('account_id', '=', acc.id),move_state_domain])
-                balance = sum(x.debit-x.credit for x in values)
+                balance = sum(x.credit - x.debit for x in values)
                 total_balance += balance
                 
                 lines.append({

@@ -29,20 +29,12 @@ class SupplierPaymentRequest(models.Model):
         for payment_req in self:
             if payment_req.is_payment_request == True or payment_req.is_project_payment == True:
                 if payment_req.payment_state == 'for_payment_procedure':
-                    payment_req.payment_bank_id = False
-                    payment_req.payment_bank_account_id = False
-                    payment_req.payment_issuing_bank_id = False
-                    payment_req.payment_issuing_bank_account_id = False
-                    payment_req.l10n_mx_edi_payment_method_id = False
                     payment_ids = self.env['account.payment'].search([('payment_state','=','for_payment_procedure'),
                                                                       ('payment_request_id','=',payment_req.id)])
                     for payment in payment_ids:
                         payment.cancel()
                     if payment_req.check_folio_id:
                         payment_req.check_folio_id.status = 'Cancelled'
-                    check_payment_reqs = self.env['check.payment.req'].search([('payment_req_id', '=', payment_req.id)])
-                    for req in check_payment_reqs:
-                        req.unlink()
                     payment_req.payment_state = 'payment_method_cancelled'
             if payment_req.payment_state == 'rotated' and payment_req.is_payment_request == True:
                 payment_req.action_cancel_budget()

@@ -150,6 +150,7 @@ class CheckProtection(models.AbstractModel):
                     amount = sum(x.check_amount for x in date_rec_ids)
                     total_amount += amount
                     total_check += total_rec
+                    print(total_check,'total_check')
                     
                     lines.append({
                         'id': 'hierarchy' + str(module),
@@ -174,13 +175,14 @@ class CheckProtection(models.AbstractModel):
                 'unfoldable': False,
                 'unfolded': True,
             })
+        print(lines)
                  
         return lines
 
     def _get_report_name(self):
         return _("Check Protection")
 
-    def get_pdf(self, options, minimal_layout=True):
+    def get_pdf(self, options, minimal_layout=True,line_id=None):
         # As the assets are generated during the same transaction as the rendering of the
         # templates calling them, there is a scenario where the assets are unreachable: when
         # you make a request to read the assets while the transaction creating them is not done.
@@ -213,10 +215,25 @@ class CheckProtection(models.AbstractModel):
             spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 10}
             footer = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
         else:
+            lines = self._get_lines(options, line_id=line_id)
+            data = []
+            total =[]
+            for record in lines:
+                data.append(record.get('columns')[1])
+                total.append(record.get('columns'))
+            total_check =''
+            total_amt = ''
+            d1=total[-1:][0]
+            p=d1[-1:][0]
+            total_amt += str(p.get('no_format_name'))
+            print('total_amt',total_amt)
+            total_check += str(len(data)-1)
             rcontext.update({
                     'css': '',
                     'o': self.env.user,
                     'res_company': self.env.company,
+                    'total_check':total_check,
+                    'total_amt':total_amt
                 })
             header = self.env['ir.actions.report'].render_template("jt_check_controls.external_layout_check_protection", values=rcontext)
             header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded

@@ -5,3 +5,4 @@ access_finance_sender_recipient_trades,finance_sender_recipient_trades_access,mo
 access_application_request,access_application_request,model_application_request,,1,1,1,1
 access_quote,access_quote,model_quote,,1,1,1,1
 access_dollar_fund,access_dollar_fund,model_dollar_fund,,1,1,1,1
+access_request_accounts_line,access_request_accounts_line,model_request_accounts_line,,1,1,1,1

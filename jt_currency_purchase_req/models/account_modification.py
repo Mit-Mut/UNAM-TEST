@@ -30,6 +30,7 @@ class AccountModification(models.Model):
     no_trade = fields.Char('No. Trade')
     legal_number = fields.Char('legal Number')
     modification_date = fields.Date("Date")
+    request_line_ids = fields.One2many('request.accounts.line','request_id',string='request line')
     
     @api.model
     def create(self, vals):
@@ -46,4 +47,19 @@ class AccountModification(models.Model):
 
     def action_confirm_modification(self):
         self.write({'status': 'confirmed'})
-        
+
+
+class AccountModificationLine(models.Model):
+
+    _name = 'request.accounts.line'
+    _description = 'Account modification line'
+
+
+    project_id = fields.Many2one('project.project', "Project Number")
+    bank_account_id = fields.Many2one(
+        "account.journal", string="Bank", domain=[('type', '=', 'bank')])
+    bank_acc_number_id = fields.Many2one('res.partner.bank',
+                                         related='bank_account_id.bank_account_id', string="Bank Account")
+    user_id = fields.Many2one('hr.employee',
+                              related='project_id.responsible_name', string="Project Manager")
+    request_id = fields.Many2one('request.accounts','account request')

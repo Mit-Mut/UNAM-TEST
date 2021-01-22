@@ -149,12 +149,12 @@
         <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
             <div class="row">
                 <div class="col-6">
-                    <hr style="width:40%;color:black;"/><br/>
-                    <strong>RESPONSABLE DE IMPRESION</strong>
+                    <span style="margin-bottom:200px;">________________________________<br/>
+                    RESPONSABLE DE IMPRESION</span>
                 </div>
                 <div class="col-6">
-                    <hr/><br/>
-                    <strong>VO.BO.</strong>
+                    <span style="margin-bottom:200px;">________________________________<br/>
+                    VO.BO.</span>
 
                 </div>
             </div>
@@ -190,7 +190,7 @@
                     <span style="font-size:12px;">PATRONATO UNIVERSITARIO</span><br/>
                     <span style="font-size:12px;">DIRECCIÓN GENERAL DE FINANZAS</span><br/>
                     <span style="font-size:12px;">COORDINACIÓN DE PAGOS</span><br/>
-                    <span style="font-size:12px;">REPORTE DE PROTECCIÓN DE CHEQUES DEL DIA </span><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/> <br/>
+                    <span style="font-size:12px;">REPORTE DE PROTECCIÓN DE CHEQUES DEL DIA </span><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y')"/> <br/>
                 </div>
                
                 
@@ -198,10 +198,10 @@
             </div>
             <div class="row">
                 <div class="col-6">
-                    <span><strong>CHEQUES LIBERADOS:</strong></span>
+                    <span><strong>CHEQUES LIBERADOS : <span t-esc="total_check"/></strong></span>
                 </div>
                 <div class="col-6">
-                    <span><strong>IMPORTE TOTAL:</strong></span>
+                    <span><strong>IMPORTE TOTAL : </strong></span>
                 </div>
                 
             </div>
@@ -237,13 +237,15 @@
                         <span style="font-size:16px;">DIRECCIÓN GENERAL DE FINANZAS</span><br/>
                         <span style="font-size:12px;">PATRONATO UNIVERSITARIO</span><br/>
                         <span style="font-size:12px;">Tesorería</span><br/>
+                        <span style="font-size:12px;">REPORTE DE LOS INFORMES DE LOS CHEQUES DE NOMINA DE SUELDO Y PENSIÓN ALIMENTICIA</span><br/>
+                        <span>QNA</span>
                     </div>
 
                 </div>
-                <div>
+                <!-- <div> 
                     <p style="font-style:bold;">REPORTE DE LOS INFORMES DE LOS CHEQUES DE NOMINA DE SUELDO Y PENSIÓN ALIMENTICIA</p><br/>
                     <center><p>QNA</p></center>
-                </div>
+                </div> -->
             </div>
             <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
               <t t-raw="0"/>
@@ -336,7 +338,8 @@
                     <span style="font-size:12px;">PATRONATO UNIVERSITARIO</span><br/>
                     <span style="font-size:12px;">TESORERIA</span><br/>
                     <span style="font-size:15px;">CÉDULA CONTROL DE PROTECCIÓN DE CHEQUES</span><br/>
-                    <span style="font-size:12px;">QUINCENA</span><br/>
+                    <span style="font-size:12px;">QUINCENA</span>
+                    <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%m/%Y')"/> <br/>
                     <span style="font-size:12px;">CUENTA DE CARGO</span><br/>
                    
                 </div>

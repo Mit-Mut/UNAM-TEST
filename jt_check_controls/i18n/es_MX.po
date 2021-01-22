@@ -2381,4 +2381,23 @@ msgstr ""
 "                    <span>Cuenta bancaria:</span><br/>\n"
 "                    <span>Fecha de impresión  </span>"
 
+#. module: jt_check_controls
+#: code:addons/jt_check_controls/reports/check_protection.py:0
+#, python-format
+msgid "Unit"
+msgstr "Unidad"
+
+#. module: jt_check_controls
+#: code:addons/jt_check_controls/reports/check_protection.py:0
+#: code:addons/jt_check_controls/reports/check_protection_control_certificate.py:0
+#, python-format
+msgid "Number of checks"
+msgstr "Cantidad de cheques"
+
+#. module: jt_check_controls
+#: code:addons/jt_check_controls/reports/check_protection_control_certificate.py:0
+#, python-format
+msgid "Concepts"
+msgstr "Conceptos"
+
 

@@ -169,6 +169,23 @@
                                         <table style="text-align:center" width="100%">
                                             <tbody>
                                                 <tr>
+                                                    <td width="33%">
+                                                    </td>
+                                                    <td width="33%">Zone</td>
+                                                </tr>
+                                                <tr>
+                                                    
+                                                    <td width="33%">
+                                                         <t t-if="line.payment_req_id">
+                                                            <span t-esc="line.payment_req_id.name"/>
+                                                         </t>
+                                                    </td>
+                                                    <td width="33%">
+                                                        <span t-esc="line.check_folio_id.checkbook_no"/>
+                                                    </td>
+                                                    <td width="33%">
+                                                        <span t-esc="line.check_folio_id.folio"/>
+                                                    </td>
                                                     <div class="row">
                                                         <div class="col-6" align="left" style="margin-left:5px;">
                                                             <t t-if="line.payment_req_id">
@@ -178,17 +195,6 @@
                                                         <div class="col-6" align="left" style="text-align:right">
                                                         </div>
                                                     </div>
-                                                    <td width="33%">
-                                                         <t t-if="line.payment_req_id">
-                                                            <span t-esc="line.payment_req_id.name"/>
-                                                         </t>
-                                                    </td>
-                                                    <td width="33%">
-                                                        <!-- <span t-esc="line.check_folio_id.checkbook_no"/> -->
-                                                    </td>
-                                                    <td width="33%">
-                                                        <span t-esc="line.check_folio_id.folio"/>
-                                                    </td>
                                                     
                                                 </tr>
                                                 <tr>

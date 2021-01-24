@@ -212,28 +212,46 @@ class CheckProtection(models.AbstractModel):
         if minimal_layout:
             header = ''
             footer = self.env['ir.actions.report'].render_template("web.internal_layout", values=rcontext)
-            spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 10}
+            spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 20}
             footer = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
         else:
             lines = self._get_lines(options, line_id=line_id)
+            start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+            end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+        
+            date_list =''
+            date_list += str(start)
+            date_list += '\t'
+            date_list += 'To'
+            date_list += '\t'
+            date_list += str(end)
             data = []
             total =[]
             for record in lines:
                 data.append(record.get('columns')[1])
                 total.append(record.get('columns'))
+            
             total_check =''
+            if data:
+                total_check += str(len(data)-1)
             total_amt = ''
-            d1=total[-1:][0]
-            p=d1[-1:][0]
-            total_amt += str(p.get('no_format_name'))
-            print('total_amt',total_amt)
-            total_check += str(len(data)-1)
+            d1 =[]
+            if total:
+                d1=total[-1:][0]
+                k = d1[0]
+                p=k[-1:][0]
+                total_amt += str(p.get('no_format_name'))
+                
             rcontext.update({
                     'css': '',
                     'o': self.env.user,
                     'res_company': self.env.company,
                     'total_check':total_check,
-                    'total_amt':total_amt
+                    'total_amt':total_amt,
+                    'date_list':date_list
+
                 })
             header = self.env['ir.actions.report'].render_template("jt_check_controls.external_layout_check_protection", values=rcontext)
             header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded

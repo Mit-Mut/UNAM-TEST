@@ -8,7 +8,18 @@
             <field name="arch" type="xml">
                 <field name="code" position="before">
             		<field name="is_conacyt_project"/>
+                    <field name="is_purchase_of_foreign_curr"/>
             	</field>
+                 <xpath expr="//notebook/page[@name='journal_entries']" position="inside">
+                    <group attrs="{'invisible':[('is_purchase_of_foreign_curr','=',False)]}" string="Purchase of foreign currency">
+                        <group string="Currency Purchase">
+                            <field name="receivable_CFDIS_debit_account_id" />
+                            <field name="receivable_CFDIS_credit_account_id"/>
+                            <field name="conac_receivable_CFDIS_credit_account_id"/>
+                            <field name="conac_receivable_CFDIS_debit_account_id"/>
+                        </group>
+                    </group>                
+                </xpath>
             	<xpath expr="//notebook/page[@name='journal_entries']" position="inside">
                 	<group attrs="{'invisible':[('is_conacyt_project','=',False)]}" string="CONACYT Project">
                 		<group string="Account receivable CFDIS">

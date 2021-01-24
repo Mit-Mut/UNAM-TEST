@@ -149,11 +149,13 @@
         <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
             <div class="row">
                 <div class="col-6">
-                    <span style="margin-bottom:200px;">________________________________<br/>
+                    <span style="margin-top:50px;">________________________________<br/>
+
+                    <span style="margin-bottom:50px;">________________________________<br/>
                     RESPONSABLE DE IMPRESION</span>
                 </div>
                 <div class="col-6">
-                    <span style="margin-bottom:200px;">________________________________<br/>
+                    <span style="margin-bottom:50px;">________________________________<br/>
                     VO.BO.</span>
 
                 </div>
@@ -190,7 +192,8 @@
                     <span style="font-size:12px;">PATRONATO UNIVERSITARIO</span><br/>
                     <span style="font-size:12px;">DIRECCIÓN GENERAL DE FINANZAS</span><br/>
                     <span style="font-size:12px;">COORDINACIÓN DE PAGOS</span><br/>
-                    <span style="font-size:12px;">REPORTE DE PROTECCIÓN DE CHEQUES DEL DIA </span><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y')"/> <br/>
+                    <span style="font-size:12px;">REPORTE DE PROTECCIÓN DE CHEQUES DEL DIA </span><br/><strong><span t-esc="date_list" style="font-size:14px;"/> </strong><br/>
+
                 </div>
                
                 
@@ -201,7 +204,7 @@
                     <span><strong>CHEQUES LIBERADOS : <span t-esc="total_check"/></strong></span>
                 </div>
                 <div class="col-6">
-                    <span><strong>IMPORTE TOTAL : </strong></span>
+                    <span><strong>IMPORTE TOTAL : <span t-esc="total_amt"/></strong></strong></span>
                 </div>
                 
             </div>

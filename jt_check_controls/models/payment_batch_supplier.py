@@ -125,7 +125,7 @@ class PaymentBatchSupplier(models.Model):
 
     def _get_check_data(self):
         for rec in self:
-            rec.amount_of_checkes = len(rec.payment_req_ids)
+            rec.amount_of_checkes = len(rec.payment_req_ids.filtered(lambda x: x.check_folio_id != False))
             reqs = rec.payment_req_ids.filtered(lambda x: x.check_folio_id != False)
             if reqs:
                 rec.intial_check_folio = reqs[0].check_folio_id.id

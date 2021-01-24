@@ -168,6 +168,16 @@ class BlankCheckRequest(models.Model):
 
     def action_apply_distribution(self):
         self.ensure_one()
+        log_ids = self.log_ids.ids if self.log_ids else []
+        check_log_obj = self.env['check.log']
+        if log_ids:
+            for line in self.distribution_of_module_ids:
+                check_logs = check_log_obj.search(
+                    [('checklist_id.checkbook_req_id', '=', self.checkbook_req_id.id),
+                     ('folio', '>=', line.intial_filio.folio),
+                     ('folio', '<=', line.final_folio.folio)])
+                for log in check_logs:
+                    log_ids.remove(log.id)
         return {
             'name': _('Apply Distribution'),
             'view_mode': 'form',
@@ -175,7 +185,7 @@ class BlankCheckRequest(models.Model):
             'res_model': 'apply.distribution.modules',
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'context': {'log_ids': self.log_ids.ids if self.log_ids else [],
+            'context': {'log_ids': log_ids,
                         'default_checkbook_req_id': self.checkbook_req_id.id if self.checkbook_req_id else False}
         }
 

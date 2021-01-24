@@ -223,7 +223,8 @@ class CheckProtectionControlCertificate(models.AbstractModel):
             if department.get('selected',False):
                 department_domain.append(department.get('id'))
        
-        domain = domain + [('invoice_date','>=',start),('invoice_date','<=',end),('check_folio_id','!=',False)]
+        domain = domain + [('invoice_date','>=',start),('invoice_date','<=',end),('check_folio_id','!=',False),
+                           ('check_folio_id.status', '=', 'Protected')]
         salary_payroll_ids = self.env['account.move'].search(domain + [('is_payroll_payment_request', '=', True)])
         diff_payroll_ids = self.env['account.move'].search(domain + [('is_different_payroll_request', '=', True)])
         

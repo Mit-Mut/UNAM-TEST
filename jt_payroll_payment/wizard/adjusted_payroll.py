@@ -104,7 +104,6 @@ class AdjustedPayrollWizard(models.TransientModel):
             employee_id = False
             if self.type_of_movement == 'perception_adjustment_detail':
                 for rowx, row in enumerate(map(sheet.row, range(1, sheet.nrows)), 1):
-                    
                     counter = 0
                     rfc = row[0].value
                     clave_categ = row[1].value
@@ -123,16 +122,15 @@ class AdjustedPayrollWizard(models.TransientModel):
                         p_id = self.env['program.code'].search([('program_code','=',program_code)],limit=1)
                         if p_id:
                             program_id = p_id.id
-                    
                     emp_payroll_ids = []
                     if rfc:
                         employee_id =self.env['hr.employee'].search([('rfc','=',rfc)],limit=1)
                         if employee_id:
                             employee_id = employee_id.id
-                        
+
                     if employee_id:
                         emp_payroll_ids = self.payroll_process_id.payroll_ids.filtered(lambda x:x.employee_id.id==employee_id)
-                        
+
                     for rec in emp_payroll_ids:
                         if perception:
                             if  type(perception) is int or type(perception) is float:
@@ -253,9 +251,11 @@ class AdjustedPayrollWizard(models.TransientModel):
                                 bank_rec = self.env['res.bank'].search([('l10n_mx_edi_code','=',str(bank_key))],limit=1)
                                 if bank_rec:
                                     bank_id = bank_rec.id
-                            
+
                             if payment_method_id:
-                                lines = rec.pension_payment_line_ids.filtered(lambda x:x.l10n_mx_edi_payment_method_id.id==payment_method_id and x.bank_key == bank_key)
+                                lines = rec.pension_payment_line_ids.filtered(lambda x:
+                                        x.l10n_mx_edi_payment_method_id.id==payment_method_id and
+                                        x.bank_key == str(bank_key))
                                 for line in lines:
                                     line.total_pension = total_pension
                                     line.partner_id = partner_id 

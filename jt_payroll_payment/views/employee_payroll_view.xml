@@ -101,8 +101,8 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="menu_emp_payroll_file" name="Upload Files" action="employee_payroll_file_action"
-                  sequence="1" parent="menu_emp_payroll_payment_of_payroll"/>
+<!--        <menuitem id="menu_emp_payroll_file" name="Upload Files" action="employee_payroll_file_action"-->
+<!--                  sequence="1" parent="menu_emp_payroll_payment_of_payroll"/>-->
 
     </data>
 </odoo>

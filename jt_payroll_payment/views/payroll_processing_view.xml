@@ -7,15 +7,19 @@
             <field name="arch" type="xml">
                 <form>
                   	<header>
-                  		<button string='Generate Payroll' name='generate_payroll' type="object" class="oe_highlight"></button>
-                  		<button string='Generate Adjustment' name='generate_adjustment' type="object" class="oe_highlight"></button>
-                  		<button string='Lows and Cancellations' name='lows_and_cancellations' type="object" class="oe_highlight"></button>
+                  		<button string='Generate Payroll' name='generate_payroll' type="object" class="oe_highlight"/>
+                  		<button string='Generate Adjustment' name='generate_adjustment' type="object"
+                                class="oe_highlight"/>
+                  		<button string='Lows and Cancellations' name='lows_and_cancellations' type="object"
+                                class="oe_highlight"/>
                   		
                   	</header>
                     <sheet>
                     	<field name="payroll_ids" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
-                             <button name="view_payment_receipt" type="object" class="oe_stat_button" icon="fa-random" attrs="{'invisible':[('payroll_ids','=',False)]}">
+                             <button name="view_payment_receipt" type="object" class="oe_stat_button" icon="fa-random"
+                                     attrs="{'invisible':[('payroll_ids','=',False)]}"
+                             context="{'show_from_payroll':1}">
                                 <field name="total_record" widget="statinfo"/>
                             </button>
                         </div>
@@ -125,7 +129,7 @@
                                 <field name="bank_key"/>
                                 <field name="deposite_number"/>
                                 <field name="check_number"/>
-                                <field name="adjustment_case_id"/>
+                                <field name="adjustment_case_id" context="{'show_from_payroll':1}"/>
                                 <field name="net_salary"/>
                                 <field name="casualties_and_cancellations" attrs="{'readonly':[('state','=','done')]}"/>
                                 <field name="request_type" attrs="{'readonly':[('state','=','done')]}" invisible="1"/>
@@ -208,11 +212,13 @@
                         		<field name="additional_payments_line_ids" readonly="1">
                         			<tree>
                         				<field name="details"/>
+                        				<field name="description"/>
                         				<field name="amount"/>
                         			</tree>
                         			<form>
                         				<group>
 	                        				<field name="details"/>
+	                        				<field name="description"/>
 	                        				<field name="amount"/>
                         				</group>
                         			</form>

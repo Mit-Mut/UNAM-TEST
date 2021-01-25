@@ -145,12 +145,16 @@ class Payroll(models.AbstractModel):
         return templates
 
     def _get_columns_name(self, options):
-        return [
+        print ("Coolll=",self.env.context)
+        col_list= [
             {'name': _('Folio')},
             {'name': _('Cheque')},
             {'name': _('Beneficiario')},
             {'name': _('Importe')},
         ]
+        if self.env.context and self.env.context.get('get_sign_col'):
+            col_list.append({'name':_('Firma'),'class':'text-left'})
+        return col_list 
 
     def _format(self, value,figure_type):
         if self.env.context.get('no_format'):
@@ -176,7 +180,6 @@ class Payroll(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         lines = []
-        
         domain = []
         bank_list = []
         bank_account_list = []
@@ -221,25 +224,35 @@ class Payroll(models.AbstractModel):
             total += inv.amount_total  
             if inv.check_folio_id:
                 total_check += 1
+
+            col_list = [ {'name': inv.check_folio_id and inv.check_folio_id.folio or ''},
+                            {'name': inv.partner_id and inv.partner_id.name or ''},
+                            self._format({'name': inv.amount_total},figure_type='float'),
+                            ]
+            
+            if self.env.context and self.env.context.get('get_sign_col'):
+                col_list.append({'name':'___________________________________','class':'text-left'})
+                
             lines.append({
                 'id': 'hierarchy' + str(inv.id),
                 'name' : inv.folio, 
-                'columns': [ {'name': inv.check_folio_id and inv.check_folio_id.folio or ''},
-                            {'name': inv.partner_id and inv.partner_id.name or ''},
-                            self._format({'name': inv.amount_total},figure_type='float'),
-                            ],
+                'columns': col_list,
                 'level': 3,
                 'unfoldable': False,
                 'unfolded': True,
             })
 
+        total_list = [{'name': total_check,'class':'number'},
+                        {'name': ''},
+                        self._format({'name': total},figure_type='float'),
+                        ]
+        if self.env.context and self.env.context.get('get_sign_col'):
+            total_list.append({'name':'','class':'text-left'})
+        
         lines.append({
             'id': 'hierarchy_total',
             'name' : 'TOTAL', 
-            'columns': [{'name': total_check,'class':'number'},
-                        {'name': ''},
-                        self._format({'name': total},figure_type='float'),
-                        ],
+            'columns': total_list,
             'level': 1,
             'unfoldable': False,
             'unfolded': True,
@@ -276,7 +289,9 @@ class Payroll(models.AbstractModel):
             "account_reports.print_template",
             values=dict(rcontext),
         )
-        body_html = self.with_context(print_mode=True).get_html(options)
+        body_html = self.with_context(print_mode=True,get_sign_col=True).get_html(options)
+        if body_html:
+            body_html = body_html + b'<div class="row"><div class="col-6 text-center"><hr style="width:60%;color:black;"/><strong>RESPONSABLE DE IMPRESION</strong></div><div class="col-6 text-center"><hr/><strong>VO.BO.</strong></div></div>'
 
         body = body.replace(b'<body class="o_account_reports_body_print">', b'<body class="o_account_reports_body_print">' + body_html)
         if minimal_layout:
@@ -527,8 +542,8 @@ class Payroll(models.AbstractModel):
                 'summary': report_manager.summary,
                 'company_name': self.env.company.name,}
         report = {}
-        #options.get('date',{}).update({'string':''}) 
-        lines = self._get_lines(options, line_id=line_id)
+        #options.get('date',{}).update({'string':''})
+        lines = self.with_context(get_sign_col=self.env.context.get('get_sign_col',False))._get_lines(options, line_id=line_id)
 
         if options.get('hierarchy'):
             lines = self._create_hierarchy(lines, options)
@@ -549,7 +564,7 @@ class Payroll(models.AbstractModel):
                     footnotes_to_render.append({'id': f.id, 'number': number, 'text': f.text})
 
         rcontext = {'report': report,
-                    'lines': {'columns_header': self.get_header(options), 'lines': lines},
+                    'lines': {'columns_header': self.with_context(get_sign_col=self.env.context.get('get_sign_col',False)).get_header(options), 'lines': lines},
                     'options': {},
                     'context': self.env.context,
                     'model': self,

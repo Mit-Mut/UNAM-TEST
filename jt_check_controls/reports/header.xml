@@ -42,6 +42,7 @@
           <t t-raw="0"/>
         </div>
 
+	<!-- 
         <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
             <div class="row">
                 <div class="col-6">
@@ -55,7 +56,7 @@
                 </div>
             </div>
         </div>
-         
+      -->    
         </template>
 
 
@@ -147,19 +148,6 @@
         </div>
 
         <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
-            <div class="row">
-                <div class="col-6">
-                    <span style="margin-top:50px;">________________________________<br/>
-
-                    <span style="margin-bottom:50px;">________________________________<br/>
-                    RESPONSABLE DE IMPRESION</span>
-                </div>
-                <div class="col-6">
-                    <span style="margin-bottom:50px;">________________________________<br/>
-                    VO.BO.</span>
-
-                </div>
-            </div>
         </div>
          
         </template>
@@ -204,7 +192,7 @@
                     <span><strong>CHEQUES LIBERADOS : <span t-esc="total_check"/></strong></span>
                 </div>
                 <div class="col-6">
-                    <span><strong>IMPORTE TOTAL : <span t-esc="total_amt"/></strong></strong></span>
+                    <span><strong>IMPORTE TOTAL : <span t-esc="total_amt"/></strong></span>
                 </div>
                 
             </div>
@@ -341,8 +329,7 @@
                     <span style="font-size:12px;">PATRONATO UNIVERSITARIO</span><br/>
                     <span style="font-size:12px;">TESORERIA</span><br/>
                     <span style="font-size:15px;">CÉDULA CONTROL DE PROTECCIÓN DE CHEQUES</span><br/>
-                    <span style="font-size:12px;">QUINCENA</span>
-                    <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%m/%Y')"/> <br/>
+                    <span style="font-size:12px;">QUINCENA : <span t-esc="q_year_data"/></span><br/>
                     <span style="font-size:12px;">CUENTA DE CARGO</span><br/>
                    
                 </div>

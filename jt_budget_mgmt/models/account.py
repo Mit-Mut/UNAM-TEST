@@ -385,7 +385,6 @@ class AccountMoveLine(models.Model):
     budget_id = fields.Many2one('expenditure.budget')
     adequacy_id = fields.Many2one('adequacies')
     program_code_id = fields.Many2one('program.code')
-    account_ie_id = fields.Many2one('association.distribution.ie.accounts','I.E. Accounts')
     budget_line_link_ids = fields.One2many('budget.line.move.line.links','account_move_line_id')
     
     @api.onchange('program_code_id')

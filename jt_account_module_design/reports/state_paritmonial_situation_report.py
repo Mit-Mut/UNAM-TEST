@@ -112,6 +112,7 @@ class StatePartimonialSituation(models.AbstractModel):
         concept_ids = self.env['integration.statement.asset'].search([])
         for con in concept_ids:
             total_balance = 0
+            total_balance1 = 0
             lines.append({
                 'id': 'concept',
                 'name': con.concept,
@@ -128,6 +129,8 @@ class StatePartimonialSituation(models.AbstractModel):
                 values= self.env['account.move.line'].search([('date', '>=', start),('date', '<=', end),('account_id', '=', acc.id),move_state_domain])
                 balance = sum(x.credit - x.debit for x in values)
                 total_balance += balance
+                balance1 = sum(x.debit - x.credit for x in values)
+                total_balance1 += balance1
                 
                 lines.append({
                     'id': 'account' + str(acc.id),
@@ -135,7 +138,7 @@ class StatePartimonialSituation(models.AbstractModel):
                     'columns': [{'name': acc.name},
                                 self._format({'name': balance},figure_type='float'),
                                 {'name': ''},
-                                self._format({'name': balance},figure_type='float'),
+                                self._format({'name': balance1},figure_type='float'),
                                 ],
                     
                     'level': 3,
@@ -149,7 +152,7 @@ class StatePartimonialSituation(models.AbstractModel):
                 'columns': [{'name': ''},
                             self._format({'name': total_balance},figure_type='float'),
                             {'name': ''},
-                            self._format({'name': total_balance},figure_type='float'),
+                            self._format({'name': total_balance1},figure_type='float'),
                             ],
                 
                 'level': 1,

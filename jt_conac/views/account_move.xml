@@ -166,6 +166,8 @@
                                        attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
 
                                 <field name="ref"/>
+                                <field name="dependence_id" context="{'show_for_supplier_payment':True}"/>
+                                <field name="sub_depend_id" context="{'show_for_supplier_payment':True}"/>
                                 <field name="invoice_vendor_bill_id"
                                        attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('type', '!=', 'in_invoice')]}"
                                        domain="[('company_id', '=', company_id), ('partner_id','child_of', [partner_id]), ('type','=','in_invoice')]"

@@ -92,6 +92,6 @@ class CustomPayrollProcessing(models.Model):
                 'context': {'show_category_name': True},
                 'target': 'current',
                 'type': 'ir.actions.act_window',
-                'domain':[('id','in',self.payroll_ids.ids)]
+                #'domain':[('id','in',self.payroll_ids.ids)]
             }
         

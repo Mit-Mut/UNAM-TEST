@@ -37,8 +37,6 @@ class AccountMove(models.Model):
 
     _inherit = 'account.move'
 
-    dependence_id = fields.Many2one('dependency','Dependence')
-    sub_depend_id = fields.Many2one('sub.dependency', "Sub Dependency")
     programatic_code = fields.Boolean('Programmatic Code')
     ie_account = fields.Boolean('IEAccount')
     program_code_id = fields.Many2one('program.code','Program Code')

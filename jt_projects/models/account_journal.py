@@ -30,6 +30,7 @@ class AccountJournal(models.Model):
     _inherit = 'account.journal'
 
     is_conacyt_project = fields.Boolean(string='CONACYT Project',default=False,copy=False)
+    is_purchase_of_foreign_curr = fields.Boolean(string='Purchase of Foreign Currency',default=False,copy=False)
 
 
     receivable_CFDIS_credit_account_id = fields.Many2one('account.account', "Default Credit Account")

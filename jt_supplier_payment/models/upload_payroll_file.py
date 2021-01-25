@@ -73,10 +73,10 @@ class EmployeePayroll(models.Model):
             if line_vals:
                 invoice_line_vals.append((0,0,line_vals))
         is_payroll_payment_request = True
-        is_pension_payment_request = False
-        if self.is_pension_payment_request:
-            is_payroll_payment_request = False
-            is_pension_payment_request = True
+        is_pension_payment_request = True
+#         if self.is_pension_payment_request:
+#             is_payroll_payment_request = False
+#             is_pension_payment_request = True
                 
         partner_id = self.employee_id and self.employee_id.user_id and self.employee_id.user_id.partner_id and self.employee_id.user_id.partner_id.id or False 
         vals = {'payment_bank_id':self.bank_receiving_payment_id and self.bank_receiving_payment_id.id or False,
@@ -100,9 +100,50 @@ class EmployeePayroll(models.Model):
                 'period_end' : self.period_end,
                 }
         return vals
+
+    def get_pension_payment_request_vals(self,line):
+        journal = self.env.ref('jt_payroll_payment.payroll_payment_request_jour')
+        is_payroll_payment_request = True
+        is_pension_payment_request = True
+        
+        partner_id = line.partner_id.id
+        invoice_line_vals=[(0,0,{
+            'quantity' : 1,
+            'price_unit' : line.total_pension,
+            })]
+        vals = {'payment_bank_id':self.bank_receiving_payment_id and self.bank_receiving_payment_id.id or False,
+                'payment_bank_account_id': self.receiving_bank_acc_pay_id and self.receiving_bank_acc_pay_id.id or False,
+                'payment_issuing_bank_id': self.payment_issuing_bank_id and self.payment_issuing_bank_id.id or False,
+                'l10n_mx_edi_payment_method_id' : line.l10n_mx_edi_payment_method_id and line.l10n_mx_edi_payment_method_id.id or False,
+                'partner_id' : partner_id,
+                'is_payroll_payment_request':is_payroll_payment_request,
+                'is_pension_payment_request' : is_pension_payment_request,
+                'type' : 'in_invoice',
+                'journal_id' : journal and journal.id or False,
+                'invoice_date' : fields.Date.today(),
+                'invoice_line_ids':invoice_line_vals,
+                'fornight' : self.fornight,
+                'payroll_request_type' : self.request_type,
+                'deposite_number' : self.deposite_number,
+                'check_number' : self.check_number,
+                'bank_key' : self.bank_key,
+                'pension_reference': self.reference,
+                'period_start' : self.period_start,
+                'period_end' : self.period_end,
+                }
+        return vals
     
+    def create_pension_payment_request(self):
+        for rec in self:
+            if rec.pension_payment_line_ids:
+                for line in rec.pension_payment_line_ids:
+                    if line.partner_id:
+                        vals = self.get_pension_payment_request_vals(line)
+                        self.env['account.move'].create(vals)
+                            
     def create_payroll_payment(self):
         payroll_payment_vals = self.get_payroll_payment_vals()
+        self.create_pension_payment_request()
         return self.env['account.move'].create(payroll_payment_vals)
         
     def action_done(self):

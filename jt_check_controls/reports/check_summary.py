@@ -249,7 +249,7 @@ class CheckSummary(models.AbstractModel):
             'unfoldable': False,
             'unfolded': True,
         })
-            
+                    
         return lines
 
     def _get_report_name(self):
@@ -280,7 +280,9 @@ class CheckSummary(models.AbstractModel):
             values=dict(rcontext),
         )
         body_html = self.with_context(print_mode=True).get_html(options)
-
+        if body_html:
+            body_html = body_html + b'<div class="row"><div class="col-6 text-center"><hr style="width:60%;color:black;"/><strong>RESPONSABLE DE IMPRESION</strong></div><div class="col-6 text-center"><hr/><strong>VO.BO.</strong></div></div>'
+            
         body = body.replace(b'<body class="o_account_reports_body_print">', b'<body class="o_account_reports_body_print">' + body_html)
         if minimal_layout:
             header = ''

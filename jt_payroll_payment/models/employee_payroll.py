@@ -39,7 +39,6 @@ class Employee(models.Model):
                     'groups_id': [(4, group_portal.id)],
                     'company_id': company_id,
                     'company_ids': [(6, 0, [company_id])],
-                    
                     }
             user_id = self.env['res.users'].with_context(no_reset_password=True)._create_user_from_template(vals)
             emp.user_id = user_id.id
@@ -235,9 +234,18 @@ class AdditionalPaymentsLine(models.Model):
     payroll_id = fields.Many2one('employee.payroll.file','Payroll')
     
     job_id = fields.Many2one('hr.job','Category Key')
-    description = fields.Text(related='job_id.description',string='Description')
+    job_description = fields.Text(related='job_id.description',string='Job Description')
     details = fields.Selection([('N','N'),('U','U')],string='Detail')
+    description = fields.Char("Description", compute='_compute_description', store=True)
     amount = fields.Float('Matter')
+
+    @api.depends('details')
+    def _compute_description(self):
+        for line in self:
+            if line.details == 'N':
+                line.description = 'Normal'
+            else:
+                line.description = 'Unique'
 
 class AdditionalPensionPaymentsLine(models.Model):
     

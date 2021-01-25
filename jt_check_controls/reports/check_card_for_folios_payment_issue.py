@@ -202,38 +202,72 @@ class CheckCardFolioPaymentIssue(models.AbstractModel):
             bank_total = 0
             rec_ids = payment_issue_ids.filtered(lambda x:x.payment_issuing_bank_id.id==journal.id)
             for rec in rec_ids:
-                if all([x.check_status == 'Sent to protection' for x in rec.payment_req_ids]):
-                    amount = sum(line.amount_to_pay for line in rec.payment_req_ids)
-                    total_amount += amount
-                    bank_total += amount
+#                 if all([x.check_status == 'Sent to protection' for x in rec.payment_req_ids]):
+#                     amount = sum(line.amount_to_pay for line in rec.payment_req_ids)
+#                     total_amount += amount
+#                     bank_total += amount
+# 
+#                     lines.append({
+#                         'id': 'hierarchy_rec' + str(rec.id),
+#                         'name' : rec.intial_check_folio and rec.intial_check_folio.folio or '',
+#                         'columns': [ {'name': rec.final_check_folio and rec.final_check_folio.folio or ''},
+#                                     self._format({'name': amount},figure_type='float'),
+#                                     ],
+#                         'level': 3,
+#                         'unfoldable': False,
+#                         'unfolded': True,
+#                     })
+#                 else:
+                    line_payment_ids = rec.payment_req_ids.filtered(lambda r: r.check_status == 'Sent to protection')
+                    folio_mapped_ids = line_payment_ids.mapped('check_folio_id').sorted(key='folio')
+                    if folio_mapped_ids:
+                        amount = 0
+                        first_folio_id = False
+                        last_folio_id = False
+                         
+                        for folio in  folio_mapped_ids:
+                                
+        
+                            if last_folio_id and last_folio_id.folio and folio.folio and (last_folio_id.folio+1) != folio.folio: 
+                                lines.append({
+                                    'id': 'hierarchy_rec' + str(rec.id),
+                                    'name': first_folio_id and first_folio_id.folio or '',
+                                    'columns': [{'name': last_folio_id and last_folio_id.folio or ''},
+                                                self._format({'name': amount}, figure_type='float'),
+                                                ],
+                                    'level': 3,
+                                    'unfoldable': False,
+                                    'unfolded': True,
+                                })
+                                first_folio_id = False
+                                last_folio_id = False
+                                amount = 0
 
-                    lines.append({
-                        'id': 'hierarchy_rec' + str(rec.id),
-                        'name' : rec.intial_check_folio and rec.intial_check_folio.folio or '',
-                        'columns': [ {'name': rec.final_check_folio and rec.final_check_folio.folio or ''},
-                                    self._format({'name': amount},figure_type='float'),
-                                    ],
-                        'level': 3,
-                        'unfoldable': False,
-                        'unfolded': True,
-                    })
-                else:
-                    for line in rec.payment_req_ids.filtered(lambda r: r.check_status == 'Sent to protection'):
-                        amount = line.amount_to_pay
-                        total_amount += amount
-                        bank_total += amount
-
-                        lines.append({
-                            'id': 'hierarchy_rec' + str(rec.id),
-                            'name': line.check_folio_id and line.check_folio_id.folio or '',
-                            'columns': [{'name': line.check_folio_id and line.check_folio_id.folio or ''},
-                                        self._format({'name': amount}, figure_type='float'),
-                                        ],
-                            'level': 3,
-                            'unfoldable': False,
-                            'unfolded': True,
-                        })
-
+                            for line in rec.payment_req_ids.filtered(lambda r: r.check_folio_id.id == folio.id):
+                                amount += line.amount_to_pay
+                                
+                            total_amount += amount
+                            bank_total += amount
+                                
+                            if not first_folio_id:
+                                first_folio_id = folio
+                            if first_folio_id:
+                                last_folio_id = folio
+                        if first_folio_id:
+                            lines.append({
+                                'id': 'hierarchy_rec' + str(rec.id),
+                                'name': first_folio_id and first_folio_id.folio or '',
+                                'columns': [{'name': last_folio_id and last_folio_id.folio or ''},
+                                            self._format({'name': amount}, figure_type='float'),
+                                            ],
+                                'level': 3,
+                                'unfoldable': False,
+                                'unfolded': True,
+                            })
+                            first_folio_id = False
+                            last_folio_id = False
+                            amount = 0
+                            
             bank_name = 'TOTAL CHEQUES '+str(journal.name)
             lines.append({
                 'id': 'total'+str(journal.id),

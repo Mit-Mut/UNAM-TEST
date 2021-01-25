@@ -66,8 +66,8 @@
             <field name="inherit_id" ref="account.view_move_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//group/group/field[@name='ref']" position="after">
-                    <field name="dependence_id"/>
-                    <field name="sub_depend_id"/>
+                    <field name="dependancy_id" context="{'show_for_supplier_payment':True}"/>
+                    <field name="sub_dependancy_id" context="{'show_for_supplier_payment':True}"/>
                     <field name="programatic_code"/>
                     <field name="ie_account"/>
                 </xpath>
@@ -79,10 +79,10 @@
         </record>
         
         <record id="jt_projects.open_request_accounts_action" model="ir.actions.act_window">
-        	<field name="context">{'from_account_design':True,'from_conacyt':1,'default_move_type' : 'account open'}</field>
+            <field name="context">{'from_account_design':True,'from_conacyt':1,'default_move_type' : 'account open'}</field>
         </record>
         <record id="jt_projects.cancellation_request_action" model="ir.actions.act_window">
-        	<field name="context">{'from_account_design':True,'from_conacyt':1,'default_move_type' : 'account cancel'}</field>
+            <field name="context">{'from_account_design':True,'from_conacyt':1,'default_move_type' : 'account cancel'}</field>
         </record>
         
         

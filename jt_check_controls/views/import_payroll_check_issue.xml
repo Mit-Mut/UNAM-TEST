@@ -57,6 +57,7 @@
         <record id="action_import_payroll_check_issue" model="ir.actions.act_window">
             <field name="name">Import of payroll check reissue</field>
             <field name="res_model">import.payroll.check.issue</field>
+            <field name="context"></field>
             <field name="view_mode">tree,form</field>
         </record>
 

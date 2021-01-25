@@ -18,7 +18,7 @@ class EmployeePayroll(models.Model):
         if res.check_number and res.check_number.isnumeric() and res.l10n_mx_edi_payment_method_id and res.l10n_mx_edi_payment_method_id.id==check_payment_method:
             rec_check_number = int(res.check_number)  
                           
-            check_id = self.env['check.log'].search([('folio','=',rec_check_number)],limit=1)
+            check_id = self.env['check.log'].search([('bank_id.bank_id.l10n_mx_edi_code','=',res.bank_key),('folio','=',rec_check_number)],limit=1)
             if check_id:
                 res.check_folio_id = check_id.id
         return res
@@ -31,7 +31,7 @@ class EmployeePayroll(models.Model):
                 if res.check_number and res.check_number.isnumeric() and res.l10n_mx_edi_payment_method_id and res.l10n_mx_edi_payment_method_id.id==check_payment_method:
                     rec_check_number = int(res.check_number)  
                                   
-                    check_id = self.env['check.log'].search([('folio','=',rec_check_number)],limit=1)
+                    check_id = self.env['check.log'].search([('bank_id.bank_id.l10n_mx_edi_code','=',res.bank_key),('folio','=',rec_check_number)],limit=1)
                     if check_id:
                         if not res.check_folio_id:
                             res.check_folio_id = check_id.id

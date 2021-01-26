@@ -125,8 +125,12 @@ class PaymentBatchSupplier(models.Model):
 
     def _get_check_data(self):
         for rec in self:
-            rec.amount_of_checkes = len(rec.payment_req_ids.filtered(lambda x: x.check_folio_id != False))
-            reqs = rec.payment_req_ids.filtered(lambda x: x.check_folio_id != False)
+            req_list = []
+            for req in rec.payment_req_ids:
+                if req.check_folio_id:
+                    req_list.append(req)
+            rec.amount_of_checkes = len(req_list)
+            reqs = sorted(req_list)
             if reqs:
                 rec.intial_check_folio = reqs[0].check_folio_id.id
                 rec.final_check_folio = reqs[-1].check_folio_id.id
@@ -143,7 +147,10 @@ class PaymentBatchSupplier(models.Model):
                 raise ValidationError(_("The bank's response file for changing status must be attached to the checks"))
             for line in rec.payment_req_ids.filtered(lambda x: x.selected == True):
                 if line.check_folio_id.status == 'Sent to protection':
-                    line.check_folio_id.status = 'Protected and in transit'
+                    if rec.type_of_batch in ('supplier', 'project'):
+                        line.check_folio_id.status = 'Protected and in transit'
+                    else:
+                        line.check_folio_id.status = 'Protected'
                     line.check_folio_id.date_protection = today
                     check_protection_term = 0
                     if line.payment_batch_id.payment_issuing_bank_id.bank_id:
@@ -154,16 +161,24 @@ class PaymentBatchSupplier(models.Model):
     def action_send_file_to_protection(self):
         for rec in self:
             for line in rec.payment_req_ids.filtered(lambda x: x.selected == True):
-                if line.check_folio_id.status == 'Delivered':
-                    line.check_folio_id.status = 'Sent to protection'
+                if rec.type_of_batch in ('supplier', 'project'):
+                    if line.check_folio_id.status == 'Delivered':
+                        line.check_folio_id.status = 'Sent to protection'
+                else:
+                    if line.check_folio_id.status == 'Printed':
+                        line.check_folio_id.status = 'Sent to protection'
                 line.selected = False
             rec.selected = False
 
     def action_deliver_checks(self):
         for rec in self:
             for line in rec.payment_req_ids.filtered(lambda x: x.selected == True):
-                if line.check_folio_id.status == 'Printed':
-                    line.check_folio_id.status = 'Delivered'
+                if rec.type_of_batch in ('supplier', 'project'):
+                    if line.check_folio_id.status == 'Printed':
+                        line.check_folio_id.status = 'Delivered'
+                else:
+                    if line.check_folio_id.status == 'Protected':
+                        line.check_folio_id.status = 'In transit'
                 line.selected = False
             rec.selected = False
 

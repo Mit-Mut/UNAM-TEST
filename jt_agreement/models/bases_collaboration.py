@@ -817,6 +817,8 @@ class ResPartnerBank(models.Model):
             res = super(ResPartnerBank, self).name_get()
         return res
 
+    for_agreements = fields.Boolean("Agreements",copy=False,default=False)
+    for_investments = fields.Boolean("Investments",copy=False,default=False)
 
 class ResPartner(models.Model):
 

@@ -54,3 +54,29 @@ class PaymentRequest(models.Model):
 
     def request(self):
         self.state = 'requested'
+        
+    @api.model
+    def create(self,vals):
+        res = super(PaymentRequest,self).create(vals)
+        if res.amount and res.date and res.payment_method_id and res.beneficiary_id:
+            folio_rec = ''
+            payment_ids = self.env['account.move'].search([('is_payment_request', '=', True),('partner_id','=',res.beneficiary_id.id),('l10n_mx_edi_payment_method_id','=',res.payment_method_id.id),('amount_total','=',res.amount)])
+            for payment in payment_ids:
+                if payment.date_receipt and payment.date_receipt.date()== res.date:
+                    folio_rec = payment.folio 
+            res.counter_receipt_sheet = folio_rec
+        return res
+    
+    def write(self,vals):
+        result = super(PaymentRequest,self).write(vals)
+        if 'counter_receipt_sheet' not in vals:
+            for res in self:
+                if res.amount and res.date and res.payment_method_id and res.beneficiary_id:
+                    folio_rec = ''
+                    payment_ids = self.env['account.move'].search([('is_payment_request', '=', True),('partner_id','=',res.beneficiary_id.id),('l10n_mx_edi_payment_method_id','=',res.payment_method_id.id),('amount_total','=',res.amount)])
+                    for payment in payment_ids:
+                        if payment.date_receipt and payment.date_receipt.date()== res.date:
+                            folio_rec = payment.folio 
+                    res.counter_receipt_sheet = folio_rec
+        return result
+    

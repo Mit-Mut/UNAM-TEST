@@ -17,29 +17,29 @@ class InvestmentPeriodRate(models.Model):
     product_type = fields.Selection([('TIIE','TIIE'),('CETES','CETES'),('UDIBONOS','UDIBONOS'),('BONUS','BONUS'),
                                      ('PAGARE','PAGARE')],string="Product Type")
     rate_daily = fields.Float(string="Daily Rate",digits=0)
-    rate_days_28 = fields.Float(string="28 Days",digits=0)
+    rate_days_28 = fields.Float(string="28 Days",digits='CETES')
     term_days_28 = fields.Integer(string="Term 28 Days")
-    rate_days_91 = fields.Float(string="91 Days",digits=0)
+    rate_days_91 = fields.Float(string="91 Days",digits='CETES')
     term_days_91 = fields.Integer(string="Term 91 Days")
-    rate_days_182 = fields.Float(string="182 Days",digits=0)
+    rate_days_182 = fields.Float(string="182 Days",digits='CETES')
     term_days_182 = fields.Integer(string="Term 182 Days")
-    rate_days_364 = fields.Float(string="364 Days",digits=0)
+    rate_days_364 = fields.Float(string="364 Days",digits='CETES')
     term_days_364 = fields.Integer(string="Term 364 Days")
 
     #=====UDIBONOS=====#    
-    rate_year_3 = fields.Float(string="3 Year Rate",digits=0)
+    rate_year_3 = fields.Float(string="3 Year Rate",digits='UDIBONOS')
     term_year_3 = fields.Integer(string="3 Year Term")
-    rate_year_5 = fields.Float(string="5 Year Rate",digits=0)
+    rate_year_5 = fields.Float(string="5 Year Rate",digits='UDIBONOS')
     term_year_5 = fields.Integer(string="5 Year Term")
-    rate_year_10 = fields.Float(string="10 Year Rate",digits=0)
+    rate_year_10 = fields.Float(string="10 Year Rate",digits='UDIBONOS')
     term_year_10 = fields.Integer(string="10 Year Term")
-    rate_year_20 = fields.Float(string="20 Year Rate",digits=0)
+    rate_year_20 = fields.Float(string="20 Year Rate",digits='UDIBONOS')
     term_year_20 = fields.Integer(string="20 Year Term")
-    rate_year_30 = fields.Float(string="30 Year Rate",digits=0)
+    rate_year_30 = fields.Float(string="30 Year Rate",digits='UDIBONOS')
     term_year_30 = fields.Integer(string="30 Year Term")
     
     #========BONUS=====#
-    rate_year_7 = fields.Float(string="7 Year Rate",digits=0)
+    rate_year_7 = fields.Float(string="7 Year Rate",digits='BONDS')
     term_year_7 = fields.Integer(string="7 Year Term")
     
     _sql_constraints = [('rate_date_product_type', 'unique(rate_date,product_type)',

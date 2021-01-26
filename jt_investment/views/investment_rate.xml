@@ -16,10 +16,10 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="rate_date"/>
-                    <field name="rate_daily" digits="[12,4]"/>
-                    <field name="rate_days_28" digits="[12,4]"/>
-                    <field name="rate_days_91" digits="[12,4]"/>
-                    <field name="rate_days_182" digits="[12,4]"/>
+                    <field name="rate_daily" />
+                    <field name="rate_days_28" />
+                    <field name="rate_days_91" />
+                    <field name="rate_days_182"/>
                     <field name="product_type" invisible="1"/>
                 </tree>
             </field>
@@ -41,10 +41,10 @@
                                 <field name="product_type" invisible="1"/>
                             </group>
                             <group>
-                                <field name="rate_daily" digits="[12,4]"/>
-			                    <field name="rate_days_28" digits="[12,4]"/>
-			                    <field name="rate_days_91" digits="[12,4]"/>
-			                    <field name="rate_days_182" digits="[12,4]"/>                            
+                                <field name="rate_daily" />
+			                    <field name="rate_days_28" />
+			                    <field name="rate_days_91" />
+			                    <field name="rate_days_182" />                            
                             </group>
                         </group>
                     </sheet>
@@ -96,13 +96,13 @@
                 <tree>
                     <field name="rate_date"/>
                     <field name="term_days_28"/>
-                    <field name="rate_days_28" digits="[12,4]"/>
+                    <field name="rate_days_28"/>
                     <field name="term_days_91"/>
-                    <field name="rate_days_91" digits="[12,4]"/>
+                    <field name="rate_days_91" />
                     <field name="term_days_182"/>
-                    <field name="rate_days_182" digits="[12,4]"/>
+                    <field name="rate_days_182" />
                     <field name="term_days_364"/>
-                    <field name="rate_days_364" digits="[12,4]"/>
+                    <field name="rate_days_364" />
                     <field name="product_type" invisible="1"/>
                 </tree>
             </field>
@@ -124,13 +124,13 @@
                             </group>
                             <group>
 			                    <field name="term_days_28"/>
-			                    <field name="rate_days_28" digits="[12,4]"/>
+			                    <field name="rate_days_28" />
 			                    <field name="term_days_91"/>
-			                    <field name="rate_days_91" digits="[12,4]"/>
+			                    <field name="rate_days_91" />
 			                    <field name="term_days_182"/>
-			                    <field name="rate_days_182" digits="[12,4]"/>
+			                    <field name="rate_days_182" />
 			                    <field name="term_days_364"/>
-			                    <field name="rate_days_364" digits="[12,4]"/>
+			                    <field name="rate_days_364" />
                             </group>
                         </group>
                     </sheet>
@@ -183,15 +183,15 @@
                 <tree>
                     <field name="rate_date"/>
                     <field name="term_year_3"/>
-                    <field name="rate_year_3" digits="[12,4]"/>
+                    <field name="rate_year_3" />
                     <field name="term_year_5"/>
-                    <field name="rate_year_5" digits="[12,4]"/>
+                    <field name="rate_year_5" />
                     <field name="term_year_10"/>
-                    <field name="rate_year_10" digits="[12,4]"/>
+                    <field name="rate_year_10" />
                     <field name="term_year_20"/>
-                    <field name="rate_year_20" digits="[12,4]"/>
+                    <field name="rate_year_20" />
                     <field name="term_year_30"/>
-                    <field name="rate_year_30" digits="[12,4]"/>
+                    <field name="rate_year_30" />
                     
                     <field name="product_type" invisible="1"/>
                 </tree>
@@ -215,15 +215,15 @@
                             </group>
                             <group>
 			                    <field name="term_year_3"/>
-			                    <field name="rate_year_3" digits="[12,4]"/>
+			                    <field name="rate_year_3" />
 			                    <field name="term_year_5"/>
-			                    <field name="rate_year_5" digits="[12,4]"/>
+			                    <field name="rate_year_5" />
 			                    <field name="term_year_10"/>
-			                    <field name="rate_year_10" digits="[12,4]"/>
+			                    <field name="rate_year_10" />
 			                    <field name="term_year_20"/>
-			                    <field name="rate_year_20" digits="[12,4]"/>
+			                    <field name="rate_year_20" />
 			                    <field name="term_year_30"/>
-			                    <field name="rate_year_30" digits="[12,4]"/>
+			                    <field name="rate_year_30" />
                             </group>
                         </group>
                     </sheet>
@@ -275,17 +275,17 @@
                 <tree>
                     <field name="rate_date"/>
                     <field name="term_year_3"/>
-                    <field name="rate_year_3" digits="[12,4]"/>
+                    <field name="rate_year_3" />
                     <field name="term_year_5"/>
-                    <field name="rate_year_5" digits="[12,4]"/>
+                    <field name="rate_year_5" />
                     <field name="term_year_7"/>
-                    <field name="rate_year_7" digits="[12,4]"/>                    
+                    <field name="rate_year_7" />                    
                     <field name="term_year_10"/>
-                    <field name="rate_year_10" digits="[12,4]"/>
+                    <field name="rate_year_10" />
                     <field name="term_year_20"/>
-                    <field name="rate_year_20" digits="[12,4]"/>
+                    <field name="rate_year_20" />
                     <field name="term_year_30"/>
-                    <field name="rate_year_30" digits="[12,4]"/>
+                    <field name="rate_year_30" />
                     
                     <field name="product_type" invisible="1"/>
                 </tree>
@@ -309,18 +309,18 @@
                             </group>
                             <group>
 			                    <field name="term_year_3"/>
-			                    <field name="rate_year_3" digits="[12,4]"/>
+			                    <field name="rate_year_3" />
 			                    <field name="term_year_5"/>
-			                    <field name="rate_year_5" digits="[12,4]"/>
+			                    <field name="rate_year_5" />
 			                    <field name="term_year_7"/>
-			                    <field name="rate_year_7" digits="[12,4]"/>
+			                    <field name="rate_year_7" />
 			                    
 			                    <field name="term_year_10"/>
-			                    <field name="rate_year_10" digits="[12,4]"/>
+			                    <field name="rate_year_10" />
 			                    <field name="term_year_20"/>
-			                    <field name="rate_year_20" digits="[12,4]"/>
+			                    <field name="rate_year_20" />
 			                    <field name="term_year_30"/>
-			                    <field name="rate_year_30" digits="[12,4]"/>
+			                    <field name="rate_year_30" />
                             </group>
                         </group>
                     </sheet>
@@ -370,10 +370,10 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="rate_date"/>
-                    <field name="rate_daily" digits="[12,4]"/>
-                    <field name="rate_days_28" digits="[12,4]"/>
-                    <field name="rate_days_91" digits="[12,4]"/>
-                    <field name="rate_days_182" digits="[12,4]"/>
+                    <field name="rate_daily" />
+                    <field name="rate_days_28" />
+                    <field name="rate_days_91" />
+                    <field name="rate_days_182" />
                     <field name="product_type" invisible="1"/>
                 </tree>
             </field>
@@ -395,10 +395,10 @@
                                 <field name="product_type" invisible="1"/>
                             </group>
                             <group>
-                            	<field name="rate_daily" digits="[12,4]"/>
-			                    <field name="rate_days_28" digits="[12,4]"/>
-			                    <field name="rate_days_91" digits="[12,4]"/>
-			                    <field name="rate_days_182" digits="[12,4]"/>                            
+                            	<field name="rate_daily" />
+			                    <field name="rate_days_28" />
+			                    <field name="rate_days_91" />
+			                    <field name="rate_days_182" />                            
                             </group>
                         </group>
                     </sheet>

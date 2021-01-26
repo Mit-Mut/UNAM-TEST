@@ -31,6 +31,7 @@
     'license': 'AGPL-3',
     'depends': ['jt_budget_mgmt','jt_projects'],
     'data': [
+        'security/security.xml',
         'views/minimum_checks.xml',
         'views/trades.xml',
         'views/check_authorized_by_dependency.xml',

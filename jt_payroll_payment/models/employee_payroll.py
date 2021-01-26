@@ -32,6 +32,7 @@ class Employee(models.Model):
     def action_create_portal_users(self):
         group_portal = self.env.ref('base.group_portal')
         company_id = self.env.company.id
+        user_obj = self.env['res.users']
         for emp in self.filtered(lambda x: not x.user_id):            
             vals = {'name' : emp.name,
                     'login' : emp.name,
@@ -40,7 +41,7 @@ class Employee(models.Model):
                     'company_id': company_id,
                     'company_ids': [(6, 0, [company_id])],
                     }
-            user_id = self.env['res.users'].with_context(no_reset_password=True)._create_user_from_template(vals)
+            user_id = user_obj.with_context(no_reset_password=True)._create_user_from_template(vals)
             emp.user_id = user_id.id
             emp.emp_partner_id = user_id.partner_id and user_id.partner_id.id or False
              

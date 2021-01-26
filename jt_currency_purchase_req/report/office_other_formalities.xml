@@ -129,7 +129,7 @@ TREASURY</p>
 
         <report
                 id="office_other_formalities_action"
-                model="finance.sender.recipient.trades"
+                model="other.procedure"
                 string="Office Other Formalities"
                 report_type="qweb-pdf"
                 name="jt_currency_purchase_req.office_formalities_template"

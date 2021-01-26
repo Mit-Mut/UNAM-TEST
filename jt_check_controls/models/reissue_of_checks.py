@@ -10,7 +10,11 @@ class ReissueOfChecks(models.Model):
     _rec_name = 'application_folio'
     
     application_folio = fields.Char('Application sheet')
-    type_of_request = fields.Selection([('check_reissue','Check Reissue'),('check_cancellation','Check Cancellation'),('check_adjustments','Check Adjustments')],string='Type of Request')
+    type_of_request = fields.Selection([('check_reissue','Check Reissue'),('check_cancellation','Check Cancellation')],
+                                       string='Type of Request')
+    type_of_request_payroll = fields.Selection(
+        [('check_reissue', 'Check Reissue'), ('check_cancellation', 'Check Cancellation'),
+         ('check_adjustments', 'Check Adjustments')], string='Type of Request')
     checkbook_req_id = fields.Many2one("checkbook.request", "Checkbook")
     check_log_id = fields.Many2one('check.log','Check Folio')
     check_log_ids = fields.Many2many('check.log','rel_reissue_check_log','log_id','reissue_id',compute="get_check_log_ids")
@@ -29,6 +33,7 @@ class ReissueOfChecks(models.Model):
     reason_reissue = fields.Text("Reason for Reissue")
     reason_cancellation = fields.Text("Reason for Cancellation")
     reason_rejection = fields.Text("Reason for rejection")
+    reason_adjustments = fields.Text("Reason for Adjustment")
     description_layout = fields.Text("Description for Layout")
     
     is_physical_check = fields.Boolean("Do you have the physical check?")
@@ -79,11 +84,11 @@ class ReissueOfChecks(models.Model):
                 self.folio_against_receipt = move_id.id
             self.checkbook_req_id = self.check_log_id.checklist_id and self.check_log_id.checklist_id.checkbook_req_id and self.check_log_id.checklist_id.checkbook_req_id.id or False 
                         
-    @api.depends('type_of_request','checkbook_req_id')
+    @api.depends('type_of_request','checkbook_req_id', 'type_of_request_payroll')
     def get_check_log_ids(self):
         for rec in self:
             log_list = []
-            if rec.type_of_request=='check_reissue':
+            if rec.type_of_request=='check_reissue' or rec.type_of_request_payroll == 'check_reissue':
                 check_ids = self.env['check.log'].search([('status','in',('Delivered','Protected and in transit',
                                                                           'Cancelled'))])
                 if rec.checkbook_req_id:
@@ -100,8 +105,9 @@ class ReissueOfChecks(models.Model):
                 check_ids = move_ids.mapped('check_folio_id')
                 log_list = check_ids.ids
                 
-            if rec.type_of_request=='check_cancellation':
-                check_ids = self.env['check.log'].search([('status','in',('Protected and in transit','Printed','Detained','Withdrawn from circulation'))])
+            elif rec.type_of_request=='check_cancellation' or rec.type_of_request_payroll == 'check_cancellation':
+                check_ids = self.env['check.log'].search([('status','in',('Protected and in transit','Printed',
+                                                                          'Detained','Withdrawn from circulation'))])
                 if rec.checkbook_req_id:
                     check_ids = check_ids.filtered(lambda x:x.checklist_id.checkbook_req_id.id==rec.checkbook_req_id.id)
                     move_ids = self.env['account.move'].search([('check_folio_id','in',check_ids.ids)])
@@ -113,7 +119,17 @@ class ReissueOfChecks(models.Model):
                         move_ids = move_ids.filtered(lambda x:x.is_payroll_payment_request or x.is_different_payroll_request)
                     check_ids = move_ids.mapped('check_folio_id')
                 log_list = check_ids.ids
-            
+
+            elif rec.type_of_request_payroll == 'check_adjustments':
+                if rec.checkbook_req_id:
+                    check_ids = self.env['check.log'].search([('status', '=', 'Printed')])
+                    check_ids = check_ids.filtered(
+                        lambda x: x.checklist_id.checkbook_req_id.id == rec.checkbook_req_id.id)
+                    move_ids = self.env['account.move'].search([('check_folio_id', 'in', check_ids.ids),
+                                                                '|', ('is_payroll_payment_request', '=', True),
+                                                                ('is_different_payroll_request', '=', True)])
+                    check_ids = move_ids.mapped('check_folio_id')
+                    log_list = check_ids.ids
             rec.check_log_ids= [(6, 0, log_list)]
                 
     @api.model
@@ -125,6 +141,14 @@ class ReissueOfChecks(models.Model):
     
     def action_request(self):
         self.state = 'request'
+        check_control_admin_group = self.env.ref('jt_check_controls.group_check_control_admin')
+        check_control_admin_users = check_control_admin_group.users
+        message = "Approve '" + self.application_folio + "' Request for changes to the check(Suppliers)"
+        for user in check_control_admin_users:
+            self.env['bus.bus'].sendone(
+                (self._cr.dbname, 'res.partner', user.partner_id.id),
+                {'type': 'simple_notification', 'title': _('Approve Request'), 'message': message, 'sticky': True,
+                 'info': True})
     
     def action_approve(self):
         self.state = 'approved'
@@ -137,9 +161,11 @@ class ReissueOfChecks(models.Model):
                 for payment in payment_ids:
                     payment.cancel()
                 move.payment_state = 'payment_method_cancelled'
-        if self.check_log_id and self.type_of_request=='check_cancellation':    
+        if self.check_log_id and (self.type_of_request=='check_cancellation' or
+                                  self.type_of_request_payroll=='check_cancellation'):
             self.check_log_id.status = 'Cancelled'
-            
+        if self.check_log_id and self.type_of_request_payroll=='check_adjustments':
+            self.check_log_id.status = 'Detained'
         if self.move_id:
             self.move_id.cancel_payment_method()
                 

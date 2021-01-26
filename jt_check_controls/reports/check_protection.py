@@ -224,7 +224,7 @@ class CheckProtection(models.AbstractModel):
             date_list =''
             date_list += str(start)
             date_list += '\t'
-            date_list += 'To'
+            date_list += 'al'
             date_list += '\t'
             date_list += str(end)
 #             data = []

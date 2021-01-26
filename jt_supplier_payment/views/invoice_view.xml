@@ -70,7 +70,7 @@
                         <field name="is_show_turn_type" invisible="1"/>                            	                        
                         <group>
                             <group>
-                                <field name="partner_id"  required="1" string="Beneficiary of the payment" attrs="{'readonly': [('payment_state', '!=', 'draft')]}" domain="[('beneficiary_type', 'in', ('national_provider','foreign_supplier'))]"/>
+                                <field name="partner_id"  required="1" string="Beneficiary of the payment" attrs="{'readonly': [('payment_state', '!=', 'draft')]}" domain="[('beneficiary_type', 'in', ('scholar','national_provider','foreign_supplier'))]"/>
                                 <field name="baneficiary_key" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 <field name="rfc" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 <field name="date_receipt" attrs="{'invisible':[('is_payment_request','=',False)],'readonly': [('payment_state', '!=', 'draft')]}"/>

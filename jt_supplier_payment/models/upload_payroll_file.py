@@ -73,7 +73,7 @@ class EmployeePayroll(models.Model):
             if line_vals:
                 invoice_line_vals.append((0,0,line_vals))
         is_payroll_payment_request = True
-        is_pension_payment_request = True
+        is_pension_payment_request = False
 #         if self.is_pension_payment_request:
 #             is_payroll_payment_request = False
 #             is_pension_payment_request = True
@@ -103,14 +103,22 @@ class EmployeePayroll(models.Model):
 
     def get_pension_payment_request_vals(self,line):
         journal = self.env.ref('jt_payroll_payment.payroll_payment_request_jour')
-        is_payroll_payment_request = True
+        is_payroll_payment_request = False
         is_pension_payment_request = True
         
         partner_id = line.partner_id.id
-        invoice_line_vals=[(0,0,{
+        account_id = self.env['account.account'].search([('code','=','220.008.001')],limit=1)
+        
+        
+        line_v = {
             'quantity' : 1,
             'price_unit' : line.total_pension,
-            })]
+            }
+        if account_id:
+            line_v.update({'account_id':account_id.id})
+        
+        invoice_line_vals=[(0,0,line_v)] 
+        
         vals = {'payment_bank_id':self.bank_receiving_payment_id and self.bank_receiving_payment_id.id or False,
                 'payment_bank_account_id': self.receiving_bank_acc_pay_id and self.receiving_bank_acc_pay_id.id or False,
                 'payment_issuing_bank_id': self.payment_issuing_bank_id and self.payment_issuing_bank_id.id or False,

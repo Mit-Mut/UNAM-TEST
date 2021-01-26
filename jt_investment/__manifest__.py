@@ -35,6 +35,7 @@
         'data/sequence.xml',
         'data/data.xml',
         'data/cron.xml',
+        'data/decimal_precision.xml',
         'security/ir.model.access.csv',
         'views/account_journal_view.xml',
         'views/investment_rate.xml',

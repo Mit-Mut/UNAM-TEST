@@ -79,10 +79,10 @@
         </record>
         
         <record id="jt_projects.open_request_accounts_action" model="ir.actions.act_window">
-        	<field name="context">{'from_account_design':True,'from_conacyt':1,'default_move_type' : 'account open'}</field>
+            <field name="context">{'from_account_design':True,'from_conacyt':1,'default_move_type' : 'account open'}</field>
         </record>
         <record id="jt_projects.cancellation_request_action" model="ir.actions.act_window">
-        	<field name="context">{'from_account_design':True,'from_conacyt':1,'default_move_type' : 'account cancel'}</field>
+            <field name="context">{'from_account_design':True,'from_conacyt':1,'default_move_type' : 'account cancel'}</field>
         </record>
         
         

@@ -132,7 +132,7 @@ TREASURY</p>
 
         <report
                 id="open_cancellation_checking_account_action"
-                model="finance.sender.recipient.trades"
+                model="account.cancellation"
                 string="Office Cancellation Checking Account"
                 report_type="qweb-pdf"
                 name="jt_currency_purchase_req.office_cancellation_template"

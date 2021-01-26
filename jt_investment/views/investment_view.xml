@@ -15,7 +15,7 @@
                		<field name="contract_id"/>
                		<field name="amount_to_invest"/>
                		<field name="actual_amount"/>
-               		<field name="interest_rate" digits="[12,6]"/>
+               		<field name="interest_rate"/>
                		<field name="term"/>
                		<field name="capitalizable"/>
                		<field name="currency_id"/>
@@ -70,8 +70,8 @@
                                     'tree_view_ref': 'jt_investment.investment_period_rate_tiie_tree',
                                     'form_view_ref': 'jt_investment.investment_period_rate_tiie_form'
                                     }"  attrs="{'readonly': [('state', '!=', 'draft')],'invisible':[('is_variable_rate','=',False)],'required':[('is_variable_rate','=',True)]}"/>
-			               		<field name="interest_rate" required="1" digits="[12,6]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-			               		<field name="extra_percentage" required="1" digits="[12,6]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			               		<field name="interest_rate" required="1"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			               		<field name="extra_percentage" required="1"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 
 			            		<field name="fund_id" invisible="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			            		<field name="fund_key" invisible="1" readonly="1"/>

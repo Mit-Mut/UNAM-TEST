@@ -307,10 +307,14 @@ class GenerateCancelCheckLayout(models.TransientModel):
                 raise ValidationError(_('Confirm that the status of all selected checks is "Approved", therefore no '
                                         'layout can be generated until the status is not Approved'))
 
-            if check.type_of_request != 'check_cancellation':
-                raise ValidationError(_('Confirm that the all selected checks Type of Request is "Check Cancellation", therefore no '
+            if check.type_of_batch in ('supplier', 'project'):
+                if check.type_of_request != 'check_cancellation':
+                    raise ValidationError(_('Confirm that the all selected checks Type of Request is "Check Cancellation", therefore no '
                                         'layout can be generated until the Type of Request is not Check Cancellation'))
-
+            else:
+                if check.type_of_request_payroll != 'check_cancellation':
+                    raise ValidationError(_('Confirm that the all selected checks Type of Request is "Check Cancellation", therefore no '
+                                        'layout can be generated until the Type of Request is not Check Cancellation'))
             if check.status != 'Cancelled':
                 raise ValidationError(_('Confirm that all selected checks Status is "Cancelled", therefore no '
                                         'layout can be generated until the Check Status is not Cancelled'))

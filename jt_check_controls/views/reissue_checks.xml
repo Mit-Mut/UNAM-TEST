@@ -49,16 +49,30 @@
                                 <field name="check_amount"/>
                                 <field name="status"/>
                                 <field name="general_status"/>
-                                <field name="is_physical_check" attrs="{'readonly':[('state','!=','draft')]}"/>
-                                <field name="reason_reissue"  attrs="{'readonly':[('state','!=','draft')],'invisible':[('type_of_request','!=','check_reissue')]}"/>
-                                <field name="reason_cancellation" attrs="{'readonly':[('state','!=','draft')],'invisible':[('type_of_request','!=','check_cancellation')]}"/>
-                                <field name="reason_rejection" attrs="{'invisible':[('state','!=','rejected')],'required':[('state','=','rejected')]}"/>
+                                <field name="is_physical_check" attrs="{'readonly':[('state','!=','draft')],
+                                       'invisible': [('type_of_request', '=', 'check_adjustments')]}"/>
+                                <field name="reason_reissue"  attrs="{'readonly':[('state','!=','draft')],
+                                'invisible':[('type_of_request','!=','check_reissue')]}"/>
+                                <field name="reason_cancellation" attrs="{'readonly':[('state','!=','draft')],
+                                'invisible':[('type_of_request','!=','check_cancellation')]}"/>
+                                <field name="reason_rejection" attrs="{'invisible':[('state','!=','rejected')],
+                                'required':[('state','=','rejected')]}"/>
+                                <field name="reason_adjustments" attrs="{'invisible':[('state','!=','rejected'),
+                                (('type_of_request','!=','check_adjustments'))],'required':[('state','=','rejected')]}"/>
                             </group>
                             <group>
                                 <field name="bank_id"/>
                                 <field name="bank_account_id"/>
-                                <field name="move_id" attrs="{'readonly':[('state','!=','draft')]}" domain="[('payment_state','in',('payment_method_cancelled','assigned_payment_method')),('is_payment_request', '=', True),('type', '=', 'in_invoice')]"/>
-                                <field name="folio_against_receipt"  context="{'show_folio_name':True}" attrs="{'readonly':[('state','!=','draft')]}" domain="[('payment_state','=',('payment_method_cancelled','assigned_payment_method')),('is_payment_request', '=', True),('type', '=', 'in_invoice')]"/>
+                                <field name="move_id" attrs="{'readonly':[('state','!=','draft')],
+                                    'invisible': [('type_of_request', '=', 'check_adjustments')]}"
+                                       domain="[('payment_state','in',('payment_method_cancelled',
+                                       'assigned_payment_method')),('is_payment_request', '=', True),
+                                       ('type', '=', 'in_invoice')]"/>
+                                <field name="folio_against_receipt"  context="{'show_folio_name':True}"
+                                       attrs="{'readonly':[('state','!=','draft')],
+                                       'invisible': [('type_of_request', '=', 'check_adjustments')]}"
+                                   domain="[('payment_state','=',('payment_method_cancelled','assigned_payment_method'))
+                                   ,('is_payment_request', '=', True),('type', '=', 'in_invoice')]"/>
                                 <field name="folio_against_receipt_name" invisible="1"/>
                                 <field name="partner_id"/>
                                 <field name="observations" attrs="{'readonly':[('state','!=','draft')]}"/>
@@ -125,7 +139,8 @@
             <field name="res_model">reissue.checks</field>
             <field name="view_mode">tree,form</field>
             <field name="context">{'show_name_and_folio_name':True,'default_type_of_batch':'supplier', 'from_approve_check':1}</field>
-            <field name="domain">[('type_of_batch','=','supplier'),('state','=','approved'),('type_of_request','=','check_cancellation')]</field>
+            <field name="domain">[('type_of_batch','=','supplier'),('state','=','approved'),'|',
+                ('type_of_request','=','check_cancellation'), ('type_of_request_payroll','=','check_cancellation')]</field>
         </record>
 
 		<record id="action_cancellation_of_checks_link_tree" model="ir.actions.act_window.view">
@@ -292,9 +307,9 @@
                         <group>
                             <group>
                             	<field name="type_of_batch" invisible="1"/>
-                                <field name="type_of_request" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="type_of_request_payroll" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="type_of_reissue_id" attrs="{'readonly':[('state','!=','draft')],
-                                    'invisible':[('type_of_request', '!=', 'check_reissue')]}"/>
+                                    'invisible':[('type_of_request_payroll', '!=', 'check_reissue')]}"/>
                                 <field name="check_log_ids" invisible="1"/>
                                 <field name="checkbook_req_id"  context="{'from_approve_check':1}"
                                        domain="[('state','!=','cancelled')]"
@@ -307,10 +322,10 @@
                                 <field name="is_physical_check" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="reason_reissue"
                                        attrs="{'readonly':[('state','!=','draft')],
-                                       'invisible':[('type_of_request','!=','check_reissue')]}"/>
+                                       'invisible':[('type_of_request_payroll','!=','check_reissue')]}"/>
                                 <field name="reason_cancellation"
                                        attrs="{'readonly':[('state','!=','draft')],
-                                       'invisible':[('type_of_request','!=','check_cancellation')]}"/>
+                                       'invisible':[('type_of_request_payroll','!=','check_cancellation')]}"/>
                                 <field name="reason_rejection"
                                        attrs="{'invisible':[('state','!=','rejected')],
                                        'required':[('state','=','rejected')]}"/>

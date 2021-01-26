@@ -186,19 +186,21 @@ class SummaryOfOperationMaturities(models.AbstractModel):
 #             ('company_id', 'in', self.env.user.company_ids.ids or [self.env.company.id])
 #         ], order="company_id, name")
 
-    def _format(self, value,figure_type):
+    def _format(self, value,figure_type,digit,is_currency):
         if self.env.context.get('no_format'):
             return value
         value['no_format_name'] = value['name']
-        
-        currency_id = self.env.company.currency_id
+        if is_currency:
+            currency_id = self.env.company.currency_id
+        else:
+            currency_id = False
         if figure_type == 'float':
             
-            if currency_id.is_zero(value['name']):
+            if currency_id and currency_id.is_zero(value['name']):
                 # don't print -0.0 in reports
                 value['name'] = abs(value['name'])
                 value['class'] = 'number text-muted'
-            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id)
+            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id,digits=digit)
             value['class'] = 'number'
             return value
         if figure_type == 'percents':
@@ -350,13 +352,13 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                             {'name': sale.invesment_date},
                             {'name': sale.expiry_date}, 
                             {'name': sale.journal_id and sale.journal_id.bank_account_id and sale.journal_id.bank_account_id.acc_number or ''},
-                            self._format({'name': sale.amount},figure_type='float'),
+                            self._format({'name': sale.amount},figure_type='float',digit=2,is_currency=True),
                             {'name':sale.currency_id and sale.currency_id.name or ''},
                             {'name': 'Títulos'},
                             {'name': term},
-                            self._format({'name': sale.price},figure_type='float'),
+                            self._format({'name': sale.price},figure_type='float',digit=2,is_currency=False),
                             {'name': ''},
-                            self._format({'name': interest},figure_type='float'),
+                            self._format({'name': interest},figure_type='float',digit=2,is_currency=True),
                             ],
                 'level': 3,
                 'unfoldable': False,
@@ -374,7 +376,8 @@ class SummaryOfOperationMaturities(models.AbstractModel):
             invesment_date = ''
             if cetes.date_time:
                 invesment_date = cetes.date_time.strftime('%Y-%m-%d') 
-                 
+            precision = self.env['decimal.precision'].precision_get('CETES')
+                
             interest = ((cetes.nominal_value*cetes.yield_rate/100)*term/360)
             lines.append({
                 'id': 'hierarchy_cetes' + str(cetes.id),
@@ -384,13 +387,13 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                             {'name': invesment_date},
                             {'name': cetes.expiry_date},  
                             {'name': cetes.journal_id and cetes.journal_id.bank_account_id and cetes.journal_id.bank_account_id.acc_number or ''},
-                            self._format({'name': cetes.nominal_value},figure_type='float'),
+                            self._format({'name': cetes.nominal_value},figure_type='float',digit=2,is_currency=True),
                             {'name':cetes.currency_id and cetes.currency_id.name or ''},
                             {'name': 'CETES'},
                             {'name': cetes.term},
-                            self._format({'name': cetes.yield_rate},figure_type='float'),
+                            self._format({'name': cetes.yield_rate},figure_type='float',digit=precision,is_currency=False),
                             {'name': ''},
-                            self._format({'name': interest},figure_type='float'),
+                            self._format({'name': interest},figure_type='float',digit=2,is_currency=True),
                             ],
                 'level': 3,
                 'unfoldable': False,
@@ -405,6 +408,8 @@ class SummaryOfOperationMaturities(models.AbstractModel):
             invesment_date = ''
             if udibonos.date_time:
                 invesment_date = udibonos.date_time.strftime('%Y-%m-%d') 
+
+            precision = self.env['decimal.precision'].precision_get('UDIBONOS')
             
             interest = ((udibonos.nominal_value*udibonos.interest_rate/100)*udibonos.time_for_each_cash_flow/360)
             lines.append({
@@ -415,19 +420,18 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                             {'name': invesment_date},
                             {'name': udibonos.expiry_date},                               
                             {'name': udibonos.journal_id and udibonos.journal_id.bank_account_id and udibonos.journal_id.bank_account_id.acc_number or ''},
-                            self._format({'name': udibonos.nominal_value},figure_type='float'),
+                            self._format({'name': udibonos.nominal_value},figure_type='float',digit=2,is_currency=True),
                             {'name':udibonos.currency_id and udibonos.currency_id.name or ''},
                             {'name': 'UDIBONOS'},
                             {'name': udibonos.time_for_each_cash_flow},
-                            self._format({'name': udibonos.interest_rate},figure_type='float'),
+                            self._format({'name': udibonos.interest_rate},figure_type='float',digit=precision,is_currency=False),
                             {'name': ''},
-                            self._format({'name': interest},figure_type='float'),
+                            self._format({'name': interest},figure_type='float',digit=2,is_currency=True),
                             ],
                 'level': 3,
                 'unfoldable': False,
                 'unfolded': True,
             })
-
         #==== bonds========#
         for bonds in bonds_records:
             total_investment += bonds.nominal_value
@@ -438,7 +442,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
             invesment_date = ''
             if bonds.date_time:
                 invesment_date = bonds.date_time.strftime('%Y-%m-%d') 
-            
+            precision = self.env['decimal.precision'].precision_get('BONDS')            
             lines.append({
                 'id': 'hierarchy_bonds' + str(bonds.id),
                 'name': resouce_name,
@@ -447,13 +451,13 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                             {'name': invesment_date},
                             {'name': bonds.expiry_date},                               
                             {'name': bonds.journal_id and bonds.journal_id.bank_account_id and bonds.journal_id.bank_account_id.acc_number or ''},
-                            self._format({'name': bonds.nominal_value},figure_type='float'),
+                            self._format({'name': bonds.nominal_value},figure_type='float',digit=2,is_currency=True),
                             {'name':bonds.currency_id and bonds.currency_id.name or ''},
                             {'name': 'BONOS'},
                             {'name': bonds.time_for_each_cash_flow},
-                            self._format({'name': bonds.interest_rate},figure_type='float'),
+                            self._format({'name': bonds.interest_rate},figure_type='float',digit=precision,is_currency=False),
                             {'name': ''},
-                            self._format({'name': interest},figure_type='float'),
+                            self._format({'name': interest},figure_type='float',digit=2,is_currency=True),
                             ],
                 'level': 3,
                 'unfoldable': False,
@@ -473,7 +477,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                 term = pay.annual_term * 360
                 
             interest = ((pay.amount*pay.interest_rate/100)*term/360)
-
+            precision = self.env['decimal.precision'].precision_get('REPAY')
             invesment_date = ''
             if pay.date_time:
                 invesment_date = pay.date_time.strftime('%Y-%m-%d') 
@@ -486,13 +490,13 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                             {'name': invesment_date},
                             {'name': pay.expiry_date},                               
                             {'name': pay.journal_id and pay.journal_id.bank_account_id and pay.journal_id.bank_account_id.acc_number or ''},
-                            self._format({'name': pay.amount},figure_type='float'),
+                            self._format({'name': pay.amount},figure_type='float',digit=2,is_currency=True),
                             {'name':pay.currency_id and pay.currency_id.name or ''},
                             {'name': 'Pagaré'},
                             {'name': term},
-                            self._format({'name': pay.interest_rate},figure_type='float'),
+                            self._format({'name': pay.interest_rate},figure_type='float',digit=precision,is_currency=False),
                             {'name': ''},
-                            self._format({'name': interest},figure_type='float'),
+                            self._format({'name': interest},figure_type='float',digit=2,is_currency=True),
                             ],
                 'level': 3,
                 'unfoldable': False,
@@ -510,7 +514,8 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                 term = pro.term_variable
             
             resouce_name = pro.fund_id and pro.fund_id.name or ''
-            
+            precision = self.env['decimal.precision'].precision_get('Productive Accounts')
+                        
             interest = ((pro.actual_amount * pro.interest_rate/100)*term/360)
             invesment_date = ''
             if pro.invesment_date:
@@ -523,13 +528,13 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                             {'name': invesment_date},
                             {'name': pro.expiry_date},                               
                             {'name': pro.journal_id and pro.journal_id.bank_account_id and pro.journal_id.bank_account_id.acc_number or ''},
-                            self._format({'name': pro.actual_amount},figure_type='float'),
+                            self._format({'name': pro.actual_amount},figure_type='float',digit=2,is_currency=True),
                             {'name':pro.currency_id and pro.currency_id.name or ''},
                             {'name': 'Cuentas Productivas'},
                             {'name': term},
-                            self._format({'name': pro.interest_rate},figure_type='float'),
-                            self._format({'name': pro.extra_percentage},figure_type='float'),
-                            self._format({'name': interest},figure_type='float'),
+                            self._format({'name': pro.interest_rate},figure_type='float',digit=precision,is_currency=False),
+                            self._format({'name': pro.extra_percentage},figure_type='float',digit=2,is_currency=True),
+                            self._format({'name': interest},figure_type='float',digit=2,is_currency=True),
                             ],
                 'level': 3,
                 'unfoldable': False,
@@ -544,7 +549,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                         {'name': ''},
                         {'name': ''},
                         {'name': ''},
-                        self._format({'name': total_investment},figure_type='float'),
+                        self._format({'name': total_investment},figure_type='float',digit=2,is_currency=True),
                         {'name': ''},
                         {'name': ''},
                         {'name': ''},
@@ -620,7 +625,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                 amount += sum(x.amount for x in will_pay_bank_records)
                 amount += sum(x.amount for x in sale_bank_records)
                 amount += sum(x.actual_amount for x in productive_bank_records)                        
-                columns.append(self._format({'name': amount},figure_type='float'))
+                columns.append(self._format({'name': amount},figure_type='float',digit=2,is_currency=True))
                 
                 if total_dict.get(period.get('string')):
                     old_amount = total_dict.get(period.get('string',0)) + amount
@@ -628,7 +633,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                 else:
                     total_dict.update({period.get('string'):amount})
                 total_ins += amount
-            amount_total.append(self._format({'name': total_ins},figure_type='float'))
+            amount_total.append(self._format({'name': total_ins},figure_type='float',digit=2,is_currency=True))
             
             lines.append({
                 'id': 'hierarchy_jr' + str(journal.id),
@@ -641,7 +646,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
 
         total_name = [{'name': 'Total'}]
         for per in total_dict:
-            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float'))
+            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2,is_currency=True))
             
         r_column = 12 - len(total_name)
         if r_column > 0:
@@ -726,7 +731,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                 amount += sum(x.amount for x in will_pay_fund_records)
                 amount += sum(x.amount for x in sale_fund_records)
                 amount += sum(x.actual_amount for x in productive_fund_records)                                      
-                columns.append(self._format({'name': amount},figure_type='float'))
+                columns.append(self._format({'name': amount},figure_type='float',digit=2,is_currency=True))
 
                 if total_dict.get(period.get('string')):
                     old_amount = total_dict.get(period.get('string',0)) + amount
@@ -734,7 +739,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                 else:
                     total_dict.update({period.get('string'):amount})
                 total_ins += amount
-            amount_total.append(self._format({'name': total_ins},figure_type='float'))
+            amount_total.append(self._format({'name': total_ins},figure_type='float',digit=2,is_currency=True))
 
             
             lines.append({
@@ -748,7 +753,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
 
         total_name = [{'name': 'Total'}]
         for per in total_dict:
-            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float'))
+            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2,is_currency=True))
             
         r_column = 12 - len(total_name)
         if r_column > 0:
@@ -827,7 +832,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                 amount += sum(x.amount for x in will_pay_bank_records)
                 amount += sum(x.amount for x in sale_bank_records)
                 amount += sum(x.actual_amount for x in productive_bank_records)                        
-                columns.append(self._format({'name': amount},figure_type='float'))
+                columns.append(self._format({'name': amount},figure_type='float',digit=2,is_currency=True))
                 
                 if total_dict.get(period.get('string')):
                     old_amount = total_dict.get(period.get('string',0)) + amount
@@ -835,7 +840,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                 else:
                     total_dict.update({period.get('string'):amount})
                 total_ins += amount
-            amount_total.append(self._format({'name': total_ins},figure_type='float'))
+            amount_total.append(self._format({'name': total_ins},figure_type='float',digit=2,is_currency=True))
             
             lines.append({
                 'id': 'hierarchy_jr' + str(currency.id),
@@ -848,7 +853,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
 
         total_name = [{'name': 'Total'}]
         for per in total_dict:
-            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float'))
+            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2,is_currency=True))
             
         r_column = 12 - len(total_name)
         if r_column > 0:

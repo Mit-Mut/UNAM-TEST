@@ -87,8 +87,16 @@ class AdjustedPayrollWizard(models.TransientModel):
                                 if  type(check_no) is int or type(check_no) is float:
                                     check_no = int(check_no)
                                 rec.check_number = check_no
-                                
-                            if deposite_no:
+
+                            check_payment_method = self.env.ref('l10n_mx_edi.payment_method_cheque').id
+                            if deposite_no and rec.l10n_mx_edi_payment_method_id and \
+                                rec.l10n_mx_edi_payment_method_id.id == check_payment_method and case == 'A':
+                                if deposite_no and new_bank_no:
+                                    log = self.env['check.log'].search([('folio', '=', deposite_no),
+                                                    ('bank_id.bank_id.l10n_mx_edi_code', '=', new_bank_no)], limit=1)
+                                    if log:
+                                        rec.check_final_folio_id = log.id
+                            elif deposite_no:
                                 if  type(deposite_no) is int or type(deposite_no) is float:
                                     deposite_no = int(deposite_no)
                                 

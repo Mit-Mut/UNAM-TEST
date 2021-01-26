@@ -45,9 +45,9 @@
                   action="account_modification_action"
                   />
 
-                      <!-- Trades  menu-->
+          <!-- Offices  menu-->
         <menuitem id="menu_trade" 
-                  name="Trade"
+                  name="Offices"
                   sequence="104" 
                   parent="jt_payroll_payment.menu_payment_finance"
                   
@@ -55,35 +55,37 @@
 
          <!-- signuature  menu-->
         <menuitem id="menu_signautre_update" 
-                  name="Signature Update"
+                  name="Office of updating signatures"
                   sequence="0" 
+                  action="action_update_signature"
                   parent="menu_trade"
                   
                   />
 
-          <!-- note opening  menu-->
-        <menuitem id="menu_signautre_update" 
-                  name="note Opening of checking"
+          <!-- opening checking account menu-->
+        <menuitem id="menu_checking_account" 
+                  name="Opening a checking account"
                   sequence="1" 
+                  action="action_open_account_checking"
                   parent="menu_trade"
                   
                   />
 
-                  />
+                
             <!-- cancellation  menu-->
         <menuitem id="menu_cancellation_account" 
-                  name="account Cancellation of checking account"
+                  name="Cancellation of checking account"
                   sequence="2" 
                   parent="menu_trade"
-                  
+                  action="action_account_cancellation"
                   />
 
-                    <!-- cancellation  menu-->
+                    <!-- Procedure menu-->
         <menuitem id="menu_other_procedure" 
                   name="Other procedures"
                   sequence="3" 
                   parent="menu_trade"
-                  
+                  action="action_other_procedures"  
                   />
 
  

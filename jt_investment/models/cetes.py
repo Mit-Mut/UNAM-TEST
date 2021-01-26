@@ -45,7 +45,7 @@ class CETES(models.Model):
     start_date = fields.Date('Start Date')
     due_date = fields.Date('Due Date')
     nominal_value = fields.Float(related='amount_invest',string="Nominal Value")
-    yield_rate = fields.Float("Yield Rate")
+    yield_rate = fields.Float("Yield Rate",digits='CETES')
     term = fields.Selection([('28', '28 Days'),
                              ('91', '91 Days'),
                              ('182', '182 Days'),

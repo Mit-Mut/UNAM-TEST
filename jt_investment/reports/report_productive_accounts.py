@@ -183,14 +183,19 @@ class ReportProductiveAccounts(models.AbstractModel):
             
         return month_name.upper()
 
-    def _format(self, value,figure_type,digit):
+    def _format(self, value,figure_type,digit,is_currency):
         if self.env.context.get('no_format'):
             return value
         value['no_format_name'] = value['name']
         
         if figure_type == 'float':
-            currency_id = self.env.company.currency_id
-            if currency_id.is_zero(value['name']):
+
+            if is_currency:
+                currency_id = self.env.company.currency_id
+            else:
+                currency_id = False
+            
+            if currency_id and currency_id.is_zero(value['name']):
                 # don't print -0.0 in reports
                 value['name'] = abs(value['name'])
                 value['class'] = 'number text-muted'
@@ -281,6 +286,7 @@ class ReportProductiveAccounts(models.AbstractModel):
         total_p_amount = 0
         total_extra_amount = 0
         total_diff_amount = 0
+        precision = self.env['decimal.precision'].precision_get('Productive Accounts')
         for rec in records:
             term = 0
             if rec.is_fixed_rate:
@@ -293,7 +299,7 @@ class ReportProductiveAccounts(models.AbstractModel):
             total_days += days
             extra_percentage_value =  ((rec.actual_amount * rec.extra_percentage)/100)/360*term
             diffrence = days - extra_percentage_value
-            capital =  self._format({'name': rec.actual_amount},figure_type='float',digit=2)
+            capital =  self._format({'name': rec.actual_amount},figure_type='float',digit=2,is_currency=True)
             capital = capital.get('name')
             
             total_p_amount += days
@@ -308,13 +314,13 @@ class ReportProductiveAccounts(models.AbstractModel):
                 'columns': [
                             {'name': rec.contract_id and rec.contract_id.name or ''},
                             {'name':rec.currency_id.name},
-                            self._format({'name': rec.actual_amount},figure_type='float',digit=2),
-                            self._format({'name': total_rate},figure_type='float',digit=6),
+                            self._format({'name': rec.actual_amount},figure_type='float',digit=2,is_currency=True),
+                            self._format({'name': total_rate},figure_type='float',digit=precision,is_currency=False),
                             {'name': term},
-                            self._format({'name': days},figure_type='float',digit=2),
-                            self._format({'name': rec.extra_percentage},figure_type='float',digit=6),
-                            self._format({'name': extra_percentage_value},figure_type='float',digit=2),
-                            self._format({'name': diffrence},figure_type='float',digit=2),
+                            self._format({'name': days},figure_type='float',digit=2,is_currency=True),
+                            self._format({'name': rec.extra_percentage},figure_type='float',digit=precision,is_currency=False),
+                            self._format({'name': extra_percentage_value},figure_type='float',digit=2,is_currency=True),
+                            self._format({'name': diffrence},figure_type='float',digit=2,is_currency=True),
                             ],
                 'level': 3,
                 'unfoldable': False,
@@ -352,13 +358,13 @@ class ReportProductiveAccounts(models.AbstractModel):
                 'columns': [
                             {'name': rec.contract_id and rec.contract_id.name or ''},
                             {'name':rec.currency_id.name},
-                            self._format({'name': rec.actual_amount},figure_type='float',digit=2),
-                            self._format({'name': total_rate},figure_type='float',digit=6),
+                            self._format({'name': rec.actual_amount},figure_type='float',digit=2,is_currency=True),
+                            self._format({'name': total_rate},figure_type='float',digit=precision,is_currency=False),
                             {'name': day_diff},
-                            self._format({'name': days},figure_type='float',digit=2),
-                            self._format({'name': rec.extra_percentage},figure_type='float',digit=6),
-                            self._format({'name': extra_percentage_value},figure_type='float',digit=2),
-                            self._format({'name': diffrence},figure_type='float',digit=2),
+                            self._format({'name': days},figure_type='float',digit=2,is_currency=True),
+                            self._format({'name': rec.extra_percentage},figure_type='float',digit=precision,is_currency=False),
+                            self._format({'name': extra_percentage_value},figure_type='float',digit=2,is_currency=True),
+                            self._format({'name': diffrence},figure_type='float',digit=2,is_currency=True),
                             ],
                 'level': 3,
                 'unfoldable': False,
@@ -378,10 +384,10 @@ class ReportProductiveAccounts(models.AbstractModel):
                         {'name': ''},
                         {'name': ''},
                         {'name': ''},
-                        self._format({'name': total_p_amount},figure_type='float',digit=2),
+                        self._format({'name': total_p_amount},figure_type='float',digit=2,is_currency=True),
                         {'name':''},
-                        self._format({'name': total_extra_amount},figure_type='float',digit=2),
-                        self._format({'name': total_diff_amount},figure_type='float',digit=2),
+                        self._format({'name': total_extra_amount},figure_type='float',digit=2,is_currency=True),
+                        self._format({'name': total_diff_amount},figure_type='float',digit=2,is_currency=True),
                         ],
             'level': 1,
             'unfoldable': False,
@@ -471,10 +477,10 @@ class ReportProductiveAccounts(models.AbstractModel):
                                     {'name': ''},
                                     {'name': ''},
                                     {'name': ''},
-                                    self._format({'name': total_month_amount},figure_type='float',digit=2),
+                                    self._format({'name': total_month_amount},figure_type='float',digit=2,is_currency=True),
                                     {'name': ''},
-                                    self._format({'name': total_month_extra},figure_type='float',digit=2),
-                                    self._format({'name': total_month_diff},figure_type='float',digit=2),
+                                    self._format({'name': total_month_extra},figure_type='float',digit=2,is_currency=True),
+                                    self._format({'name': total_month_diff},figure_type='float',digit=2,is_currency=True),
                                     
                                     ],
                         'level': 1,
@@ -527,7 +533,7 @@ class ReportProductiveAccounts(models.AbstractModel):
                 #amount -= sum(x.amount for x in productive_currency_records.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure')))                
                 amount += sum(x.actual_amount for x in productive_currency_records)
          
-                columns.append(self._format({'name': amount},figure_type='float',digit=2))
+                columns.append(self._format({'name': amount},figure_type='float',digit=2,is_currency=True))
                  
                 if total_dict.get(period.get('string')):
                     old_amount = total_dict.get(period.get('string',0)) + amount
@@ -535,7 +541,7 @@ class ReportProductiveAccounts(models.AbstractModel):
                 else:
                     total_dict.update({period.get('string'):amount})
                 total_ins += amount
-            amount_total.append(self._format({'name': total_ins},figure_type='float',digit=2))
+            amount_total.append(self._format({'name': total_ins},figure_type='float',digit=2,is_currency=True))
              
             lines.append({
                 'id': 'hierarchy_jr' + str(currency.id),
@@ -548,7 +554,7 @@ class ReportProductiveAccounts(models.AbstractModel):
  
         total_name = [{'name': 'Total'}]
         for per in total_dict:
-            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2))
+            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2,is_currency=True))
              
         r_column = 9 - len(total_name)
         if r_column > 0:

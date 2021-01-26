@@ -146,14 +146,19 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
             
         return month_name.upper()
 
-    def _format(self, value,figure_type,digit):
+    def _format(self, value,figure_type,digit,is_currency):
         if self.env.context.get('no_format'):
             return value
         value['no_format_name'] = value['name']
         
         if figure_type == 'float':
-            currency_id = self.env.company.currency_id
-            if currency_id.is_zero(value['name']):
+
+            if is_currency:
+                currency_id = self.env.company.currency_id
+            else:
+                currency_id = False
+            
+            if currency_id and currency_id.is_zero(value['name']):
                 # don't print -0.0 in reports
                 value['name'] = abs(value['name'])
                 value['class'] = 'number text-muted'
@@ -290,7 +295,7 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                         period_rate_id = self.env['investment.period.rate'].search([('rate_date','<',rec.date_required),('product_type','=','TIIE')],limit=1,order='rate_date desc')
                         p_rate = period_rate_id.rate_days_28
                 total_avg_final += final_amount
-                
+                precision = self.env['decimal.precision'].precision_get('Productive Accounts')
                 lines.append({
                     'id': 'hierarchy' + str(rec.id),
                     'name': rec.date_required.day,
@@ -301,12 +306,12 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                                 {'name': rec.fund_type and rec.fund_type.name or ''},
                                 {'name': rec.agreement_type_id and rec.agreement_type_id.name or ''},
                                 {'name': rec.base_collabaration_id and rec.base_collabaration_id.name or ''},
-                                self._format({'name': p_rate},figure_type='float',digit=4),
-                                self._format({'name': capital},figure_type='float',digit=2),
-                                self._format({'name': entradas},figure_type='float',digit=2),
-                                self._format({'name': salidas},figure_type='float',digit=2),
-                                self._format({'name': final_amount},figure_type='float',digit=2),
-                                self._format({'name': total_avg_final/rec.date_required.day},figure_type='float',digit=2),
+                                self._format({'name': p_rate},figure_type='float',digit=precision,is_currency=False),
+                                self._format({'name': capital},figure_type='float',digit=2,is_currency=True),
+                                self._format({'name': entradas},figure_type='float',digit=2,is_currency=True),
+                                self._format({'name': salidas},figure_type='float',digit=2,is_currency=True),
+                                self._format({'name': final_amount},figure_type='float',digit=2,is_currency=True),
+                                self._format({'name': total_avg_final/rec.date_required.day},figure_type='float',digit=2,is_currency=True),
                                 ],
                     'level': 3,
                     'unfoldable': False,
@@ -324,10 +329,10 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                             {'name': ''},
                             {'name': ''},
                             {'name': ''},
-                            self._format({'name': total_capital},figure_type='float',digit=2),
-                            self._format({'name': total_entradas},figure_type='float',digit=2),
-                            self._format({'name': total_salidas},figure_type='float',digit=2),
-                            self._format({'name': final_amount},figure_type='float',digit=2),
+                            self._format({'name': total_capital},figure_type='float',digit=2,is_currency=True),
+                            self._format({'name': total_entradas},figure_type='float',digit=2,is_currency=True),
+                            self._format({'name': total_salidas},figure_type='float',digit=2,is_currency=True),
+                            self._format({'name': final_amount},figure_type='float',digit=2,is_currency=True),
                             {'name': ''},
                             ],
                 'level': 1,
@@ -385,7 +390,7 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                 
                 amount += sum(x.amount for x in records_bank_periods.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal')))
                 amount -= sum(x.amount for x in records_bank_periods.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure')))
-                columns.append(self._format({'name': amount},figure_type='float',digit=2))
+                columns.append(self._format({'name': amount},figure_type='float',digit=2,is_currency=True))
                 
                 if total_dict.get(period.get('string')):
                     old_amount = total_dict.get(period.get('string',0)) + amount
@@ -393,7 +398,7 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                 else:
                     total_dict.update({period.get('string'):amount})
                 total_ins += amount
-            amount_total.append(self._format({'name': total_ins},figure_type='float',digit=2))
+            amount_total.append(self._format({'name': total_ins},figure_type='float',digit=2,is_currency=True))
             
             lines.append({
                 'id': 'hierarchy_jr' + str(journal.id),
@@ -406,7 +411,7 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
 
         total_name = [{'name': 'Total'}]
         for per in total_dict:
-            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2))
+            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2,is_currency=True))
             
         r_column = 13 - len(total_name)
         if r_column > 0:
@@ -471,7 +476,7 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                 
                 amount += sum(x.amount for x in records_fund.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal') and x.investment_fund_id.fund_id.id==origin.id))
                 amount -= sum(x.amount for x in records_fund.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure') and x.investment_fund_id.fund_id.id==origin.id))
-                columns.append(self._format({'name': amount},figure_type='float',digit=2))
+                columns.append(self._format({'name': amount},figure_type='float',digit=2,is_currency=True))
 
                 if total_dict.get(period.get('string')):
                     old_amount = total_dict.get(period.get('string',0)) + amount
@@ -479,7 +484,7 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                 else:
                     total_dict.update({period.get('string'):amount})
                 total_ins += amount
-            amount_total.append(self._format({'name': total_ins},figure_type='float',digit=2))
+            amount_total.append(self._format({'name': total_ins},figure_type='float',digit=2,is_currency=True))
 
             
             lines.append({
@@ -493,7 +498,7 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
 
         total_name = [{'name': 'Total'}]
         for per in total_dict:
-            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2))
+            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2,is_currency=True))
             
         r_column = 12 - len(total_name)
         if r_column > 0:
@@ -560,7 +565,7 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                 
                 amount += sum(x.amount for x in records_periods.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal')))
                 amount -= sum(x.amount for x in records_periods.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure')))
-                columns.append(self._format({'name': amount},figure_type='float',digit=2))
+                columns.append(self._format({'name': amount},figure_type='float',digit=2,is_currency=True))
                 
                 if total_dict.get(period.get('string')):
                     old_amount = total_dict.get(period.get('string',0)) + amount
@@ -568,7 +573,7 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                 else:
                     total_dict.update({period.get('string'):amount})
                 total_ins += amount
-            amount_total.append(self._format({'name': total_ins},figure_type='float',digit=2))
+            amount_total.append(self._format({'name': total_ins},figure_type='float',digit=2,is_currency=True))
             
             lines.append({
                 'id': 'hierarchy_jr' + str(currency.id),
@@ -581,7 +586,7 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
 
         total_name = [{'name': 'Total'}]
         for per in total_dict:
-            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2))
+            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2,is_currency=True))
             
         r_column = 13 - len(total_name)
         if r_column > 0:

@@ -42,7 +42,7 @@
           <t t-raw="0"/>
         </div>
 
-	<!-- 
+    <!-- 
         <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
             <div class="row">
                 <div class="col-6">
@@ -229,7 +229,7 @@
                         <span style="font-size:12px;">PATRONATO UNIVERSITARIO</span><br/>
                         <span style="font-size:12px;">Tesorería</span><br/>
                         <span style="font-size:12px;">REPORTE DE LOS INFORMES DE LOS CHEQUES DE NOMINA DE SUELDO Y PENSIÓN ALIMENTICIA</span><br/>
-                        <span>QNA</span>
+                        <span t-esc="q_year_data"/>
                     </div>
 
                 </div>
@@ -241,7 +241,7 @@
             <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
               <t t-raw="0"/>
             </div>
-            <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
+            <!-- <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
                 <div class="row">
                     <div class="col-6" style="font-size:10px;">
                         <span style="display: inline;">SOLICITADO POR:<hr style="width:50%;background-color:black;" /></span><br/>
@@ -254,7 +254,7 @@
                         <span style="margin-left:20px;">PARA LA COORDINACIÓN DE OPERACIÓN POR BANCA ELECTRÓNICA</span>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </template>
 
 

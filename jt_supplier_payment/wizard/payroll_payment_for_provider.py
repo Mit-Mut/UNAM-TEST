@@ -42,8 +42,10 @@ class PayrollPaymentProviderwizard(models.TransientModel):
             payment_bank_id = False 
         invoice_line_list = []
         for record in self.emp_payroll_ids:
-            line_vals = record.get_invoice_line_vals()
-            invoice_line_list.append((0,0,line_vals))
+            for line in record.preception_line_ids:
+                line_vals = record.get_invoice_line_vals(line)
+                if line_vals:
+                    invoice_line_list.append((0,0,line_vals))
         
         cash_rec_ids = self.emp_payroll_ids.filtered(lambda x:x.l10n_mx_edi_payment_method_id.name in ('Cash','Efectivo'))
         payment_method_id = False

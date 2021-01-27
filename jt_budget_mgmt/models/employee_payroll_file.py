@@ -23,6 +23,12 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
+
+class PreceptionLine(models.Model):
+    _inherit = 'preception.line'
+
+    program_code_id = fields.Many2one("program.code", string="Program Code")
+
 class EmployeePayroll(models.Model):
 
     _inherit = 'employee.payroll.file'
@@ -30,6 +36,12 @@ class EmployeePayroll(models.Model):
     dependancy_id = fields.Many2one(related="employee_id.dependancy_id", string='Dependency')
     sub_dependancy_id = fields.Many2one(related="employee_id.sub_dependancy_id", string='Sub Dependency')
     program_code_id = fields.Many2one("program.code", string="Program Code")
+    total_preception = fields.Float("Total Preception", compute="_compute_preception", store=True)
+
+    @api.depends('preception_line_ids')
+    def _compute_preception(self):
+        for file in self:
+            file.total_preception = sum(line.amount if line.program_code_id else 0 for line in file.preception_line_ids)
 
     def get_invoice_line_vals(self,line):
         invoice_line_vals = super(EmployeePayroll,self).get_invoice_line_vals(line)
@@ -38,10 +50,10 @@ class EmployeePayroll(models.Model):
             invoice_line_vals.update({'program_code_id':line.program_code_id and line.program_code_id.id or False})
             if account_id:
                 invoice_line_vals.update({'account_id':account_id})
-            else:
-                invoice_line_vals = {}
-        else:
-            invoice_line_vals = {}
+#             else:
+#                 invoice_line_vals = {}
+#         else:
+#             invoice_line_vals = {}
             
         return invoice_line_vals
     
@@ -64,12 +76,6 @@ class PaymentRequest(models.Model):
     sub_dependancy_id = fields.Many2one('sub.dependency', 'Sub Dependency')
     program_code_id = fields.Many2one("program.code", string="Program Code")
 
-class PreceptionLine(models.Model):
-    
-    _inherit = 'preception.line'
- 
-    program_code_id = fields.Many2one("program.code", string="Program Code")
-    
 class AdditionalPaymentsLine(models.Model):
     
     _inherit = 'additional.payments.line'

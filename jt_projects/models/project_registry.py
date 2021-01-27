@@ -80,20 +80,28 @@ class ProjectRegistry(models.Model):
 
     base_id = fields.Many2one('bases.collaboration','TOA')
 
-    @api.constrains('number')
-    def _project_number_unique(self):
-        for record in self:
-            project_id = self.env['project.project'].search([('id', '!=', record.id),('number','=',record.number)],limit=1)
-            if project_id:
-                raise ValidationError(_('The Project Number Value Must Be Unique'))
+#     @api.constrains('number')
+#     def _project_number_unique(self):
+#         for record in self:
+#             project_id = self.env['project.project'].search([('id', '!=', record.id),('number','=',record.number)],limit=1)
+#             if project_id:
+#                 raise ValidationError(_('The Project Number Value Must Be Unique'))
 
-    @api.constrains('number_agreement','agreement_type')
-    def _project_number_agreement_type_unique(self):
+#     @api.constrains('number_agreement','agreement_type')
+#     def _project_number_agreement_type_unique(self):
+#         for record in self:
+#             if record.number_agreement and record.agreement_type:
+#                 project_id = self.env['project.project'].search([('id', '!=', record.id),('agreement_type','=',record.agreement_type),('number_agreement','=',record.number_agreement)],limit=1)
+#                 if project_id:
+#                     raise ValidationError(_('The combination of the Agreement Type and Agreement Number fields must be unique'))
+
+    @api.constrains('number','custom_project_type_id')
+    def _project_number_project_type_unique(self):
         for record in self:
-            if record.number_agreement and record.agreement_type:
-                project_id = self.env['project.project'].search([('id', '!=', record.id),('agreement_type','=',record.agreement_type),('number_agreement','=',record.number_agreement)],limit=1)
+            if record.custom_project_type_id and record.number:
+                project_id = self.env['project.project'].search([('id', '!=', record.id),('custom_project_type_id','=',record.custom_project_type_id.id),('number','=',record.number)],limit=1)
                 if project_id:
-                    raise ValidationError(_('The combination of the Agreement Type and Agreement Number fields must be unique'))
+                    raise ValidationError(_('The combination of the Project Type Identifier and Project Number fields must be unique'))
 
     @api.model
     def create(self, vals):

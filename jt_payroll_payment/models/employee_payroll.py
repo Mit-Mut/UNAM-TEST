@@ -32,6 +32,7 @@ class Employee(models.Model):
     def action_create_portal_users(self):
         group_portal = self.env.ref('base.group_portal')
         company_id = self.env.company.id
+        user_obj = self.env['res.users']
         for emp in self.filtered(lambda x: not x.user_id):            
             vals = {'name' : emp.name,
                     'login' : emp.name,
@@ -39,9 +40,8 @@ class Employee(models.Model):
                     'groups_id': [(4, group_portal.id)],
                     'company_id': company_id,
                     'company_ids': [(6, 0, [company_id])],
-                    
                     }
-            user_id = self.env['res.users'].with_context(no_reset_password=True)._create_user_from_template(vals)
+            user_id = user_obj.with_context(no_reset_password=True)._create_user_from_template(vals)
             emp.user_id = user_id.id
             emp.emp_partner_id = user_id.partner_id and user_id.partner_id.id or False
              
@@ -139,6 +139,7 @@ class EmployeePayroll(models.Model):
     check_number = fields.Char("Check number")
     bank_key = fields.Char("Bank Key")
     adjustment_case_id = fields.Many2one('adjustment.cases','Adjustment Cases')
+    adjustment_case_description = fields.Text(related="adjustment_case_id.description",string="Case Description")
     net_salary = fields.Float("Net Salary")
     casualties_and_cancellations = fields.Selection([('B','B'),('BD','BD'),('BDEF','BDEF')],string='Casualties And Cancellations',tracking=True)
     
@@ -148,7 +149,8 @@ class EmployeePayroll(models.Model):
         help='Indicates the way the payment was/will be received, where the '
         'options could be: Cash, Nominal Check, Credit Card, etc.')
 
-        
+    is_pension_payment_request = fields.Boolean("Pension Payment",default=False,copy=False)
+            
     @api.onchange('employee_id') 
     def onchange_partner_bak_account(self):
         if self.employee_id and self.employee_id.bank_ids:
@@ -234,9 +236,18 @@ class AdditionalPaymentsLine(models.Model):
     payroll_id = fields.Many2one('employee.payroll.file','Payroll')
     
     job_id = fields.Many2one('hr.job','Category Key')
-    description = fields.Text(related='job_id.description',string='Description')
+    job_description = fields.Text(related='job_id.description',string='Job Description')
     details = fields.Selection([('N','N'),('U','U')],string='Detail')
+    description = fields.Char("Description", compute='_compute_description', store=True)
     amount = fields.Float('Matter')
+
+    @api.depends('details')
+    def _compute_description(self):
+        for line in self:
+            if line.details == 'N':
+                line.description = 'Normal'
+            else:
+                line.description = 'Unique'
 
 class AdditionalPensionPaymentsLine(models.Model):
     

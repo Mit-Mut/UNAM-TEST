@@ -30,6 +30,7 @@ class AccountMove(models.Model):
 
     is_payroll_payment_request = fields.Boolean("Payroll",default=False,copy=False)
     is_different_payroll_request = fields.Boolean("Different To Payroll",default=False,copy=False)
+    is_pension_payment_request = fields.Boolean("Pension Payment",default=False,copy=False)
     is_project_payment = fields.Boolean('Is Project Payment', default=False,copy=False)
     fornight = fields.Selection([('01', '01'), ('02', '02'), ('03', '03'), ('04', '04'), ('05', '05'),
                                  ('06', '06'), ('07', '07'), ('08', '08'), ('09', '09'), ('10', '10'),
@@ -89,6 +90,7 @@ class AccountPayment(models.Model):
                                              ('payroll_payment','Payroll Payment'),
                                              ('different_to_payroll','Different To Payroll'),
                                              ('project_payment','Project Payment'),
+                                             ('pension_payment','Pension Payment'),
                                              ],copy=False)
     
     fornight = fields.Selection([('01', '01'), ('02', '02'), ('03', '03'), ('04', '04'), ('05', '05'),

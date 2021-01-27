@@ -27,6 +27,10 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
 
     conac_move = fields.Boolean(string="CONAC")
+    dependence_id = fields.Many2one('dependency','Dependence')
+    sub_depend_id = fields.Many2one('sub.dependency', "Sub Dependency")
+    programatic_code = fields.Boolean('Programmatic Code')
+    ie_account = fields.Boolean('IEAccount')
 
 class AccountMoveLine(models.Model):
 
@@ -34,6 +38,7 @@ class AccountMoveLine(models.Model):
 
     conac_move = fields.Boolean(string="CONAC")
     coa_conac_id = fields.Many2one('coa.conac', string="CODE CONAC")
+    program_code_id = fields.Many2one('program.code','Program Code')
 
     @api.model_create_multi
     def create(self, vals_list):

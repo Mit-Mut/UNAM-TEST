@@ -145,12 +145,16 @@ class Payroll(models.AbstractModel):
         return templates
 
     def _get_columns_name(self, options):
-        return [
+        print ("Coolll=",self.env.context)
+        col_list= [
             {'name': _('Folio')},
             {'name': _('Cheque')},
             {'name': _('Beneficiario')},
             {'name': _('Importe')},
         ]
+        if self.env.context and self.env.context.get('get_sign_col'):
+            col_list.append({'name':_('Firma'),'class':'text-left'})
+        return col_list 
 
     def _format(self, value,figure_type):
         if self.env.context.get('no_format'):
@@ -176,7 +180,6 @@ class Payroll(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         lines = []
-        
         domain = []
         bank_list = []
         bank_account_list = []
@@ -211,33 +214,45 @@ class Payroll(models.AbstractModel):
         if check_payment_method:
             domain += [('l10n_mx_edi_payment_method_id','=',check_payment_method)]
             
-        payroll_domain = domain + [('payment_state','=','for_payment_procedure'),('type', '=', 'in_invoice'), ('is_payroll_payment_request', '=', True)]
+        payroll_domain = domain + [('payment_state','=','assigned_payment_method'),('type', '=', 'in_invoice'), ('is_payroll_payment_request', '=', True)]
         invoice_ids = self.env['account.move'].search(payroll_domain)
 
         
         total = 0
-        
+        total_check = 0
         for inv in invoice_ids:
             total += inv.amount_total  
+            if inv.check_folio_id:
+                total_check += 1
+
+            col_list = [ {'name': inv.check_folio_id and inv.check_folio_id.folio or ''},
+                            {'name': inv.partner_id and inv.partner_id.name or ''},
+                            self._format({'name': inv.amount_total},figure_type='float'),
+                            ]
+            
+            if self.env.context and self.env.context.get('get_sign_col'):
+                col_list.append({'name':'___________________________________','class':'text-left'})
+                
             lines.append({
                 'id': 'hierarchy' + str(inv.id),
                 'name' : inv.folio, 
-                'columns': [ {'name': inv.check_folio_id and inv.check_folio_id.folio or ''},
-                            {'name': inv.partner_id and inv.partner_id.name or ''},
-                            self._format({'name': inv.amount_total},figure_type='float'),
-                            ],
+                'columns': col_list,
                 'level': 3,
                 'unfoldable': False,
                 'unfolded': True,
             })
 
+        total_list = [{'name': total_check,'class':'number'},
+                        {'name': ''},
+                        self._format({'name': total},figure_type='float'),
+                        ]
+        if self.env.context and self.env.context.get('get_sign_col'):
+            total_list.append({'name':'','class':'text-left'})
+        
         lines.append({
             'id': 'hierarchy_total',
             'name' : 'TOTAL', 
-            'columns': [{'name': ''},
-                        {'name': ''},
-                        self._format({'name': total},figure_type='float'),
-                        ],
+            'columns': total_list,
             'level': 1,
             'unfoldable': False,
             'unfolded': True,
@@ -274,7 +289,10 @@ class Payroll(models.AbstractModel):
             "account_reports.print_template",
             values=dict(rcontext),
         )
-        body_html = self.with_context(print_mode=True).get_html(options)
+        body_html = self.with_context(print_mode=True,get_sign_col=True).get_html(options)
+        body_html = body_html.replace(b'<div class="o_account_reports_header">',b'<div>')
+        if body_html:
+            body_html = body_html + b'<div class="row"><div class="col-6 text-center"><hr style="width:60%;color:black;"/><strong>RESPONSABLE DE IMPRESION</strong></div><div class="col-6 text-center"><hr/><strong>VO.BO.</strong></div>'
 
         body = body.replace(b'<body class="o_account_reports_body_print">', b'<body class="o_account_reports_body_print">' + body_html)
         if minimal_layout:
@@ -283,10 +301,48 @@ class Payroll(models.AbstractModel):
             spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 10}
             footer = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
         else:
+            bank_list = []
+            bank_account_list = []
+            upa_list = []
+            
+            bank_name = ''
+            bank_account_name = ''
+            upa_catalog_name = ''
+            for bank in options.get('bank'):
+                if bank.get('selected',False)==True:
+                    bank_list.append(bank.get('id',0))
+            if bank_list:
+                bank_ids = self.env['res.bank'].search([('id','in',bank_list)])
+                for bank in bank_ids:
+                    bank_name += bank.name+"," 
+                    
+            for bank_account in options.get('bank_account'):
+                if bank_account.get('selected',False)==True:
+                    bank_account_list.append(bank_account.get('id',0))
+                    
+            if bank_account_list:
+                bank_account_ids = self.env['res.partner.bank'].search([('id','in',bank_account_list)])
+                for bank_acc in bank_account_ids:
+                    bank_account_name += bank_acc.acc_number+"," 
+                if not bank_list:
+                    for bank in bank_account_ids.mapped('bank_id'):
+                        bank_name += bank.name+","
+                        
+            for upa_catalog in options.get('upa_catalog'):
+                if upa_catalog.get('selected',False)==True:
+                    upa_list.append(upa_catalog.get('id',0))
+            if upa_list:
+                upa_ids = self.env['policy.keys'].search([('id','in',upa_list)])
+                for upa in upa_ids:
+                    upa_catalog_name += upa.origin+","
+            
             rcontext.update({
                     'css': '',
                     'o': self.env.user,
                     'res_company': self.env.company,
+                    'bank_name' : bank_name,
+                    'bank_account_name' : bank_account_name,
+                    'upa_catalog_name' : upa_catalog_name,                    
                 })
             header = self.env['ir.actions.report'].render_template("jt_check_controls.external_layout_payment_report", values=rcontext)
             header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
@@ -467,3 +523,72 @@ class Payroll(models.AbstractModel):
         generated_file = output.read()
         output.close()
         return generated_file
+
+    def get_html(self, options, line_id=None, additional_context=None):
+        '''
+        return the html value of report, or html value of unfolded line
+        * if line_id is set, the template used will be the line_template
+        otherwise it uses the main_template. Reason is for efficiency, when unfolding a line in the report
+        we don't want to reload all lines, just get the one we unfolded.
+        '''
+        # Check the security before updating the context to make sure the options are safe.
+        self._check_report_security(options)
+
+        # Prevent inconsistency between options and context.
+        self = self.with_context(self._set_context(options))
+
+        templates = self._get_templates()
+        report_manager = self._get_report_manager(options)
+        report = {'name': self._get_report_name(),
+                'summary': report_manager.summary,
+                'company_name': self.env.company.name,}
+        report = {}
+        #options.get('date',{}).update({'string':''})
+        lines = self.with_context(get_sign_col=self.env.context.get('get_sign_col',False))._get_lines(options, line_id=line_id)
+
+        if options.get('hierarchy'):
+            lines = self._create_hierarchy(lines, options)
+        if options.get('selected_column'):
+            lines = self._sort_lines(lines, options)
+
+        footnotes_to_render = []
+        if self.env.context.get('print_mode', False):
+            # we are in print mode, so compute footnote number and include them in lines values, otherwise, let the js compute the number correctly as
+            # we don't know all the visible lines.
+            footnotes = dict([(str(f.line), f) for f in report_manager.footnotes_ids])
+            number = 0
+            for line in lines:
+                f = footnotes.get(str(line.get('id')))
+                if f:
+                    number += 1
+                    line['footnote'] = str(number)
+                    footnotes_to_render.append({'id': f.id, 'number': number, 'text': f.text})
+
+        rcontext = {'report': report,
+                    'lines': {'columns_header': self.with_context(get_sign_col=self.env.context.get('get_sign_col',False)).get_header(options), 'lines': lines},
+                    'options': {},
+                    'context': self.env.context,
+                    'model': self,
+                }
+        if additional_context and type(additional_context) == dict:
+            rcontext.update(additional_context)
+        if self.env.context.get('analytic_account_ids'):
+            rcontext['options']['analytic_account_ids'] = [
+                {'id': acc.id, 'name': acc.name} for acc in self.env.context['analytic_account_ids']
+            ]
+
+        render_template = templates.get('main_template', 'account_reports.main_template')
+        
+        if line_id is not None:
+            render_template = templates.get('line_template', 'account_reports.line_template')
+        html = self.env['ir.ui.view'].render_template(
+            render_template,
+            values=dict(rcontext),
+        )
+        if self.env.context.get('print_mode', False):
+            for k,v in self._replace_class().items():
+                html = html.replace(k, v)
+            # append footnote as well
+            html = html.replace(b'<div class="js_account_report_footnotes"></div>', self.get_html_footnotes(footnotes_to_render))
+        return html
+

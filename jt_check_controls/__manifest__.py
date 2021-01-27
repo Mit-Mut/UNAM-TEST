@@ -31,6 +31,7 @@
     'license': 'AGPL-3',
     'depends': ['jt_budget_mgmt','jt_projects'],
     'data': [
+        'security/security.xml',
         'views/minimum_checks.xml',
         'views/trades.xml',
         'views/check_authorized_by_dependency.xml',
@@ -72,6 +73,8 @@
         'reports/payroll_adjustment.xml',
         'wizard/reissue_reject_reason.xml',
         'views/place_of_payment.xml',
+        'wizard/apply_distribution.xml',
+        'views/employee_payroll.xml',
 
     ],
     'demo': [

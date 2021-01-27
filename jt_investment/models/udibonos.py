@@ -39,7 +39,7 @@ class UDIBONOS(models.Model):
     issue_date = fields.Date('Date of issue')
     due_date = fields.Date('Due Date')
     nominal_value = fields.Float(related='amount_invest',string="Nominal Value")
-    interest_rate = fields.Float("Interest Rate")
+    interest_rate = fields.Float("Interest Rate",digits='UDIBONOS')
     time_for_each_cash_flow = fields.Integer(string="Time for each cash flow",size=4)
     time_to_expiration_date = fields.Integer(string="Time to Expiration Date",size=4)
     coupon = fields.Float(string="Coupon",compute="get_coupon_amount",store=True)
@@ -59,7 +59,7 @@ class UDIBONOS(models.Model):
     number_of_title = fields.Float("Number of Titles")
     udi_value = fields.Float("UDI value")
     udi_value_multiplied = fields.Float(string="The value of the Udi is multiplied by 100",default=100)
-    coupon_rate = fields.Float("Coupon Rate")
+    coupon_rate = fields.Float("Coupon Rate",digits='UDIBONOS')
     period_days = fields.Float("Period days")  
     
 

@@ -48,6 +48,33 @@ class PayrollCheckAmounts(models.AbstractModel):
     filter_unposted_in_period = None
     MAX_LINES = None
 
+    filter_fortnight = [
+        {'id': '01', 'name': ('01'), 'selected': False},
+        {'id': '02', 'name': ('02'), 'selected': False},
+        {'id': '03', 'name': ('03'), 'selected': False},
+        {'id': '04', 'name': ('04'), 'selected': False},
+        {'id': '05', 'name': ('05'), 'selected': False},
+        {'id': '06', 'name': ('06'), 'selected': False},
+        {'id': '07', 'name': ('07'), 'selected': False},
+        {'id': '08', 'name': ('08'), 'selected': False},
+        {'id': '09', 'name': ('09'), 'selected': False},
+        {'id': '10', 'name': ('10'), 'selected': False},
+        {'id': '11', 'name': ('11'), 'selected': False},
+        {'id': '12', 'name': ('12'), 'selected': False},
+        {'id': '13', 'name': ('13'), 'selected': False},
+        {'id': '14', 'name': ('14'), 'selected': False},
+        {'id': '15', 'name': ('15'), 'selected': False},
+        {'id': '16', 'name': ('16'), 'selected': False},
+        {'id': '17', 'name': ('17'), 'selected': False},
+        {'id': '18', 'name': ('18'), 'selected': False},
+        {'id': '19', 'name': ('19'), 'selected': False},
+        {'id': '20', 'name': ('20'), 'selected': False},
+        {'id': '21', 'name': ('21'), 'selected': False},
+        {'id': '22', 'name': ('22'), 'selected': False},
+        {'id': '23', 'name': ('23'), 'selected': False},
+        {'id': '24', 'name': ('24'), 'selected': False},
+    ]
+
     def _get_reports_buttons(self):
         return [
             {'name': _('Print Preview'), 'sequence': 1,
@@ -97,6 +124,13 @@ class PayrollCheckAmounts(models.AbstractModel):
     def _get_lines(self, options, line_id=None):
         lines = []
         domain = []
+        fortnight_domain = []
+        
+        fortnight_select = options.get('fortnight')
+        for fortnight in fortnight_select:
+            if fortnight.get('selected',False):
+                fortnight_domain.append(fortnight.get('id'))
+            
         start = datetime.strptime(
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
@@ -105,6 +139,12 @@ class PayrollCheckAmounts(models.AbstractModel):
         domain = domain + [('payment_date','>=',start),('payment_date','<=',end),('type_of_batch','=','nominal')]
          
         payment_issue_ids = self.env['payment.batch.supplier'].search(domain)
+        if fortnight_domain and payment_issue_ids:
+            batch_lines_ids = self.env['check.payment.req'].search([('payment_batch_id','in',payment_issue_ids.ids),
+                                                        ('payment_req_id.fornight','in',fortnight_domain),
+                                                        ('check_status', '=', 'Printed')])
+            payment_issue_ids = batch_lines_ids.mapped('payment_batch_id')
+
         journal_ids = payment_issue_ids.mapped('payment_issuing_bank_id')
         total_amount = 0
         for journal in journal_ids:
@@ -117,24 +157,28 @@ class PayrollCheckAmounts(models.AbstractModel):
                 date_list = list(date_list)
                 for d in date_list:
                     date_payment_issue_ids = j_payment_issue_ids.filtered(lambda x:x.payment_date==d)
+                    is_any_printed = False
                     amount = 0
                     for payment_batch in date_payment_issue_ids:
-                        
-                        amount += sum(x.amount_to_pay for x in payment_batch.payment_req_ids)
+                        if not is_any_printed:
+                            is_any_printed = any(x.check_status == 'Printed' for x in payment_batch.payment_req_ids)
+                        amount += sum(x.amount_to_pay if x.check_status == 'Printed' else 0 \
+                             for x in payment_batch.payment_req_ids)
+
                     total_amount += amount
-                    
-                    lines.append({
-                        'id': 'account_' + str(bank_account.id),
-                        'name' : bank_account.acc_number, 
-                        'columns': [ {'name': journal.name},
-                                    self._format({'name': amount},figure_type='float'),
-                                    {'name': d,},
-                                    
-                                    ],
-                        'level': 3,
-                        'unfoldable': False,
-                        'unfolded': True,
-                    })
+                    if is_any_printed:
+                        lines.append({
+                            'id': 'account_' + str(bank_account.id),
+                            'name' : bank_account.acc_number,
+                            'columns': [ {'name': journal.name},
+                                        self._format({'name': amount},figure_type='float'),
+                                        {'name': d,},
+
+                                        ],
+                            'level': 3,
+                            'unfoldable': False,
+                            'unfolded': True,
+                        })
 
         lines.append({
             'id': 'total',
@@ -162,49 +206,67 @@ class PayrollCheckAmounts(models.AbstractModel):
         # table.
         # This scenario happens when you want to print a PDF report for the first time, as the
         # assets are not in cache and must be generated. To workaround this issue, we manually
-        # commit the writes in the `ir.attachment` table. It is done thanks to
-        # a key in the context.
+        # commit the writes in the `ir.attachment` table. It is done thanks to a key in the context.
         minimal_layout = False
         if not config['test_enable']:
             self = self.with_context(commit_assetsbundle=True)
 
-        base_url = self.env['ir.config_parameter'].sudo().get_param(
-            'report.url') or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('report.url') or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         rcontext = {
             'mode': 'print',
             'base_url': base_url,
             'company': self.env.company,
         }
 
+        date1 = datetime.now()
+
         body = self.env['ir.ui.view'].render_template(
             "account_reports.print_template",
             values=dict(rcontext),
         )
         body_html = self.with_context(print_mode=True).get_html(options)
+        body_html = body_html.replace(b'<div class="o_account_reports_header">',b'<div>')
+        if body_html:
+            body_html = body_html + b'<div class="text-left"><strong>SOLICITADO POR:<hr style="width:60%;border: 1px solid black;"/></strong></div><div class="text-left"><strong>AUTORIZADO POR:<hr style="width:60%;hight:10%;border: 1.5px solid black;"/></strong></div><span style="margin-left:20px;">PARA LA COORDINACION DE OPERACION POR BANCA ELECTRONICA</span style="margin-right:50px;"><br/><span>Fecha de Emision:</span>'
 
-        body = body.replace(b'<body class="o_account_reports_body_print">',
-                            b'<body class="o_account_reports_body_print">' + body_html)
+        body = body.replace(b'<body class="o_account_reports_body_print">', b'<body class="o_account_reports_body_print">' + body_html)
+        
+        start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+
         if minimal_layout:
             header = ''
-            footer = self.env['ir.actions.report'].render_template(
-                "web.internal_layout", values=rcontext)
-            spec_paperformat_args = {
-                'data-report-margin-top': 10, 'data-report-header-spacing': 10}
-            footer = self.env['ir.actions.report'].render_template(
-                "web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
+            footer = self.env['ir.actions.report'].render_template("web.internal_layout", values=rcontext)
+            spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 10}
+            footer = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
         else:
+            bank_list = []
+            bank_account_list = []
+            upa_list = []
+            
+            q_year_data = ''
+            fortnight_select = options.get('fortnight')
+            for fortnight in fortnight_select:
+                if fortnight.get('selected',False):
+                    #fortnight_domain.append(fortnight.get('id'))
+                    q_year_data += str(fortnight.get('id'))+","
+            
+            q_year_data += "/"+str(start.year)
+
             rcontext.update({
-                'css': '',
-                'o': self.env.user,
-                'res_company': self.env.company,
-            })
-            header = self.env['ir.actions.report'].render_template(
-                "jt_check_controls.external_layout_check_amounts", values=rcontext)
-            # Ensure that headers and footer are correctly encoded
-            header = header.decode('utf-8')
+                    'css': '',
+                    'o': self.env.user,
+                    'res_company': self.env.company,
+                    'q_year_data' : q_year_data,
+                    'date1' : date1,
+                })
+
+            header = self.env['ir.actions.report'].render_template("jt_check_controls.external_layout_check_amounts", values=rcontext)
+            header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
             spec_paperformat_args = {}
-            # Default header and footer in case the user customized
-            # web.external_layout and removed the header/footer
+            # Default header and footer in case the user customized web.external_layout and removed the header/footer
             headers = header.encode()
             footer = b''
             # parse header as new header contains header, body and footer
@@ -214,13 +276,11 @@ class PayrollCheckAmounts(models.AbstractModel):
 
                 for node in root.xpath(match_klass.format('header')):
                     headers = lxml.html.tostring(node)
-                    headers = self.env['ir.actions.report'].render_template(
-                        "web.minimal_layout", values=dict(rcontext, subst=True, body=headers))
+                    headers = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=headers))
 
                 for node in root.xpath(match_klass.format('footer')):
                     footer = lxml.html.tostring(node)
-                    footer = self.env['ir.actions.report'].render_template(
-                        "web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
+                    footer = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
 
             except lxml.etree.XMLSyntaxError:
                 headers = header.encode()
@@ -231,12 +291,12 @@ class PayrollCheckAmounts(models.AbstractModel):
         if len(self.with_context(print_mode=True).get_header(options)[-1]) > 5:
             landscape = True
 
-            return self.env['ir.actions.report']._run_wkhtmltopdf(
-                [body],
-                header=header, footer=footer,
-                landscape=landscape,
-                specific_paperformat_args=spec_paperformat_args
-            )
+        return self.env['ir.actions.report']._run_wkhtmltopdf(
+            [body],
+            header=header, footer=footer,
+            landscape=landscape,
+            specific_paperformat_args=spec_paperformat_args
+        )
 
     def get_xlsx(self, options, response=None):
         output = io.BytesIO()
@@ -380,3 +440,71 @@ class PayrollCheckAmounts(models.AbstractModel):
         generated_file = output.read()
         output.close()
         return generated_file
+
+    def get_html(self, options, line_id=None, additional_context=None):
+        '''
+        return the html value of report, or html value of unfolded line
+        * if line_id is set, the template used will be the line_template
+        otherwise it uses the main_template. Reason is for efficiency, when unfolding a line in the report
+        we don't want to reload all lines, just get the one we unfolded.
+        '''
+        # Check the security before updating the context to make sure the options are safe.
+        self._check_report_security(options)
+
+        # Prevent inconsistency between options and context.
+        self = self.with_context(self._set_context(options))
+
+        templates = self._get_templates()
+        report_manager = self._get_report_manager(options)
+        report = {'name': self._get_report_name(),
+                'summary': report_manager.summary,
+                'company_name': self.env.company.name,}
+        report = {}
+        #options.get('date',{}).update({'string':''}) 
+        lines = self._get_lines(options, line_id=line_id)
+
+        if options.get('hierarchy'):
+            lines = self._create_hierarchy(lines, options)
+        if options.get('selected_column'):
+            lines = self._sort_lines(lines, options)
+
+        footnotes_to_render = []
+        if self.env.context.get('print_mode', False):
+            # we are in print mode, so compute footnote number and include them in lines values, otherwise, let the js compute the number correctly as
+            # we don't know all the visible lines.
+            footnotes = dict([(str(f.line), f) for f in report_manager.footnotes_ids])
+            number = 0
+            for line in lines:
+                f = footnotes.get(str(line.get('id')))
+                if f:
+                    number += 1
+                    line['footnote'] = str(number)
+                    footnotes_to_render.append({'id': f.id, 'number': number, 'text': f.text})
+
+        rcontext = {'report': report,
+                    'lines': {'columns_header': self.get_header(options), 'lines': lines},
+                    'options': {},
+                    'context': self.env.context,
+                    'model': self,
+                }
+        if additional_context and type(additional_context) == dict:
+            rcontext.update(additional_context)
+        if self.env.context.get('analytic_account_ids'):
+            rcontext['options']['analytic_account_ids'] = [
+                {'id': acc.id, 'name': acc.name} for acc in self.env.context['analytic_account_ids']
+            ]
+
+        render_template = templates.get('main_template', 'account_reports.main_template')
+        
+        if line_id is not None:
+            render_template = templates.get('line_template', 'account_reports.line_template')
+        html = self.env['ir.ui.view'].render_template(
+            render_template,
+            values=dict(rcontext),
+        )
+        if self.env.context.get('print_mode', False):
+            for k,v in self._replace_class().items():
+                html = html.replace(k, v)
+            # append footnote as well
+            html = html.replace(b'<div class="js_account_report_footnotes"></div>', self.get_html_footnotes(footnotes_to_render))
+        return html

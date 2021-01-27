@@ -82,13 +82,21 @@ class AdjustedPayrollWizard(models.TransientModel):
                         
                     for rec in emp_payroll_ids:
                         rec.adjustment_case_id = case_id and case_id.id or False
-                        if case=='A' or case=='R' or case=='F' or case=='Z' or case=='H' or case=='E' or case=='V' or case=='C':
+                        if case=='A' or case=='R' or case=='F' or case=='Z' or case=='H' or case=='E' or case=='S' or case=='V' or case=='C':
                             if check_no:
                                 if  type(check_no) is int or type(check_no) is float:
                                     check_no = int(check_no)
                                 rec.check_number = check_no
-                                
-                            if deposite_no:
+
+                            check_payment_method = self.env.ref('l10n_mx_edi.payment_method_cheque').id
+                            if deposite_no and rec.l10n_mx_edi_payment_method_id and \
+                                rec.l10n_mx_edi_payment_method_id.id == check_payment_method and case == 'A':
+                                if deposite_no and new_bank_no:
+                                    log = self.env['check.log'].search([('folio', '=', deposite_no),
+                                                    ('bank_id.bank_id.l10n_mx_edi_code', '=', new_bank_no)], limit=1)
+                                    if log:
+                                        rec.check_final_folio_id = log.id
+                            elif deposite_no:
                                 if  type(deposite_no) is int or type(deposite_no) is float:
                                     deposite_no = int(deposite_no)
                                 
@@ -104,7 +112,6 @@ class AdjustedPayrollWizard(models.TransientModel):
             employee_id = False
             if self.type_of_movement == 'perception_adjustment_detail':
                 for rowx, row in enumerate(map(sheet.row, range(1, sheet.nrows)), 1):
-                    
                     counter = 0
                     rfc = row[0].value
                     clave_categ = row[1].value
@@ -123,16 +130,15 @@ class AdjustedPayrollWizard(models.TransientModel):
                         p_id = self.env['program.code'].search([('program_code','=',program_code)],limit=1)
                         if p_id:
                             program_id = p_id.id
-                    
                     emp_payroll_ids = []
                     if rfc:
                         employee_id =self.env['hr.employee'].search([('rfc','=',rfc)],limit=1)
                         if employee_id:
                             employee_id = employee_id.id
-                        
+
                     if employee_id:
                         emp_payroll_ids = self.payroll_process_id.payroll_ids.filtered(lambda x:x.employee_id.id==employee_id)
-                        
+
                     for rec in emp_payroll_ids:
                         if perception:
                             if  type(perception) is int or type(perception) is float:
@@ -253,9 +259,11 @@ class AdjustedPayrollWizard(models.TransientModel):
                                 bank_rec = self.env['res.bank'].search([('l10n_mx_edi_code','=',str(bank_key))],limit=1)
                                 if bank_rec:
                                     bank_id = bank_rec.id
-                            
+
                             if payment_method_id:
-                                lines = rec.pension_payment_line_ids.filtered(lambda x:x.l10n_mx_edi_payment_method_id.id==payment_method_id and x.bank_key == bank_key)
+                                lines = rec.pension_payment_line_ids.filtered(lambda x:
+                                        x.l10n_mx_edi_payment_method_id.id==payment_method_id and
+                                        x.bank_key == str(bank_key))
                                 for line in lines:
                                     line.total_pension = total_pension
                                     line.partner_id = partner_id 

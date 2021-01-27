@@ -47,19 +47,18 @@ class CheckProtection(models.AbstractModel):
     filter_hierarchy = None
     filter_unposted_in_period = None
     MAX_LINES = None
+    
     filter_department = [
-        {'id': 'ACATLAN', 'name': ('ACATLAN'), 'selected': False},
-        {'id': 'ARAGON', 'name': ('ARAGON'), 'selected': False},
-        {'id': 'CUAUTITLAN', 'name': ('CUAUTITLAN'), 'selected': False},
-        {'id': 'CUERNAVACA', 'name': ('CUERNAVACA'), 'selected': False},
-        {'id': 'COVE', 'name': ('COVE'), 'selected': False},
-        {'id': 'IZTACALA', 'name': ('IZTACALA'), 'selected': False},
-        {'id': 'JURIQUILLA', 'name': ('JURIQUILLA'), 'selected': False},
-        {'id': 'LION', 'name': ('LION'), 'selected': False},
-        {'id': 'MORELIA', 'name': ('MORELIA'), 'selected': False},
-        {'id': 'YUCATAN', 'name': ('YUCATAN'), 'selected': False},
-        
-        
+        {'id': 'ACATLAN', 'name': _('ACATLAN'), 'selected': False},
+        {'id': 'ARAGON', 'name': _('ARAGON'), 'selected': False},
+        {'id': 'CUAUTITLAN', 'name': _('CUAUTITLAN'), 'selected': False},
+        {'id': 'CUERNAVACA', 'name': _('CUERNAVACA'), 'selected': False},
+        {'id': 'COVE', 'name': _('ENSENADA'), 'selected': False},
+        {'id': 'IZTACALA', 'name': _('IZTACALA'), 'selected': False},
+        {'id': 'JURIQUILLA', 'name': _('JURIQUILLA'), 'selected': False},
+        {'id': 'LION', 'name': _('LEON'), 'selected': False},
+        {'id': 'MORELIA', 'name': _('MORELIA'), 'selected': False},
+        {'id': 'YUCATAN', 'name': _('YUCATAN'), 'selected': False},
     ]
    
 
@@ -117,6 +116,15 @@ class CheckProtection(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+        
+        department_domain = []
+        
+        department_select = options.get('department')
+        for department in department_select:
+            if department.get('selected',False):
+                department_domain.append(department.get('id'))
+        if department_domain:
+            domain = domain + [('module','in',department_domain)]
             
         domain = domain + [('date_protection','>=',start),('date_protection','<=',end),('module','!=',False)]
         
@@ -142,6 +150,7 @@ class CheckProtection(models.AbstractModel):
                     amount = sum(x.check_amount for x in date_rec_ids)
                     total_amount += amount
                     total_check += total_rec
+                    print(total_check,'total_check')
                     
                     lines.append({
                         'id': 'hierarchy' + str(module),
@@ -166,13 +175,13 @@ class CheckProtection(models.AbstractModel):
                 'unfoldable': False,
                 'unfolded': True,
             })
-                 
+            options.update({'total_check': total_check, 'total_amount': total_amount})                 
         return lines
 
     def _get_report_name(self):
         return _("Check Protection")
 
-    def get_pdf(self, options, minimal_layout=True):
+    def get_pdf(self, options, minimal_layout=True,line_id=None):
         # As the assets are generated during the same transaction as the rendering of the
         # templates calling them, there is a scenario where the assets are unreachable: when
         # you make a request to read the assets while the transaction creating them is not done.
@@ -197,18 +206,54 @@ class CheckProtection(models.AbstractModel):
             values=dict(rcontext),
         )
         body_html = self.with_context(print_mode=True).get_html(options)
-
+        body_html = body_html.replace(b'<div class="o_account_reports_header">',b'<div>')
+        #<div class="o_account_reports_header">
         body = body.replace(b'<body class="o_account_reports_body_print">', b'<body class="o_account_reports_body_print">' + body_html)
         if minimal_layout:
             header = ''
             footer = self.env['ir.actions.report'].render_template("web.internal_layout", values=rcontext)
-            spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 10}
+            spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 20}
             footer = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
         else:
+            lines = self._get_lines(options, line_id=line_id)
+            start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+            end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+        
+            date_list =''
+            date_list += str(start)
+            date_list += '\t'
+            date_list += 'al'
+            date_list += '\t'
+            date_list += str(end)
+#             data = []
+#             total =[]
+#             for record in lines:
+#                 data.append(record.get('columns')[1])
+#                 total.append(record.get('columns'))
+#             
+#             total_check =''
+#             if data:
+#                 total_check += str(len(data)-1)
+#             total_amt = ''
+#             d1 =[]
+#             if total:
+#                 d1=total[-1:][0]
+#                 k = d1[0]
+#                 p=k[-1:][0]
+#                 total_amt += str(p.get('no_format_name'))
+            total_check = options.get('total_check',0)
+            total_amt = options.get('total_amount',0)
+                
             rcontext.update({
                     'css': '',
                     'o': self.env.user,
                     'res_company': self.env.company,
+                    'total_check':total_check,
+                    'total_amt':str(self._format({'name': total_amt},figure_type='float').get('name')),
+                    'date_list':date_list
+
                 })
             header = self.env['ir.actions.report'].render_template("jt_check_controls.external_layout_check_protection", values=rcontext)
             header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
@@ -390,3 +435,71 @@ class CheckProtection(models.AbstractModel):
             generated_file = output.read()
             output.close()
             return generated_file
+
+    def get_html(self, options, line_id=None, additional_context=None):
+        '''
+        return the html value of report, or html value of unfolded line
+        * if line_id is set, the template used will be the line_template
+        otherwise it uses the main_template. Reason is for efficiency, when unfolding a line in the report
+        we don't want to reload all lines, just get the one we unfolded.
+        '''
+        # Check the security before updating the context to make sure the options are safe.
+        self._check_report_security(options)
+
+        # Prevent inconsistency between options and context.
+        self = self.with_context(self._set_context(options))
+
+        templates = self._get_templates()
+        report_manager = self._get_report_manager(options)
+        report = {'name': self._get_report_name(),
+                'summary': report_manager.summary,
+                'company_name': self.env.company.name,}
+        report = {}
+        #options.get('date',{}).update({'string':''}) 
+        lines = self._get_lines(options, line_id=line_id)
+
+        if options.get('hierarchy'):
+            lines = self._create_hierarchy(lines, options)
+        if options.get('selected_column'):
+            lines = self._sort_lines(lines, options)
+
+        footnotes_to_render = []
+        if self.env.context.get('print_mode', False):
+            # we are in print mode, so compute footnote number and include them in lines values, otherwise, let the js compute the number correctly as
+            # we don't know all the visible lines.
+            footnotes = dict([(str(f.line), f) for f in report_manager.footnotes_ids])
+            number = 0
+            for line in lines:
+                f = footnotes.get(str(line.get('id')))
+                if f:
+                    number += 1
+                    line['footnote'] = str(number)
+                    footnotes_to_render.append({'id': f.id, 'number': number, 'text': f.text})
+
+        rcontext = {'report': report,
+                    'lines': {'columns_header': self.get_header(options), 'lines': lines},
+                    'options': {},
+                    'context': self.env.context,
+                    'model': self,
+                }
+        if additional_context and type(additional_context) == dict:
+            rcontext.update(additional_context)
+        if self.env.context.get('analytic_account_ids'):
+            rcontext['options']['analytic_account_ids'] = [
+                {'id': acc.id, 'name': acc.name} for acc in self.env.context['analytic_account_ids']
+            ]
+
+        render_template = templates.get('main_template', 'account_reports.main_template')
+        
+        if line_id is not None:
+            render_template = templates.get('line_template', 'account_reports.line_template')
+        html = self.env['ir.ui.view'].render_template(
+            render_template,
+            values=dict(rcontext),
+        )
+        if self.env.context.get('print_mode', False):
+            for k,v in self._replace_class().items():
+                html = html.replace(k, v)
+            # append footnote as well
+            html = html.replace(b'<div class="js_account_report_footnotes"></div>', self.get_html_footnotes(footnotes_to_render))
+        return html

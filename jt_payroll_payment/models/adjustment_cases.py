@@ -30,7 +30,19 @@ class AdjustmentCases(models.Model):
     _rec_name = 'case'
 
 
-    case = fields.Selection([('A','A'),('D','D'),('R','R'),('F','F'),('H','H'),('B','B'),('V','V'),('C','C'),('E','E'),('P','P'),('Z','Z')],string="Case")
+    case = fields.Selection([('A','A'),('D','D'),('R','R'),('F','F'),('H','H'),('B','B'),('V','V'),('C','C'),('E','E'),('P','P'),('Z','Z'),('S','S')],string="Case")
     description = fields.Text('Description')
+
+#     def name_get(self):
+#         if 'show_from_payroll' in self._context:
+#             res = []
+#             for case in self:
+#                 name = case.description
+#                 res.append((case.id, name))
+#         else:
+#             res = super(AdjustmentCases, self).name_get()
+#         return res
+
+
     
     

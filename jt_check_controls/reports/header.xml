@@ -2,7 +2,7 @@
 <odoo>
     <data>
 
-        <template id="external_layout_check_summary" name="external_layout_check_summary">
+        <template id="external_layout_of_check_summary" name="external_layout_of_check_summary">
         <t t-if="not o" t-set="o" t-value="doc"/>
 
         <t t-if="not company">
@@ -27,12 +27,12 @@
                 <div class="col-6 text-center">
                     <span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span><br/>
                     <span style="font-size:12px;">DIRECCIÓN GENERAL DE FINANZAS</span><br/>
-                    <span style="font-size:12px;">AREA DE TRAMIT:REC/04</span><br/>
+                    <span style="font-size:12px;">ÁREA DE TRÁMITE:<span t-esc="upa_catalog_name"/></span><br/>
                     <span style="font-size:12px;">REPORTE SUMARIAS DE CHEQUES</span><br/>
                 </div>
                 <div class="col-3 text-left" style="vertical-align: bottom;">
-                    <span>Bank:<span t-esc="bank_name"/></span><br/>
-                    <span>Bank Account:<span t-esc="bank_account_name"/></span><br/>
+                    <span>Banco:<span t-esc="bank_name"/></span><br/>
+                    <span>Cuenta Bancaria:<span t-esc="bank_account_name"/></span><br/>
                     <span>Fecha de impresión  </span><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/> 
                 </div>
                 
@@ -42,6 +42,7 @@
           <t t-raw="0"/>
         </div>
 
+    <!-- 
         <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
             <div class="row">
                 <div class="col-6">
@@ -55,7 +56,7 @@
                 </div>
             </div>
         </div>
-         
+      -->    
         </template>
 
 
@@ -130,12 +131,12 @@
                     <span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span><br/>
                     <span style="font-size:12px;">DIRECCIÓN GENERAL DE FINANZAS</span><br/>
                     <span style="font-size:12px;">PATRONATO UNIVERSITARIO</span><br/>
-                    <span style="font-size:12px;">AREA DE TRAMIT:PER/04</span><br/>
+                    <span style="font-size:12px;">ÁREA DE TRÁMITE:<span t-esc="upa_catalog_name"/></span><br/>
                     <span style="font-size:12px;">REPORTE DE NOMINA</span><br/>
                 </div>
                 <div class="col-3 text-left" style="vertical-align: bottom;">
-                    <span>Bank:</span><br/>
-                    <span>Bank Account:</span><br/>
+                    <span>Banco:<span t-esc="bank_name"/></span><br/>
+                    <span>Cuenta Bancaria:<span t-esc="bank_account_name"/></span><br/>
                     <span>Fecha de impresión  </span><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/> 
                 </div>
                 
@@ -147,17 +148,6 @@
         </div>
 
         <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
-            <div class="row">
-                <div class="col-6">
-                    <hr style="width:40%;color:black;"/><br/>
-                    <strong>RESPONSABLE DE IMPRESION</strong>
-                </div>
-                <div class="col-6">
-                    <hr/><br/>
-                    <strong>VO.BO.</strong>
-
-                </div>
-            </div>
         </div>
          
         </template>
@@ -190,7 +180,8 @@
                     <span style="font-size:12px;">PATRONATO UNIVERSITARIO</span><br/>
                     <span style="font-size:12px;">DIRECCIÓN GENERAL DE FINANZAS</span><br/>
                     <span style="font-size:12px;">COORDINACIÓN DE PAGOS</span><br/>
-                    <span style="font-size:12px;">REPORTE DE PROTECCIÓN DE CHEQUES DEL DIA </span><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/> <br/>
+                    <span style="font-size:12px;">REPORTE DE PROTECCIÓN DE CHEQUES DEL DIA </span><br/><strong><span t-esc="date_list" style="font-size:14px;"/> </strong><br/>
+
                 </div>
                
                 
@@ -198,10 +189,10 @@
             </div>
             <div class="row">
                 <div class="col-6">
-                    <span><strong>CHEQUES LIBERADOS:</strong></span>
+                    <span><strong>CHEQUES LIBERADOS : <span t-esc="total_check"/></strong></span>
                 </div>
                 <div class="col-6">
-                    <span><strong>IMPORTE TOTAL:</strong></span>
+                    <span><strong>IMPORTE TOTAL : <span t-esc="total_amt"/></strong></span>
                 </div>
                 
             </div>
@@ -237,18 +228,20 @@
                         <span style="font-size:16px;">DIRECCIÓN GENERAL DE FINANZAS</span><br/>
                         <span style="font-size:12px;">PATRONATO UNIVERSITARIO</span><br/>
                         <span style="font-size:12px;">Tesorería</span><br/>
+                        <span style="font-size:12px;">REPORTE DE LOS INFORMES DE LOS CHEQUES DE NOMINA DE SUELDO Y PENSIÓN ALIMENTICIA</span><br/>
+                        <span t-esc="q_year_data"/>
                     </div>
 
                 </div>
-                <div>
+                <!-- <div> 
                     <p style="font-style:bold;">REPORTE DE LOS INFORMES DE LOS CHEQUES DE NOMINA DE SUELDO Y PENSIÓN ALIMENTICIA</p><br/>
                     <center><p>QNA</p></center>
-                </div>
+                </div> -->
             </div>
             <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
               <t t-raw="0"/>
             </div>
-            <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
+            <!-- <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
                 <div class="row">
                     <div class="col-6" style="font-size:10px;">
                         <span style="display: inline;">SOLICITADO POR:<hr style="width:50%;background-color:black;" /></span><br/>
@@ -261,7 +254,7 @@
                         <span style="margin-left:20px;">PARA LA COORDINACIÓN DE OPERACIÓN POR BANCA ELECTRÓNICA</span>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </template>
 
 
@@ -336,7 +329,7 @@
                     <span style="font-size:12px;">PATRONATO UNIVERSITARIO</span><br/>
                     <span style="font-size:12px;">TESORERIA</span><br/>
                     <span style="font-size:15px;">CÉDULA CONTROL DE PROTECCIÓN DE CHEQUES</span><br/>
-                    <span style="font-size:12px;">QUINCENA</span><br/>
+                    <span style="font-size:12px;">QUINCENA : <span t-esc="q_year_data"/></span><br/>
                     <span style="font-size:12px;">CUENTA DE CARGO</span><br/>
                    
                 </div>

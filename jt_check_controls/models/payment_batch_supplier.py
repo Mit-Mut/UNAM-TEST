@@ -91,43 +91,46 @@ class PaymentBatchSupplier(models.Model):
         self.selected = False
 
     def get_date(self):
-        date = self.payment_date or datetime.today().date()
-        day = date.day
-        month = date.month
-        month_name = ''
-        if month == 1:
-            month_name = 'Enero'
-        elif month == 2:
-            month_name = 'Febrero'
-        elif month == 3:
-            month_name = 'Marzo'
-        elif month == 4:
-            month_name = 'Abril'
-        elif month == 5:
-            month_name = 'Mayo'
-        elif month == 6:
-            month_name = 'Junio'
-        elif month == 7:
-            month_name = 'Julio'
-        elif month == 8:
-            month_name = 'Agosto'
-        elif month == 9:
-            month_name = 'Septiembre'
-        elif month == 10:
-            month_name = 'Octubre'
-        elif month == 11:
-            month_name = 'Noviembre'
-        elif month == 12:
-            month_name = 'Diciembre'
-        year = date.year
-        return str(day) + ' de ' + month_name + ' de ' + str(year)
+        date = self.payment_date and self.payment_date or False
+        if date:
+            day = date.day
+            month = date.month
+            month_name = ''
+            if month == 1:
+                month_name = 'Enero'
+            elif month == 2:
+                month_name = 'Febrero'
+            elif month == 3:
+                month_name = 'Marzo'
+            elif month == 4:
+                month_name = 'Abril'
+            elif month == 5:
+                month_name = 'Mayo'
+            elif month == 6:
+                month_name = 'Junio'
+            elif month == 7:
+                month_name = 'Julio'
+            elif month == 8:
+                month_name = 'Agosto'
+            elif month == 9:
+                month_name = 'Septiembre'
+            elif month == 10:
+                month_name = 'Octubre'
+            elif month == 11:
+                month_name = 'Noviembre'
+            elif month == 12:
+                month_name = 'Diciembre'
+            year = date.year
+            return str(day) + ' de ' + month_name + ' de ' + str(year)
 
     def _get_check_data(self):
         for rec in self:
-            rec.amount_of_checkes = len(rec.payment_req_ids.filtered(lambda x: x.check_status in ('Printed',
-                                                                                                  'Delivered',
-                                                                                                  'Protected and in transit')))
-            reqs = rec.payment_req_ids.filtered(lambda x: x.check_folio_id != False)
+            req_list = []
+            for req in rec.payment_req_ids:
+                if req.check_folio_id:
+                    req_list.append(req)
+            rec.amount_of_checkes = len(req_list)
+            reqs = sorted(req_list)
             if reqs:
                 rec.intial_check_folio = reqs[0].check_folio_id.id
                 rec.final_check_folio = reqs[-1].check_folio_id.id
@@ -144,7 +147,10 @@ class PaymentBatchSupplier(models.Model):
                 raise ValidationError(_("The bank's response file for changing status must be attached to the checks"))
             for line in rec.payment_req_ids.filtered(lambda x: x.selected == True):
                 if line.check_folio_id.status == 'Sent to protection':
-                    line.check_folio_id.status = 'Protected and in transit'
+                    if rec.type_of_batch in ('supplier', 'project'):
+                        line.check_folio_id.status = 'Protected and in transit'
+                    else:
+                        line.check_folio_id.status = 'Protected'
                     line.check_folio_id.date_protection = today
                     check_protection_term = 0
                     if line.payment_batch_id.payment_issuing_bank_id.bank_id:
@@ -155,16 +161,24 @@ class PaymentBatchSupplier(models.Model):
     def action_send_file_to_protection(self):
         for rec in self:
             for line in rec.payment_req_ids.filtered(lambda x: x.selected == True):
-                if line.check_folio_id.status == 'Delivered':
-                    line.check_folio_id.status = 'Sent to protection'
+                if rec.type_of_batch in ('supplier', 'project'):
+                    if line.check_folio_id.status == 'Delivered':
+                        line.check_folio_id.status = 'Sent to protection'
+                else:
+                    if line.check_folio_id.status == 'Printed':
+                        line.check_folio_id.status = 'Sent to protection'
                 line.selected = False
             rec.selected = False
 
     def action_deliver_checks(self):
         for rec in self:
             for line in rec.payment_req_ids.filtered(lambda x: x.selected == True):
-                if line.check_folio_id.status == 'Printed':
-                    line.check_folio_id.status = 'Delivered'
+                if rec.type_of_batch in ('supplier', 'project'):
+                    if line.check_folio_id.status == 'Printed':
+                        line.check_folio_id.status = 'Delivered'
+                else:
+                    if line.check_folio_id.status == 'Protected':
+                        line.check_folio_id.status = 'In transit'
                 line.selected = False
             rec.selected = False
 
@@ -211,6 +225,7 @@ class PaymentBatchSupplier(models.Model):
                         line.payment_req_id.check_folio_id = line.check_folio_id.id
                         counter += 1
                         line.selected = False
+                        line.payment_req_id.payment_state = 'assigned_payment_method'
                     rec.printed_checks = True
                 if not logs:
                     raise ValidationError(_('No check available to assign!'))

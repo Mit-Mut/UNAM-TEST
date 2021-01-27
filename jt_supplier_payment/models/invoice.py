@@ -212,6 +212,14 @@ class AccountMove(models.Model):
     is_show_resposible_group = fields.Boolean(
         'Resposible Group', default=False)
 
+    period_start = fields.Date("Period")
+    period_end = fields.Date("Period End")
+    pension_reference = fields.Char("Reference")
+
+    deposite_number = fields.Char("Deposit number")
+    check_number = fields.Char("Check number")
+    bank_key = fields.Char("Bank Key")
+
     @api.depends('payment_state', 'is_payroll_payment_request', 'is_payment_request', 'state')
     def get_conac_line_display(self):
         for rec in self:

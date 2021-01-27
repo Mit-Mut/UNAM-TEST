@@ -63,6 +63,7 @@
         'security/ir.model.access.csv',
         'wizard/amounts_to_invest.xml',
         'reports/bases_collaboration_amounts_to_invest.xml',
+        'views/res_partner_bank.xml',
     ],
     'application': False,
     'installable': True,

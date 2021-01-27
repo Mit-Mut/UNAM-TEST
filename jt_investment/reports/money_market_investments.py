@@ -177,18 +177,23 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
             {'name': _('Tasa de interés')},
         ]
 
-    def _format(self, value,figure_type):
+    def _format(self, value,figure_type,digit,is_currency):
         if self.env.context.get('no_format'):
             return value
         value['no_format_name'] = value['name']
         
         if figure_type == 'float':
-            currency_id = self.env.company.currency_id
-            if currency_id.is_zero(value['name']):
+
+            if is_currency:
+                currency_id = self.env.company.currency_id
+            else:
+                currency_id = False
+            
+            if currency_id and currency_id.is_zero(value['name']):
                 # don't print -0.0 in reports
                 value['name'] = abs(value['name'])
                 value['class'] = 'number text-muted'
-            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id)
+            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id,digits=digit)
             value['class'] = 'number'
             return value
         if figure_type == 'percents':
@@ -292,6 +297,7 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
         for cetes in cetes_records:
             total_investment += cetes.nominal_value
             resouce_name = cetes.fund_id and cetes.fund_id.name or ''
+            precision = self.env['decimal.precision'].precision_get('CETES')
             lines.append({
                 'id': 'hierarchy_cetes' + str(cetes.id),
                 'name' : resouce_name, 
@@ -299,10 +305,10 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
                             {'name': cetes.contract_id and cetes.contract_id.name or ''}, 
                             {'name': cetes.journal_id and cetes.journal_id.bank_account_id and cetes.journal_id.bank_account_id.acc_number or ''},
                             {'name':cetes.currency_id.name},
-                            self._format({'name': cetes.nominal_value},figure_type='float'),
+                            self._format({'name': cetes.nominal_value},figure_type='float',digit=2,is_currency=True),
                             {'name': 'CETES'},
                             {'name': cetes.term},
-                            self._format({'name': cetes.yield_rate},figure_type='float'),
+                            self._format({'name': cetes.yield_rate},figure_type='float',digit=precision,is_currency=False),
                             ],
                 'level': 3,
                 'unfoldable': False,
@@ -312,6 +318,7 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
         #==== udibonos========#
         for udibonos in udibonos_records:
             total_investment += udibonos.nominal_value
+            precision = self.env['decimal.precision'].precision_get('UDIBONOS')
             resouce_name = udibonos.fund_id and udibonos.fund_id.name or ''
             lines.append({
                 'id': 'hierarchy_udibonos' + str(udibonos.id),
@@ -320,10 +327,10 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
                             {'name': udibonos.contract_id and udibonos.contract_id.name or ''}, 
                             {'name': udibonos.journal_id and udibonos.journal_id.bank_account_id and udibonos.journal_id.bank_account_id.acc_number or ''},
                             {'name':udibonos.currency_id.name},
-                            self._format({'name': udibonos.nominal_value},figure_type='float'),
+                            self._format({'name': udibonos.nominal_value},figure_type='float',digit=2,is_currency=True),
                             {'name': 'UDIBONOS'},
                             {'name': udibonos.time_for_each_cash_flow},
-                            self._format({'name': udibonos.interest_rate},figure_type='float'),
+                            self._format({'name': udibonos.interest_rate},figure_type='float',digit=precision,is_currency=False),
                             ],
                 'level': 3,
                 'unfoldable': False,
@@ -334,6 +341,7 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
         for bonds in bonds_records:
             total_investment += bonds.nominal_value
             resouce_name = bonds.fund_id and bonds.fund_id.name or ''
+            precision = self.env['decimal.precision'].precision_get('BONDS')
             lines.append({
                 'id': 'hierarchy_bonds' + str(bonds.id),
                 'name': resouce_name,
@@ -341,10 +349,10 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
                             {'name': bonds.contract_id and bonds.contract_id.name or ''}, 
                             {'name': bonds.journal_id and bonds.journal_id.bank_account_id and bonds.journal_id.bank_account_id.acc_number or ''},
                             {'name':bonds.currency_id.name},
-                            self._format({'name': bonds.nominal_value},figure_type='float'),
+                            self._format({'name': bonds.nominal_value},figure_type='float',digit=2,is_currency=True),
                             {'name': 'BONOS'},
                             {'name': bonds.time_for_each_cash_flow},
-                            self._format({'name': bonds.interest_rate},figure_type='float'),
+                            self._format({'name': bonds.interest_rate},figure_type='float',digit=precision,is_currency=False),
                             ],
                 'level': 3,
                 'unfoldable': False,
@@ -355,6 +363,8 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
         for pay in will_pay_records:
             total_investment += pay.amount
             resouce_name = pay.fund_id and pay.fund_id.name or ''
+            precision = self.env['decimal.precision'].precision_get('REPAY')
+                        
             term = 0
             if pay.annual_term:
                 term += pay.annual_term * 360
@@ -370,10 +380,10 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
                             {'name': pay.contract_id and pay.contract_id.name or ''}, 
                             {'name': pay.journal_id and pay.journal_id.bank_account_id and pay.journal_id.bank_account_id.acc_number or ''},
                             {'name':pay.currency_id.name},
-                            self._format({'name': pay.amount},figure_type='float'),
+                            self._format({'name': pay.amount},figure_type='float',digit=2,is_currency=True),
                             {'name': 'PAGARE'},
                             {'name': term},
-                            self._format({'name': pay.interest_rate},figure_type='float'),
+                            self._format({'name': pay.interest_rate},figure_type='float',digit=precision,is_currency=False),
                             ],
                 'level': 3,
                 'unfoldable': False,
@@ -388,7 +398,7 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
                         {'name': ''}, 
                         {'name': ''},
                         {'name': ''},
-                        self._format({'name': total_investment},figure_type='float'),
+                        self._format({'name': total_investment},figure_type='float',digit=2,is_currency=True),
                         {'name': ''},
                         {'name':''},
                         {'name':''},
@@ -452,7 +462,7 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
                 amount += sum(x.nominal_value for x in udibonos_bank_records)
                 amount += sum(x.nominal_value for x in bonds_bank_records)
                 amount += sum(x.amount for x in will_pay_bank_records)                        
-                columns.append(self._format({'name': amount},figure_type='float'))
+                columns.append(self._format({'name': amount},figure_type='float',digit=2,is_currency=True))
 
                 if total_dict.get(period.get('string')):
                     old_amount = total_dict.get(period.get('string',0)) + amount
@@ -460,7 +470,7 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
                 else:
                     total_dict.update({period.get('string'):amount})
                 total_ins += amount
-            amount_total.append(self._format({'name': total_ins},figure_type='float'))
+            amount_total.append(self._format({'name': total_ins},figure_type='float',digit=2,is_currency=True))
 
             lines.append({
                 'id': 'hierarchy_jr' + str(journal.id),
@@ -473,7 +483,7 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
 
         total_name = [{'name': 'Total'}]
         for per in total_dict:
-            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float'))
+            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2,is_currency=True))
             
         r_column = 8 - len(total_name)
         if r_column > 0:
@@ -550,7 +560,7 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
                 amount += sum(x.nominal_value for x in udibonos_fund_records)
                 amount += sum(x.nominal_value for x in bonds_fund_records)
                 amount += sum(x.amount for x in will_pay_fund_records)                        
-                columns.append(self._format({'name': amount},figure_type='float'))
+                columns.append(self._format({'name': amount},figure_type='float',digit=2,is_currency=True))
 
                 if total_dict.get(period.get('string')):
                     old_amount = total_dict.get(period.get('string',0)) + amount
@@ -558,7 +568,7 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
                 else:
                     total_dict.update({period.get('string'):amount})
                 total_ins += amount
-            amount_total.append(self._format({'name': total_ins},figure_type='float'))
+            amount_total.append(self._format({'name': total_ins},figure_type='float',digit=2,is_currency=True))
 
             lines.append({
                 'id': 'hierarchy_or' + str(origin.id),
@@ -571,7 +581,7 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
 
         total_name = [{'name': 'Total'}]
         for per in total_dict:
-            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float'))
+            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2,is_currency=True))
             
         r_column = 8 - len(total_name)
         if r_column > 0:
@@ -646,7 +656,7 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
                 amount += sum(x.nominal_value for x in bonds_currency_records)
                 amount += sum(x.amount for x in will_pay_currency_records)
         
-                columns.append(self._format({'name': amount},figure_type='float'))
+                columns.append(self._format({'name': amount},figure_type='float',digit=2,is_currency=True))
                 
                 if total_dict.get(period.get('string')):
                     old_amount = total_dict.get(period.get('string',0)) + amount
@@ -654,7 +664,7 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
                 else:
                     total_dict.update({period.get('string'):amount})
                 total_ins += amount
-            amount_total.append(self._format({'name': total_ins},figure_type='float'))
+            amount_total.append(self._format({'name': total_ins},figure_type='float',digit=2,is_currency=True))
             
             lines.append({
                 'id': 'hierarchy_jr' + str(currency.id),
@@ -667,7 +677,7 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
 
         total_name = [{'name': 'Total'}]
         for per in total_dict:
-            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float'))
+            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2,is_currency=True))
             
         r_column = 8 - len(total_name)
         if r_column > 0:

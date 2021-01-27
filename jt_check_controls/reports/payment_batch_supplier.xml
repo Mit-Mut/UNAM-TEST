@@ -52,7 +52,8 @@
                                 </t>
                             </t>
                             <t t-foreach="o.payment_req_ids" t-as="line" t-if="o.type_of_batch == 'nominal'">
-                                <t t-if="line.selected and line.check_folio_id and line.check_status == 'Available for printing'">
+                                <t  t-if="line.selected and line.check_folio_id and line.check_status == 'Available for printing'">
+                                    
                                     <div>
                                         <div class="row">
                                             <div class="col-12" align="left" style="margin-left:5px;text-align:right" >
@@ -61,15 +62,15 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-6" align="left" style="margin-left:5px;">
-                                                <b><span t-esc="line.payment_req_id.rfc"/></b><br/>
-                                                <b>Benef:</b>
-                                                    <t t-if="line.payment_req_id">
-                                                    <b><span t-esc="line.payment_req_id.partner_id.name"/></b>                                                    
-                                                    </t>
+                                            <div class="col-6" align="left" style="margin-left:5px;margin-top:15px;">
+                                                <p><strong><span t-esc="line.payment_req_id.rfc"/> </strong><br/>
+    <!--                                                 <b>Benef:</b>
+ -->                                                <t t-if="line.payment_req_id">
+                                            <span t-esc="line.payment_req_id.partner_id.name"/></t></p>               
+                                                    
 
                                             </div>
-                                            <div class="col-6" align="left" style="margin-left:5px;text-align:right">
+                                            <div class="col-6" align="left" style="margin-left:5px;text-align:right;margin-top:25px;">
                                                 <t t-if="line.payment_req_id">
                                                         <span t-esc="line.amount_to_pay"
                                                             t-options='{"widget": "monetary",
@@ -78,11 +79,9 @@
                                             </div>
                                         </div>
                                         <br/>
-                                        
-                                        <br/>
                                          <t t-if="line.payment_req_id">
                                              <span style="margin-left:5px;">(</span>
-                                             <span
+                                                 <span
                                            t-esc="line.payment_req_id.currency_id.with_context(from_supplier_payment_batch_report=True).amount_to_text(line.amount_to_pay)"/> )
                                          </t>
                                         <br/>
@@ -141,12 +140,12 @@
                                 </t>
                             </t>
                         </div>
-                        <div class="page">
+                        <div class="page" t-if="o.type_of_batch in ('supplier','project')">
                             <t t-if="not o" t-set="o" t-value="doc"/>
                             <t t-if="not company">
                                 <!-- Multicompany -->
                                 <t t-if="company_id">
-                                    <t t-set="company" t-value="company_id"/>
+                                    <t t-set="company_idany" t-value="company_id"/>
                                 </t>
                                 <t t-elif="o and 'company_id' in o">
                                     <t t-set="company" t-value="o.company_id.sudo()"/>
@@ -155,8 +154,9 @@
                                     <t t-set="company" t-value="res_company"/>
                                 </t>
                             </t>
-                            <t t-foreach="o.payment_req_ids" t-as="line">
+                            <t t-foreach="o.payment_req_ids" t-as="line" t-if="o.type_of_batch in ('supplier','project')">
                                 <t t-if="line.selected and line.check_folio_id and line.check_status == 'Available for printing'">
+                                
                                     <div>
                                         <div class="row">
                                             <div class="col-6" align="left" style="margin-left:5px;">
@@ -168,34 +168,40 @@
                                         <br/>
                                         <table style="text-align:center" width="100%">
                                             <tbody>
+                                                <!-- <tr>
+                                                    <td width="33%">
+                                                    </td>
+                                                    <td width="33%">Zone</td>
+                                                </tr> -->
                                                 <tr>
-                                                    <div class="row">
-                                                        <div class="col-6" align="left" style="margin-left:5px;">
-                                                            <t t-if="line.payment_req_id">
-                                                            <b><span t-esc="line.payment_req_id.partner_id.name"/></b>
-                                                            </t>
-                                                        </div>
-                                                        <div class="col-6" align="left" style="text-align:right">
-                                                        </div>
-                                                    </div>
+                                                    
                                                     <td width="33%">
                                                          <t t-if="line.payment_req_id">
                                                             <span t-esc="line.payment_req_id.name"/>
                                                          </t>
                                                     </td>
                                                     <td width="33%">
-                                                        <span t-esc="line.check_folio_id.checkbook_no"/>
+                                                        98 - add here value from given master data files
+                                                        <!-- <span t-esc="line.check_folio_id.checkbook_no"/> -->
                                                     </td>
                                                     <td width="33%">
                                                         <span t-esc="line.check_folio_id.folio"/>
                                                     </td>
+                                                    <div class="row">
+                                                        <div class="col-6" align="left" style="margin-left:5px;">
+                                                            <!-- <t t-if="line.payment_req_id">
+                                                            <b><span t-esc="line.payment_req_id.partner_id.name"/></b>
+                                                            </t> -->
+                                                        </div>
+                                                        <div class="col-6" align="left" style="text-align:right">
+                                                        </div>
+                                                    </div>
                                                     
                                                 </tr>
                                                 <tr>
-                                                    <td style="text-align:left" width="10%"><!-- <b>Benef:</b>
-                                                    <t t-if="line.payment_req_id">
-                                                    <b><span t-esc="line.payment_req_id.partner_id.name"/></b> -->
-                                                    <!-- </t> --></td>
+                                                    <td style="text-align:left" width="10%"><t t-if="line.payment_req_id">
+                                                    <b><span t-esc="line.payment_req_id.partner_id.name"/></b>
+                                                    </t></td>
                                                     <td width="33%"></td>
                                                     <td width="33%" style="text-align:right">
                                                     <t t-if="line.payment_req_id">

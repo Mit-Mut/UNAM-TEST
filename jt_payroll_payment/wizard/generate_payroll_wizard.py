@@ -28,6 +28,7 @@ from odoo.modules.module import get_resource_path
 from xlrd import open_workbook
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import ustr
+import io
 
 class GeneratePayrollWizard(models.TransientModel):
 
@@ -47,8 +48,18 @@ class GeneratePayrollWizard(models.TransientModel):
     employee_ids = fields.Many2many('hr.employee','employee_generate_payroll_wizard_rel','employee_id','wizard_id','Employees')
     payroll_process_id = fields.Many2one('custom.payroll.processing','Payroll Process')
     
+    def check_employee_data(self,failed_row,rfc,import_type):
+        failed_row += str(rfc) + "------>> Invalid Employee RFC In "+str(import_type)+" Import\n"
+        return failed_row
+    
+    def check_category_data(self,failed_row,cat,import_type):
+        failed_row += str(cat) + "------>> Invalid Category Key In "+str(import_type)+" Import\n"
+        return failed_row
+     
     def generate(self):
         if self.file:
+            failed_row = ""
+            
             data = base64.decodestring(self.file)
             book = open_workbook(file_contents=data or b'')
             sheet = book.sheet_by_index(0)
@@ -60,7 +71,6 @@ class GeneratePayrollWizard(models.TransientModel):
             #======================== payroll_perceptions ================# 
             if self.type_of_movement == 'payroll_perceptions':
                 for rowx, row in enumerate(map(sheet.row, range(1, sheet.nrows)), 1):
-                    
                     counter = 0
                     rfc = row[0].value
                     program_code = row[2].value
@@ -71,7 +81,7 @@ class GeneratePayrollWizard(models.TransientModel):
                     bank_account = row[8].value
                     pre_key = row[9].value
                     amount = row[10].value
-                    
+
                     if rfc:
                         if exit_payroll_id and line_data:
                             exit_payroll_id.write({'preception_line_ids':line_data})
@@ -96,6 +106,8 @@ class GeneratePayrollWizard(models.TransientModel):
                                 payment_method_id = payment_method_rec.id
                              
                         employee_id =self.env['hr.employee'].search([('rfc','=',rfc)],limit=1)
+                        if not employee_id:
+                            failed_row = self.check_employee_data(failed_row, rfc, 'Payroll Perceptions')
                         if employee_id:
                             rec_check_number = check_number
                             rec_deposite_number = deposite_number
@@ -111,7 +123,7 @@ class GeneratePayrollWizard(models.TransientModel):
                                     rec_deposite_number = int(deposite_number)
 
                             if bank_key:
-                                if  type(bank_key) is int or type(bank_key) is float:
+                                if type(bank_key) is int or type(bank_key) is float:
                                     rec_bank_key = int(bank_key)
 
                             if bank_account:
@@ -121,15 +133,25 @@ class GeneratePayrollWizard(models.TransientModel):
                                 if bank_account_rec:
                                     bank_account_id = bank_account_rec.id
                                     
-                            exit_payroll_id = self.env['employee.payroll.file'].search([('employee_id','=',employee_id.id),('id','in',self.payroll_process_id.payroll_ids.ids)],limit=1)
+                            exit_payroll_id = self.env['employee.payroll.file'].search([('employee_id','=',employee_id.id),
+                                                        ('id','in',self.payroll_process_id.payroll_ids.ids)],limit=1)
                             if exit_payroll_id:
                                 exit_payroll_id.l10n_mx_edi_payment_method_id = payment_method_id
                                 exit_payroll_id.deposite_number = rec_deposite_number
                                 exit_payroll_id.check_number = rec_check_number
                                 exit_payroll_id.bank_key = rec_bank_key
                                 exit_payroll_id.receiving_bank_acc_pay_id = bank_account_id
+                                if check_number and rec_bank_key:
+                                    log = self.env['check.log'].search([('folio', '=', check_number),
+                                                    ('bank_id.bank_id.l10n_mx_edi_code', '=', rec_bank_key)], limit=1)
+                                    if log:
+                                        exit_payroll_id.check_folio_id = log.id
                                 
                             if not exit_payroll_id:
+                                log = False
+                                if check_number:
+                                    log = self.env['check.log'].search([('folio', '=', check_number),
+                                                    ('bank_id.bank_id.l10n_mx_edi_code', '=', rec_bank_key)], limit=1)
                                 result_dict.update({'payroll_processing_id':self.payroll_process_id.id,
                                                     'period_start' : self.payroll_process_id.period_start,
                                                     'period_end' : self.payroll_process_id.period_end,
@@ -138,10 +160,14 @@ class GeneratePayrollWizard(models.TransientModel):
                                                     'bank_key' : rec_bank_key,
                                                     'deposite_number' : rec_deposite_number,
                                                     'check_number' : rec_check_number,
+                                                    'check_folio_id': log.id if log else False,
                                                     'l10n_mx_edi_payment_method_id':payment_method_id,
+                                                    'is_pension_payment_request' : True,
                                                     'receiving_bank_acc_pay_id' : bank_account_id,
                                                     'payment_request_type':'direct_employee'})
-                    
+                        else:
+                            continue
+
                     program_id = False
                     if program_code:
                         p_id = self.env['program.code'].search([('program_code','=',program_code)],limit=1)
@@ -155,20 +181,18 @@ class GeneratePayrollWizard(models.TransientModel):
                         pre_id = self.env['preception'].search([('key','=',pre_key)],limit=1)
                         if pre_id:
                             line_data.append((0,0,{'program_code_id':program_id,'preception_id':pre_id.id,'amount':amount})) 
+                    if exit_payroll_id and line_data:
+                        exit_payroll_id.write({'preception_line_ids':line_data})
+                        line_data = []
+                        # exit_payroll_id = False
 
-                if exit_payroll_id and line_data:
-                    exit_payroll_id.write({'preception_line_ids':line_data})
-                    line_data = []
-                    exit_payroll_id = False
-                         
-                if result_dict:
-                    result_dict.update({'preception_line_ids':line_data})
-                    self.env['employee.payroll.file'].create(result_dict) 
-                    line_data = []
-                    result_dict = {}
-                    
+                    if result_dict:
+                        result_dict.update({'preception_line_ids':line_data})
+                        exit_payroll_id = self.env['employee.payroll.file'].create(result_dict)
+                        line_data = []
+                        result_dict = {}
 
-            #======================== payroll_deductions ================# 
+            #======================== payroll_deductions ================#
             if self.type_of_movement == 'payroll_deductions':
                 for rowx, row in enumerate(map(sheet.row, range(1, sheet.nrows)), 1):
                     
@@ -193,6 +217,8 @@ class GeneratePayrollWizard(models.TransientModel):
                             exit_payroll_id = False
                              
                         employee_id =self.env['hr.employee'].search([('rfc','=',rfc)],limit=1)
+                        if not employee_id:
+                            failed_row = self.check_employee_data(failed_row,rfc,'Payroll Deductions')                            
                         if employee_id:
 
                             exit_payroll_id = self.env['employee.payroll.file'].search([('employee_id','=',employee_id.id),('id','in',self.payroll_process_id.payroll_ids.ids)],limit=1)
@@ -206,8 +232,11 @@ class GeneratePayrollWizard(models.TransientModel):
                                                     'fornight' : self.payroll_process_id.fornight,
                                                     'employee_id':employee_id.id,
                                                     'net_salary':net_salary,
+                                                    'is_pension_payment_request' : True,
                                                     'payment_request_type':'direct_employee'})
-                    
+                        else:
+                            continue
+
                     if ded_key:
                         if  type(ded_key) is int or type(ded_key) is float:
                             ded_key = int(ded_key)
@@ -216,18 +245,18 @@ class GeneratePayrollWizard(models.TransientModel):
                         if ded_id:
                             line_data.append((0,0,{'deduction_id':ded_id.id,'amount':amount})) 
 
-                if exit_payroll_id and line_data:
-                    exit_payroll_id.write({'deduction_line_ids':line_data})
-                    line_data = []
-                    exit_payroll_id = False
-                         
-                if result_dict:
-                    result_dict.update({'deduction_line_ids':line_data})
-                    self.env['employee.payroll.file'].create(result_dict) 
-                    line_data = []
-                    exit_payroll_id = False
-                    result_dict = {}
-                    
+                    if exit_payroll_id and line_data:
+                        exit_payroll_id.write({'deduction_line_ids':line_data})
+                        line_data = []
+                        # exit_payroll_id = False
+
+                    if result_dict:
+                        result_dict.update({'deduction_line_ids':line_data})
+                        exit_payroll_id = self.env['employee.payroll.file'].create(result_dict)
+                        line_data = []
+                        # exit_payroll_id = False
+                        result_dict = {}
+
             #======================== pension_payment ================# 
             if self.type_of_movement == 'pension_payment':
                 
@@ -242,23 +271,11 @@ class GeneratePayrollWizard(models.TransientModel):
                     bank_account = row[7].value
                     total_pension = row[8].value
 
-                    
                     if rfc:
-
-                        if exit_payroll_id and line_data:
-                            exit_payroll_id.write({'pension_payment_line_ids':line_data})
-                            line_data = []
-                            exit_payroll_id = False
-                            result_dict = {}
-                        
-                        if result_dict:
-                            result_dict.update({'pension_payment_line_ids':line_data})
-                            self.env['employee.payroll.file'].create(result_dict)
-                            result_dict = {}
-                            line_data = []
-                            exit_payroll_id = False
-                             
                         employee_id =self.env['hr.employee'].search([('rfc','=',rfc)],limit=1)
+                        if not employee_id:
+                            failed_row = self.check_employee_data(failed_row,rfc,'Pension Payment')                            
+                        
                         if employee_id:
                             exit_payroll_id = self.env['employee.payroll.file'].search([('employee_id','=',employee_id.id),('id','in',self.payroll_process_id.payroll_ids.ids)],limit=1)
                             if not exit_payroll_id:                             
@@ -267,8 +284,11 @@ class GeneratePayrollWizard(models.TransientModel):
                                                     'period_end' : self.payroll_process_id.period_end,
                                                     'fornight' : self.payroll_process_id.fornight,
                                                     'employee_id':employee_id.id,
+                                                    'is_pension_payment_request' : True,
                                                     'payment_request_type':'direct_employee'})
-                    
+                        else:
+                            continue
+
                     partner_id = False
                     deposite_data = deposite
                     check_no_data = check_no
@@ -310,17 +330,17 @@ class GeneratePayrollWizard(models.TransientModel):
                     
                     line_data.append((0,0,{'bank_key':bank_key,'bank_id':bank_id,'bank_acc_number':bank_account_id,'l10n_mx_edi_payment_method_id':payment_method_id,'partner_id':partner_id,'deposit_number':deposite_data,'check_number':check_no_data,'total_pension':total_pension})) 
 
-                if exit_payroll_id and line_data:
-                    exit_payroll_id.write({'pension_payment_line_ids':line_data})
-                    line_data = []
-                    exit_payroll_id = False
-                         
-                if result_dict:
-                    result_dict.update({'pension_payment_line_ids':line_data})
-                    self.env['employee.payroll.file'].create(result_dict)
-                    line_data = []
-                    result_dict = [] 
-                    exit_payroll_id = False
+                    if exit_payroll_id and line_data:
+                        exit_payroll_id.write({'pension_payment_line_ids':line_data})
+                        line_data = []
+                        # exit_payroll_id = False
+
+                    if result_dict:
+                        result_dict.update({'pension_payment_line_ids':line_data})
+                        exit_payroll_id = self.env['employee.payroll.file'].create(result_dict)
+                        line_data = []
+                        result_dict = {}
+                        # exit_payroll_id = False
 
             #======================== Additional payments ================# 
             if self.type_of_movement == 'additional_payments':
@@ -349,6 +369,9 @@ class GeneratePayrollWizard(models.TransientModel):
                             exit_payroll_id = False
                              
                         employee_id =self.env['hr.employee'].search([('rfc','=',rfc)],limit=1)
+                        if not employee_id:
+                            failed_row = self.check_employee_data(failed_row,rfc,'Additional Payments')                            
+                        
                         if employee_id:
                             exit_payroll_id = self.env['employee.payroll.file'].search([('employee_id','=',employee_id.id),('id','in',self.payroll_process_id.payroll_ids.ids)],limit=1)
                             if not exit_payroll_id:                             
@@ -357,8 +380,11 @@ class GeneratePayrollWizard(models.TransientModel):
                                                     'period_end' : self.payroll_process_id.period_end,
                                                     'fornight' : self.payroll_process_id.fornight,
                                                     'employee_id':employee_id.id,
+                                                    'is_pension_payment_request' : True,
                                                     'payment_request_type':'direct_employee'})
-                    
+                        else:
+                            continue
+
                     job_data = False
                     program_code_id = False
                     details_data = False
@@ -372,7 +398,8 @@ class GeneratePayrollWizard(models.TransientModel):
                         job_rec = self.env['hr.job'].search([('category_key.name','=',job_id)],limit=1)
                         if job_rec:
                             job_data = job_rec.id
-                    
+                        else:
+                            failed_row = self.check_category_data(failed_row, job_id,'Additional Payments')
                     if program_code:
                         p_id = self.env['program.code'].search([('program_code','=',program_code)],limit=1)
                         if p_id:
@@ -380,18 +407,18 @@ class GeneratePayrollWizard(models.TransientModel):
                          
                     line_data.append((0,0,{'job_id':job_data,'program_code_id':program_code_id,'details':details_data,'amount':amount})) 
 
-                if exit_payroll_id and line_data:
-                    exit_payroll_id.write({'additional_payments_line_ids':line_data})
-                    line_data = []
-                    exit_payroll_id = False
-                    result_dict = {}
-                         
-                if result_dict:
-                    result_dict.update({'additional_payments_line_ids':line_data})
-                    self.env['employee.payroll.file'].create(result_dict)
-                    result_dict = {} 
-                    line_data = []
-                    exit_payroll_id = False
+                    if exit_payroll_id and line_data:
+                        exit_payroll_id.write({'additional_payments_line_ids':line_data})
+                        line_data = []
+                        # exit_payroll_id = False
+                        result_dict = {}
+
+                    if result_dict:
+                        result_dict.update({'additional_payments_line_ids':line_data})
+                        exit_payroll_id = self.env['employee.payroll.file'].create(result_dict)
+                        result_dict = {}
+                        line_data = []
+                        # exit_payroll_id = False
 
             #======================== additional_pension_payments ================# 
             if self.type_of_movement == 'additional_pension_payments':
@@ -408,25 +435,31 @@ class GeneratePayrollWizard(models.TransientModel):
                             line_data = []
                             exit_payroll_id = False
                             result_dict = {}
-                        
+
                         if result_dict:
                             result_dict.update({'additional_pension_payments_line_ids':line_data})
                             self.env['employee.payroll.file'].create(result_dict)
                             result_dict = {}
                             line_data = []
                             exit_payroll_id = False
-                             
+
                         employee_id =self.env['hr.employee'].search([('rfc','=',rfc)],limit=1)
+                        if not employee_id:
+                            failed_row = self.check_employee_data(failed_row,rfc,'Additional Pension Payments')                            
+                        
                         if employee_id:
-                            exit_payroll_id = self.env['employee.payroll.file'].search([('employee_id','=',employee_id.id),('id','in',self.payroll_process_id.payroll_ids.ids)],limit=1)
-                            if not exit_payroll_id: 
+                            exit_payroll_id = self.env['employee.payroll.file'].search([('employee_id','=',employee_id.id),
+                                                        ('id','in',self.payroll_process_id.payroll_ids.ids)],limit=1)
+                            if not exit_payroll_id:
                                 result_dict.update({'payroll_processing_id':self.payroll_process_id.id,
                                                     'period_start' : self.payroll_process_id.period_start,
                                                     'period_end' : self.payroll_process_id.period_end,
                                                     'fornight' : self.payroll_process_id.fornight,
                                                     'employee_id':employee_id.id,
+                                                    'is_pension_payment_request' : True,
                                                     'payment_request_type':'direct_employee'})
-                    
+                        else:
+                            continue
                     partner_id = False
                     
                     if ben_name:
@@ -436,16 +469,29 @@ class GeneratePayrollWizard(models.TransientModel):
                         
                     line_data.append((0,0,{'partner_id':partner_id,'amount':amount})) 
 
-                if exit_payroll_id and line_data:
-                    exit_payroll_id.write({'additional_pension_payments_line_ids':line_data})
-                    line_data = []
-                    exit_payroll_id = False
-                    result_dict = {}
-                         
-                if result_dict:
-                    result_dict.update({'additional_pension_payments_line_ids':line_data})
-                    self.env['employee.payroll.file'].create(result_dict) 
-                    line_data = []
-                    exit_payroll_id = False
-                    result_dict = {}
-                    
+                    if exit_payroll_id and line_data:
+                        exit_payroll_id.write({'additional_pension_payments_line_ids':line_data})
+                        line_data = []
+                        # exit_payroll_id = False
+                        result_dict = {}
+
+                    if result_dict:
+                        result_dict.update({'additional_pension_payments_line_ids':line_data})
+                        exit_payroll_id = self.env['employee.payroll.file'].create(result_dict)
+                        line_data = []
+                        # exit_payroll_id = False
+                        result_dict = {}
+
+            if failed_row != "":
+                content = ""
+                if self.payroll_process_id.failed_row_file:
+                    file_data = base64.b64decode(self.payroll_process_id.failed_row_file)
+                    content += io.StringIO(file_data.decode("utf-8")).read()
+                # if cron:
+                #     content = ''
+                content += "\n"
+                content += "...................Failed Rows " + \
+                           str(datetime.today()) + "...............\n"
+                content += str(failed_row)
+                failed_data = base64.b64encode(content.encode('utf-8'))
+                self.payroll_process_id.failed_row_file = failed_data

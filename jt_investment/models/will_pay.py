@@ -37,7 +37,7 @@ class WillPay(models.Model):
     investment_date = fields.Date('Investment Date')
     due_date = fields.Date('Due Date')
     amount = fields.Float(related='amount_invest',string='Amount')
-    interest_rate = fields.Float("Interest Rate")
+    interest_rate = fields.Float("Interest Rate",digits='REPAY')
     annual_term = fields.Integer("Annual Term")
     monthly_term = fields.Integer("Monthly Term")
     term_days = fields.Integer("Term Days")

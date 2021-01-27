@@ -38,6 +38,9 @@
                                     <field name="period_end" class="oe_inline" required="1"/>
                                 </div>
                                 <field name="fornight" required="1"/>
+                                   <field name="failed_row_file" filename="fialed_row_filename" readonly="1"/>
+                                   <field name="fialed_row_filename" invisible="1"/>
+                                
                              </group>
                         </group>
                     </sheet>
@@ -125,11 +128,12 @@
                             <group>
                                 <field name="reference" readonly="1"/>
                                 <field name="name" readonly="1"/>
-                                <field name="l10n_mx_edi_payment_method_id"/>
-                                <field name="bank_key"/>
-                                <field name="deposite_number"/>
-                                <field name="check_number"/>
-                                <field name="adjustment_case_id" context="{'show_from_payroll':1}"/>
+                                <field name="l10n_mx_edi_payment_method_id" attrs="{'readonly':[('state','=','done')]}"/>
+                                <field name="bank_key" attrs="{'readonly':[('state','=','done')]}"/>
+                                <field name="deposite_number" attrs="{'readonly':[('state','=','done')]}"/>
+                                <field name="check_number" attrs="{'readonly':[('state','=','done')]}"/>
+                                <field name="adjustment_case_id" context="{'show_from_payroll':1}" attrs="{'readonly':[('state','=','done')]}"/>
+                                <field name="adjustment_case_description"/>
                                 <field name="net_salary"/>
                                 <field name="casualties_and_cancellations" attrs="{'readonly':[('state','=','done')]}"/>
                                 <field name="request_type" attrs="{'readonly':[('state','=','done')]}" invisible="1"/>

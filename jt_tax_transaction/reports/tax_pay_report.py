@@ -39,7 +39,7 @@ class TaxReport(models.AbstractModel):
     filter_date = {'mode': 'range', 'filter': 'this_month'}
     filter_comparison = None
     filter_all_entries = False
-    filter_journals = None
+    filter_journals = True
     filter_analytic = None
     filter_unfold_all = None
     filter_cash_basis = None
@@ -144,11 +144,10 @@ class TaxReport(models.AbstractModel):
         account_id = self.env['account.account'].search([('code', '=', '220.001.001.001')], limit=1)
         if account_id:
             values= self.env['account.move.line'].search(domain + [('account_id', '=', account_id.id)])
-            acc_amount_220_001_001_001 = sum(x.credit - x.debit for x in values)
+            acc_amount_220_001_001_001 = sum(x.debit - x.credit for x in values)
     
         #===============115.001.001============#
         acc_amount_115_001_001 = 0
-        
         account_id = self.env['account.account'].search([('code', '=', '115.001.001')], limit=1)
         if account_id:
             values= self.env['account.move.line'].search(domain + [('account_id', '=', account_id.id)])

@@ -36,3 +36,12 @@ class RequestConfirm(models.TransientModel):
             request_account_id.bank_id = self.bank_id
             request_account_id.confirm_account()
     
+            return {
+                'name': 'Bank Account',
+                'view_mode': 'form',
+                'view_id': self.env.ref('account.view_account_bank_journal_form').id,
+                'res_model': 'account.journal',
+                'type': 'ir.actions.act_window',
+                'target': 'current',
+                'context': {'default_type': 'bank','default_account_open_request_id':active_id}
+            }

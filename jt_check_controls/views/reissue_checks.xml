@@ -319,7 +319,9 @@
                                 <field name="check_amount"/>
                                 <field name="status"/>
                                 <field name="general_status"/>
-                                <field name="is_physical_check" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="is_physical_check" attrs="{'readonly':[('state','!=','draft')],'invisible':[('type_of_request_payroll','=','check_adjustments')]}"/>
+                                <field name="reason_adjustments" attrs="{'invisible':[('state','!=','rejected'),
+                                ('type_of_request_payroll','!=','check_adjustments')],'required':[('state','=','rejected')]}"/>
                                 <field name="reason_reissue"
                                        attrs="{'readonly':[('state','!=','draft')],
                                        'invisible':[('type_of_request_payroll','!=','check_reissue')]}"/>
@@ -333,10 +335,10 @@
                             <group>
                                 <field name="bank_id"/>
                                 <field name="bank_account_id"/>
-                                <field name="move_id" attrs="{'readonly':[('state','!=','draft')]}"
+                                <field name="move_id" attrs="{'readonly':[('state','!=','draft')],'invisible':[('type_of_request_payroll','=','check_adjustments')]}"
                                  domain="[('payment_state','in',('payment_method_cancelled','assigned_payment_method')),('is_payroll_payment_request', '=', True),('type', '=', 'in_invoice')]"/>
                                 <field name="folio_against_receipt"  context="{'show_folio_name':True}"
-                                       attrs="{'readonly':[('state','!=','draft')]}"
+                                       attrs="{'readonly':[('state','!=','draft')],'invisible':[('type_of_request_payroll','=','check_adjustments')]}"
                                 domain="[('payment_state','=',('payment_method_cancelled','assigned_payment_method')),('is_payroll_payment_request', '=', True),('type', '=', 'in_invoice')]"/>
                                 <field name="folio_against_receipt_name" invisible="1"/>
                                 <field name="partner_id"/>

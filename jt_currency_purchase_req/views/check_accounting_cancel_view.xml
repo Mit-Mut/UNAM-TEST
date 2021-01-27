@@ -22,7 +22,7 @@
                 <form>
                     <group>
                         <group>
-                        <field name="account_modification_id"/>
+                        <field name="account_cancellation_id"/>
                         <field name="dependancy_id"/>
                         <field name="bank_id"/>
                      </group>

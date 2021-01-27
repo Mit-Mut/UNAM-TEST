@@ -140,9 +140,11 @@ class PayrollCheckAmounts(models.AbstractModel):
          
         payment_issue_ids = self.env['payment.batch.supplier'].search(domain)
         if fortnight_domain and payment_issue_ids:
-            batch_lines_ids = self.env['check.payment.req'].search([('payment_batch_id','in',payment_issue_ids.ids),('payment_req_id.fornight','in',fortnight_domain)])
+            batch_lines_ids = self.env['check.payment.req'].search([('payment_batch_id','in',payment_issue_ids.ids),
+                                                        ('payment_req_id.fornight','in',fortnight_domain),
+                                                        ('check_status', '=', 'Printed')])
             payment_issue_ids = batch_lines_ids.mapped('payment_batch_id')
-            
+
         journal_ids = payment_issue_ids.mapped('payment_issuing_bank_id')
         total_amount = 0
         for journal in journal_ids:
@@ -155,25 +157,28 @@ class PayrollCheckAmounts(models.AbstractModel):
                 date_list = list(date_list)
                 for d in date_list:
                     date_payment_issue_ids = j_payment_issue_ids.filtered(lambda x:x.payment_date==d)
+                    is_any_printed = False
                     amount = 0
                     for payment_batch in date_payment_issue_ids:
+                        if not is_any_printed:
+                            is_any_printed = any(x.check_status == 'Printed' for x in payment_batch.payment_req_ids)
                         amount += sum(x.amount_to_pay if x.check_status == 'Printed' else 0 \
                              for x in payment_batch.payment_req_ids)
 
                     total_amount += amount
-                    
-                    lines.append({
-                        'id': 'account_' + str(bank_account.id),
-                        'name' : bank_account.acc_number, 
-                        'columns': [ {'name': journal.name},
-                                    self._format({'name': amount},figure_type='float'),
-                                    {'name': d,},
-                                    
-                                    ],
-                        'level': 3,
-                        'unfoldable': False,
-                        'unfolded': True,
-                    })
+                    if is_any_printed:
+                        lines.append({
+                            'id': 'account_' + str(bank_account.id),
+                            'name' : bank_account.acc_number,
+                            'columns': [ {'name': journal.name},
+                                        self._format({'name': amount},figure_type='float'),
+                                        {'name': d,},
+
+                                        ],
+                            'level': 3,
+                            'unfoldable': False,
+                            'unfolded': True,
+                        })
 
         lines.append({
             'id': 'total',
@@ -213,6 +218,8 @@ class PayrollCheckAmounts(models.AbstractModel):
             'company': self.env.company,
         }
 
+        date1 = datetime.now()
+
         body = self.env['ir.ui.view'].render_template(
             "account_reports.print_template",
             values=dict(rcontext),
@@ -220,7 +227,7 @@ class PayrollCheckAmounts(models.AbstractModel):
         body_html = self.with_context(print_mode=True).get_html(options)
         body_html = body_html.replace(b'<div class="o_account_reports_header">',b'<div>')
         if body_html:
-            body_html = body_html + b'<div class="text-left"><strong>SOLICITADO POR:<hr style="width:60%;color:black;"/></strong></div><div class="text-left"><strong>AUTORIZADO POR:<hr style="width:60%;color:black;"/></strong></div><span style="margin-left:20px;">PARA LA COORDINACION DE OPERACION POR BANCA ELECTRONICA</span>'
+            body_html = body_html + b'<div class="text-left"><strong>SOLICITADO POR:<hr style="width:60%;border: 1px solid black;"/></strong></div><div class="text-left"><strong>AUTORIZADO POR:<hr style="width:60%;hight:10%;border: 1.5px solid black;"/></strong></div><span style="margin-left:20px;">PARA LA COORDINACION DE OPERACION POR BANCA ELECTRONICA</span style="margin-right:50px;"><br/><span>Fecha de Emision:</span>'
 
         body = body.replace(b'<body class="o_account_reports_body_print">', b'<body class="o_account_reports_body_print">' + body_html)
         
@@ -247,13 +254,13 @@ class PayrollCheckAmounts(models.AbstractModel):
                     q_year_data += str(fortnight.get('id'))+","
             
             q_year_data += "/"+str(start.year)
-            print ("===",q_year_data)
-            
+
             rcontext.update({
                     'css': '',
                     'o': self.env.user,
                     'res_company': self.env.company,
                     'q_year_data' : q_year_data,
+                    'date1' : date1,
                 })
 
             header = self.env['ir.actions.report'].render_template("jt_check_controls.external_layout_check_amounts", values=rcontext)

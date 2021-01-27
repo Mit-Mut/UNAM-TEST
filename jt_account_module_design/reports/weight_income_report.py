@@ -38,8 +38,8 @@ class WeightIncomeReport(models.AbstractModel):
 
     filter_date = {'mode': 'range', 'filter': 'this_month'}
     filter_comparison = None
-    filter_all_entries = None
-    filter_journals = None
+    filter_all_entries = True
+    filter_journals = True
     filter_analytic = None
     filter_unfold_all = None
     filter_cash_basis = None

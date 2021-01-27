@@ -13,6 +13,13 @@
              	<field name="check_folio_id"/>
              	<field name="check_final_folio_id"/>
              </field>
+             <xpath expr="//page/field[@name='pension_payment_line_ids']/tree/field[@name='check_number']" position="after">
+             	<field name="check_folio_id"/>
+             </xpath>
+             <xpath expr="//page/field[@name='pension_payment_line_ids']/form/group[1]/field[@name='check_number']" position="after">
+             	<field name="check_folio_id"/>
+             </xpath>
+             
 			</field>
 		</record>
 	</data>

@@ -14,7 +14,7 @@ class CommisionAndProfit(models.Model):
     type_of_comission  = fields.Selection([('check_paid_per_window','Check paid per Window'),('transfer','Transfers')],string='Type Of Commision')
     journal_id = fields.Many2one('account.journal',string="Daily")
     programmatic_code_id = fields.Many2one('program.code',string="Programmatic Code")
-    amount = fields.Char('Amount')
+    amount = fields.Float('Amount')
     move_line_ids = fields.One2many(
         'account.move.line', 'commision_profit_id', string="Journal Items")
     description = fields.Char('Description')
@@ -28,15 +28,20 @@ class CommisionAndProfit(models.Model):
         for record in self:
 
             record.status = 'approved'
-            if record.journal_id:
+            if record.journal_id and record.programmatic_code_id:
                 journal = record.journal_id
-                if not journal.default_debit_account_id or not journal.default_credit_account_id \
-                        or not journal.conac_debit_account_id or not journal.conac_credit_account_id:
+                if not journal.default_credit_account_id \
+                        or not journal.conac_credit_account_id:
                     if self.env.user.lang == 'es_MX':
                         raise ValidationError(_("Por favor configure la cuenta UNAM y CONAC en diario!"))
                     else:
                         raise ValidationError(_("Please configure UNAM and CONAC account in journal!"))
-
+                if not record.programmatic_code_id.item_id.unam_account_id or not record.programmatic_code_id.item_id.unam_account_id.coa_conac_id:
+                    if self.env.user.lang == 'es_MX':
+                        raise ValidationError(_("Por favor configure la cuenta UNAM y CONAC en item!"))
+                    else:
+                        raise ValidationError(_("Please configure UNAM and CONAC account in Item!"))
+                     
                 today = datetime.today().date()
                 user = self.env.user
                 partner_id = user.partner_id.id
@@ -52,8 +57,8 @@ class CommisionAndProfit(models.Model):
                                      'commision_profit_id': self.id,
                                      }),
                                      (0, 0, {
-                                     'account_id': journal.default_debit_account_id.id,
-                                     'coa_conac_id': journal.conac_debit_account_id.id,
+                                     'account_id': record.programmatic_code_id.item_id.unam_account_id.id,
+                                     'coa_conac_id': record.programmatic_code_id.item_id.unam_account_id.coa_conac_id.id,
                                      'debit': amount,
                                      'partner_id': partner_id,
                                      'commision_profit_id': self.id,

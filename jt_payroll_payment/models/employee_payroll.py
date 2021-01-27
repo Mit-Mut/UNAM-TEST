@@ -139,6 +139,7 @@ class EmployeePayroll(models.Model):
     check_number = fields.Char("Check number")
     bank_key = fields.Char("Bank Key")
     adjustment_case_id = fields.Many2one('adjustment.cases','Adjustment Cases')
+    adjustment_case_description = fields.Text(related="adjustment_case_id.description",string="Case Description")
     net_salary = fields.Float("Net Salary")
     casualties_and_cancellations = fields.Selection([('B','B'),('BD','BD'),('BDEF','BDEF')],string='Casualties And Cancellations',tracking=True)
     

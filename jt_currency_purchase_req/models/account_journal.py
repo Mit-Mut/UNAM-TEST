@@ -29,7 +29,8 @@ class AccountJournal(models.Model):
                                     string='Account Type')
     dependency_id = fields.Many2one('dependency', "Dependency Key")
     auth_sign_ids = fields.One2many('auth.sign','journal_id')
-
+    account_open_request_id = fields.Many2one('request.accounts','Account Request')
+    
 class  AuthorizedSign(models.Model):
 
 	_name = 'auth.sign'

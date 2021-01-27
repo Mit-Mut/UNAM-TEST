@@ -142,13 +142,35 @@ class ReissueOfChecks(models.Model):
     def action_request(self):
         self.state = 'request'
         check_control_admin_group = self.env.ref('jt_check_controls.group_check_control_admin')
+        finance_admin_group = self.env.ref('jt_finance.group_finance_admin')
         check_control_admin_users = check_control_admin_group.users
-        message = "Approve '" + self.application_folio + "' Request for changes to the check(Suppliers)"
+        finance_admin_users = finance_admin_group.users
+        activity_type = self.env.ref('mail.mail_activity_data_todo').id
+        summary = "Approve '" + self.application_folio + "' Request for changes to the check"
+        if self.type_of_batch == 'supplier':
+            summary += " (Suppliers)"
+        elif self.type_of_batch == 'project':
+            summary += " (Project)"
+        elif self.type_of_batch == 'nominal':
+            summary += " (Payroll)"
+        activity_obj = self.env['mail.activity']
+        model_id = self.env['ir.model'].sudo().search([('model', '=', 'reissue.checks')]).id
+        user_list = []
         for user in check_control_admin_users:
-            self.env['bus.bus'].sendone(
-                (self._cr.dbname, 'res.partner', user.partner_id.id),
-                {'type': 'simple_notification', 'title': _('Approve Request'), 'message': message, 'sticky': True,
-                 'info': True})
+            if user.id not  in user_list:
+                activity_obj.create({'activity_type_id': activity_type,
+                                   'res_model': 'reissue.checks', 'res_id': self.application_folio,
+                                   'res_model_id':model_id,
+                                   'summary': summary, 'user_id': user.id})
+                user_list.append(user.id)
+        for user in finance_admin_users:
+            if user.id not in user_list:
+                activity_obj.create({'activity_type_id': activity_type,
+                                   'res_model': 'reissue.checks', 'res_id': self.application_folio,
+                                   'res_model_id':model_id,
+                                   'summary': summary, 'user_id': user.id})
+                user_list.append(user.id)
+
     
     def action_approve(self):
         self.state = 'approved'
@@ -166,6 +188,7 @@ class ReissueOfChecks(models.Model):
             self.check_log_id.status = 'Cancelled'
         if self.check_log_id and self.type_of_request_payroll=='check_adjustments':
             self.check_log_id.status = 'Detained'
+            self.check_log_id.general_status = 'cancelled'
         if self.move_id:
             self.move_id.cancel_payment_method()
                 

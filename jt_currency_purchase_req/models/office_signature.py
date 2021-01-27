@@ -65,11 +65,11 @@ class AccountCancellation(models.Model):
     _name = 'account.cancellation'
     _description = 'Checking account cancellation'
 
-    account_modification_id = fields.Many2one('request.accounts',domain=[('move_type','=','account_modify')])
+    account_cancellation_id = fields.Many2one('request.accounts',domain=[('move_type','=','account cancel')])
     dependancy_id = fields.Many2one('dependency', string='Dependency')
-    bank_id = fields.Many2one('res.bank',string='Bank')
-    bank_account_id = fields.Many2one('account.journal',"Bank Account")
-    user_id = fields.Many2one('res.users','Responsible User')
+    bank_account_id = fields.Many2one('account.journal',related='account_cancellation_id.bank_account_id',string="Bank Account")
+    bank_id = fields.Many2one('res.bank',related='bank_account_id.bank_id',string='Bank')
+    user_id = fields.Many2one('hr.employee',related="account_cancellation_id.user_id",string='Responsible User')   
 
 
 

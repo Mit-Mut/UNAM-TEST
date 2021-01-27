@@ -29,9 +29,10 @@ class AccountModification(models.Model):
         ('account_modify', 'Account Modification')])
     no_trade = fields.Char('No. Trade')
     legal_number = fields.Char('legal Number')
-    modification_date = fields.Date("Date")
+    modification_date = fields.Date("Date",default=fields.Date.context_today)
     request_line_ids = fields.One2many('request.accounts.line','request_id',string='request line')
-    
+    cancellation_date = fields.Date('Date',default=fields.Date.context_today)
+
     @api.model
     def create(self, vals):
         res = super(AccountModification,self).create(vals)
@@ -42,8 +43,13 @@ class AccountModification(models.Model):
             res.invoice = res.invoice.zfill(8)
         return res
 
-    def send_notification_msg(self):
-        print ("calll")
+    def generate_modification_request(self):
+        message = "Check the '" + self.invoice + "' Request for the modification in account"
+        user = self.env.user
+        self.env['bus.bus'].sendone(
+            (self._cr.dbname, 'res.partner', user.partner_id.id),
+            {'type': 'simple_notification', 'title': _('Request'), 'message': message, 'sticky': True,
+             'info': True})
 
     def action_confirm_modification(self):
         self.write({'status': 'confirmed'})

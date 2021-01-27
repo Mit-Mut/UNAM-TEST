@@ -28,6 +28,7 @@ from odoo.modules.module import get_resource_path
 from xlrd import open_workbook
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import ustr
+import io
 
 class GeneratePayrollWizard(models.TransientModel):
 
@@ -47,8 +48,18 @@ class GeneratePayrollWizard(models.TransientModel):
     employee_ids = fields.Many2many('hr.employee','employee_generate_payroll_wizard_rel','employee_id','wizard_id','Employees')
     payroll_process_id = fields.Many2one('custom.payroll.processing','Payroll Process')
     
+    def check_employee_data(self,failed_row,rfc,import_type):
+        failed_row += str(rfc) + "------>> Invalid Employee RFC In "+str(import_type)+" Import\n"
+        return failed_row
+    
+    def check_category_data(self,failed_row,cat,import_type):
+        failed_row += str(cat) + "------>> Invalid Category Key In "+str(import_type)+" Import\n"
+        return failed_row
+     
     def generate(self):
         if self.file:
+            failed_row = ""
+            
             data = base64.decodestring(self.file)
             book = open_workbook(file_contents=data or b'')
             sheet = book.sheet_by_index(0)
@@ -95,6 +106,8 @@ class GeneratePayrollWizard(models.TransientModel):
                                 payment_method_id = payment_method_rec.id
                              
                         employee_id =self.env['hr.employee'].search([('rfc','=',rfc)],limit=1)
+                        if not employee_id:
+                            failed_row = self.check_employee_data(failed_row, rfc, 'Payroll Perceptions')
                         if employee_id:
                             rec_check_number = check_number
                             rec_deposite_number = deposite_number
@@ -204,6 +217,8 @@ class GeneratePayrollWizard(models.TransientModel):
                             exit_payroll_id = False
                              
                         employee_id =self.env['hr.employee'].search([('rfc','=',rfc)],limit=1)
+                        if not employee_id:
+                            failed_row = self.check_employee_data(failed_row,rfc,'Payroll Deductions')                            
                         if employee_id:
 
                             exit_payroll_id = self.env['employee.payroll.file'].search([('employee_id','=',employee_id.id),('id','in',self.payroll_process_id.payroll_ids.ids)],limit=1)
@@ -258,6 +273,9 @@ class GeneratePayrollWizard(models.TransientModel):
 
                     if rfc:
                         employee_id =self.env['hr.employee'].search([('rfc','=',rfc)],limit=1)
+                        if not employee_id:
+                            failed_row = self.check_employee_data(failed_row,rfc,'Pension Payment')                            
+                        
                         if employee_id:
                             exit_payroll_id = self.env['employee.payroll.file'].search([('employee_id','=',employee_id.id),('id','in',self.payroll_process_id.payroll_ids.ids)],limit=1)
                             if not exit_payroll_id:                             
@@ -351,6 +369,9 @@ class GeneratePayrollWizard(models.TransientModel):
                             exit_payroll_id = False
                              
                         employee_id =self.env['hr.employee'].search([('rfc','=',rfc)],limit=1)
+                        if not employee_id:
+                            failed_row = self.check_employee_data(failed_row,rfc,'Additional Payments')                            
+                        
                         if employee_id:
                             exit_payroll_id = self.env['employee.payroll.file'].search([('employee_id','=',employee_id.id),('id','in',self.payroll_process_id.payroll_ids.ids)],limit=1)
                             if not exit_payroll_id:                             
@@ -377,7 +398,8 @@ class GeneratePayrollWizard(models.TransientModel):
                         job_rec = self.env['hr.job'].search([('category_key.name','=',job_id)],limit=1)
                         if job_rec:
                             job_data = job_rec.id
-                    
+                        else:
+                            failed_row = self.check_category_data(failed_row, job_id,'Additional Payments')
                     if program_code:
                         p_id = self.env['program.code'].search([('program_code','=',program_code)],limit=1)
                         if p_id:
@@ -422,6 +444,9 @@ class GeneratePayrollWizard(models.TransientModel):
                             exit_payroll_id = False
 
                         employee_id =self.env['hr.employee'].search([('rfc','=',rfc)],limit=1)
+                        if not employee_id:
+                            failed_row = self.check_employee_data(failed_row,rfc,'Additional Pension Payments')                            
+                        
                         if employee_id:
                             exit_payroll_id = self.env['employee.payroll.file'].search([('employee_id','=',employee_id.id),
                                                         ('id','in',self.payroll_process_id.payroll_ids.ids)],limit=1)
@@ -456,4 +481,17 @@ class GeneratePayrollWizard(models.TransientModel):
                         line_data = []
                         # exit_payroll_id = False
                         result_dict = {}
-                    
+
+            if failed_row != "":
+                content = ""
+                if self.payroll_process_id.failed_row_file:
+                    file_data = base64.b64decode(self.payroll_process_id.failed_row_file)
+                    content += io.StringIO(file_data.decode("utf-8")).read()
+                # if cron:
+                #     content = ''
+                content += "\n"
+                content += "...................Failed Rows " + \
+                           str(datetime.today()) + "...............\n"
+                content += str(failed_row)
+                failed_data = base64.b64encode(content.encode('utf-8'))
+                self.payroll_process_id.failed_row_file = failed_data

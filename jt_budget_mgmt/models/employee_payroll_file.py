@@ -50,10 +50,10 @@ class EmployeePayroll(models.Model):
             invoice_line_vals.update({'program_code_id':line.program_code_id and line.program_code_id.id or False})
             if account_id:
                 invoice_line_vals.update({'account_id':account_id})
-            else:
-                invoice_line_vals = {}
-        else:
-            invoice_line_vals = {}
+#             else:
+#                 invoice_line_vals = {}
+#         else:
+#             invoice_line_vals = {}
             
         return invoice_line_vals
     

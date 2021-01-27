@@ -168,6 +168,8 @@
                                 <field name="ref"/>
                                 <field name="dependence_id" context="{'show_for_supplier_payment':True}"/>
                                 <field name="sub_depend_id" context="{'show_for_supplier_payment':True}"/>
+                                <field name="programatic_code"/>
+                                <field name="ie_account"/>
                                 <field name="invoice_vendor_bill_id"
                                        attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('type', '!=', 'in_invoice')]}"
                                        domain="[('company_id', '=', company_id), ('partner_id','child_of', [partner_id]), ('type','=','in_invoice')]"
@@ -266,6 +268,7 @@
                                                groups="account.group_show_line_subtotals_tax_included"/>
 
                                         <!-- Others fields -->
+
                                         <field name="partner_id" invisible="1"/>
                                         <field name="amount_currency" invisible="1"/>
                                         <field name="currency_id" invisible="1"/>
@@ -423,10 +426,12 @@
 <!--                                                    'invisible': [('display_type', 'in', ('line_section', 'line_note'))],-->
 <!--                                               }"-->
 <!--                                               domain="[('company_id', '=', parent.company_id)]" />-->
+                                        
                                         <field name="coa_conac_id"/>
                                         <field name="partner_id"
                                                domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"
                                                attrs="{'column_invisible': [('parent.type', '!=', 'entry')]}"/>
+                                        <field name="program_code_id"/>
                                         <field name="name" widget="section_and_note_text" optional="show"/>
                                         <field name="analytic_account_id"
                                                optional="hide"

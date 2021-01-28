@@ -75,6 +75,7 @@
         'views/place_of_payment.xml',
         'wizard/apply_distribution.xml',
         'views/employee_payroll.xml',
+        'data/cron.xml'
 
     ],
     'demo': [

@@ -6,6 +6,7 @@ class CheckbookRequest(models.Model):
 
     _name = 'checkbook.request'
     _description = "Checkbook Request"
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char("Name", default="Checkbook Request")
     application_no = fields.Integer("Application No.")
@@ -85,6 +86,17 @@ class CheckbookRequest(models.Model):
     def action_request(self):
         self.ensure_one()
         self.state = 'requested'
+        check_control_admin_group = self.env.ref('jt_check_controls.group_check_control_admin')
+        check_control_admin_users = check_control_admin_group.users
+        activity_type = self.env.ref('mail.mail_activity_data_todo').id
+        activity_obj = self.env['mail.activity']
+        model_id = self.env['ir.model'].sudo().search([('model', '=', 'checkbook.request')]).id
+        summary = "You have a new check request pending authorization"
+        for user in check_control_admin_users:
+            activity_obj.create({'activity_type_id': activity_type,
+                                 'res_model': 'checkbook.request', 'res_id': self.id,
+                                 'res_model_id': model_id,
+                                 'summary': summary, 'user_id': user.id})
 
     def action_approve(self):
         self.ensure_one()
@@ -230,6 +242,7 @@ class CheckListLine(models.Model):
 
     checklist_id = fields.Many2one("checklist", "Checkbook Request")
     folio = fields.Integer("Folio")
+    related_check_folio_id = fields.Many2one('check.log', "Related Checks", copy=False)
     bank_id = fields.Many2one('account.journal',"Bank")
     bank_account_id = fields.Many2one('res.partner.bank', "Bank Account")
     checkbook_no = fields.Char("Checkbook No")

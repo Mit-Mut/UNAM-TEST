@@ -101,6 +101,7 @@ class ExecutiveData(models.Model):
 
     _name = 'executive.data'
     _description = "Executive Data"
+    _rec_name = 'name'
 
     journal_id = fields.Many2one('account.journal')
     name = fields.Char('Name')
@@ -110,6 +111,22 @@ class ExecutiveData(models.Model):
     email = fields.Char('Email')
     recipient_executive = fields.Boolean("Recipient Executive")
     copied_executive = fields.Boolean("Copied Executive")
+
+
+    def name_get(self):
+        if 'show_recipet' in self._context:
+            res = []
+            for base in self:
+                base_name = ''
+                if base.position:
+                    base_name = base.position
+                res.append((base.id, base_name))
+        else:
+            res = []
+            for rec in self:
+                res.append((rec.id,rec.name))
+        return res
+
     
 class MinimumBalanceHistory(models.Model):
     

@@ -90,6 +90,153 @@ class PaymentBatchSupplier(models.Model):
             line.selected = False
         self.selected = False
 
+
+    def get_zone_data(self):
+
+        U = "369369369703603603658148148143692692692036936936981471471476925925925369269269214704704709258258258"
+        importe = str(self.amount_of_checkes)
+        NumChq = str(self.checkbook_req_id.checkbook_no)
+        vl_impaux = ""
+        va = ""
+        total = ""
+        DIG1 = ""
+        dig2 = ""
+        numchqs = ""
+        IJ = str.find(importe, ".")
+            # Elimina el . del importe
+        if IJ == 0:
+            pass
+        else:
+            vl_txtaux = importe[0:IJ]
+            vl_txtaux = vl_txtaux + importe[IJ + 1:11]
+            vl_impaux = vl_txtaux
+
+        # Otra vez elimina cualquier punto del importe
+        vl_txtaux = ""
+        for IJ in range(0, len(vl_impaux)):
+            if vl_impaux[IJ] != ".":
+                vl_txtaux = vl_txtaux + vl_impaux[IJ]
+      
+        # Rellena con ceros a la izquierda hasta que sean 12 dígitos
+        for IJ in range(0, 12 - len(vl_txtaux)):
+            vl_txtaux = "0" + vl_txtaux
+
+        #justifica con zeros a la izquierda el numchq hasta 8 dígitos
+        numchqs = ""
+        for IJ in range(1, 8 - len(NumChq) + 1):
+            numchqs = "0" + numchqs
+      
+        # une el número de cheque y el importe
+        numchqs = numchqs + NumChq
+
+        # Agrega otro cero a la izquierda. Deben ser 21 caracteres
+        va = "0" + numchqs + vl_txtaux 
+
+        # Calcula el primer dígito
+        total = 0
+
+        # Revisa con isdigit porque hay comas en la cadena del importe
+        # Si hay coma no se suma nada
+        if str.isdigit(va[2]):
+            total = total + int(va[2])
+        if str.isdigit(va[5]):
+            total = total + int(va[5])
+        if str.isdigit(va[8]):
+            total = total + int(va[8])
+        if str.isdigit(va[11]):
+            total = total + int(va[11])
+        if str.isdigit(va[14]):
+            total = total + int(va[14])
+        if str.isdigit(va[17]):
+            total = total + int(va[17])
+        if str.isdigit(va[20]):
+            total = total + int(va[20])
+
+        #total = int(va[2]) + int(va[5]) + int(va[8]) + int(va[11]) + \
+        #        int(va[14]) + int(va[17]) + int(va[20])   
+        
+        #inicia la suma de pares 1ra parte
+        if str.isdigit(va[0:2]) and int(va[0:2]) > 0:
+            total = total + int(U[int(va[0:2])-1])
+
+        if str.isdigit(va[3:5]) and int(va[3:5]) > 0:
+            total = total + int(U[int(va[3:5])-1])
+
+        if str.isdigit(va[6:8]) and int(va[6:8]) > 0:
+            total = total + int(U[int(va[6:8])-1])
+
+        if str.isdigit(va[9:11]) and int(va[9:11]) > 0:
+            total = total + int(U[int(va[9:11])-1])
+
+        if str.isdigit(va[12:14]) and int(va[12:14]) > 0:
+            total = total + int(U[int(va[12:14])-1])
+
+        if str.isdigit(va[15:17]) and int(va[15:17]) > 0:
+            total = total + int(U[int(va[15:17])-1])
+
+        if str.isdigit(va[18:20]) and int(va[18:20]) > 0:
+            total = total + int(U[int(va[18:20])-1])
+
+        DIG1 = 10 - int(str(total)[-1])
+
+        if DIG1 == 10:
+            DIG1 = 0
+
+        # Calcula el segundo dígito
+        va = ""
+        total = 0
+        va = numchqs + vl_txtaux + str(DIG1)
+
+        if str.isdigit(va[2]):
+            total = total + int(va[2])
+        if str.isdigit(va[5]):
+            total = total + int(va[5])
+        if str.isdigit(va[8]):
+            total = total + int(va[8])
+        if str.isdigit(va[11]):
+            total = total + int(va[11])
+        if str.isdigit(va[14]):
+            total = total + int(va[14])
+        if str.isdigit(va[17]):
+            total = total + int(va[17])
+        if str.isdigit(va[20]):
+            total = total + int(va[20])
+
+        #total = int(va[2]) + int(va[5]) + int(va[8]) + int(va[11]) + \
+        #        int(va[14]) + int(va[17]) + int(va[20])
+
+        if str.isdigit(va[0:2]) and int(va[0:2]) > 0:
+            total = total + int(U[int(va[0:2])-1])
+
+        if str.isdigit(va[3:5]) and int(va[3:5]) > 0:
+            total = total + int(U[int(va[3:5])-1])
+
+        if str.isdigit(va[6:8]) and int(va[6:8]) > 0:
+            total = total + int(U[int(va[6:8])-1])
+
+        if str.isdigit(va[9:11]) and int(va[9:11]) > 0:
+            total = total + int(U[int(va[9:11])-1])
+
+        if str.isdigit(va[12:14]) and int(va[12:14]) > 0:
+            total = total + int(U[int(va[12:14])-1])
+
+        if str.isdigit(va[15:17]) and int(va[15:17]) > 0:
+            total = total + int(U[int(va[15:17])-1])
+
+        if str.isdigit(va[18:20]) and int(va[18:20]) > 0:
+            total = total + int(U[int(va[18:20])-1])
+
+        dig2 = 10 - int(str(total)[-1])
+        
+        if dig2 == 10:
+            dig2 = 0
+
+        # Une los dos dígitos
+        digitos = str(DIG1) + str(dig2) 
+        print(digitos,'digitos')
+        return digitos
+
+
     def get_date(self):
         date = self.payment_date and self.payment_date or False
         if date:
@@ -221,7 +368,10 @@ class PaymentBatchSupplier(models.Model):
                                 previous_data = str(line.payment_req_id.check_folio_id.folio)
                                 
                             line.payment_req_id.related_check_history = previous_data      
-                            line.payment_req_id.related_check_folio_ids =  [(4, line.payment_req_id.check_folio_id.id)]   
+                            line.payment_req_id.related_check_folio_ids =  [(4, line.payment_req_id.check_folio_id.id)]
+                            line.payment_req_id.check_folio_id.related_check_folio_id = line.check_folio_id.id
+                            line.check_folio_id.related_check_folio_id = line.payment_req_id.check_folio_id.id
+                               
                         line.payment_req_id.check_folio_id = line.check_folio_id.id
                         counter += 1
                         line.selected = False

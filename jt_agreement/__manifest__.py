@@ -32,6 +32,7 @@
     'depends': ['jt_income', 'jt_payroll_payment'],
     'data': [
         'data/sequence.xml',
+        'data/cron.xml',
         'views/fund_type.xml',
         'views/agreement_type.xml',
         'views/recurring_payment_temp.xml',

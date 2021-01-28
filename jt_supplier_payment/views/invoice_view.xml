@@ -556,16 +556,57 @@
                                     <group></group>
 								</group>
                             </page>
-                            <page string="Employee Payroll" attrs="{'invisible':[('employee_paryoll_ids','=',False)]}">
+                            <page string="Employee Payroll" attrs="{'invisible':[('is_payroll_payment_request','=',False)]}">
                             	<field name="employee_paryoll_ids" readonly="1">
                             		<tree>
 	                            		<field name="employee_id"/>
 	                            		<field name="name"/>
 	                            		<field name="reference"/>
-	                            		<field name="amount_payable"/>
+	                            		<field name="amount_payable" invisible="1"/>
                             		</tree>
                             	</field>
                             </page>
+                            <page string="Perception" attrs="{'invisible':[('is_payroll_payment_request','=',False)]}">
+                            	<field name="preception_ids" readonly="1">
+                        			<tree>
+                        				<field name="payroll_id"/>
+                        				<field name="preception_id"/>
+                        				<field name="description"/>
+                        				<field name="account_id"/>
+                        				<field name="amount"/>
+                        			</tree>
+                        			<form>
+                        				<group>
+                        					<field name="payroll_id"/>
+	                        				<field name="preception_id"/>
+	                        				<field name="description"/>
+	                        				<field name="account_id"/>
+	                        				<field name="amount"/>
+                        				</group>
+                        			</form>
+                            	</field>
+                            </page>
+                            <page string="Deductions" attrs="{'invisible':[('is_payroll_payment_request','=',False)]}">
+                            	<field name="deduction_ids" readonly="1">
+                        			<tree>
+                        				<field name="credit_account_id"/>
+                        				<field name="deduction_id"/>
+                        				<field name="description"/>
+                        				<field name="amount"/>
+                        				<field name="net_salary" invisible="1"/>
+                        			</tree>
+                        			<form>
+                        				<group>
+	                        				<field name="credit_account_id"/>
+	                        				<field name="deduction_id"/>
+	                        				<field name="description"/>
+	                        				<field name="amount"/>
+	                        				<field name="net_salary" invisible="1"/>
+                        				</group>
+                        			</form>
+                            	</field>
+                            </page>
+                            
                             <!-- Attachment preview -->
                             <div class="o_attachment_preview"
                                  attrs="{'invisible': ['|', '|',

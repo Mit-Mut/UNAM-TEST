@@ -23,6 +23,17 @@ class CommisionAndProfit(models.Model):
                                ], string="Status", default="draft")
 
 
+    @api.model
+    def create(self, vals):
+        res = super(CommisionAndProfit,self).create(vals)
+        folio = self.env['ir.sequence'].next_by_code('comission.profit')
+        res.folio = folio        
+        if res.folio:
+            res.folio = res.folio.zfill(8)
+        return res
+
+
+
     def approve(self):
 
         for record in self:

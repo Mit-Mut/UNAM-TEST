@@ -126,14 +126,17 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
             {'name': _('SALDO FINAL')},
         ]
 
-    def _format(self, value,figure_type,digit):
+    def _format(self, value,figure_type,digit,is_currency):
         if self.env.context.get('no_format'):
             return value
         value['no_format_name'] = value['name']
-        
-        if figure_type == 'float':
+        if is_currency:
             currency_id = self.env.company.currency_id
-            if currency_id.is_zero(value['name']):
+        else:
+            currency_id = False
+        if figure_type == 'float':
+            
+            if currency_id and currency_id.is_zero(value['name']):
                 # don't print -0.0 in reports
                 value['name'] = abs(value['name'])
                 value['class'] = 'number text-muted'
@@ -249,7 +252,8 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
         g_final_amount = 0
         g_total_entradas = 0
         g_total_salidas  = 0
-
+        precision = self.env['decimal.precision'].precision_get('Productive Accounts')
+        
         bank_account_ids = opt_lines.mapped('investment_id.journal_id')
         for bank in bank_account_ids:
             final_amount = 0
@@ -310,11 +314,11 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
                     'columns': [{'name': month_name},
                                 {'name':rec.investment_id.journal_id and rec.investment_id.journal_id.bank_id and rec.investment_id.journal_id.bank_id.name or ''},
                                 {'name':rec.investment_id and rec.investment_id.currency_id and rec.investment_id.currency_id.name or ''},
-                                self._format({'name': p_rate},figure_type='float',digit=4),
-                                self._format({'name': inc_balance},figure_type='float',digit=2),
-                                self._format({'name': entradas},figure_type='float',digit=2),
-                                self._format({'name': salidas},figure_type='float',digit=2),
-                                self._format({'name': final_amount},figure_type='float',digit=2),
+                                self._format({'name': p_rate},figure_type='float',digit=precision,is_currency=False),
+                                self._format({'name': inc_balance},figure_type='float',digit=2,is_currency=True),
+                                self._format({'name': entradas},figure_type='float',digit=2,is_currency=True),
+                                self._format({'name': salidas},figure_type='float',digit=2,is_currency=True),
+                                self._format({'name': final_amount},figure_type='float',digit=2,is_currency=True),
                                 ],
                     'level': 3,
                     'unfoldable': False,
@@ -328,10 +332,10 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
                             {'name':''},
                             {'name':''},
                             {'name':''},
-                            self._format({'name': 0.0},figure_type='float',digit=2),
-                            self._format({'name': total_entradas},figure_type='float',digit=2),
-                            self._format({'name': total_salidas},figure_type='float',digit=2),
-                            self._format({'name': final_amount},figure_type='float',digit=2),
+                            self._format({'name': 0.0},figure_type='float',digit=2,is_currency=True),
+                            self._format({'name': total_entradas},figure_type='float',digit=2,is_currency=True),
+                            self._format({'name': total_salidas},figure_type='float',digit=2,is_currency=True),
+                            self._format({'name': final_amount},figure_type='float',digit=2,is_currency=True),
                             ],
                 'level': 1,
                 'unfoldable': False,
@@ -349,10 +353,10 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
                         {'name':''},
                         {'name':''},
                         {'name':''},
-                        self._format({'name': 0.0},figure_type='float',digit=2),
-                        self._format({'name': g_total_entradas},figure_type='float',digit=2),
-                        self._format({'name': g_total_salidas},figure_type='float',digit=2),
-                        self._format({'name': g_final_amount},figure_type='float',digit=2),
+                        self._format({'name': 0.0},figure_type='float',digit=2,is_currency=True),
+                        self._format({'name': g_total_entradas},figure_type='float',digit=2,is_currency=True),
+                        self._format({'name': g_total_salidas},figure_type='float',digit=2,is_currency=True),
+                        self._format({'name': g_final_amount},figure_type='float',digit=2,is_currency=True),
                         ],
             'level': 1,
             'unfoldable': False,
@@ -414,7 +418,7 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
                 
                 amount += sum(x.amount for x in records_period.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal')))
                 amount -= sum(x.amount for x in records_period.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure')))
-                columns.append(self._format({'name': amount},figure_type='float',digit=2))
+                columns.append(self._format({'name': amount},figure_type='float',digit=2,is_currency=True))
                 
                 if total_dict.get(period.get('string')):
                     old_amount = total_dict.get(period.get('string',0)) + amount
@@ -422,7 +426,7 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
                 else:
                     total_dict.update({period.get('string'):amount})
                 total_ins += amount
-            amount_total.append(self._format({'name': total_ins},figure_type='float',digit=2))
+            amount_total.append(self._format({'name': total_ins},figure_type='float',digit=2,is_currency=True))
             
             lines.append({
                 'id': 'hierarchy_jr' + str(journal.id),
@@ -435,7 +439,7 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
 
         total_name = [{'name': 'Total'}]
         for per in total_dict:
-            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2))
+            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2,is_currency=True))
             
         r_column = 8 - len(total_name)
         if r_column > 0:
@@ -505,7 +509,7 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
                 amount += sum(x.amount for x in records_currency_period.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal')))
                 amount -= sum(x.amount for x in records_currency_period.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure')))
                 
-                columns.append(self._format({'name': amount},figure_type='float',digit=2))
+                columns.append(self._format({'name': amount},figure_type='float',digit=2,is_currency=True))
                 
                 if total_dict.get(period.get('string')):
                     old_amount = total_dict.get(period.get('string',0)) + amount
@@ -513,7 +517,7 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
                 else:
                     total_dict.update({period.get('string'):amount})
                 total_ins += amount
-            amount_total.append(self._format({'name': total_ins},figure_type='float',digit=2))
+            amount_total.append(self._format({'name': total_ins},figure_type='float',digit=2,is_currency=True))
             
             lines.append({
                 'id': 'hierarchy_jr' + str(currency.id),
@@ -526,7 +530,7 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
 
         total_name = [{'name': 'Total'}]
         for per in total_dict:
-            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2))
+            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2,is_currency=True))
             
         r_column = 8 - len(total_name)
         if r_column > 0:

@@ -126,18 +126,21 @@ class InvestmentCommittee(models.AbstractModel):
             {'name': _('Destino Rendimiento')},
         ]
 
-    def _format(self, value,figure_type):
+    def _format(self, value,figure_type,digit,is_currency):
         if self.env.context.get('no_format'):
             return value
         value['no_format_name'] = value['name']
-        
-        if figure_type == 'float':
+        if is_currency:
             currency_id = self.env.company.currency_id
-            if currency_id.is_zero(value['name']):
+        else:
+            currency_id = False
+        if figure_type == 'float':
+            
+            if currency_id and currency_id.is_zero(value['name']):
                 # don't print -0.0 in reports
                 value['name'] = abs(value['name'])
                 value['class'] = 'number text-muted'
-            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id)
+            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id,digits=digit)
             value['class'] = 'number'
             return value
         if figure_type == 'percents':
@@ -256,17 +259,17 @@ class InvestmentCommittee(models.AbstractModel):
         #===== Investment =======#        
         for account in productive_ids:
             total_amount += account.actual_amount
-
+            precision = self.env['decimal.precision'].precision_get('Productive Accounts')
             lines.append({
                 'id': 'hierarchy_account' + str(account.id),
                 'name' : '', 
                 'columns': [
                             {'name':  account.journal_id and account.journal_id.bank_id and account.journal_id.bank_id.name or ''},
                             {'name':account.currency_id.name},
-                            self._format({'name': account.actual_amount},figure_type='float'),
+                            self._format({'name': account.actual_amount},figure_type='float',digit=2,is_currency=True),
                             {'name': 'Cuentas productivas'},
-                            {'name': account.interest_rate or ''},
-                            {'name': account.extra_percentage or ''},
+                            self._format({'name': account.interest_rate},figure_type='float',digit=precision,is_currency=False),
+                            self._format({'name': account.extra_percentage},figure_type='float',digit=precision,is_currency=False),
                             {'name': account.yield_id and account.yield_id.name or ''},
                             ],
                 'level': 3,
@@ -280,7 +283,7 @@ class InvestmentCommittee(models.AbstractModel):
             'columns': [
                         {'name':''}, 
                         {'name': ''},
-                        self._format({'name': total_amount},figure_type='float'),
+                        self._format({'name': total_amount},figure_type='float',digit=2,is_currency=True),
                         {'name': ''},
                         {'name': ''},
                         {'name':''},
@@ -334,7 +337,7 @@ class InvestmentCommittee(models.AbstractModel):
                 amount = 0
                 amount += sum(x.actual_amount for x in productive_currency)
         
-                columns.append(self._format({'name': amount},figure_type='float'))
+                columns.append(self._format({'name': amount},figure_type='float',digit=2,is_currency=True))
                 
                 if total_dict.get(period.get('string')):
                     old_amount = total_dict.get(period.get('string',0)) + amount
@@ -342,7 +345,7 @@ class InvestmentCommittee(models.AbstractModel):
                 else:
                     total_dict.update({period.get('string'):amount})
                 total_ins += amount
-            amount_total.append(self._format({'name': total_ins},figure_type='float'))
+            amount_total.append(self._format({'name': total_ins},figure_type='float',digit=2,is_currency=True))
             
             lines.append({
                 'id': 'hierarchy_jr' + str(currency.id),
@@ -355,7 +358,7 @@ class InvestmentCommittee(models.AbstractModel):
 
         total_name = [{'name': 'Total'}]
         for per in total_dict:
-            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float'))
+            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2,is_currency=True))
             
         r_column = 7 - len(total_name)
         if r_column > 0:
@@ -391,7 +394,7 @@ class InvestmentCommittee(models.AbstractModel):
         #==== CETES========#        
         for cetes in cetes_records:
             cetes_total_amount += cetes.nominal_value
-
+            precision = self.env['decimal.precision'].precision_get('CETES')
             lines.append({
                 'id': 'hierarchy_cetes' + str(cetes.id),
                 'name' : '', 
@@ -399,9 +402,9 @@ class InvestmentCommittee(models.AbstractModel):
                              
                             {'name':  cetes.bank_id and cetes.bank_id.name or ''},
                             {'name':cetes.currency_id.name},
-                            self._format({'name': cetes.nominal_value},figure_type='float'),
+                            self._format({'name': cetes.nominal_value},figure_type='float',digit=2,is_currency=True),
                             {'name': 'CETES'},
-                            {'name': cetes.yield_rate or ''},
+                            self._format({'name': cetes.yield_rate},figure_type='float',digit=precision,is_currency=False),
                             {'name':''},
                             {'name': cetes.yield_id and cetes.yield_id.name or ''},
                             ],
@@ -416,7 +419,7 @@ class InvestmentCommittee(models.AbstractModel):
             'columns': [
                         {'name':''}, 
                         {'name': ''},
-                        self._format({'name': cetes_total_amount},figure_type='float'),
+                        self._format({'name': cetes_total_amount},figure_type='float',digit=2,is_currency=True),
                         {'name': ''},
                         {'name': ''},
                         {'name':''},
@@ -471,7 +474,7 @@ class InvestmentCommittee(models.AbstractModel):
                 amount = 0
                 amount += sum(x.nominal_value for x in cetes_currency)
         
-                columns.append(self._format({'name': amount},figure_type='float'))
+                columns.append(self._format({'name': amount},figure_type='float',digit=2,is_currency=True))
                 
                 if total_dict.get(period.get('string')):
                     old_amount = total_dict.get(period.get('string',0)) + amount
@@ -479,7 +482,7 @@ class InvestmentCommittee(models.AbstractModel):
                 else:
                     total_dict.update({period.get('string'):amount})
                 total_ins += amount
-            amount_total.append(self._format({'name': total_ins},figure_type='float'))
+            amount_total.append(self._format({'name': total_ins},figure_type='float',digit=2,is_currency=True))
             
             lines.append({
                 'id': 'hierarchy_jr' + str(currency.id),
@@ -492,7 +495,7 @@ class InvestmentCommittee(models.AbstractModel):
 
         total_name = [{'name': 'Total'}]
         for per in total_dict:
-            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float'))
+            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2,is_currency=True))
             
         r_column = 7 - len(total_name)
         if r_column > 0:
@@ -528,7 +531,8 @@ class InvestmentCommittee(models.AbstractModel):
         #==== udibonos========#
         for udibonos in udibonos_records:
             udibonos_total_amount += udibonos.nominal_value
-
+            precision = self.env['decimal.precision'].precision_get('UDIBONOS')
+            
             lines.append({
                 'id': 'hierarchy_udibonos' + str(udibonos.id),
                 'name': '',
@@ -536,9 +540,9 @@ class InvestmentCommittee(models.AbstractModel):
                              
                             {'name':udibonos.bank_id and udibonos.bank_id.name or ''},
                             {'name':udibonos.currency_id.name},
-                            self._format({'name': udibonos.nominal_value},figure_type='float'),
+                            self._format({'name': udibonos.nominal_value},figure_type='float',digit=2,is_currency=True),
                             {'name': 'UDIBONOS'},
-                            {'name': udibonos.interest_rate or ''},
+                            self._format({'name': udibonos.interest_rate},figure_type='float',digit=precision,is_currency=False),
                             {'name':''},
                             {'name': udibonos.yield_id and udibonos.yield_id.name or ''},
                             ],
@@ -555,7 +559,7 @@ class InvestmentCommittee(models.AbstractModel):
                          
                         {'name': ''},
                         {'name':''},
-                        self._format({'name': udibonos_total_amount},figure_type='float'),
+                        self._format({'name': udibonos_total_amount},figure_type='float',digit=2,is_currency=True),
                         {'name': ''},
                         {'name': ''},
                         {'name':''},
@@ -610,7 +614,7 @@ class InvestmentCommittee(models.AbstractModel):
                 amount = 0
                 amount += sum(x.nominal_value for x in udibonos_currency)
         
-                columns.append(self._format({'name': amount},figure_type='float'))
+                columns.append(self._format({'name': amount},figure_type='float',digit=2,is_currency=True))
                 
                 if total_dict.get(period.get('string')):
                     old_amount = total_dict.get(period.get('string',0)) + amount
@@ -618,7 +622,7 @@ class InvestmentCommittee(models.AbstractModel):
                 else:
                     total_dict.update({period.get('string'):amount})
                 total_ins += amount
-            amount_total.append(self._format({'name': total_ins},figure_type='float'))
+            amount_total.append(self._format({'name': total_ins},figure_type='float',digit=2,is_currency=True))
             
             lines.append({
                 'id': 'hierarchy_jr' + str(currency.id),
@@ -631,7 +635,7 @@ class InvestmentCommittee(models.AbstractModel):
 
         total_name = [{'name': 'Total'}]
         for per in total_dict:
-            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float'))
+            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2,is_currency=True))
             
         r_column = 7 - len(total_name)
         if r_column > 0:
@@ -667,7 +671,7 @@ class InvestmentCommittee(models.AbstractModel):
         #==== bonds========#
         for bonds in bonds_records:
             bonds_total_amount += bonds.nominal_value
-
+            precision = self.env['decimal.precision'].precision_get('BONDS')
             lines.append({
                 'id': 'hierarchy_bonds' + str(bonds.id),
                 'name': '',
@@ -675,9 +679,9 @@ class InvestmentCommittee(models.AbstractModel):
                              
                             {'name': bonds.bank_id and bonds.bank_id.name or ''},
                             {'name':bonds.currency_id.name},
-                            self._format({'name': bonds.nominal_value},figure_type='float'),
+                            self._format({'name': bonds.nominal_value},figure_type='float',digit=2,is_currency=True),
                             {'name': 'BONOS'},
-                            {'name': bonds.interest_rate or ''},
+                            self._format({'name': bonds.interest_rate},figure_type='float',digit=precision,is_currency=False),
                             {'name':''},
                            {'name': bonds.yield_id and bonds.yield_id.name or ''},
                             ],
@@ -692,7 +696,7 @@ class InvestmentCommittee(models.AbstractModel):
             'columns': [
                         {'name': ''},
                         {'name':''},
-                        self._format({'name': bonds_total_amount},figure_type='float'),
+                        self._format({'name': bonds_total_amount},figure_type='float',digit=2,is_currency=True),
                         {'name': ''},
                         {'name': ''},
                         {'name':''},
@@ -746,7 +750,7 @@ class InvestmentCommittee(models.AbstractModel):
                 amount = 0
                 amount += sum(x.nominal_value for x in bonds_currency)
         
-                columns.append(self._format({'name': amount},figure_type='float'))
+                columns.append(self._format({'name': amount},figure_type='float',digit=2,is_currency=True))
                 
                 if total_dict.get(period.get('string')):
                     old_amount = total_dict.get(period.get('string',0)) + amount
@@ -754,7 +758,7 @@ class InvestmentCommittee(models.AbstractModel):
                 else:
                     total_dict.update({period.get('string'):amount})
                 total_ins += amount
-            amount_total.append(self._format({'name': total_ins},figure_type='float'))
+            amount_total.append(self._format({'name': total_ins},figure_type='float',digit=2,is_currency=True))
             
             lines.append({
                 'id': 'hierarchy_jr' + str(currency.id),
@@ -767,7 +771,7 @@ class InvestmentCommittee(models.AbstractModel):
 
         total_name = [{'name': 'Total'}]
         for per in total_dict:
-            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float'))
+            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2,is_currency=True))
             
         r_column = 7 - len(total_name)
         if r_column > 0:
@@ -804,6 +808,7 @@ class InvestmentCommittee(models.AbstractModel):
         #==== I will pay========#
         for pay in will_pay_records:
             pay_total_amount += pay.amount
+            precision = self.env['decimal.precision'].precision_get('REPAY')
             lines.append({
                 'id': 'hierarchy_pay' + str(pay.id),
                 'name': '',
@@ -811,9 +816,9 @@ class InvestmentCommittee(models.AbstractModel):
                              
                             {'name': pay.bank_id and pay.bank_id.name or ''},
                             {'name':pay.currency_id.name},
-                            self._format({'name': pay.amount},figure_type='float'),
+                            self._format({'name': pay.amount},figure_type='float',digit=2,is_currency=True),
                             {'name': 'Pagaré'},
-                            {'name': pay.interest_rate or ''},
+                            self._format({'name': pay.interest_rate},figure_type='float',digit=precision,is_currency=False),
                             {'name':''},
                             {'name': pay.yield_id and pay.yield_id.name or ''},
                             ],
@@ -828,7 +833,7 @@ class InvestmentCommittee(models.AbstractModel):
             'columns': [
                         {'name': ''},
                         {'name':''},
-                        self._format({'name': pay_total_amount},figure_type='float'),
+                        self._format({'name': pay_total_amount},figure_type='float',digit=2,is_currency=True),
                         {'name': ''},
                         {'name': ''},
                         {'name':''},
@@ -883,7 +888,7 @@ class InvestmentCommittee(models.AbstractModel):
                 amount = 0
                 amount += sum(x.amount for x in pay_currency)
         
-                columns.append(self._format({'name': amount},figure_type='float'))
+                columns.append(self._format({'name': amount},figure_type='float',digit=2,is_currency=True))
                 
                 if total_dict.get(period.get('string')):
                     old_amount = total_dict.get(period.get('string',0)) + amount
@@ -891,7 +896,7 @@ class InvestmentCommittee(models.AbstractModel):
                 else:
                     total_dict.update({period.get('string'):amount})
                 total_ins += amount
-            amount_total.append(self._format({'name': total_ins},figure_type='float'))
+            amount_total.append(self._format({'name': total_ins},figure_type='float',digit=2,is_currency=True))
             
             lines.append({
                 'id': 'hierarchy_jr' + str(currency.id),
@@ -904,7 +909,7 @@ class InvestmentCommittee(models.AbstractModel):
 
         total_name = [{'name': 'Total'}]
         for per in total_dict:
-            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float'))
+            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2,is_currency=True))
             
         r_column = 7 - len(total_name)
         if r_column > 0:
@@ -966,9 +971,9 @@ class InvestmentCommittee(models.AbstractModel):
                              
                             {'name': sale.journal_id and sale.journal_id.bank_id and sale.journal_id.bank_id.name or ''},
                             {'name':sale.currency_id.name},
-                            self._format({'name': sale.amount},figure_type='float'),
+                            self._format({'name': sale.amount},figure_type='float',digit=2,is_currency=True),
                             {'name': 'Títulos'},
-                            {'name': sale.price or ''},
+                            self._format({'name': sale.price},figure_type='float',digit=4,is_currency=False),
                             {'name':''},
                             {'name': sale.yield_id and sale.yield_id.name or ''},
                             ],
@@ -983,7 +988,7 @@ class InvestmentCommittee(models.AbstractModel):
             'columns': [
                         {'name':''}, 
                         {'name': ''},
-                        self._format({'name': sale_total_amount},figure_type='float'),
+                        self._format({'name': sale_total_amount},figure_type='float',digit=2,is_currency=True),
                         {'name': ''},
                         {'name': ''},
                         {'name':''},
@@ -1041,7 +1046,7 @@ class InvestmentCommittee(models.AbstractModel):
                     if x.movement and x.movement=='sell':
                         amount -= x.amount
                 #amount += sum(x.amount for x in sale_currency)
-                columns.append(self._format({'name': amount},figure_type='float'))
+                columns.append(self._format({'name': amount},figure_type='float',digit=2,is_currency=True))
                 
                 if total_dict.get(period.get('string')):
                     old_amount = total_dict.get(period.get('string',0)) + amount
@@ -1049,7 +1054,7 @@ class InvestmentCommittee(models.AbstractModel):
                 else:
                     total_dict.update({period.get('string'):amount})
                 total_ins += amount
-            amount_total.append(self._format({'name': total_ins},figure_type='float'))
+            amount_total.append(self._format({'name': total_ins},figure_type='float',digit=2,is_currency=True))
             
             lines.append({
                 'id': 'hierarchy_jr' + str(currency.id),
@@ -1062,7 +1067,7 @@ class InvestmentCommittee(models.AbstractModel):
 
         total_name = [{'name': 'Total'}]
         for per in total_dict:
-            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float'))
+            total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2,is_currency=True))
             
         r_column = 7 - len(total_name)
         if r_column > 0:

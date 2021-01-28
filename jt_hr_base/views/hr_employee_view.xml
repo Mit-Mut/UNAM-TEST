@@ -12,6 +12,7 @@
                 	<field name="bank_journal_id" invisible="1"/>
                     <field name="worker_payment_key"/>
                     <field name="payment_place_id"/>
+                    <field name="payment_place_description"/>
 <!--                    <field name="journal_id"/>-->
                 </xpath>
 

@@ -47,6 +47,8 @@ class AccountMove(models.Model):
     payroll_register_user_id = fields.Many2one('res.users',default=lambda self: self.env.user,copy=False,string="User who registers")
     payroll_send_user_id = fields.Many2one('res.users',default=lambda self: self.env.user,copy=False,string="User who sends")
     employee_paryoll_ids = fields.One2many('employee.payroll.file','move_id')
+    preception_ids = fields.One2many('preception.line','move_id')
+    deduction_ids = fields.One2many('deduction.line','move_id')
     
     observations = fields.Text(string='Observations')
     

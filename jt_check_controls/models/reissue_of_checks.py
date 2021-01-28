@@ -12,6 +12,7 @@ class ReissueOfChecks(models.Model):
     application_folio = fields.Char('Application sheet')
     type_of_request = fields.Selection([('check_reissue','Check Reissue'),('check_cancellation','Check Cancellation')],
                                        string='Type of Request')
+    reissue_type = fields.Selection([('revocation','Revocación'),('reexped','Reexpedición o Reimpresión')],copy=False)
     type_of_request_payroll = fields.Selection(
         [('check_reissue', 'Check Reissue'), ('check_cancellation', 'Check Cancellation'),
          ('check_adjustments', 'Check Adjustments')], string='Type of Request')
@@ -159,7 +160,7 @@ class ReissueOfChecks(models.Model):
         for user in check_control_admin_users:
             if user.id not  in user_list:
                 activity_obj.create({'activity_type_id': activity_type,
-                                   'res_model': 'reissue.checks', 'res_id': self.application_folio,
+                                   'res_model': 'reissue.checks', 'res_id': self.id,
                                    'res_model_id':model_id,
                                    'summary': summary, 'user_id': user.id})
                 user_list.append(user.id)

@@ -173,7 +173,8 @@ class BankBalanceCheck(models.TransientModel):
         for rec in self.invoice_ids:
             rec.action_post()
             rec.payment_issuing_bank_id = self.journal_id.id
-            self.create_journal_line_for_payment_procedure(rec)
+            if not rec.is_pension_payment_request and not rec.is_different_payroll_request:
+                self.create_journal_line_for_payment_procedure(rec)
             payment_record = self.env['account.payment.register'].with_context(active_ids=rec.ids).\
                 create({'journal_id':self.journal_id.id,'invoice_ids':[(6, 0, rec.ids)]})
             Payment = self.env['account.payment']

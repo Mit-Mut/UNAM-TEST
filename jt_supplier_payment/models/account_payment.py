@@ -201,7 +201,8 @@ class AccountPayment(models.Model):
             for inv in payment.invoice_ids.filtered(lambda x:x.is_project_payment or x.is_payment_request or x.is_payroll_payment_request or x.is_different_payroll_request or x.is_pension_payment_request):
                 if inv.invoice_payment_state == 'paid':
                     inv.payment_state = 'paid'
-                    payment.create_journal_for_paid(inv)
+                    if not inv.is_pension_payment_request and not inv.is_different_payroll_request:
+                        payment.create_journal_for_paid(inv)
             is_supplier_payment = payment.invoice_ids.filtered(lambda x:x.is_project_payment or x.is_payment_request or x.is_payroll_payment_request or x.is_different_payroll_request or x.is_pension_payment_request)
             if is_supplier_payment:
                 for line in payment.move_line_ids:

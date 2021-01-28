@@ -10,7 +10,7 @@
                     <field name="name"/>
                     <field name="payment_number"/>
                     <field name="payment_period"/>
-                    <field name="journal_id"/>
+                    <field name="journal_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -29,7 +29,7 @@
                                 <field name="terms_condition"/>
                             </group>
                             <group>
-                                <field name="journal_id"/>
+                                <field name="journal_id" invisible="1"/>
                             </group>
                         </group>
                     </sheet>

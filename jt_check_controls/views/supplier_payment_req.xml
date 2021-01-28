@@ -70,5 +70,26 @@
                 ('type', '=', 'in_invoice'), ('is_payroll_payment_request', '=', True)]</field>
         </record>
 		
+		<!--  Pension Payment Request -->
+        <record id="pensions_payroll_payment_req_form_view_inherit_check" model="ir.ui.view">
+            <field name="name">pensions.payroll.payment.req.form.view</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="jt_supplier_payment.pensions_payroll_payment_req_form_view"/>
+            <field name="arch" type="xml">
+            	<field name="check_number" position="after">
+            		<field name="check_folio_id"  attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
+            	</field>
+            	<field name="check_number" position="attributes">
+            		<attribute name='invisible'>1</attribute>
+            	</field>
+			</field>
+		</record>
+				
+		<record id="jt_supplier_payment.pension_payroll_payment_request_action" model="ir.actions.act_window">
+            <field name="domain">[('payment_state','in',('draft','registered','approved_payment','for_payment_procedure','paid',
+                'assigned_payment_method')),
+                ('type', '=', 'in_invoice'), ('is_pension_payment_request', '=', True)]</field>
+		
+		</record>
     </data>
 </odoo>

@@ -30,7 +30,7 @@ class HrEmployee(models.Model):
     worker_payment_key = fields.Char('Worker Payment Key')
     # journal_id = fields.Many2one('account.journal', string='Bank Key Scatter')
     payment_place_id = fields.Many2one('payment.place', 'Payment Place')
-
+    payment_place_description = fields.Text(related='payment_place_id.description',string='Payment Place Description')
     # Job Information Page Fields
     entry_date = fields.Date('Date of Entry')
     ss_number = fields.Integer('Social Security Number')

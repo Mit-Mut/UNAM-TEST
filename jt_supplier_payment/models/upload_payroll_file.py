@@ -122,7 +122,6 @@ class EmployeePayroll(models.Model):
             line_v.update({'account_id':account_id.id})
         
         invoice_line_vals=[(0,0,line_v)] 
-        
         vals = {'payment_bank_id':self.bank_receiving_payment_id and self.bank_receiving_payment_id.id or False,
                 'payment_bank_account_id': self.receiving_bank_acc_pay_id and self.receiving_bank_acc_pay_id.id or False,
                 'payment_issuing_bank_id': self.payment_issuing_bank_id and self.payment_issuing_bank_id.id or False,
@@ -137,7 +136,7 @@ class EmployeePayroll(models.Model):
                 'fornight' : self.fornight,
                 'payroll_request_type' : self.request_type,
                 'deposite_number' : self.deposite_number,
-                'check_number' : self.check_number,
+                'check_number' : line.check_number,
                 'bank_key' : self.bank_key,
                 'pension_reference': self.reference,
                 'period_start' : self.period_start,

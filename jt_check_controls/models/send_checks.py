@@ -23,6 +23,24 @@ class SendChecks(models.Model):
         ('reject', 'Rejected'),
         ('destroy', 'Destroyed')
     ], default='draft', string="Status")
+    created_activity = fields.Boolean("Create Activity")
+
+    def send_five_year_old_send_check_activity(self):
+        five_year_old_date = datetime.today().date() - relativedelta(years=5)
+        check_control_admin_group = self.env.ref('jt_check_controls.group_check_control_admin')
+        check_control_admin_users = check_control_admin_group.users
+        activity_type = self.env.ref('mail.mail_activity_data_todo').id
+        activity_obj = self.env['mail.activity']
+        model_id = self.env['ir.model'].sudo().search([('model', '=', 'send.checks')]).id
+        for check in self.env['send.checks'].search([('created_activity', '=', False), ('status', '=', 'approved'),
+                                                     ('approval_date', '<', five_year_old_date)]):
+            summary = str(check.batch_folio) + " Checks have completed 5 years on file"
+            for user in check_control_admin_users:
+                activity_obj.create({'activity_type_id': activity_type,
+                                     'res_model': 'send.checks', 'res_id': check.id,
+                                     'res_model_id': model_id,
+                                     'summary': summary, 'user_id': user.id})
+            check.created_activity = True
 
     def action_reject(self):
         self.status = 'reject'

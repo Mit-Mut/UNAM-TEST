@@ -55,7 +55,38 @@ class GeneratePayrollWizard(models.TransientModel):
     def check_category_data(self,failed_row,cat,import_type):
         failed_row += str(cat) + "------>> Invalid Category Key In "+str(import_type)+" Import\n"
         return failed_row
-     
+
+    def check_program_code_data(self,failed_row,program,import_type):
+        failed_row += str(program) + "------>> Invalid Program Code In "+str(import_type)+" Import\n"
+        return failed_row
+
+    def check_payment_method_data(self,failed_row,method,import_type):
+        failed_row += str(method) + "------>> Invalid Payment Method In "+str(import_type)+" Import\n"
+        return failed_row
+
+    def check_bank_key_data(self,failed_row,key,import_type):
+        failed_row += str(key) + "------>> Invalid Bank Key In "+str(import_type)+" Import\n"
+        return failed_row
+
+    def check_checklog_data(self,failed_row,number,import_type):
+        failed_row += str(number) + "------>> Invalid Check Number In "+str(import_type)+" Import\n"
+        return failed_row
+
+    def check_bank_accunt_data(self,failed_row,acount,import_type):
+        failed_row += str(acount) + "------>> Invalid Bank Account In "+str(import_type)+" Import\n"
+        return failed_row
+
+    def check_perception_data(self,failed_row,perception,import_type):
+        failed_row += str(perception) + "------>> Invalid Payment key In "+str(import_type)+" Import\n"
+        return failed_row
+
+    def check_deduction_data(self,failed_row,deduction,import_type):
+        failed_row += str(deduction) + "------>> Invalid Deduction key In "+str(import_type)+" Import\n"
+        return failed_row
+    def check_parter_data(self,failed_row,partner,import_type):
+        failed_row += str(partner) + "------>> Invalid Beneficiaries In "+str(import_type)+" Import\n"
+        return failed_row
+         
     def generate(self):
         if self.file:
             failed_row = ""
@@ -104,7 +135,9 @@ class GeneratePayrollWizard(models.TransientModel):
                             payment_method_rec = self.env['l10n_mx_edi.payment.method'].search([('name','=',str(payment_method))],limit=1)
                             if payment_method_rec:
                                 payment_method_id = payment_method_rec.id
-                             
+                            else:
+                                failed_row = self.check_payment_method_data(failed_row,payment_method,'Payroll Perceptions')
+                                continue    
                         employee_id =self.env['hr.employee'].search([('rfc','=',rfc)],limit=1)
                         if not employee_id:
                             failed_row = self.check_employee_data(failed_row, rfc, 'Payroll Perceptions')
@@ -125,13 +158,27 @@ class GeneratePayrollWizard(models.TransientModel):
                             if bank_key:
                                 if type(bank_key) is int or type(bank_key) is float:
                                     rec_bank_key = int(bank_key)
+                                bank_id_1 = self.env['res.bank'].search([('l10n_mx_edi_code', '=', rec_bank_key)])
+                                if not bank_id_1:
+                                    failed_row = self.check_bank_key_data(failed_row,bank_key,'Payroll Perceptions')
+                                    continue
 
+                            if rec_check_number and rec_bank_key:
+                                log = self.env['check.log'].search([('folio', '=', rec_check_number),
+                                                ('bank_id.bank_id.l10n_mx_edi_code', '=', rec_bank_key)], limit=1)
+                                if not log:
+                                    failed_row = self.check_checklog_data(failed_row,rec_check_number,'Payroll Perceptions')
+                                    continue
+                                
                             if bank_account:
                                 if  type(bank_account) is int or type(bank_account) is float:
                                     bank_account = int(bank_account)
                                 bank_account_rec = self.env['res.partner.bank'].search([('acc_number','=',str(bank_account))],limit=1)
                                 if bank_account_rec:
                                     bank_account_id = bank_account_rec.id
+                                else:
+                                    failed_row = self.check_bank_accunt_data(failed_row,bank_account,'Payroll Perceptions')
+                                    continue
                                     
                             exit_payroll_id = self.env['employee.payroll.file'].search([('employee_id','=',employee_id.id),
                                                         ('id','in',self.payroll_process_id.payroll_ids.ids)],limit=1)
@@ -173,14 +220,20 @@ class GeneratePayrollWizard(models.TransientModel):
                         p_id = self.env['program.code'].search([('program_code','=',program_code)],limit=1)
                         if p_id:
                             program_id = p_id.id
-                        
+                        else:
+                            failed_row = self.check_program_code_data(failed_row,program_code,'Payroll Perceptions')
+                            continue
                     if pre_key:
                         if  type(pre_key) is int or type(pre_key) is float:
                             pre_key = int(pre_key)
                         
                         pre_id = self.env['preception'].search([('key','=',pre_key)],limit=1)
                         if pre_id:
-                            line_data.append((0,0,{'program_code_id':program_id,'preception_id':pre_id.id,'amount':amount})) 
+                            line_data.append((0,0,{'program_code_id':program_id,'preception_id':pre_id.id,'amount':amount}))
+                        else:
+                            failed_row = self.check_perception_data(failed_row,pre_key,'Payroll Perceptions')
+                            continue
+                         
                     if exit_payroll_id and line_data:
                         exit_payroll_id.write({'preception_line_ids':line_data})
                         line_data = []
@@ -244,7 +297,9 @@ class GeneratePayrollWizard(models.TransientModel):
                         ded_id = self.env['deduction'].search([('key','=',ded_key)],limit=1)
                         if ded_id:
                             line_data.append((0,0,{'deduction_id':ded_id.id,'amount':amount})) 
-
+                        else:
+                            failed_row = self.check_deduction_data(failed_row,ded_key,'Payroll Deductions')
+                            continue
                     if exit_payroll_id and line_data:
                         exit_payroll_id.write({'deduction_line_ids':line_data})
                         line_data = []
@@ -313,21 +368,37 @@ class GeneratePayrollWizard(models.TransientModel):
                         payment_method_rec = self.env['l10n_mx_edi.payment.method'].search([('name','=',str(payment_method))],limit=1)
                         if payment_method_rec:
                             payment_method_id = payment_method_rec.id
-
+                        else:
+                            failed_row = self.check_payment_method_data(failed_row,payment_method,'Pension Payment')
+                            continue
+                        
                     if bank_account:
                         if  type(bank_account) is int or type(bank_account) is float:
                             bank_account = int(bank_account)
                         bank_account_rec = self.env['res.partner.bank'].search([('acc_number','=',str(bank_account))],limit=1)
                         if bank_account_rec:
                             bank_account_id = bank_account_rec.id
-
+                        else:
+                            failed_row = self.check_bank_accunt_data(failed_row,bank_account,'Pension Payment')
+                            continue
+                        
                     if bank_key:
                         if  type(bank_key) is int or type(bank_key) is float:
                             bank_key = int(bank_key)
                         bank_rec = self.env['res.bank'].search([('l10n_mx_edi_code','=',str(bank_key))],limit=1)
                         if bank_rec:
                             bank_id = bank_rec.id
-                    
+                        else:
+                            failed_row = self.check_bank_key_data(failed_row,bank_key,'Pension Payment')
+                            continue
+
+                    if check_no_data and bank_key:
+                        log = self.env['check.log'].search([('folio', '=', check_no_data),
+                                        ('bank_id.bank_id.l10n_mx_edi_code', '=', bank_key)], limit=1)
+                        if not log:
+                            failed_row = self.check_checklog_data(failed_row,check_no_data,'Pension Payment')
+                            continue
+                            
                     line_data.append((0,0,{'bank_key':bank_key,'bank_id':bank_id,'bank_acc_number':bank_account_id,'l10n_mx_edi_payment_method_id':payment_method_id,'partner_id':partner_id,'deposit_number':deposite_data,'check_number':check_no_data,'total_pension':total_pension})) 
 
                     if exit_payroll_id and line_data:
@@ -404,7 +475,9 @@ class GeneratePayrollWizard(models.TransientModel):
                         p_id = self.env['program.code'].search([('program_code','=',program_code)],limit=1)
                         if p_id:
                             program_code_id = p_id.id
-                         
+                        else:
+                            failed_row = self.check_program_code_data(failed_row,program_code,'Additional Payments')
+                            continue
                     line_data.append((0,0,{'job_id':job_data,'program_code_id':program_code_id,'details':details_data,'amount':amount})) 
 
                     if exit_payroll_id and line_data:
@@ -466,7 +539,9 @@ class GeneratePayrollWizard(models.TransientModel):
                         per_rec = self.env['res.partner'].search([('name','=',ben_name)],limit=1)
                         if per_rec:
                             partner_id = per_rec.id
-                        
+                        else:
+                            failed_row = self.check_parter_data(failed_row,ben_name,'Additional Pension Payments')
+                            continue
                     line_data.append((0,0,{'partner_id':partner_id,'amount':amount})) 
 
                     if exit_payroll_id and line_data:

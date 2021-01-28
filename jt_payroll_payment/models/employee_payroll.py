@@ -182,7 +182,8 @@ class PreceptionLine(models.Model):
     description = fields.Char(related='preception_id.concept',string="Description")
     amount = fields.Float("Matter")
     account_id = fields.Many2one('account.account','Account')
-
+    move_id = fields.Many2one(related='payroll_id.move_id')
+    
     @api.onchange('program_code_id')
     def onchange_program_code(self):
         if self.program_code_id and self.program_code_id.item_id and self.program_code_id.item_id.unam_account_id:
@@ -206,6 +207,7 @@ class deductionLine(models.Model):
     amount = fields.Float("Matter")
     net_salary = fields.Float("Net Salary")
     credit_account_id = fields.Many2one(related='deduction_id.credit_account_id',string='Ledger account')
+    move_id = fields.Many2one(related='payroll_id.move_id')
     
 class PensionPaymentLine(models.Model):
     

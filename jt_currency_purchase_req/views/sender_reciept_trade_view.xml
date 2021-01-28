@@ -27,9 +27,13 @@
                         	<page string="Occupation Compensation" name="occupation_compensation">
                         		<group>
                         			<group string="RECIPIENT">
-                        				<field name="recipient_title"/>
-                        				<field name="recipient_emp_id"/>
-                        				<field name="recipient_professional_title"/>
+                        				<field name="recipient_title" invisible="1"/>
+                        				<field name="recipient_emp_id" invisible="1"/>
+                        				<field name="recipient_professional_title" invisible="1"/>
+                                        <!-- Reciept-->
+                                        <field name="bank_account_id"/>
+                                        <field name="executive_id"/>
+                                        <field name="position_id" context="{'show_recipet':True}"/>
                         			</group>
                         			<group string="SENDER">
                         				<field name="sender_title"/>
@@ -66,7 +70,7 @@
             <field name="res_model">finance.sender.recipient.trades</field>
         </record>
 
-        <menuitem id="menu_sender_recipient_trades_finance" name="Trades Sender and Recipient  " sequence="100"
+        <menuitem id="menu_sender_recipient_trades_finance" name="Trades Sender and Recipient" sequence="100"
         parent="jt_payroll_payment.menu_payment_finance_setting"
         action="action_sender_recipient_trades_finance"/>
 

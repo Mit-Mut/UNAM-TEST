@@ -232,7 +232,8 @@
                                 <field name="date_expiration"/>
                                 <field name="date_cancellation"/>
                                 <field name="check_amount"/>
-                                <field name="related_check_folio_id" readonly="1"/>
+                                <field name="related_check_folio_id" invisible="1"/>
+                                <field name="related_checks" readonly="1"/>
                             </group>
                         </group>
                     </sheet>

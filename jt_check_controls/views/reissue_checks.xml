@@ -309,7 +309,7 @@
                             <group>
                             	<field name="type_of_batch" invisible="1"/>
                                 <field name="type_of_request_payroll" attrs="{'readonly':[('state','!=','draft')]}"/>
-                                <field name="reissue_type" attrs="{'readonly':[('state','!=','draft')]}"/>
+<!--                                <field name="reissue_type" attrs="{'readonly':[('state','!=','draft')]}"/>-->
                                 <field name="type_of_reissue_id" attrs="{'readonly':[('state','!=','draft')],
                                     'invisible':[('type_of_request_payroll', '!=', 'check_reissue')]}"/>
                                 <field name="check_log_ids" invisible="1"/>
@@ -399,7 +399,8 @@
             <field name="view_mode">tree,form</field>
              <field name="context">{'show_name_and_folio_name':True,'default_type_of_batch':'nominal',
                 'from_approve_check':1}</field>
-            <field name="domain">[('type_of_batch','=','nominal'),('state','=','request'),('reissue_type','=','revocation')]</field>
+            <field name="domain">[('type_of_batch','=','nominal'),('state','=','request'),
+                ('type_of_reissue_id.name','=','Revocación')]</field>
         </record>
 
 		<record id="action_revocation_reissue_check_finance_link_tree" model="ir.actions.act_window.view">
@@ -428,7 +429,8 @@
             <field name="view_mode">tree,form</field>
              <field name="context">{'show_name_and_folio_name':True,'default_type_of_batch':'nominal',
                 'from_approve_check':1}</field>
-            <field name="domain">[('type_of_batch','=','nominal'),('state','=','request'),('reissue_type','=','reexped')]</field>
+            <field name="domain">[('type_of_batch','=','nominal'),('state','=','request'),
+                ('type_of_reissue_id.name','=','Reexpedición o Reimpresión')]</field>
         </record>
 
 		<record id="action_reexped_reissue_check_finance_link_tree" model="ir.actions.act_window.view">
@@ -447,7 +449,7 @@
 	
         <menuitem id="menu_reexped_reissue_check_finance" name="Request for reissues"
                   action="action_reexped_reissue_check_finance"
-                  parent="jt_payroll_payment.menu_payment_finance" sequence="1"/>
+                  parent="jt_payroll_payment.menu_payment_of_payroll" sequence="3"/>
 	                              
     </data>
 </odoo>

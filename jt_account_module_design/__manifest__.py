@@ -38,6 +38,7 @@
         'views/integration_of_statement_asset_view.xml',
         'views/miles_revenue_view.xml',
         'views/detailed_imcome_statement_view.xml',
+        # 'reports/filter_template.xml',
         'security/ir.model.access.csv',
     ],
 

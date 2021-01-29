@@ -111,6 +111,21 @@
             sequence="6"
         />
 
+        <record id="action_status_program_report" model="ir.actions.client">
+            <field name="name">Status Program report</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model':'jt_account_module_design.status.program.report'}" />
+        </record>
+
+        <!-- added menu for the status program report -->
+        <menuitem id="menu_status_program_report" 
+                name="Status Program Report" 
+                parent="special_reports_submenu" 
+                action="action_status_program_report"
+                sequence="9"/>
+
+
+
 
     </data>
 </odoo>

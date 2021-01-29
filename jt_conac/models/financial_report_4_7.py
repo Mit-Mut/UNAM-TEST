@@ -21,6 +21,8 @@
 #
 ##############################################################################
 from odoo import models, _,api
+from datetime import datetime
+
 
 
 class StatementOfCashFlows(models.AbstractModel):
@@ -46,8 +48,18 @@ class StatementOfCashFlows(models.AbstractModel):
         return templates
 
     def _get_columns_name(self, options):
+
+        start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+        
+        prev_year = start.year - 1 
+
         columns = [
             {'name': _('Concepto')},
+            {'name': str(start.year)},
+            {'name': str(prev_year)},
         ]
 
         comparison = options.get('comparison')

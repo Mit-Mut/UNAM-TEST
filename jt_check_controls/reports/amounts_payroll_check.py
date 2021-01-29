@@ -227,8 +227,14 @@ class PayrollCheckAmounts(models.AbstractModel):
         body_html = self.with_context(print_mode=True).get_html(options)
         body_html = body_html.replace(b'<div class="o_account_reports_header">',b'<div>')
         if body_html:
-            body_html = body_html + b'<div class="text-left"><strong>SOLICITADO POR:<hr style="width:60%;border: 1px solid black;"/></strong></div><div class="text-left"><strong>AUTORIZADO POR:<hr style="width:60%;hight:10%;border: 1.5px solid black;"/></strong></div><span style="margin-left:20px;">PARA LA COORDINACION DE OPERACION POR BANCA ELECTRONICA</span style="margin-right:50px;"><br/><span><b>Fecha de Emision:</b><p id="date"></p><script>document.getElementById("date").innerHTML = Date();</script></span>'
-
+            ss = datetime.today().strftime('%d/%m/%Y')
+             
+            #body_html = body_html + b'<div class="text-left"><strong>SOLICITADO POR:<hr style="width:60%;border: 1px solid black;"/></strong></div><div class="text-left"><strong>AUTORIZADO POR:<hr style="width:60%;hight:10%;border: 1.5px solid black;"/></strong></div><span style="margin-left:20px;">PARA LA COORDINACION DE OPERACION POR BANCA ELECTRONICA</span style="margin-right:50px;"><br/><span><b>Fecha de Emision:</b><p id="date"></p><script>document.getElementById("date").innerHTML = Date();</script></span>'
+            dd = '<div class="text-left"><strong>SOLICITADO POR:<hr style="width:60%;border: 1px solid black;"/></strong></div><div class="text-left"><strong>AUTORIZADO POR:<hr style="width:60%;hight:10%;border: 1.5px solid black;"/></strong></div><span style="margin-left:20px;">PARA LA COORDINACION DE OPERACION POR BANCA ELECTRONICA</span style="margin-right:50px;"><br/><span><b>Fecha de Emision : </b>'+ss+'</script></span>'
+            
+            #body_html = body_html + b'<div class="text-left"><strong>SOLICITADO POR:<hr style="width:60%;border: 1px solid black;"/></strong></div><div class="text-left"><strong>AUTORIZADO POR:<hr style="width:60%;hight:10%;border: 1.5px solid black;"/></strong></div><span style="margin-left:20px;">PARA LA COORDINACION DE OPERACION POR BANCA ELECTRONICA</span style="margin-right:50px;"><br/><span><b>Fecha de Emision:</b>'+str('11/12/2020')+'</script></span>'
+            body_html = body_html + dd.encode('utf-8')
+            
         body = body.replace(b'<body class="o_account_reports_body_print">', b'<body class="o_account_reports_body_print">' + body_html)
         
         start = datetime.strptime(

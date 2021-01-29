@@ -16,17 +16,21 @@ class EmployeePayroll(models.Model):
         for rec in self:
             if rec.check_folio_id and not rec.check_final_folio_id:
                 rec.check_folio_id.status = 'Assigned for shipping'
+                rec.check_folio_id.general_status = 'assigned'
             elif rec.check_folio_id and rec.check_final_folio_id and rec.check_folio_id.id != rec.check_final_folio_id.id:
                 rec.check_final_folio_id.status = 'Assigned for shipping'
+                rec.check_final_folio_id.general_status = 'assigned'
                 rec.check_folio_id.status = 'Cancelled'
             elif rec.check_folio_id and rec.check_final_folio_id and rec.check_folio_id.id == rec.check_final_folio_id.id:
                 rec.check_final_folio_id.status = 'Assigned for shipping'
-                
+                rec.check_final_folio_id.general_status = 'assigned'
         return result 
 
     def get_payroll_payment_vals(self):
-        vals = super(EmployeePayroll,self).get_payroll_payment_vals()  
-        if self.check_folio_id:
+        vals = super(EmployeePayroll,self).get_payroll_payment_vals() 
+        if self.check_final_folio_id:
+            vals.update({'check_folio_id':self.check_final_folio_id.id})
+        elif self.check_folio_id:
             vals.update({'check_folio_id':self.check_folio_id.id})
         return vals
     
@@ -45,8 +49,8 @@ class EmployeePayroll(models.Model):
             
             check_id = self.env['check.log'].search([('bank_id.bank_id.l10n_mx_edi_code','=',res.bank_key),('folio','=',rec_check_number)],limit=1)
             
-            if check_id and check_id.general_status != 'available':
-                raise UserError(_('El cheque'+ str(rec_check_number) +' no se encuentra disponible'))
+            if check_id and check_id.general_status != 'available' and check_id not in ('Checkbook registration','Assigned for shipping','Available for printing'):
+                raise UserError(_('El cheque '+ str(rec_check_number) +' no se encuentra disponible'))
             
             if check_id:
                 res.check_folio_id = check_id.id
@@ -65,8 +69,8 @@ class EmployeePayroll(models.Model):
                                   
                     check_id = self.env['check.log'].search([('bank_id.bank_id.l10n_mx_edi_code','=',res.bank_key),('folio','=',rec_check_number)],limit=1)
                     
-                    if check_id and check_id.general_status != 'available':
-                        raise UserError(_('El cheque'+ str(rec_check_number) +' no se encuentra disponible'))
+                    if check_id and check_id.general_status != 'available' and check_id not in ('Checkbook registration','Assigned for shipping','Available for printing'):
+                        raise UserError(_('El cheque '+ str(rec_check_number) +' no se encuentra disponible'))
                     
                     if check_id:
                         if not res.check_folio_id:
@@ -96,8 +100,8 @@ class PensionPaymentLine(models.Model):
             rec_check_number = int(res.check_number)  
             
             check_id = self.env['check.log'].search([('bank_id.bank_id.l10n_mx_edi_code','=',res.bank_key),('folio','=',rec_check_number)],limit=1)
-            if check_id and check_id.general_status != 'available':
-                raise UserError(_('El cheque'+ str(rec_check_number) +' no se encuentra disponible'))
+            if check_id and check_id.general_status != 'available' and check_id not in ('Checkbook registration','Assigned for shipping','Available for printing'):
+                raise UserError(_('El cheque '+ str(rec_check_number) +' no se encuentra disponible'))
             
             if check_id:
                 res.check_folio_id = check_id.id
@@ -114,8 +118,8 @@ class PensionPaymentLine(models.Model):
                     rec_check_number = int(res.check_number)  
                                   
                     check_id = self.env['check.log'].search([('bank_id.bank_id.l10n_mx_edi_code','=',res.bank_key),('folio','=',rec_check_number)],limit=1)
-                    if check_id and check_id.general_status != 'available':
-                        raise UserError(_('El cheque'+ str(rec_check_number) +' no se encuentra disponible'))
+                    if check_id and check_id.general_status != 'available' and check_id not in ('Checkbook registration','Assigned for shipping','Available for printing'):
+                        raise UserError(_('El cheque '+ str(rec_check_number) +' no se encuentra disponible'))
                     
                     if check_id:
                         #if res.check_folio_id:

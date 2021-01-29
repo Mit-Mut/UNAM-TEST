@@ -48,7 +48,7 @@ class Trust(models.Model):
         'res.currency', default=lambda self: self.env.user.company_id.currency_id)
     
     opening_balance = fields.Float("Opening balance")
-    available_bal = fields.Monetary("Available Balance")
+    available_bal = fields.Monetary("Available Balance", compute='_compute_available_bal', store=True)
     origin_resource_id = fields.Many2one('sub.origin.resource', "Origin of the resource")
     executive_name = fields.Char("Executive name")
     phone = fields.Char("Phone")
@@ -96,7 +96,13 @@ class Trust(models.Model):
     report_start_date = fields.Date("report_start_date")
     report_end_date = fields.Date("report_end_date")
 
-    
+    @api.depends('interest_rate_ids', 'interest_rate_ids.yields', 'interest_rate_ids.fees')
+    def _compute_available_bal(self):
+        for trust in self:
+            yield_sum = sum(line.yields for line in trust.interest_rate_ids)
+            fees_sum = sum(line.fees for line in trust.interest_rate_ids)
+            trust.available_bal = yield_sum - fees_sum
+
     def compute_operations(self):
         for rec in self:
             operations = len(rec.request_open_balance_ids)
@@ -361,7 +367,7 @@ class Trust(models.Model):
         req_date += self.interest_rate_ids.filtered(lambda x: self.report_start_date and self.report_end_date and \
             x.interest_date >= self.report_start_date and \
            x.interest_date <= self.report_end_date).mapped('interest_date')
-        
+
         if req_date:
             req_date = list(set(req_date))
             req_date =  sorted(req_date)

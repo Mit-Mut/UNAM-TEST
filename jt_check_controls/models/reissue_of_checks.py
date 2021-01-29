@@ -12,7 +12,7 @@ class ReissueOfChecks(models.Model):
     application_folio = fields.Char('Application sheet')
     type_of_request = fields.Selection([('check_reissue','Check Reissue'),('check_cancellation','Check Cancellation')],
                                        string='Type of Request')
-    reissue_type = fields.Selection([('revocation','Revocación'),('reexped','Reexpedición o Reimpresión')],copy=False)
+    # reissue_type = fields.Selection([('revocation','Revocación'),('reexped','Reexpedición o Reimpresión')],copy=False)
     type_of_request_payroll = fields.Selection(
         [('check_reissue', 'Check Reissue'), ('check_cancellation', 'Check Cancellation'),
          ('check_adjustments', 'Check Adjustments')], string='Type of Request')
@@ -157,6 +157,7 @@ class ReissueOfChecks(models.Model):
         activity_obj = self.env['mail.activity']
         model_id = self.env['ir.model'].sudo().search([('model', '=', 'reissue.checks')]).id
         user_list = []
+        # if self.type_of_reissue_id and self.type_of_reissue_id.name == 'Revocación':
         for user in check_control_admin_users:
             if user.id not  in user_list:
                 activity_obj.create({'activity_type_id': activity_type,

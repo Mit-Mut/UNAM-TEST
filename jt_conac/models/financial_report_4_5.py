@@ -20,7 +20,15 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from odoo import models,api, _
+from odoo import models, api, _
+from datetime import datetime
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
+from odoo.tools.misc import formatLang
+from odoo.tools.misc import xlsxwriter
+import io
+import base64
+from odoo.tools import config, date_utils, get_lang
+import lxml.html
 
 
 class AnalyticalStatementOfDebtAndOtherLiabilities(models.AbstractModel):
@@ -61,6 +69,28 @@ class AnalyticalStatementOfDebtAndOtherLiabilities(models.AbstractModel):
 
         return columns
 
+    def _format(self, value, figure_type):
+        if self.env.context.get('no_format'):
+            return value
+        value['no_format_name'] = value['name']
+
+        if figure_type == 'float':
+            currency_id = self.env.company.currency_id
+            if currency_id.is_zero(value['name']):
+                # don't print -0.0 in reports
+                value['name'] = abs(value['name'])
+                value['class'] = 'number text-muted'
+            value['name'] = formatLang(
+                self.env, value['name'], currency_obj=currency_id)
+            value['class'] = 'number'
+            return value
+        if figure_type == 'percents':
+            value['name'] = str(round(value['name'] * 100, 1)) + '%'
+            value['class'] = 'number'
+            return value
+        value['name'] = round(value['name'], 1)
+        return value
+
     def _get_lines(self, options, line_id=None):
         comparison = options.get('comparison')
         periods = []
@@ -87,6 +117,7 @@ class AnalyticalStatementOfDebtAndOtherLiabilities(models.AbstractModel):
             for level_1_line in level_1_lines:
                 level_2_columns = [{'name': ''}, {'name': ''}, {'name': ''}, {'name': ''}]
                 level_2_columns.extend([{'name': ''} for period in periods])
+                total_balance = 0
                 lines.append({
                     'id': 'level_one_%s' % level_1_line.id,
                     'name': level_1_line.denomination,
@@ -102,7 +133,6 @@ class AnalyticalStatementOfDebtAndOtherLiabilities(models.AbstractModel):
                 for level_2_line in level_2_lines:
                     level_3_columns = [{'name': ''}, {'name': ''}, {'name': ''}, {'name': ''}]
                     level_3_columns.extend([{'name': ''} for period in periods])
-
                     lines.append({
                         'id': 'level_two_%s' % level_2_line.id,
                         'name': level_2_line.denomination,
@@ -113,10 +143,11 @@ class AnalyticalStatementOfDebtAndOtherLiabilities(models.AbstractModel):
                         'parent_id': 'level_one_%s' % level_1_line.id,
                     })
 
+
                     level_3_lines = debt_obj.search(
                         [('parent_id', '=', level_2_line.id)])
                     for level_3_line in level_3_lines:
-                        level_4_columns = [{'name': level_3_line.currency_id.id}, {'name': level_3_line.country_id.id}, {'name': level_3_line.init_balance}, {'name': level_3_line.end_balance}]
+                        level_4_columns = [{'name': level_3_line.currency_id.name}, {'name': level_3_line.country_id.name}, {'name': level_3_line.init_balance}, {'name': level_3_line.end_balance}]
                         level_4_columns.extend([{'name': ''} for period in periods])
 
                         lines.append({
@@ -126,6 +157,40 @@ class AnalyticalStatementOfDebtAndOtherLiabilities(models.AbstractModel):
                             'level': 4,
                             'parent_id': 'level_two_%s' % level_2_line.id,
                         })
+                init_balance = 0
+                total_balance += init_balance
+                
+                lines.append({
+                    'id': 'sub_total',
+                    'name': 'SUB TOTAL',
+                    'columns': [{'name': ''},
+                                {'name': ''},
+                                self._format({'name': total_balance},figure_type='float'),
+                                self._format({'name': total_balance},figure_type='float'),
+                                ],
+                    
+                    'level': 1,
+                    'unfoldable': False,
+                    'unfolded': True,
+                    'class':'text-left'
+                })
+
+            lines.append({
+                'id': 'group_total',
+                'name': 'TOTAL',
+                'columns': [{'name': ''},
+                            {'name': ''},
+                            self._format({'name': total_balance},figure_type='float'),
+                            self._format({'name': total_balance},figure_type='float'),
+                            ],
+                
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+                'class':'text-left'
+                })
+
+                        
         return lines
     
     def _get_report_name(self):

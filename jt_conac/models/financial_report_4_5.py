@@ -93,15 +93,30 @@ class AnalyticalStatementOfDebtAndOtherLiabilities(models.AbstractModel):
 
     def _get_lines(self, options, line_id=None):
         comparison = options.get('comparison')
+        move_line_obj = self.env['account.move.line']
         periods = []
         if comparison and comparison.get('filter') != 'no_comparison':
             periods = [period.get('string') for period in comparison.get('periods')]
         debt_obj = self.env['debt.statement']
         lines = []
+
+        start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+        
+        if options.get('all_entries') is False:
+            move_state_domain = ('move_id.state', '=', 'posted')
+        else:
+            move_state_domain = ('move_id.state', '!=', 'cancel')
+        
         hierarchy_lines = debt_obj.sudo().search(
             [('parent_id', '=', False)], order='id')
-
+        
         for line in hierarchy_lines:
+            total_int = 0
+            total_final = 0
+            
             level_1_columns = [{'name': ''}, {'name': ''}, {'name': ''}, {'name': ''}]
             level_1_columns.extend([{'name': ''} for period in periods])
             lines.append({
@@ -115,9 +130,12 @@ class AnalyticalStatementOfDebtAndOtherLiabilities(models.AbstractModel):
 
             level_1_lines = debt_obj.search([('parent_id', '=', line.id)])
             for level_1_line in level_1_lines:
+                sub_total_int = 0
+                sub_total_final = 0
+                
                 level_2_columns = [{'name': ''}, {'name': ''}, {'name': ''}, {'name': ''}]
                 level_2_columns.extend([{'name': ''} for period in periods])
-                total_balance = 0
+                
                 lines.append({
                     'id': 'level_one_%s' % level_1_line.id,
                     'name': level_1_line.denomination,
@@ -147,8 +165,32 @@ class AnalyticalStatementOfDebtAndOtherLiabilities(models.AbstractModel):
                     level_3_lines = debt_obj.search(
                         [('parent_id', '=', level_2_line.id)])
                     for level_3_line in level_3_lines:
-                        level_4_columns = [{'name': level_3_line.currency_id.name}, {'name': level_3_line.country_id.name}, {'name': level_3_line.init_balance}, {'name': level_3_line.end_balance}]
+                        level_3_int = 0
+                        level_3_final = 0
+                        if level_3_line.coa_conac_id:
+                            move_lines = move_line_obj.sudo().search(
+                                [('coa_conac_id', '=', level_3_line.coa_conac_id.id),
+                                 move_state_domain,
+                                 ('date', '<=', end)])
+                            if move_lines:
+                                level_3_final = (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+
+                            move_lines = move_line_obj.sudo().search(
+                                [('coa_conac_id', '=', level_3_line.coa_conac_id.id),
+                                 move_state_domain,
+                                 ('date', '<=', start)])
+                            if move_lines:
+                                level_3_int = (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+                                 
+                        level_4_columns = [{'name': level_3_line.currency_id.name}, 
+                                           {'name': level_3_line.country_id.name},
+                                            self._format({'name': level_3_int},figure_type='float'), 
+                                            self._format({'name': level_3_final},figure_type='float'),]
                         level_4_columns.extend([{'name': ''} for period in periods])
+                        total_int += level_3_int
+                        total_final += level_3_final
+                        sub_total_int += level_3_int
+                        sub_total_final += level_3_final
 
                         lines.append({
                             'id': 'level_three_%s' % level_3_line.id,
@@ -157,33 +199,34 @@ class AnalyticalStatementOfDebtAndOtherLiabilities(models.AbstractModel):
                             'level': 4,
                             'parent_id': 'level_two_%s' % level_2_line.id,
                         })
-                init_balance = 0
-                total_balance += init_balance
+                sub_total = [{'name': ''},
+                                {'name': ''},
+                                self._format({'name': sub_total_int},figure_type='float'),
+                                self._format({'name': sub_total_final},figure_type='float'),]
+                sub_total.extend([{'name': ''} for period in periods])
                 
                 lines.append({
                     'id': 'sub_total',
                     'name': 'SUB TOTAL',
-                    'columns': [{'name': ''},
-                                {'name': ''},
-                                self._format({'name': total_balance},figure_type='float'),
-                                self._format({'name': total_balance},figure_type='float'),
-                                ],
+                    'columns': sub_total,
                     
                     'level': 1,
                     'unfoldable': False,
                     'unfolded': True,
                     'class':'text-left'
                 })
-
+            
+            total_col = [{'name': ''},
+                            {'name': ''},
+                            self._format({'name': total_int},figure_type='float'),
+                            self._format({'name': total_final},figure_type='float'),
+                            ]
+            total_col.extend([{'name': ''} for period in periods])
+            
             lines.append({
                 'id': 'group_total',
                 'name': 'TOTAL',
-                'columns': [{'name': ''},
-                            {'name': ''},
-                            self._format({'name': total_balance},figure_type='float'),
-                            self._format({'name': total_balance},figure_type='float'),
-                            ],
-                
+                'columns': total_col,
                 'level': 1,
                 'unfoldable': False,
                 'unfolded': True,

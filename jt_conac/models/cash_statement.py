@@ -30,3 +30,4 @@ class StatementOfCash(models.Model):
 
     concept = fields.Char(string='Concepto')
     parent_id = fields.Many2one('cash.statement', string='Parent')
+    coa_conac_id = fields.Many2one('coa.conac', string="CODE CONAC")

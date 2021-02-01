@@ -29,7 +29,7 @@
     'maintainer': 'Jupical Technologies Pvt. Ltd.',
     'website': 'http://www.jupical.com',
     'license': 'AGPL-3',
-    'depends': ['account_accountant', 'l10n_mx','jt_projects'],
+    'depends': ['account_accountant', 'l10n_mx','jt_projects','l10n_mx_reports'],
     'data': [
         'reports/header.xml',
         'reports/report_menu.xml',
@@ -38,7 +38,7 @@
         'views/integration_of_statement_asset_view.xml',
         'views/miles_revenue_view.xml',
         'views/detailed_imcome_statement_view.xml',
-        # 'reports/filter_template.xml',
+ #       'reports/filter_template.xml',
         'security/ir.model.access.csv',
     ],
 

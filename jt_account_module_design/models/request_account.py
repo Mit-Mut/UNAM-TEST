@@ -41,3 +41,11 @@ class AccountMove(models.Model):
     ie_account = fields.Boolean('IEAccount')
     program_code_id = fields.Many2one('program.code','Program Code')
     account_ie_id = fields.Many2one('association.distribution.ie.accounts','I.E. Accounts')
+
+class AccountMoveLine(models.Model):
+
+    _inherit = 'account.move.line'
+
+    is_programatic_code = fields.Boolean(related="move_id.programatic_code",store=True)
+    is_ie_account = fields.Boolean(related="move_id.ie_account",store=True)
+

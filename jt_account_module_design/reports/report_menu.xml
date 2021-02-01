@@ -94,7 +94,7 @@
             sequence="4"
         />
 
-                <!-- Miles revenue  submenu -->
+        <!-- Miles revenue  submenu -->
         <menuitem
             id="miles_revenue_report_submenu"
             name="Miles Revenue Report"
@@ -103,7 +103,7 @@
             sequence="5"
         />
 
-              <menuitem
+        <menuitem
             id="state_income_expenses_report"
             name="Income Expenses and Investment"
             parent="special_reports_submenu"
@@ -114,7 +114,7 @@
         <record id="action_status_program_report" model="ir.actions.client">
             <field name="name">Status Program report</field>
             <field name="tag">account_report</field>
-            <field name="context" eval="{'model':'jt_account_module_design.status.program.report'}" />
+            <field name="context" eval="{'model':'jt_account_module_design.general.ledger.inherit'}" />
         </record>
 
         <!-- added menu for the status program report -->
@@ -123,6 +123,20 @@
                 parent="special_reports_submenu" 
                 action="action_status_program_report"
                 sequence="9"/>
+
+        <!-- financial statement action -->
+        <record id="action_financial_positional_statement" model="ir.actions.client">
+            <field name="name">Financial Position Statement report</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model':'jt_account_module_design.account_coa.inherit'}" />
+        </record>
+
+        <!-- added menu for the financial statement report -->
+        <menuitem id="menu_financial_position_report" 
+                name="Financial Position Statement" 
+                parent="special_reports_submenu" 
+                action="action_financial_positional_statement"
+                sequence="10"/>
 
 
 

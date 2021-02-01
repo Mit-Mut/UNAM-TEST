@@ -70,7 +70,8 @@ class BankBalanceCheck(models.TransientModel):
         if rec.is_payroll_payment_request and rec.employee_paryoll_ids:
             payroll_process_ids = rec.employee_paryoll_ids.mapped('payroll_processing_id')
             if payroll_process_ids and payroll_process_ids[0].period_start and payroll_process_ids[0].period_end and payroll_process_ids[0].fornight:
-                cal_id = self.env['calendar.payment.regis'].search([('type_of_payment','=','payroll'),('fornight_does','=',payroll_process_ids[0].fornight),('type_pay', '=', 'Payment schedule'), ('date', '>=', payroll_process_ids[0].period_start), ('date', '<=', payroll_process_ids[0].period_end)],limit=1)
+                #cal_id = self.env['calendar.payment.regis'].search([('type_of_payment','=','payroll'),('fornight_does','=',payroll_process_ids[0].fornight),('type_pay', '=', 'Payment schedule'), ('date', '>=', payroll_process_ids[0].period_start), ('date', '<=', payroll_process_ids[0].period_end)],limit=1)
+                cal_id = self.env['calendar.payment.regis'].search([('type_of_payment','=','payroll'),('fornight_does','=',payroll_process_ids[0].fornight),('type_pay', '=', 'Payment schedule')],limit=1)
                 if cal_id and cal_id.date:
                     payment_date = cal_id.date
         return payment_date
@@ -130,13 +131,13 @@ class BankBalanceCheck(models.TransientModel):
             or not invoice.journal_id.accured_debit_account_id \
             or not invoice.journal_id.conac_accured_debit_account_id :
             raise ValidationError("Please configure UNAM and CONAC Accrued account in payment request journal!")
-
+        amount_total = sum(x.price_total for x in invoice.invoice_line_ids.filtered(lambda x:x.program_code_id))
         if invoice.currency_id != invoice.company_id.currency_id:
-            amount_currency = abs(invoice.amount_total)
+            amount_currency = abs(amount_total)
             balance = invoice.currency_id._convert(amount_currency, invoice.company_currency_id, invoice.company_id, invoice.date)
             currency_id = invoice.currency_id and invoice.currency_id.id or False 
         else:
-            balance = abs(invoice.amount_total)
+            balance = abs(amount_total)
             amount_currency = 0.0
             currency_id = False
         

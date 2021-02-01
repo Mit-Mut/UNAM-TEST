@@ -13,7 +13,7 @@ class SenderRecipientTradesFinance(models.Model):
                                  ],string="Template")
     
         
-    bank_account_id = fields.Many2one('account.journal','Bank Account')
+    bank_account_id = fields.Many2one('res.partner.bank','Bank Account')
     executive_id = fields.Many2one('executive.data',string='Executive Data')
     position_id = fields.Many2one('executive.data',string='Position')
 
@@ -28,11 +28,11 @@ class SenderRecipientTradesFinance(models.Model):
     employee_ids = fields.Many2many('hr.employee','rel_employee_sender_recipient_trades_finance','sender_id','emp_id','EMPLOYEES COPIED')
     
 
-    @api.onchange('bank_account_id')
-    def onchange_move_id(self):
-        if self.bank_account_id:
-            self.executive_id = self.bank_account_id.executive_ids.ids
-            self.position_id = self.executive_id.position
+    # @api.onchange('bank_account_id')
+    # def onchange_move_id(self):
+    #     if self.bank_account_id:
+    #         self.executive_id = self.bank_account_id.executive_ids.ids
+    #         self.position_id = self.executive_id.position
 
 
     def name_get(self):

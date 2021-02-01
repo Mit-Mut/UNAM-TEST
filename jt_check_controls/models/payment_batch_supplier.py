@@ -68,7 +68,7 @@ class PaymentBatchSupplier(models.Model):
     checkbook_req_id = fields.Many2one("checkbook.request", "Checkbook Number")
     type_of_payment_method = fields.Selection([('handbook', 'Handbook'),
                                                ('checks', 'Checks')], "Type of Payment Method")
-    payment_date = fields.Date("Payment Date")
+    payment_date = fields.Date(string="Payment Date",default=datetime.today())
     amount_of_checkes = fields.Integer("Amount of Checkes", compute='_get_check_data')
     intial_check_folio = fields.Many2one("check.log", compute='_get_check_data')
     final_check_folio = fields.Many2one("check.log", compute='_get_check_data')
@@ -76,7 +76,8 @@ class PaymentBatchSupplier(models.Model):
     printed_checks = fields.Boolean("Printed checks")
     description_layout = fields.Text("Description Layout")
     selected = fields.Boolean("Select All")
-    type_of_batch = fields.Selection([('supplier','Supplier'),('project','Project'),('nominal','Nominal'),('pension','Pension')],string="Type Of Batch")
+    type_of_batch = fields.Selection([('supplier','Supplier'),('project','Project'),('nominal','Nominal'),
+                                      ('pension','Pension')],string="Type Of Batch")
        
     @api.onchange('select_all')
     def select_lines(self):
@@ -548,11 +549,18 @@ class BankBalanceCheck(models.TransientModel):
                     type_of_batch = 'project'
                 elif move.is_pension_payment_request:
                     type_of_batch = 'pension'
+                    move.payment_state = 'assigned_payment_method'
+                    if move.check_folio_id:
+                        move.check_folio_id.status = 'Printed'
                 
                 moves_list.append(move)
                 
             move_val_list = []
+            checkbook_req_id = False
             for move in moves_list:
+                if move.check_folio_id:
+                    checkbook_req_id = move.check_folio_id.checklist_id and move.check_folio_id.checklist_id and move.check_folio_id.checklist_id.checkbook_req_id.id or False
+                
                 payment = self.env['account.payment'].search([('payment_request_id', '=', move.id)], limit=1)
                 move_val_list.append({'payment_req_id': move.id, 'amount_to_pay': move.amount_total,
                                       'payment_id': payment.id,'check_folio_id':move.check_folio_id and move.check_folio_id.id or False})
@@ -562,6 +570,7 @@ class BankBalanceCheck(models.TransientModel):
                 'payment_issuing_bank_acc_id': bank_acc_id,
                 'type_of_payment_method': 'checks',
                 'type_of_batch':type_of_batch,
+                'checkbook_req_id' : checkbook_req_id,
                 'payment_req_ids': [(0, 0, val) for val in move_val_list]
             })
         return res

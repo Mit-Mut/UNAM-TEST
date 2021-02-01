@@ -147,7 +147,7 @@ class CheckCardFolioPaymentIssue(models.AbstractModel):
             if fortnight.get('selected',False):
                 fortnight_domain.append(fortnight.get('id'))
             
-        domain = domain + [('payment_date','>=',start),('payment_date','<=',end),('type_of_batch','=','nominal')]
+        domain = domain + [('payment_date','>=',start),('payment_date','<=',end),('type_of_batch','in',('nominal','pension'))]
         
         payment_issue_ids = self.env['payment.batch.supplier'].search(domain)
         batch_lines_ids = self.env['check.payment.req'].search([('check_status','=','Sent to protection'),

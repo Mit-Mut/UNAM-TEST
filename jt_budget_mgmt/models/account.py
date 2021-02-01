@@ -243,7 +243,6 @@ class AccountMove(models.Model):
             else: 
                 line_amount = line.credit + line.tax_price_cr
             
-            print ("Line amount====",line_amount)    
             
             if total_available_budget < line_amount:
                 is_check = True
@@ -347,13 +346,14 @@ class AccountMove(models.Model):
             self.journal_id.default_debit_account_id):
             raise ValidationError(_("Configure Default Debit and Credit Account in %s!" % \
                                     self.journal_id.name))
-
+        
+        amount_total = sum(x.price_total for x in self.invoice_line_ids.filtered(lambda x:x.program_code_id))    
         if self.currency_id != self.company_id.currency_id:
-            amount_currency = abs(self.amount_total)
+            amount_currency = abs(amount_total)
             balance = self.currency_id._convert(amount_currency, self.company_currency_id, self.company_id, self.date)
             currency_id = self.currency_id and self.currency_id.id or False
         else:
-            balance = abs(self.amount_total)
+            balance = abs(amount_total)
             amount_currency = 0.0
             currency_id = False
             

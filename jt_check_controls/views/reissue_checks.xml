@@ -388,7 +388,34 @@
 
         <menuitem id="menu_request_for_changes_to_the_check_payroll" name="Payroll"
                   parent="request_for_changes_to_the_check"
-                  action="action_request_for_changes_to_the_check_payroll" sequence="3"/>      
+                  action="action_request_for_changes_to_the_check_payroll" sequence="3"/>
+
+        <record id="action_request_for_changes_to_the_check_pension" model="ir.actions.act_window">
+            <field name="name">Pension Payment</field>
+            <field name="res_model">reissue.checks</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type_of_batch','=','pension')]</field>
+            <field name="context">{'show_name_and_folio_name':True,'default_type_of_batch':'pension',
+                'from_approve_check':1}</field>
+        </record>
+
+		<record id="action_pension_reissue_of_checks_link_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="reissue_checks_payroll_tree_view"/>
+            <field name="act_window_id" ref="action_request_for_changes_to_the_check_pension"/>
+        </record>
+
+        <record id="action_pension_reissue_of_checks_link_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="reissue_checks_payroll_form_view"/>
+            <field name="act_window_id" ref="action_request_for_changes_to_the_check_pension"/>
+        </record>
+
+        <menuitem id="menu_request_for_changes_to_the_check_pension" name="Pension Payment"
+                  parent="request_for_changes_to_the_check"
+                  action="action_request_for_changes_to_the_check_pension" sequence="3"/>
                   
 
 	<!--  Payroll revocation Into Finance -->

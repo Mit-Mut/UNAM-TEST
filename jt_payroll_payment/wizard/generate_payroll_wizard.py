@@ -48,43 +48,43 @@ class GeneratePayrollWizard(models.TransientModel):
     employee_ids = fields.Many2many('hr.employee','employee_generate_payroll_wizard_rel','employee_id','wizard_id','Employees')
     payroll_process_id = fields.Many2one('custom.payroll.processing','Payroll Process')
     
-    def check_employee_data(self,failed_row,rfc,import_type):
-        failed_row += str(rfc) + "------>> Invalid Employee RFC In "+str(import_type)+" Import\n"
+    def check_employee_data(self,failed_row,rfc,import_type,counter):
+        failed_row += "Row " +str(counter)+" : " + str(rfc) + "------>> Invalid Employee RFC In "+str(import_type)+" Import\n"
         return failed_row
     
-    def check_category_data(self,failed_row,cat,import_type):
-        failed_row += str(cat) + "------>> Invalid Category Key In "+str(import_type)+" Import\n"
+    def check_category_data(self,failed_row,cat,import_type,counter):
+        failed_row +="Row " +str(counter)+" : " + str(cat) + "------>> Invalid Category Key In "+str(import_type)+" Import\n"
         return failed_row
 
-    def check_program_code_data(self,failed_row,program,import_type):
-        failed_row += str(program) + "------>> Invalid Program Code In "+str(import_type)+" Import\n"
+    def check_program_code_data(self,failed_row,program,import_type,counter):
+        failed_row +="Row " +str(counter)+" : " + str(program) + "------>> Invalid Program Code In "+str(import_type)+" Import\n"
         return failed_row
 
-    def check_payment_method_data(self,failed_row,method,import_type):
-        failed_row += str(method) + "------>> Invalid Payment Method In "+str(import_type)+" Import\n"
+    def check_payment_method_data(self,failed_row,method,import_type,counter):
+        failed_row +="Row " +str(counter)+" : " + str(method) + "------>> Invalid Payment Method In "+str(import_type)+" Import\n"
         return failed_row
 
-    def check_bank_key_data(self,failed_row,key,import_type):
-        failed_row += str(key) + "------>> Invalid Bank Key In "+str(import_type)+" Import\n"
+    def check_bank_key_data(self,failed_row,key,import_type,counter):
+        failed_row +="Row " +str(counter)+" : " + str(key) + "------>> Invalid Bank Key In "+str(import_type)+" Import\n"
         return failed_row
 
-    def check_checklog_data(self,failed_row,number,import_type):
-        failed_row += str(number) + "------>> Invalid Check Number In "+str(import_type)+" Import\n"
+    def check_checklog_data(self,failed_row,number,import_type,counter):
+        failed_row +="Row " +str(counter)+" : " + str(number) + "------>> Invalid Check Number In "+str(import_type)+" Import\n"
         return failed_row
 
-    def check_bank_accunt_data(self,failed_row,acount,import_type):
-        failed_row += str(acount) + "------>> Invalid Bank Account In "+str(import_type)+" Import\n"
+    def check_bank_accunt_data(self,failed_row,acount,import_type,counter):
+        failed_row +="Row " +str(counter)+" : " + str(acount) + "------>> Invalid Bank Account In "+str(import_type)+" Import\n"
         return failed_row
 
-    def check_perception_data(self,failed_row,perception,import_type):
-        failed_row += str(perception) + "------>> Invalid Payment key In "+str(import_type)+" Import\n"
+    def check_perception_data(self,failed_row,perception,import_type,counter):
+        failed_row +="Row " +str(counter)+" : " + str(perception) + "------>> Invalid Payment key In "+str(import_type)+" Import\n"
         return failed_row
 
-    def check_deduction_data(self,failed_row,deduction,import_type):
-        failed_row += str(deduction) + "------>> Invalid Deduction key In "+str(import_type)+" Import\n"
+    def check_deduction_data(self,failed_row,deduction,import_type,counter):
+        failed_row +="Row " +str(counter)+" : " + str(deduction) + "------>> Invalid Deduction key In "+str(import_type)+" Import\n"
         return failed_row
-    def check_parter_data(self,failed_row,partner,import_type):
-        failed_row += str(partner) + "------>> Invalid Beneficiaries In "+str(import_type)+" Import\n"
+    def check_parter_data(self,failed_row,partner,import_type,counter):
+        failed_row +="Row " +str(counter)+" : " + str(partner) + "------>> Invalid Beneficiaries In "+str(import_type)+" Import\n"
         return failed_row
          
     def generate(self):
@@ -101,8 +101,9 @@ class GeneratePayrollWizard(models.TransientModel):
             exit_payroll_id = False
             #======================== payroll_perceptions ================# 
             if self.type_of_movement == 'payroll_perceptions':
+                counter = 0
                 for rowx, row in enumerate(map(sheet.row, range(1, sheet.nrows)), 1):
-                    counter = 0
+                    counter += 1
                     rfc = row[0].value
                     program_code = row[2].value
                     payment_method = row[4].value
@@ -136,11 +137,11 @@ class GeneratePayrollWizard(models.TransientModel):
                             if payment_method_rec:
                                 payment_method_id = payment_method_rec.id
                             else:
-                                failed_row = self.check_payment_method_data(failed_row,payment_method,'Payroll Perceptions')
+                                failed_row = self.check_payment_method_data(failed_row,payment_method,'Payroll Perceptions',counter)
                                 continue    
                         employee_id =self.env['hr.employee'].search([('rfc','=',rfc)],limit=1)
                         if not employee_id:
-                            failed_row = self.check_employee_data(failed_row, rfc, 'Payroll Perceptions')
+                            failed_row = self.check_employee_data(failed_row, rfc, 'Payroll Perceptions',counter)
                         if employee_id:
                             rec_check_number = check_number
                             rec_deposite_number = deposite_number
@@ -160,14 +161,16 @@ class GeneratePayrollWizard(models.TransientModel):
                                     rec_bank_key = int(bank_key)
                                 bank_id_1 = self.env['res.bank'].search([('l10n_mx_edi_code', '=', rec_bank_key)])
                                 if not bank_id_1:
-                                    failed_row = self.check_bank_key_data(failed_row,bank_key,'Payroll Perceptions')
+                                    failed_row = self.check_bank_key_data(failed_row,bank_key,'Payroll Perceptions',counter)
                                     continue
 
                             if rec_check_number and rec_bank_key:
                                 log = self.env['check.log'].search([('folio', '=', rec_check_number),
+                                    ('status', 'in', ('Checkbook registration', 'Assigned for shipping',
+                                    'Available for printing')), ('general_status', '=', 'available'),
                                                 ('bank_id.bank_id.l10n_mx_edi_code', '=', rec_bank_key)], limit=1)
                                 if not log:
-                                    failed_row = self.check_checklog_data(failed_row,rec_check_number,'Payroll Perceptions')
+                                    failed_row = self.check_checklog_data(failed_row,rec_check_number,'Payroll Perceptions',counter)
                                     continue
                                 
                             if bank_account:
@@ -177,7 +180,7 @@ class GeneratePayrollWizard(models.TransientModel):
                                 if bank_account_rec:
                                     bank_account_id = bank_account_rec.id
                                 else:
-                                    failed_row = self.check_bank_accunt_data(failed_row,bank_account,'Payroll Perceptions')
+                                    failed_row = self.check_bank_accunt_data(failed_row,bank_account,'Payroll Perceptions',counter)
                                     continue
                                     
                             exit_payroll_id = self.env['employee.payroll.file'].search([('employee_id','=',employee_id.id),
@@ -190,6 +193,8 @@ class GeneratePayrollWizard(models.TransientModel):
                                 exit_payroll_id.receiving_bank_acc_pay_id = bank_account_id
                                 if check_number and rec_bank_key:
                                     log = self.env['check.log'].search([('folio', '=', check_number),
+                                    ('status', 'in', ('Checkbook registration','Assigned for shipping',
+                                           'Available for printing')),('general_status', '=', 'available'),
                                                     ('bank_id.bank_id.l10n_mx_edi_code', '=', rec_bank_key)], limit=1)
                                     if log:
                                         exit_payroll_id.check_folio_id = log.id
@@ -198,6 +203,8 @@ class GeneratePayrollWizard(models.TransientModel):
                                 log = False
                                 if check_number:
                                     log = self.env['check.log'].search([('folio', '=', check_number),
+                                    ('status', 'in', ('Checkbook registration','Assigned for shipping',
+                                    'Available for printing')),('general_status', '=', 'available'),
                                                     ('bank_id.bank_id.l10n_mx_edi_code', '=', rec_bank_key)], limit=1)
                                 result_dict.update({'payroll_processing_id':self.payroll_process_id.id,
                                                     'period_start' : self.payroll_process_id.period_start,
@@ -221,7 +228,7 @@ class GeneratePayrollWizard(models.TransientModel):
                         if p_id:
                             program_id = p_id.id
                         else:
-                            failed_row = self.check_program_code_data(failed_row,program_code,'Payroll Perceptions')
+                            failed_row = self.check_program_code_data(failed_row,program_code,'Payroll Perceptions',counter)
                             continue
                     if pre_key:
                         if  type(pre_key) is int or type(pre_key) is float:
@@ -231,7 +238,7 @@ class GeneratePayrollWizard(models.TransientModel):
                         if pre_id:
                             line_data.append((0,0,{'program_code_id':program_id,'preception_id':pre_id.id,'amount':amount}))
                         else:
-                            failed_row = self.check_perception_data(failed_row,pre_key,'Payroll Perceptions')
+                            failed_row = self.check_perception_data(failed_row,pre_key,'Payroll Perceptions',counter)
                             continue
                          
                     if exit_payroll_id and line_data:
@@ -247,9 +254,10 @@ class GeneratePayrollWizard(models.TransientModel):
 
             #======================== payroll_deductions ================#
             if self.type_of_movement == 'payroll_deductions':
+                counter = 0
                 for rowx, row in enumerate(map(sheet.row, range(1, sheet.nrows)), 1):
                     
-                    counter = 0
+                    counter += 1
                     rfc = row[0].value
                     ded_key = row[2].value
                     amount = row[3].value
@@ -271,7 +279,7 @@ class GeneratePayrollWizard(models.TransientModel):
                              
                         employee_id =self.env['hr.employee'].search([('rfc','=',rfc)],limit=1)
                         if not employee_id:
-                            failed_row = self.check_employee_data(failed_row,rfc,'Payroll Deductions')                            
+                            failed_row = self.check_employee_data(failed_row,rfc,'Payroll Deductions',counter)                            
                         if employee_id:
 
                             exit_payroll_id = self.env['employee.payroll.file'].search([('employee_id','=',employee_id.id),('id','in',self.payroll_process_id.payroll_ids.ids)],limit=1)
@@ -298,7 +306,7 @@ class GeneratePayrollWizard(models.TransientModel):
                         if ded_id:
                             line_data.append((0,0,{'deduction_id':ded_id.id,'amount':amount})) 
                         else:
-                            failed_row = self.check_deduction_data(failed_row,ded_key,'Payroll Deductions')
+                            failed_row = self.check_deduction_data(failed_row,ded_key,'Payroll Deductions',counter)
                             continue
                     if exit_payroll_id and line_data:
                         exit_payroll_id.write({'deduction_line_ids':line_data})
@@ -314,9 +322,9 @@ class GeneratePayrollWizard(models.TransientModel):
 
             #======================== pension_payment ================# 
             if self.type_of_movement == 'pension_payment':
-                
+                counter = 0
                 for rowx, row in enumerate(map(sheet.row, range(1, sheet.nrows)), 1):
-                    counter = 0
+                    counter += 1
                     rfc = row[0].value
                     ben_name = row[2].value
                     payment_method = row[3].value
@@ -329,7 +337,7 @@ class GeneratePayrollWizard(models.TransientModel):
                     if rfc:
                         employee_id =self.env['hr.employee'].search([('rfc','=',rfc)],limit=1)
                         if not employee_id:
-                            failed_row = self.check_employee_data(failed_row,rfc,'Pension Payment')                            
+                            failed_row = self.check_employee_data(failed_row,rfc,'Pension Payment',counter)                            
                         
                         if employee_id:
                             exit_payroll_id = self.env['employee.payroll.file'].search([('employee_id','=',employee_id.id),('id','in',self.payroll_process_id.payroll_ids.ids)],limit=1)
@@ -350,10 +358,15 @@ class GeneratePayrollWizard(models.TransientModel):
                     payment_method_id = False
                     bank_account_id = False
                     bank_id = False
+                    check_folio_id = False
                     if ben_name:
                         per_rec = self.env['res.partner'].search([('name','=',ben_name)],limit=1)
                         if per_rec:
                             partner_id = per_rec.id
+                        else:
+                            failed_row = self.check_parter_data(failed_row,ben_name,'Pension Payment',counter)
+                            continue
+                            
                     if deposite:         
                         if  type(deposite) is int or type(deposite) is float:
                             deposite_data = int(deposite)
@@ -369,7 +382,7 @@ class GeneratePayrollWizard(models.TransientModel):
                         if payment_method_rec:
                             payment_method_id = payment_method_rec.id
                         else:
-                            failed_row = self.check_payment_method_data(failed_row,payment_method,'Pension Payment')
+                            failed_row = self.check_payment_method_data(failed_row,payment_method,'Pension Payment',counter)
                             continue
                         
                     if bank_account:
@@ -379,7 +392,7 @@ class GeneratePayrollWizard(models.TransientModel):
                         if bank_account_rec:
                             bank_account_id = bank_account_rec.id
                         else:
-                            failed_row = self.check_bank_accunt_data(failed_row,bank_account,'Pension Payment')
+                            failed_row = self.check_bank_accunt_data(failed_row,bank_account,'Pension Payment',counter)
                             continue
                         
                     if bank_key:
@@ -389,17 +402,26 @@ class GeneratePayrollWizard(models.TransientModel):
                         if bank_rec:
                             bank_id = bank_rec.id
                         else:
-                            failed_row = self.check_bank_key_data(failed_row,bank_key,'Pension Payment')
+                            failed_row = self.check_bank_key_data(failed_row,bank_key,'Pension Payment',counter)
                             continue
 
                     if check_no_data and bank_key:
                         log = self.env['check.log'].search([('folio', '=', check_no_data),
-                                        ('bank_id.bank_id.l10n_mx_edi_code', '=', bank_key)], limit=1)
+                            ('status', 'in',('Checkbook registration', 'Assigned for shipping','Available for printing')),
+                            ('general_status', '=', 'available'),('bank_id.bank_id.l10n_mx_edi_code', '=', bank_key)],
+                            limit=1)
                         if not log:
-                            failed_row = self.check_checklog_data(failed_row,check_no_data,'Pension Payment')
+                            failed_row = self.check_checklog_data(failed_row,check_no_data,'Pension Payment',counter)
                             continue
+                        else:
+                            check_folio_id = log
                             
-                    line_data.append((0,0,{'bank_key':bank_key,'bank_id':bank_id,'bank_acc_number':bank_account_id,'l10n_mx_edi_payment_method_id':payment_method_id,'partner_id':partner_id,'deposit_number':deposite_data,'check_number':check_no_data,'total_pension':total_pension})) 
+                    line_data.append((0,0,{'bank_key':bank_key,
+                                           'bank_id':bank_id,'bank_acc_number':bank_account_id,
+                                           'l10n_mx_edi_payment_method_id':payment_method_id,
+                                           'partner_id':partner_id,'deposit_number':deposite_data,
+                                           'check_number':check_no_data,'total_pension':total_pension,
+                                           'check_folio_id': check_folio_id.id if check_folio_id else False}))
 
                     if exit_payroll_id and line_data:
                         exit_payroll_id.write({'pension_payment_line_ids':line_data})
@@ -415,9 +437,10 @@ class GeneratePayrollWizard(models.TransientModel):
 
             #======================== Additional payments ================# 
             if self.type_of_movement == 'additional_payments':
+                counter = 0
                 for rowx, row in enumerate(map(sheet.row, range(1, sheet.nrows)), 1):
                     
-                    counter = 0
+                    counter += 1
                     rfc = row[0].value
                     job_id = row[1].value
                     amount = row[2].value
@@ -441,7 +464,7 @@ class GeneratePayrollWizard(models.TransientModel):
                              
                         employee_id =self.env['hr.employee'].search([('rfc','=',rfc)],limit=1)
                         if not employee_id:
-                            failed_row = self.check_employee_data(failed_row,rfc,'Additional Payments')                            
+                            failed_row = self.check_employee_data(failed_row,rfc,'Additional Payments',counter)                            
                         
                         if employee_id:
                             exit_payroll_id = self.env['employee.payroll.file'].search([('employee_id','=',employee_id.id),('id','in',self.payroll_process_id.payroll_ids.ids)],limit=1)
@@ -470,13 +493,13 @@ class GeneratePayrollWizard(models.TransientModel):
                         if job_rec:
                             job_data = job_rec.id
                         else:
-                            failed_row = self.check_category_data(failed_row, job_id,'Additional Payments')
+                            failed_row = self.check_category_data(failed_row, job_id,'Additional Payments',counter)
                     if program_code:
                         p_id = self.env['program.code'].search([('program_code','=',program_code)],limit=1)
                         if p_id:
                             program_code_id = p_id.id
                         else:
-                            failed_row = self.check_program_code_data(failed_row,program_code,'Additional Payments')
+                            failed_row = self.check_program_code_data(failed_row,program_code,'Additional Payments',counter)
                             continue
                     line_data.append((0,0,{'job_id':job_data,'program_code_id':program_code_id,'details':details_data,'amount':amount})) 
 
@@ -495,9 +518,10 @@ class GeneratePayrollWizard(models.TransientModel):
 
             #======================== additional_pension_payments ================# 
             if self.type_of_movement == 'additional_pension_payments':
+                counter = 0
                 for rowx, row in enumerate(map(sheet.row, range(1, sheet.nrows)), 1):
                     
-                    counter = 0
+                    counter += 1
                     rfc = row[0].value
                     ben_name = row[1].value
                     amount = row[2].value
@@ -518,7 +542,7 @@ class GeneratePayrollWizard(models.TransientModel):
 
                         employee_id =self.env['hr.employee'].search([('rfc','=',rfc)],limit=1)
                         if not employee_id:
-                            failed_row = self.check_employee_data(failed_row,rfc,'Additional Pension Payments')                            
+                            failed_row = self.check_employee_data(failed_row,rfc,'Additional Pension Payments',counter)                            
                         
                         if employee_id:
                             exit_payroll_id = self.env['employee.payroll.file'].search([('employee_id','=',employee_id.id),
@@ -540,7 +564,7 @@ class GeneratePayrollWizard(models.TransientModel):
                         if per_rec:
                             partner_id = per_rec.id
                         else:
-                            failed_row = self.check_parter_data(failed_row,ben_name,'Additional Pension Payments')
+                            failed_row = self.check_parter_data(failed_row,ben_name,'Additional Pension Payments',counter)
                             continue
                     line_data.append((0,0,{'partner_id':partner_id,'amount':amount})) 
 

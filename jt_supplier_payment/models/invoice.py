@@ -432,7 +432,16 @@ class AccountMove(models.Model):
                 current_date = today + timedelta(days=30)
                 move.commitment_date = current_date
             move.payment_state = 'registered'
-
+    
+    def action_register_mass(self):
+        for rec in self:
+            if rec.payment_state != 'draft':
+                raise UserError(_('You can registered only draft payment'))
+            if rec.is_different_payroll_request or rec.is_pension_payment_request:
+                rec.action_register()
+            else:
+                raise UserError(_('You can registered only other then payroll or Pension Payment'))
+        
     def action_draft(self):
         self.ensure_one()
         self.payment_state = 'draft'

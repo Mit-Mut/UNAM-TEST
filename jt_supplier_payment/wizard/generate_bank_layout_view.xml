@@ -9,6 +9,8 @@
                 <form string="Generate Bank Layout">
                     <group>
                     	<field name="journal_id" required="1" domain="[('bank_format','!=',False)]" options="{'no_open': True, 'no_create': True}"/>
+                    	<field name="bank_format" invisible="1"/>
+                    	<field name="sit_file_key" attrs="{'invisible':[('bank_format','!=','bbva_sit')]}"/>
                     	<field name="payment_ids" invisible="1"/>
                     	<field name="file_name" invisible="1"/>
                     	<field name="file_data" readonly="1" filename="file_name" attrs="{'invisible':[('file_data','=',False)]}"/>

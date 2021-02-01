@@ -359,15 +359,17 @@ class Trust(models.Model):
         lines = []
         folio=1
         final = 0
-
         lang = self.env.user.lang
-        req_date = self.request_open_balance_ids.filtered(lambda x: self.report_start_date and self.report_end_date \
-            and x.state=='confirmed' and \
-            x.request_date >= self.report_start_date and x.request_date <= self.report_end_date).mapped('request_date')
-        req_date += self.interest_rate_ids.filtered(lambda x: self.report_start_date and self.report_end_date and \
-            x.interest_date >= self.report_start_date and \
-           x.interest_date <= self.report_end_date).mapped('interest_date')
-
+#         req_date = self.request_open_balance_ids.filtered(lambda x: self.report_start_date and self.report_end_date \
+#             and x.state=='confirmed' and \
+#             x.request_date >= self.report_start_date and x.request_date <= self.report_end_date).mapped('request_date')
+#         req_date += self.interest_rate_ids.filtered(lambda x: self.report_start_date and self.report_end_date and \
+#             x.interest_date >= self.report_start_date and \
+#            x.interest_date <= self.report_end_date).mapped('interest_date')
+        
+        req_date = self.request_open_balance_ids.mapped('request_date')
+        req_date += self.interest_rate_ids.mapped('interest_date')
+        
         if req_date:
             req_date = list(set(req_date))
             req_date =  sorted(req_date)

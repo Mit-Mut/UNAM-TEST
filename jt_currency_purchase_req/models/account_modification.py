@@ -44,7 +44,10 @@ class AccountModification(models.Model):
         return res
 
     def generate_modification_request(self):
-        message = "Check the '" + self.invoice + "' Request for the modification in account"
+        if self.move_type == 'account open':
+            message = "Check the '" + self.invoice + "' Request for a account"
+        elif self.move_type == 'account_modify':
+            message = "Check the '" + self.invoice + "' Request for the modification in account"
         user = self.env.user
         self.env['bus.bus'].sendone(
             (self._cr.dbname, 'res.partner', user.partner_id.id),

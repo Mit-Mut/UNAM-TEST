@@ -23,6 +23,8 @@
                         <button name="approve" string="Approve" attrs="{'invisible':[('status','!=','draft')]}" class="oe_highlight" type="object"/>
                         <button name="reject" string="Reject" attrs="{'invisible':[('status','!=','draft')]}" class="oe_highlight" type="object"/>
                         <button name="validate" string="Validate" attrs="{'invisible':[('status','in',('draft','validate'))]}" class="oe_highlight" type="object"/>
+                        <button name="generate_modification_request" string="Send Request" class="oe_highlight"
+                                type="object" attrs="{'invisible': [('status', '!=', 'validate')]}"/>
                         <field name="status" widget="statusbar"/>
                     </header>
                     <sheet>

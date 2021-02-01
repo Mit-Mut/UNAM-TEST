@@ -60,9 +60,15 @@ class Quotes(models.Model):
                 rec.amount = (1/rec.exchange_rate.rate)*rec.no_of_currencies
             else:
                 rec.amount = 0
+
+    def generate_modification_request(self):
+        message = "Check the '" + "' Request for a Quote"
+        user = self.env.user
+        self.env['bus.bus'].sendone(
+            (self._cr.dbname, 'res.partner', user.partner_id.id),
+            {'type': 'simple_notification', 'title': _('Request'), 'message': message, 'sticky': True,
+             'info': True})
             
-
-
 
     @api.constrains('shedule_date')
     def _project_number_unique(self):

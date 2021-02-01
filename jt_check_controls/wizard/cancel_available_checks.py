@@ -18,4 +18,5 @@ class CancelAvailableCheck(models.TransientModel):
                 self.check_folio_id.status = 'Canceled in custody of Finance'
             else:
                 self.check_folio_id.status = 'Cancelled'
-                 
+                self.check_folio_id.date_cancellation = datetime.now().today()
+

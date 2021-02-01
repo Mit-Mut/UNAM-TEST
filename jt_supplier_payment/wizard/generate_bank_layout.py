@@ -20,7 +20,7 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from odoo import models, fields,_
+from odoo import models, fields,api,_
 from odoo.exceptions import UserError, ValidationError
 import base64
 from datetime import datetime, timedelta
@@ -36,7 +36,13 @@ class GenerateBankLayout(models.TransientModel):
     payment_ids = fields.Many2many('account.payment','account_payment_bank_layout_rel','bank_layout_id','payment_id','Payments')
     file_name = fields.Char('Filename')
     file_data = fields.Binary('Download')
+    sit_file_key = fields.Char('File Key',size=30)
+    bank_format = fields.Selection(related='journal_id.bank_format')
     
+    @api.onchange('journal_id')
+    def onchange_journal_id(self):
+        self.sit_file_key = False
+        
     def action_generate_bank_layout(self):
         
         active_ids = self.env.context.get('active_ids')
@@ -1256,6 +1262,8 @@ class GenerateBankLayout(models.TransientModel):
         
     def generate_bank_layout(self):
         for payment in self.payment_ids:
+            if self.sit_file_key:
+                payment.sit_file_key = self.sit_file_key 
             if payment.journal_id.id != self.journal_id.id:
                 raise UserError(_("The selected layout does NOT match the bank of the selected payments"))
         if self.journal_id.bank_format == 'banamex':

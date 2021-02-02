@@ -10,6 +10,7 @@
                         <group>
                             <field name="concept"/>
                             <field name="parent_id" invisible="1"/>
+                            <field name="coa_conac_id"/>
                         </group>
                     </sheet>
                 </form>

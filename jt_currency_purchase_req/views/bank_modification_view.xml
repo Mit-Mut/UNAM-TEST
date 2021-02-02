@@ -27,7 +27,7 @@
                         <button name="generate_request" string="Generate Request" class="oe_highlight"
                                 type="object" attrs="{'invisible': [('status', '!=', 'eraser')]}"/>
                          <button name="generate_modification_request" string="Send Request" class="oe_highlight"
-                                type="object" attrs="{'invisible': [('status', '=', 'confirmed')]}"/>
+                                type="object" attrs="{'invisible': [('status', '!=', 'confirmed')]}"/>
                         <button name="action_confirm_modification" string="Confirm" class="oe_highlight"
                                 type="object" attrs="{'invisible': [('status', '!=', 'request')]}"/>
                         <button name="%(jt_projects.action_request_Rejection)d" string="Reject" class="oe_highlight"
@@ -40,6 +40,7 @@
                                 <field name="invoice" string="Folio"  attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="modification_date" readonly="1"/>
                                 <field name="move_type" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="legal_number"/>
                                <!--  <field name="bank_account_id" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="bank_acc_number_id"/>
                                 <field name="project_id" domain="[('project_type', '=', 'conacyt')]"

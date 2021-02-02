@@ -546,6 +546,12 @@
                         </notebook>
 
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                    
                 </form>
             </field>
         </record>
@@ -657,6 +663,35 @@
         <menuitem id="in_payment_different_payroll_payment_request_menu" name="Payroll"
                   action="in_payment_different_payroll_payment_request_action"
                   parent="different_payroll_payment_menu_in_payment" sequence="1"/>
-          	
+        
+        <!-- Multiple confirm Different Payroll -->
+         <record id="confirm_other_then_payroll" model="ir.actions.server">
+            <field name="name">Confirmed Other Payroll</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">action = records.action_confirm_different_payroll_mass()</field>
+        </record>
+         <record id="confirm_pension_payroll_payment" model="ir.actions.server">
+            <field name="name">Confirmed Pension Payment</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">action = records.action_confirm_pension_payroll_mass()</field>
+        </record>
+        
+        <!-- Action Multiple Register Payment -->
+
+         <record id="register_pension_payroll_payment" model="ir.actions.server">
+            <field name="name">Register</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">action = records.action_register_mass()</field>
+        </record>
+          	 
 	</data>
 </odoo>

@@ -1,5 +1,6 @@
 from odoo import models, fields,_,api
 from odoo.exceptions import UserError, ValidationError
+from datetime import datetime
 
 class BankBalanceCheck(models.TransientModel):
 
@@ -65,20 +66,39 @@ class BankBalanceCheck(models.TransientModel):
                 'target': 'new',
                 'context':{'default_account_balance':account_balance,'default_is_balance':False,'default_wizard_id':self.id},
                 }
-     
+    def get_payroll_payment_date(self,rec,payment_date):
+        if rec.is_payroll_payment_request and rec.employee_paryoll_ids:
+            payroll_process_ids = rec.employee_paryoll_ids.mapped('payroll_processing_id')
+            if payroll_process_ids and payroll_process_ids[0].period_start and payroll_process_ids[0].period_end and payroll_process_ids[0].fornight:
+                #cal_id = self.env['calendar.payment.regis'].search([('type_of_payment','=','payroll'),('fornight_does','=',payroll_process_ids[0].fornight),('type_pay', '=', 'Payment schedule'), ('date', '>=', payroll_process_ids[0].period_start), ('date', '<=', payroll_process_ids[0].period_end)],limit=1)
+                cal_id = self.env['calendar.payment.regis'].search([('type_of_payment','=','payroll'),('fornight_does','=',payroll_process_ids[0].fornight),('type_pay', '=', 'Payment schedule')],limit=1)
+                if cal_id and cal_id.date:
+                    payment_date = cal_id.date
+        return payment_date
+    
     def get_payment_data(self,rec,data):
         payment_date = False
         if rec.invoice_payment_term_id:
             result = rec.invoice_payment_term_id.compute(rec.amount_total, rec.invoice_date, rec.currency_id)
             if result:
                 payment_date = result[0][0]
+                if rec.is_different_payroll_request or rec.is_pension_payment_request:
+                    if payment_date and isinstance(payment_date,str):
+                        payment_date = datetime.strptime(payment_date, '%Y-%m-%d')
+                        payment_date = rec.get_patment_date(0, payment_date)
+                    
         elif not rec.invoice_payment_term_id and rec.invoice_date_due:
+            
             payment_date = rec.invoice_date_due
+            if rec.is_different_payroll_request or rec.is_pension_payment_request:
+                payment_date = rec.get_patment_date(0, payment_date)
+            
         elif rec.invoice_date and not rec.invoice_payment_term_id:
             payment_date = rec.get_patment_date(30, rec.invoice_date)
         payment_request_type = False
         if rec.is_payroll_payment_request:
             payment_request_type = 'payroll_payment'
+            payment_date = self.get_payroll_payment_date(rec,payment_date)
         elif rec.is_payment_request:
             payment_request_type = 'supplier_payment'
         elif rec.is_different_payroll_request:
@@ -111,13 +131,13 @@ class BankBalanceCheck(models.TransientModel):
             or not invoice.journal_id.accured_debit_account_id \
             or not invoice.journal_id.conac_accured_debit_account_id :
             raise ValidationError("Please configure UNAM and CONAC Accrued account in payment request journal!")
-
+        amount_total = sum(x.price_total for x in invoice.invoice_line_ids.filtered(lambda x:x.program_code_id))
         if invoice.currency_id != invoice.company_id.currency_id:
-            amount_currency = abs(invoice.amount_total)
+            amount_currency = abs(amount_total)
             balance = invoice.currency_id._convert(amount_currency, invoice.company_currency_id, invoice.company_id, invoice.date)
             currency_id = invoice.currency_id and invoice.currency_id.id or False 
         else:
-            balance = abs(invoice.amount_total)
+            balance = abs(amount_total)
             amount_currency = 0.0
             currency_id = False
         

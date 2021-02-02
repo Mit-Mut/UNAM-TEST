@@ -118,13 +118,16 @@ class ExecutiveData(models.Model):
             res = []
             for base in self:
                 base_name = ''
-                if base.position:
-                    base_name = base.position
-                res.append((base.id, base_name))
+                base_position = ''
+                if base.position and base.name:
+                    base_position = base.position
+                    base_name = base.name
+                    res.append((base.id, '%s - %s' %
+                            (base_name,base_position)))
+                else:
+                    res.append((base.id,base.name))
         else:
-            res = []
-            for rec in self:
-                res.append((rec.id,rec.name))
+            res = super(ExecutiveData, self).name_get()
         return res
 
     

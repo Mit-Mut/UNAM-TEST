@@ -614,7 +614,27 @@ msgstr "Trab. del Arte, Espe"
 #. module: jt_hr_base
 #: model:ir.model.fields.selection,name:jt_hr_base.selection__hr_employee__worker_type__trust
 msgid "Trust"
-msgstr "Confiar"
+msgstr "Confianza"
+
+#. module: jt_hr_base
+#: model:ir.model.fields.selection,name:jt_hr_base.selection__hr_employee__worker_type__subject
+msgid "Subject"
+msgstr "Asignatura"
+
+#. module: jt_hr_base
+#: model:ir.model.fields.selection,name:jt_hr_base.selection__hr_employee__worker_type__career
+msgid "Career"
+msgstr "Carrera"
+
+#. module: jt_hr_base
+#: model:ir.model.fields.selection,name:jt_hr_base.selection__hr_employee__worker_type__officials
+msgid "Officials"
+msgstr "Funcionarios"
+
+#. module: jt_hr_base
+#: model:ir.model.fields.selection,name:jt_hr_base.selection__hr_employee__worker_type__fee
+msgid "Fee"
+msgstr "Honorarios"
 
 #. module: jt_hr_base
 #: model:ir.model.fields,field_description:jt_hr_base.field_hr_employee__road

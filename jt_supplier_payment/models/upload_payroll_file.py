@@ -43,7 +43,9 @@ class EmployeePayroll(models.Model):
         for record in self:
             record.reference= self.env['ir.sequence'].next_by_code('seq.payroll.employee.reference')
             record.state = 'revised'
-
+            if record.casualties_and_cancellations == 'BDEF':
+                record.employee_id.active = False
+                
     def get_invoice_line_vals(self,line):
         invoice_line_vals = { 'quantity' : 1,
                             'price_unit' : line.amount,

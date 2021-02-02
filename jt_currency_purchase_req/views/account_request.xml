@@ -31,6 +31,8 @@
                                 type="action" attrs="{'invisible': [('status', '!=', 'request')]}"/>
                         <button name="%(jt_projects.action_request_Rejection)d" string="Reject" class="oe_highlight"
                                 type="action" attrs="{'invisible': [('status', '!=', 'request')]}"/>
+                        <button name="generate_modification_request" string="Send Request" class="oe_highlight"
+                                type="object" attrs="{'invisible': [('status', '!=', 'confirmed')]}"/>
                         <field name="status" widget="statusbar" statusbar_visible="eraser,request,confirmed,rejected"/>
                     </header>
                     <sheet>

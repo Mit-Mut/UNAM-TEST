@@ -44,9 +44,9 @@
                                 <field name="user_id" attrs="{'readonly': [('status', '!=', 'eraser')]}" />
                                 <field name="project_type_identifier" attrs="{'readonly': [('status', '!=', 'eraser')]}" string="Project Type"/>
                                 <field name="project_stage_identifier" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="ministrations_amount" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="no_trade" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="authorized_amount" attrs="{'readonly': [('status', '!=', 'eraser')]}" />
+                                <field name="ministrations_amount" attrs="{'readonly': [('status', '!=', 'eraser')]}" invisible="1"/>
+                                <field name="no_trade" attrs="{'readonly': [('status', '!=', 'eraser')]}" invisible="1"/>
+                                <field name="authorized_amount" attrs="{'readonly': [('status', '!=', 'eraser')]}" invisible="1"/>
                             </group>
                             <group>
                                 <field name="cancellation_date" readonly="1"/>

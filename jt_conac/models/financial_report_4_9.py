@@ -279,10 +279,14 @@ class AnalyticalStatusOfTheExpenditureBudgetExercise(models.AbstractModel):
                                 shcp_budget_line = period_budget_lines.filtered(lambda x:x.program_code_id.item_id.id==item.id)
                                 program_code_ids = shcp_budget_line.mapped('program_code_id')
                                 if program_code_ids:
-                                    self.env.cr.execute("""(select coalesce(sum(abs(amount_total_signed)),0) as committed from account_move where id in 
-                                                        (select DISTINCT amlp.move_id from account_move_line amlp where amlp.payment_id in  
-                                                        (select DISTINCT apay.id from account_move_line line,account_move amove,account_payment apay 
-                                                        where  line.program_code_id in %s and amove.id=line.move_id and amove.payment_state=%s and apay.payment_date >= %s and apay.payment_date <= %s and apay.payment_request_id = amove.id)))""", (tuple(program_code_ids.ids),'paid',period_date_from,period_date_to))
+#                                     self.env.cr.execute("""(select coalesce(sum(abs(amount_total_signed)),0) as committed from account_move where id in 
+#                                                         (select DISTINCT amlp.move_id from account_move_line amlp where amlp.payment_id in  
+#                                                         (select DISTINCT apay.id from account_move_line line,account_move amove,account_payment apay 
+#                                                         where  line.program_code_id in %s and amove.id=line.move_id and amove.payment_state=%s and apay.payment_date >= %s and apay.payment_date <= %s and apay.payment_request_id = amove.id)))""", (tuple(program_code_ids.ids),'paid',period_date_from,period_date_to))
+
+                                    self.env.cr.execute(""" 
+                                                        (select coalesce(sum(abs(line.balance)+abs(line.tax_price_cr)),0) from account_move_line line,account_move amove,account_payment apay 
+                                                        where  line.program_code_id in %s and amove.id=line.move_id and amove.payment_state=%s and apay.payment_date >= %s and apay.payment_date <= %s and apay.payment_request_id = amove.id)""", (tuple(program_code_ids.ids),'paid',period_date_from,period_date_to))
                                     
                                     #self.env.cr.execute("select coalesce(sum(line.price_total),0) as committed from account_move_line line,account_move amove where line.program_code_id in %s and amove.id=line.move_id and amove.payment_state=%s and amove.invoice_date >= %s and amove.invoice_date <= %s", (tuple(program_code_ids.ids),'paid',period_date_from,period_date_to))
                                     my_datas = self.env.cr.fetchone()

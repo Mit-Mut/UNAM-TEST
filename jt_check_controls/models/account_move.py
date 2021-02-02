@@ -56,7 +56,7 @@ class SupplierPaymentRequest(models.Model):
     def write(self, vals):
         res = super(SupplierPaymentRequest, self).write(vals)
         for move in self:
-            if move.is_payment_request and vals.get('payment_state') == 'paid' and move.check_folio_id:
+            if vals.get('payment_state') == 'paid' and move.check_folio_id:
                 move.check_folio_id.status = 'Charged'
         return res
 
@@ -126,4 +126,8 @@ class SupplierPaymentRequest(models.Model):
                 
         return ticket_data
         
-        
+class AccountPayment(models.Model):
+    _inherit = 'account.payment'
+
+    check_folio_id = fields.Many2one('check.log', "Check Sheet", copy=False, related='payment_request_id.check_folio_id', store=True)
+    payment_method_name = fields.Char(related='l10n_mx_edi_payment_method_id.name', store=True)

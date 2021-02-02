@@ -91,5 +91,23 @@
                 ('type', '=', 'in_invoice'), ('is_pension_payment_request', '=', True)]</field>
 		
 		</record>
+		<!-- Request for Different Payroll Payment -->
+		<record id="jt_supplier_payment.different_payroll_payment_request_action" model="ir.actions.act_window">
+            <field name="domain">[('payment_state','in',('draft','registered','approved_payment','for_payment_procedure','paid',
+                'assigned_payment_method')),('type', '=', 'in_invoice'), ('is_different_payroll_request', '=', True)]</field>
+		</record>
+
+        <record id="sup_pay_inherited_view_account_payment_form" model="ir.ui.view">
+            <field name="name">Supplier Payment Inherited view account payment form</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="jt_supplier_payment.inherited_view_account_payment_form"/>
+            <field name="arch" type="xml">
+                <field name="journal_id" position="after">
+                    <field name="payment_method_name" invisible="1"/>
+                    <field name="check_folio_id"
+                       attrs="{'invisible': [('payment_method_name', '!=', 'Cheque nominativo')]}"/>
+                </field>
+            </field>
+        </record>
     </data>
 </odoo>

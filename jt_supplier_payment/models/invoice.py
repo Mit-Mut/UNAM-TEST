@@ -219,6 +219,7 @@ class AccountMove(models.Model):
     deposite_number = fields.Char("Deposit number")
     check_number = fields.Char("Check number")
     bank_key = fields.Char("Bank Key")
+    previous_number = fields.Char("Previous Number", size=11)
 
     @api.depends('payment_state', 'is_payroll_payment_request', 'is_payment_request', 'state')
     def get_conac_line_display(self):
@@ -431,14 +432,41 @@ class AccountMove(models.Model):
                 current_date = today + timedelta(days=30)
                 move.commitment_date = current_date
             move.payment_state = 'registered'
-
+    
+    def action_register_mass(self):
+        for rec in self:
+            if rec.payment_state != 'draft':
+                raise UserError(_('You can registered only draft payment'))
+            if rec.is_different_payroll_request or rec.is_pension_payment_request:
+                rec.action_register()
+            else:
+                raise UserError(_('You can registered only other then payroll or Pension Payment'))
+        
     def action_draft(self):
         self.ensure_one()
         self.payment_state = 'draft'
 
     def action_confirm_different_payroll(self):
         self.payment_state = 'approved_payment'
-        
+    
+    def action_confirm_different_payroll_mass(self):
+        for rec in self:
+            if rec.payment_state != 'registered':
+                raise UserError(_('You can confirm only registered payment'))
+            if rec.is_different_payroll_request:
+                rec.action_confirm_different_payroll()
+            else:
+                raise UserError(_('You can confirm only other then payroll'))
+
+    def action_confirm_pension_payroll_mass(self):
+        for rec in self:
+            if rec.payment_state != 'registered':
+                raise UserError(_('You can confirm only registered payment'))
+            if rec.is_pension_payment_request:
+                rec.action_confirm_different_payroll()
+            else:
+                raise UserError(_('You can confirm only pension payment'))
+            
     def action_reschedule(self):
         return {
             'name': _('Reschedule Request'),
@@ -463,7 +491,6 @@ class AccountMove(models.Model):
         return non_business_day
 
     def get_patment_date(self, total_days, invoice_date):
-
         next_date = invoice_date + timedelta(days=total_days)
         if self.is_payment_request:
             return next_date 

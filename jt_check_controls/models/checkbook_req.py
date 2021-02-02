@@ -317,6 +317,11 @@ class CheckListLine(models.Model):
                                     "Detained \n"
                                     "Withdrawn from circulation \n"))
         res = super(CheckListLine, self).write(vals)
+        if vals.get('status',False) and vals.get('status','')=='Cancelled':
+            for check in self:
+                records = self.env['account.move'].search([('check_folio_id','=',check.id),('payment_state','!=','payment_method_cancelled')])
+                for payment in records: 
+                    payment.payment_state = 'payment_method_cancelled'
         return res
 
     def action_send_to_custody(self):

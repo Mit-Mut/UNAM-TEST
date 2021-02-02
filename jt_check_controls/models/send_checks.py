@@ -48,7 +48,8 @@ class SendChecks(models.Model):
     def action_approve(self):
         self.status = 'approved'
         approval = datetime.today().date()
-        self.approval_date = approval
+        if not self.approval_date:
+            self.approval_date = approval
         for rec in self.check_line_ids:
             rec.check_log_id.status = 'On file'
         for res in self:
@@ -56,14 +57,11 @@ class SendChecks(models.Model):
                 res._send_notification_msg()
 
     def _send_notification_msg(self):
-
         for res in self:
             if res.status == 'approved' and res.approval_date:
                 five_yrs_ago = (datetime.today().date() -
                                 relativedelta(years=5))
-
                 if res.approval_date == five_yrs_ago:
-
                     activity = self.env['mail.activity'].sudo().create({
                         'activity_type_id': self.env.ref('jt_check_controls.mail_act_send_checks').id,
                         'note': _('5 years old on file and can be destroyed'),

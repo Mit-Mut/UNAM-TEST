@@ -91,11 +91,14 @@ class PaymentRequest(models.Model):
                 res.counter_receipt_sheet = folio_rec
 
     def action_validates_payment_request_auto(self):
-        records = self.env['payment.request'].search([('counter_receipt_sheet','=',False)])
+        records = self.env['payment.request'].search(['|',('counter_receipt_sheet','=',False),('counter_receipt_sheet','=','')])
         for res in records:
             if res.amount and res.date and res.payment_method_id and res.beneficiary_id:
                 folio_rec = ''
-                payment_ids = self.env['account.move'].search([('is_payment_request', '=', True),('partner_id','=',res.beneficiary_id.id),('l10n_mx_edi_payment_method_id','=',res.payment_method_id.id),('amount_total','=',res.amount)])
+                payment_ids = self.env['account.move'].search([('is_payment_request', '=', True),
+                                                               ('partner_id','=',res.beneficiary_id.id),
+                                        ('l10n_mx_edi_payment_method_id','=',res.payment_method_id.id),
+                                                               ('amount_total','=',res.amount)])
                 for payment in payment_ids:
                     if payment.date_receipt and payment.date_receipt.date()== res.date:
                         folio_rec = payment.folio 

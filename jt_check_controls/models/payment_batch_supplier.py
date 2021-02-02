@@ -68,7 +68,7 @@ class PaymentBatchSupplier(models.Model):
     checkbook_req_id = fields.Many2one("checkbook.request", "Checkbook Number")
     type_of_payment_method = fields.Selection([('handbook', 'Handbook'),
                                                ('checks', 'Checks')], "Type of Payment Method")
-    payment_date = fields.Date("Payment Date")
+    payment_date = fields.Date(string="Payment Date",default=datetime.today())
     amount_of_checkes = fields.Integer("Amount of Checkes", compute='_get_check_data')
     intial_check_folio = fields.Many2one("check.log", compute='_get_check_data')
     final_check_folio = fields.Many2one("check.log", compute='_get_check_data')
@@ -76,7 +76,8 @@ class PaymentBatchSupplier(models.Model):
     printed_checks = fields.Boolean("Printed checks")
     description_layout = fields.Text("Description Layout")
     selected = fields.Boolean("Select All")
-    type_of_batch = fields.Selection([('supplier','Supplier'),('project','Project'),('nominal','Nominal')],string="Type Of Batch")
+    type_of_batch = fields.Selection([('supplier','Supplier'),('project','Project'),('nominal','Nominal'),
+                                      ('pension','Pension')],string="Type Of Batch")
        
     @api.onchange('select_all')
     def select_lines(self):
@@ -341,7 +342,23 @@ class PaymentBatchSupplier(models.Model):
             'target': 'new',
             'context': {'default_batch_id': self.id}
         }
-
+    def set_related_check_log(self,line):
+        if line.check_folio_id:
+            previous_data = ''
+            if line.payment_req_id:
+                for check in line.payment_req_id.related_check_folio_ids:
+                    if check.id != line.check_folio_id.id:
+                        if previous_data:
+                            previous_data += ","+str(check.folio)
+                        else:
+                            previous_data = str(check.folio)
+                    currect_check_data = str(line.check_folio_id.folio)
+                    for c in line.payment_req_id.related_check_folio_ids:
+                        if c.id != check.id:
+                            currect_check_data += ","+str(c.folio)
+                    check.related_checks = currect_check_data 
+            line.check_folio_id.related_checks = previous_data 
+        
     def action_assign_check_folio(self):
         check_log_obj = self.env['check.log']
         check_payment_req_obj = self.env['check.payment.req']
@@ -373,6 +390,8 @@ class PaymentBatchSupplier(models.Model):
                             line.check_folio_id.related_check_folio_id = line.payment_req_id.check_folio_id.id
                                
                         line.payment_req_id.check_folio_id = line.check_folio_id.id
+                        self.set_related_check_log(line)
+                        
                         counter += 1
                         line.selected = False
                         line.payment_req_id.payment_state = 'assigned_payment_method'
@@ -500,6 +519,15 @@ class BankBalanceCheck(models.TransientModel):
                 else:
                     batch_data.update({invoice.batch_folio: [invoice]})
 
+            if invoice.is_pension_payment_request == True and invoice.l10n_mx_edi_payment_method_id \
+                    and invoice.l10n_mx_edi_payment_method_id.id == check_payment_method:
+                if invoice.batch_folio in batch_data.keys():
+                    batch_data.update({
+                        invoice.batch_folio: batch_data.get(invoice.batch_folio) + [invoice]
+                    })
+                else:
+                    batch_data.update({invoice.batch_folio: [invoice]})
+
 
         for folio, moves in batch_data.items():
             batch_folio = folio
@@ -510,26 +538,39 @@ class BankBalanceCheck(models.TransientModel):
             for move in moves:
                 if move.is_payroll_payment_request:
                     type_of_batch = 'nominal'
+                    move.payment_state = 'assigned_payment_method'
+                    if move.check_folio_id:
+                        move.check_folio_id.status = 'Printed'
                 elif move.is_payment_request:
                     type_of_batch = 'supplier'
                 elif move.is_different_payroll_request:
                     type_of_batch = 'nominal'
                 elif move.is_project_payment:
                     type_of_batch = 'project'
+                elif move.is_pension_payment_request:
+                    type_of_batch = 'pension'
+                    move.payment_state = 'assigned_payment_method'
+                    if move.check_folio_id:
+                        move.check_folio_id.status = 'Printed'
                 
                 moves_list.append(move)
                 
             move_val_list = []
+            checkbook_req_id = False
             for move in moves_list:
+                if move.check_folio_id:
+                    checkbook_req_id = move.check_folio_id.checklist_id and move.check_folio_id.checklist_id and move.check_folio_id.checklist_id.checkbook_req_id.id or False
+                
                 payment = self.env['account.payment'].search([('payment_request_id', '=', move.id)], limit=1)
                 move_val_list.append({'payment_req_id': move.id, 'amount_to_pay': move.amount_total,
-                                      'payment_id': payment.id})
+                                      'payment_id': payment.id,'check_folio_id':move.check_folio_id and move.check_folio_id.id or False})
             self.env['payment.batch.supplier'].create({
                 'batch_folio': batch_folio,
                 'payment_issuing_bank_id': bank_id,
                 'payment_issuing_bank_acc_id': bank_acc_id,
                 'type_of_payment_method': 'checks',
                 'type_of_batch':type_of_batch,
+                'checkbook_req_id' : checkbook_req_id,
                 'payment_req_ids': [(0, 0, val) for val in move_val_list]
             })
         return res

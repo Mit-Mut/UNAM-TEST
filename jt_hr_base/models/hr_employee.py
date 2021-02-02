@@ -34,9 +34,9 @@ class HrEmployee(models.Model):
     # Job Information Page Fields
     entry_date = fields.Date('Date of Entry')
     ss_number = fields.Integer('Social Security Number')
-    worker_type = fields.Selection([('base', 'Base'), ('trust', 'Trust'),
-                                    ('pensioner', 'Pensioner')],
-                                   string='Type of Worker')
+    worker_type = fields.Selection([('base', 'Base'), ('trust', 'Trust'),('pensioner', 'Pensioner'),
+                            ('subject', 'Subject'), ('career', 'Career'), ('officials', 'Officials'), ('fee', 'Fee')],
+                            string='Type of Worker')
     worker_status = fields.Selection([('active', 'Active'),
                                       ('license', 'License')],
                                      string='Worker Status')

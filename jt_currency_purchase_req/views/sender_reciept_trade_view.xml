@@ -32,7 +32,7 @@
                         				<field name="recipient_professional_title" invisible="1"/>
                                         <!-- Reciept-->
                                         <field name="bank_account_id"/>
-                                        <field name="executive_id"/>
+                                        <field name="executive_id" context="{'show_recipet':True}"/>
                                         <field name="position_id" context="{'show_recipet':True}"/>
                         			</group>
                         			<group string="SENDER">
@@ -68,6 +68,7 @@
          <record id="action_sender_recipient_trades_finance" model="ir.actions.act_window">
             <field name="name">Sender and Recipient of Trades</field>
             <field name="res_model">finance.sender.recipient.trades</field>
+            <field name="context">{'show_recipet':True}</field>
         </record>
 
         <menuitem id="menu_sender_recipient_trades_finance" name="Trades Sender and Recipient" sequence="100"

@@ -172,6 +172,9 @@
 
         </template>
 
+        
+
+
         <!-- Financial positional statment Report -->
         <template id="external_layout_fianancial_statement_report" name="external_layout_fianancial_statement_report">
             <t t-if="not o" t-set="o" t-value="doc"/>

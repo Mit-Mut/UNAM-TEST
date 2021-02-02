@@ -36,3 +36,5 @@ class StatementOfDebt(models.Model):
     init_balance = fields.Float(string='Initial Balance of the Period')
     end_balance = fields.Float(string='End Balance of the Period')
     parent_id = fields.Many2one('debt.statement', string='Parent')
+    coa_conac_id = fields.Many2one('coa.conac', string="CODE CONAC")
+    

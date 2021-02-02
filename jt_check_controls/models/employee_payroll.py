@@ -24,7 +24,11 @@ class EmployeePayroll(models.Model):
             elif rec.check_folio_id and rec.check_final_folio_id and rec.check_folio_id.id == rec.check_final_folio_id.id:
                 rec.check_final_folio_id.status = 'Assigned for shipping'
                 rec.check_final_folio_id.general_status = 'assigned'
-        return result 
+            for pension_pay in rec.pension_payment_line_ids:
+                if pension_pay.check_folio_id:
+                    pension_pay.check_folio_id.status = 'Assigned for shipping'
+                    pension_pay.check_folio_id.general_status = 'assigned'
+        return result
 
     def get_payroll_payment_vals(self):
         vals = super(EmployeePayroll,self).get_payroll_payment_vals() 

@@ -93,7 +93,9 @@ class AdjustedPayrollWizard(models.TransientModel):
                                 rec.l10n_mx_edi_payment_method_id.id == check_payment_method and case == 'A':
                                 if deposite_no and new_bank_no:
                                     log = self.env['check.log'].search([('folio', '=', deposite_no),
-                                                    ('bank_id.bank_id.l10n_mx_edi_code', '=', new_bank_no)], limit=1)
+                                    ('status', 'in', ('Checkbook registration', 'Assigned for shipping',
+                                    'Available for printing')), ('general_status', '=', 'available'),
+                                    ('bank_id.bank_id.l10n_mx_edi_code', '=', new_bank_no)], limit=1)
                                     if log:
                                         rec.check_final_folio_id = log.id
                             elif deposite_no:

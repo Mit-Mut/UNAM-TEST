@@ -227,6 +227,14 @@ class CheckProtectionControlCertificate(models.AbstractModel):
                            ('check_folio_id.status', '=', 'Protected')]
         salary_payroll_ids = self.env['account.move'].search(domain + [('is_payroll_payment_request', '=', True)])
         diff_payroll_ids = self.env['account.move'].search(domain + [('is_different_payroll_request', '=', True)])
+        pension_payroll_ids = self.env['account.move'].search(domain + [('is_pension_payment_request', '=', True)])
+
+        pension_check_folio_ids = pension_payroll_ids.mapped('check_folio_id')
+        if pension_check_folio_ids and department_domain:
+            pension_check_folio_ids = pension_check_folio_ids.filtered(lambda x:x.module in department_domain)
+
+        total_pension_checks = len(pension_check_folio_ids)
+        total_amt_pension_check = sum(x.check_amount for x in pension_check_folio_ids)
         
         check_folio_ids = salary_payroll_ids.mapped('check_folio_id')
         if check_folio_ids and department_domain:
@@ -452,8 +460,8 @@ class CheckProtectionControlCertificate(models.AbstractModel):
         salary_list = [{
                 'id': 'Module',
                 'name' : 'CIFRAS DE PENSION ALIMENTICIA', 
-                'columns': [self._format({'name': salary_amount},figure_type='float'),
-                            {'name': total_check,'class':'number'},
+                'columns': [self._format({'name': total_amt_pension_check},figure_type='float'),
+                            {'name': total_pension_checks,'class':'number'},
                             
                             ],
                 'level': 1,

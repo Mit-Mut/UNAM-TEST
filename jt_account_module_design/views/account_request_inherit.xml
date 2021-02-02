@@ -72,8 +72,14 @@
                     <field name="ie_account"/>
                 </xpath>
                 <xpath expr="//page[@id='aml_tab']//field[@name='line_ids']/tree/field[@name='partner_id']" position="after">
-                    <field name="program_code_id"/>
-                    <field name="account_ie_id"/>
+                	<field name="is_programatic_code" invisible="1"/>
+                	<field name="is_ie_account" invisible="1"/>
+                    <field name="program_code_id" attrs="{'invisible':[('is_programatic_code','=',False)]}"/>
+                    <field name="account_ie_id" attrs="{'invisible':[('is_ie_account','=',False)]}"/>
+                    
+                </xpath>
+                <xpath expr="//page[@id='aml_tab']//field[@name='line_ids']" position="attributes">
+                	<attribute name="context">{'default_is_ie_account':ie_account,'default_is_programatic_code':programatic_code,'default_type': context.get('default_type'), 'line_ids': line_ids, 'journal_id': journal_id, 'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id != company_currency_id and currency_id or False}</attribute>
                 </xpath>
             </field>
         </record>

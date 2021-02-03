@@ -9,22 +9,42 @@
                     <sheet>
                         <group>
                             <field name="name"/>
-                            <field name="estimated_amt" widget="float"/>
-                            <field name="exp_and_red_amt" widget="float"/>
-                            <field name="modified_amt" widget="float"/>
-                            <field name="accrued_amt" widget="float"/>
-                            <field name="raised_amt" widget="float"/>
-                            <field name="difference_amt" widget="float"/>
+                            <field name="estimated_amt" widget="float" invisible="1"/>
+                            <field name="exp_and_red_amt" widget="float" invisible="1"/>
+                            <field name="modified_amt" widget="float" invisible="1"/>
+                            <field name="accrued_amt" widget="float" invisible="1"/>
+                            <field name="raised_amt" widget="float" invisible="1"/>
+                            <field name="difference_amt" widget="float" invisible="1"/>
                             <field name="parent_id"/>
                         </group>
+
                         <group>
+                        	<field name="conac_accounts_ids" attrs="{'invisible':[('parent_id','=',False)]}">
+                        		<tree>
+                        		<field name="code"/>
+                        		<field name="name"/>
+                        		<field name="gender"/>
+                        		</tree>
+                        	</field>
+                        </group>
+                        <group>
+                        	<field name="conac_collected_accounts_ids" attrs="{'invisible':[('parent_id','=',False)]}">
+                        		<tree>
+                        		<field name="code"/>
+                        		<field name="name"/>
+                        		
+                        		</tree>
+                        	</field>
+                        </group>
+                        
+                        <group invisible="1">
                         	<field name="accounts_ids" attrs="{'invisible':[('parent_id','=',False)]}">
                         		<field name="code"/>
                         		<field name="name"/>
                         		<field name="coa_conac_id"/>
                         	</field>
                         </group>
-                        <group>
+                        <group invisible="1">
                         	<field name="collected_accounts_ids" attrs="{'invisible':[('parent_id','=',False)]}">
                         		<field name="code"/>
                         		<field name="name"/>

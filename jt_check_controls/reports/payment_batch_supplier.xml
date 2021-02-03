@@ -52,7 +52,7 @@
                                 </t>
                             </t>
                             <t t-foreach="o.payment_req_ids" t-as="line" t-if="o.type_of_batch == 'nominal'">
-                                <t  t-if="line.selected and line.check_folio_id and line.check_status == 'Available for printing'">
+                                <t t-if="line.selected and line.check_folio_id and line.check_status == 'Available for printing'">
                                     <!--   -->
                                     <div>
                                         <div class="row">
@@ -92,7 +92,7 @@
                             </t>
                                 <t t-foreach="o.payment_req_ids" t-as="line" t-if="o.type_of_batch in ('supplier','project')">
                                 <t t-if="line.selected and line.check_folio_id and line.check_status == 'Available for printing'">
-                                    <!--   -->
+                                    <!--    -->
                                     <div>
                                         <div class="row">
                                             <div class="col-6" align="left" style="margin-left:5px;">
@@ -157,6 +157,7 @@
                             </t>
                             <t t-foreach="o.payment_req_ids" t-as="line" t-if="o.type_of_batch in ('supplier','project')">
                                 <t t-if="line.selected and line.check_folio_id and line.check_status == 'Available for printing'">
+                                    <!--  -->
                                     <div>
                                         <div class="row">
                                             <div class="col-6" align="left" style="margin-left:5px;">
@@ -181,8 +182,7 @@
                                                          </t>
                                                     </td>
                                                     <td width="33%">
-                                                        <span t-esc="o.get_zone_data()"/>
-                                                        <!-- <span t-esc="line.check_folio_id.checkbook_no"/> -->
+                                                        <span t-esc="line.zone"/>
                                                     </td>
                                                     <td width="33%">
                                                         <span t-esc="line.check_folio_id.folio"/>

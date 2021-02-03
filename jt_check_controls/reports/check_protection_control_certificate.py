@@ -234,7 +234,7 @@ class CheckProtectionControlCertificate(models.AbstractModel):
             pension_check_folio_ids = pension_check_folio_ids.filtered(lambda x:x.module in department_domain)
 
         total_pension_checks = len(pension_check_folio_ids)
-        total_amt_pension_check = sum(x.check_amount for x in pension_check_folio_ids)
+        total_amt_pension_check = sum(x.amount_total for x in pension_payroll_ids.filtered(lambda x:x.check_folio_id.id in pension_check_folio_ids.ids))
         
         check_folio_ids = salary_payroll_ids.mapped('check_folio_id')
         if check_folio_ids and department_domain:

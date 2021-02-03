@@ -94,7 +94,17 @@
         <record id="jt_projects.cancellation_request_action" model="ir.actions.act_window">
             <field name="context">{'from_account_design':True,'from_conacyt':1,'default_move_type' : 'account cancel'}</field>
         </record>
-        
+
+        <record id="view_conac_move_form_inherit_ie" model="ir.ui.view">
+            <field name="name">"view.conac.move.form.inherit.ie</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="jt_conac.view_conac_move_form"/>
+            <field name="arch" type="xml">
+               <xpath expr="//page[@id='aml_tab']//field[@name='line_ids']/tree/field[@name='program_code_id']" position="after">
+					<field name="account_ie_id"/>               
+               </xpath>
+        	</field>
+        </record>
         
     </data>
 </odoo>

@@ -250,19 +250,25 @@ class AccountChartOfAccountReport(models.AbstractModel):
         '''
 
         domain = []
-                  
+        is_add_fiter = False
         if len(options['selected_programs']) > 0:
             domain.append(('program_id.key_unam', 'in', options['selected_programs']))
+            is_add_fiter = True
         if len(options['selected_sub_programs']) > 0:
             domain.append(('sub_program_id.sub_program', 'in', options['selected_sub_programs']))
+            is_add_fiter = True
         if len(options['selected_dependency']) > 0:
             domain.append(('dependency_id.dependency', 'in', options['selected_dependency']))
+            is_add_fiter = True
         if len(options['selected_sub_dependency']) > 0:
             domain.append(('sub_dependency_id.sub_dependency', 'in', options['selected_sub_dependency']))
+            is_add_fiter = True
         if len(options['selected_items']) > 0:
             domain.append(('item_id.item', 'in', options['selected_items']))
+            is_add_fiter = True
         if len(options['selected_or']) > 0:
             domain.append(('resource_origin_id.key_origin', 'in', options['selected_or']))
+            is_add_fiter = True
 
         program_code_obj = self.env['program.code']
         program_codes = program_code_obj.search(domain)
@@ -281,7 +287,7 @@ class AccountChartOfAccountReport(models.AbstractModel):
 
         total_debit = total_credit = total_balance = 0.0
         for account, periods_results in accounts_results:
-            if not account.id in program_codes_account_ids:
+            if is_add_fiter and not account.id in program_codes_account_ids:
                 continue
             
             # No comparison allowed in the General Ledger. Then, take only the first period.

@@ -4,31 +4,26 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 13.0+e\n"
+"Project-Id-Version: Odoo Server 13.0+e-20201209\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-01 19:36+0000\n"
-"PO-Revision-Date: 2020-12-02 14:53-0600\n"
+"POT-Creation-Date: 2021-02-03 01:41+0000\n"
+"PO-Revision-Date: 2021-02-03 01:41+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-"Language: es\n"
-"X-Generator: Poedit 2.3\n"
 
 #. module: jt_agreement
 #: model_terms:ir.ui.view,arch_db:jt_agreement.bases_collaboration_template_header
+#: model_terms:ir.ui.view,arch_db:jt_agreement.collaboration_amount_invest_template_header
 msgid ""
 "<b>\n"
-"                                        <span style=\"font-size:20px;\">UNIVERSIDAD "
-"NACIONAL AUTONOMA DE MAXICO</span><br/>\n"
-"                                        <span style=\"font-size:18px;\">PATRONATO "
-"UNIVERSITARO-TESORERIA</span><br/>\n"
-"                                        <span style=\"font-size:18px;\">DIRECCION "
-"GENERAL DE FINANZAS</span><br/>\n"
-"                                        <span style=\"font-size:18px;\">DIRECCION DE "
-"INGRESOS Y OPERATION FINANCIERA</span><br/>\n"
+"                                        <span style=\"font-size:20px;\">UNIVERSIDAD NACIONAL AUTONOMA DE MAXICO</span><br/>\n"
+"                                        <span style=\"font-size:18px;\">PATRONATO UNIVERSITARO-TESORERIA</span><br/>\n"
+"                                        <span style=\"font-size:18px;\">DIRECCION GENERAL DE FINANZAS</span><br/>\n"
+"                                        <span style=\"font-size:18px;\">DIRECCION DE INGRESOS Y OPERATION FINANCIERA</span><br/>\n"
 "                                    </b>"
 msgstr ""
 
@@ -36,26 +31,35 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:jt_agreement.account_statement_template_header
 msgid ""
 "<b>\n"
-"                                <span style=\"font-size:16px;text-align:center\" class="
-"\"text-center\">UNIVERSIDAD NACIONAL AUTONOMA DE MAXICO</span><br/>\n"
-"                                <span style=\"font-size:14px;\" class=\"text-center"
-"\">PATRONATO UNIVERSITARO</span><br/>\n"
-"                                <span style=\"font-size:12px;\" class=\"text-center"
-"\">Direccion General de Finanzas</span><br/>\n"
-"                                <span style=\"font-size:12px;\" class=\"text-center"
-"\">Departamento de Control Financiero</span><br/>\n"
-"                                <span style=\"font-size:12px;\" class=\"text-center"
-"\">Movimientos de Fideicomisos</span><br/>\n"
-"                                <span style=\"font-size:12px;\" class=\"text-center"
-"\">CONSULTA: GENERAL POR FIDEICOMISO</span><br/>\n"
+"                                <span style=\"font-size:16px;text-align:center\" class=\"text-center\">UNIVERSIDAD NACIONAL AUTONOMA DE MAXICO</span><br/>\n"
+"                                <span style=\"font-size:14px;\" class=\"text-center\">PATRONATO UNIVERSITARO</span><br/>\n"
+"                                <span style=\"font-size:12px;\" class=\"text-center\">Direccion General de Finanzas</span><br/>\n"
+"                                <span style=\"font-size:12px;\" class=\"text-center\">Departamento de Control Financiero</span><br/>\n"
+"                                <span style=\"font-size:12px;\" class=\"text-center\">Movimientos de Fideicomisos</span><br/>\n"
+"                                <span style=\"font-size:12px;\" class=\"text-center\">CONSULTA: GENERAL POR FIDEICOMISO</span><br/>\n"
 "                            </b>"
+msgstr ""
+
+#. module: jt_agreement
+#: model_terms:ir.ui.view,arch_db:jt_agreement.collaboration_amount_invest_template_doc
+msgid "<b>(+) Incrementos</b>"
+msgstr ""
+
+#. module: jt_agreement
+#: model_terms:ir.ui.view,arch_db:jt_agreement.collaboration_amount_invest_template_doc
+msgid "<b>(+) Interés</b>"
+msgstr ""
+
+#. module: jt_agreement
+#: model_terms:ir.ui.view,arch_db:jt_agreement.collaboration_amount_invest_template_doc
+msgid "<b>(-) Retiros</b>"
 msgstr ""
 
 #. module: jt_agreement
 #: model_terms:ir.ui.view,arch_db:jt_agreement.bases_collaboration_template_header
 msgid ""
-"<b><span style=\"font-size:17px;margin-left:5px;\">ESTADO DE CUENTA DE CONVENIOS BASES "
-"DE COLABORACIÓN</span></b>"
+"<b><span style=\"font-size:17px;margin-left:5px;\">ESTADO DE CUENTA DE "
+"CONVENIOS BASES DE COLABORACIÓN</span></b>"
 msgstr ""
 
 #. module: jt_agreement
@@ -64,26 +68,43 @@ msgid "<b><span style=\"margin-left:5px;font-size:15px;\">FIDEICOMISO:</span></b
 msgstr ""
 
 #. module: jt_agreement
+#: model_terms:ir.ui.view,arch_db:jt_agreement.collaboration_amount_invest_template_doc
+msgid "<b>Periodo: </b>"
+msgstr ""
+
+#. module: jt_agreement
+#: model_terms:ir.ui.view,arch_db:jt_agreement.collaboration_amount_invest_template_doc
+msgid "<b>Subtotal</b>"
+msgstr ""
+
+#. module: jt_agreement
+#: model_terms:ir.ui.view,arch_db:jt_agreement.collaboration_amount_invest_template_header
+msgid ""
+"<span style=\"font-size:15px;\">Fecha y hora de impresión\n"
+"                                    </span>"
+msgstr ""
+
+#. module: jt_agreement
 #: model_terms:ir.ui.view,arch_db:jt_agreement.external_layout_agreements_movements
 msgid ""
 "<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span><br/>\n"
-"                   \t<span style=\"font-size:14px;\">PATRONATO UNIVERSITARIO</span><br/"
-">\n"
-"                   \t<span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE FINANZAS</"
-"span><br/>\n"
+"                   \t<span style=\"font-size:14px;\">PATRONATO UNIVERSITARIO</span><br/>\n"
+"                   \t<span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE FINANZAS</span><br/>\n"
 "                   \t<span style=\"font-size:12px;\">RELACION DE MOVIMIENTOS</span><br/>"
 msgstr ""
 
 #. module: jt_agreement
 #: model_terms:ir.ui.view,arch_db:jt_agreement.bases_collaboration_template_header
 msgid ""
-"<span style=\"margin-left:300px;font-size:15px;\">Fecha y hora de impresión  </span>"
+"<span style=\"margin-left:300px;font-size:15px;\">Fecha y hora de impresión"
+"  </span>"
 msgstr ""
 
 #. module: jt_agreement
 #: model_terms:ir.ui.view,arch_db:jt_agreement.account_statement_template_header
 msgid ""
-"<span style=\"margin-left:400px;font-size:15px;\">Fecha y hora de impresión  </span>"
+"<span style=\"margin-left:400px;font-size:15px;\">Fecha y hora de impresión"
+"  </span>"
 msgstr ""
 
 #. module: jt_agreement
@@ -268,7 +289,7 @@ msgstr "Secretario administrativo"
 #. module: jt_agreement
 #: model:ir.actions.act_window,name:jt_agreement.action_view_agreement_type
 msgid "Agreemenr Type"
-msgstr "Tipo de convenio"
+msgstr "Tipo de convenio de Bases de Colaboración"
 
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration__name
@@ -314,7 +335,9 @@ msgid "Agreement Type Code must be 2 characters."
 msgstr "La clave de tipo de convenio debe ser de 2 caracteres."
 
 #. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_account_setup_bank_manual_config__for_agreements
 #: model:ir.model.fields,field_description:jt_agreement.field_approve_investment_bal_req__is_agr
+#: model:ir.model.fields,field_description:jt_agreement.field_res_partner_bank__for_agreements
 #: model:ir.ui.menu,name:jt_agreement.menu_agreements
 msgid "Agreements"
 msgstr "Convenios"
@@ -335,7 +358,12 @@ msgstr "Monto"
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_payment_request__amount
 msgid "Amount to withdraw"
-msgstr "Monto a retirar"
+msgstr ""
+
+#. module: jt_agreement
+#: model:ir.actions.act_window,name:jt_agreement.action_amounts_to_invest_bases_collaboration
+msgid "Amounts to Invest"
+msgstr ""
 
 #. module: jt_agreement
 #: model:ir.model.fields.selection,name:jt_agreement.selection__recurring_payment_template__payment_period__annual
@@ -391,7 +419,7 @@ msgstr "Aprobar"
 #. module: jt_agreement
 #: model:ir.model,name:jt_agreement.model_approve_investment_bal_req
 msgid "Approve Investment Balance request"
-msgstr ""
+msgstr "Aprobar saldo de la solicitud de inversión"
 
 #. module: jt_agreement
 #: model:ir.model.fields.selection,name:jt_agreement.selection__request_open_balance__state__approved
@@ -481,6 +509,7 @@ msgid "Bank"
 msgstr "Banco"
 
 #. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_collaboration_beneficiary__bank_account_ids
 #: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance__destination_bank_account_id
 #: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance__origin_bank_account_id
 msgid "Bank Account"
@@ -513,9 +542,14 @@ msgid "Banking institution"
 msgstr "Institución bancaria"
 
 #. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_interest_rate_base__base_id
+msgid "Base"
+msgstr ""
+
+#. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_jt_agreement_bases_collaboration_line__bases_id
 msgid "Bases"
-msgstr "Bases"
+msgstr ""
 
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance__bases_collaboration_id
@@ -534,6 +568,7 @@ msgstr "Modificación de bases de colaboración"
 
 #. module: jt_agreement
 #: model:ir.actions.report,name:jt_agreement.bases_collaboration_report
+#: model:ir.actions.report,name:jt_agreement.collaboration_amount_to_invest_report
 msgid "Bases collaboration"
 msgstr "Bases de colaboración"
 
@@ -547,6 +582,11 @@ msgstr "Bases de colaboración"
 #: model:ir.model,name:jt_agreement.model_jt_agreement_bases_collaboration
 msgid "Bases of collaboration"
 msgstr "Bases de colaboración"
+
+#. module: jt_agreement
+#: model:ir.model,name:jt_agreement.model_bases_collaboration_amounts_invest
+msgid "Bases of collaboration - Amounts to Invest"
+msgstr ""
 
 #. module: jt_agreement
 #: model:ir.ui.menu,name:jt_agreement.menu_collaboration_basic
@@ -634,54 +674,72 @@ msgstr ""
 #, python-format
 msgid "Can't create Modifications for Cancelled Bases of Collabration!"
 msgstr ""
-"¡No es posible crear modificaciones en bases de colaboración en estatus cancelada!"
+"¡No es posible crear modificaciones en bases de colaboración en estatus "
+"cancelada!"
 
 #. module: jt_agreement
 #: code:addons/jt_agreement/models/trust.py:0
 #, python-format
 msgid "Can't create Modifications for Cancelled Trust!"
-msgstr "¡No es posible crear modificaciones en fideicomisos en estatus cancelado!"
+msgstr ""
+"¡No es posible crear modificaciones en fideicomisos en estatus cancelado!"
 
 #. module: jt_agreement
 #: code:addons/jt_agreement/models/bases_collaboration.py:0
 #, python-format
 msgid "Can't create Operation for Cancelled Bases of Collabration!"
-msgstr "¡No es posible crear operaciones en bases de colaboración en estatus cancelada!"
+msgstr ""
+"¡No es posible crear operaciones en bases de colaboración en estatus "
+"cancelada!"
 
 #. module: jt_agreement
 #: code:addons/jt_agreement/models/bases_collaboration.py:0
 #, python-format
 msgid "Can't create Operation for Cancelled Patrimonial resources!"
-msgstr "¡No es posible crear operaciones en recursos patrimoniales en estatus cancelado!"
+msgstr ""
+"¡No es posible crear operaciones en recursos patrimoniales en estatus "
+"cancelado!"
 
 #. module: jt_agreement
 #: code:addons/jt_agreement/models/bases_collaboration.py:0
 #, python-format
 msgid "Can't create Operation for Cancelled Trust!"
-msgstr "¡No es posible crear operaciones en fideicomisos en estatus cancelado!"
-
-#. module: jt_agreement
-#: code:addons/jt_agreement/models/bases_collaboration.py:0
-#, python-format
-msgid "Can't create Operation with 'Increase by closing' Type of Operation manually!"
-msgstr "¡No es posible crear la operación 'Incremento por Cierre' manualmente!"
+msgstr ""
+"¡No es posible crear operaciones en fideicomisos en estatus cancelado!"
 
 #. module: jt_agreement
 #: code:addons/jt_agreement/models/bases_collaboration.py:0
 #, python-format
 msgid ""
-"Can't create Operation with 'Withdrawal Due to Cancellation' Type of Operation manually!"
-msgstr "¡No es posible crear la operación 'Retiro por Cancelación' manualmente!"
+"Can't create Operation with 'Increase by closing' Type of Operation "
+"manually!"
+msgstr ""
+"¡No es posible crear la operación 'Incremento por Cierre' manualmente!"
+
+#. module: jt_agreement
+#: code:addons/jt_agreement/models/bases_collaboration.py:0
+#: code:addons/jt_agreement/models/bases_collaboration.py:0
+#: code:addons/jt_agreement/models/bases_collaboration.py:0
+#: code:addons/jt_agreement/models/bases_collaboration.py:0
+#, python-format
+msgid ""
+"Can't create Operation with 'Withdrawal Due to Cancellation' Type of "
+"Operation manually!"
+msgstr ""
+"¡No es posible crear la operación 'Retiro por Cancelación' manualmente!"
 
 #. module: jt_agreement
 #: code:addons/jt_agreement/models/bases_collaboration.py:0
 #, python-format
 msgid ""
-"Can't create Operation with 'Withdrawal due to closure' Type of Operation manually!"
-msgstr "¡No es posible crear la operación 'Incremento por Cierre' manualmente!"
+"Can't create Operation with 'Withdrawal due to closure' Type of Operation "
+"manually!"
+msgstr ""
+"¡No es posible crear la operación 'Incremento por Cierre' manualmente!"
 
 #. module: jt_agreement
 #: model_terms:ir.ui.view,arch_db:jt_agreement.agreement_trust_form
+#: model_terms:ir.ui.view,arch_db:jt_agreement.amount_to_invest_bases_collaboration_view
 #: model_terms:ir.ui.view,arch_db:jt_agreement.approve_open_balance_req_operation
 #: model_terms:ir.ui.view,arch_db:jt_agreement.cancel_collaboration_form_view
 #: model_terms:ir.ui.view,arch_db:jt_agreement.cancel_patrimonial_form_view
@@ -756,7 +814,7 @@ msgstr "Ciudad"
 #. module: jt_agreement
 #: model_terms:ir.ui.view,arch_db:jt_agreement.bases_collaboration_report_template_doc
 msgid "Clave dependencia:"
-msgstr "Clave dependencia:"
+msgstr ""
 
 #. module: jt_agreement
 #: model:ir.model,name:jt_agreement.model_closing_collaboration
@@ -764,15 +822,32 @@ msgid "Closing Collaboration"
 msgstr "Cierre de bases de colaboración"
 
 #. module: jt_agreement
+#: model:ir.model,name:jt_agreement.model_periods_closing
+msgid "Closing Period"
+msgstr ""
+
+#. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration__periods_closing_ids
+msgid "Closing Periods"
+msgstr ""
+
+#. module: jt_agreement
 #: model:ir.actions.server,name:jt_agreement.action_closing_collaboration
 msgid "Closing of collaboration databases"
 msgstr "Cierre de bases de colaboración"
+
+#. module: jt_agreement
+#: code:addons/jt_agreement/models/agreement_type.py:0
+#, python-format
+msgid "Code Value Must Be Unique"
+msgstr ""
 
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_account_move_line__collaboration_id
 #: model:ir.model.fields,field_description:jt_agreement.field_collaboration_beneficiary__collaboration_id
 #: model:ir.model.fields,field_description:jt_agreement.field_collaboration_providers__collaboration_id
 #: model:ir.model.fields,field_description:jt_agreement.field_committee__collaboration_id
+#: model:ir.model.fields,field_description:jt_agreement.field_periods_closing__collaboration_id
 msgid "Collaboration"
 msgstr "Colaboración"
 
@@ -865,6 +940,8 @@ msgstr "Confirmado"
 
 #. module: jt_agreement
 #: model:ir.model,name:jt_agreement.model_res_partner
+#: model:ir.model.fields,field_description:jt_agreement.field_collaboration_beneficiary__is_contact
+#: model:ir.model.fields,field_description:jt_agreement.field_collaboration_beneficiary__partner_id
 msgid "Contact"
 msgstr "Contacto"
 
@@ -872,12 +949,12 @@ msgstr "Contacto"
 #: code:addons/jt_agreement/reports/movments.py:0
 #, python-format
 msgid "Convenio"
-msgstr "Convenio"
+msgstr ""
 
 #. module: jt_agreement
 #: model_terms:ir.ui.view,arch_db:jt_agreement.bases_collaboration_report_template_doc
 msgid "Convenio:"
-msgstr "Convenio:"
+msgstr ""
 
 #. module: jt_agreement
 #: code:addons/jt_agreement/models/bases_collaboration.py:0
@@ -915,6 +992,11 @@ msgid "Country"
 msgstr ""
 
 #. module: jt_agreement
+#: model_terms:ir.actions.act_window,help:jt_agreement.action_view_agreement_type
+msgid "Crear un nuevo documento"
+msgstr ""
+
+#. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance__create_payment_request
 msgid "Create Payment Request"
 msgstr "Crear solicitud de pago"
@@ -927,6 +1009,7 @@ msgstr "Crear solicitud de pago"
 #: model:ir.model.fields,field_description:jt_agreement.field_approve_investment_bal_req__create_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_background_project__create_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration__create_uid
+#: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration_amounts_invest__create_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration_modification__create_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_cancel_collaboration__create_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_cancel_patrimonial__create_uid
@@ -936,12 +1019,14 @@ msgstr "Crear solicitud de pago"
 #: model:ir.model.fields,field_description:jt_agreement.field_collaboration_providers__create_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_committee__create_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_fund_type__create_uid
+#: model:ir.model.fields,field_description:jt_agreement.field_interest_rate_base__create_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_interest_rate_operation__create_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_investment_funds__create_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_jt_agreement_bases_collaboration__create_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_jt_agreement_bases_collaboration_line__create_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_patrimonial_resources__create_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_payment_request__create_uid
+#: model:ir.model.fields,field_description:jt_agreement.field_periods_closing__create_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_reason_rejection_open_bal__create_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_recurring_payment_template__create_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance__create_uid
@@ -962,6 +1047,7 @@ msgstr "Creado por"
 #: model:ir.model.fields,field_description:jt_agreement.field_approve_investment_bal_req__create_date
 #: model:ir.model.fields,field_description:jt_agreement.field_background_project__create_date
 #: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration__create_date
+#: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration_amounts_invest__create_date
 #: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration_modification__create_date
 #: model:ir.model.fields,field_description:jt_agreement.field_cancel_collaboration__create_date
 #: model:ir.model.fields,field_description:jt_agreement.field_cancel_patrimonial__create_date
@@ -971,12 +1057,14 @@ msgstr "Creado por"
 #: model:ir.model.fields,field_description:jt_agreement.field_collaboration_providers__create_date
 #: model:ir.model.fields,field_description:jt_agreement.field_committee__create_date
 #: model:ir.model.fields,field_description:jt_agreement.field_fund_type__create_date
+#: model:ir.model.fields,field_description:jt_agreement.field_interest_rate_base__create_date
 #: model:ir.model.fields,field_description:jt_agreement.field_interest_rate_operation__create_date
 #: model:ir.model.fields,field_description:jt_agreement.field_investment_funds__create_date
 #: model:ir.model.fields,field_description:jt_agreement.field_jt_agreement_bases_collaboration__create_date
 #: model:ir.model.fields,field_description:jt_agreement.field_jt_agreement_bases_collaboration_line__create_date
 #: model:ir.model.fields,field_description:jt_agreement.field_patrimonial_resources__create_date
 #: model:ir.model.fields,field_description:jt_agreement.field_payment_request__create_date
+#: model:ir.model.fields,field_description:jt_agreement.field_periods_closing__create_date
 #: model:ir.model.fields,field_description:jt_agreement.field_reason_rejection_open_bal__create_date
 #: model:ir.model.fields,field_description:jt_agreement.field_recurring_payment_template__create_date
 #: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance__create_date
@@ -1021,6 +1109,11 @@ msgid "Date Required"
 msgstr "Fecha requerida"
 
 #. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_closing_collaboration__registration_date
+msgid "Date of registration in the basis"
+msgstr ""
+
+#. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration__registration_date
 #: model:ir.model.fields,field_description:jt_agreement.field_patrimonial_resources__registration_date
 msgid "Date of registration in the system"
@@ -1029,7 +1122,7 @@ msgstr "Fecha de registro en el sistema"
 #. module: jt_agreement
 #: model_terms:ir.ui.view,arch_db:jt_agreement.trust_account_statement_template_doc
 msgid "Debe"
-msgstr "Debe"
+msgstr ""
 
 #. module: jt_agreement
 #: model_terms:ir.ui.view,arch_db:jt_agreement.bases_collaboration_report_template_doc
@@ -1076,7 +1169,7 @@ msgstr "Depósitos"
 #: code:addons/jt_agreement/reports/account_statements_collaboration.py:0
 #, python-format
 msgid "Depósitos"
-msgstr "Depósitos"
+msgstr ""
 
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration__desc_dependency
@@ -1119,6 +1212,7 @@ msgstr "Responsable directo"
 #: model:ir.model.fields,field_description:jt_agreement.field_approve_investment_bal_req__display_name
 #: model:ir.model.fields,field_description:jt_agreement.field_background_project__display_name
 #: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration__display_name
+#: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration_amounts_invest__display_name
 #: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration_modification__display_name
 #: model:ir.model.fields,field_description:jt_agreement.field_cancel_collaboration__display_name
 #: model:ir.model.fields,field_description:jt_agreement.field_cancel_patrimonial__display_name
@@ -1128,6 +1222,7 @@ msgstr "Responsable directo"
 #: model:ir.model.fields,field_description:jt_agreement.field_collaboration_providers__display_name
 #: model:ir.model.fields,field_description:jt_agreement.field_committee__display_name
 #: model:ir.model.fields,field_description:jt_agreement.field_fund_type__display_name
+#: model:ir.model.fields,field_description:jt_agreement.field_interest_rate_base__display_name
 #: model:ir.model.fields,field_description:jt_agreement.field_interest_rate_operation__display_name
 #: model:ir.model.fields,field_description:jt_agreement.field_investment_funds__display_name
 #: model:ir.model.fields,field_description:jt_agreement.field_jt_agreement_account_statements_collaboration__display_name
@@ -1137,6 +1232,7 @@ msgstr "Responsable directo"
 #: model:ir.model.fields,field_description:jt_agreement.field_jt_agreement_payment_details_beneficiaries__display_name
 #: model:ir.model.fields,field_description:jt_agreement.field_patrimonial_resources__display_name
 #: model:ir.model.fields,field_description:jt_agreement.field_payment_request__display_name
+#: model:ir.model.fields,field_description:jt_agreement.field_periods_closing__display_name
 #: model:ir.model.fields,field_description:jt_agreement.field_reason_rejection_open_bal__display_name
 #: model:ir.model.fields,field_description:jt_agreement.field_recurring_payment_template__display_name
 #: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance__display_name
@@ -1192,10 +1288,18 @@ msgstr "Estatus"
 #: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration__holder_email
 #: model:ir.model.fields,field_description:jt_agreement.field_patrimonial_resources__direct_responsable_email
 msgid "Email"
-msgstr "Email"
+msgstr ""
 
 #. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_collaboration_beneficiary__employee_id
+#: model:ir.model.fields,field_description:jt_agreement.field_collaboration_beneficiary__is_employee
+msgid "Employee"
+msgstr ""
+
+#. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration_amounts_invest__end_date
 #: model:ir.model.fields,field_description:jt_agreement.field_jt_agreement_bases_collaboration__end_date
+#: model:ir.model.fields,field_description:jt_agreement.field_periods_closing__end_date
 #: model:ir.model.fields,field_description:jt_agreement.field_trust_account_statement__end_date
 msgid "End Date"
 msgstr "Fecha de fin"
@@ -1249,7 +1353,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:jt_agreement.trust_account_statement_template_doc
 #, python-format
 msgid "Fecha"
-msgstr "Fecha"
+msgstr ""
 
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_agreement_trust__state_id
@@ -1263,12 +1367,14 @@ msgid "Fees"
 msgstr "Intereses"
 
 #. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration_amounts_invest__file
 #: model:ir.model.fields,field_description:jt_agreement.field_jt_agreement_bases_collaboration_line__file
 #: model:ir.model.fields,field_description:jt_agreement.field_trust_account_statement_line__file
 msgid "File"
 msgstr "Archivo"
 
 #. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration_amounts_invest__filename
 #: model:ir.model.fields,field_description:jt_agreement.field_jt_agreement_bases_collaboration_line__filename
 #: model:ir.model.fields,field_description:jt_agreement.field_trust_account_statement_line__filename
 msgid "File name"
@@ -1279,16 +1385,16 @@ msgstr "Nombre del archivo"
 #, python-format
 msgid "First 4 character of Convention must be Dependency and Group."
 msgstr ""
-"Los primeros 4 dígitos del 'No de Convenio' deben de ser 3 de la dependencia y 1 del "
-"grupo."
+"Los primeros 4 dígitos del 'No de Convenio' deben de ser 3 de la dependencia"
+" y 1 del grupo."
 
 #. module: jt_agreement
 #: code:addons/jt_agreement/models/patrimonial_resources.py:0
 #, python-format
 msgid "First 5 character of Convention must be Dependency and Sub Dependency."
 msgstr ""
-"Los primeros 5 dígitos del 'N° para reporte' deben de ser 3 de la dependencia y 2 del "
-"la sub dependencia."
+"Los primeros 5 dígitos del 'N° para reporte' deben de ser 3 de la "
+"dependencia y 2 del la sub dependencia."
 
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_investment_funds__first_number
@@ -1299,7 +1405,7 @@ msgstr "Cuenta Productiva:"
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_approve_investment_bal_req__invoice
 msgid "Folio"
-msgstr "Folio"
+msgstr ""
 
 #. module: jt_agreement
 #: model_terms:ir.ui.view,arch_db:jt_agreement.trust_account_statement_template_doc
@@ -1451,7 +1557,6 @@ msgstr ""
 #. module: jt_agreement
 #: model:ir.actions.act_window,name:jt_agreement.action_view_agreement_fund
 #: model:ir.model,name:jt_agreement.model_agreement_fund
-#: model:ir.ui.menu,name:jt_agreement.menu_agreement_fund
 msgid "Funds"
 msgstr "Fondos"
 
@@ -1482,13 +1587,19 @@ msgstr "Grupo"
 #. module: jt_agreement
 #: code:addons/jt_agreement/models/agreement_type.py:0
 #, python-format
+msgid "Group Value Must Be Unique"
+msgstr ""
+
+#. module: jt_agreement
+#: code:addons/jt_agreement/models/agreement_type.py:0
+#, python-format
 msgid "Group Value Must Be numeric"
 msgstr "El valor del campo \"Grupo\" debe ser númerico"
 
 #. module: jt_agreement
 #: model_terms:ir.ui.view,arch_db:jt_agreement.trust_account_statement_template_doc
 msgid "Haber"
-msgstr "Haber"
+msgstr ""
 
 #. module: jt_agreement
 #: model:ir.ui.menu,name:jt_agreement.menu_heritage_resources
@@ -1532,6 +1643,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_agreement.field_approve_investment_bal_req__id
 #: model:ir.model.fields,field_description:jt_agreement.field_background_project__id
 #: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration__id
+#: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration_amounts_invest__id
 #: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration_modification__id
 #: model:ir.model.fields,field_description:jt_agreement.field_cancel_collaboration__id
 #: model:ir.model.fields,field_description:jt_agreement.field_cancel_patrimonial__id
@@ -1541,6 +1653,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_agreement.field_collaboration_providers__id
 #: model:ir.model.fields,field_description:jt_agreement.field_committee__id
 #: model:ir.model.fields,field_description:jt_agreement.field_fund_type__id
+#: model:ir.model.fields,field_description:jt_agreement.field_interest_rate_base__id
 #: model:ir.model.fields,field_description:jt_agreement.field_interest_rate_operation__id
 #: model:ir.model.fields,field_description:jt_agreement.field_investment_funds__id
 #: model:ir.model.fields,field_description:jt_agreement.field_jt_agreement_account_statements_collaboration__id
@@ -1550,6 +1663,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_agreement.field_jt_agreement_payment_details_beneficiaries__id
 #: model:ir.model.fields,field_description:jt_agreement.field_patrimonial_resources__id
 #: model:ir.model.fields,field_description:jt_agreement.field_payment_request__id
+#: model:ir.model.fields,field_description:jt_agreement.field_periods_closing__id
 #: model:ir.model.fields,field_description:jt_agreement.field_reason_rejection_open_bal__id
 #: model:ir.model.fields,field_description:jt_agreement.field_recurring_payment_template__id
 #: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance__id
@@ -1678,7 +1792,7 @@ msgstr ""
 #: code:addons/jt_agreement/reports/movments.py:0
 #, python-format
 msgid "Importe"
-msgstr "Importe"
+msgstr ""
 
 #. module: jt_agreement
 #: model:ir.model.fields.selection,name:jt_agreement.selection__agreement_trust__state__in_force
@@ -1722,6 +1836,7 @@ msgstr "Cuenta de intereses"
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_agreement_trust__interest_date
 #: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration__interest_date
+#: model:ir.model.fields,field_description:jt_agreement.field_interest_rate_base__interest_date
 #: model:ir.model.fields,field_description:jt_agreement.field_interest_rate_operation__interest_date
 msgid "Interest Date"
 msgstr "Fecha de intereses"
@@ -1729,6 +1844,7 @@ msgstr "Fecha de intereses"
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_agreement_trust__interest_rate_ids
 #: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration__interest_rate
+#: model:ir.model.fields,field_description:jt_agreement.field_interest_rate_base__interest_rate
 #: model_terms:ir.ui.view,arch_db:jt_agreement.view_bases_collabration_form
 msgid "Interest Rate"
 msgstr "Tasa de interes"
@@ -1762,6 +1878,12 @@ msgid "Investment Settlement"
 msgstr ""
 
 #. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_account_setup_bank_manual_config__for_investments
+#: model:ir.model.fields,field_description:jt_agreement.field_res_partner_bank__for_investments
+msgid "Investments"
+msgstr ""
+
+#. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance_finance__invoice
 msgid "Invoice"
 msgstr ""
@@ -1792,6 +1914,7 @@ msgid "Is Follower"
 msgstr ""
 
 #. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration_amounts_invest__is_hide_button
 #: model:ir.model.fields,field_description:jt_agreement.field_jt_agreement_bases_collaboration__is_hide_button
 msgid "Is Hide Button"
 msgstr ""
@@ -1834,6 +1957,7 @@ msgstr "Número"
 #: model:ir.model.fields,field_description:jt_agreement.field_approve_investment_bal_req____last_update
 #: model:ir.model.fields,field_description:jt_agreement.field_background_project____last_update
 #: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration____last_update
+#: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration_amounts_invest____last_update
 #: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration_modification____last_update
 #: model:ir.model.fields,field_description:jt_agreement.field_cancel_collaboration____last_update
 #: model:ir.model.fields,field_description:jt_agreement.field_cancel_patrimonial____last_update
@@ -1843,6 +1967,7 @@ msgstr "Número"
 #: model:ir.model.fields,field_description:jt_agreement.field_collaboration_providers____last_update
 #: model:ir.model.fields,field_description:jt_agreement.field_committee____last_update
 #: model:ir.model.fields,field_description:jt_agreement.field_fund_type____last_update
+#: model:ir.model.fields,field_description:jt_agreement.field_interest_rate_base____last_update
 #: model:ir.model.fields,field_description:jt_agreement.field_interest_rate_operation____last_update
 #: model:ir.model.fields,field_description:jt_agreement.field_investment_funds____last_update
 #: model:ir.model.fields,field_description:jt_agreement.field_jt_agreement_account_statements_collaboration____last_update
@@ -1852,6 +1977,7 @@ msgstr "Número"
 #: model:ir.model.fields,field_description:jt_agreement.field_jt_agreement_payment_details_beneficiaries____last_update
 #: model:ir.model.fields,field_description:jt_agreement.field_patrimonial_resources____last_update
 #: model:ir.model.fields,field_description:jt_agreement.field_payment_request____last_update
+#: model:ir.model.fields,field_description:jt_agreement.field_periods_closing____last_update
 #: model:ir.model.fields,field_description:jt_agreement.field_reason_rejection_open_bal____last_update
 #: model:ir.model.fields,field_description:jt_agreement.field_recurring_payment_template____last_update
 #: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance____last_update
@@ -1872,6 +1998,7 @@ msgstr "Última modificación el"
 #: model:ir.model.fields,field_description:jt_agreement.field_approve_investment_bal_req__write_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_background_project__write_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration__write_uid
+#: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration_amounts_invest__write_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration_modification__write_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_cancel_collaboration__write_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_cancel_patrimonial__write_uid
@@ -1881,12 +2008,14 @@ msgstr "Última modificación el"
 #: model:ir.model.fields,field_description:jt_agreement.field_collaboration_providers__write_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_committee__write_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_fund_type__write_uid
+#: model:ir.model.fields,field_description:jt_agreement.field_interest_rate_base__write_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_interest_rate_operation__write_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_investment_funds__write_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_jt_agreement_bases_collaboration__write_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_jt_agreement_bases_collaboration_line__write_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_patrimonial_resources__write_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_payment_request__write_uid
+#: model:ir.model.fields,field_description:jt_agreement.field_periods_closing__write_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_reason_rejection_open_bal__write_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_recurring_payment_template__write_uid
 #: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance__write_uid
@@ -1907,6 +2036,7 @@ msgstr "Última actualización por"
 #: model:ir.model.fields,field_description:jt_agreement.field_approve_investment_bal_req__write_date
 #: model:ir.model.fields,field_description:jt_agreement.field_background_project__write_date
 #: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration__write_date
+#: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration_amounts_invest__write_date
 #: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration_modification__write_date
 #: model:ir.model.fields,field_description:jt_agreement.field_cancel_collaboration__write_date
 #: model:ir.model.fields,field_description:jt_agreement.field_cancel_patrimonial__write_date
@@ -1916,12 +2046,14 @@ msgstr "Última actualización por"
 #: model:ir.model.fields,field_description:jt_agreement.field_collaboration_providers__write_date
 #: model:ir.model.fields,field_description:jt_agreement.field_committee__write_date
 #: model:ir.model.fields,field_description:jt_agreement.field_fund_type__write_date
+#: model:ir.model.fields,field_description:jt_agreement.field_interest_rate_base__write_date
 #: model:ir.model.fields,field_description:jt_agreement.field_interest_rate_operation__write_date
 #: model:ir.model.fields,field_description:jt_agreement.field_investment_funds__write_date
 #: model:ir.model.fields,field_description:jt_agreement.field_jt_agreement_bases_collaboration__write_date
 #: model:ir.model.fields,field_description:jt_agreement.field_jt_agreement_bases_collaboration_line__write_date
 #: model:ir.model.fields,field_description:jt_agreement.field_patrimonial_resources__write_date
 #: model:ir.model.fields,field_description:jt_agreement.field_payment_request__write_date
+#: model:ir.model.fields,field_description:jt_agreement.field_periods_closing__write_date
 #: model:ir.model.fields,field_description:jt_agreement.field_reason_rejection_open_bal__write_date
 #: model:ir.model.fields,field_description:jt_agreement.field_recurring_payment_template__write_date
 #: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance__write_date
@@ -2076,7 +2208,6 @@ msgid "Movements Of Agreements"
 msgstr "Movimiento de convenios"
 
 #. module: jt_agreement
-#: model:ir.model.fields,field_description:jt_agreement.field_collaboration_beneficiary__employee_id
 #: model:ir.model.fields,field_description:jt_agreement.field_collaboration_providers__partner_id
 #: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance__name
 #: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance_invest__name
@@ -2188,12 +2319,12 @@ msgstr ""
 #: code:addons/jt_agreement/reports/movments.py:0
 #, python-format
 msgid "Nombre Convenio"
-msgstr "Nombre Convenio"
+msgstr ""
 
 #. module: jt_agreement
 #: model_terms:ir.ui.view,arch_db:jt_agreement.bases_collaboration_report_template_doc
 msgid "Num.de Convenio:"
-msgstr "Num.de Convenio:"
+msgstr ""
 
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_agreement_agreement_type__message_needaction_counter
@@ -2305,7 +2436,7 @@ msgstr ""
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration__n_report
 msgid "N° para reporte"
-msgstr "N° para reporte"
+msgstr ""
 
 #. module: jt_agreement
 #: code:addons/jt_agreement/models/bases_collaboration.py:0
@@ -2363,7 +2494,7 @@ msgstr "Operación"
 #: code:addons/jt_agreement/reports/account_statements_collaboration.py:0
 #, python-format
 msgid "Operación"
-msgstr "Operación"
+msgstr ""
 
 #. module: jt_agreement
 #: model_terms:ir.ui.view,arch_db:jt_agreement.view_req_open_balance_form
@@ -2385,6 +2516,8 @@ msgstr "Número de operación"
 
 #. module: jt_agreement
 #: code:addons/jt_agreement/models/bases_collaboration.py:0
+#: code:addons/jt_agreement/models/bases_collaboration.py:0
+#: code:addons/jt_agreement/models/bases_collaboration.py:0
 #, python-format
 msgid "Operation Number must be Numeric."
 msgstr "El número de operación debe ser numérico."
@@ -2403,9 +2536,12 @@ msgstr ""
 #. module: jt_agreement
 #: code:addons/jt_agreement/models/bases_collaboration.py:0
 #, python-format
-msgid "Operation of opening balance can be performed just one time in each agreement"
+msgid ""
+"Operation of opening balance can be performed just one time in each "
+"agreement"
 msgstr ""
-"La operación de \"Apertura de saldo\" solo puede ser realizada 1 vez en cada convenio"
+"La operación de \"Apertura de saldo\" solo puede ser realizada 1 vez en cada"
+" convenio"
 
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_agreement_trust__total_operations
@@ -2445,7 +2581,7 @@ msgstr "Titular de la dependencia"
 #: code:addons/jt_agreement/reports/movments.py:0
 #, python-format
 msgid "PDF"
-msgstr "PDF"
+msgstr ""
 
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance_invest__fund_key
@@ -2456,7 +2592,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_agreement.field_approve_investment_bal_req__patrimonial_id
 #: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance_invest__patrimonial_id
 msgid "Patrimonial"
-msgstr "Patrimonial"
+msgstr ""
 
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_agreement_trust__patrimonial_account_id
@@ -2501,7 +2637,7 @@ msgstr "Detalle de pago a beneficiarios"
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_payment_request__payment_method_id
 msgid "Payment Method"
-msgstr "Medio de pago"
+msgstr "Medio de Pago"
 
 #. module: jt_agreement
 #: model:ir.model,name:jt_agreement.model_payment_request
@@ -2540,7 +2676,7 @@ msgstr "Pagos"
 #. module: jt_agreement
 #: model_terms:ir.ui.view,arch_db:jt_agreement.bases_collaboration_report_template_doc
 msgid "Periodo:"
-msgstr "Periodo:"
+msgstr ""
 
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance_invest__permanent_instructions
@@ -2583,7 +2719,7 @@ msgstr "Defina una secuencia en su diario."
 #: code:addons/jt_agreement/models/bases_collaboration.py:0
 #, python-format
 msgid "Por favor configure la cuenta UNAM y CONAC en diario!"
-msgstr "Por favor configure la cuenta UNAM y CONAC en diario!"
+msgstr ""
 
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_committee__column_position_id
@@ -2591,6 +2727,7 @@ msgid "Position / Appointment column"
 msgstr "Puesto/Nombramiento"
 
 #. module: jt_agreement
+#: model_terms:ir.ui.view,arch_db:jt_agreement.amount_to_invest_bases_collaboration_view
 #: model_terms:ir.ui.view,arch_db:jt_agreement.generate_account_statement
 #: model_terms:ir.ui.view,arch_db:jt_agreement.generate_bases_collaboration_view
 msgid "Print"
@@ -2620,6 +2757,11 @@ msgstr "Proveedores"
 #. module: jt_agreement
 #: model:ir.model.fields.selection,name:jt_agreement.selection__recurring_payment_template__payment_period__quarterly
 msgid "Quarterly"
+msgstr ""
+
+#. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration__rate_base_ids
+msgid "Rate Base"
 msgstr ""
 
 #. module: jt_agreement
@@ -2686,7 +2828,7 @@ msgstr "Referencia"
 #: code:addons/jt_agreement/reports/movments.py:0
 #, python-format
 msgid "Referencia"
-msgstr "Referencia"
+msgstr ""
 
 #. module: jt_agreement
 #: model_terms:ir.ui.view,arch_db:jt_agreement.view_bases_collabration_form
@@ -2829,7 +2971,7 @@ msgstr "Retiro"
 #: model_terms:ir.ui.view,arch_db:jt_agreement.bases_collaboration_report_template_doc
 #, python-format
 msgid "Retiro"
-msgstr "Retiro"
+msgstr ""
 
 #. module: jt_agreement
 #: model_terms:ir.ui.view,arch_db:jt_agreement.view_req_open_balance_form_investment
@@ -2862,6 +3004,21 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:jt_agreement.trust_account_statement_template_doc
 #, python-format
 msgid "Saldo"
+msgstr ""
+
+#. module: jt_agreement
+#: model_terms:ir.ui.view,arch_db:jt_agreement.collaboration_amount_invest_template_doc
+msgid "Saldo a Invertir en Enero:"
+msgstr ""
+
+#. module: jt_agreement
+#: model_terms:ir.ui.view,arch_db:jt_agreement.collaboration_amount_invest_template_doc
+msgid "Saldo al final del periodo:"
+msgstr ""
+
+#. module: jt_agreement
+#: model_terms:ir.ui.view,arch_db:jt_agreement.collaboration_amount_invest_template_doc
+msgid "Saldo al inicio del periodo:"
 msgstr ""
 
 #. module: jt_agreement
@@ -2918,7 +3075,9 @@ msgid "Specific project"
 msgstr "Proyecto específico"
 
 #. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration_amounts_invest__start_date
 #: model:ir.model.fields,field_description:jt_agreement.field_jt_agreement_bases_collaboration__start_date
+#: model:ir.model.fields,field_description:jt_agreement.field_periods_closing__start_date
 #: model:ir.model.fields,field_description:jt_agreement.field_trust_account_statement__start_date
 msgid "Start Date"
 msgstr ""
@@ -3144,7 +3303,7 @@ msgstr ""
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance__trust_provider_ids
 msgid "Trust Provider"
-msgstr "Trust Provider"
+msgstr ""
 
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance__trust_agreement_file
@@ -3160,9 +3319,10 @@ msgid "Trusts"
 msgstr "Fideicomisos"
 
 #. module: jt_agreement
+#: model:ir.actions.act_window,name:jt_agreement.action_agreement_agreement_type_budget
 #: model:ir.ui.menu,name:jt_agreement.menu_type_agreement
 msgid "Type Of Agreement"
-msgstr "Tipo de convenio"
+msgstr "Tipo de convenio de Bases de Colaboración"
 
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_approve_investment_bal_req__fund_type
@@ -3195,9 +3355,15 @@ msgstr "Tipo de operación"
 
 #. module: jt_agreement
 #: code:addons/jt_agreement/models/bases_collaboration.py:0
+#: code:addons/jt_agreement/models/bases_collaboration.py:0
+#: code:addons/jt_agreement/models/bases_collaboration.py:0
+#: code:addons/jt_agreement/models/bases_collaboration.py:0
 #, python-format
-msgid "Type of Operation must be 'Withdrawal Due to Cancellation' for this operation!"
-msgstr "¡El tipo de operación para esta acción debe ser 'Retiro por cancelación'!"
+msgid ""
+"Type of Operation must be 'Withdrawal Due to Cancellation' for this "
+"operation!"
+msgstr ""
+"¡El tipo de operación para esta acción debe ser 'Retiro por cancelación'!"
 
 #. module: jt_agreement
 #: model:ir.model.fields,help:jt_agreement.field_agreement_agreement_type__activity_exception_decoration
@@ -3287,6 +3453,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:jt_agreement.selection__patrimonial_resources__state__valid
 msgid "Valid"
 msgstr "Valido"
+
+#. module: jt_agreement
+#: model:ir.actions.server,name:jt_agreement.action_validates_payment_request_list
+msgid "Validates"
+msgstr ""
 
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_collaboration_beneficiary__validity_final_beneficiary
@@ -3414,14 +3585,18 @@ msgstr ""
 
 #. module: jt_agreement
 #: code:addons/jt_agreement/models/bases_collaboration.py:0
+#: code:addons/jt_agreement/models/bases_collaboration.py:0
 #: code:addons/jt_agreement/models/patrimonial_resources.py:0
+#: code:addons/jt_agreement/models/patrimonial_resources.py:0
+#: code:addons/jt_agreement/models/trust.py:0
 #: code:addons/jt_agreement/models/trust.py:0
 #, python-format
 msgid ""
-"You can add only %s Beneficiaries which is mentined in 'Number of allowed beneficiaries'"
+"You can add only %s Beneficiaries which is mentined in 'Number of allowed "
+"beneficiaries'"
 msgstr ""
-"Solo puedes añadir %s beneficiario/s indicados en el campo 'Numero de beneficiarios "
-"permitidos'"
+"Solo puedes añadir %s beneficiario/s indicados en el campo 'Numero de "
+"beneficiarios permitidos'"
 
 #. module: jt_agreement
 #: code:addons/jt_agreement/models/bases_collaboration.py:0
@@ -3443,6 +3618,12 @@ msgid "You cannot delete an entry which has been requested."
 msgstr "No puedes borrar un registro que ha sido solicitado."
 
 #. module: jt_agreement
+#: code:addons/jt_agreement/wizard/closing_collaboration.py:0
+#, python-format
+msgid "You have not selected Registration date between selected period!"
+msgstr ""
+
+#. module: jt_agreement
 #: model_terms:ir.ui.view,arch_db:jt_agreement.agreement_trust_form
 msgid "ZIP"
 msgstr ""
@@ -3450,6 +3631,11 @@ msgstr ""
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_agreement_trust__zip
 msgid "Zip"
+msgstr ""
+
+#. module: jt_agreement
+#: model:ir.model,name:jt_agreement.model_interest_rate_base
+msgid "interest.rate.base"
 msgstr ""
 
 #. module: jt_agreement
@@ -3465,6 +3651,7 @@ msgstr ""
 #. module: jt_agreement
 #: model:ir.actions.report,print_report_name:jt_agreement.account_statement_report
 #: model:ir.actions.report,print_report_name:jt_agreement.bases_collaboration_report
+#: model:ir.actions.report,print_report_name:jt_agreement.collaboration_amount_to_invest_report
 msgid "object.name"
 msgstr ""
 

@@ -163,13 +163,13 @@ class AccountPayment(models.Model):
         
     def create_journal_for_paid(self,invoice):
         #==== he Bank Journal will be taken, corresponding to the “Paid” accounting moment ===#
-        
+        amount_total = sum(x.price_total for x in invoice.invoice_line_ids.filtered(lambda x:x.program_code_id))
         if invoice.currency_id != invoice.company_id.currency_id:
-            amount_currency = abs(invoice.amount_total)
+            amount_currency = abs(amount_total)
             balance = invoice.currency_id._convert(amount_currency, invoice.company_currency_id, invoice.company_id, invoice.date)
             currency_id = invoice.currency_id and invoice.currency_id.id or False
         else:
-            balance = abs(invoice.amount_total)
+            balance = abs(amount_total)
             amount_currency = 0.0
             currency_id = False
             

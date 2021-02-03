@@ -29,5 +29,7 @@ class StatementOfCash(models.Model):
     _rec_name = 'concept'
 
     concept = fields.Char(string='Concepto')
+    major = fields.Many2one('account.account','Major',domain=[('user_type_id','=','Income')])
+    types = fields.Selection([('option','Options'),('origin','Origin')],string='Type')
     parent_id = fields.Many2one('cash.statement', string='Parent')
     coa_conac_id = fields.Many2one('coa.conac', string="CODE CONAC")

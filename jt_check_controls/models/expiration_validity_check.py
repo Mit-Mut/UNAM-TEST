@@ -78,7 +78,7 @@ class ExpirationValidityCheck(models.Model):
                 where line.is_withdrawn_circulation IS FALSE
                 AND am.payment_state = 'assigned_payment_method'
                 AND am.id=line.payment_req_id 
-                AND cl.status = 'Protected and in transit'
+                AND cl.status in ('Protected and in transit','Protected')
                 AND cl.id = line.check_folio_id
                             )''' % (self._table)
                             )
@@ -90,11 +90,13 @@ class ExpirationValidityCheck(models.Model):
                 raise Warning(_("Aún no expira la protección del cheque"))
 
             if rec.payment_req_id:
-                rec.payment_req_id.payment_state = 'payment_method_cancelled'
+
                 payment_ids = self.env['account.payment'].search([('payment_state', '=', 'for_payment_procedure'),
                                                                   ('payment_request_id', '=', rec.payment_req_id.id)])
                 for payment in payment_ids:
                     payment.cancel()
+                rec.payment_req_id.payment_state = 'payment_method_cancelled'
+                
             if rec.check_folio_id:
                 rec.check_folio_id.status = 'Withdrawn from circulation'
                 rec.check_payment_req_id.is_withdrawn_circulation = True

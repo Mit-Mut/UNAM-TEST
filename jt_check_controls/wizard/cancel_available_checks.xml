@@ -10,7 +10,7 @@
 				<form>
 					<sheet>
 						<group>
-							<field name="check_folio_id" invisible="1"/>
+							<field name="check_folio_ids" invisible="1"/>
 							<field name="reason_cancellation" required="1"/>
 							<field name="is_physical_check"/>
 						</group>

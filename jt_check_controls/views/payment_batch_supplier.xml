@@ -61,6 +61,7 @@
                                         <field name="payment_req_id" readonly="1" force_save="1"/>
                                         <field name="amount_to_pay" readonly="1" force_save="1"/>
                                         <field name="check_status"/>
+                                        <field name="zone" invisible="1"/>
                                     </tree>
                                 </field>
                             </page>

@@ -136,6 +136,14 @@ class HrEmployee(models.Model):
         if self.number_of_square and  not str(self.number_of_square).isnumeric():
             raise ValidationError(_('The Number of square must be numeric value'))
 
+    @api.constrains('rfc')
+    def _check_unique_rfc(self):
+        for rec in self:
+            if rec.rfc:
+                emp_id = self.env['hr.employee'].search([('id', '!=', rec.id),('rfc','=',rec.rfc)],limit=1)
+                if emp_id:
+                    raise ValidationError(_('The Employee RFC Value Must Be Unique'))
+
     @api.constrains('worker_payment_key')
     def _check_worker_payment_key(self):
         if self.worker_payment_key and not str(self.worker_payment_key).isnumeric():

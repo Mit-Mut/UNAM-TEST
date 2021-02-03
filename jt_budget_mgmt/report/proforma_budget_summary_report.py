@@ -709,20 +709,21 @@ class ProformaBudgetSummaryReport(models.AbstractModel):
                 
             elif column in ('Paid', 'Pagado'):
                 need_columns_with_format.append('paid')
-                col_query += """, (select coalesce(sum(abs(amount_total_signed)),0) from account_move where id in 
-                                    (select DISTINCT amlp.move_id from account_move_line amlp where amlp.payment_id in  
-                                    (select DISTINCT apay.id from account_move_line line,account_move amove,account_payment apay 
-                                    where  pc.id=line.program_code_id and amove.id=line.move_id and amove.payment_state=%s and apay.payment_date >= %s and apay.payment_date <= %s and apay.payment_request_id = amove.id))) as paid """
+#                 col_query += """, (select coalesce(sum(abs(amount_total_signed)),0) from account_move where id in 
+#                                     (select DISTINCT amlp.move_id from account_move_line amlp where amlp.payment_id in  
+#                                     (select DISTINCT apay.id from account_move_line line,account_move amove,account_payment apay 
+#                                     where  pc.id=line.program_code_id and amove.id=line.move_id and amove.payment_state=%s and apay.payment_date >= %s and apay.payment_date <= %s and apay.payment_request_id = amove.id))) as paid """
+
+                col_query += """,(select coalesce(sum(abs(line.balance)+abs(line.tax_price_cr)),0) from account_move_line line,account_move amove,account_payment apay 
+                                    where  pc.id=line.program_code_id and amove.id=line.move_id and amove.payment_state=%s and apay.payment_date >= %s and apay.payment_date <= %s and apay.payment_request_id = amove.id) as paid """
                                     
                 #col_query += ',(select coalesce(sum(line.price_total),0) from account_move_line line,account_move amove where pc.id=line.program_code_id and amove.id=line.move_id and amove.payment_state=%s and amove.invoice_date >= %s and amove.invoice_date <= %s) as paid'
                 tuple_where_data.append('paid')
                 tuple_where_data.append(start)
                 tuple_where_data.append(end)
                 #=== Grand Total ======#
-                self.env.cr.execute("""(select coalesce(sum(abs(amount_total_signed)),0) from account_move where id in 
-                                    (select DISTINCT amlp.move_id from account_move_line amlp where amlp.payment_id in  
-                                    (select DISTINCT apay.id from account_move_line line,account_move amove,account_payment apay 
-                                    where  line.program_code_id in %s and amove.id=line.move_id and amove.payment_state=%s and apay.payment_date >= %s and apay.payment_date <= %s and apay.payment_request_id = amove.id)))""", (tuple(program_code_list),'paid',start,end))
+                self.env.cr.execute("""(select coalesce(sum(abs(line.balance)+abs(line.tax_price_cr)),0) from account_move_line line,account_move amove,account_payment apay 
+                                    where  line.program_code_id in %s and amove.id=line.move_id and amove.payment_state=%s and apay.payment_date >= %s and apay.payment_date <= %s and apay.payment_request_id = amove.id)""", (tuple(program_code_list),'paid',start,end))
                 
                 #self.env.cr.execute("select coalesce(sum(line.price_total),0) from account_move_line line,account_move amove where line.program_code_id in %s and amove.id=line.move_id and amove.payment_state=%s and amove.invoice_date >= %s and amove.invoice_date <= %s", (tuple(program_code_list),'paid',start,end))
                 my_datas = self.env.cr.fetchone()

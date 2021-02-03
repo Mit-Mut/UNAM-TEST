@@ -5,18 +5,18 @@ class CancelAvailableCheck(models.TransientModel):
     _name = 'cancel.available.check'
     _description = 'Cancel Available Check'
 
-    check_folio_id = fields.Many2one('check.log',"Check number")
+    check_folio_ids = fields.Many2many('check.log',string="Check number")
     reason_cancellation = fields.Text(string='Reason Cancellation')
     is_physical_check = fields.Boolean(string="Do you have the physical check?",copy=False,default=False)
     
     def apply(self):
-        if self.check_folio_id:
-            self.check_folio_id.reason_cancellation = self.reason_cancellation
-            self.check_folio_id.is_physical_check = self.is_physical_check
-            self.check_folio_id.general_status = 'cancelled'
+        for folio in self.check_folio_ids:
+            folio.reason_cancellation = self.reason_cancellation
+            folio.is_physical_check = self.is_physical_check
+            folio.general_status = 'cancelled'
             if self.is_physical_check:
-                self.check_folio_id.status = 'Canceled in custody of Finance'
+                folio.status = 'Canceled in custody of Finance'
             else:
-                self.check_folio_id.status = 'Cancelled'
-                self.check_folio_id.date_cancellation = datetime.now().today()
+                folio.status = 'Cancelled'
+                folio.date_cancellation = datetime.now().today()
 

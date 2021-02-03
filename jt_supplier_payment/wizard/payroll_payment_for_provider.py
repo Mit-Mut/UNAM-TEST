@@ -41,7 +41,13 @@ class PayrollPaymentProviderwizard(models.TransientModel):
             payment_bank_account_id = False
             payment_bank_id = False 
         invoice_line_list = []
+        fornight = False
         for record in self.emp_payroll_ids:
+            if record.fornight:
+                fornight = record.fornight
+            elif record.payroll_processing_id and record.payroll_processing_id.fornight:
+                fornight = record.payroll_processing_id.fornight
+                
             for line in record.preception_line_ids:
                 line_vals = record.get_invoice_line_vals(line)
                 if line_vals:
@@ -65,6 +71,7 @@ class PayrollPaymentProviderwizard(models.TransientModel):
                 'type' : 'in_invoice',
                 'invoice_date' : fields.Date.today(),
                 'invoice_line_ids':invoice_line_list,
+                'fornight' : fornight,
                 'l10n_mx_edi_payment_method_id' : payment_method_id,
             }
         move_id = self.env['account.move'].create(vals)

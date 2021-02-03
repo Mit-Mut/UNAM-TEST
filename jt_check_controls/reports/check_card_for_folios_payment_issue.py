@@ -200,24 +200,8 @@ class CheckCardFolioPaymentIssue(models.AbstractModel):
             })
             
             bank_total = 0
-            rec_ids = payment_issue_ids.filtered(lambda x:x.payment_issuing_bank_id.id==journal.id)
+            rec_ids = payment_issue_ids.filtered(lambda x:x.payment_issuing_bank_id.id==journal.id and x.type_of_batch == 'nominal')
             for rec in rec_ids:
-#                 if all([x.check_status == 'Sent to protection' for x in rec.payment_req_ids]):
-#                     amount = sum(line.amount_to_pay for line in rec.payment_req_ids)
-#                     total_amount += amount
-#                     bank_total += amount
-# 
-#                     lines.append({
-#                         'id': 'hierarchy_rec' + str(rec.id),
-#                         'name' : rec.intial_check_folio and rec.intial_check_folio.folio or '',
-#                         'columns': [ {'name': rec.final_check_folio and rec.final_check_folio.folio or ''},
-#                                     self._format({'name': amount},figure_type='float'),
-#                                     ],
-#                         'level': 3,
-#                         'unfoldable': False,
-#                         'unfolded': True,
-#                     })
-#                 else:
                     line_payment_ids = rec.payment_req_ids.filtered(lambda r: r.check_status == 'Sent to protection')
                     folio_mapped_ids = line_payment_ids.mapped('check_folio_id').sorted(key='folio')
                     if folio_mapped_ids:
@@ -233,7 +217,8 @@ class CheckCardFolioPaymentIssue(models.AbstractModel):
                                     'id': 'hierarchy_rec' + str(rec.id),
                                     'name': first_folio_id and first_folio_id.folio or '',
                                     'columns': [{'name': last_folio_id and last_folio_id.folio or ''},
-                                                self._format({'name': amount}, figure_type='float'),
+                                                {'name': amount,'class':'number'},
+                                                
                                                 ],
                                     'level': 3,
                                     'unfoldable': False,
@@ -241,13 +226,15 @@ class CheckCardFolioPaymentIssue(models.AbstractModel):
                                 })
                                 first_folio_id = False
                                 last_folio_id = False
+                                total_amount += amount
+                                bank_total += amount
+                                
                                 amount = 0
 
                             for line in rec.payment_req_ids.filtered(lambda r: r.check_folio_id.id == folio.id):
-                                amount += line.amount_to_pay
+                                #amount += line.amount_to_pay
+                                amount += 1
                                 
-                            total_amount += amount
-                            bank_total += amount
                                 
                             if not first_folio_id:
                                 first_folio_id = folio
@@ -258,7 +245,7 @@ class CheckCardFolioPaymentIssue(models.AbstractModel):
                                 'id': 'hierarchy_rec' + str(rec.id),
                                 'name': first_folio_id and first_folio_id.folio or '',
                                 'columns': [{'name': last_folio_id and last_folio_id.folio or ''},
-                                            self._format({'name': amount}, figure_type='float'),
+                                            {'name': amount,'class':'number'},
                                             ],
                                 'level': 3,
                                 'unfoldable': False,
@@ -266,6 +253,74 @@ class CheckCardFolioPaymentIssue(models.AbstractModel):
                             })
                             first_folio_id = False
                             last_folio_id = False
+                            total_amount += amount
+                            bank_total += amount
+                            
+                            amount = 0
+
+            rec_ids = payment_issue_ids.filtered(lambda x:x.payment_issuing_bank_id.id==journal.id and x.type_of_batch == 'pension')
+            for rec in rec_ids:
+                    line_payment_ids = rec.payment_req_ids.filtered(lambda r: r.check_status == 'Sent to protection')
+                    folio_mapped_ids = line_payment_ids.mapped('check_folio_id').sorted(key='folio')
+                    if folio_mapped_ids:
+                        amount = 0
+                        first_folio_id = False
+                        last_folio_id = False
+                          
+                        for folio in  folio_mapped_ids:
+                                 
+         
+                            if last_folio_id and last_folio_id.folio and folio.folio and (last_folio_id.folio+1) != folio.folio:
+                                msg_str = 'Incluye los folios' +str(first_folio_id.folio)+" al "+str(last_folio_id.folio)+" que son de Pension Alimenticia" 
+                                lines.append({
+                                    'id': 'hierarchy_rec' + str(rec.id),
+                                    'name': msg_str,
+                                    'columns': [
+                                                {'name': amount,'class':'number'},
+                                                 
+                                                ],
+                                    'level': 3,
+                                    'unfoldable': False,
+                                    'unfolded': True,
+                                    'colspan':2,
+                                })
+                                first_folio_id = False
+                                last_folio_id = False
+                                total_amount += amount
+                                bank_total += amount
+                                
+                                amount = 0
+ 
+                            for line in rec.payment_req_ids.filtered(lambda r: r.check_folio_id.id == folio.id):
+                                #amount += line.amount_to_pay
+                                amount += 1
+                                 
+                                 
+                            if not first_folio_id:
+                                first_folio_id = folio
+                            if first_folio_id:
+                                last_folio_id = folio
+                        if first_folio_id:
+                            first_folio_name = first_folio_id and first_folio_id.folio or ''
+                            last_folio_name = last_folio_id and last_folio_id.folio or ''
+                            msg_str = 'Incluye los folios' +str(first_folio_name)+" al "+str(last_folio_name)+" que son de Pension Alimenticia"
+                            
+                            lines.append({
+                                'id': 'hierarchy_rec' + str(rec.id),
+                                'name': msg_str,
+                                'columns': [
+                                            {'name': amount,'class':'number'},
+                                            ],
+                                'level': 3,
+                                'unfoldable': False,
+                                'unfolded': True,
+                                'colspan':2,
+                            })
+                            first_folio_id = False
+                            last_folio_id = False
+                            total_amount += amount
+                            bank_total += amount
+                            
                             amount = 0
                             
             bank_name = 'TOTAL CHEQUES '+str(journal.name)
@@ -274,7 +329,7 @@ class CheckCardFolioPaymentIssue(models.AbstractModel):
                 'name' : '', 
                 'columns': [ 
                             {'name': bank_name},
-                            self._format({'name': bank_total},figure_type='float'),
+                            {'name': bank_total,'class':'number'},
                             ],
                 'level': 1,
                 'unfoldable': False,
@@ -286,7 +341,7 @@ class CheckCardFolioPaymentIssue(models.AbstractModel):
             'name' : '', 
             'columns': [ 
                         {'name': _('TOTAL CHEQUES BANCOS')},
-                        self._format({'name': total_amount},figure_type='float'),
+                        {'name': total_amount,'class':'number'},
                         ],
             'level': 1,
             'unfoldable': False,

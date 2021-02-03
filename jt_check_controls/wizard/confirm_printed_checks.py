@@ -53,7 +53,6 @@ class ConfirmPrintedCheck(models.TransientModel):
                 else:
                     line.check_folio_id.status = 'Cancelled'
                     line.check_folio_id.reason_cancellation = 'Print Error'
-                    line.payment_req_id.check_folio_id = False
                     line.selected = False
             batch.printed_checks = False
             batch.selected = False

@@ -69,5 +69,5 @@ class AvailableCheck(models.Model):
             'domain': [],
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'context': {'default_check_folio_id': self.check_folio_id.id},
+            'context': {'default_check_folio_ids': self.ids},
         }

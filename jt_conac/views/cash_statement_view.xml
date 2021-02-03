@@ -12,6 +12,10 @@
                             <field name="parent_id" invisible="1"/>
                             <field name="coa_conac_id"/>
                         </group>
+                        <group>
+                            <field name="major"/>
+                            <field name="types"/>
+                        </group>
                     </sheet>
                 </form>
             </field>

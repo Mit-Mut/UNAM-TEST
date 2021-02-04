@@ -3,6 +3,21 @@ from datetime import date
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv import expression
 
+class ProjectProgramCode(models.Model):
+    
+    _name = 'custom.project.programcode'
+    
+    project_id = fields.Many2one('project.project', string='Project',ondelete='cascade')
+    program_code_id = fields.Many2one('program.code','Program Code')
+
+    @api.constrains('program_code_id')
+    def _project_program_unique(self):
+        for record in self:
+            if record.program_code_id:
+                line = self.env['custom.project.programcode'].search([('id', '!=', record.id),('program_code_id','=',record.program_code_id.id)],limit=1)
+                if line:
+                    raise ValidationError(_('This Program Code Already Link To Project'))
+    
 class ProjectRegistry(models.Model):
     _inherit = 'project.project'
     _description = "CONACYT Project Registry"
@@ -80,6 +95,9 @@ class ProjectRegistry(models.Model):
 
     base_id = fields.Many2one('bases.collaboration','TOA')
 
+    project_programcode_ids = fields.One2many('custom.project.programcode', 'project_id', string='Program Code')
+    
+   
 #     @api.constrains('number')
 #     def _project_number_unique(self):
 #         for record in self:
@@ -368,3 +386,8 @@ class ProjectMinistrations(models.Model):
     project_id = fields.Many2one('project.project', 'Project')
     ministrations = fields.Integer("Number of ministrations")
     ministering_amount = fields.Float("Ministering amount")
+
+
+    
+    
+    

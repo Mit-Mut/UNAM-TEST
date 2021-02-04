@@ -293,7 +293,7 @@ class CheckCardFolioPaymentIssue(models.AbstractModel):
  
                             for line in rec.payment_req_ids.filtered(lambda r: r.check_folio_id.id == folio.id):
                                 #amount += line.amount_to_pay
-                                amount += 1
+                                amount -= 1
                                  
                                  
                             if not first_folio_id:

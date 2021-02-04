@@ -30,6 +30,18 @@ class StateOfVariation(models.AbstractModel):
     _inherit = "jt_conac.coa.conac.report"
     _description = "State of Variation in the Public Treasury"
 
+    filter_date = {'mode': 'range', 'filter': 'this_month'}
+    filter_comparison = {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
+    filter_all_entries = False
+    filter_journals = False
+    filter_analytic = False
+    filter_unfold_all = False
+    filter_cash_basis = None
+    filter_hierarchy = False
+    filter_unposted_in_period = False
+    MAX_LINES = None
+
+
     def _get_columns_name(self, options):
         return [
             {'name': _('Concepto')},

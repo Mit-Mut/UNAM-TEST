@@ -27,7 +27,7 @@ class SupplierPaymentRequest(models.Model):
 
     def cancel_payment_method(self):
         for payment_req in self:
-            if payment_req.is_payment_request == True or payment_req.is_project_payment == True:
+            if payment_req:
                 if payment_req.payment_state == 'assigned_payment_method':
                     payment_ids = self.env['account.payment'].search([('payment_state','=','for_payment_procedure'),
                                                                       ('payment_request_id','=',payment_req.id)])

@@ -190,6 +190,13 @@ class EmployeePayroll(models.Model):
             
         elif direct_employee:
             for record in self:
+                if record.casualties_and_cancellations and record.casualties_and_cancellations == 'B':
+                    record.state = 'done'
+                    continue
+                elif record.casualties_and_cancellations and record.casualties_and_cancellations == 'BD':
+                    record.state = 'done'
+                    continue
+                
                 move_id = record.create_payroll_payment()
                 record.move_id = move_id.id
                 record.state = 'done'

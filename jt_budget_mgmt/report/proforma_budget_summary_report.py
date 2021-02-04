@@ -697,7 +697,7 @@ class ProformaBudgetSummaryReport(models.AbstractModel):
             elif column in ('Exercised', 'Ejercido'):
                 need_columns_with_format.append('exercised')
                 col_query += ',(select coalesce(sum(abs(line.balance)+abs(line.tax_price_cr)),0) from account_move_line line,account_move amove where pc.id=line.program_code_id and amove.id=line.move_id and amove.payment_state in %s and amove.invoice_date >= %s and amove.invoice_date <= %s) as exercised'
-                tuple_where_data.append(('for_payment_procedure','payment_not_applied'))
+                tuple_where_data.append(('for_payment_procedure','payment_not_applied','assigned_payment_method'))
                 tuple_where_data.append(start)
                 tuple_where_data.append(end)
 

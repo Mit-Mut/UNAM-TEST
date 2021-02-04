@@ -186,6 +186,21 @@ class PaymentBatchSupplier(models.Model):
             rec.selected = False
 
     def action_layout_check_protection(self):
+        rec_id = False
+        bank_layout = False
+        if self:
+            rec_id = self[0].id
+            if self[0].payment_issuing_bank_id and self[0].payment_issuing_bank_id.bank_id and self[0].payment_issuing_bank_id.bank_id.name:
+                if self[0].payment_issuing_bank_id.bank_id.name.upper()== 'Banamex'.upper():
+                    bank_layout = 'Banamex'
+                elif self[0].payment_issuing_bank_id.bank_id.name.upper()== 'BBVA Bancomer'.upper():
+                    bank_layout = 'BBVA Bancomer'
+                elif self[0].payment_issuing_bank_id.bank_id.name.upper()== 'Inbursa'.upper():
+                    bank_layout = 'Inbursa'
+                elif self[0].payment_issuing_bank_id.bank_id.name.upper()== 'Santander'.upper():
+                    bank_layout = 'Santander'
+                elif self[0].payment_issuing_bank_id.bank_id.name.upper()== 'Scotiabank'.upper():
+                    bank_layout = 'Scotiabank'
         return {
             'name': _('Generate Check Layout'),
             'view_type': 'form',
@@ -195,7 +210,7 @@ class PaymentBatchSupplier(models.Model):
             'domain': [],
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'context': {'default_batch_id': self.id}
+            'context': {'default_batch_id': rec_id,'default_layout':bank_layout}
         }
     def set_related_check_log(self,line):
         if line.check_folio_id:
@@ -551,7 +566,7 @@ class BankBalanceCheck(models.TransientModel):
                 if move.is_payroll_payment_request:
                     type_of_batch = 'nominal'
                     move.payment_state = 'assigned_payment_method'
-                    if move.check_folio_id and move.check_folio_id.status not in ('Detained','Cancelled'):
+                    if move.check_folio_id and move.check_folio_id.status not in ('Detained','Cancelled','Reissued','Withdrawn from circulation'):
                         move.check_folio_id.status = 'Printed'
                 elif move.is_payment_request:
                     type_of_batch = 'supplier'
@@ -562,7 +577,7 @@ class BankBalanceCheck(models.TransientModel):
                 elif move.is_pension_payment_request:
                     type_of_batch = 'pension'
                     move.payment_state = 'assigned_payment_method'
-                    if move.check_folio_id and move.check_folio_id.status not in ('Detained','Cancelled'):
+                    if move.check_folio_id and move.check_folio_id.status not in ('Detained','Cancelled','Reissued','Withdrawn from circulation'):
                         move.check_folio_id.status = 'Printed'
                 
                 moves_list.append(move)
@@ -572,9 +587,9 @@ class BankBalanceCheck(models.TransientModel):
             for move in moves_list:
                 check_folio_id = False
                 if move.check_folio_id:
-                    checkbook_req_id = move.check_folio_id.checklist_id and move.check_folio_id.checklist_id and move.check_folio_id.checklist_id.checkbook_req_id.id or False
-                    if move.check_folio_id.status not in ('Detained','Cancelled'):
+                    if move.check_folio_id.status not in ('Detained','Cancelled','Reissued','Withdrawn from circulation'):
                         check_folio_id = move.check_folio_id.id
+                        checkbook_req_id = move.check_folio_id.checklist_id and move.check_folio_id.checklist_id and move.check_folio_id.checklist_id.checkbook_req_id.id or False
                          
                 payment = self.env['account.payment'].search([('payment_request_id', '=', move.id)], limit=1)
                 move_val_list.append({'payment_req_id': move.id, 'amount_to_pay': move.amount_total,

@@ -76,8 +76,17 @@
             <field name="model">account.move</field>
             <field name="inherit_id" ref="jt_supplier_payment.pensions_payroll_payment_req_form_view"/>
             <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button name="action_rotated" string="Reschedule" class="oe_highlight" type="object"
+                                attrs="{'invisible': [('payment_state', '!=', 'payment_method_cancelled')]}"/>
+                </xpath>
+            
             	<field name="check_number" position="after">
             		<field name="check_folio_id"  attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
+                    <field name="check_status"/>
+                    <field name="related_check_folio_ids" invisible="1"/>
+                    <field name="related_check_history" readonly="1"/>
+            		
             	</field>
             	<field name="check_number" position="attributes">
             		<attribute name='invisible'>1</attribute>

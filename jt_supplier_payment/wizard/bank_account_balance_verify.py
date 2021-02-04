@@ -1,6 +1,6 @@
 from odoo import models, fields,_,api
 from odoo.exceptions import UserError, ValidationError
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class BankBalanceCheck(models.TransientModel):
 
@@ -83,10 +83,16 @@ class BankBalanceCheck(models.TransientModel):
             if result:
                 payment_date = result[0][0]
                 if rec.is_different_payroll_request or rec.is_pension_payment_request:
-                    if payment_date and isinstance(payment_date,str):
+                    if rec.invoice_date and payment_date and isinstance(payment_date,str):
                         payment_date = datetime.strptime(payment_date, '%Y-%m-%d')
-                        payment_date = rec.get_patment_date(0, payment_date)
-                    
+                        payment_date = payment_date + timedelta(days=-1)
+
+                        non_business_day_ids = rec.get_non_business_day(
+                            rec.invoice_date, payment_date)
+                        if non_business_day_ids:
+                            payment_date = payment_date + timedelta(days=1)
+                            payment_date = rec.get_patment_date(len(non_business_day_ids) - 1, payment_date)
+                        
         elif not rec.invoice_payment_term_id and rec.invoice_date_due:
             
             payment_date = rec.invoice_date_due

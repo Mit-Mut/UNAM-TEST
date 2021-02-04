@@ -143,7 +143,9 @@ class HrEmployee(models.Model):
                 emp_id = self.env['hr.employee'].search([('id', '!=', rec.id),('rfc','=',rec.rfc)],limit=1)
                 if emp_id:
                     raise ValidationError(_('The Employee RFC Value Must Be Unique'))
-
+            if not rec.rfc:
+                raise ValidationError(_('The Add Employee RFC Value'))
+            
     @api.constrains('worker_payment_key')
     def _check_worker_payment_key(self):
         if self.worker_payment_key and not str(self.worker_payment_key).isnumeric():

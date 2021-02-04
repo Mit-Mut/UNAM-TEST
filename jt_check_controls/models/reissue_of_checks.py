@@ -255,6 +255,19 @@ class ReissueOfChecks(models.Model):
         self.state = 'rejected'
 
     def action_layout_check_cancel(self):
+        layout = False
+        bank_ids = self.mapped('bank_id.bank_id')
+        if bank_ids and len(bank_ids) > 1:
+            raise ValidationError(_('Please select same bank for layout'))
+        if self:
+            if self[0].bank_id and self[0].bank_id.bank_id and self[0].bank_id.bank_id.name:
+                if self[0].bank_id.bank_id.name.upper() == 'Banamex'.upper():
+                    layout = 'Banamex'
+                elif self[0].bank_id.bank_id.name.upper() == 'BBVA Bancomer'.upper():
+                    layout = 'BBVA Bancomer'
+                elif self[0].bank_id.bank_id.name.upper() == 'Scotiabank'.upper():
+                    layout = 'Scotiabank'
+                    
         return {
             'name': _('Generate Cancel Check Layout'),
             'view_type': 'form',
@@ -264,6 +277,6 @@ class ReissueOfChecks(models.Model):
             'domain': [],
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'context': {'default_reissue_ids': [(6,0,self.ids)]},
+            'context': {'default_reissue_ids': [(6,0,self.ids)],'default_layout':layout},
         }
         

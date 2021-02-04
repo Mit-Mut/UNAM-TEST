@@ -112,6 +112,7 @@ class StatementOfChangesInTheFinancialPosition(models.AbstractModel):
             move_state_domain = ('move_id.state', '!=', 'cancel')
 
         last_total_dict = {}
+        last_total_dict2 = {}
         for line in hierarchy_lines:
             if line.code in ('1.0.0.0', '2.0.0.0', '3.0.0.0'):
                 lines.append({
@@ -139,6 +140,7 @@ class StatementOfChangesInTheFinancialPosition(models.AbstractModel):
                     level_2_lines = conac_obj.search([('parent_id', '=', level_1_line.id)])
                     for level_2_line in level_2_lines:
                         main_balance_dict = {}
+                        main_balance_dict2 = {}
                         level_2_columns = [{'name': ''}, {'name': ''}] * len(periods)
                         lines.append({
                             'id': 'level_two_%s' % level_2_line.id,
@@ -196,20 +198,39 @@ class StatementOfChangesInTheFinancialPosition(models.AbstractModel):
                                             period_dict.update({period.get('string'): balance})
 
                             for pd, bal in period_dict.items():
-                                if pd in main_balance_dict.keys():
-                                    main_balance_dict.update({pd: main_balance_dict.get(pd) + bal})
+                                if bal > 0: 
+                                    if pd in main_balance_dict.keys():
+                                        main_balance_dict.update({pd: main_balance_dict.get(pd) + bal})
+                                    else:
+                                        main_balance_dict.update({pd: bal})
                                 else:
-                                    main_balance_dict.update({pd: bal})
-                                if pd in last_total_dict.keys():
-                                    last_total_dict.update({pd: last_total_dict.get(pd) + bal})
+                                    if pd in main_balance_dict2.keys():
+                                        main_balance_dict2.update({pd: main_balance_dict2.get(pd) + bal})
+                                    else:
+                                        main_balance_dict2.update({pd: bal})
+                                
+                                if bal > 0:    
+                                    if pd in last_total_dict.keys():
+                                        last_total_dict.update({pd: last_total_dict.get(pd) + bal})
+                                    else:
+                                        last_total_dict.update({pd: bal})
                                 else:
-                                    last_total_dict.update({pd: bal})
-
+                                    if pd in last_total_dict2.keys():
+                                        last_total_dict2.update({pd: last_total_dict2.get(pd) + bal})
+                                    else:
+                                        last_total_dict2.update({pd: bal})
+                                    
                             for pe in periods:
                                 if pe.get('string') in period_dict.keys():
                                     amt = period_dict.get(pe.get('string'))
-                                    amt_columns += [self._format({'name': 0.00},figure_type='float'), 
-                                                    self._format({'name': amt},figure_type='float')]
+                                    origin_amt = 0
+                                    app_amt = 0
+                                    if amt > 0: 
+                                        app_amt = amt
+                                    else:
+                                        origin_amt = amt
+                                    amt_columns += [self._format({'name': abs(origin_amt)},figure_type='float'), 
+                                                    self._format({'name': app_amt},figure_type='float')]
                                 else:
                                     amt_columns += [self._format({'name': 0.00},figure_type='float'),
                                                      self._format({'name': 0.00},figure_type='float')]
@@ -222,13 +243,18 @@ class StatementOfChangesInTheFinancialPosition(models.AbstractModel):
                             })
                         total_col = []
                         for pe in periods:
+                            origin_amt = 0
+                            app_amt = 0
                             if pe.get('string') in main_balance_dict.keys():
-                                amt = main_balance_dict.get(pe.get('string'))
-                                total_col += [self._format({'name': 0.00},figure_type='float'),
-                                               self._format({'name': amt},figure_type='float')]
-                            else:
-                                total_col += [self._format({'name': 0.00},figure_type='float'), 
-                                              self._format({'name': 0.00},figure_type='float')]
+                                amt = main_balance_dict.get(pe.get('string'),0)
+                                app_amt = amt
+                            if pe.get('string') in main_balance_dict2.keys():
+                                amt = main_balance_dict2.get(pe.get('string'),0)
+                                origin_amt = amt
+                                
+                            total_col += [self._format({'name': abs(origin_amt)},figure_type='float'),
+                                           self._format({'name': app_amt},figure_type='float')]
+                            
                         lines.append({
                             'id': 'total_%s' % level_1_line.id,
                             'name': 'Total',
@@ -241,13 +267,19 @@ class StatementOfChangesInTheFinancialPosition(models.AbstractModel):
                         })
         main_total_col = []
         for pe in periods:
+            origin_amt = 0
+            app_amt = 0
+            
             if pe.get('string') in last_total_dict.keys():
-                amt = last_total_dict.get(pe.get('string'))
-                main_total_col += [self._format({'name': 0.00},figure_type='float'),
-                                   self._format({'name': amt},figure_type='float')]
-            else:
-                main_total_col += [self._format({'name': 0.00},figure_type='float'), 
-                                   self._format({'name': 0.00},figure_type='float')]
+                amt = last_total_dict.get(pe.get('string'),0)
+                app_amt = amt
+            if pe.get('string') in last_total_dict2.keys():
+                amt = last_total_dict2.get(pe.get('string'),0)
+                origin_amt = amt
+                
+            main_total_col += [self._format({'name': abs(origin_amt)},figure_type='float'),
+                               self._format({'name': app_amt},figure_type='float')]
+            
         if self.env.user.lang == 'es_MX':
             lines.append({
                 'id': 'total_%s' % level_1_line.id,

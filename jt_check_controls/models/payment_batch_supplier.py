@@ -589,6 +589,7 @@ class BankBalanceCheck(models.TransientModel):
                 if move.check_folio_id:
                     if move.check_folio_id.status not in ('Detained','Cancelled','Reissued','Withdrawn from circulation'):
                         check_folio_id = move.check_folio_id.id
+                        move.check_folio_id.check_amount = move.amount_total
                         checkbook_req_id = move.check_folio_id.checklist_id and move.check_folio_id.checklist_id and move.check_folio_id.checklist_id.checkbook_req_id.id or False
                          
                 payment = self.env['account.payment'].search([('payment_request_id', '=', move.id)], limit=1)

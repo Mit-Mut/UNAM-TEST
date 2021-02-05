@@ -168,12 +168,14 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                     for acc in account_ids:
                     
 
-                        values= self.env['account.move.line'].search(domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', account_ids.ids)])
+                        #values= self.env['account.move.line'].search(domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', account_ids.ids)])
+                        values= self.env['account.move.line'].search(domain + [('account_id', 'in', acc.ids)])
                         exercised = sum(x.debit-x.credit for x in values)
                         exercised = exercised/1000
                         total_exercised += exercised
 
-                        values= self.env['account.move.line'].search(pre_domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', account_ids.ids)])
+                        #values= self.env['account.move.line'].search(pre_domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', account_ids.ids)])
+                        values= self.env['account.move.line'].search(pre_domain + [('account_id', 'in', acc.ids)])
                         exercised_pre= sum(x.debit-x.credit for x in values)
                         exercised_pre = exercised_pre/1000
                         

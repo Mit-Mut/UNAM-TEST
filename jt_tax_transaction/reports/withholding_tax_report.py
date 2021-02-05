@@ -116,7 +116,7 @@ class WithholdingTaxReport(models.AbstractModel):
         
         account_ids = self.env['account.account']
          
-        account_code_list = ['220,001,001,001','220,001,001,002','220,001,001,003','220,001,002,001',
+        account_code_list = ['220.001.001.001','220.001.001.002','220.001.001.003','220.001.002.001',
                              '220.001.002.002','220.001.002.003','220.001.002.004','220.001.002.005',
                              '220.001.003.001','220.001.004.001','220.001.004.002','220.001.004.003',
                              '220.001.004.004','220.001.004.005','220.001.004.006','220.001.005.001',
@@ -130,7 +130,7 @@ class WithholdingTaxReport(models.AbstractModel):
         for tax in tax_ids:
             total_balance = 0
             total_tax = 0
-            move_lines= self.env['account.move.line'].search([('account_id','in',account_ids.ids),('date', '>=', start),('date', '<=', end),('move_id.journal_id','=',journal_id),('tax_line_id', '=', tax.id),move_state_domain])
+            move_lines= self.env['account.move.line'].search([('account_id','in',account_ids.ids),('date', '>=', start),('date', '<=', end),('move_id.journal_id','=',journal_id),('tax_ids', '=', tax.id),move_state_domain])
             #move_lines = self.env['account.move.line'].search([('date', '>=', start),('date', '<=', end),('move_id.journal_id','=',journal_id),('tax_line_id', '=', tax.id),move_state_domain])
             if move_lines:    
                 tax_line_list = []

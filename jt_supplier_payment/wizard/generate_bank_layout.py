@@ -355,7 +355,7 @@ class GenerateBankLayout(models.TransientModel):
         currect_time = datetime.today()
         file_data +=str(currect_time.year)
         file_data +="-"+str(currect_time.month).zfill(2)
-        file_data +="-"+str(currect_time.day)
+        file_data +="-"+str(currect_time.day).zfill(2)
         
         file_data += '01'
         
@@ -514,7 +514,7 @@ class GenerateBankLayout(models.TransientModel):
             if payment.payment_date:
                 file_data +=str(payment.payment_date.year)
                 file_data +="-"+str(payment.payment_date.month).zfill(2)
-                file_data +="-"+str(payment.payment_date.day)
+                file_data +="-"+str(payment.payment_date.day).zfill(2)
             #====== Effective date =======#
             file_data += '0001-01-01'
             #====== Grace Date =======#
@@ -525,7 +525,7 @@ class GenerateBankLayout(models.TransientModel):
             if payment.payment_date:
                 file_data +=str(payment.payment_date.year)
                 file_data +="-"+str(payment.payment_date.month).zfill(2)
-                file_data +="-"+str(payment.payment_date.day)
+                file_data +="-"+str(payment.payment_date.day).zfill(2)
             #====== Recurring payment indicator =========#
             file_data += 'N'
             #======= FILLER =======#
@@ -634,7 +634,7 @@ class GenerateBankLayout(models.TransientModel):
             amount = str(amount).split('.')
             #print ('Amount=====',x)
             file_data +=","+str(amount[0]).zfill(13)
-            file_data +='.'
+            #file_data +='.'
             file_data +=str(amount[1])
             
             #====== Currency Data =========#
@@ -662,10 +662,10 @@ class GenerateBankLayout(models.TransientModel):
             #====VAT  ========#
             file_data +=",             "    # 13 Space 
             
-            file_data +="\n"
+            file_data +="\r\n"
         
         file_data +=str(record_count+1) + ","+ str(record_count) + ","+'Transfer terceros' 
-        
+        file_data +="\r\n"
         gentextfile = base64.b64encode(bytes(file_data,'utf-8'))
         self.file_data = gentextfile
         self.file_name = file_name

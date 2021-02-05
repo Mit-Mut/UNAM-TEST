@@ -162,17 +162,18 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
 
                     for acc in account_ids:
                     
-                        values= self.env['account.move.line'].search(domain + [('adequacy_id','!=',False),('account_id', 'in', account_ids.ids)])
+                        values= self.env['account.move.line'].search(domain + [('adequacy_id','!=',False),('account_id', 'in', acc.ids)])
                         assign = sum(x.debit-x.credit for x in values)
                         assign = assign/1000
                         total_assign += assign
 
-                        values= self.env['account.move.line'].search(domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', account_ids.ids)])
+                        #values= self.env['account.move.line'].search(domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', acc.ids)])
+                        values= self.env['account.move.line'].search(domain + [('account_id', 'in', acc.ids)])
                         exercised = sum(x.debit-x.credit for x in values)
                         exercised = exercised/1000
                         total_exercised += exercised
 
-                        values= self.env['account.move.line'].search(domain + [('budget_id','!=',False),('account_id', 'in', account_ids.ids)])
+                        values= self.env['account.move.line'].search(domain + [('budget_id','!=',False),('account_id', 'in', acc.ids)])
                         to_exercised = sum(x.debit-x.credit for x in values)
                         to_exercised = to_exercised/1000
                         

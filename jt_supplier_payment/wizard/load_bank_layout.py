@@ -106,9 +106,9 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                         success_content += str(count)+' : '+ str(line) + "\n"
                         match_payment[0].post()
                     else:
-                        failed_content += str(count)+' : '+ str(line) + "\n"
+                        failed_content += str(count)+' : Payment Not Found For Amount and Account---> '+ str(line) + "\n"
                 else:
-                    failed_content += str(count)+' : '+ str(line) + "\n"
+                    failed_content += str(count)+' :PLease Set Account Or Amount ---> '+ str(line) + "\n"
                 count += 1
                 
             if failed_content:
@@ -150,9 +150,9 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                         success_content += str(count)+' : '+ str(line) + "\n"                        
                         match_payment[0].post()
                     else:
-                        failed_content += str(count)+' : '+ str(line) + "\n"
+                        failed_content += str(count)+' : Payment Not Found For Amount and HSBC Reference---> '+ str(line) + "\n"
                 else:
-                    failed_content += str(count)+' : '+ str(line) + "\n"
+                    failed_content += str(count)+' :Please set Amount and HSBC Reference---> '+ str(line) + "\n"
                 count += 1
                                                             
             if failed_content:
@@ -193,9 +193,9 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                         success_content += str(count)+' : '+ str(line) + "\n"                        
                         match_payment[0].post()
                     else:
-                        failed_content += str(count)+' : '+ str(line) + "\n"
+                        failed_content += str(count)+' : Payment Not Found For Amount and Santander Payment Concept--->  '+ str(line) + "\n"
                 else:
-                    failed_content += str(count)+' : '+ str(line) + "\n"
+                    failed_content += str(count)+' :Please Set amount and concept---->'+ str(line) + "\n"
 
             if failed_content:
                 failed_data = base64.b64encode(failed_content.encode('utf-8'))
@@ -236,9 +236,9 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                         success_content += str(count)+' : '+ str(line) + "\n"                        
                         match_payment[0].post()
                     else:
-                        failed_content += str(count)+' : '+ str(line) + "\n"
+                        failed_content += str(count)+' : Payment Not Found For Amount and JP Payment Concept---> '+ str(line) + "\n"
                 else:
-                    failed_content += str(count)+' : '+ str(line) + "\n"
+                    failed_content += str(count)+' : Please Set The Amount Or JP Payment Concept----> '+ str(line) + "\n"
                 count += 1
                 
             if failed_content:
@@ -286,9 +286,9 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                         success_content += str(count)+' : '+ str(line) + "\n"                        
                         match_payment[0].post()
                     else:
-                        failed_content += str(count)+' : '+ str(line) + "\n"
+                        failed_content += str(count)+' :Payment Not Found For Amount---> '+ str(line) + "\n"
                 else:
-                    failed_content += str(count)+' : '+ str(line) + "\n"
+                    failed_content += str(count)+' :Please set data line 22 and payment charge 1---> '+ str(line) + "\n"
                 
                 
             if failed_content:
@@ -359,9 +359,9 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                         success_content += str(count)+' : '+ str(line) + "\n"                        
                         match_payment[0].post()
                     else:
-                        failed_content += str(count)+' : '+ str(line) + "\n"
+                        failed_content += str(count)+' : Payment Not Found For Amount and Account Number---> '+ str(line) + "\n"
                 else:
-                    failed_content += str(count)+' : '+ str(line) + "\n"
+                    failed_content += str(count)+' : Please set account,amount or result Procesado---> '+ str(line) + "\n"
                 count += 1
                                                             
             if failed_content:
@@ -411,9 +411,9 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                         success_content += str(count)+' : '+ str(line) + "\n"                        
                         match_payment[0].post()
                     else:
-                        failed_content += str(count)+' : '+ str(line) + "\n"
+                        failed_content += str(count)+' : Payment Not Found For Amount and Account Number---> '+ str(line) + "\n"
                 else:
-                    failed_content += str(count)+' : '+ str(line) + "\n"
+                    failed_content += str(count)+' : Please set account,amount or result Processed---->'+ str(line) + "\n"
                 count += 1
                                                             
             if failed_content:
@@ -461,9 +461,9 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                         success_content += str(count)+' : '+ str(line) + "\n"                        
                         match_payment[0].post()
                     else:
-                        failed_content += str(count)+' : '+ str(line) + "\n"
+                        failed_content += str(count)+' : Payment Not Found For Amount and Account Number--->'+ str(line) + "\n"
                 else:
-                    failed_content += str(count)+' : '+ str(line) + "\n"
+                    failed_content += str(count)+' :Please set account,amount or status 00--> '+ str(line) + "\n"
             if failed_content:
                 failed_data = base64.b64encode(failed_content.encode('utf-8'))
                 self.failed_file_data = failed_data
@@ -509,9 +509,9 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                         success_content += str(count)+' : '+ str(line) + "\n"                        
                         match_payment[0].post()
                     else:
-                        failed_content += str(count)+' : '+ str(line) + "\n"
+                        failed_content += str(count)+' : Payment Not Found For Amount and Account Number---> '+ str(line) + "\n"
                 else:
-                    failed_content += str(count)+' : '+ str(line) + "\n"
+                    failed_content += str(count)+' : Please set amount,account or status 0000000---->'+ str(line) + "\n"
             if failed_content:
                 failed_data = base64.b64encode(failed_content.encode('utf-8'))
                 self.failed_file_data = failed_data
@@ -562,9 +562,9 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                         success_content += str(count)+' : '+ str(line) + "\n"                        
                         match_payment[0].post()
                     else:
-                        failed_content += str(count)+' : '+ str(line) + "\n"
+                        failed_content += str(count)+' : Payment Not Found For Amount and Account Number--->'+ str(line) + "\n"
                 else:
-                    failed_content += str(count)+' : '+ str(line) + "\n"
+                    failed_content += str(count)+' : Please set account,amount or status 3'+ str(line) + "\n"
             if failed_content:
                 failed_data = base64.b64encode(failed_content.encode('utf-8'))
                 self.failed_file_data = failed_data
@@ -609,9 +609,9 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                         success_content += str(count)+' : '+ str(line) + "\n"                        
                         match_payment[0].post()
                     else:
-                        failed_content += str(count)+' : '+ str(line) + "\n"
+                        failed_content += str(count)+' : Payment Not Found For Amount and Account Number--->'+ str(line) + "\n"
                 else:
-                    failed_content += str(count)+' : '+ str(line) + "\n"
+                    failed_content += str(count)+' : Please set account,amount or status 000---->'+ str(line) + "\n"
             if failed_content:
                 failed_data = base64.b64encode(failed_content.encode('utf-8'))
                 self.failed_file_data = failed_data
@@ -658,9 +658,9 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                         success_content += str(count)+' : '+ str(line) + "\n"                        
                         match_payment[0].post()
                     else:
-                        failed_content += str(count)+' : '+ str(line) + "\n"
+                        failed_content += str(count)+' : Payment Not Found For Amount and Account Number--->'+ str(line) + "\n"
                 else:
-                    failed_content += str(count)+' : '+ str(line) + "\n"
+                    failed_content += str(count)+' : Please set account,amount or status 00'+ str(line) + "\n"
             if failed_content:
                 failed_data = base64.b64encode(failed_content.encode('utf-8'))
                 self.failed_file_data = failed_data

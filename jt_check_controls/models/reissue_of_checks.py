@@ -236,6 +236,7 @@ class ReissueOfChecks(models.Model):
         if self.check_log_id and self.type_of_request_payroll=='check_adjustments':
             self.check_log_id.status = 'Detained'
             self.check_log_id.general_status = 'cancelled'
+            self.check_log_id.reason_retention = self.reason_adjustments
         if self.move_id:
             self.move_id.cancel_payment_method()
                 

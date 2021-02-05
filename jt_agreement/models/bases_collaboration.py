@@ -478,7 +478,7 @@ class BasesCollabration(models.Model):
                 'context': {'default_bases_collaboration_id': self.id,
                             'default_apply_to_basis_collaboration': True,
                             'default_agreement_number': self.convention_no,
-                            'default_opening_balance': self.opening_bal,
+                            'default_opening_balance': 0,
                             'default_cbc_format': self.cbc_format,
                             'default_supporting_documentation': self.cbc_format,
                             'default_cbc_shipping_office': self.cbc_shipping_office,
@@ -506,7 +506,7 @@ class BasesCollabration(models.Model):
                 'type': 'ir.actions.act_window',
                 'context': {'default_bases_collaboration_id': self.id,
                             'default_apply_to_basis_collaboration': True,
-                            'default_opening_balance': self.opening_bal,
+                            'default_opening_balance': 0,
                             'default_agreement_number': self.convention_no,
                             'default_name': self.name,
                             'default_operation_number': self.next_no,
@@ -991,6 +991,12 @@ class RequestOpenBalance(models.Model):
         'specific.project', 'Specific project')
     background_project_id = fields.Many2one(
         'background.project', 'Background Project', related="specifics_project_id.backgound_project_id")
+
+    @api.constrains('opening_balance')
+    def _check_opening_balance(self):
+        print ('opening_balance')
+        if self.opening_balance == 0:
+            raise ValidationError(_('Opening amount must be different to 0.'))
 
     @api.onchange('type_of_operation_trust')
     def type_of_operation_trust_change(self):

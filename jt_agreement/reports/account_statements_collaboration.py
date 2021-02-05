@@ -101,7 +101,93 @@ class AccountStatementsCollaboration(models.AbstractModel):
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
         
+        req_lines = self.env['request.open.balance'].search([('bases_collaboration_id','!=',False),('state','=','confirmed'),('request_date', '>=',start),('request_date', '<=',end)])
+        base_ids = req_lines.mapped('bases_collaboration_id')
+        lang = self.env.user.lang
+        for base in base_ids:
+            base_line_ids = req_lines.filtered(lambda x:x.bases_collaboration_id.id==base.id)
+            req_date = base_line_ids.mapped('request_date')
+            
+            req_date += base.rate_base_ids.filtered(lambda x:x.interest_date >= start and x.interest_date <= end).mapped('interest_date')
 
+            lines.append({
+            'id': 'hierarchy_'+str(base.id),
+            'name': 'Convenio :   '+str(base.name),
+            'columns': [{'name': 'Num.de Convenio :     '+str(base.convention_no)}, 
+                        {'name': ''}, 
+                        {'name': ''},
+                        {'name': ''}, 
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+            })
+
+            if req_date:
+                req_date = list(set(req_date))
+                req_date =  sorted(req_date)
+            final = 0
+            for req in req_date:
+                opt_lines = base_line_ids.filtered(lambda x:x.state=='confirmed' and x.request_date == req)
+                for line in opt_lines:
+                    opt = dict(line._fields['type_of_operation'].selection).get(line.type_of_operation)
+                    #opt = line.type_of_operation
+                    if lang == 'es_MX':
+                        if line.type_of_operation=='open_bal':
+                            opt = 'Importe de apertura'
+                        elif line.type_of_operation=='increase':
+                            opt = 'Incremento'
+                        elif line.type_of_operation=='retirement':
+                            opt = 'Retiro'
+                        elif line.type_of_operation=='withdrawal':
+                            opt = 'Retiro por liquidación'
+                        elif line.type_of_operation=='withdrawal_cancellation':
+                            opt = 'Retiro por cancelación'
+                        elif line.type_of_operation=='withdrawal_closure':
+                            opt = 'Retiro por cierre'
+                        elif line.type_of_operation=='increase_by_closing':
+                            opt = 'Incremento por cierre'
+                    debit = 0
+                    credit = 0  
+                    if line.type_of_operation in ('open_bal','increase','increase_by_closing'):         
+                        final += line.opening_balance
+                        debit = line.opening_balance
+                    elif line.type_of_operation in ('withdrawal','retirement','withdrawal_cancellation','withdrawal_closure'):
+                        final -= line.opening_balance
+                        credit = line.opening_balance
+
+                    lines.append({
+                    'id': 'Date_'+str(base.id),
+                    'name': line.request_date,
+                    'columns': [{'name': opt}, 
+                                self._format({'name': debit},figure_type='float'), 
+                                self._format({'name': credit},figure_type='float'),
+                                self._format({'name': final},figure_type='float'), 
+                                ],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                    })
+                        
+    
+                for line in base.rate_base_ids.filtered(lambda x:x.interest_date == req):
+                    final += line.interest_rate
+                    
+                    lines.append({
+                    'id': 'Date_in'+str(base.id),
+                    'name': line.interest_date,
+                    'columns': [{'name': 'Intereses' if lang == 'es_MX' else 'Interest',}, 
+                                self._format({'name': line.interest_rate},figure_type='float'), 
+                                self._format({'name': 0.0},figure_type='float'),
+                                self._format({'name': final},figure_type='float'), 
+                                ],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                    })
+                            
+        return lines
+    
     def _get_report_name(self):
         return _("Account Statements")
 

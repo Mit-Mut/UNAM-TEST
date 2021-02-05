@@ -321,6 +321,11 @@ class CheckListLine(models.Model):
             for check in self:
                 records = self.env['account.move'].search([('check_folio_id','=',check.id),('payment_state','!=','payment_method_cancelled')])
                 for payment in records: 
+                    account_payment_ids = self.env['account.payment'].search([('payment_state','=','for_payment_procedure'),
+                                                                      ('payment_request_id','=',payment.id)])
+                    for p in account_payment_ids:
+                        p.cancel()
+                    
                     payment.payment_state = 'payment_method_cancelled'
         return res
 

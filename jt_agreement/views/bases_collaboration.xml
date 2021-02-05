@@ -333,7 +333,7 @@
                                 </group>
                                  <group string="Providers" name="providers">
                                      <field name="provider_ids" nolabel="1"
-                                            attrs="{'readonly': [('state', '!=', 'draft')]}">
+                                            attrs="{'readonly': [('state', 'not in', ('draft','valid'))]}">
                                          <tree editable="top">
                                              <field name="partner_id" required="1"/>
                                                 <field name="bank_id" domain="[('partner_id', '=', partner_id)]"

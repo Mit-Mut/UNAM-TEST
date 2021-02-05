@@ -108,6 +108,7 @@
                                 <field name="upa_document_type" invisible="1" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 <field name="payment_issuing_bank_id" readonly="1"/> <!-- attrs="{'readonly': [('payment_state', '!=', 'draft'),('is_from_reschedule_payment','=',False)]}" -->
                                 <field name="payment_issuing_bank_acc_id"/>
+                                <field name="batch_folio" readonly="1"/>	                             
 								<field name="payroll_register_user_id" invisible="1" string="Request for payment" readonly="1"/>
                                 <label for="invoice_payment_term_id"
                                        attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>

@@ -15,10 +15,10 @@
                     <sheet>
                         <group>
                                 <group>
-                                    <field name="name" />
+                                    <field name="name" readonly="1"/>
                                     <field name="operation_number"/>
                                     <field name="type_of_operation"/>
-                                    <field name="amount"/>
+                                    <field name="amount" readonly="1"/>
                                     <field name="payment_request_number"/>
                                 </group>
                                 <group>
@@ -26,7 +26,7 @@
                                     <field name="date"/>
                                     <field name="reference"/>
                                     <field name="counter_receipt_sheet"/>
-                                    <field name="beneficiary_id"/>
+                                    <field name="beneficiary_id" readonly="1"/>
                                     <field name="bank_ids" invisible="1"/>
                                     <field name="bank_id" domain="[('id','in',bank_ids)]" context="{'from_agreement':True}"/>
                                     <field name="account_number"/>

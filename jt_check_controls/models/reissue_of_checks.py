@@ -30,6 +30,7 @@ class ReissueOfChecks(models.Model):
     move_id = fields.Many2one('account.move','Payment request')
     folio_against_receipt = fields.Many2one('account.move','Folio against Receipt')
     folio_against_receipt_name = fields.Char(related='folio_against_receipt.folio',string='Folio')
+   # move_ids = fields.Many2many('account.move','rel_reissue_account_move','move_id','reissue_id',compute="get_move_ids")
     
     reason_reissue = fields.Text("Reason for Reissue")
     reason_cancellation = fields.Text("Reason for Cancellation")
@@ -85,7 +86,20 @@ class ReissueOfChecks(models.Model):
                 self.move_id = move_id.id
                 self.folio_against_receipt = move_id.id
             self.checkbook_req_id = self.check_log_id.checklist_id and self.check_log_id.checklist_id.checkbook_req_id and self.check_log_id.checklist_id.checkbook_req_id.id or False 
-                        
+
+#     @api.depends('type_of_request','type_of_request_payroll','type_of_batch')
+#     def get_move_ids(self):                        
+#         for rec in self:
+#             move_list = []
+#             domain = [('payment_state','in',('payment_method_cancelled','assigned_payment_method')),('type', '=', 'in_invoice')]
+#             if rec.type_of_request_payroll == 'check_reissue':
+#                 if rec.type_of_batch == 'nominal':
+#                     domain.append(('check_status','in',()))
+#             if domain:
+#                 move_rec_ids = self.env['account.move'].search([domain])
+#                 move_list = move_rec_ids.ids
+#             rec.move_ids= [(6, 0, move_list)]
+                
     @api.depends('type_of_request','checkbook_req_id', 'type_of_request_payroll')
     def get_check_log_ids(self):
         for rec in self:
@@ -103,7 +117,7 @@ class ReissueOfChecks(models.Model):
                     move_ids = move_ids.filtered(lambda x:x.is_project_payment)
                 elif rec.type_of_batch == 'nominal':
                     move_ids = move_ids.filtered(lambda x:x.is_payroll_payment_request or x.is_different_payroll_request)
-                elif rec.type_of_batch == 'pention':
+                elif rec.type_of_batch == 'pension':
                     move_ids = move_ids.filtered(lambda x:x.is_pension_payment_request)
                 
                 check_ids = move_ids.mapped('check_folio_id')
@@ -120,7 +134,7 @@ class ReissueOfChecks(models.Model):
                 if rec.type_of_batch == 'nominal':
                     move_ids = move_ids.filtered(
                         lambda x: x.is_payroll_payment_request or x.is_different_payroll_request)
-                elif rec.type_of_batch == 'pention':
+                elif rec.type_of_batch == 'pension':
                     move_ids = move_ids.filtered(lambda x: x.is_pension_payment_request)
 
                 check_ids = move_ids.mapped('check_folio_id')
@@ -137,7 +151,7 @@ class ReissueOfChecks(models.Model):
                         move_ids = move_ids.filtered(lambda x:x.is_project_payment)
                     elif rec.type_of_batch == 'nominal':
                         move_ids = move_ids.filtered(lambda x:x.is_payroll_payment_request or x.is_different_payroll_request)
-                    elif rec.type_of_batch == 'pention':
+                    elif rec.type_of_batch == 'pension':
                         move_ids = move_ids.filtered(lambda x: x.is_pension_payment_request)
 
                     check_ids = move_ids.mapped('check_folio_id')
@@ -152,7 +166,7 @@ class ReissueOfChecks(models.Model):
                     if rec.type_of_batch == 'nominal':
                         move_ids = move_ids.filtered(
                             lambda x: x.is_payroll_payment_request or x.is_different_payroll_request)
-                    elif rec.type_of_batch == 'pention':
+                    elif rec.type_of_batch == 'pension':
                         move_ids = move_ids.filtered(lambda x: x.is_pension_payment_request)
 
                     check_ids = move_ids.mapped('check_folio_id')

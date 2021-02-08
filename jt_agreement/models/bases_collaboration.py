@@ -1242,6 +1242,17 @@ class RequestOpenBalance(models.Model):
                 partner_id = user.partner_id.id
                 amount = self.opening_balance
                 name = ''
+                dep = False
+                sub_dep = False
+                if self.bases_collaboration_id:
+                    dep = self.bases_collaboration_id.dependency_id and self.bases_collaboration_id.dependency_id.id or False
+                    sub_dep = self.bases_collaboration_id.subdependency_id and self.bases_collaboration_id.subdependency_id.id or False
+                if self.patrimonial_resources_id:
+                    print ("callll====")
+                    dep = self.patrimonial_resources_id.dependency_id and self.patrimonial_resources_id.dependency_id.id or False
+                    sub_dep = self.patrimonial_resources_id.subdependency_id and self.patrimonial_resources_id.subdependency_id.id or False
+                
+                     
                 if self.name:
                     name += self.name
                 if self.operation_number:
@@ -1249,6 +1260,8 @@ class RequestOpenBalance(models.Model):
 
                 if self.type_of_operation in ('open_bal', 'increase', 'increase_by_closing'):
                     unam_move_val = {'name': name, 'ref': name,  'conac_move': True,
+                                     'dependancy_id' : dep,
+                                     'sub_dependancy_id' : sub_dep,
                                      'date': today, 'journal_id': journal.id, 'company_id': self.env.user.company_id.id,
                                      'line_ids': [(0, 0, {
                                          'account_id': journal.default_credit_account_id.id,

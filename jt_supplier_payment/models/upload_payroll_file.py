@@ -36,6 +36,34 @@ class EmployeePayroll(models.Model):
     substate = fields.Selection(related="move_id.payment_state",string="SubState")
     batch_folio = fields.Integer(related="move_id.batch_folio",string="Batch Folio")
     
+#     @api.onchange('l10n_mx_edi_payment_method_id')
+#     def onchange_l10n_mx_edi_payment_method_id(self):
+#         if self.l10n_mx_edi_payment_method_id:
+#             cash_payment_method = self.env.ref('l10n_mx_edi.payment_method_efectivo').id
+#             if cash_payment_method and cash_payment_method == self.l10n_mx_edi_payment_method_id.id:
+#                 self.payment_request_type = 'payment_provider'
+#             else: 
+#                 self.payment_request_type = False
+
+    @api.model
+    def create(self,vals):
+        res = super(EmployeePayroll,self).create(vals)
+        if res.l10n_mx_edi_payment_method_id:
+            cash_payment_method = self.env.ref('l10n_mx_edi.payment_method_efectivo').id
+            if cash_payment_method and cash_payment_method == res.l10n_mx_edi_payment_method_id.id:
+                res.payment_request_type = 'payment_provider'
+        return res
+    
+    def write(self,vals):
+        result = super(EmployeePayroll,self).write(vals)
+        if 'l10n_mx_edi_payment_method_id' in vals:
+            for res in self:
+                if res.l10n_mx_edi_payment_method_id:
+                    cash_payment_method = self.env.ref('l10n_mx_edi.payment_method_efectivo').id
+                    if cash_payment_method and cash_payment_method == res.l10n_mx_edi_payment_method_id.id:
+                        res.payment_request_type = 'payment_provider'
+        return result
+    
     def action_reviewed(self):
         if any(self.filtered(lambda x:x.state not in ('draft','revised'))):
             raise UserError(_("You can Reviewed only for those Payroll which are in "

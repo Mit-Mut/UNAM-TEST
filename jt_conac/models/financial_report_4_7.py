@@ -159,9 +159,9 @@ class StatementOfCashFlows(models.AbstractModel):
                     [('parent_id', '=', level_1_line.id)])
                 for level_2_line in level_2_lines:
                     current_amount = 0
-                    if level_2_line.coa_conac_id:
+                    if level_2_line.coa_conac_ids:
                         move_lines = move_line_obj.sudo().search(
-                            [('coa_conac_id', '=', level_2_line.coa_conac_id.id),
+                            [('coa_conac_id', 'in', level_2_line.coa_conac_ids.ids),
                              move_state_domain,
                              ('date', '>=', start),('date', '<=', end)])
                         if move_lines:
@@ -173,9 +173,9 @@ class StatementOfCashFlows(models.AbstractModel):
                                                        DEFAULT_SERVER_DATE_FORMAT).date()
                         date_end = datetime.strptime(str(period.get('date_to')), DEFAULT_SERVER_DATE_FORMAT).date()
                         per_amount = 0
-                        if level_2_line.coa_conac_id:
+                        if level_2_line.coa_conac_ids:
                             move_lines = move_line_obj.sudo().search(
-                                [('coa_conac_id', '=', level_2_line.coa_conac_id.id),
+                                [('coa_conac_id', 'in', level_2_line.coa_conac_ids.ids),
                                  move_state_domain,
                                  ('date', '>=', date_start),('date', '<=', date_end)])
                             if move_lines:

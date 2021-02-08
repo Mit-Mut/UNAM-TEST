@@ -82,6 +82,9 @@
                 </xpath>
             
             	<field name="check_number" position="after">
+                    <field name="dependancy_id" context="{'show_for_supplier_payment':True}" attrs="{'readonly':[('payment_state', '!=', 'draft')]}"/>
+                    <field name="sub_dependancy_id" domain="[('dependency_id','=',dependancy_id)]" context="{'show_for_supplier_payment':True}" attrs="{'readonly':[('payment_state', '!=', 'draft')]}"/>
+            	
             		<field name="check_folio_id"  attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
                     <field name="check_status"/>
                     <field name="related_check_folio_ids" invisible="1"/>

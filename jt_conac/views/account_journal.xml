@@ -11,7 +11,7 @@
                 	<field name="conac_credit_account_id" readonly="1" force_save="1"/>
                 </xpath>
                 <xpath expr="//notebook/page[@name='journal_entries']/group/group[2]" position="after">
-                    <group string="Excercise" attrs="{'invisible':[('is_federal_subsidy','=',True)]}">
+                    <group string="Excercised" attrs="{'invisible':[('is_federal_subsidy','=',True)]}">
                         <field name="execercise_debit_account_id"/>
                         <field name="execercise_credit_account_id"/>
                         <field name="conac_exe_debit_account_id" readonly="1" force_save="1"/>

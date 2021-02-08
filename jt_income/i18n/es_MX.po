@@ -3391,3 +3391,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_1_document
 msgid "y antecedentes."
 msgstr ""
+
+#. module: jt_income
+#: model_terms:ir.ui.view,arch_db:jt_income.inherited_account_journal_form_view
+msgid "Earned Income"
+msgstr "Ingreso Ganado"

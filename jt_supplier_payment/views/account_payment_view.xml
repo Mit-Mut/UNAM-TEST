@@ -101,6 +101,12 @@
             		<field name="is_hide_santander" invisible="1"/>
             		<field name="is_hide_jp_morgan" invisible="1"/>
             	</field>
+            	<field name="partner_type" position="after">
+            		<field name="employee_partner_type" attrs="{'invisible':[('payment_request_type','not in',('pension_payment','payroll_payment'))],'required':[('payment_request_type','in',('pension_payment','payroll_payment'))]}"/>
+            	</field>
+            	<field name="partner_type" position="attributes">
+            		<attribute name="attrs">{'required': [('state', '=', 'draft'), ('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': ['|',('payment_request_type','in',('pension_payment','payroll_payment')),('payment_type', 'not in', ('inbound', 'outbound'))]}</attribute>
+            	</field>
 	            <xpath expr="//sheet/group[1]" position="after">
 	            	<notebook>
 	            		<page string="Banamex" name="banamex" attrs="{'invisible':[('is_hide_banamex','=',True)]}">

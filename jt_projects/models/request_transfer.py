@@ -149,6 +149,9 @@ class RequestTransfer(models.Model):
 
 
             unam_move_val = {'name': name, 'ref': name,  'conac_move': True,
+                            'dependancy_id' : self.dependency_id and self.dependency_id.id or False,
+                             'sub_dependancy_id': self.subdependency_id and self.subdependency_id.id or False, 
+
                              'date': today, 'journal_id': journal.id, 'company_id': self.env.user.company_id.id,
                              'line_ids': [(0, 0, {
                                  'account_id': journal.receivable_CFDIS_credit_account_id.id,

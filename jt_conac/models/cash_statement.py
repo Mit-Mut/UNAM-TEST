@@ -32,4 +32,4 @@ class StatementOfCash(models.Model):
     major = fields.Selection([('operating_activity','Cash Flows from Operating Activities'),('invest_activity','Cash Flows from Investing Activities'),('finance_activity','Cash Flow from Financing Activities')],string='Major')
     types = fields.Selection([('option','Options'),('origin','Origin')],string='Type')
     parent_id = fields.Many2one('cash.statement', string='Parent')
-    coa_conac_id = fields.Many2one('coa.conac', string="CODE CONAC")
+    coa_conac_ids = fields.Many2many('coa.conac', string="CODE CONAC")

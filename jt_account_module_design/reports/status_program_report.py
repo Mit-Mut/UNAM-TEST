@@ -44,7 +44,7 @@ class StatusProgramReport(models.AbstractModel):
 
     _name = "jt_account_module_design.general.ledger.inherit"
     _inherit = "account.report"
-    _description = "General Ledger"
+    _description = "Trial Balance"
 
     filter_program_code_section = True
     filter_date = {'mode': 'range', 'filter': 'this_month'}

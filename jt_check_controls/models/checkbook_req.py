@@ -116,12 +116,16 @@ class CheckbookRequest(models.Model):
 
     def action_confirm(self):
         self.ensure_one()
+        checkbook_no = False
+        if self and self[0].bank_id and self[0].bank_id.checkbook_no:
+            checkbook_no = self[0].bank_id.checkbook_no
         return {
             'name': _('Check Reception'),
             'type': 'ir.actions.act_window',
             'res_model': 'confirm.checkbook',
             'view_mode': 'form',
             'target': 'new',
+            'context':{'default_checkbook_no':checkbook_no}
         }
 
     def action_checklist(self):

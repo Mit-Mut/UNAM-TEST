@@ -61,7 +61,10 @@ class AccountPayment(models.Model):
     jp_payment_concept = fields.Char('Payment Concept')
     
     payment_request_id = fields.Many2one('account.move','circular')
+
+    employee_partner_type = fields.Selection([('employee','Employee')],string='Partner Type',copy=False)
     
+            
     @api.depends('journal_id','journal_id.bank_format','journal_id.load_bank_format')
     def check_bank_format_type(self):
         for record in self:
@@ -116,6 +119,8 @@ class AccountPayment(models.Model):
         if res.folio and not res.sit_reason_for_payment:
             sit_res = res.folio.replace("/",'')
             res.sit_reason_for_payment = sit_res
+        if res.partner_type and res.payment_request_type and res.payment_request_type in ('pension_payment','payroll_payment'):
+            res.employee_partner_type = 'employee'
         return res
     
     @api.constrains('banamex_reference')

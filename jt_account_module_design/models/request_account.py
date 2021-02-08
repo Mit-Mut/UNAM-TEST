@@ -42,6 +42,19 @@ class AccountMove(models.Model):
     program_code_id = fields.Many2one('program.code','Program Code')
     account_ie_id = fields.Many2one('association.distribution.ie.accounts','I.E. Accounts')
 
+    @api.model
+    def create(self,vals):
+        res = super(AccountMove,self).create(vals)
+        print ("res.line_ids===",res.line_ids)
+        if res.line_ids:
+            program_code_id = res.line_ids.filtered(lambda x:x.program_code_id)
+            if program_code_id:
+                res.programatic_code = True
+            account_ie_id = res.line_ids.filtered(lambda x:x.account_ie_id)
+            if account_ie_id:
+                res.ie_account = True
+        return res
+        
 class AccountMoveLine(models.Model):
 
     _inherit = 'account.move.line'

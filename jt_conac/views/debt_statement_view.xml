@@ -14,7 +14,7 @@
                             <field name="init_balance" invisible="1"/>
                             <field name="end_balance" invisible="1"/>
                             <field name="parent_id"/>
-                            <field name="coa_conac_id"/>
+                            <field name="coa_conac_ids" widget="many2many_tags"/>
                         </group>
                     </sheet>
                 </form>

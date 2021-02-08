@@ -15,12 +15,12 @@
                         <td style="text-align:center">
                             <b>
                                 <span style="font-size:16px;text-align:center" class="text-center">UNIVERSIDAD NACIONAL
-                                    AUTONOMA DE MÉXICO
+                                    AUTÓNOMA DE MÉXICO
                                 </span>
                                 <br/>
                                 <span style="font-size:14px;" class="text-center">PATRONATO UNIVERSITARIO</span>
                                 <br/>
-                                <span style="font-size:12px;" class="text-center">Direccion General de Finanzas</span>
+                                <span style="font-size:12px;" class="text-center">Dirección General de Finanzas</span>
                                 <br/>
                                 <span style="font-size:12px;" class="text-center">Departamento de Control Financiero
                                 </span>
@@ -62,9 +62,9 @@
                         <b>
                             <span style="margin-left:5px;font-size:15px;">FIDEICOMISO:</span>
                         </b>
-                        <span t-esc="o.name"/>
+                        <span t-esc="o.name"/><br/>
                         <b>
-                            <span style="margin-left:400px;font-size:15px;">Fecha y hora de impresión</span>
+                            <span style="margin-left:5px;font-size:15px;">Fecha y hora de impresión</span>
                             <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/>
                         </b>
                         <br/>

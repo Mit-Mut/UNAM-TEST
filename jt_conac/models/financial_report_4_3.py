@@ -49,6 +49,7 @@ class StateOfVariation(models.AbstractModel):
             {'name': _('Patrimonio Generado de Ejercicios Anteriores')},
             {'name': _('Patrimonio Generado del Ejercicio')},
             {'name': _('Exceso o Insuficiencia en la Actualización de la Hacienda Pública / Patrimonio')},
+            {'name': _('Total')},
         ]
 
     def _format(self, value,figure_type):
@@ -90,7 +91,7 @@ class StateOfVariation(models.AbstractModel):
                 lines.append({
                     'id': 'hierarchy_' + line.code,
                     'name': line.display_name,
-                    'columns': [{'name': ''}, {'name': ''}, {'name': ''}, {'name': ''}],
+                    'columns': [{'name': ''}, {'name': ''}, {'name': ''}, {'name': ''},{'name': ''}],
                     'level': 1,
                     'unfoldable': False,
                     'unfolded': True,
@@ -103,6 +104,7 @@ class StateOfVariation(models.AbstractModel):
                     level_1_col_2 = 0
                     level_1_col_3 = 0
                     level_1_col_4 = 0
+                    level_1_col_5 = level_1_col_2 + level_1_col_3
 
                     level_2_lines = conac_obj.search(
                         [('parent_id', '=', level_1_line.id)])
@@ -118,7 +120,7 @@ class StateOfVariation(models.AbstractModel):
                             [('parent_id', '=', level_2_line.id)])
                         third_level = []
                         for level_3_line in level_3_lines:
-                            level_3_columns = [{'name': ''}, {'name': ''}, {'name': ''}, {'name': ''}]
+                            level_3_columns = [{'name': ''}, {'name': ''}, {'name': ''}, {'name': ''},{'name': ''}]
                             level_3_col_1 = 0
                             level_3_col_2 = 0
                             level_3_col_3 = 0
@@ -138,7 +140,7 @@ class StateOfVariation(models.AbstractModel):
                                     total_col4 += level_3_col_4
                                     
                                 level_3_columns = [{'name': ''}, {'name': ''}, {'name': ''},
-                                                    self._format({'name': level_3_col_4},figure_type='float')]
+                                                    self._format({'name': level_3_col_4},figure_type='float'),self._format({'name': level_3_col_4},figure_type='float')]
 
                             elif level_3_line.code == '3.1.1.0' or level_3_line.code == '3.1.2.0' or level_3_line.code == '3.1.3.0':
                                 if move_lines:
@@ -148,7 +150,7 @@ class StateOfVariation(models.AbstractModel):
                                     total_col1 += level_3_col_1
                                     
                                 level_3_columns = [self._format({'name': level_3_col_1},figure_type='float'),
-                                                   {'name': ''}, {'name': ''}, {'name': ''},]
+                                                   {'name': ''}, {'name': ''}, {'name': ''},self._format({'name': level_3_col_1},figure_type='float')]
 
                             elif level_3_line.code == '3.2.1.0':
                                 if move_lines:
@@ -158,7 +160,7 @@ class StateOfVariation(models.AbstractModel):
                                     total_col3 += level_3_col_3
                                     
                                 level_3_columns = [{'name': ''}, {'name': ''},self._format({'name': level_3_col_3},figure_type='float'),
-                                                    {'name': ''},]
+                                                    {'name': ''},self._format({'name': level_3_col_3},figure_type='float')]
 
                             elif level_2_line.code == '3.2.2.0' or level_2_line.code == '3.2.3.0' or level_2_line.code == '3.2.4.0' or level_2_line.code == '3.2.5.0':
                                 if move_lines:
@@ -168,7 +170,7 @@ class StateOfVariation(models.AbstractModel):
                                     total_col2 += level_3_col_2
                                     
                                 level_3_columns = [{'name': ''}, self._format({'name': level_3_col_2},figure_type='float'),{'name': ''},
-                                                    {'name': ''},]
+                                                    {'name': ''},self._format({'name': level_3_col_2},figure_type='float')]
                                 
                             third_level.append({
                                 'id': 'level_three_%s' % level_3_line.id,
@@ -184,10 +186,10 @@ class StateOfVariation(models.AbstractModel):
                              move_state_domain,
                              ])
                         
-                        level_2_columns = [{'name': ''}, {'name': ''}, {'name': ''}, {'name': ''}]
+                        level_2_columns = [{'name': ''}, {'name': ''}, {'name': ''}, {'name': ''},{'name': ''}]
                         if level_2_line.code == '3.3.0.0':
                             level_2_columns = [{'name': ''}, {'name': ''}, {'name': ''}, 
-                                               self._format({'name': level_2_col_4},figure_type='float')]
+                                               self._format({'name': level_2_col_4},figure_type='float'),self._format({'name': level_2_col_4},figure_type='float')]
                             
                         elif level_2_line.code == '3.3.1.0' or level_2_line.code == '3.3.2.0':
                             if move_lines:
@@ -195,7 +197,7 @@ class StateOfVariation(models.AbstractModel):
                                 total_col4 += level_2_col_4
                                 level_1_col_4 += level_2_col_4
                             level_2_columns = [
-                                               {'name': ''}, {'name': ''}, {'name': ''},self._format({'name': level_2_col_4},figure_type='float'),]
+                                               {'name': ''}, {'name': ''}, {'name': ''},self._format({'name': level_2_col_4},figure_type='float'),self._format({'name': level_2_col_4},figure_type='float')]
 
                         elif level_2_line.code == '3.1.1.0' or level_2_line.code == '3.1.2.0' or level_2_line.code == '3.1.3.0':
                             if move_lines:
@@ -203,7 +205,7 @@ class StateOfVariation(models.AbstractModel):
                                 total_col1 += level_2_col_1
                                 level_1_col_1 += level_2_col_1
                             level_2_columns = [self._format({'name': level_2_col_1},figure_type='float'),
-                                                {'name': ''}, {'name': ''}, {'name': ''}]
+                                                {'name': ''}, {'name': ''}, {'name': ''},self._format({'name': level_2_col_1},figure_type='float')]
 
                         elif level_2_line.code == '3.2.1.0':
                             if move_lines:
@@ -211,7 +213,7 @@ class StateOfVariation(models.AbstractModel):
                                 total_col3 += level_2_col_3
                                 level_1_col_3 += level_2_col_3
                             level_2_columns = [{'name': ''}, {'name': ''},self._format({'name': level_2_col_3},figure_type='float'),
-                                                 {'name': ''}]
+                                                 {'name': ''},self._format({'name': level_2_col_3},figure_type='float')]
 
                         elif level_2_line.code == '3.2.2.0' or level_2_line.code == '3.2.3.0' or level_2_line.code == '3.2.4.0' or level_2_line.code == '3.2.5.0':
                             if move_lines:
@@ -219,7 +221,7 @@ class StateOfVariation(models.AbstractModel):
                                 total_col2 += level_2_col_2
                                 level_1_col_2 += level_2_col_2
                             level_2_columns = [{'name': ''}, self._format({'name': level_2_col_2},figure_type='float'),{'name': ''},
-                                                 {'name': ''}]
+                                                 {'name': ''},self._format({'name': level_2_col_2},figure_type='float')]
                         
                         second_level.append({
                             'id': 'level_two_%s' % level_2_line.id,
@@ -232,20 +234,20 @@ class StateOfVariation(models.AbstractModel):
                         })
                         second_level += third_level
 
-                    level_1_columns = [{'name': ''}, {'name': ''}, {'name': ''}, {'name': ''}]
+                    level_1_columns = [{'name': ''}, {'name': ''}, {'name': ''}, {'name': ''},{'name': ''}]
                     if level_1_line.code == '3.3.0.0':
                         level_1_columns = [{'name': ''}, {'name': ''}, {'name': ''}, 
-                                           self._format({'name': level_1_col_4},figure_type='float')]
+                                           self._format({'name': level_1_col_4},figure_type='float'),self._format({'name': level_1_col_4},figure_type='float')]
 
                     elif level_1_line.code == '3.1.0.0':
                         level_1_columns = [self._format({'name': level_1_col_1},figure_type='float'),
-                                           {'name': ''}, {'name': ''}, {'name': ''}, ]
+                                           {'name': ''}, {'name': ''}, {'name': ''},self._format({'name': level_1_col_1},figure_type='float') ]
 
                     elif level_1_line.code == '3.2.0.0':
                         level_1_columns = [{'name': ''},
                                            self._format({'name': level_1_col_2},figure_type='float'),
                                            self._format({'name': level_1_col_3},figure_type='float'), 
-                                            {'name': ''}, ]
+                                            {'name': ''}, self._format({'name': level_1_col_5},figure_type='float'),]
 
 
                     first_level.append({
@@ -263,7 +265,8 @@ class StateOfVariation(models.AbstractModel):
                 total_columns = [self._format({'name': total_col1},figure_type='float'),
                                 self._format({'name': total_col2},figure_type='float'),
                                 self._format({'name': total_col3},figure_type='float'),
-                                self._format({'name': total_col4},figure_type='float')]
+                                self._format({'name': total_col4},figure_type='float'),
+                                {'name': ''},]
 
                 lines.append({
                     'id': 'Total',

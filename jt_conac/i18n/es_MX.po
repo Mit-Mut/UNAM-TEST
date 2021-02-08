@@ -440,8 +440,8 @@ msgstr "Estimado"
 
 #. module: jt_conac
 #: model_terms:ir.ui.view,arch_db:jt_conac.inherited_account_journal_form_view
-msgid "Excercise"
-msgstr "Ejercicio"
+msgid "Excercised"
+msgstr "Ejercitado"
 
 #. module: jt_conac
 #: code:addons/jt_conac/models/financial_report_4_3.py:0

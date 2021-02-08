@@ -158,7 +158,7 @@ class TaxReport(models.AbstractModel):
         account_id = self.env['account.account'].search([('code', '=', '220.001.001.003')], limit=1)
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
-            acc_amount_220_001_001_003 = sum(x.credit - x.debit for x in values)
+            acc_amount_220_001_001_003 = sum(x.debit - x.credit for x in values)
 
         total_isr = acc_amount_220_001_001_001 + acc_amount_220_001_001_003
 
@@ -657,7 +657,14 @@ class TaxReport(models.AbstractModel):
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
             acc_amount_220_001_006_003 = sum(x.credit - x.debit for x in values)
 
-        vat_pay_total = acc_amount_220_001_006_001 + acc_amount_220_001_006_002 + acc_amount_220_001_006_003
+        #===============220.001.006.004 ============#
+        acc_amount_220_001_006_004 = 0
+        account_id = self.env['account.account'].search([('code', '=', '220.001.006.004')], limit=1)
+        if account_id:            
+            values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
+            acc_amount_220_001_006_004 = sum(x.credit - x.debit for x in values)
+
+        vat_pay_total = acc_amount_220_001_006_001 + acc_amount_220_001_006_002 + acc_amount_220_001_006_003 + acc_amount_220_001_006_004
 
         lines.append({
             'id': 'hierarchy_account1',
@@ -707,6 +714,21 @@ class TaxReport(models.AbstractModel):
             'name' : '220.001.006.003 ' +'VAT TO PAY GAS STATION', 
             'columns': [
                          self._format({'name': acc_amount_220_001_006_003},figure_type='float'),
+                         {'name':''},
+                        ],
+            'level': 3,
+            'unfoldable': False,
+            'unfolded': True,
+            'class':'text-left',
+        })
+
+        #===============220.001.006.004 ============#
+        
+        lines.append({
+            'id': 'hierarchy_account23',
+            'name' : '220.001.006.004 ' +'VAT Balance In Favor You', 
+            'columns': [
+                         self._format({'name': acc_amount_220_001_006_004},figure_type='float'),
                          {'name':''},
                         ],
             'level': 3,

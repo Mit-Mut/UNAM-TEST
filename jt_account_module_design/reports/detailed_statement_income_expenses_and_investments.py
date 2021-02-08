@@ -192,7 +192,7 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                     })
 
                     for acc in account_ids:
-                        values= self.env['account.move.line'].search(domain + [('budget_id','!=',False),('account_id', 'in', account_ids.ids)])
+                        values= self.env['account.move.line'].search(domain + [('budget_id','!=',False),('account_id', 'in', acc.ids)])
                         authorized = sum(x.debit-x.credit for x in values)
                         authorized = authorized/1000
                         
@@ -201,12 +201,16 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                         transfers = 0
                         total_transfers += transfers
 
-                        values= self.env['account.move.line'].search(domain + [('adequacy_id','!=',False),('account_id', 'in', account_ids.ids)])
+                        values= self.env['account.move.line'].search(domain + [('adequacy_id','!=',False),('account_id', 'in', acc.ids)])
                         assign = sum(x.debit-x.credit for x in values)
                         assign = assign/1000
                         total_assign += assign
+
+                        values= self.env['account.move.line'].search(domain + [('account_id', 'in', acc.ids)])
+                        contable_exercised = sum(x.debit-x.credit for x in values)
+                        contable_exercised = contable_exercised/1000
                         
-                        contable_exercised = 0
+                        #contable_exercised = 0
                         total_contable_exercised += contable_exercised
 
                         e_income = 0
@@ -215,12 +219,12 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                         extra_book = 0
                         total_extra_book += extra_book
                         
-                        values= self.env['account.move.line'].search(domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', account_ids.ids)])
+                        values= self.env['account.move.line'].search(domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', acc.ids)])
                         exercised = sum(x.debit-x.credit for x in values)
                         exercised = exercised/1000
                         total_exercised += exercised
 
-                        values= self.env['account.move.line'].search(domain + [('budget_id','!=',False),('account_id', 'in', account_ids.ids)])
+                        values= self.env['account.move.line'].search(domain + [('budget_id','!=',False),('account_id', 'in', acc.ids)])
                         to_exercised = sum(x.debit-x.credit for x in values)
                         to_exercised = to_exercised/1000
                         

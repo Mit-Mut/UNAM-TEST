@@ -28,11 +28,21 @@ class GenerateSupplierCheckLayout(models.TransientModel):
             if batch.payment_issuing_bank_id.bank_id.name.upper() != self.layout.upper():
                 raise ValidationError(_('The selected layout does NOT match the bank of the selected records" and no '
                                         'layout can be generated until the correct bank is selected.'))
-            invalid_req = batch.payment_req_ids.filtered(lambda x: x.selected == True and \
-                                                         x.check_status != 'Delivered')
-            if invalid_req:
-                raise ValidationError(_('Confirm that the status of all selected checks is "Delivered", therefore no '
-                                        'layout can be generated until the status is as indicated above'))
+            if batch and batch.type_of_batch and batch.type_of_batch in ('nominal','pension'):
+                invalid_req = batch.payment_req_ids.filtered(lambda x: x.selected == True and \
+                                                             x.check_status not in ('Delivered','Printed'))
+                
+                if invalid_req:
+                    raise ValidationError(_('Confirm that the status of all selected checks is "Delivered or Printed", therefore no '
+                                            'layout can be generated until the status is as indicated above'))
+
+            if batch and batch.type_of_batch and batch.type_of_batch in ('supplier','project'):
+                invalid_req = batch.payment_req_ids.filtered(lambda x: x.selected == True and x.check_status != 'Delivered')
+                if invalid_req:
+                    raise ValidationError(_('Confirm that the status of all selected checks is "Delivered", therefore no '
+                                            'layout can be generated until the status is as indicated above'))
+
+                    
             bank = batch.payment_issuing_bank_id
             file_data = ''
             file_name = ''

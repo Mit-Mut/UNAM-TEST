@@ -10,7 +10,7 @@
                         <group>
                             <field name="concept"/>
                             <field name="parent_id" invisible="1"/>
-                            <field name="coa_conac_id"/>
+                            <field name="coa_conac_ids" widget="many2many_tags"/>
                         </group>
                         <group>
                             <field name="major"/>

@@ -112,33 +112,46 @@
         />
 
         <record id="action_status_program_report" model="ir.actions.client">
-            <field name="name">Status Program report</field>
+            <field name="name">Trial Balance</field>
             <field name="tag">account_report</field>
             <field name="context" eval="{'model':'jt_account_module_design.general.ledger.inherit'}" />
         </record>
 
         <!-- added menu for the status program report -->
         <menuitem id="menu_status_program_report" 
-                name="Status Program Report" 
+                name="Trial Balance" 
                 parent="special_reports_submenu" 
                 action="action_status_program_report"
                 sequence="9"/>
 
-        <!-- financial statement action -->
-        <record id="action_financial_positional_statement" model="ir.actions.client">
-            <field name="name">Financial Position Statement report</field>
+        <!-- general accounting action -->
+        <record id="action_general_accounting" model="ir.actions.client">
+            <field name="name">General Accouting</field>
             <field name="tag">account_report</field>
             <field name="context" eval="{'model':'jt_account_module_design.account_coa.inherit'}" />
         </record>
 
-        <!-- added menu for the financial statement report -->
-        <menuitem id="menu_financial_position_report" 
-                name="Financial Position Statement" 
+        <!-- added menu for the general accounting report -->
+        <menuitem id="menu_general_accounting" 
+                name="General Accouting" 
                 parent="special_reports_submenu" 
-                action="action_financial_positional_statement"
+                action="action_general_accounting"
                 sequence="10"/>
 
 
+        <!-- Statement of Financial Position action -->
+        <record id="action_financial_positional_statement" model="ir.actions.client">
+            <field name="name">Statement Of Financial Position</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model':'jt_account_module_design.financial.report'}" />
+        </record>
+
+        <!-- added menu for the Statement of Financial Position report -->
+        <menuitem id="menu_financial_position_report" 
+                name="Statement of Financial Position" 
+                parent="special_reports_submenu" 
+                action="action_financial_positional_statement"
+                sequence="11"/>
 
 
     </data>

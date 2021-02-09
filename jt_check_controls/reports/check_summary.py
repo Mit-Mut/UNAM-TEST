@@ -216,10 +216,10 @@ class CheckSummary(models.AbstractModel):
         if check_payment_method:
             domain += [('l10n_mx_edi_payment_method_id','=',check_payment_method)]
             
-        supplier_domain = domain + [('payment_state','=','assigned_payment_method'),('type', '=', 'in_invoice'), ('is_payment_request', '=', True)]
+        supplier_domain = domain + [('check_folio_id','!=',False),('payment_state','=','assigned_payment_method'),('type', '=', 'in_invoice'), ('is_payment_request', '=', True)]
         invoice_ids = self.env['account.move'].search(supplier_domain)
 
-        project_domain = domain + [('payment_state','=','assigned_payment_method'),('type', '=', 'in_invoice'), ('is_project_payment', '=', True)]
+        project_domain = domain + [('check_folio_id','!=',False),('payment_state','=','assigned_payment_method'),('type', '=', 'in_invoice'), ('is_project_payment', '=', True)]
         invoice_ids += self.env['account.move'].search(project_domain)
         
         total = 0

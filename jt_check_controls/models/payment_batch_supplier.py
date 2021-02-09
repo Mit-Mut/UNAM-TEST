@@ -258,13 +258,15 @@ class PaymentBatchSupplier(models.Model):
                             line.payment_req_id.related_check_folio_ids =  [(4, line.payment_req_id.check_folio_id.id)]
                             line.payment_req_id.check_folio_id.related_check_folio_id = line.check_folio_id.id
                             line.check_folio_id.related_check_folio_id = line.payment_req_id.check_folio_id.id
+                        
                                
                         line.payment_req_id.check_folio_id = line.check_folio_id.id
                         self.set_related_check_log(line)
                         
                         counter += 1
                         line.selected = False
-                        line.payment_req_id.payment_state = 'assigned_payment_method'
+                        if line.payment_req_id.check_folio_id:
+                            line.payment_req_id.payment_state = 'assigned_payment_method'
                     rec.printed_checks = True
                 if not logs:
                     raise ValidationError(_('No check available to assign!'))
@@ -565,7 +567,8 @@ class BankBalanceCheck(models.TransientModel):
             for move in moves:
                 if move.is_payroll_payment_request:
                     type_of_batch = 'nominal'
-                    move.payment_state = 'assigned_payment_method'
+                    if move.check_folio_id:
+                        move.payment_state = 'assigned_payment_method'
                     if move.check_folio_id and move.check_folio_id.status not in ('Detained','Cancelled','Reissued','Withdrawn from circulation'):
                         move.check_folio_id.status = 'Printed'
                 elif move.is_payment_request:
@@ -576,7 +579,8 @@ class BankBalanceCheck(models.TransientModel):
                     type_of_batch = 'project'
                 elif move.is_pension_payment_request:
                     type_of_batch = 'pension'
-                    move.payment_state = 'assigned_payment_method'
+                    if move.check_folio_id:
+                        move.payment_state = 'assigned_payment_method'
                     if move.check_folio_id and move.check_folio_id.status not in ('Detained','Cancelled','Reissued','Withdrawn from circulation'):
                         move.check_folio_id.status = 'Printed'
                 

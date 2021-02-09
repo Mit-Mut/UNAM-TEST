@@ -437,10 +437,10 @@ class AccountMove(models.Model):
         for rec in self:
             if rec.payment_state != 'draft':
                 raise UserError(_('You can registered only draft payment'))
-            if rec.is_different_payroll_request or rec.is_pension_payment_request:
+            if rec.is_different_payroll_request or rec.is_pension_payment_request or rec.is_payroll_payment_request:
                 rec.action_register()
             else:
-                raise UserError(_('You can registered only other then payroll or Pension Payment'))
+                raise UserError(_('You can registered only payroll,other then payroll or Pension Payment'))
         
     def action_draft(self):
         self.ensure_one()

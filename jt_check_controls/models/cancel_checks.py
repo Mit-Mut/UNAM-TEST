@@ -1,6 +1,5 @@
 from datetime import datetime
-from odoo.exceptions import ValidationError
-
+from odoo.exceptions import ValidationError, UserError
 from odoo import models, fields, api, _
 
 
@@ -39,6 +38,13 @@ class CancelChecks(models.Model):
     def action_reject(self):
         self.ensure_one()
         self.status = 'rejected'
+
+    def unlink(self):
+        for check in self:
+            if check.status != 'draft':
+                raise UserError(_('Cannot delete a record that has already been processed.'))
+        return super(CancelChecks, self).unlink()
+
 
     def action_approve(self):
         self.ensure_one()

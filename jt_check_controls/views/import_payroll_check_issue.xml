@@ -61,9 +61,16 @@
             <field name="view_mode">tree,form</field>
         </record>
 
+       
         <menuitem id="menu_import_payroll_check_issue" name="Import of payroll check reissue"
                   parent="check_control_main_menu"
                   action="action_import_payroll_check_issue" sequence="5"/>
+
+         <!-- hide import payroll check issue menu  -->
+        <record id="jt_check_controls.menu_import_payroll_check_issue" model="ir.ui.menu">
+          <field name="groups_id" eval="[(6, 0, [ref('jt_projects.menu_hide_group')] )]"/>
+        </record>
+
 
         <record id="action_update_check_and_amount" model="ir.actions.server">
             <field name="name">Update check and amount</field>

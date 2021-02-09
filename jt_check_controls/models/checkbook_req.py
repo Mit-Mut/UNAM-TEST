@@ -1,6 +1,6 @@
 from odoo import models, fields, api, _
 from datetime import datetime
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 class CheckbookRequest(models.Model):
 
@@ -224,6 +224,13 @@ class CheckbookRequest(models.Model):
         trade = self.env['trades.config'].search([('job_template', '=', 'register_checks')], limit=1)
         return trade
 
+    def unlink(self):
+        for check_req in self:
+            if check_req.state != 'draft':
+                raise UserError(_('Cannot delete a record that has already been processed.'))
+        return super(CheckbookRequest, self).unlink()
+
+
 class CheckList(models.Model):
 
     _name = 'checklist'
@@ -305,6 +312,7 @@ class CheckListLine(models.Model):
                 rec.general_status = False
 
     def write(self, vals):
+        
         if self.status == 'Cancelled' and vals.get('status') in ('Checkbook registration', 'Assigned for shipping',
           'Available for printing', 'Printed', 'Delivered', 'In transit', 'Sent to protection',
            'Protected and in transit', 'Protected', 'Detained', 'Withdrawn from circulation'):
@@ -320,6 +328,9 @@ class CheckListLine(models.Model):
                                     "Protected \n"
                                     "Detained \n"
                                     "Withdrawn from circulation \n"))
+        if vals.get('status',False) and vals.get('status','')=='Cancelled':
+            today = datetime.today().date()
+            vals.update({'date_cancellation':today})
         res = super(CheckListLine, self).write(vals)
         if vals.get('status',False) and vals.get('status','')=='Cancelled':
             for check in self:
@@ -346,6 +357,13 @@ class CheckListLine(models.Model):
                     'checkbook_no': rec.bank_id.checkbook_no if rec.bank_id else False,
                     'check_log_id': rec.id
                     })
+
+    def unlink(self):
+        for rec in self:
+            records = self.env['account.move'].search([('check_folio_id','=',rec.id),('payment_state','=','assigned_payment_method')])
+            if records:
+                raise UserError(_('You can not delete check that link into payments!'))
+        return super(CheckListLine, self).unlink()
 
 class ResBank(models.Model):
 

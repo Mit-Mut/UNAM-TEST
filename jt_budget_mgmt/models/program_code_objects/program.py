@@ -32,7 +32,7 @@ class Program(models.Model):
 
     key_unam = fields.Char(string='Key UNAM', size=2)
     desc_key_unam = fields.Text(string='Description Key UNAM')
-
+    digit = fields.Char(string="Key UNAM Digit",size=1,compute="get_key_unam_digit",store=True)
     _sql_constraints = [('key_unam', 'unique(key_unam)',
                          'The key UNAM must be unique.')]
 
@@ -44,6 +44,12 @@ class Program(models.Model):
     def fill_zero(self, code):
         return str(code).zfill(2)
 
+    @api.depends('key_unam')
+    def get_key_unam_digit(self):
+        for rec in self:
+            if rec.key_unam:
+                rec.digit = rec.key_unam[0]
+                 
     @api.model
     def create(self, vals):
         if vals.get('key_unam') and len(vals.get('key_unam')) != 2:

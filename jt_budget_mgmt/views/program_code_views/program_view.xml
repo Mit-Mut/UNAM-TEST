@@ -25,6 +25,7 @@
 	            		<group>
 	            			<field name="key_unam" required="1"/>
                             <field name="desc_key_unam" required="1"/>
+                            <field name="digit"/>
 	            		</group>
 	            	</sheet>
             	</form>
@@ -39,6 +40,7 @@
             	<tree>
             		<field name="key_unam"/>
                     <field name="desc_key_unam"/>
+                    <field name="digit"/>
             	</tree>
             </field>
         </record>

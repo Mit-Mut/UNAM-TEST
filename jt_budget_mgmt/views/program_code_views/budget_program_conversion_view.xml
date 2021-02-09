@@ -23,8 +23,8 @@
             	<form>
             		<sheet>
 	            		<group>
-	            			<field name="unam_key_id" required="1" options="{'no_open': True, 'no_create': True}"/>
-                            <field name="desc"/>
+	            			<field name="unam_key_id" invisible="1" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="desc" invisible="1"/>
                             <field name="shcp" required="1"/>
                             <field name="description"/>
 	            		</group>
@@ -39,8 +39,8 @@
             <field name="model">budget.program.conversion</field>
             <field name="arch" type="xml">
             	<tree>
-            		<field name="unam_key_id"/>
-                    <field name="desc"/>
+            		<field name="unam_key_id" invisible="1"/>
+                    <field name="desc" invisible="1"/>
                     <field name="shcp"/>
                     <field name="description"/>
             	</tree>

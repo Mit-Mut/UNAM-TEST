@@ -22,6 +22,14 @@ class ReportAccountFinancialReport(models.Model):
     filter_program_code_section = True
     filter_comparison = {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
 
+    def _get_templates(self):
+        """Get this template for better fit of columns"""
+        templates = super(ReportAccountFinancialReport, self)._get_templates()
+        templates['main_template'] = 'jt_account_module_design.financial_statement_main_template'
+        templates.update({'custom_line_template_right':'jt_account_module_design.custom_line_template_right','custom_line_template_left':'jt_account_module_design.custom_line_template_left'})
+        
+        return templates
+
     @api.model
     def _init_filter_program_code_section(self, options, previous_options=None):
         options['code_sections'] = previous_options and previous_options.get(
@@ -122,14 +130,88 @@ class ReportAccountFinancialReport(models.Model):
         program_codes_account_ids = program_codes_account_ids.ids
          
         report_id = self.env.ref('account_reports.account_financial_report_balancesheet0')
+        
         if  report_id:
+            #======= Side Data ======#
+
+            line_obj = report_id.line_ids
+            if line_id:
+                line_obj = self.env['account.financial.html.report.line'].search([('id', '=', line_id)])
+            if options.get('comparison') and options.get('comparison').get('periods'):
+                line_obj = line_obj.with_context(periods=options['comparison']['periods'])
+            if options.get('ir_filters'):
+                line_obj = line_obj.with_context(periods=options.get('ir_filters'))
+    
+            currency_table = report_id._get_currency_table()
+            domain, group_by = report_id._get_filter_info(options)
+    
+            if group_by:
+                options['groups'] = {}
+                options['groups']['fields'] = group_by
+                options['groups']['ids'] = report_id._get_groups(domain, group_by)
+    
+            amount_of_periods = len((options.get('comparison') or {}).get('periods') or []) + 1
+            amount_of_group_ids = len(options.get('groups', {}).get('ids') or []) or 1
+            linesDicts = [[{} for _ in range(0, amount_of_group_ids)] for _ in range(0, amount_of_periods)]
+            
+            left_line_obj = line_obj
+            right_line_obj = line_obj
+            left_line_id = self.env.ref('account_reports.account_financial_report_total_assets0')
+            if left_line_id:
+                left_line_obj = left_line_id
+                right_line_obj = right_line_obj - left_line_id 
             if is_add_fiter:
-                lines = report_id.with_context(custom_account_ids=[('account_id','in',program_codes_account_ids)])._get_lines(options, line_id=line_id)
+                lines = left_line_obj.with_context(
+                        filter_domain=domain,custom_account_ids=[('account_id','in',program_codes_account_ids)]
+                    )._get_lines(self, currency_table, options, linesDicts)
+                for l in lines:
+                    l.update({'side':'left'})
+
+                right_lines = right_line_obj.with_context(
+                        filter_domain=domain,custom_account_ids=[('account_id','in',program_codes_account_ids)]
+                    )._get_lines(self, currency_table, options, linesDicts)
+                for l in right_lines:
+                    l.update({'side':'right'})
+                    
+                lines += right_lines
+                #lines = report_id.with_context(custom_account_ids=[('account_id','in',program_codes_account_ids)])._get_lines(options, line_id=line_id)
             else:
-                lines = report_id._get_lines(options, line_id=line_id)
+                lines = left_line_obj.with_context(
+                        filter_domain=domain
+                    )._get_lines(self, currency_table, options, linesDicts)
+                for l in lines:
+                    l.update({'side':'left'})
+                    
+                right_lines = right_line_obj.with_context(
+                        filter_domain=domain
+                    )._get_lines(self, currency_table, options, linesDicts)
+                    
+                for l in right_lines:
+                    l.update({'side':'right'})
+                
+                lines+=right_lines
+                #lines = report_id._get_lines(options, line_id=line_id)
         
         return lines
-     
+    
+    def get_custom_lines(self,lines,side):
+#         print ("Side==",side)
+#         new_list_lines = []
+#         exist_lines = lines.get('lines',[])
+#         #exist_lines = self._get_lines(options=[], line_id=None)
+#         for e in exist_lines:
+#             if e.get('side',False) and e.get('side',False)==side:
+#                 new_list_lines.append(e)
+#         lines.update({'lines':new_list_lines})
+#         
+#         print ("Side==",lines)
+#         if side == 'right':
+#             lines = []
+        return lines
+
+    def _get_report_name(self):
+        return ("Statement Of Financial Position")
+    
 class AccountFinancialReportLine(models.Model):
     _inherit = "account.financial.html.report.line"
      

@@ -144,7 +144,7 @@ class TaxReport(models.AbstractModel):
         account_id = self.env['account.account'].search([('code', '=', '220.001.001.001')], limit=1)
         if account_id:
             values= self.env['account.move.line'].search(domain + [('account_id', '=', account_id.id)])
-            acc_amount_220_001_001_001 = sum(x.debit - x.credit for x in values)
+            acc_amount_220_001_001_001 = sum(x.credit - x.debit for x in values)
     
         #===============115.001.001============#
         acc_amount_115_001_001 = 0
@@ -158,7 +158,7 @@ class TaxReport(models.AbstractModel):
         account_id = self.env['account.account'].search([('code', '=', '220.001.001.003')], limit=1)
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
-            acc_amount_220_001_001_003 = sum(x.debit - x.credit for x in values)
+            acc_amount_220_001_001_003 = sum(x.credit - x.debit for x in values)
 
         total_isr = acc_amount_220_001_001_001 + acc_amount_220_001_001_003
 

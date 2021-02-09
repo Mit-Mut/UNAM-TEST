@@ -2400,4 +2400,23 @@ msgstr "Cantidad de cheques"
 msgid "Concepts"
 msgstr "Conceptos"
 
+#. module: jt_check_controls
+#: code:addons/jt_check_controls/wizard/generate_sup_batch_check_layout.py:0
+#, python-format
+msgid ""
+"Confirm that the status of all selected checks is \"Delivered\", therefore "
+"no layout can be generated until the status is as indicated above"
+msgstr ""
+"Confirmar que el estado de todos los cheques seleccionados sea \"Entregado\", de otra forma "
+"el layout no podrá ser generado hasta que se encuentre en el estado indicado"
+
+#. module: jt_check_controls
+#: code:addons/jt_check_controls/wizard/generate_sup_batch_check_layout.py:0
+#, python-format
+msgid ""
+"Confirm that the status of all selected checks is \"Printed\", therefore no "
+"layout can be generated until the status is as indicated above"
+msgstr ""
+"Confirmar que el estado de todos los cheques seleccionados sea \"Impreso\", de otra forma "
+"el layout no podrá ser generado hasta que se encuentre en el estado indicado"
 

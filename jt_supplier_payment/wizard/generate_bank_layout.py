@@ -633,8 +633,8 @@ class GenerateBankLayout(models.TransientModel):
             amount = "%.2f" % payment.amount
             amount = str(amount).split('.')
             #print ('Amount=====',x)
-            file_data +=","+str(amount[0]).zfill(11)
-            #file_data +='.'
+            file_data +=","+str(amount[0])
+            file_data +='.'
             file_data +=str(amount[1])
             
             #====== Currency Data =========#

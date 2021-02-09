@@ -1,5 +1,5 @@
 from datetime import datetime
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo import models, fields, api, _
 from dateutil.relativedelta import relativedelta
 
@@ -44,6 +44,13 @@ class SendChecks(models.Model):
 
     def action_reject(self):
         self.status = 'reject'
+
+    def unlink(self):
+        for check in self:
+            if check.status != 'draft':
+                raise UserError(_('Cannot delete a record that has already been processed.'))
+        return super(SendChecks, self).unlink()
+
 
     def action_approve(self):
         self.status = 'approved'

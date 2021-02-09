@@ -8,6 +8,8 @@
             <field name="arch" type="xml">
                 <search string="Sub dependency">
                     <field name="sub_dependency"/>
+                    <field name="dependency_id"/>
+                    <field name="description"/>
                     <group expand="1" string="Group By">
                         <filter string="Sub dependency" name='sub_dependency' context="{'group_by':'sub_dependency'}"/>
                     </group>

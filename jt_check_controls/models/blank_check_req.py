@@ -1,6 +1,7 @@
 from odoo import models, fields, api, _
 from datetime import datetime
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
+
 
 
 class BlankCheckRequest(models.Model):
@@ -59,6 +60,13 @@ class BlankCheckRequest(models.Model):
         res.application_no = "DIOF / CTRLCHEQ / " + \
             str(application_no) + "/" + str(year)
         return res
+
+    def unlink(self):
+        for check_req in self:
+            if check_req.state != 'draft':
+                raise UserError(_('Cannot delete a record that has already been processed.'))
+        return super(BlankCheckRequest, self).unlink()
+
 
     @api.constrains('amount_checks')
     def _check_amount_checks(self):

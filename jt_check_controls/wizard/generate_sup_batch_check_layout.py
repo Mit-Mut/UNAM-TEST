@@ -30,10 +30,10 @@ class GenerateSupplierCheckLayout(models.TransientModel):
                                         'layout can be generated until the correct bank is selected.'))
             if batch and batch.type_of_batch and batch.type_of_batch in ('nominal','pension'):
                 invalid_req = batch.payment_req_ids.filtered(lambda x: x.selected == True and \
-                                                             x.check_status not in ('Delivered','Printed'))
+                                                             x.check_status !='Printed')
                 
                 if invalid_req:
-                    raise ValidationError(_('Confirm that the status of all selected checks is "Delivered or Printed", therefore no '
+                    raise ValidationError(_('Confirm that the status of all selected checks is "Printed", therefore no '
                                             'layout can be generated until the status is as indicated above'))
 
             if batch and batch.type_of_batch and batch.type_of_batch in ('supplier','project'):
@@ -57,8 +57,7 @@ class GenerateSupplierCheckLayout(models.TransientModel):
                 file_data += '000000000000'
                 file_data += '\r\n'
                 total_amt = 0
-                for line in batch.payment_req_ids.filtered(lambda x: x.selected == True and \
-                                                         x.check_status == 'Delivered'):
+                for line in batch.payment_req_ids.filtered(lambda x: x.selected == True):
                     file_data += '02'
                     file_data += bank.branch_number if bank.branch_number else ''
                     file_data += bank.bank_account_id.acc_number.zfill(20) if bank.bank_account_id \
@@ -76,8 +75,7 @@ class GenerateSupplierCheckLayout(models.TransientModel):
                     file_data += '\r\n'
                     total_amt += line.amount_to_pay
                 file_data += '03'
-                file_data += str(len(batch.payment_req_ids.filtered(lambda x: x.selected == True and \
-                                                         x.check_status == 'Delivered'))).zfill(6)
+                file_data += str(len(batch.payment_req_ids.filtered(lambda x: x.selected == True))).zfill(6)
                 total_amt = str(round(total_amt, 2)).split('.')
                 file_data += str(total_amt[0]).zfill(14)
                 file_data += str(total_amt[1]) if len(str(total_amt[1])) == 2 else str(total_amt[1]) + '0'
@@ -88,21 +86,18 @@ class GenerateSupplierCheckLayout(models.TransientModel):
                 file_data += bank.bank_account_id.acc_number.zfill(18) if bank.bank_account_id \
                         and bank.bank_account_id.acc_number else '000000000000000000'
                 file_data += '/'
-                total_rec = len(batch.payment_req_ids.filtered(lambda x: x.selected == True and \
-                                                             x.check_status == 'Delivered'))
+                total_rec = len(batch.payment_req_ids.filtered(lambda x: x.selected == True))
                 file_data += str(total_rec).zfill(6)
                 file_data += '/'
                 total_amt = sum(
-                    line.amount_to_pay for line in batch.payment_req_ids.filtered(lambda x: x.selected == True and \
-                                                                                x.check_status == 'Delivered'))
+                    line.amount_to_pay for line in batch.payment_req_ids.filtered(lambda x: x.selected == True))
                 file_data += str(round(total_amt, 2)).replace('.', '').zfill(15)
                 file_data += '/'
                 today_date = datetime.date.today().strftime("%Y-%m-%d")
                 file_data += str(today_date)
                 file_data += '/'
                 file_data += "\r\n"
-                for line in batch.payment_req_ids.filtered(lambda x: x.selected == True and \
-                                                                     x.check_status == 'Delivered'):
+                for line in batch.payment_req_ids.filtered(lambda x: x.selected == True):
                     file_data += str(line.check_folio_id.folio).zfill(7)
                     file_data += '/'
                     file_data += 'A'
@@ -112,8 +107,7 @@ class GenerateSupplierCheckLayout(models.TransientModel):
                     file_data += "\r\n"
             elif self.layout == 'Santander':
                 file_name = 'santander.txt'
-                for line in batch.payment_req_ids.filtered(lambda x: x.selected == True and \
-                                                         x.check_status == 'Delivered'):
+                for line in batch.payment_req_ids.filtered(lambda x: x.selected == True):
                     file_data += bank.bank_account_id.acc_number.ljust(16) if bank.bank_account_id \
                         else '0000000000000000'
                     file_data += str(line.check_folio_id.folio).ljust(7)
@@ -138,17 +132,14 @@ class GenerateSupplierCheckLayout(models.TransientModel):
                     file_data += "\r\n"
             elif self.layout == 'Inbursa':
                 file_name = 'inbursa.txt'
-                total_rec = len(batch.payment_req_ids.filtered(lambda x: x.selected == True and \
-                                                         x.check_status == 'Delivered'))
+                total_rec = len(batch.payment_req_ids.filtered(lambda x: x.selected == True))
                 file_data += str(total_rec).zfill(5)
                 file_data += '\t'
-                total_amt = sum(line.amount_to_pay for line in batch.payment_req_ids.filtered(lambda x: x.selected == True and \
-                                                         x.check_status == 'Delivered'))
+                total_amt = sum(line.amount_to_pay for line in batch.payment_req_ids.filtered(lambda x: x.selected == True))
                 file_data += ('%.2f'%total_amt).zfill(15)
                 file_data += '\t'
                 file_data += '\r\n'
-                for line in batch.payment_req_ids.filtered(lambda x: x.selected == True and \
-                                                         x.check_status == 'Delivered'):
+                for line in batch.payment_req_ids.filtered(lambda x: x.selected == True):
                     today_date = datetime.date.today()
                     #file_data += str(today_date).replace('-', '/')
 
@@ -176,8 +167,7 @@ class GenerateSupplierCheckLayout(models.TransientModel):
                 file_data += ''.ljust(140)
                 file_data += '1'
                 file_data += '\r\n'
-                for line in batch.payment_req_ids.filtered(lambda x: x.selected == True and \
-                                                                     x.check_status == 'Delivered'):
+                for line in batch.payment_req_ids.filtered(lambda x: x.selected == True):
                     file_data += 'A'
                     if bank.branch_number and len(bank.branch_number) > 3:
                         file_data += bank.branch_number[-3:]
@@ -201,14 +191,11 @@ class GenerateSupplierCheckLayout(models.TransientModel):
                     file_data += '3'
                     file_data += '\r\n'
                 file_data += 'P'
-                file_data += str(len(batch.payment_req_ids.filtered(lambda x: x.selected == True and \
-                                                                     x.check_status == 'Delivered'))).zfill(9)
-                sum_of_check_folio = sum(line.check_folio_id.folio for line in batch.payment_req_ids.filtered(lambda x: x.selected == True and \
-                                                         x.check_status == 'Delivered'))
+                file_data += str(len(batch.payment_req_ids.filtered(lambda x: x.selected == True))).zfill(9)
+                sum_of_check_folio = sum(line.check_folio_id.folio for line in batch.payment_req_ids.filtered(lambda x: x.selected == True))
                 #file_data += str(batch.checkbook_req_id.checkbook_no).zfill(15)
                 file_data += str(sum_of_check_folio).zfill(15)
-                total = sum(line.amount_to_pay for line in batch.payment_req_ids.filtered(lambda x: x.selected == True \
-                                                            and x.check_status == 'Delivered'))
+                total = sum(line.amount_to_pay for line in batch.payment_req_ids.filtered(lambda x: x.selected == True))
                 amount = "%.2f" % total            
                 amount = str(amount).split('.')
                 file_data +=str(amount[0]).zfill(16)
@@ -216,8 +203,7 @@ class GenerateSupplierCheckLayout(models.TransientModel):
                 file_data += '0'.zfill(9)
                 file_data += '0'.zfill(15)
                 file_data += '0'.zfill(18)
-                file_data += str(len(batch.payment_req_ids.filtered(lambda x: x.selected == True and \
-                                                                              x.check_status == 'Delivered'))).zfill(10)
+                file_data += str(len(batch.payment_req_ids.filtered(lambda x: x.selected == True))).zfill(10)
                 
                 file_data += str(sum_of_check_folio).zfill(15)
                 

@@ -16,13 +16,13 @@ class ApproveBlankCheck(models.TransientModel):
     bank_account_id = fields.Many2one('account.journal', "Bank Account")
     checkbook_req_id = fields.Many2one("checkbook.request", "Checkbook No")
     number_of_checks_auth = fields.Integer("Number of checks authorized")
+    checkbook_no = fields.Char(related='checkbook_req_id.checkbook_no')
     intial_folio = fields.Integer("Intial Folio")
     final_folio = fields.Integer("Final Folio")
 
     @api.onchange('bank_account_id')
     def onchange_bank_account_id(self):
         if self.bank_account_id:
-            self.checkbook_req_id = False
             self.checkbook_no = self.bank_account_id.checkbook_no
 
     def apply(self):

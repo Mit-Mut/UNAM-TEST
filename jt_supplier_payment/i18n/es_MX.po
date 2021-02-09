@@ -2416,7 +2416,7 @@ msgstr ""
 #: code:addons/jt_supplier_payment/models/account_payment.py:0
 #, python-format
 msgid "You can not register payment with 0 amount"
-msgstr "Las cuentas contables del Beneficiario del Pago no están bien configuradas"
+msgstr "No se puede programar una Solicitud de Pago que tiene un monto de 0."
 
 #. module: jt_supplier_payment
 #: code:addons/jt_supplier_payment/wizard/payment_declined.py:0

@@ -62,7 +62,7 @@ class AccountPayment(models.Model):
     
     payment_request_id = fields.Many2one('account.move','circular')
 
-    employee_partner_type = fields.Selection([('employee','Employee')],string='Partner Type',copy=False)
+    employee_partner_type = fields.Selection([('employee','Employee'),('alimony','Alimony')],string='Partner Type',copy=False)
     
             
     @api.depends('journal_id','journal_id.bank_format','journal_id.load_bank_format')
@@ -119,8 +119,11 @@ class AccountPayment(models.Model):
         if res.folio and not res.sit_reason_for_payment:
             sit_res = res.folio.replace("/",'')
             res.sit_reason_for_payment = sit_res
-        if res.partner_type and res.payment_request_type and res.payment_request_type in ('pension_payment','payroll_payment'):
+        if res.partner_type and res.payment_request_type and res.payment_request_type == 'payroll_payment':
             res.employee_partner_type = 'employee'
+        elif res.partner_type and res.payment_request_type and res.payment_request_type == 'pension_payment':
+            res.employee_partner_type = 'alimony'        
+        
         return res
     
     @api.constrains('banamex_reference')

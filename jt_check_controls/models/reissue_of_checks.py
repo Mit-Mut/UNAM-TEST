@@ -1,5 +1,5 @@
 from datetime import datetime
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo import models, fields, api, _
 
 
@@ -65,6 +65,13 @@ class ReissueOfChecks(models.Model):
                     if emp_id:
                         emp_no = emp_id.worker_number
             rec.employee_number = emp_no
+
+    def unlink(self):
+        for check in self:
+            if check.state != 'draft':
+                raise UserError(_('Cannot delete a record that has already been processed.'))
+        return super(ReissueOfChecks, self).unlink()
+
               
     @api.onchange('move_id')
     def onchange_move_id(self):

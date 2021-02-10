@@ -236,6 +236,18 @@
                 <t t-call="account_reports.filter_info_template"/>
             </div>
             <div class="o_account_reports_summary"/>
+				<!-- 
+                <table class="o_account_reports_table table-hover">
+                    <t t-call="{{model._get_templates()['main_table_header_template']}}"/>
+                    <tbody>
+
+                      <t t-if="lines.get('lines')">
+                            <t t-call="{{model._get_templates()['custom_line_template_left']}}"/>
+                        </t>
+                    </tbody>
+                </table>
+                 -->
+			         
             <div class="row">
             
             <div class="table-responsive col-6">
@@ -270,6 +282,8 @@
     <!-- custom Line-->
 
 <template id="custom_line_template_left">
+	<div class="row">
+	<div class="col-6">
     <t t-foreach="lines['lines']" t-as="line">
     	<t t-if="line.get('side','')=='left'">
         <t t-set="trclass" t-value="''"/>
@@ -351,6 +365,9 @@
         </tr>
     </t>
     </t>
+    </div>
+    <div class="col-6"></div>
+    </div>
 </template>
 
 <template id="custom_line_template_right">

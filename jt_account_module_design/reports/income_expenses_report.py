@@ -143,10 +143,12 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                     'unfolded': True,
                 })
                 count += 1
-                total_exercised = 0
-                total_exercised_pre = 0
-                total_variation = 0
                 for con in type_concept_ids:
+
+                    total_exercised = 0
+                    total_exercised_pre = 0
+                    total_variation = 0
+                    
                     account_ids = con.account_ids
 
                     lines.append({
@@ -170,13 +172,13 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
 
                         #values= self.env['account.move.line'].search(domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', account_ids.ids)])
                         values= self.env['account.move.line'].search(domain + [('account_id', 'in', acc.ids)])
-                        exercised = sum(x.debit-x.credit for x in values)
+                        exercised = sum(x.credit - x.debit for x in values)
                         exercised = exercised/1000
                         total_exercised += exercised
 
                         #values= self.env['account.move.line'].search(pre_domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', account_ids.ids)])
                         values= self.env['account.move.line'].search(pre_domain + [('account_id', 'in', acc.ids)])
-                        exercised_pre= sum(x.debit-x.credit for x in values)
+                        exercised_pre= sum(x.credit - x.debit for x in values)
                         exercised_pre = exercised_pre/1000
                         
                         total_exercised_pre += exercised_pre
@@ -184,15 +186,6 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                         variation = exercised - exercised_pre
                         total_variation += variation
                         
-                        if type == 'income':
-                            remant_exercised += total_exercised
-                            remant_exercised_pre += total_exercised_pre
-                            remant_variation += total_variation
-                            
-                        elif type == 'expenses':
-                            remant_exercised -= total_exercised
-                            remant_exercised_pre -= total_exercised_pre
-                            remant_variation -= total_variation
                             
                         per = 0
                         if exercised != 0:
@@ -200,7 +193,7 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                         
                         lines.append({
                             'id': 'account' + str(acc.id),
-                            'name': acc.code + acc.name,
+                            'name': acc.code +" "+ acc.name,
                             'columns': [
                                         self._format({'name': exercised},figure_type='float'),
                                         self._format({'name': exercised_pre},figure_type='float'),
@@ -213,6 +206,16 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                             'unfoldable': False,
                             'unfolded': True,
                         })
+
+                    if type == 'income':
+                        remant_exercised += total_exercised
+                        remant_exercised_pre += total_exercised_pre
+                        remant_variation += total_variation
+                        
+                    elif type == 'expenses':
+                        remant_exercised -= total_exercised
+                        remant_exercised_pre -= total_exercised_pre
+                        remant_variation -= total_variation
     
                     lines.append({
                         'id': 'group_total',

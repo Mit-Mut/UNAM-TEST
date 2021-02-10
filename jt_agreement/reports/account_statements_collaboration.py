@@ -104,6 +104,7 @@ class AccountStatementsCollaboration(models.AbstractModel):
         req_lines = self.env['request.open.balance'].search([('bases_collaboration_id','!=',False),('state','=','confirmed'),('request_date', '>=',start),('request_date', '<=',end)])
         base_ids = req_lines.mapped('bases_collaboration_id')
         lang = self.env.user.lang
+        total_final = 0
         for base in base_ids:
             base_line_ids = req_lines.filtered(lambda x:x.bases_collaboration_id.id==base.id)
             req_date = base_line_ids.mapped('request_date')
@@ -151,9 +152,11 @@ class AccountStatementsCollaboration(models.AbstractModel):
                     credit = 0  
                     if line.type_of_operation in ('open_bal','increase','increase_by_closing'):         
                         final += line.opening_balance
+                        total_final += line.opening_balance
                         debit = line.opening_balance
                     elif line.type_of_operation in ('withdrawal','retirement','withdrawal_cancellation','withdrawal_closure'):
                         final -= line.opening_balance
+                        total_final -= line.opening_balance
                         credit = line.opening_balance
 
                     lines.append({
@@ -172,7 +175,7 @@ class AccountStatementsCollaboration(models.AbstractModel):
     
                 for line in base.rate_base_ids.filtered(lambda x:x.interest_date == req):
                     final += line.interest_rate
-                    
+                    total_final += line.interest_rate
                     lines.append({
                     'id': 'Date_in'+str(base.id),
                     'name': line.interest_date,
@@ -185,6 +188,19 @@ class AccountStatementsCollaboration(models.AbstractModel):
                     'unfoldable': False,
                     'unfolded': True,
                     })
+
+        lines.append({
+        'id': 'Total',
+        'name': 'Total',
+        'columns': [{'name': '',}, 
+                    {'name': '',}, 
+                    {'name': '',},
+                    self._format({'name': total_final},figure_type='float'), 
+                    ],
+        'level': 1,
+        'unfoldable': False,
+        'unfolded': True,
+        })
                             
         return lines
     

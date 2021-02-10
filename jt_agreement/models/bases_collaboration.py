@@ -992,6 +992,12 @@ class RequestOpenBalance(models.Model):
     background_project_id = fields.Many2one(
         'background.project', 'Background Project', related="specifics_project_id.backgound_project_id")
 
+    @api.onchange('type_of_operation')
+    def onchange_type_of_operation_amount(self):
+        if self.type_of_operation and self.type_of_operation == 'open_bal':
+            if self.bases_collaboration_id:
+                self.opening_balance = self.bases_collaboration_id.opening_bal
+                 
     @api.constrains('opening_balance')
     def _check_opening_balance(self):
         print ('opening_balance')

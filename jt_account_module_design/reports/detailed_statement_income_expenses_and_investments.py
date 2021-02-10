@@ -158,16 +158,18 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                 
                 total_per = 0
                 
-                total_authorized = 0
-                total_transfers = 0
-                total_assign = 0
-                total_contable_exercised = 0
-                total_e_income = 0
-                total_extra_book = 0
-                total_exercised = 0
-                total_to_exercised = 0
                 
                 for con in type_concept_ids:
+
+                    total_authorized = 0
+                    total_transfers = 0
+                    total_assign = 0
+                    total_contable_exercised = 0
+                    total_e_income = 0
+                    total_extra_book = 0
+                    total_exercised = 0
+                    total_to_exercised = 0
+                    
                     account_ids = con.account_ids
                     
                     lines.append({
@@ -207,7 +209,7 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                         total_assign += assign
 
                         values= self.env['account.move.line'].search(domain + [('account_id', 'in', acc.ids)])
-                        contable_exercised = sum(x.debit-x.credit for x in values)
+                        contable_exercised = sum(x.credit - x.debit for x in values)
                         contable_exercised = contable_exercised/1000
                         
                         #contable_exercised = 0
@@ -230,25 +232,6 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                         
                         total_to_exercised += to_exercised
                          
-                        if type == 'income':
-                            remant_authorized += total_authorized
-                            remant_transfers += total_transfers
-                            remant_assign += total_assign
-                            remant_contable_exercised += total_contable_exercised
-                            remant_e_income += total_e_income
-                            remant_extra_book += total_extra_book
-                            remant_exercised += total_exercised
-                            remant_to_exercised += total_to_exercised
-                            
-                        elif type == 'expenses':
-                            remant_authorized -= total_authorized
-                            remant_transfers -= total_transfers
-                            remant_assign -= total_assign
-                            remant_contable_exercised += total_contable_exercised
-                            remant_e_income -= total_e_income
-                            remant_extra_book -= total_extra_book
-                            remant_exercised -= total_exercised
-                            remant_to_exercised -= total_to_exercised
                             
                         per = 0
                         if assign > 0:
@@ -256,7 +239,7 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                     
                         lines.append({
                             'id': 'account' + str(acc.id),
-                            'name': acc.code + acc.name,
+                            'name': str(acc.code) +" "+ str(acc.name),
                             'columns': [
                                         self._format({'name': authorized},figure_type='float'),
                                         self._format({'name': transfers},figure_type='float'),
@@ -273,6 +256,26 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                             'unfoldable': False,
                             'unfolded': True,
                         })
+
+                    if type == 'income':
+                        remant_authorized += total_authorized
+                        remant_transfers += total_transfers
+                        remant_assign += total_assign
+                        remant_contable_exercised += total_contable_exercised
+                        remant_e_income += total_e_income
+                        remant_extra_book += total_extra_book
+                        remant_exercised += total_exercised
+                        remant_to_exercised += total_to_exercised
+                        
+                    elif type == 'expenses':
+                        remant_authorized -= total_authorized
+                        remant_transfers -= total_transfers
+                        remant_assign -= total_assign
+                        remant_contable_exercised += total_contable_exercised
+                        remant_e_income -= total_e_income
+                        remant_extra_book -= total_extra_book
+                        remant_exercised -= total_exercised
+                        remant_to_exercised -= total_to_exercised
     
                     lines.append({
                         'id': 'group_total',

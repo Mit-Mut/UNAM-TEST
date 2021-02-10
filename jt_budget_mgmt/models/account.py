@@ -98,7 +98,7 @@ class AccountMove(models.Model):
                     move_str_msg = "Insuficiencia Presupuestal para el código del programa\n\n"
                 
                 sufficient_move_ids.append(request.id)
-                for line in request.invoice_line_ids:
+                for line in request.invoice_line_ids.filtered(lambda x:x.program_code_id):
                     total_available_budget = 0
                     if line.program_code_id:
                         budget_line = self.env['expenditure.budget.line']
@@ -142,7 +142,6 @@ class AccountMove(models.Model):
                         line_amount = line.debit + line.tax_price_cr
                     else:
                         line_amount = line.credit + line.tax_price_cr
-                        
                     if total_available_budget < line_amount:
                         is_check = True
                         program_name = ''

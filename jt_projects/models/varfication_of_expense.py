@@ -576,7 +576,7 @@ class VerficationOfExpense(models.Model):
             
             unam_move_val = {'ref': self.display_name,  'conac_move': True,
                              'dependancy_id' : self.dependence and self.dependence.id or False,
-                             'sub_dependancy_id': self.subdependence and self.subdependence.id or False, 
+                             'sub_dependancy_id': self.subdependence and self.subdependence.id or False,
                              'date': today, 'journal_id': journal.id, 'company_id': self.env.user.company_id.id,
                              'line_ids': lines}
             

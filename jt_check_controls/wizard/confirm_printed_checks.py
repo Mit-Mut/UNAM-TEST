@@ -44,11 +44,12 @@ class ConfirmPrintedCheck(models.TransientModel):
             for line in self.payment_req_ids:
                 if line.selected:
                     cancel_folio.append(line.check_folio_id.id)
-            for line in batch.payment_req_ids:
+            for line in batch.payment_req_ids.filtered(lambda x:x.selected):
                 if line.check_folio_id.id not in cancel_folio:
                     line.check_folio_id.status = 'Printed'
                     line.check_folio_id.date_printing = today_date
-                    line.payment_req_id.payment_state = 'assigned_payment_method'
+                    if line.payment_req_id and line.payment_req_id.check_folio_id:
+                        line.payment_req_id.payment_state = 'assigned_payment_method'
                     line.selected = False
                 else:
                     line.check_folio_id.status = 'Cancelled'

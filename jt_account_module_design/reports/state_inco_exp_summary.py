@@ -137,11 +137,13 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                     'unfolded': True,
                 })
                 
-                total_assign = 0
-                total_exercised = 0
-                total_to_exercised = 0
-                total_per = 0
                 for con in type_concept_ids:
+
+                    total_assign = 0
+                    total_exercised = 0
+                    total_to_exercised = 0
+                    total_per = 0
+                    
                     account_ids = con.account_ids
 
                     lines.append({
@@ -169,7 +171,7 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
 
                         #values= self.env['account.move.line'].search(domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', acc.ids)])
                         values= self.env['account.move.line'].search(domain + [('account_id', 'in', acc.ids)])
-                        exercised = sum(x.debit-x.credit for x in values)
+                        exercised = sum(x.credit - x.debit for x in values)
                         exercised = exercised/1000
                         total_exercised += exercised
 
@@ -178,15 +180,6 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                         to_exercised = to_exercised/1000
                         
                         total_to_exercised += to_exercised
-                        if type == 'income':
-                            remant_assign += total_assign
-                            remant_exercised += total_exercised
-                            remant_to_exercised += total_to_exercised
-                            
-                        elif type == 'expenses':
-                            remant_assign -= total_assign
-                            remant_exercised -= total_exercised
-                            remant_to_exercised -= total_to_exercised
                             
                         per = 0
                         if assign > 0:
@@ -194,7 +187,7 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                         
                         lines.append({
                             'id': 'account' + str(acc.id),
-                            'name': acc.code + acc.name,
+                            'name': acc.code +" "+ acc.name,
                             'columns': [
                                         self._format({'name': assign},figure_type='float'),
                                         self._format({'name': exercised},figure_type='float'),
@@ -206,6 +199,16 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                             'unfoldable': False,
                             'unfolded': True,
                         })
+
+                    if type == 'income':
+                        remant_assign += total_assign
+                        remant_exercised += total_exercised
+                        remant_to_exercised += total_to_exercised
+                        
+                    elif type == 'expenses':
+                        remant_assign -= total_assign
+                        remant_exercised -= total_exercised
+                        remant_to_exercised -= total_to_exercised
     
                     lines.append({
                         'id': 'group_total',

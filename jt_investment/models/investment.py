@@ -503,6 +503,9 @@ class InvestmentOperation(models.Model):
         if self.operation_number and not self.operation_number.isnumeric():
             raise ValidationError(_('Operation Number must be Numeric.'))
 
+    def action_reset_to_draft(self):
+        self.line_state='draft'
+
     def action_approved(self):
         self.line_state = 'approved'
 
@@ -511,6 +514,9 @@ class InvestmentOperation(models.Model):
 
     def action_canceled(self):
         self.line_state = 'canceled'
+
+    def action_reject(self):
+        self.line_state = 'rejected'
 
     @api.model
     def default_get(self, fields):

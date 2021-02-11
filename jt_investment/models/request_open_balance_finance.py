@@ -158,6 +158,9 @@ class BasesCollabration(models.Model):
         if self.distribution_id:
             self.distribution_id.action_reject()
             self.distribution_id.reason_rejection = self.reason_rejection 
+            
+        if self.investment_operation_id:
+            self.investment_operation_id.action_reject()
     
         return result
 

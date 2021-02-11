@@ -567,10 +567,10 @@ class BankBalanceCheck(models.TransientModel):
             for move in moves:
                 if move.is_payroll_payment_request:
                     type_of_batch = 'nominal'
-                    if move.check_folio_id:
-                        move.payment_state = 'assigned_payment_method'
+                        
                     if move.check_folio_id and move.check_folio_id.status not in ('Detained','Cancelled','Reissued','Withdrawn from circulation'):
                         move.check_folio_id.status = 'Printed'
+                        move.payment_state = 'assigned_payment_method'
                 elif move.is_payment_request:
                     type_of_batch = 'supplier'
                 elif move.is_different_payroll_request:
@@ -579,11 +579,11 @@ class BankBalanceCheck(models.TransientModel):
                     type_of_batch = 'project'
                 elif move.is_pension_payment_request:
                     type_of_batch = 'pension'
-                    if move.check_folio_id:
-                        move.payment_state = 'assigned_payment_method'
+                        
                     if move.check_folio_id and move.check_folio_id.status not in ('Detained','Cancelled','Reissued','Withdrawn from circulation'):
                         move.check_folio_id.status = 'Printed'
-                
+                        move.payment_state = 'assigned_payment_method'
+                        
                 moves_list.append(move)
                 
             move_val_list = []

@@ -31,11 +31,14 @@ class BudgetProgramConversion(models.Model):
     _description = 'Budget Program Conversion'
     _rec_name = 'shcp'
 
-    unam_key_id = fields.Many2one('program', string='Key UNAM')
+    unam_key_id = fields.Many2one('program', string='UNAM Function')
     desc = fields.Text(string='Description of key UNAM')
     shcp = fields.Many2one("shcp.code", string='Conversion of SHCP program')
     description = fields.Text(string='Description conversion of SHCP program')
 
+    dep_con_id = fields.Many2one('departure.conversion','SHCP Item')
+    federal_part_desc = fields.Text(related='dep_con_id.federal_part_desc',string="Item SHCP Description")
+    
     _sql_constraints = [('uniq_unam_key_id', 'unique(unam_key_id)',
                          'The Key UNAM must be unique.')]
 

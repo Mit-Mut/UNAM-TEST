@@ -258,8 +258,12 @@ class ReissueOfChecks(models.Model):
             self.check_log_id.status = 'Detained'
             self.check_log_id.general_status = 'cancelled'
             self.check_log_id.reason_retention = self.reason_adjustments
-        if self.move_id:
-            self.move_id.cancel_payment_method()
+        
+        if self.check_log_id:
+            moves = self.env['account.move'].search([('check_folio_id', '=', self.check_log_id.id)])
+            if moves:
+                for move in moves:
+                    move.cancel_payment_method()
                 
     def action_reject(self):
         return {

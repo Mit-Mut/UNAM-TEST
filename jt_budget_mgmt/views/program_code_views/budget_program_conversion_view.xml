@@ -23,7 +23,9 @@
             	<form>
             		<sheet>
 	            		<group>
-	            			<field name="unam_key_id" invisible="1" options="{'no_open': True, 'no_create': True}"/>
+	            			<field name="unam_key_id" context="{'show_program_digit':True}" options="{'no_open': True, 'no_create': True}"/>
+	            			<field name="dep_con_id"/>
+	            			<field name="federal_part_desc"/>
                             <field name="desc" invisible="1"/>
                             <field name="shcp" required="1"/>
                             <field name="description"/>
@@ -39,7 +41,9 @@
             <field name="model">budget.program.conversion</field>
             <field name="arch" type="xml">
             	<tree>
-            		<field name="unam_key_id" invisible="1"/>
+            		<field name="unam_key_id" context="{'show_program_digit':True}"/>
+           			<field name="dep_con_id"/>
+           			<field name="federal_part_desc"/>
                     <field name="desc" invisible="1"/>
                     <field name="shcp"/>
                     <field name="description"/>
@@ -53,7 +57,7 @@
             <field name="res_model">budget.program.conversion</field>
             <field name="view_mode">tree,form,search</field>
             <field name="view_id" ref="budget_program_conversion_tree_view"/>
-            <field name="context">{}</field>
+            <field name="context">{'show_program_digit':True}</field>
         </record>
     </data>
 </odoo>

@@ -27,8 +27,8 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
 
     conac_move = fields.Boolean(string="CONAC")
-    dependence_id = fields.Many2one('dependency','Dependence')
-    sub_depend_id = fields.Many2one('sub.dependency', "Sub Dependency")
+    dependence_id = fields.Many2one('dependency','D')
+    sub_depend_id = fields.Many2one('sub.dependency', "S")
     programatic_code = fields.Boolean('Programmatic Code')
     ie_account = fields.Boolean('IEAccount')
 

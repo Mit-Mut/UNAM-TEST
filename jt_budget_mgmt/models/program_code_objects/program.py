@@ -36,6 +36,16 @@ class Program(models.Model):
     _sql_constraints = [('key_unam', 'unique(key_unam)',
                          'The key UNAM must be unique.')]
 
+    def name_get(self):
+        result = []
+        for rec in self:
+            name = rec.key_unam or ''
+            if self.env.context:
+                if rec.digit and self.env.context.get('show_program_digit',False):
+                    name = rec.digit
+            result.append((rec.id, name))
+        return result
+
     @api.constrains('key_unam')
     def _check_key_unam(self):
         if not str(self.key_unam).isnumeric():

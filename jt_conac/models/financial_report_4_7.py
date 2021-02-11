@@ -110,7 +110,7 @@ class StatementOfCashFlows(models.AbstractModel):
             #period_list.reverse()
             periods_data = [period for period in period_list]
         #periods.append(options.get('date'))
-            
+        
         cash_obj = self.env['cash.statement']
         lines = []
 
@@ -128,9 +128,13 @@ class StatementOfCashFlows(models.AbstractModel):
             [('parent_id', '=', False)], order='id')
 
         for line in hierarchy_lines:
+            total_amount = 0
             level_1_columns = [{'name': ''} ]
             level_1_columns.extend([{'name': ''} for period in periods])
 
+            level_1_columns_total_dict = {}
+            level_1_columns_total_col = []
+            
             lines.append({
                 'id': 'hierarchy_' + str(line.id),
                 'name': line.concept,
@@ -142,8 +146,12 @@ class StatementOfCashFlows(models.AbstractModel):
 
             level_1_lines = cash_obj.search([('parent_id', '=', line.id)])
             for level_1_line in level_1_lines:
+                total_amount_2 = 0
                 level_2_columns = [{'name': ''}]
                 level_2_columns.extend([{'name': ''} for period in periods])
+
+                level_2_columns_total_dict = {}
+                level_2_columns_total_col = []
 
                 lines.append({
                     'id': 'level_one_%s' % level_1_line.id,
@@ -165,7 +173,10 @@ class StatementOfCashFlows(models.AbstractModel):
                              move_state_domain,
                              ('date', '>=', start),('date', '<=', end)])
                         if move_lines:
-                            current_amount = (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+                            current_amount = (sum(move_lines.mapped('credit')) - sum(move_lines.mapped('debit')))
+                    
+                    total_amount += current_amount
+                    total_amount_2 += current_amount
                     
                     level_3_columns = [self._format({'name': current_amount},figure_type='float'), ]
                     for period in periods_data:
@@ -179,8 +190,20 @@ class StatementOfCashFlows(models.AbstractModel):
                                  move_state_domain,
                                  ('date', '>=', date_start),('date', '<=', date_end)])
                             if move_lines:
-                                per_amount = (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+                                per_amount = (sum(move_lines.mapped('credit')) - sum(move_lines.mapped('debit')))
+                                
+                        if level_1_columns_total_dict.get(period.get('string'),False):
+                            per_total_amount = level_1_columns_total_dict.get(period.get('string'),0.0) + per_amount
+                            level_1_columns_total_dict.update({period.get('string'):per_total_amount})
+                        else:
+                            level_1_columns_total_dict.update({period.get('string'):per_amount})
 
+                        if level_2_columns_total_dict.get(period.get('string'),False):
+                            per_total_amount = level_2_columns_total_dict.get(period.get('string'),0.0) + per_amount
+                            level_2_columns_total_dict.update({period.get('string'):per_total_amount})
+                        else:
+                            level_2_columns_total_dict.update({period.get('string'):per_amount})
+                            
                         level_3_columns.extend([self._format({'name': per_amount},figure_type='float'),])
 
                     lines.append({
@@ -190,6 +213,114 @@ class StatementOfCashFlows(models.AbstractModel):
                         'level': 3,
                         'parent_id': 'level_one_%s' % level_1_line.id,
                     })
+                    
+                level_2_columns_total_col.extend([self._format({'name': total_amount_2},figure_type='float'),])
+                for ll in level_2_columns_total_dict:
+                    level_2_columns_total_col.extend([self._format({'name': level_2_columns_total_dict.get(ll,0.0)},figure_type='float'),])
+                lines.append({
+                    'id': 'Total' + str(level_1_line.id),
+                    'name': "Total",
+                    'columns': level_2_columns_total_col,
+                    'level': 1,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+
+
+            level_1_columns_total_col.extend([self._format({'name': total_amount},figure_type='float'),])
+            for ll in level_1_columns_total_dict:
+                level_1_columns_total_col.extend([self._format({'name': level_1_columns_total_dict.get(ll,0.0)},figure_type='float'),])
+            lines.append({
+                'id': 'Total' + str(line.id),
+                'name': line.concept,
+                'columns': level_1_columns_total_col,
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        #================CONAC account 1.1.1.0 Cash and Equivalents ==========#
+        conac_account_ids = self.env['coa.conac']
+        account_id = self.env['coa.conac'].search([('code','=','1.1.1.0')],limit=1)
+        if account_id:
+            conac_account_ids += account_id
+            child_ids = self.env['coa.conac'].search([('parent_id','=',account_id.id)])
+            if child_ids:
+                conac_account_ids += child_ids
+                
+        if conac_account_ids:
+            pre_year_amount = 0
+            current_year_amount = 0
+            
+            move_lines = move_line_obj.sudo().search(
+                [('coa_conac_id', 'in', conac_account_ids.ids),
+                 move_state_domain,
+                 ('date', '>=', start),('date', '<=', end)])
+            if move_lines:
+                pre_year_amount = (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+            
+            level_pre_year_col = [self._format({'name': pre_year_amount},figure_type='float')]
+
+            move_lines = move_line_obj.sudo().search(
+                [('coa_conac_id', 'in', conac_account_ids.ids),
+                 move_state_domain,
+                 ('date', '<=', end)])
+            if move_lines:
+                current_year_amount = (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+            
+            level_current_year_col = [self._format({'name': current_year_amount},figure_type='float')]
+            
+            net_cash_amount = current_year_amount - pre_year_amount
+            level_cash_amount_col = [self._format({'name': net_cash_amount},figure_type='float')]
+            
+            for period in periods_data:
+                date_start = datetime.strptime(str(period.get('date_from')),
+                                               DEFAULT_SERVER_DATE_FORMAT).date()
+                date_end = datetime.strptime(str(period.get('date_to')), DEFAULT_SERVER_DATE_FORMAT).date()
+                per_amount = 0
+                move_lines = move_line_obj.sudo().search(
+                    [('coa_conac_id', 'in', conac_account_ids.ids),
+                     move_state_domain,
+                     ('date', '>=', date_start),('date', '<=', date_end)])
+                if move_lines:
+                    per_amount = (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+    
+                level_pre_year_col.extend([self._format({'name': per_amount},figure_type='float'),])
+
+                current_amount = 0
+                move_lines = move_line_obj.sudo().search(
+                    [('coa_conac_id', 'in', conac_account_ids.ids),
+                     move_state_domain,
+                     ('date', '<=', date_end)])
+                if move_lines:
+                    current_amount = (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+    
+                
+                level_current_year_col.extend([self._format({'name': current_amount},figure_type='float'),])
+    
+                period_cash_amount = current_amount - per_amount
+                level_cash_amount_col.extend([self._format({'name': period_cash_amount},figure_type='float'),])
+                
+            lines.append({
+                'id': 'level_pre_year_col',
+                'name': 'Cash and Cash Equivalents at the Beginning of the Fiscal Year',
+                'columns': level_pre_year_col,
+                'level': 1,
+            })
+
+            lines.append({
+                'id': 'level_current_year_col',
+                'name': 'Cash and Cash Equivalents at the End of the Fiscal Year',
+                'columns': level_current_year_col,
+                'level': 1,
+            })
+
+            lines.append({
+                'id': 'level_cash_amount_col',
+                'name': 'Net Increase / Decrease in Cash and Cash Equivalents',
+                'columns': level_cash_amount_col,
+                'level': 1,
+            })
 
         return lines
 

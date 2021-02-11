@@ -39,7 +39,17 @@ class AnalyticalIncomeStatement(models.AbstractModel):
         return templates
 
     def _get_columns_name(self, options):
-        return [
+
+        periods = []
+        col_list = []
+        comparison = options.get('comparison')
+        if comparison and comparison.get('filter') != 'no_comparison':
+            period_list = comparison.get('periods')
+            period_list.reverse()
+            periods = [period for period in period_list]
+        #periods.append(options.get('date'))
+
+        col_list.extend([
             {'name': _('Nombre')},
             {'name': _('Estimado')},
             {'name': _('Ampliaciones y Reducciones')},
@@ -47,8 +57,20 @@ class AnalyticalIncomeStatement(models.AbstractModel):
             {'name': _('Devengado')},
             {'name': _('Recaudado')},
             {'name': _('Diferencia')},
-        ]
+        ])
 
+        for p in periods:
+                
+            col_list.extend([
+                {'name': _('Estimado')},
+                {'name': _('Ampliaciones y Reducciones')},
+                {'name': _('Modificado')},
+                {'name': _('Devengado')},
+                {'name': _('Recaudado')},
+                {'name': _('Diferencia')},
+            ])
+        return col_list
+    
     def _format(self, value,figure_type):
         if self.env.context.get('no_format'):
             return value
@@ -90,15 +112,18 @@ class AnalyticalIncomeStatement(models.AbstractModel):
             [('parent_id', '=', False)], order='id')
 
         for line in hierarchy_lines:
+            level_1_columns = []
+            for p in periods:
+                level_1_columns.extend([{'name': ''}, {'name': ''}, {'name': ''}, {'name': ''}, {'name': ''}, {'name': ''}])
             lines.append({
                 'id': 'hierarchy_' + str(line.id),
                 'name': line.name,
-                'columns': [{'name': ''}, {'name': ''}, {'name': ''}, {'name': ''}, {'name': ''}, {'name': ''}],
+                'columns': level_1_columns,
                 'level': 1,
                 'unfoldable': False,
                 'unfolded': True,
             })
-
+            
             level_1_lines = income_obj.search([('parent_id', '=', line.id)])
             for level_1_line in level_1_lines:
                 amt_columns = []
@@ -113,18 +138,18 @@ class AnalyticalIncomeStatement(models.AbstractModel):
                     date_end = datetime.strptime(str(period.get('date_to')), DEFAULT_SERVER_DATE_FORMAT).date()
 
                     move_lines = move_line_obj.sudo().search(
-                        [('coa_conac_id', 'in', level_1_line.conac_accounts_ids.ids),
+                        [('coa_conac_id', 'in', level_1_line.coa_conac_ids.ids),
                          ('move_id.state', '=', posted),
                          ('date', '>=', date_start), ('date', '<=', date_end)])
                     if move_lines:
                         estimated_amount = (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
 
-                    move_lines = move_line_obj.sudo().search(
-                        [('coa_conac_id', 'in', level_1_line.conac_collected_accounts_ids.ids),
-                         ('move_id.state', '=', posted),
-                         ('date', '>=', date_start), ('date', '<=', date_end)])
-                    if move_lines:
-                        collected_amount = (sum(move_lines.mapped('credit')) - sum(move_lines.mapped('debit')))
+#                     move_lines = move_line_obj.sudo().search(
+#                         [('coa_conac_id', 'in', level_1_line.conac_collected_accounts_ids.ids),
+#                          ('move_id.state', '=', posted),
+#                          ('date', '>=', date_start), ('date', '<=', date_end)])
+#                     if move_lines:
+#                         collected_amount = (sum(move_lines.mapped('credit')) - sum(move_lines.mapped('debit')))
                     
                     if period.get('string') in period_dict:
                         pe_dict = period_dict.get(period.get('string'))
@@ -181,18 +206,18 @@ class AnalyticalIncomeStatement(models.AbstractModel):
                         date_end = datetime.strptime(str(period.get('date_to')), DEFAULT_SERVER_DATE_FORMAT).date()
     
                         move_lines = move_line_obj.sudo().search(
-                            [('coa_conac_id', 'in', level_2_line.conac_accounts_ids.ids),
+                            [('coa_conac_id', 'in', level_2_line.coa_conac_ids.ids),
                              ('move_id.state', '=', posted),
                              ('date', '>=', date_start), ('date', '<=', date_end)])
                         if move_lines:
                             estimated_amount = (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
     
-                        move_lines = move_line_obj.sudo().search(
-                            [('coa_conac_id', 'in', level_2_line.conac_collected_accounts_ids.ids),
-                             ('move_id.state', '=', posted),
-                             ('date', '>=', date_start), ('date', '<=', date_end)])
-                        if move_lines:
-                            collected_amount = (sum(move_lines.mapped('credit')) - sum(move_lines.mapped('debit')))
+#                         move_lines = move_line_obj.sudo().search(
+#                             [('coa_conac_id', 'in', level_2_line.conac_collected_accounts_ids.ids),
+#                              ('move_id.state', '=', posted),
+#                              ('date', '>=', date_start), ('date', '<=', date_end)])
+#                         if move_lines:
+#                             collected_amount = (sum(move_lines.mapped('credit')) - sum(move_lines.mapped('debit')))
                         
                         if period.get('string') in period_dict:
                             pe_dict = period_dict.get(period.get('string'))
@@ -249,18 +274,18 @@ class AnalyticalIncomeStatement(models.AbstractModel):
                             date_end = datetime.strptime(str(period.get('date_to')), DEFAULT_SERVER_DATE_FORMAT).date()
         
                             move_lines = move_line_obj.sudo().search(
-                                [('coa_conac_id', 'in', level_3_line.conac_accounts_ids.ids),
+                                [('coa_conac_id', 'in', level_3_line.coa_conac_ids.ids),
                                  ('move_id.state', '=', posted),
                                  ('date', '>=', date_start), ('date', '<=', date_end)])
                             if move_lines:
                                 estimated_amount = (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
         
-                            move_lines = move_line_obj.sudo().search(
-                                [('coa_conac_id', 'in', level_3_line.conac_collected_accounts_ids.ids),
-                                 ('move_id.state', '=', posted),
-                                 ('date', '>=', date_start), ('date', '<=', date_end)])
-                            if move_lines:
-                                collected_amount = (sum(move_lines.mapped('credit')) - sum(move_lines.mapped('debit')))
+#                             move_lines = move_line_obj.sudo().search(
+#                                 [('coa_conac_id', 'in', level_3_line.conac_collected_accounts_ids.ids),
+#                                  ('move_id.state', '=', posted),
+#                                  ('date', '>=', date_start), ('date', '<=', date_end)])
+#                             if move_lines:
+#                                 collected_amount = (sum(move_lines.mapped('credit')) - sum(move_lines.mapped('debit')))
                             
                             if period.get('string') in period_dict:
                                 pe_dict = period_dict.get(period.get('string'))
@@ -298,6 +323,84 @@ class AnalyticalIncomeStatement(models.AbstractModel):
                             'level': 4,
                             'parent_id': 'level_two_%s' % level_2_line.id,
                         })
+
+        blank_columns = []
+        for p in periods:
+            blank_columns.extend([{'name': ''}, {'name': ''}, {'name': ''}, {'name': ''}, {'name': ''}, {'name': ''}])
+        lines.append({
+            'id': 'blank_columns',
+            'name': '',
+            'columns': blank_columns,
+            'level': 3,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+        estimate_columns = []
+        for period in periods:
+            estimated = 0
+            reductions = 0
+            accrued = 0
+            collected = 0
+            
+            estimated_account_id = account_id = self.env['coa.conac'].search([('code','=','8.1.1.0')],limit=1)
+            reductions_account_id = account_id = self.env['coa.conac'].search([('code','=','8.1.3.0')],limit=1)
+            accrued_account_id = account_id = self.env['coa.conac'].search([('code','=','8.1.4.0')],limit=1)
+            collected_account_id = account_id = self.env['coa.conac'].search([('code','=','8.1.5.0')],limit=1)
+            
+            date_start = datetime.strptime(str(period.get('date_from')),
+                                           DEFAULT_SERVER_DATE_FORMAT).date()
+            date_end = datetime.strptime(str(period.get('date_to')), DEFAULT_SERVER_DATE_FORMAT).date()
+            
+            if estimated_account_id:
+                move_lines = move_line_obj.sudo().search(
+                    [('coa_conac_id', '=', estimated_account_id.id),
+                     ('move_id.state', '=', posted),
+                     ('date', '>=', date_start),('date', '<=', date_end)])
+                if move_lines:
+                    estimated = (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+
+            if reductions_account_id:
+                move_lines = move_line_obj.sudo().search(
+                    [('coa_conac_id', '=', reductions_account_id.id),
+                     ('move_id.state', '=', posted),
+                     ('date', '>=', date_start),('date', '<=', date_end)])
+                if move_lines:
+                    reductions = (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+
+            if accrued_account_id:
+                move_lines = move_line_obj.sudo().search(
+                    [('coa_conac_id', '=', accrued_account_id.id),
+                     ('move_id.state', '=', posted),
+                     ('date', '>=', date_start),('date', '<=', date_end)])
+                if move_lines:
+                    accrued = (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+
+            if collected_account_id:
+                move_lines = move_line_obj.sudo().search(
+                    [('coa_conac_id', '=', collected_account_id.id),
+                     ('move_id.state', '=', posted),
+                     ('date', '>=', date_start),('date', '<=', date_end)])
+                if move_lines:
+                    collected = (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+                
+            modified = estimated + reductions
+            difference = collected - estimated
+            
+            estimate_columns.extend([self._format({'name': estimated},figure_type='float'),
+                                  self._format({'name':reductions},figure_type='float'), 
+                                  self._format({'name': modified},figure_type='float'), 
+                                  self._format({'name': accrued},figure_type='float'), 
+                                  self._format({'name': collected},figure_type='float'), 
+                                  self._format({'name': difference},figure_type='float')])
+            
+        lines.append({
+            'id': 'estimate_columns',
+            'name': 'Conac Revenue Budgetary Accounts:',
+            'columns': estimate_columns,
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
                         
         return lines
 

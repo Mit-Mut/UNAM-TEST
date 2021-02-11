@@ -1,4 +1,5 @@
-from odoo import fields, models, api
+from odoo import fields, models, api,_
+from odoo.exceptions import ValidationError, UserError
 
 class ConfirmCheckBook(models.TransientModel):
     _name = 'confirm.checkbook'
@@ -15,6 +16,19 @@ class ConfirmCheckBook(models.TransientModel):
         total = (self.received_boxes * self.check_per_box) + self.additional_checks
         self.total_cash = total
 
+#     def validation_check_folio(self,check_req):
+#         bank_id = check_req.bank_id and check_req.bank_id.id or False 
+#         other_checkbook_ids = self.env['checkbook.request'].search([('state','=','confirmed'),('bank_id','=',bank_id)])
+#         for checkbook in other_checkbook_ids:
+#             if check_req.intial_folio >= checkbook.intial_folio and  check_req.intial_folio <= checkbook.final_folio:
+#                 raise UserError(_('Cannot register folios that are already registered'))
+#             if check_req.final_folio >= checkbook.intial_folio and  check_req.final_folio <= checkbook.final_folio:
+#                 raise UserError(_('Cannot register folios that are already registered'))
+#             if  checkbook.intial_folio >= check_req.intial_folio and  checkbook.final_folio <= check_req.intial_folio:
+#                 raise UserError(_('Cannot register folios that are already registered'))
+#             if  checkbook.intial_folio >= check_req.final_folio and  checkbook.final_folio <= check_req.final_folio:
+#                 raise UserError(_('Cannot register folios that are already registered'))
+            
     def apply(self):
         check_req = self.env['checkbook.request'].browse(self._context.get('active_id'))
         if check_req:

@@ -125,6 +125,7 @@
                     				<field name="seq" invisible="1"/>
                     				<field name="record_type" invisible="1"/>
                     				<button name="action_requested" string="Confirm" attrs="{'invisible':[('line_state','!=','draft')]}" class="oe_highlight" type="object"/>
+                    				<button name="action_reset_to_draft" string="Reset To Draft" attrs="{'invisible':[('line_state','!=','rejected')]}" class="oe_highlight" type="object"/>
                     				<field name="invoice" invisible="1"/>
                     				<field name="journal_id" invisible="1"/>
                     				<field name="source_ids" invisible="1"/>

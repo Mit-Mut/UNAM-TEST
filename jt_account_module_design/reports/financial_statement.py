@@ -103,7 +103,9 @@ class ReportAccountFinancialReport(models.Model):
         lines = []
 
         domain = []
-        is_add_fiter = False          
+        dep_domain = []
+        is_add_fiter = False
+        is_add_dep_fiter = False
         if len(options['selected_programs']) > 0:
             domain.append(('program_id.key_unam', 'in', options['selected_programs']))
             is_add_fiter = True
@@ -111,10 +113,12 @@ class ReportAccountFinancialReport(models.Model):
             domain.append(('sub_program_id.sub_program', 'in', options['selected_sub_programs']))
             is_add_fiter = True
         if len(options['selected_dependency']) > 0:
-            domain.append(('dependency_id.dependency', 'in', options['selected_dependency']))
+            dep_domain.append(('move_id.dependancy_id.dependency', 'in', options['selected_dependency']))
+            is_add_dep_fiter = True
             is_add_fiter = True
         if len(options['selected_sub_dependency']) > 0:
-            domain.append(('sub_dependency_id.sub_dependency', 'in', options['selected_sub_dependency']))
+            dep_domain.append(('move_id.sub_dependancy_id.sub_dependency', 'in', options['selected_sub_dependency']))
+            is_add_dep_fiter = True
             is_add_fiter = True
         if len(options['selected_items']) > 0:
             domain.append(('item_id.item', 'in', options['selected_items']))
@@ -130,6 +134,12 @@ class ReportAccountFinancialReport(models.Model):
         program_codes_account_ids = program_codes_account_ids.ids
          
         report_id = self.env.ref('account_reports.account_financial_report_balancesheet0')
+
+        move_lines_dep_account_ids = self.env['account.account']
+        
+        if is_add_dep_fiter:
+            move_lines_ids = self.env['account.move.line'].search(dep_domain)
+            program_codes_account_ids += move_lines_ids.mapped('account_id').ids
         
         if  report_id:
             #======= Side Data ======#

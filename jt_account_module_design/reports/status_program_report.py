@@ -417,7 +417,9 @@ class StatusProgramReport(models.AbstractModel):
         # Then, the '_do_query' will compute all sums/unaffected earnings/initial balances for all comparisons.
 
         domain = []
-        is_add_fiter = False          
+        dep_domain = []
+        is_add_fiter = False
+        is_add_dep_fiter = False
         if len(options['selected_programs']) > 0:
             domain.append(('program_id.key_unam', 'in', options['selected_programs']))
             is_add_fiter = True
@@ -425,11 +427,11 @@ class StatusProgramReport(models.AbstractModel):
             domain.append(('sub_program_id.sub_program', 'in', options['selected_sub_programs']))
             is_add_fiter = True
         if len(options['selected_dependency']) > 0:
-            domain.append(('dependency_id.dependency', 'in', options['selected_dependency']))
-            is_add_fiter = True
+            dep_domain.append(('move_id.dependancy_id.dependency', 'in', options['selected_dependency']))
+            is_add_dep_fiter = True
         if len(options['selected_sub_dependency']) > 0:
-            domain.append(('sub_dependency_id.sub_dependency', 'in', options['selected_sub_dependency']))
-            is_add_fiter = True
+            dep_domain.append(('move_id.sub_dependancy_id.sub_dependency', 'in', options['selected_sub_dependency']))
+            is_add_dep_fiter = True
         if len(options['selected_items']) > 0:
             domain.append(('item_id.item', 'in', options['selected_items']))
             is_add_fiter = True
@@ -448,6 +450,12 @@ class StatusProgramReport(models.AbstractModel):
         options_list = self._get_options_periods_list(new_options)
         accounts_results, taxes_results = self.env['account.general.ledger']._do_query(options_list, fetch_lines=False)
 
+        move_lines_dep_account_ids = self.env['account.account']
+        
+        if is_add_dep_fiter:
+            move_lines_ids = self.env['account.move.line'].search(dep_domain)
+            move_lines_dep_account_ids = move_lines_ids.mapped('account_id')
+
         grouped_accounts = {}
         initial_balances = {}
         comparison_table = [options.get('date')]
@@ -455,6 +463,10 @@ class StatusProgramReport(models.AbstractModel):
         for account, periods_results in accounts_results:
             if is_add_fiter and not account.id in program_codes_account_ids:
                 continue
+
+            if is_add_dep_fiter  and not account.id in move_lines_dep_account_ids.ids:
+                continue
+            
             grouped_accounts.setdefault(account, [])
             for i, res in enumerate(periods_results):
                 if i == 0:

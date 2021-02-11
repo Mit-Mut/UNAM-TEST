@@ -134,7 +134,7 @@ class StateOfVariation(models.AbstractModel):
                             
                             if level_3_line.code == '3.3.1.0' or level_3_line.code == '3.3.2.0':
                                 if move_lines:
-                                    level_3_col_4 = (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+                                    level_3_col_4 = (sum(move_lines.mapped('credit')) - sum(move_lines.mapped('debit')))
                                     level_2_col_4 += level_3_col_4 
                                     level_1_col_4 += level_3_col_4
                                     total_col4 += level_3_col_4
@@ -144,7 +144,7 @@ class StateOfVariation(models.AbstractModel):
 
                             elif level_3_line.code == '3.1.1.0' or level_3_line.code == '3.1.2.0' or level_3_line.code == '3.1.3.0':
                                 if move_lines:
-                                    level_3_col_1 = (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+                                    level_3_col_1 = (sum(move_lines.mapped('credit')) - sum(move_lines.mapped('debit')))
                                     level_2_col_1 += level_3_col_1 
                                     level_1_col_1 += level_3_col_1
                                     total_col1 += level_3_col_1
@@ -154,7 +154,7 @@ class StateOfVariation(models.AbstractModel):
 
                             elif level_3_line.code == '3.2.1.0':
                                 if move_lines:
-                                    level_3_col_3 = (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+                                    level_3_col_3 = (sum(move_lines.mapped('credit')) - sum(move_lines.mapped('debit')))
                                     level_2_col_3 += level_3_col_3 
                                     level_1_col_3 += level_3_col_3
                                     total_col3 += level_3_col_3
@@ -164,7 +164,7 @@ class StateOfVariation(models.AbstractModel):
 
                             elif level_2_line.code == '3.2.2.0' or level_2_line.code == '3.2.3.0' or level_2_line.code == '3.2.4.0' or level_2_line.code == '3.2.5.0':
                                 if move_lines:
-                                    level_3_col_2 = (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+                                    level_3_col_2 = (sum(move_lines.mapped('credit')) - sum(move_lines.mapped('debit')))
                                     level_2_col_2 += level_3_col_2 
                                     level_1_col_2 += level_3_col_2
                                     total_col2 += level_3_col_2
@@ -193,7 +193,7 @@ class StateOfVariation(models.AbstractModel):
                             
                         elif level_2_line.code == '3.3.1.0' or level_2_line.code == '3.3.2.0':
                             if move_lines:
-                                level_2_col_4 += (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+                                level_2_col_4 += (sum(move_lines.mapped('credit')) - sum(move_lines.mapped('debit')))
                                 total_col4 += level_2_col_4
                                 level_1_col_4 += level_2_col_4
                             level_2_columns = [
@@ -201,7 +201,7 @@ class StateOfVariation(models.AbstractModel):
 
                         elif level_2_line.code == '3.1.1.0' or level_2_line.code == '3.1.2.0' or level_2_line.code == '3.1.3.0':
                             if move_lines:
-                                level_2_col_1 += (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+                                level_2_col_1 += (sum(move_lines.mapped('credit')) - sum(move_lines.mapped('debit')))
                                 total_col1 += level_2_col_1
                                 level_1_col_1 += level_2_col_1
                             level_2_columns = [self._format({'name': level_2_col_1},figure_type='float'),
@@ -209,7 +209,7 @@ class StateOfVariation(models.AbstractModel):
 
                         elif level_2_line.code == '3.2.1.0':
                             if move_lines:
-                                level_2_col_3 += (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+                                level_2_col_3 += (sum(move_lines.mapped('credit')) - sum(move_lines.mapped('debit')))
                                 total_col3 += level_2_col_3
                                 level_1_col_3 += level_2_col_3
                             level_2_columns = [{'name': ''}, {'name': ''},self._format({'name': level_2_col_3},figure_type='float'),
@@ -217,7 +217,7 @@ class StateOfVariation(models.AbstractModel):
 
                         elif level_2_line.code == '3.2.2.0' or level_2_line.code == '3.2.3.0' or level_2_line.code == '3.2.4.0' or level_2_line.code == '3.2.5.0':
                             if move_lines:
-                                level_2_col_2 += (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+                                level_2_col_2 += (sum(move_lines.mapped('credit')) - sum(move_lines.mapped('debit')))
                                 total_col2 += level_2_col_2
                                 level_1_col_2 += level_2_col_2
                             level_2_columns = [{'name': ''}, self._format({'name': level_2_col_2},figure_type='float'),{'name': ''},

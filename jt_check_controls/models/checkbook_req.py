@@ -8,7 +8,7 @@ class CheckbookRequest(models.Model):
     _description = "Checkbook Request"
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    name = fields.Char("Name", default="Checkbook Request")
+    name = fields.Char("Name", default=lambda self: _("Checkbook Request"))
     application_no = fields.Integer("Application No.")
     folio_legal = fields.Char("Folio Legal")
     appliaction_date = fields.Date("Application Date", default=datetime.today())
@@ -25,7 +25,7 @@ class CheckbookRequest(models.Model):
     are_test_prin_formats_sent = fields.Boolean("Are test print formats sent?")
     dependence_id = fields.Many2one('dependency', "Dependence")
     subdependence_id = fields.Many2one('sub.dependency', "Subdependence")
-    area = fields.Char("Area", default="Financial Operations Department")
+    area = fields.Char("Area", default=lambda self: _("Financial Operations Department"))
     number_of_folios = fields.Char("Number of Folios")
     print_sample_folio_number = fields.Char("Print Sample Folio Number")
 
@@ -310,6 +310,15 @@ class CheckListLine(models.Model):
                 rec.general_status = 'paid'
             else:
                 rec.general_status = False
+
+    @api.constrains('folio','bank_id')
+    def _check_stage_identifier(self):
+        for check in self:
+            if check.folio and check.bank_id:
+                other_check = self.env['check.log'].search([('id','!=',check.id),('folio','=',check.folio),('bank_id','=',check.bank_id.id)])
+                print ("Other Check---",other_check)
+                if other_check:
+                    raise ValidationError(_('Cannot register folios that are already registered'))
 
     def write(self, vals):
         

@@ -18,7 +18,7 @@ import base64
 from datetime import timedelta
 from odoo.tools import config, date_utils, get_lang
 import lxml.html
-
+from odoo.tools.misc import format_date
 
 
 class AccountChartOfAccountReport(models.AbstractModel):
@@ -250,7 +250,9 @@ class AccountChartOfAccountReport(models.AbstractModel):
         '''
 
         domain = []
+        dep_domain = []
         is_add_fiter = False
+        is_add_dep_fiter = False
         if len(options['selected_programs']) > 0:
             domain.append(('program_id.key_unam', 'in', options['selected_programs']))
             is_add_fiter = True
@@ -258,11 +260,11 @@ class AccountChartOfAccountReport(models.AbstractModel):
             domain.append(('sub_program_id.sub_program', 'in', options['selected_sub_programs']))
             is_add_fiter = True
         if len(options['selected_dependency']) > 0:
-            domain.append(('dependency_id.dependency', 'in', options['selected_dependency']))
-            is_add_fiter = True
+            dep_domain.append(('move_id.dependancy_id.dependency', 'in', options['selected_dependency']))
+            is_add_dep_fiter = True
         if len(options['selected_sub_dependency']) > 0:
-            domain.append(('sub_dependency_id.sub_dependency', 'in', options['selected_sub_dependency']))
-            is_add_fiter = True
+            dep_domain.append(('move_id.sub_dependancy_id.sub_dependency', 'in', options['selected_sub_dependency']))
+            is_add_dep_fiter = True
         if len(options['selected_items']) > 0:
             domain.append(('item_id.item', 'in', options['selected_items']))
             is_add_fiter = True
@@ -285,11 +287,18 @@ class AccountChartOfAccountReport(models.AbstractModel):
         expanded_account = line_id and self.env['account.account'].browse(int(line_id[8:]))
         accounts_results, taxes_results = self._do_query(options_list, expanded_account=expanded_account)
 
+        move_lines_dep_account_ids = self.env['account.account']
+        
+        if is_add_dep_fiter:
+            move_lines_ids = self.env['account.move.line'].search(dep_domain)
+            move_lines_dep_account_ids = move_lines_ids.mapped('account_id')
+        
         total_debit = total_credit = total_balance = 0.0
         for account, periods_results in accounts_results:
             if is_add_fiter and not account.id in program_codes_account_ids:
                 continue
-            
+            if is_add_dep_fiter  and not account.id in move_lines_dep_account_ids.ids:
+                continue
             # No comparison allowed in the General Ledger. Then, take only the first period.
             results = periods_results[0]
 

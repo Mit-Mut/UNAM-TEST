@@ -173,7 +173,7 @@ class StatementOfCashFlows(models.AbstractModel):
                              move_state_domain,
                              ('date', '>=', start),('date', '<=', end)])
                         if move_lines:
-                            current_amount = (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+                            current_amount = (sum(move_lines.mapped('credit')) - sum(move_lines.mapped('debit')))
                     
                     total_amount += current_amount
                     total_amount_2 += current_amount
@@ -190,7 +190,7 @@ class StatementOfCashFlows(models.AbstractModel):
                                  move_state_domain,
                                  ('date', '>=', date_start),('date', '<=', date_end)])
                             if move_lines:
-                                per_amount = (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+                                per_amount = (sum(move_lines.mapped('credit')) - sum(move_lines.mapped('debit')))
                                 
                         if level_1_columns_total_dict.get(period.get('string'),False):
                             per_total_amount = level_1_columns_total_dict.get(period.get('string'),0.0) + per_amount

@@ -1063,8 +1063,11 @@ msgid "Checkbook Number"
 msgstr "Número de la chequera"
 
 #. module: jt_check_controls
+#: code:addons/jt_check_controls/models/checkbook_req.py:0
 #: model:ir.model,name:jt_check_controls.model_checkbook_request
+#: model:ir.model.fields,field_description:jt_check_controls.field_apply_distribution_modules__checkbook_req_id
 #: model:ir.model.fields,field_description:jt_check_controls.field_check_log__checklist_id
+#, python-format
 msgid "Checkbook Request"
 msgstr "Solicitud de chequera"
 
@@ -2419,4 +2422,16 @@ msgid ""
 msgstr ""
 "Confirmar que el estado de todos los cheques seleccionados sea \"Impreso\", de otra forma "
 "el layout no podrá ser generado hasta que se encuentre en el estado indicado"
+
+#. module: jt_check_controls
+#: code:addons/jt_check_controls/models/checkbook_req.py:0
+#, python-format
+msgid "Financial Operations Department"
+msgstr "Departamento de Operación Financiera"
+
+#. module: jt_check_controls
+#: code:addons/jt_check_controls/models/checkbook_req.py:0
+#, python-format
+msgid "Cannot register folios that are already registered"
+msgstr "No se pueden registrar folios que ya están registrados"
 

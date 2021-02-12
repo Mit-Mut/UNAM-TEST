@@ -40,7 +40,7 @@ class CancelCollaboration(models.TransientModel):
             rec.cancel_date = self.cancel_date
             rec.supporing_doc = self.supporing_doc
             rec.reason_cancel = self.reason_cancel
-            rec.state = 'in_force'
+            
             self.env['request.open.balance'].create({
                 'bases_collaboration_id': rec.id,
                 'is_cancel_collaboration': True,
@@ -61,3 +61,4 @@ class CancelCollaboration(models.TransientModel):
                 'availability_account_id': rec.availability_account_id.id if rec.availability_account_id
                 else False
             })
+            rec.state = 'to_be_cancelled'

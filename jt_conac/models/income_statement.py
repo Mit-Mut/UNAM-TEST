@@ -36,10 +36,11 @@ class StatementOfIncome(models.Model):
     raised_amt = fields.Float(string='Recaudado')
     difference_amt = fields.Float(string='Diferencia')
     parent_id = fields.Many2one('income.statement', string='Parent')
-    accounts_ids = fields.Many2many("account.account",'rel_conac_income_account','income_id','account_id','Estimated Accounts')
-    collected_accounts_ids = fields.Many2many("account.account",'rel_conac_income_collected_account','income_id','account_id','Collected Accounts')
+    coa_conac_ids = fields.Many2many('coa.conac', string="CODE CONAC")
+    # accounts_ids = fields.Many2many("account.account",'rel_conac_income_account','income_id','account_id','Estimated Accounts')
+    # collected_accounts_ids = fields.Many2many("account.account",'rel_conac_income_collected_account','income_id','account_id','Collected Accounts')
 
-    conac_accounts_ids = fields.Many2many("coa.conac",'rel_conac_chart_income_account','income_id','account_id','Estimated Accounts')
-    conac_collected_accounts_ids = fields.Many2many("coa.conac",'rel_conac_chart_income_collected_account','income_id','account_id','Collected Accounts')
+    # conac_accounts_ids = fields.Many2many("coa.conac",'rel_conac_chart_income_account','income_id','account_id','Estimated Accounts')
+    # conac_collected_accounts_ids = fields.Many2many("coa.conac",'rel_conac_chart_income_collected_account','income_id','account_id','Collected Accounts')
     
     

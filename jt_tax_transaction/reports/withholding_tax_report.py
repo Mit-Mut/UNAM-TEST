@@ -68,7 +68,7 @@ class WithholdingTaxReport(models.AbstractModel):
             {'name': _('Name Of The Tax')},
             {'name': ''},
             {'name': ''},
-            #{'name': _('Net'), 'class': 'number'},
+            {'name': _('Net'), 'class': 'number'},
             {'name': _('Tax'), 'class': 'number'}
         ]
     def _format(self, value,figure_type):
@@ -108,6 +108,7 @@ class WithholdingTaxReport(models.AbstractModel):
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
+        total = 0
         tax_ids = self.env['account.tax'].search([])
         journal_id = False
         journal_rec = self.env['account.journal'].search([('code','=','CBMX')],limit=1)
@@ -122,31 +123,151 @@ class WithholdingTaxReport(models.AbstractModel):
                              '220.001.004.004','220.001.004.005','220.001.004.006','220.001.005.001',
                              '220.001.005.002'
                              ]
-        for a in account_code_list:
-            account_id = self.env['account.account'].search([('code','=',a)],limit=1)
+        for account in account_code_list:
+            account_id = self.env['account.account'].search([('code','=',account)],limit=1)
             if account_id:
                account_ids = account_ids + account_id
                    
 
         tax_line_list = []
-        for line in account_ids:
-            move_lines= self.env['account.move.line'].search([('account_id','=',line.id),('date', '>=', start),('date', '<=', end),move_state_domain])
-            amount = sum(x.debit-x.credit for x in move_lines)
-            tax_line_list.append({
-                'id': line.id,
-                'name' : line.code +" "+ line.name, 
-                'columns': [
-                            {'name': ''},
-                            {'name': ''},
-                            #self._format({'name': 00},figure_type='float'),
-                            self._format({'name': amount},figure_type='float'),
-                            ],
-                'level': 3,
-                'unfoldable': False,
-                'class':'text-left',
-                'caret_options': 'account.account',
-            })
+        for tax in tax_ids:
+            total_balance = 0
+            total_tax = 0
+            move_lines= self.env['account.move.line'].search([('account_id','in',account_ids.ids),('date', '>=', start),('date', '<=', end),('tax_line_id', '=', tax.id),move_state_domain])
+            #move_lines = self.env['account.move.line'].search([('date', '>=', start),('date', '<=', end),('move_id.journal_id','=',journal_id),('tax_line_id', '=', tax.id),move_state_domain])
+            if move_lines:    
+                tax_line_list = []
+                tax_account_ids = move_lines.mapped('account_id')
+                tax_move_lines = move_lines.filtered(lambda x:x.account_id.id in tax_account_ids.ids)
+                
+                for account_id in tax_account_ids:
+                    net_amount = sum(x.tax_base_amount for x in tax_move_lines.filtered(lambda x:x.account_id.id==account_id.id))
+                    tax_amount = sum(x.debit+x.credit for x in tax_move_lines.filtered(lambda x:x.account_id.id==account_id.id))
+                    
+                    tax_line_list.append({
+                        'id': account_id.id,
+                        'name' :  account_id.code +" "+ account_id.name, 
+                        'columns': [
+                                    {'name': ''},
+                                    {'name': ''},
+                                    self._format({'name': net_amount},figure_type='float'),
+                                    self._format({'name': tax_amount},figure_type='float'),
+                                    ],
+                        'level': 3,
+                        'unfolded': True,
+                        'parent_id': 'tax_name'+str(tax.id),
+                        'caret_options': 'account.account',
+                    })
+                    total_balance += net_amount
+                    total_tax += tax_amount
 
-        lines += tax_line_list     
+                tax_list=[{
+                    'id': 'tax_name_in'+str(tax.id),
+                    'name' : "Total", 
+                    'columns': [
+                                {'name': ''},
+                                {'name': ''},
+                                self._format({'name': total_balance},figure_type='float'),
+                                self._format({'name': total_tax},figure_type='float'),
+                                ],
+                    'level': 1,
+                    'unfoldable': True,
+                    'unfolded': False,
+                    'parent_id': 'tax_name'+str(tax.id),
+                }]
+
+                tax_list=[{
+                    'id': 'tax_name'+str(tax.id),
+                    'name' : tax.name, 
+                    'columns': [
+                                {'name': ''},
+                                {'name': ''},
+                                self._format({'name': total_balance},figure_type='float'),
+                                self._format({'name': total_tax},figure_type='float'),
+                                ],
+                    'level': 1,
+                    'unfoldable': True,
+                    'unfolded': False,
+                }]
+                lines += tax_list + tax_line_list     
+        return lines
+
+
+#         for tax in tax_ids:
+#             total_balance = 0
+#             total_tax = 0
+#             move_lines= self.env['account.move.line'].search([('account_id','in',account_ids.ids),('date', '>=', start),('date', '<=', end),('tax_line_id', '=', tax.id),move_state_domain])
+#             #move_lines = self.env['account.move.line'].search([('date', '>=', start),('date', '<=', end),('move_id.journal_id','=',journal_id),('tax_line_id', '=', tax.id),move_state_domain])
+#             if move_lines:    
+#                 tax_line_list = []
+#                 for line in move_lines:
+#                     tax_line_list.append({
+#                         'id': 'line'+str(line.id),
+#                         'name' : line.ref, 
+#                         'columns': [
+#                                     {'name': line.date},
+#                                     {'name': line.move_id.name},
+#                                     self._format({'name': line.tax_base_amount},figure_type='float'),
+#                                     self._format({'name': line.debit+line.credit},figure_type='float'),
+#                                     ],
+#                         'level': 3,
+#                         'unfolded': True,
+#                         'parent_id': 'tax_name'+str(tax.id),
+#                     })
+#                     total_balance += line.tax_base_amount
+#                     total_tax += line.debit+line.credit
+# 
+#                 tax_list=[{
+#                     'id': 'tax_name'+str(tax.id),
+#                     'name' : tax.name, 
+#                     'columns': [
+#                                 {'name': ''},
+#                                 {'name': ''},
+#                                 self._format({'name': total_balance},figure_type='float'),
+#                                 self._format({'name': total_tax},figure_type='float'),
+#                                 ],
+#                     'level': 1,
+#                     'unfoldable': True,
+#                     'unfolded': False,
+#                 }]
+#                 lines += tax_list + tax_line_list     
+#         return lines
+
+        #====================================== Direct Account ========#
+#         for line in account_ids:
+#             move_lines= self.env['account.move.line'].search([('account_id','=',line.id),('date', '>=', start),('date', '<=', end),move_state_domain])
+#             amount = sum(x.credit-x.debit for x in move_lines)
+#             total += amount
+#             tax_line_list.append({
+#                 'id': line.id,
+#                 'name' : line.code +" "+ line.name, 
+#                 'columns': [
+#                             {'name': ''},
+#                             {'name': ''},
+#                             self._format({'name': amount},figure_type='float'),
+#                             self._format({'name': 00},figure_type='float'),
+#                             ],
+#                 'level': 3,
+#                 'unfoldable': False,
+#                 'class':'text-left',
+#                 'caret_options': 'account.account',
+#             })
+# 
+#         lines += tax_line_list     
+# 
+#         lines.append({
+#             'id': 'total',
+#             'name' : 'Total', 
+#             'columns': [
+#                         {'name':''},
+#                         {'name':''},
+#                          self._format({'name': total},figure_type='float'),
+#                         {'name':''},
+#                         ],
+#             'level': 1,
+#             'unfoldable': False,
+#             'unfolded': True,
+#             'class':'text-left',
+#         })
 
         return lines

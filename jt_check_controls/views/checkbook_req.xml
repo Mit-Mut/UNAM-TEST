@@ -74,14 +74,14 @@
                                 <field name="appliaction_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="bank_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="bank_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="amount_checks" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="amount_checks" attrs="{'readonly': [('state', 'not in', ('draft','requested','approved','submitted'))]}"/>
                                 <field name="applicant_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="observations" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
                             <group>
                                 <field name="checkbook_no" readonly="1" force_save="1"/>
-                                <field name="intial_folio" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="final_folio" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="intial_folio" attrs="{'readonly': [('state', 'not in', ('draft','requested','approved','submitted'))]}"/>
+                                <field name="final_folio" attrs="{'readonly': [('state', 'not in', ('draft','requested','approved','submitted'))]}"/>
                                 <field name="confirmation_letter" filename="file_name"/>
                                 <field name="file_name" invisible="1"/>
                                 <field name="are_test_prin_formats_sent"

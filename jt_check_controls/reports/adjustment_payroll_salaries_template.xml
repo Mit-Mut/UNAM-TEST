@@ -93,8 +93,8 @@
                                             <th name="th_number_de_cheque" class="text-left">
                                                 <span>Número cheque</span>
                                             </th>
-                                            <th name="th_unit" class="text-left">
-                                                <span>comprobar el número final</span>
+                                            <th name="th_un" class="text-left">
+                                                <span>Nuevo número de cheque</span>
                                             </th>
                                             <th class="text-left" name="th_matter">
                                                 <span>Importe</span>
@@ -110,13 +110,13 @@
 
                                         <t t-foreach="docs" t-as="doc">
                                             <!--  and doc.l10n_mx_edi_payment_method_id == 'Cheque nominativo'-->
-                                            <t t-if="doc.state == 'done' and doc.check_folio_id.folio != doc.check_final_folio_id.folio and doc.l10n_mx_edi_payment_method_id.name == 'Cheque nominativo'">
+                                            <t t-if="doc.state == 'done' and doc.check_final_folio_id.folio and doc.check_folio_id.folio and doc.check_folio_id.folio != doc.check_final_folio_id.folio and doc.l10n_mx_edi_payment_method_id.name == 'Cheque nominativo'">
                                             <tr>
                                                 
                                                 <t t-set="count" t-value="count + 1"/>
                                                 <td name="td_rfc"><span t-field="doc.rfc"/></td>
                                                 <td name="td_name" class="text-right">
-                                                    <span t-field="doc.display_name"/>
+                                                    <span t-field="doc.employee_id.name"/>
                                                 </td>
                                                 <td name="td_new_fortnight" class="text-right">
                                                     <span t-field="doc.fornight"/>

@@ -157,7 +157,7 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        <field name="state" widget="statusbar"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,valid,to_be_cancelled,cancelled"/>
                         <button name="confirm" type="object" string="Confirm" class="oe_highlight"
                                  attrs="{'invisible': [('state', '!=', 'draft')]}"/>
                         <button name="cancel" type="object" string="Cancel" class="oe_highlight"

@@ -123,8 +123,8 @@ class WithholdingTaxReport(models.AbstractModel):
                              '220.001.004.004','220.001.004.005','220.001.004.006','220.001.005.001',
                              '220.001.005.002'
                              ]
-        for a in account_code_list:
-            account_id = self.env['account.account'].search([('code','=',a)],limit=1)
+        for account in account_code_list:
+            account_id = self.env['account.account'].search([('code','=',account)],limit=1)
             if account_id:
                account_ids = account_ids + account_id
                    

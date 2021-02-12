@@ -218,15 +218,15 @@ class BasesCollabration(models.Model):
             collaboration = self.browse(collab)
             deposite = sum(
               x.opening_balance for x in collaboration.request_open_balance_ids.filtered(lambda x: x.state == 'confirmed'
-                                             and x.request_date < start_date and \
+                                             and x.request_date and x.request_date < start_date and \
                                                 x.type_of_operation in ('open_bal', 'increase', 'increase_by_closing')))
             retiros = sum(x.opening_balance for x in collaboration.request_open_balance_ids.filtered(lambda x:
                                             x.state == 'confirmed'
-                                             and x.request_date < start_date and \
+                                             and x.request_date and x.request_date < start_date and \
                     x.type_of_operation in ('retirement', 'withdrawal', 'withdrawal_cancellation', 'withdrawal_closure')))
             intial_bal = deposite - retiros
             operations = collaboration.request_open_balance_ids.filtered(lambda x:x.state=='confirmed'
-                    and x.request_date >= start_date and x.request_date <= end_date)
+                    and x.request_date and x.request_date >= start_date and x.request_date <= end_date)
             for operation in operations:
                 if operation.type_of_operation in ('open_bal', 'increase','increase_by_closing'):
                     increments += operation.opening_balance
@@ -235,7 +235,6 @@ class BasesCollabration(models.Model):
                     withdrawals += operation.opening_balance
             interest = sum(x.interest_rate for x in collaboration.rate_base_ids.filtered(lambda x:x.interest_date and x.interest_date >= start_date and x.interest_date <= end_date))
             interest = round(interest,2)
-            print ("interest===",interest)
         balance_dict.update({
             'intial_bal': intial_bal,
             'increments': increments,

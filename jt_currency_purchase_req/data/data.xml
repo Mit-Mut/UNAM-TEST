@@ -21,5 +21,26 @@
             <field name="number_increment">1</field>
             <field name="company_id" eval="False"/>
         </record>
+
+        <record id="sequence_update_signature" model="ir.sequence">
+            <field name="name">Update Signature</field>
+            <field name="code">request.update.signature</field>
+            <field name="active">TRUE</field>
+            <field name="padding">8</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="sequence_account_cancellation" model="ir.sequence">
+            <field name="name">Account Cancellation</field>
+            <field name="code">request.account.cancellation</field>
+            <field name="active">TRUE</field>
+            <field name="padding">8</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
 	</data>
 </odoo>

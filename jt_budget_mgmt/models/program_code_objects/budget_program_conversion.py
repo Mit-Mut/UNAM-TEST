@@ -32,15 +32,21 @@ class BudgetProgramConversion(models.Model):
     _rec_name = 'shcp'
 
     unam_key_id = fields.Many2one('program', string='UNAM Function')
+    unam_key_code = fields.Char(related='unam_key_id.key_unam')
+    
     desc = fields.Text(string='Description of key UNAM')
     shcp = fields.Many2one("shcp.code", string='Conversion of SHCP program')
+    shcp_name = fields.Char(related='shcp.name')
+    
     description = fields.Text(string='Description conversion of SHCP program')
 
     dep_con_id = fields.Many2one('departure.conversion','SHCP Item')
+    federal_part = fields.Char(related='dep_con_id.federal_part')
+    
     federal_part_desc = fields.Text(related='dep_con_id.federal_part_desc',string="Item SHCP Description")
     
-    _sql_constraints = [('uniq_unam_key_id', 'unique(unam_key_id)',
-                         'The Key UNAM must be unique.')]
+    _sql_constraints = [('uniq_unam_key_id', 'unique(unam_key_id,shcp,dep_con_id)',
+                         'The combination of UNAM function, SHCP Item and Conversion of SHCP must be unique')]
 
     @api.constrains('shcp')
     def _check_shcp(self):

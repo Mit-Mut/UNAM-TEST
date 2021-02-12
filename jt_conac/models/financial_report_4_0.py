@@ -110,8 +110,10 @@ class StatementOfFinancialPosition(models.AbstractModel):
             move_state_domain = ('move_id.state', '!=', 'cancel')
 
         last_total_dict = {}
+        liabilities_total_dict = {}
         for line in hierarchy_lines:
             if line.code in ('1.0.0.0', '2.0.0.0', '3.0.0.0'):
+                first_level_balance_dict = {}
                 lines.append({
                     'id': 'hierarchy_' + line.code,
                     'name': line.display_name,
@@ -185,6 +187,16 @@ class StatementOfFinancialPosition(models.AbstractModel):
                             else:
                                 last_total_dict.update({pd: bal})
 
+                            if pd in first_level_balance_dict.keys():
+                                first_level_balance_dict.update({pd: first_level_balance_dict.get(pd) + bal})
+                            else:
+                                first_level_balance_dict.update({pd: bal})
+                            if line.code != '1.0.0.0':
+                                if pd in liabilities_total_dict.keys():
+                                    liabilities_total_dict.update({pd: liabilities_total_dict.get(pd) + bal})
+                                else:
+                                    liabilities_total_dict.update({pd: bal})
+
                         for pe in periods:
                             if pe.get('string') in period_dict.keys():
                                 amt_columns.append(self._format({'name': period_dict.get(pe.get('string'))},figure_type='float'))
@@ -207,16 +219,43 @@ class StatementOfFinancialPosition(models.AbstractModel):
                         else:
                             total_col.append(self._format({'name': 0.00},figure_type='float'))
                     lines.append({
-                        'id': 'total_%s' % level_1_line.id,
+                        'id': 'total1_%s' % line.id,
                         'name': 'Total',
                         'columns': total_col,
                         'level': 2,
-                        'title_hover': level_1_line.display_name,
+                        #'title_hover': level_1_line.display_name,
                         'unfoldable': False,
                         'unfolded': True,
                         'parent_id': 'hierarchy_' + line.code,
                         
                     })
+
+                first_total_col = []
+                for pe in periods:
+                    if pe.get('string') in first_level_balance_dict.keys():
+                        first_total_col.append(self._format({'name': first_level_balance_dict.get(pe.get('string'))},figure_type='float'))
+                    else:
+                        first_total_col.append(self._format({'name': 0.00},figure_type='float'))
+                
+                string_assest = ''
+                if line.code=='1.0.0.0':
+                    string_assest = 'Total Assets'
+                elif line.code=='2.0.0.0':
+                    string_assest = 'Total Liabilities'
+                elif line.code=='3.0.0.0':
+                    string_assest = 'Total Public Finance / Equity'
+                
+                lines.append({
+                    'id': 'total_%s' % level_1_line.id,
+                    'name': string_assest,
+                    'columns': first_total_col,
+                    'level': 1,
+                    'title_hover': level_1_line.display_name,
+                    'unfoldable': False,
+                    'unfolded': True,
+                    'parent_id': 'hierarchy_' + line.code,
+                    
+                })
 
         main_total_col = []
         for pe in periods:
@@ -229,24 +268,44 @@ class StatementOfFinancialPosition(models.AbstractModel):
         if self.env.user.lang == 'es_MX':  
                           
             lines.append({
-                'id': 'total_%s' % level_1_line.id,
+                'id': 'total_main',
                 'name': 'Gran Total',
                 'columns': main_total_col,
-                'level': 2,
-                'title_hover': level_1_line.display_name,
+                'level': 1,
+                #'title_hover': level_1_line.display_name,
                 'unfoldable': False,
                 'unfolded': True,
             })
         else:
             lines.append({
-                'id': 'total_%s' % level_1_line.id,
+                'id': 'total_main',
                 'name': 'Main Total',
                 'columns': main_total_col,
-                'level': 3,
-                'title_hover': level_1_line.display_name,
+                'level': 1,
+                #'title_hover': level_1_line.display_name,
                 'unfoldable': False,
                 'unfolded': True,
             })
+        #================ Code 2.0.0.0 and code 3.0.0.0
+        
+        liabilities_total_col = []
+        for pe in periods:
+            if pe.get('string') in liabilities_total_dict.keys():
+                temp_total = self._format({'name': liabilities_total_dict.get(pe.get('string'))},figure_type='float')
+                liabilities_total_col.append(temp_total)
+            else:
+                liabilities_total_col.append(self._format({'name': 0.00},figure_type='float'))
+        
+                          
+        lines.append({
+            'id': 'total_secound',
+            'name': 'Total Liabilities and Finance Public / Equity',
+            'columns': liabilities_total_col,
+            'level': 1,
+            #'title_hover': level_1_line.display_name,
+            'unfoldable': False,
+            'unfolded': True,
+        })
          
         budget_user_type = self.env.ref('jt_supplier_payment.data_account_type_budget_accounts')
         budget_accounts = self.env['account.account'].search([('user_type_id','=',budget_user_type.id)])

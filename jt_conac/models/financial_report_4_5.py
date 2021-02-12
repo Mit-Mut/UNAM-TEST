@@ -173,14 +173,14 @@ class AnalyticalStatementOfDebtAndOtherLiabilities(models.AbstractModel):
                                  move_state_domain,
                                  ('date', '<=', end)])
                             if move_lines:
-                                level_3_final = (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+                                level_3_final = (sum(move_lines.mapped('credit')) - sum(move_lines.mapped('debit')))
 
                             move_lines = move_line_obj.sudo().search(
                                 [('coa_conac_id', 'in', level_3_line.coa_conac_ids.ids),
                                  move_state_domain,
                                  ('date', '<=', start)])
                             if move_lines:
-                                level_3_int = (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+                                level_3_int = (sum(move_lines.mapped('credit')) - sum(move_lines.mapped('debit')))
                                  
                         level_4_columns = [{'name': level_3_line.currency_id.name}, 
                                            {'name': level_3_line.country_id.name},

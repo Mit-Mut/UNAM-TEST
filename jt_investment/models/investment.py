@@ -16,7 +16,7 @@ class Investment(models.Model):
     invesment_date = fields.Datetime("Investment Date")
     journal_id = fields.Many2one("account.journal", "Bank")
     contract_id = fields.Many2one('investment.contract', 'Contract')
-    amount_to_invest = fields.Float("Initial Amount")
+    amount_to_invest = fields.Float("Amount to Invest")
     is_fixed_rate = fields.Boolean('Fixed Rate', default=False)
     is_variable_rate = fields.Boolean('Variable Rate', default=False)
     interest_rate = fields.Float("Interest rate",digits='Productive Accounts')
@@ -538,10 +538,14 @@ class InvestmentOperation(models.Model):
             invoice = self.env['ir.sequence'].next_by_code(
                 'folio.inv.operation')
             res.invoice = invoice
+            
+#         if res.type_of_operation and res.type_of_operation == 'open_bal' and res.investment_id and not res.investment_id.update_line_id:
+#             res.investment_id.amount_to_invest = res.amount
+#             res.investment_id.update_line_id = res.id
 
-        if res.type_of_operation and res.type_of_operation == 'open_bal' and res.investment_id and not res.investment_id.update_line_id:
-            res.investment_id.amount_to_invest = res.amount
-            res.investment_id.update_line_id = res.id
+        if res.type_of_operation and res.type_of_operation == 'open_bal' and res.investment_id:
+            amount = sum(x.amount for x in res.investment_id.line_ids.filtered(lambda x:x.type_of_operation=='open_bal'))
+            res.investment_id.amount_to_invest = amount
 
         return res
 
@@ -549,12 +553,17 @@ class InvestmentOperation(models.Model):
         result = super(InvestmentOperation, self).write(vals)
         if 'amount' in vals or 'type_of_operation' in vals:
             for res in self:
+#                 if res.type_of_operation and res.type_of_operation == 'open_bal' and res.investment_id:
+#                     if not res.investment_id.update_line_id:
+#                         res.investment_id.amount_to_invest = res.amount
+#                         res.investment_id.update_line_id = res.id
+#                     elif res.investment_id.update_line_id.id == res.id:
+#                         res.investment_id.amount_to_invest = res.amount
+
                 if res.type_of_operation and res.type_of_operation == 'open_bal' and res.investment_id:
-                    if not res.investment_id.update_line_id:
-                        res.investment_id.amount_to_invest = res.amount
-                        res.investment_id.update_line_id = res.id
-                    elif res.investment_id.update_line_id.id == res.id:
-                        res.investment_id.amount_to_invest = res.amount
+                    amount = sum(x.amount for x in res.investment_id.line_ids.filtered(lambda x:x.type_of_operation=='open_bal'))
+                    res.investment_id.amount_to_invest = amount
+                        
         return result
 
     @api.depends('type_of_operation')

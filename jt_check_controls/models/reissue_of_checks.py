@@ -77,13 +77,15 @@ class ReissueOfChecks(models.Model):
     def onchange_move_id(self):
         if self.move_id:
             self.folio_against_receipt = self.move_id.id
-            self.check_log_id = self.move_id.check_folio_id and self.move_id.check_folio_id.id or False
+            if not self.check_log_id:
+                self.check_log_id = self.move_id.check_folio_id and self.move_id.check_folio_id.id or False
 
     @api.onchange('folio_against_receipt')
     def onchange_folio_against_receipt(self):
         if self.folio_against_receipt:
             self.move_id = self.folio_against_receipt.id
-            self.check_log_id = self.folio_against_receipt.check_folio_id and self.folio_against_receipt.check_folio_id.id or False
+            if not self.check_log_id:
+                self.check_log_id = self.folio_against_receipt.check_folio_id and self.folio_against_receipt.check_folio_id.id or False
 
     @api.onchange('check_log_id')
     def onchange_check_log_id(self):
@@ -134,7 +136,7 @@ class ReissueOfChecks(models.Model):
                 elif rec.type_of_batch == 'pension':
                     move_ids = move_ids.filtered(lambda x:x.is_pension_payment_request)
                 
-                new_check_ids = move_ids.mapped('check_folio_id')
+                new_check_ids = move_ids.mapped('check_folio_id').filtered(lambda x:x.id in check_ids.ids)
                 new_check_ids += move_ids.mapped('related_check_folio_ids').filtered(lambda x:x.id in check_ids.ids)
                     
                 log_list = new_check_ids.ids
@@ -154,7 +156,7 @@ class ReissueOfChecks(models.Model):
                 elif rec.type_of_batch == 'pension':
                     move_ids = move_ids.filtered(lambda x: x.is_pension_payment_request)
 
-                new_check_ids = move_ids.mapped('check_folio_id')
+                new_check_ids = move_ids.mapped('check_folio_id').filtered(lambda x:x.id in check_ids.ids)
                 new_check_ids += move_ids.mapped('related_check_folio_ids').filtered(lambda x:x.id in check_ids.ids)
                     
                 log_list = new_check_ids.ids

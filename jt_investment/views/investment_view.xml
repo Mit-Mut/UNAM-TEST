@@ -61,7 +61,7 @@
 			               		<field name="journal_id" required="1"  attrs="{'readonly': [('state', '!=', 'draft')]}" domain="[('type','=','bank')]"/>
 			               		<field name="investment_fund_id" invisible="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			               		<field name="contract_id" attrs="{'required':[('state', '=', 'draft')],'readonly': [('state', '!=', 'draft')]}"/>
-			               		<field name="amount_to_invest" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+			               		<field name="amount_to_invest" readonly="1"/>
 			               		<field name="actual_amount" readonly="1"/>
 			               		<field name="is_fixed_rate"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 			               		<field name="is_variable_rate" attrs="{'readonly': [('state', '!=', 'draft')]}"/>

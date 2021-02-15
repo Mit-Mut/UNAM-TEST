@@ -236,6 +236,7 @@ class AccountChartOfAccountReport(models.AbstractModel):
         balance_progress = float(options.get('lines_progress', 0))
 
         if offset > 0:
+            print ("calll==off")
             # Case a line is expanded using the load more.
             return self._load_more_lines(options, line_id, offset, remaining, balance_progress)
         else:
@@ -284,24 +285,27 @@ class AccountChartOfAccountReport(models.AbstractModel):
         date_from = fields.Date.from_string(options['date']['date_from'])
         company_currency = self.env.company.currency_id
 
-        expanded_account = line_id and self.env['account.account'].browse(int(line_id[8:]))
-        accounts_results, taxes_results = self._do_query(options_list, expanded_account=expanded_account)
-
+        move_line_ids = self.env['account.move.line']
         move_lines_dep_account_ids = self.env['account.account']
-        
         if is_add_dep_fiter:
             move_lines_ids = self.env['account.move.line'].search(dep_domain)
+            options.update({'custom_move_ids':move_lines_ids.mapped('move_id').ids})
             move_lines_dep_account_ids = move_lines_ids.mapped('account_id')
+
+        expanded_account = line_id and self.env['account.account'].browse(int(line_id[8:]))
+        accounts_results, taxes_results = self._do_query(options_list, expanded_account=expanded_account)
         
         total_debit = total_credit = total_balance = 0.0
         for account, periods_results in accounts_results:
-            if is_add_fiter and not account.id in program_codes_account_ids:
-                continue
-            if is_add_dep_fiter  and not account.id in move_lines_dep_account_ids.ids:
+            is_account_id = False
+            if is_add_fiter and account.id in program_codes_account_ids:
+                is_account_id = True
+            if is_add_dep_fiter  and account.id in move_lines_dep_account_ids.ids:
+                is_account_id = True
+            if not is_account_id:
                 continue
             # No comparison allowed in the General Ledger. Then, take only the first period.
             results = periods_results[0]
-
             is_unfolded = 'account_%s' % account.id in options['unfolded_lines']
 
             # account.account record line.
@@ -447,8 +451,26 @@ class AccountChartOfAccountReport(models.AbstractModel):
 
     @api.model
     def _get_options_domain(self, options):
+        
         # OVERRIDE
         domain = super(AccountChartOfAccountReport, self)._get_options_domain(options)
+
+        is_add_fiter = False
+        is_add_dep_fiter = False
+        dep_domain = []
+        if len(options['selected_dependency']) > 0:
+            dep_domain.append(('move_id.dependancy_id.dependency', 'in', options['selected_dependency']))
+            is_add_dep_fiter = True
+        if len(options['selected_sub_dependency']) > 0:
+            dep_domain.append(('move_id.sub_dependancy_id.sub_dependency', 'in', options['selected_sub_dependency']))
+            is_add_dep_fiter = True
+
+        move_line_ids = self.env['account.move.line']
+        move_lines_dep_account_ids = self.env['account.account']
+        if is_add_dep_fiter:
+            move_lines_ids = self.env['account.move.line'].search(dep_domain)
+            domain += [('move_id','in',move_lines_ids.mapped('move_id').ids)]
+        print ("domain===",domain)
         # Filter accounts based on the search bar.
         if options.get('filter_accounts'):
             domain += [
@@ -803,7 +825,6 @@ class AccountChartOfAccountReport(models.AbstractModel):
         '''
         # Execute the queries and dispatch the results.
         query, params = self._get_query_sums(options_list, expanded_account=expanded_account)
-
         groupby_accounts = {}
         groupby_companies = {}
         groupby_taxes = {}

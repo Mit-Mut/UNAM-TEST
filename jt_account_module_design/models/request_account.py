@@ -42,10 +42,19 @@ class AccountMove(models.Model):
     program_code_id = fields.Many2one('program.code','Program Code')
     account_ie_id = fields.Many2one('association.distribution.ie.accounts','I.E. Accounts')
 
+    date_year_program = fields.Char(string='Program Code Search Year',compute='get_year_for_program_search',store=True)
+    
+    @api.depends('date')
+    def get_year_for_program_search(self):
+        for rec in self:
+            if rec.date:
+                rec.date_year_program = rec.date.year
+            else:
+                rec.date_year_program = ''
+                
     @api.model
     def create(self,vals):
         res = super(AccountMove,self).create(vals)
-        print ("res.line_ids===",res.line_ids)
         if res.line_ids:
             program_code_id = res.line_ids.filtered(lambda x:x.program_code_id)
             if program_code_id:

@@ -2284,8 +2284,8 @@ msgstr ""
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_investment__amount_to_invest
-msgid "Initial Amount"
-msgstr "Monto Inicial"
+msgid "Amount to Invest"
+msgstr "IMonto Inicial"
 
 #. module: jt_investment
 #: code:addons/jt_investment/reports/maturities.py:0

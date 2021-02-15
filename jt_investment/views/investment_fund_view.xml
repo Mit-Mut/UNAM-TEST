@@ -96,7 +96,7 @@
                         	</page>
                         	<page string="Investment">
                         		<field name="inv_operation_ids">
-                    			<tree>
+                    			<tree create="0">
                     				<field name="investment_fund_id" invisible="1"/>
                     				<field name="investment_id"/>
                     				<field name="type_of_operation"/>

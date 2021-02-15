@@ -286,7 +286,7 @@ class AnalyticalStatusOfTheExpenditureBudgetExercise(models.AbstractModel):
 
                                     self.env.cr.execute(""" 
                                                         (select coalesce(sum(abs(line.balance)+abs(line.tax_price_cr)),0) from account_move_line line,account_move amove,account_payment apay 
-                                                        where  line.program_code_id in %s and amove.id=line.move_id and amove.payment_state=%s and apay.payment_date >= %s and apay.payment_date <= %s and apay.payment_request_id = amove.id)""", (tuple(program_code_ids.ids),'paid',period_date_from,period_date_to))
+                                                        where  line.program_code_id in %s and amove.id=line.move_id and amove.invoice_payment_state=%s and apay.payment_date >= %s and apay.payment_date <= %s and apay.payment_request_id = amove.id)""", (tuple(program_code_ids.ids),'paid',period_date_from,period_date_to))
                                     
                                     #self.env.cr.execute("select coalesce(sum(line.price_total),0) as committed from account_move_line line,account_move amove where line.program_code_id in %s and amove.id=line.move_id and amove.payment_state=%s and amove.invoice_date >= %s and amove.invoice_date <= %s", (tuple(program_code_ids.ids),'paid',period_date_from,period_date_to))
                                     my_datas = self.env.cr.fetchone()

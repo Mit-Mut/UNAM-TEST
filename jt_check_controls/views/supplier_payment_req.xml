@@ -98,9 +98,7 @@
 		</record>
 				
 		<record id="jt_supplier_payment.pension_payroll_payment_request_action" model="ir.actions.act_window">
-            <field name="domain">[('payment_state','in',('draft','registered','approved_payment','for_payment_procedure','paid',
-                'assigned_payment_method','payment_method_cancelled')),
-                ('type', '=', 'in_invoice'), ('is_pension_payment_request', '=', True)]</field>
+            <field name="domain">[('payment_state','in',('draft','registered','approved_payment','for_payment_procedure','paid','assigned_payment_method','payment_method_cancelled')),('type', '=', 'in_invoice'),('is_pension_payment_request', '=', True)]</field>
 		
 		</record>
 		<!-- Request for Different Payroll Payment -->

@@ -965,5 +965,5 @@ class AdequaciesLines(models.Model):
     program = fields.Many2one(
         'program.code', string='Program', domain="[('state', '=', 'validated'), ('budget_id', '=', parent.budget_id)]")
 
-    _sql_constraints = [('uniq_program_per_adequacies_id', 'unique(program,adequacies_id)',
+    _sql_constraints = [('uniq_program_per_adequacies_id', 'unique(program,id)',
                          'The program code must be unique per Adequacies')]

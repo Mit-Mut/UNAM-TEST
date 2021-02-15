@@ -42,7 +42,7 @@
                             	<field name="amount" readonly="1"/>
                                 <field name="date_required" required="1"/>
                                 <field name="desti_bank_account_id" domain="[('type', '=', 'bank')]"
-                                    required="1"/>
+                                    required="1" options="{'no_open': True, 'no_create': True}"/>
                                 
                                 <field name="concept" invisible="1"/>
                                 <field name="date" invisible="1"/>                                

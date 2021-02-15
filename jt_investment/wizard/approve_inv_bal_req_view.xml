@@ -14,7 +14,7 @@
                                 <field name="agreement_number" readonly="1"/>
                                 <field name="bank_account_id" domain="[('type', '=', 'bank')]"/>
                                 <field name="desti_bank_account_id" domain="[('type', '=', 'bank')]"
-                                    required="1"/>
+                                    required="1" options="{'no_open': True, 'no_create': True}"/>
                                 <field name="amount" readonly="not context.get('edit_amount_field',False)"/>
                                 <field name="dependency_id" context="{'show_for_supplier_payment':1}"/>
                                 <field name="sub_dependency_id" domain="[('dependency_id','=',dependency_id)]" context="{'show_for_supplier_payment':1}" />

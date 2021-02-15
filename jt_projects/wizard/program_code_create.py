@@ -258,7 +258,8 @@ class ProjectProgramCode(models.TransientModel):
             'state' : self.state, 
             }
         program_code_id = self.env['program.code'].create(vals)
-        self.conacyt_project_id.program_code = program_code_id.id
+        self.env['custom.project.programcode'].create({'project_id':self.conacyt_project_id.id,'program_code_id':program_code_id.id})
+        #self.conacyt_project_id.program_code = program_code_id.id
         self.conacyt_project_id.is_code_create = True 
 
 

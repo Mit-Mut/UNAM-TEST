@@ -53,8 +53,9 @@ class AccountMoveLine(models.Model):
         result = super(AccountMoveLine,self).write(vals)
         if vals.get('account_id'):
             for res in self:
-                if res.account_id and res.account_id.coa_conac_id and not res.coa_conac_id:
+                if res.account_id and res.account_id.coa_conac_id:
                     res.coa_conac_id = res.account_id.coa_conac_id.id
+                
         return result
         
     

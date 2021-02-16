@@ -246,81 +246,6 @@ class WeightIncomeReport(models.AbstractModel):
     def _get_report_name(self):
         return _("Miles Revenue Report")
 
-    def get_pdf(self, options, minimal_layout=True):
-        # As the assets are generated during the same transaction as the rendering of the
-        # templates calling them, there is a scenario where the assets are unreachable: when
-        # you make a request to read the assets while the transaction creating them is not done.
-        # Indeed, when you make an asset request, the controller has to read the `ir.attachment`
-        # table.
-        # This scenario happens when you want to print a PDF report for the first time, as the
-        # assets are not in cache and must be generated. To workaround this issue, we manually
-        # commit the writes in the `ir.attachment` table. It is done thanks to
-        # a key in the context.
-        minimal_layout = False
-        if not config['test_enable']:
-            self = self.with_context(commit_assetsbundle=True)
-
-        base_url = self.env['ir.config_parameter'].sudo().get_param('report.url') or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        rcontext = {
-            'mode': 'print',
-            'base_url': base_url,
-            'company': self.env.company,
-        }
-
-        body = self.env['ir.ui.view'].render_template(
-            "account_reports.print_template",
-            values=dict(rcontext),
-        )
-        body_html = self.with_context(print_mode=True).get_html(options)
-
-        body = body.replace(b'<body class="o_account_reports_body_print">', b'<body class="o_account_reports_body_print">' + body_html)
-        if minimal_layout:
-            header = ''
-            footer = self.env['ir.actions.report'].render_template("web.internal_layout", values=rcontext)
-            spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 10}
-            footer = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
-        else:
-            rcontext.update({
-                    'css': '',
-                    'o': self.env.user,
-                    'res_company': self.env.company,
-                })
-            # header = self.env['ir.actions.report'].render_template("jt_investment.external_layout_investment_funds_balances", values=rcontext)
-            header = self.env['ir.actions.report'].render_template("jt_account_module_design.external_layout_state_partimonial", values=rcontext)
-               
-            header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
-            spec_paperformat_args = {}
-            # Default header and footer in case the user customized web.external_layout and removed the header/footer
-            headers = header.encode()
-            footer = b''
-            # parse header as new header contains header, body and footer
-            try:
-                root = lxml.html.fromstring(header)
-                match_klass = "//div[contains(concat(' ', normalize-space(@class), ' '), ' {} ')]"
-
-                for node in root.xpath(match_klass.format('header')):
-                    headers = lxml.html.tostring(node)
-                    headers = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=headers))
-
-                for node in root.xpath(match_klass.format('footer')):
-                    footer = lxml.html.tostring(node)
-                    footer = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
-
-            except lxml.etree.XMLSyntaxError:
-                headers = header.encode()
-                footer = b''
-            header = headers
-
-        landscape = False
-        if len(self.with_context(print_mode=True).get_header(options)[-1]) > 5:
-            landscape = True
-
-        return self.env['ir.actions.report']._run_wkhtmltopdf(
-            [body],
-            header=header, footer=footer,
-            landscape=landscape,
-            specific_paperformat_args=spec_paperformat_args
-        )
 
     def get_xlsx(self, options, response=None):
         output = io.BytesIO()
@@ -370,6 +295,11 @@ class WeightIncomeReport(models.AbstractModel):
         super_columns = self._get_super_columns(options)
         y_offset = 0
         col = 0
+        start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+
 
         sheet.merge_range(y_offset, col, 6, col, '', super_col_style)
         if self.env.user and self.env.user.company_id and self.env.user.company_id.header_logo:
@@ -385,9 +315,9 @@ class WeightIncomeReport(models.AbstractModel):
         header_title += "DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL"
         header_title += "\n"
         header_title += "REPORTE DE INGRESOS POR EL PERÍODO AL"
-        header_title += datetime.today().strftime('%d DE')
-        header_title += datetime.today().strftime('%B DEL %Y')
-        header_title += datetime.today().strftime('Y %d DE %B DEL %Y')
+        header_title += start.strftime('%d DE')
+        header_title += start.strftime('%B DEL %Y')
+        header_title += end.today().strftime('Y %d DE %B DEL %Y')
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)
         y_offset += 6
@@ -466,3 +396,154 @@ class WeightIncomeReport(models.AbstractModel):
         generated_file = output.read()
         output.close()
         return generated_file
+
+    def get_pdf(self, options, minimal_layout=True,line_id=None):
+        # As the assets are generated during the same transaction as the rendering of the
+        # templates calling them, there is a scenario where the assets are unreachable: when
+        # you make a request to read the assets while the transaction creating them is not done.
+        # Indeed, when you make an asset request, the controller has to read the `ir.attachment`
+        # table.
+        # This scenario happens when you want to print a PDF report for the first time, as the
+        # assets are not in cache and must be generated. To workaround this issue, we manually
+        # commit the writes in the `ir.attachment` table. It is done thanks to a key in the context.
+        minimal_layout = False
+        if not config['test_enable']:
+            self = self.with_context(commit_assetsbundle=True)
+
+        base_url = self.env['ir.config_parameter'].sudo().get_param('report.url') or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        rcontext = {
+            'mode': 'print',
+            'base_url': base_url,
+            'company': self.env.company,
+        }
+
+        body = self.env['ir.ui.view'].render_template(
+            "account_reports.print_template",
+            values=dict(rcontext),
+        )
+        body_html = self.with_context(print_mode=True).get_html(options)
+        body_html = body_html.replace(b'<div class="o_account_reports_header">',b'<div>')
+        #<div class="o_account_reports_header">
+        body = body.replace(b'<body class="o_account_reports_body_print">', b'<body class="o_account_reports_body_print">' + body_html)
+        if minimal_layout:
+            header = ''
+            footer = self.env['ir.actions.report'].render_template("web.internal_layout", values=rcontext)
+            spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 20}
+            footer = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
+        else:
+            start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+            end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
+            rcontext.update({
+                    'css': '',
+                    'o': self.env.user,
+                    'res_company': self.env.company,
+                    'start' : start,
+                    'end' : end
+            })
+            header = self.env['ir.actions.report'].render_template("jt_account_module_design.external_layout_weight_income", values=rcontext)
+            header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
+            spec_paperformat_args = {}
+            # Default header and footer in case the user customized web.external_layout and removed the header/footer
+            headers = header.encode()
+            footer = b''
+            # parse header as new header contains header, body and footer
+            try:
+                root = lxml.html.fromstring(header)
+                match_klass = "//div[contains(concat(' ', normalize-space(@class), ' '), ' {} ')]"
+
+                for node in root.xpath(match_klass.format('header')):
+                    headers = lxml.html.tostring(node)
+                    headers = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=headers))
+
+                for node in root.xpath(match_klass.format('footer')):
+                    footer = lxml.html.tostring(node)
+                    footer = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
+
+            except lxml.etree.XMLSyntaxError:
+                headers = header.encode()
+                footer = b''
+            header = headers
+
+        landscape = False
+        if len(self.with_context(print_mode=True).get_header(options)[-1]) > 5:
+            landscape = True
+
+        return self.env['ir.actions.report']._run_wkhtmltopdf(
+            [body],
+            header=header, footer=footer,
+            landscape=landscape,
+            specific_paperformat_args=spec_paperformat_args
+        )
+
+
+
+    def get_html(self, options, line_id=None, additional_context=None):
+        '''
+        return the html value of report, or html value of unfolded line
+        * if line_id is set, the template used will be the line_template
+        otherwise it uses the main_template. Reason is for efficiency, when unfolding a line in the report
+        we don't want to reload all lines, just get the one we unfolded.
+        '''
+        # Check the security before updating the context to make sure the options are safe.
+        self._check_report_security(options)
+
+        # Prevent inconsistency between options and context.
+        self = self.with_context(self._set_context(options))
+
+        templates = self._get_templates()
+        report_manager = self._get_report_manager(options)
+        # report = {'name': self._get_report_name(),
+        #         'summary': report_manager.summary,
+        #         'company_name': self.env.company.name,}
+        report = {}
+        #options.get('date',{}).update({'string':''}) 
+        lines = self._get_lines(options, line_id=line_id)
+
+        if options.get('hierarchy'):
+            lines = self._create_hierarchy(lines, options)
+        if options.get('selected_column'):
+            lines = self._sort_lines(lines, options)
+
+        footnotes_to_render = []
+        if self.env.context.get('print_mode', False):
+            # we are in print mode, so compute footnote number and include them in lines values, otherwise, let the js compute the number correctly as
+            # we don't know all the visible lines.
+            footnotes = dict([(str(f.line), f) for f in report_manager.footnotes_ids])
+            number = 0
+            for line in lines:
+                f = footnotes.get(str(line.get('id')))
+                if f:
+                    number += 1
+                    line['footnote'] = str(number)
+                    footnotes_to_render.append({'id': f.id, 'number': number, 'text': f.text})
+
+        rcontext = {'report': report,
+                    'lines': {'columns_header': self.get_header(options), 'lines': lines},
+                    'options': {},
+                    'context': self.env.context,
+                    'model': self,
+                }
+        if additional_context and type(additional_context) == dict:
+            rcontext.update(additional_context)
+        if self.env.context.get('analytic_account_ids'):
+            rcontext['options']['analytic_account_ids'] = [
+                {'id': acc.id, 'name': acc.name} for acc in self.env.context['analytic_account_ids']
+            ]
+
+        render_template = templates.get('main_template', 'account_reports.main_template')
+        
+        if line_id is not None:
+            render_template = templates.get('line_template', 'account_reports.line_template')
+        html = self.env['ir.ui.view'].render_template(
+            render_template,
+            values=dict(rcontext),
+        )
+        if self.env.context.get('print_mode', False):
+            for k,v in self._replace_class().items():
+                html = html.replace(k, v)
+            # append footnote as well
+            html = html.replace(b'<div class="js_account_report_footnotes"></div>', self.get_html_footnotes(footnotes_to_render))
+        return html
+

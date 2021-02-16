@@ -154,7 +154,28 @@
                                             </form>
                                         </field>
                                     </group>
-                                </group>                        	
+                                </group>   
+                                 <group string="Providers" name="providers">
+                                     <field name="provider_ids" nolabel="1"
+                                            attrs="{'readonly': [('state', 'not in', ('draft','valid'))]}">
+                                         <tree editable="top">
+                                             <field name="partner_id" required="1"/>
+                                                <field name="bank_id" domain="[('partner_id', '=', partner_id)]"
+                                                context="{'from_agreement':1}"/>
+                                                <field name="account_number"/>
+                                         </tree>
+                                         <form>
+                                             <group>
+                                                 <field name="partner_id" required="1"/>
+                                                <field name="bank_id"
+                                                 domain="[('partner_id', '=', partner_id)]"
+                                                context="{'from_agreement':1}"/>
+                                                <field name="account_number"/>
+                                             </group>
+                                         </form>
+                                     </field>
+                                 </group>
+                                                     	
                         	</page>
                         	<page string="Supporting Documentation" name="supporting_documentation">
                         		<group>

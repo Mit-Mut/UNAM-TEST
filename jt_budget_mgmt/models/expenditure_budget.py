@@ -254,7 +254,6 @@ class ExpenditureBudget(models.Model):
             raise ValidationError('Invalid Year Format Of line one!')
 
     def validate_and_add_budget_line(self, record_id=False, cron_id=False):
-        print ("==Call Metdo=====")
         if record_id:
             self = self.env['expenditure.budget'].browse(int(record_id))
 

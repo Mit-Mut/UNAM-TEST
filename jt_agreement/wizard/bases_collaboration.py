@@ -23,7 +23,7 @@
 from odoo import models, fields
 import base64
 from odoo.http import request, content_disposition
-
+from datetime import datetime, timedelta
 
 class AgreementBasesCollabration(models.TransientModel):
     _name = 'jt_agreement.bases.collaboration'
@@ -43,10 +43,23 @@ class AgreementBasesCollabration(models.TransientModel):
             
             base_records.report_start_date = self.start_date
             base_records.report_end_date = self.end_date
-            
+            today = datetime.today().date() 
             qr_pdf = self.env.ref('jt_agreement.bases_collaboration_report').render_qweb_pdf([rec])[0]
             qr_pdf = base64.b64encode(qr_pdf)
-            lines.append((0,0,{'bases_id':rec,'file':qr_pdf,'filename':'bases_collaboration.pdf'}))
+            
+            filename = 'CON'
+            if base_records.dependency_id and base_records.dependency_id.dependency:
+                filename += "_"+str(base_records.dependency_id.dependency)
+            if base_records.subdependency_id and base_records.subdependency_id.sub_dependency:
+                filename += "_"+str(base_records.subdependency_id.sub_dependency)
+            filename += "_"+str(today.month).zfill(2)+"_"+str(today.year)
+            
+            if base_records.convention_no:
+                filename += "_"+str(base_records.convention_no)
+            
+            
+            filename += ".pdf"
+            lines.append((0,0,{'bases_id':rec,'file':qr_pdf,'filename':filename}))
         pdf_rec.line_ids = lines
         
         

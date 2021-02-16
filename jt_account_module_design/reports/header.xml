@@ -80,7 +80,49 @@
                             <span style="font-size:14px;">DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL</span>
                         <br/>
                         
-                        <span>ESTADO DE INGRESOS,GASTOS E INVERSIONES DETALLADO DEL <t t-esc="context_timestamp(datetime.datetime.now()).strftime('DEL %d %B')"/> AL <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%B DEL %Y')"/></span>
+                        <span>ESTADO DE INGRESOS,GASTOS E INVERSIONES DETALLADO DEL<t t-esc="start.strftime('%d %B')"/> OF <t t-esc="start.strftime('%Y')"/> AL <t t-esc="end.strftime('%d %B')"/> OF <t t-esc="end.strftime('%Y')"/> </span>
+
+                    </div>
+                </div>
+            </div>
+            <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
+                 t-att-data-oe-lang="o and o.env.context.get('lang')">
+                <t t-raw="0"/>
+            </div>
+
+        </template>   
+
+
+                 <!-- Detail Statement of Income,Expenses and Investments summary Report -->
+        <template id="external_layout_income_exp_and_invest_summary" name="external_layout_income_exp_and_invest_summary">
+            <t t-if="not o" t-set="o" t-value="doc"/>
+
+            <t t-if="not company">
+                <!-- Multicompany -->
+                <t t-if="company_id">
+                    <t t-set="company" t-value="company_id"/>
+                </t>
+                <t t-elif="o and 'company_id' in o">
+                    <t t-set="company" t-value="o.company_id.sudo()"/>
+                </t>
+                <t t-else="else">
+                    <t t-set="company" t-value="res_company"/>
+                </t>
+            </t>
+
+            <div class="header">
+                <div class="row">
+                    <div class="col-3">
+                        <img t-attf-src="data:image/png;base64,{{company.header_logo}}"
+                             style="width:120px;height:100px;margin-top:20px;margin-right:20px;margin-bottom:20px;"/>
+                    </div>
+
+                    <div class="col-6 text-center">
+                        <b><span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span></b><br/>
+                            <span style="font-size:14px;">DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL</span>
+                        <br/>
+                        
+                        <span>ESTADO DE INGRESOS,GASTOS E INVERSIONES RESUMEN DEL <t t-esc="start.strftime('%d %B')"/> OF <t t-esc="start.strftime('%Y')"/> AL <t t-esc="end.strftime('%d %B')"/> AL <t t-esc="end.strftime('%Y')"/> </span>
 
                     </div>
                 </div>
@@ -91,6 +133,7 @@
             </div>
 
         </template>     
+  
 
 
             <!-- Weight Income report -->
@@ -201,10 +244,54 @@
 
                     <div class="col-6 text-center">
                         <b><span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span></b><br/>
-                            <span style="font-size:14px;">DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL</span>
+                            <span style="font-size:14px;">GENERAL DIRECTORATE OF BUDGET CONTROL-GENERAL
+ACCOUNTING</span>
                         <br/>
                         
-                        <span>ESTADO DE SITUACION,FINANCIERA AL <t t-esc="start"/> Y <t t-esc="end"/></span>
+                        <span>GENERAL ACCOUNTING AT THE <t t-esc="start.strftime('%d %B')"/> OF <t t-esc="start.strftime('%Y')"/> AND <t t-esc="end.strftime('%d %B ')"/> OF <t t-esc="end.strftime('%Y')"/> </span>
+
+                    </div>
+                </div>
+            </div>
+            <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
+                 t-att-data-oe-lang="o and o.env.context.get('lang')">
+                <t t-raw="0"/>
+            </div>
+
+        </template>  
+
+
+                <!-- Financial positional statment Report -->
+        <template id="external_layout_fianancial_statement_id" name="external_layout_fianancial_statement_id">
+            <t t-if="not o" t-set="o" t-value="doc"/>
+
+            <t t-if="not company">
+                <!-- Multicompany -->
+                <t t-if="company_id">
+                    <t t-set="company" t-value="company_id"/>
+                </t>
+                <t t-elif="o and 'company_id' in o">
+                    <t t-set="company" t-value="o.company_id.sudo()"/>
+                </t>
+                <t t-else="else">
+                    <t t-set="company" t-value="res_company"/>
+                </t>
+            </t>
+
+            <div class="header">
+                <div class="row">
+                    <div class="col-3">
+                        <img t-attf-src="data:image/png;base64,{{company.header_logo}}"
+                             style="width:120px;height:100px;margin-top:20px;margin-right:20px;margin-bottom:20px;"/>
+                    </div>
+
+                    <div class="col-6 text-center">
+                        <b><span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span></b><br/>
+                            <span style="font-size:14px;">GENERAL DIRECTORATE OF BUDGET CONTROL-GENERAL
+ACCOUNTING</span>
+                        <br/>
+                        
+                        <span>STATEMENT OF FINANCIAL POSITION AT THE <t t-esc="start.strftime(' %d %B')"/> OF <t t-esc="start.strftime('%Y')"/> AND <t t-esc="end.strftime('%d %B')"/> OF <t t-esc="end.strftime('%Y')"/> </span>
 
                     </div>
                 </div>
@@ -215,6 +302,51 @@
             </div>
 
         </template>     
+
+
+                    <!-- Miles Revenue  Report -->
+<!--         <template id="external_layout_miles_revenue_report" name="external_layout_miles_revenue_report">
+            <t t-if="not o" t-set="o" t-value="doc"/>
+
+            <t t-if="not company">
+ -->                <!-- Multicompany -->
+<!--                 <t t-if="company_id">
+                    <t t-set="company" t-value="company_id"/>
+                </t>
+                <t t-elif="o and 'company_id' in o">
+                    <t t-set="company" t-value="o.company_id.sudo()"/>
+                </t>
+                <t t-else="else">
+                    <t t-set="company" t-value="res_company"/>
+                </t>
+            </t>
+
+            <div class="header">
+                <div class="row">
+                    <div class="col-3">
+                        <img t-attf-src="data:image/png;base64,{{company.header_logo}}"
+                             style="width:120px;height:100px;margin-top:20px;margin-right:20px;margin-bottom:20px;"/>
+                    </div>
+
+                    <div class="col-6 text-center">
+                        <b><span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span></b><br/>
+                            <span style="font-size:14px;">GENERAL DIRECTORATE OF BUDGET CONTROL-GENERAL
+ACCOUNTING</span>
+                        <br/>
+                        
+                        <span>STATEMENT OF FINANCIAL POSITION AT THE <t t-esc="start.strftime(' %d %B')"/> OF <t t-esc="start.strftime('%Y')"/> AND <t t-esc="end.strftime('%d %B')"/> OF <t t-esc="end.strftime('%Y')"/> </span>
+
+                    </div>
+                </div>
+            </div>
+            <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
+                 t-att-data-oe-lang="o and o.env.context.get('lang')">
+                <t t-raw="0"/>
+            </div>
+
+        </template>     
+
+ -->   
 
 	<!-- custom template mail for financial report -->
 	

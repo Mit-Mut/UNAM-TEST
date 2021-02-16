@@ -397,10 +397,7 @@ class StatePartimonialSituation(models.AbstractModel):
 
         templates = self._get_templates()
         report_manager = self._get_report_manager(options)
-        report = {'name': self._get_report_name(),
-                'summary': report_manager.summary,
-                'company_name': self.env.company.name,}
-        report = {}
+        report = {'name': self._get_report_name()}
         #options.get('date',{}).update({'string':''}) 
         lines = self._get_lines(options, line_id=line_id)
         

@@ -92,6 +92,8 @@ class PatrimonialResources(models.Model):
     beneficiary_ids = fields.One2many(
         'collaboration.beneficiary', 'patrimonial_id')
 
+    provider_ids = fields.One2many('collaboration.providers', 'patrimonial_id')
+    
     fund_registration_file = fields.Binary("Fund registration format")
     fund_registration_file_name = fields.Char(
         "Fund registration format File Name")
@@ -372,6 +374,11 @@ class Beneficiary(models.Model):
 
     patrimonial_id = fields.Many2one(
         'patrimonial.resources', 'Patrimonial Resources')
+
+class Providers(models.Model):
+    _inherit = 'collaboration.providers'
+
+    patrimonial_id = fields.Many2one('patrimonial.resources','Patrimonial Resources')
 
 
 class OpenBalance(models.Model):

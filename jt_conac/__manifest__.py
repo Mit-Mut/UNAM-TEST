@@ -42,6 +42,7 @@
         'views/expenditure_status_view.xml',
         'views/states_and_program_view.xml',
         'views/menus_actions.xml',
+        'views/header.xml',
         # 'data/report_template.xml',
         'data/account_tags.xml',
         'data/financial_report_line.xml',

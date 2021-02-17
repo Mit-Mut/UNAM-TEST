@@ -310,14 +310,14 @@ class WeightIncomeReport(models.AbstractModel):
                                'image_data': image_data, 'x_offset': 8, 'y_offset': 3, 'x_scale': 0.6, 'y_scale': 0.6})
 
         col += 1
-        header_title = "UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO"
+        header_title = "UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO  "
         header_title += "\n"
-        header_title += "DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL"
+        header_title += "DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL  "
         header_title += "\n"
-        header_title += "REPORTE DE INGRESOS POR EL PERÍODO AL"
+        header_title += "REPORTE DE INGRESOS POR EL PERÍODO AL   "
         header_title += start.strftime('%d DE')
         header_title += start.strftime('%B DEL %Y')
-        header_title += end.today().strftime('Y %d DE %B DEL %Y')
+        header_title += end.strftime('Y %d DE %B DEL %Y')
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)
         y_offset += 6
@@ -442,7 +442,7 @@ class WeightIncomeReport(models.AbstractModel):
                     'start' : start,
                     'end' : end
             })
-            header = self.env['ir.actions.report'].render_template("jt_account_module_design.external_layout_weight_income", values=rcontext)
+            header = self.env['ir.actions.report'].render_template("jt_account_module_design.external_layout_miles_revenue_report", values=rcontext)
             header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
             spec_paperformat_args = {}
             # Default header and footer in case the user customized web.external_layout and removed the header/footer

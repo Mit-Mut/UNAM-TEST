@@ -172,6 +172,7 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                         #values= self.env['account.move.line'].search(domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', acc.ids)])
                         values= self.env['account.move.line'].search(domain + [('account_id', 'in', acc.ids)])
                         exercised = sum(x.credit - x.debit for x in values)
+                        exercised = abs(exercised)
                         exercised = exercised/1000
                         total_exercised += exercised
 
@@ -387,20 +388,24 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
 
         col += 1
         start = datetime.strptime(
-            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
-            options['date'].get('date_to'), '%Y-%m-%d').date()
+        options['date'].get('date_to'), '%Y-%m-%d').date()
 
-        header_title = "UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO"
+        header_title = "NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO  "
         header_title += "\n"
-        header_title += "DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL"
+        header_title += "GENERAL DIRECTORATE OF BUDGET CONTROL-ACCOUNTING GENERAL  "
         header_title += "\n"
-        header_title += "ESTADO DE INGRESOS,"
-        header_title += "GASTOS E INVERSIONES DETALLADO"
-        header_title += "DEL"
-        header_title += str(start)
-        header_title += "AL"
-        header_title += str(end)
+        header_title += "STATUS OF INCOME, EXPENSES AND INVESTMENTS DETAILED FROM"
+        header_title += start.strftime('%B %d')
+        header_title += 'OF'
+        header_title += start.strftime('%Y')
+        header_title += 'TO'
+        header_title += end.strftime('%B %d')
+        header_title += 'OF'
+        header_title += end.strftime('%Y')
+        sheet.merge_range(y_offset, col, 5, col + 6,
+                          header_title, super_col_style)
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)
         y_offset += 6

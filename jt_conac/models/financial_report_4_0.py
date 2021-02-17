@@ -160,7 +160,11 @@ class StatementOfFinancialPosition(models.AbstractModel):
                                  move_state_domain,
                                  ('date', '>=', date_start), ('date', '<=', date_end)])
                             if move_lines:
-                                balance += (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+                                if line.code=='2.0.0.0':
+                                    balance += (sum(move_lines.mapped('credit')) - sum(move_lines.mapped('debit')))
+                                else:
+                                    balance += (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+                                    
                                 if period.get('string') in period_dict:
                                     period_dict.update({period.get('string'): period_dict.get(period.get('string')) + balance})
                                 else:
@@ -177,7 +181,10 @@ class StatementOfFinancialPosition(models.AbstractModel):
                                                         move_state_domain,
                                                         ('date', '>=', date_start), ('date', '<=', date_end)])
                                 if move_lines:
-                                    balance += (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+                                    if line.code=='2.0.0.0':
+                                        balance += (sum(move_lines.mapped('credit')) - sum(move_lines.mapped('debit')))
+                                    else:
+                                        balance += (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
                                     if period.get('string') in period_dict:
                                         period_dict.update(
                                             {period.get('string'): period_dict.get(period.get('string')) + balance})
@@ -276,7 +283,7 @@ class StatementOfFinancialPosition(models.AbstractModel):
                           
             lines.append({
                 'id': 'total_main',
-                'name': 'Gran Total',
+                'name': 'Ganancia Año Actual',
                 'columns': main_total_col,
                 'level': 1,
                 #'title_hover': level_1_line.display_name,
@@ -425,7 +432,7 @@ class StatementOfFinancialPosition(models.AbstractModel):
             values=dict(rcontext),
         )
         body_html = self.with_context(print_mode=True,get_sign_col=True).get_html(options)
-        body_html = body_html.replace(b'<div class="o_account_reports_header">',b'<div>')
+        body_html = body_html.replace(b'<div class="o_account_reports_header">',b'<div style="display:none;">')
 
         body = body.replace(b'<body class="o_account_reports_body_print">', b'<body class="o_account_reports_body_print">' + body_html)
         if minimal_layout:

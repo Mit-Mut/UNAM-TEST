@@ -67,7 +67,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//group/group/field[@name='ref']" position="after">
                     <field name="dependancy_id" context="{'show_for_supplier_payment':True}"/>
-                    <field name="sub_dependancy_id" context="{'show_for_supplier_payment':True}"/>
+                    <field name="sub_dependancy_id" domain="[('dependency_id','=',dependancy_id)]" context="{'show_for_supplier_payment':True}"/>
                     <field name="programatic_code"/>
                     <field name="ie_account"/>
                     <field name="date_year_program" invisible="1"/>

@@ -33,11 +33,11 @@
     'data': [
         'reports/header.xml',
         'reports/report_menu.xml',
-        'reports/income_expenses_header.xml',
         'views/account_request_inherit.xml',
         'views/integration_of_statement_asset_view.xml',
         'views/miles_revenue_view.xml',
         'views/detailed_imcome_statement_view.xml',
+        'views/account_move_line.xml',
  #       'reports/filter_template.xml',
         'security/ir.model.access.csv',
     ],

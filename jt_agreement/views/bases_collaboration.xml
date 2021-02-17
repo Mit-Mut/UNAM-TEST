@@ -225,11 +225,11 @@
  -->                            
  							<page string="Collaboration Base Contacts" name="collaboration_base_contacts">
                                 <group>
-                                    <group string="Owner of Dependency">
-                                        <field name="employee_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <group>
+                                        <field name="employee_id" attrs="{'readonly': [('state', '!=', 'draft')]}" invisible="1"/>
                                         <field name="job_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                        <field name="phone" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                        <field name="holder_email" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        <field name="phone" attrs="{'readonly': [('state', '!=', 'draft')]}" invisible="1"/>
+                                        <field name="holder_email" attrs="{'readonly': [('state', '!=', 'draft')]}" invisible="1"/>
                                     </group>
                                     <group string="Administrative Secretary">
                                         <field name="administrative_secretary_id"

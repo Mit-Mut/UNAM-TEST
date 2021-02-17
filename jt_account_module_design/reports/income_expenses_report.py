@@ -173,6 +173,7 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                         #values= self.env['account.move.line'].search(domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', account_ids.ids)])
                         values= self.env['account.move.line'].search(domain + [('account_id', 'in', acc.ids)])
                         exercised = sum(x.credit - x.debit for x in values)
+                        exercised = abs(exercised)
                         exercised = exercised/1000
                         total_exercised += exercised
 
@@ -316,7 +317,23 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
             sheet.insert_image(0, 0, filename, {
                                'image_data': image_data, 'x_offset': 8, 'y_offset': 3, 'x_scale': 0.6, 'y_scale': 0.6})
         col += 1
-        header_title = '''DIRECCIÓN GENERAL DE FINANZAS\nPATRONATO UNIVERSITARIO\nTESORERIA\nREPORTE DE LOS INFORMES DE LOS CHEQUES DE NOMINA DE SUELDO Y PENSIÓN ALIMENTICIA'''
+        start = datetime.strptime(
+        str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+        options['date'].get('date_to'), '%Y-%m-%d').date()
+
+        header_title = "NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO  "
+        header_title += "\n"
+        header_title += "GENERAL DIRECTORATE OF BUDGET CONTROL-ACCOUNTING GENERAL  "
+        header_title += "\n"
+        header_title += "STATE OF INCOME, EXPENSES AND COMPARATIVE INVESTMENTS FROM"
+        header_title += start.strftime('%B %d')
+        header_title += 'OF'
+        header_title += start.strftime('%Y')
+        header_title += 'TO'
+        header_title += end.strftime('%B %d')
+        header_title += 'OF'
+        header_title += end.strftime('%Y')
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)
         y_offset += 6
@@ -396,7 +413,7 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
         output.close()
         return generated_file
 
-    def get_pdf(self, options, minimal_layout=True):
+    def get_pdf(self, options, minimal_layout=True,line_id=None):
         # As the assets are generated during the same transaction as the rendering of the
         # templates calling them, there is a scenario where the assets are unreachable: when
         # you make a request to read the assets while the transaction creating them is not done.
@@ -421,22 +438,27 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
             values=dict(rcontext),
         )
         body_html = self.with_context(print_mode=True).get_html(options)
-
+        body_html = body_html.replace(b'<div class="o_account_reports_header">',b'<div>')
+        #<div class="o_account_reports_header">
         body = body.replace(b'<body class="o_account_reports_body_print">', b'<body class="o_account_reports_body_print">' + body_html)
         if minimal_layout:
             header = ''
             footer = self.env['ir.actions.report'].render_template("web.internal_layout", values=rcontext)
-            spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 10}
+            spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 20}
             footer = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
         else:
+            start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+            end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
             rcontext.update({
                     'css': '',
                     'o': self.env.user,
                     'res_company': self.env.company,
-                })
-            # header = self.env['ir.actions.report'].render_template("jt_investment.external_layout_investment_funds_balances", values=rcontext)
-            header = self.env['ir.actions.report'].render_template("jt_account_module_design.external_layout_state_partimonial", values=rcontext)
-               
+                    'start' : start,
+                    'end' : end
+            })
+            header = self.env['ir.actions.report'].render_template("jt_account_module_design.external_layout_income_expenses_comparative", values=rcontext)
             header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
             spec_paperformat_args = {}
             # Default header and footer in case the user customized web.external_layout and removed the header/footer

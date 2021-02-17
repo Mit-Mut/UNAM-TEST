@@ -296,6 +296,11 @@ class WeightIncomeReport(models.AbstractModel):
         super_columns = self._get_super_columns(options)
         y_offset = 0
         col = 0
+        start = datetime.strptime(
+        str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+        options['date'].get('date_to'), '%Y-%m-%d').date()
+
         sheet.merge_range(y_offset, col, 6, col, '', super_col_style)
         if self.env.user and self.env.user.company_id and self.env.user.company_id.header_logo:
             filename = 'logo.png'
@@ -304,7 +309,15 @@ class WeightIncomeReport(models.AbstractModel):
             sheet.insert_image(0, 0, filename, {
                                'image_data': image_data, 'x_offset': 8, 'y_offset': 3, 'x_scale': 0.6, 'y_scale': 0.6})
         col += 1
-        header_title = '''DIRECCIÓN GENERAL DE FINANZAS\nPATRONATO UNIVERSITARIO\nTESORERIA\nREPORTE DE LOS INFORMES DE LOS CHEQUES DE NOMINA DE SUELDO Y PENSIÓN ALIMENTICIA'''
+        header_title = "UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO  "
+        header_title += "\n"
+        header_title += "DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL  "
+        header_title += "\n"
+        header_title += "REPORTE DE INGRESOS POR EL PERÍODO DEL"
+        header_title += start.strftime('%d DE')
+        header_title += start.strftime('%B DEL %Y')
+        header_title += end.strftime('Y %d DE %B DEL %Y')
+
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)
         y_offset += 6
@@ -485,7 +498,7 @@ class WeightIncomeReport(models.AbstractModel):
         # report = {'name': self._get_report_name(),
         #         'summary': report_manager.summary,
         #         'company_name': self.env.company.name,}
-        report = {'name': self._get_report_name()}
+        report = {}
         #options.get('date',{}).update({'string':''}) 
         lines = self._get_lines(options, line_id=line_id)
 

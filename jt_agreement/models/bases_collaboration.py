@@ -74,8 +74,7 @@ class BasesCollabration(models.Model):
         'request.open.balance', 'bases_collaboration_id')
 
     employee_id = fields.Many2one('hr.employee', 'Holder of the unit')
-    job_id = fields.Many2one(
-        related="employee_id.job_id", string="Market Stall")
+    job_id = fields.Many2one('hr.job', string="Market Stall")
     phone = fields.Char(related="employee_id.work_phone",
                         string="Telephone of the unit holder")
     holder_email = fields.Char(

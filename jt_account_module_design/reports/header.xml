@@ -273,15 +273,17 @@
 
             <div class="header">
                 <div class="row">
+               
                     <div class="col-3">
+                   
                         <img t-attf-src="data:image/png;base64,{{company.header_logo}}"
                              style="width:120px;height:100px;margin-top:20px;margin-right:20px;margin-bottom:20px;"/>
+                          
                     </div>
-
+ 
                     <div class="col-6 text-center">
                         <b><span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span></b><br/>
-                            <span style="font-size:14px;">GENERAL DIRECTORATE OF BUDGET CONTROL-GENERAL
-ACCOUNTING</span>
+                            <span style="font-size:14px;">GENERAL DIRECTORATE OF BUDGET CONTROL-GENERAL ACCOUNTING</span>
                         <br/>
                         
                         <span>GENERAL ACCOUNTING AT THE <t t-esc="start.strftime('%d %B')"/> OF <t t-esc="start.strftime('%Y')"/> AND <t t-esc="end.strftime('%d %B ')"/> OF <t t-esc="end.strftime('%Y')"/> </span>

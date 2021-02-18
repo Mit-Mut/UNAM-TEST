@@ -171,6 +171,27 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                     total_to_exercised = 0
                     
                     account_ids = con.account_ids
+
+                    lines.append({
+                        'id': 'major' + str(con.id),
+                        'name': con.major,
+                        'columns': [
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    {'name': ''},
+                                    ],
+        
+                        'level': 1,
+                        'unfoldable': False,
+                        'unfolded': True,
+                        'class':'text-left'
+                    })
                     
                     lines.append({
                         'id': 'con' + str(con.id),
@@ -272,7 +293,7 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                         remant_authorized -= total_authorized
                         remant_transfers -= total_transfers
                         remant_assign -= total_assign
-                        remant_contable_exercised += total_contable_exercised
+                        remant_contable_exercised -= total_contable_exercised
                         remant_e_income -= total_e_income
                         remant_extra_book -= total_extra_book
                         remant_exercised -= total_exercised

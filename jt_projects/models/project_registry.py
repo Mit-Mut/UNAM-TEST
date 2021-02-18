@@ -10,6 +10,47 @@ class ProjectProgramCode(models.Model):
     project_id = fields.Many2one('project.project', string='Project',ondelete='cascade')
     program_code_id = fields.Many2one('program.code','Program Code')
 
+    total_assigned_amt = fields.Float(
+        string="Assigned Total Annual", compute="_compute_amt")
+    total_per_exercise = fields.Float(
+        string="Per Exercise", compute="_compute_amt")
+    total_paid = fields.Float(
+        string="Paid", compute="_compute_amt")
+
+    @api.depends('program_code_id')
+    def _compute_amt(self):
+        for rec in self:
+            total_assigned_amt = 0
+            total_paid = 0
+            total_per_exercise = 0
+            
+            if rec.program_code_id:
+                self.env.cr.execute("select coalesce(sum(ebl.assigned),0) from expenditure_budget_line ebl where ebl.program_code_id = %s ", (rec.program_code_id.id,))
+                my_datas = self.env.cr.fetchone()
+                if my_datas:
+                    total_assigned_amt = my_datas[0]
+
+                if rec.project_id and rec.project_id.is_papiit_project:
+                    self.env.cr.execute("select coalesce(sum(ebl.available),0) from expenditure_budget_line ebl where ebl.program_code_id = %s",(rec.program_code_id.id,))
+                    my_datas = self.env.cr.fetchone()
+                    if my_datas:
+                        total_per_exercise = my_datas[0]
+    
+                    self.env.cr.execute("""(select coalesce(sum(abs(line.balance)+abs(line.tax_price_cr)),0) from account_move_line line,account_move amove,account_payment apay 
+                                        where  line.program_code_id = %s and amove.id=line.move_id and amove.payment_state=%s and apay.payment_request_id = amove.id)""", (rec.program_code_id.id,'paid',))
+                    
+                    my_datas = self.env.cr.fetchone()
+                    if my_datas:
+                        total_paid = my_datas[0]
+                else:
+                    verification_lines = self.env['verification.expense.line'].search([('program_code','=',rec.program_code_id.id),('verification_expense_id.status','=','approve')])
+                    total_paid = sum(x.subtotal for x in verification_lines)
+                    total_per_exercise = total_assigned_amt - total_paid
+                    
+            rec.total_assigned_amt = total_assigned_amt
+            rec.total_paid = total_paid
+            rec.total_per_exercise = total_per_exercise
+                
     @api.constrains('program_code_id')
     def _project_program_unique(self):
         for record in self:
@@ -17,6 +58,7 @@ class ProjectProgramCode(models.Model):
                 line = self.env['custom.project.programcode'].search([('id', '!=', record.id),('program_code_id','=',record.program_code_id.id)],limit=1)
                 if line:
                     raise ValidationError(_('This Program Code Already Link To Project'))
+
     
 class ProjectRegistry(models.Model):
     _inherit = 'project.project'

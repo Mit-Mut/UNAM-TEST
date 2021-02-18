@@ -241,13 +241,46 @@ class Adequacies(models.Model):
                     failed_row_ids.append(pointer)
                     continue
 
-                # Validate Program(PR)
-                program = program_obj.validate_program(list_result[1])
+                # Validation Conversion Program SHCP
+                program_str = ''
+                if len(str(list_result[1])) > 1:
+                    program_str = str(list_result[1]).zfill(2)
+                    
+                conversion_item_string = ''
+                if len(str(list_result[10])) > 4:
+                    conversion_item_string = str(list_result[10]).zfill(4)
+                
+                shcp = shcp_obj.validate_shcp(list_result[9], program_str,conversion_item_string)
+                if not shcp:
+                    failed_row += str(list_result) + \
+                                  "------>> Invalid Conversion Program SHCP(CONPP) Format\n"
+                    failed_row_ids.append(pointer)
+                    continue
+
+                program = shcp and shcp.unam_key_id or False
                 if not program:
                     failed_row += str(list_result) + \
                                   "------>> Invalid Program(PR) Format\n"
                     failed_row_ids.append(pointer)
                     continue
+
+
+                # Validation Federal Item
+                conversion_item = shcp and shcp.dep_con_id or False
+                  
+                if not conversion_item:
+                    failed_row += str(list_result) + \
+                                  "------>> Invalid SHCP Games(CONPA) Format\n"
+                    failed_row_ids.append(pointer)
+                    continue
+
+                # Validate Program(PR)
+#                 program = program_obj.validate_program(list_result[1])
+#                 if not program:
+#                     failed_row += str(list_result) + \
+#                                   "------>> Invalid Program(PR) Format\n"
+#                     failed_row_ids.append(pointer)
+#                     continue
 
                 # Validate Dependency
                 dependency = dependancy_obj.validate_dependency(list_result[3])
@@ -309,21 +342,14 @@ class Adequacies(models.Model):
                     failed_row_ids.append(pointer)
                     continue
 
-                # Validation Conversion Program SHCP
-                shcp = shcp_obj.validate_shcp(list_result[9], program)
-                if not shcp:
-                    failed_row += str(list_result) + \
-                                  "------>> Invalid Conversion Program SHCP(CONPP) Format\n"
-                    failed_row_ids.append(pointer)
-                    continue
-
+                
                 # Validation Federal Item
-                conversion_item = dpc_obj.validate_conversion_item(list_result[10],item.id)
-                if not conversion_item:
-                    failed_row += str(list_result) + \
-                                  "------>> Invalid SHCP Games(CONPA) Format\n"
-                    failed_row_ids.append(pointer)
-                    continue
+#                 conversion_item = dpc_obj.validate_conversion_item(list_result[10],item.id)
+#                 if not conversion_item:
+#                     failed_row += str(list_result) + \
+#                                   "------>> Invalid SHCP Games(CONPA) Format\n"
+#                     failed_row_ids.append(pointer)
+#                     continue
 
                 # Validation Expense Type
                 expense_type = expense_type_obj.validate_expense_type(list_result[11])
@@ -399,7 +425,7 @@ class Adequacies(models.Model):
                     continue
 
                 try:
-                    program_code = False
+                    program_code = False                    
                     if year and program and subprogram and dependency and subdependency and item and origin_resource \
                             and institutional_activity and shcp and conversion_item and expense_type and geo_location \
                             and wallet_key and project_type and stage and agreement_type:
@@ -423,7 +449,7 @@ class Adequacies(models.Model):
                             ('agreement_type_id', '=', agreement_type.id),
                             ('state', '=', 'validated'),
                         ], limit=1)
-
+                        print ("===",program_code)
                         if program_code:
                             budget_line = self.env['expenditure.budget.line'].sudo().search(
                                 [('program_code_id', '=', program_code.id),
@@ -965,5 +991,5 @@ class AdequaciesLines(models.Model):
     program = fields.Many2one(
         'program.code', string='Program', domain="[('state', '=', 'validated'), ('budget_id', '=', parent.budget_id)]")
 
-    _sql_constraints = [('uniq_program_per_adequacies_id', 'unique(program,adequacies_id)',
+    _sql_constraints = [('uniq_program_per_adequacies_id', 'unique(program,id)',
                          'The program code must be unique per Adequacies')]

@@ -1,4 +1,4 @@
-    # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    Jupical Technologies Pvt. Ltd.
@@ -219,6 +219,13 @@ class StatePartimonialSituation(models.AbstractModel):
         super_columns = self._get_super_columns(options)
         y_offset = 0
         col = 0
+        start = datetime.strptime(str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(str(options['date'].get('date_to')), '%Y-%m-%d').date()
+        start_date = start.strftime('%B %d')
+        s_year = start.strftime('%Y')
+        end_date = end.strftime('%B %d')
+        e_year = end.strftime('%Y')
+
         sheet.merge_range(y_offset, col, 6, col, '', super_col_style)
         if self.env.user and self.env.user.company_id and self.env.user.company_id.header_logo:
             filename = 'logo.png'
@@ -227,7 +234,8 @@ class StatePartimonialSituation(models.AbstractModel):
             sheet.insert_image(0, 0, filename, {
                                'image_data': image_data, 'x_offset': 8, 'y_offset': 3, 'x_scale': 0.6, 'y_scale': 0.6})
         col += 1
-        header_title = '''DIRECCIÓN GENERAL DE FINANZAS\nPATRONATO UNIVERSITARIO\nTESORERIA\nREPORTE DE LOS INFORMES DE LOS CHEQUES DE NOMINA DE SUELDO Y PENSIÓN ALIMENTICIA'''
+        header_title = '''NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO\nGENERAL DIRECTORATE OF BUDGET CONTROL-ACCOUNTING GENERAL\nINTEGRATION OF SOME ITEMS OF THE STATE OF PATRIMONIAL SITUATION AT THE %s OF %s AND %s OF %s''' % (start_date,s_year,end_date,e_year)
+        
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)
         y_offset += 6
@@ -307,7 +315,7 @@ class StatePartimonialSituation(models.AbstractModel):
         output.close()
         return generated_file
 
-    def get_pdf(self, options, minimal_layout=True):
+    def get_pdf(self, options, minimal_layout=True,line_id=None):
         # As the assets are generated during the same transaction as the rendering of the
         # templates calling them, there is a scenario where the assets are unreachable: when
         # you make a request to read the assets while the transaction creating them is not done.
@@ -332,22 +340,27 @@ class StatePartimonialSituation(models.AbstractModel):
             values=dict(rcontext),
         )
         body_html = self.with_context(print_mode=True).get_html(options)
-
+        body_html = body_html.replace(b'<div class="o_account_reports_header">',b'<div>')
+        #<div class="o_account_reports_header">
         body = body.replace(b'<body class="o_account_reports_body_print">', b'<body class="o_account_reports_body_print">' + body_html)
         if minimal_layout:
             header = ''
             footer = self.env['ir.actions.report'].render_template("web.internal_layout", values=rcontext)
-            spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 10}
+            spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 20}
             footer = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
         else:
+            start = datetime.strptime(
+            str(options['date'].get('date_from')), '%Y-%m-%d').date()
+            end = datetime.strptime(
+            options['date'].get('date_to'), '%Y-%m-%d').date()
             rcontext.update({
                     'css': '',
                     'o': self.env.user,
                     'res_company': self.env.company,
-                })
-            # header = self.env['ir.actions.report'].render_template("jt_investment.external_layout_investment_funds_balances", values=rcontext)
+                    'start' : start,
+                    'end' : end
+            })
             header = self.env['ir.actions.report'].render_template("jt_account_module_design.external_layout_state_partimonial", values=rcontext)
-               
             header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
             spec_paperformat_args = {}
             # Default header and footer in case the user customized web.external_layout and removed the header/footer
@@ -382,6 +395,8 @@ class StatePartimonialSituation(models.AbstractModel):
             specific_paperformat_args=spec_paperformat_args
         )
 
+
+
     def get_html(self, options, line_id=None, additional_context=None):
         '''
         return the html value of report, or html value of unfolded line
@@ -397,13 +412,13 @@ class StatePartimonialSituation(models.AbstractModel):
 
         templates = self._get_templates()
         report_manager = self._get_report_manager(options)
-        report = {'name': self._get_report_name(),
-                'summary': report_manager.summary,
-                'company_name': self.env.company.name,}
+        # report = {'name': self._get_report_name(),
+        #         'summary': report_manager.summary,
+        #         'company_name': self.env.company.name,}
         report = {}
         #options.get('date',{}).update({'string':''}) 
         lines = self._get_lines(options, line_id=line_id)
-        
+
         if options.get('hierarchy'):
             lines = self._create_hierarchy(lines, options)
         if options.get('selected_column'):
@@ -436,6 +451,7 @@ class StatePartimonialSituation(models.AbstractModel):
             ]
 
         render_template = templates.get('main_template', 'account_reports.main_template')
+        
         if line_id is not None:
             render_template = templates.get('line_template', 'account_reports.line_template')
         html = self.env['ir.ui.view'].render_template(
@@ -448,3 +464,4 @@ class StatePartimonialSituation(models.AbstractModel):
             # append footnote as well
             html = html.replace(b'<div class="js_account_report_footnotes"></div>', self.get_html_footnotes(footnotes_to_render))
         return html
+

@@ -67,14 +67,15 @@
             <field name="arch" type="xml">
                 <xpath expr="//group/group/field[@name='ref']" position="after">
                     <field name="dependancy_id" context="{'show_for_supplier_payment':True}"/>
-                    <field name="sub_dependancy_id" context="{'show_for_supplier_payment':True}"/>
+                    <field name="sub_dependancy_id" domain="[('dependency_id','=',dependancy_id)]" context="{'show_for_supplier_payment':True}"/>
                     <field name="programatic_code"/>
                     <field name="ie_account"/>
+                    <field name="date_year_program" invisible="1"/>
                 </xpath>
                 <xpath expr="//page[@id='aml_tab']//field[@name='line_ids']/tree/field[@name='partner_id']" position="after">
                 	<field name="is_programatic_code" invisible="1"/>
                 	<field name="is_ie_account" invisible="1"/>
-                    <field name="program_code_id" attrs="{'invisible':[('is_programatic_code','=',False)]}"/>
+                    <field name="program_code_id" domain="[('year.name','=',parent.date_year_program),('dependency_id','=',parent.dependancy_id)]" attrs="{'invisible':[('is_programatic_code','=',False)]}"/>
                     <field name="account_ie_id" attrs="{'invisible':[('is_ie_account','=',False)]}"/>
                     
                 </xpath>

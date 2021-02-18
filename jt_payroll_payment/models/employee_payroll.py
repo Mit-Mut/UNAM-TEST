@@ -33,17 +33,23 @@ class Employee(models.Model):
         group_portal = self.env.ref('base.group_portal')
         company_id = self.env.company.id
         user_obj = self.env['res.users']
-        for emp in self.filtered(lambda x: not x.user_id):            
-            vals = {'name' : emp.name,
-                    'login' : emp.name,
-                    'active': True, 
-                    'groups_id': [(4, group_portal.id)],
-                    'company_id': company_id,
-                    'company_ids': [(6, 0, [company_id])],
-                    }
-            user_id = user_obj.with_context(no_reset_password=True)._create_user_from_template(vals)
-            emp.user_id = user_id.id
-            emp.emp_partner_id = user_id.partner_id and user_id.partner_id.id or False
+        for emp in self.filtered(lambda x: not x.user_id and x.rfc):
+            exist_user = user_obj.search([('login','=',emp.rfc)],limit=1)
+            if exist_user:
+                emp.user_id = exist_user.id
+                emp.emp_partner_id = exist_user.partner_id and exist_user.partner_id.id or False
+            else:
+                vals = {'name' : emp.name,
+                        'login' : emp.rfc,
+                        'active': True, 
+                        'groups_id': [(4, group_portal.id)],
+                        'company_id': company_id,
+                        'company_ids': [(6, 0, [company_id])],
+                        }
+                
+                user_id = user_obj.with_context(no_reset_password=True)._create_user_from_template(vals)
+                emp.user_id = user_id.id
+                emp.emp_partner_id = user_id.partner_id and user_id.partner_id.id or False
              
 class HRJob(models.Model):
     _inherit = 'hr.job'

@@ -77,13 +77,15 @@ class ReissueOfChecks(models.Model):
     def onchange_move_id(self):
         if self.move_id:
             self.folio_against_receipt = self.move_id.id
-            self.check_log_id = self.move_id.check_folio_id and self.move_id.check_folio_id.id or False
+            if not self.check_log_id:
+                self.check_log_id = self.move_id.check_folio_id and self.move_id.check_folio_id.id or False
 
     @api.onchange('folio_against_receipt')
     def onchange_folio_against_receipt(self):
         if self.folio_against_receipt:
             self.move_id = self.folio_against_receipt.id
-            self.check_log_id = self.folio_against_receipt.check_folio_id and self.folio_against_receipt.check_folio_id.id or False
+            if not self.check_log_id:
+                self.check_log_id = self.folio_against_receipt.check_folio_id and self.folio_against_receipt.check_folio_id.id or False
 
     @api.onchange('check_log_id')
     def onchange_check_log_id(self):
@@ -92,6 +94,12 @@ class ReissueOfChecks(models.Model):
             if move_id:
                 self.move_id = move_id.id
                 self.folio_against_receipt = move_id.id
+            else:
+                move_id = self.env['account.move'].search([('related_check_folio_ids','in',self.check_log_id.id)],limit=1)
+                if move_id:
+                    self.move_id = move_id.id
+                    self.folio_against_receipt = move_id.id
+                
             self.checkbook_req_id = self.check_log_id.checklist_id and self.check_log_id.checklist_id.checkbook_req_id and self.check_log_id.checklist_id.checkbook_req_id.id or False 
 
 #     @api.depends('type_of_request','type_of_request_payroll','type_of_batch')
@@ -116,8 +124,9 @@ class ReissueOfChecks(models.Model):
                                                                           'Cancelled'))])
                 if rec.checkbook_req_id:
                     check_ids = check_ids.filtered(lambda x:x.checklist_id.checkbook_req_id.id==rec.checkbook_req_id.id)
-                move_ids = self.env['account.move'].search([('check_folio_id','in',check_ids.ids),
+                move_ids = self.env['account.move'].search(['|',('related_check_folio_ids','in',check_ids.ids),('check_folio_id','in',check_ids.ids),
                                     ('payment_state','in',('payment_method_cancelled','assigned_payment_method'))])
+                
                 if rec.type_of_batch == 'supplier':
                     move_ids = move_ids.filtered(lambda x:x.is_payment_request)
                 elif rec.type_of_batch == 'project':
@@ -127,15 +136,18 @@ class ReissueOfChecks(models.Model):
                 elif rec.type_of_batch == 'pension':
                     move_ids = move_ids.filtered(lambda x:x.is_pension_payment_request)
                 
-                check_ids = move_ids.mapped('check_folio_id')
-                log_list = check_ids.ids
+                new_check_ids = move_ids.mapped('check_folio_id').filtered(lambda x:x.id in check_ids.ids)
+                new_check_ids += move_ids.mapped('related_check_folio_ids').filtered(lambda x:x.id in check_ids.ids)
+                    
+                log_list = new_check_ids.ids
+                
             elif rec.type_of_request_payroll == 'check_reissue':
                 check_ids = self.env['check.log'].search([('status', 'in', ('In transit', 'Protected',
                                                                             'Cancelled'))])
                 if rec.checkbook_req_id:
                     check_ids = check_ids.filtered(
                         lambda x: x.checklist_id.checkbook_req_id.id == rec.checkbook_req_id.id)
-                move_ids = self.env['account.move'].search([('check_folio_id', 'in', check_ids.ids),
+                move_ids = self.env['account.move'].search(['|',('related_check_folio_ids','in',check_ids.ids),('check_folio_id', 'in', check_ids.ids),
                                                             ('payment_state', 'in',
                                                              ('payment_method_cancelled', 'assigned_payment_method'))])
                 if rec.type_of_batch == 'nominal':
@@ -144,8 +156,11 @@ class ReissueOfChecks(models.Model):
                 elif rec.type_of_batch == 'pension':
                     move_ids = move_ids.filtered(lambda x: x.is_pension_payment_request)
 
-                check_ids = move_ids.mapped('check_folio_id')
-                log_list = check_ids.ids
+                new_check_ids = move_ids.mapped('check_folio_id').filtered(lambda x:x.id in check_ids.ids)
+                new_check_ids += move_ids.mapped('related_check_folio_ids').filtered(lambda x:x.id in check_ids.ids)
+                    
+                log_list = new_check_ids.ids
+                
             elif rec.type_of_request=='check_cancellation':
                 check_ids = self.env['check.log'].search([('status','in',('Protected and in transit','Printed',
                                                                           'Detained','Withdrawn from circulation'))])

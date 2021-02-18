@@ -266,7 +266,7 @@ class ExpenditureBudget(models.Model):
             # Objects
 
             program_code_model = self.env['program.code'].sudo()
-            program_obj = self.env['program'].search_read([], fields=['id', 'key_unam'])
+            #program_obj = self.env['program'].search_read([], fields=['id', 'key_unam'])
             subprogram_obj = self.env['sub.program'].search_read(
                 [('dependency_id', '!=', False), ('sub_dependency_id', '!=', False), ('unam_key_id', '!=', False)],
                 fields=['id', 'dependency_id', 'sub_dependency_id', 'unam_key_id', 'sub_program'])
@@ -276,9 +276,9 @@ class ExpenditureBudget(models.Model):
             item_obj = self.env['expenditure.item'].search_read([], fields=['id', 'item', 'exercise_type'])
             origin_obj = self.env['resource.origin'].search_read([], fields=['id', 'key_origin'])
             activity_obj = self.env['institutional.activity'].search_read([], fields=['id', 'number'])
-            shcp_obj = self.env['budget.program.conversion'].search_read([], fields=['id', 'unam_key_id', 'shcp'])
-            dpc_obj = self.env['departure.conversion'].search_read([('item_id', '!=', False)],
-                                                                   fields=['id', 'federal_part', 'item_id'])
+            shcp_obj = self.env['budget.program.conversion'].search_read([], fields=['id','unam_key_id', 'unam_key_code', 'shcp_name','dep_con_id','federal_part'])
+#             dpc_obj = self.env['departure.conversion'].search_read([('item_id', '!=', False)],
+#                                                                    fields=['id', 'federal_part', 'item_id'])
             expense_type_obj = self.env['expense.type'].search_read([], fields=['id', 'key_expenditure_type'])
             location_obj = self.env['geographic.location'].search_read([], fields=['id', 'state_key'])
             wallet_obj = self.env['key.wallet'].search_read([], fields=['id', 'wallet_password'])
@@ -404,13 +404,43 @@ class ExpenditureBudget(models.Model):
                         failed_line_ids.append(line.id)
                         continue
 
-                    # Validate Program(PR)
+                    # Validation Conversion Program SHCP
+                    shcp = False
                     program = False
+                    conversion_item = False
+                    
+                    departure_conversion_str = False
+                    if len(str(line.departure_conversion)) > 4:
+                        departure_conversion_str = str(line.departure_conversion).zfill(4)
+                        
+                    program_str = False
                     if len(str(line.program)) > 1:
                         program_str = str(line.program).zfill(2)
-                        if program_str.isnumeric():
-                            program = list(filter(lambda prog: prog['key_unam'] == program_str, program_obj))
-                            program = program[0]['id'] if program else False
+                        
+                    if len(str(line.conversion_program)) > 3:
+                        shcp_str = str(line.conversion_program)
+                        if len(shcp_str) == 4 and (re.match("[A-Z]{1}\d{3}", str(shcp_str).upper())):
+                            shcp = list(
+                                filter(lambda tmp: tmp['shcp_name'] == shcp_str and tmp['unam_key_code'] == program_str and tmp['federal_part']==departure_conversion_str,
+                                       shcp_obj))
+                            program = shcp[0]['unam_key_id'][0] if shcp and shcp[0]['unam_key_id'] else False
+                            conversion_item  = shcp[0]['dep_con_id'][0] if shcp and shcp[0]['dep_con_id'] else False
+                            shcp = shcp[0]['id'] if shcp else False
+                            
+                    if not shcp:
+                        failed_row += str(line_vals) + \
+                                      "------>> Invalid Conversion Program SHCP(CONPP) Format\n"
+                        failed_line_ids.append(line.id)
+                        continue
+
+
+                    # Validate Program(PR)
+#                     program = False
+#                     if len(str(line.program)) > 1:
+#                         program_str = str(line.program).zfill(2)
+#                         if program_str.isnumeric():
+#                             program = list(filter(lambda prog: prog['key_unam'] == program_str, program_obj))
+#                             program = program[0]['id'] if program else False
                     if not program:
                         failed_row += str(line_vals) + \
                                       "------>> Invalid Program(PR) Format\n"
@@ -514,36 +544,21 @@ class ExpenditureBudget(models.Model):
                         failed_line_ids.append(line.id)
                         continue
 
-                    # Validation Conversion Program SHCP
-                    shcp = False
-                    if len(str(line.conversion_program)) > 3:
-                        shcp_str = str(line.conversion_program)
-                        if len(shcp_str) == 4 and (re.match("[A-Z]{1}\d{3}", str(shcp_str).upper())):
-                            shcp = list(
-                                filter(lambda tmp: tmp['shcp'][1] == shcp_str and tmp['unam_key_id'][0] == program,
-                                       shcp_obj))
-                            shcp = shcp[0]['id'] if shcp else False
-
-                    if not shcp:
-                        failed_row += str(line_vals) + \
-                                      "------>> Invalid Conversion Program SHCP(CONPP) Format\n"
-                        failed_line_ids.append(line.id)
-                        continue
-
                     # Validation Federal Item
-                    conversion_item = False
-                    if len(str(line.departure_conversion)) > 4:
-                        conversion_item_str = str(line.departure_conversion).zfill(4)
-                        if conversion_item_str.isnumeric():
-                            conversion_item = list(filter(
-                                lambda coit: coit['federal_part'] == conversion_item_str and coit['item_id'][0] == item,
-                                dpc_obj))
-                            conversion_item = conversion_item[0]['id'] if conversion_item else False
+#                     conversion_item = False
+#                     if len(str(line.departure_conversion)) > 4:
+#                         conversion_item_str = str(line.departure_conversion).zfill(4)
+#                         if conversion_item_str.isnumeric():
+#                             conversion_item = list(filter(
+#                                 lambda coit: coit['federal_part'] == conversion_item_str and coit['item_id'][0] == item,
+#                                 dpc_obj))
+#                             conversion_item = conversion_item[0]['id'] if conversion_item else False
 #                     if not conversion_item:
 #                         failed_row += str(line_vals) + \
 #                                       "------>> Invalid SHCP Games(CONPA) Format\n"
 #                         failed_line_ids.append(line.id)
 #                         continue
+
 
                     # Validation Expense Type
                     expense_type = False

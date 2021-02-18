@@ -27,11 +27,18 @@ class OfficeSignature(models.Model):
     _description = 'Office Signature'
 
     account_modification_id = fields.Many2one('request.accounts',domain=[('move_type','=','account_modify')])
+    name = fields.Char("Account Modification")
     dependancy_id = fields.Many2one('dependency', string='Dependency')
     bank_id = fields.Many2one('res.bank',string='Bank')
     bank_account_id = fields.Many2one('account.journal',"Bank Account")
     user_id = fields.Many2one('res.users','Responsible User')
 
+    @api.model
+    def create(self, vals):
+        res = super(OfficeSignature,self).create(vals)
+        seq = self.env['ir.sequence'].next_by_code('request.accounts.modification')
+        res.name = seq        
+        return res
 
 
     def get_sender_recipet1(self):
@@ -45,6 +52,7 @@ class AccountOpenRequest(models.Model):
     _name = 'account.open'
     _description = 'Opening a checking account'
 
+    
     account_modification_id = fields.Many2one('request.accounts',domain=[('move_type','=','account_modify')])
     dependancy_id = fields.Many2one('dependency', string='Dependency')
     bank_id = fields.Many2one('res.bank',string='Bank')
@@ -65,12 +73,19 @@ class AccountCancellation(models.Model):
     _name = 'account.cancellation'
     _description = 'Checking account cancellation'
 
+    name = fields.Char("Account Cancellation")
     account_cancellation_id = fields.Many2one('request.accounts',domain=[('move_type','=','account cancel')])
     dependancy_id = fields.Many2one('dependency', string='Dependency')
     bank_account_id = fields.Many2one('account.journal',related='account_cancellation_id.bank_account_id',string="Bank Account")
     bank_id = fields.Many2one('res.bank',related='bank_account_id.bank_id',string='Bank')
     user_id = fields.Many2one('hr.employee',related="account_cancellation_id.user_id",string='Responsible User')   
 
+    @api.model
+    def create(self, vals):
+        res = super(AccountCancellation,self).create(vals)
+        seq = self.env['ir.sequence'].next_by_code('request.account.cancellation')
+        res.name = seq        
+        return res
 
 
     def get_sender_recipet3(self):

@@ -1,4 +1,4 @@
-    # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    Jupical Technologies Pvt. Ltd.
@@ -29,16 +29,16 @@ import io
 import base64
 from odoo.tools import config, date_utils, get_lang
 import lxml.html
-# import xlsxwriter
 
-class StateIncomeExpensesInvestment(models.AbstractModel):
-    _name = "jt_account_design.state.income.expenses"
+
+class SalariesAlimonyAndAdditionalBenefit(models.AbstractModel):
+    _name = "jt_supplier_payment.salaries.alimony.additional.benefit"
     _inherit = "account.coa.report"
-    _description = "State of Income Expenses and Compariative Investment"
+    _description = "Cash Payment Calculation"
 
-    filter_date = {'mode': 'range', 'filter': 'this_month'}
+    filter_date = None
     filter_comparison = None
-    filter_all_entries = True
+    filter_all_entries = None
     filter_journals = True
     filter_analytic = None
     filter_unfold_all = None
@@ -47,225 +47,179 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
     filter_unposted_in_period = None
     MAX_LINES = None
 
+    filter_payment_method = True
+    
+    @api.model
+    def _get_filter_payment_method(self):
+        return self.env['l10n_mx_edi.payment.method'].search([])
+
+    @api.model
+    def _init_filter_payment_method(self, options, previous_options=None):
+        if self.filter_payment_method is None:
+            return
+        if previous_options and previous_options.get('payment_method'):
+            journal_map = dict((opt['id'], opt['selected']) for opt in previous_options['payment_method'] if opt['id'] != 'divider' and 'selected' in opt)
+        else:
+            journal_map = {}
+        options['payment_method'] = []
+
+        default_group_ids = []
+
+        for j in self._get_filter_payment_method():
+            options['payment_method'].append({
+                'id': j.id,
+                'name': j.name,
+                'code': j.name,
+                'selected': journal_map.get(j.id, j.id in default_group_ids),
+            })
+
     def _get_reports_buttons(self):
         return [
-            {'name': _('Print Preview'), 'sequence': 1,
-             'action': 'print_pdf', 'file_export_type': _('PDF')},
-            {'name': _('Export (XLSX)'), 'sequence': 2,
-             'action': 'print_xlsx', 'file_export_type': _('XLSX')},
+            {'name': _('Print Preview'), 'sequence': 1, 'action': 'print_pdf', 'file_export_type': _('PDF')},
+            {'name': _('Export (XLSX)'), 'sequence': 2, 'action': 'print_xlsx', 'file_export_type': _('XLSX')},
         ]
 
     def _get_templates(self):
         templates = super(
-            StateIncomeExpensesInvestment, self)._get_templates()
+            SalariesAlimonyAndAdditionalBenefit, self)._get_templates()
         templates[
             'main_table_header_template'] = 'account_reports.main_table_header'
         templates['main_template'] = 'account_reports.main_template'
         return templates
 
     def _get_columns_name(self, options):
-
-        start = datetime.strptime(
-            str(options['date'].get('date_from')), '%Y-%m-%d').date()
-        end = datetime.strptime(
-            options['date'].get('date_to'), '%Y-%m-%d').date()
-        
-        prev_year = start.year - 1 
         return [
-            {'name': _('Concepto')},
-            {'name': _('Ejercido año actual') + ' ' + str(start.year)},
-            {'name': _('Ejercido año anterior') + ' ' + str(prev_year)},
-            {'name': _('Variación')},
-            {'name': _('Porcentaje') +('(%)')},
+            {'name': _('Tipo de solicitud de pago de nómina')},
+            {'name': _('Cuenta bancaria de emisión de pago')},
+            {'name': _('Cantidad a pagar')},
         ]
 
-    def _format(self, value, figure_type):
+    def _format(self, value,figure_type):
         if self.env.context.get('no_format'):
             return value
         value['no_format_name'] = value['name']
-
+        
         if figure_type == 'float':
             currency_id = self.env.company.currency_id
             if currency_id.is_zero(value['name']):
                 # don't print -0.0 in reports
                 value['name'] = abs(value['name'])
                 value['class'] = 'number text-muted'
-            value['name'] = formatLang(
-                self.env, value['name'], currency_obj=currency_id)
+            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id)
             value['class'] = 'number'
             return value
         if figure_type == 'percents':
             value['name'] = str(round(value['name'] * 100, 1)) + '%'
             value['class'] = 'number'
             return value
+        
         value['name'] = round(value['name'], 1)
         return value
 
     def _get_lines(self, options, line_id=None):
         lines = []
-        start = datetime.strptime(
-            str(options['date'].get('date_from')), '%Y-%m-%d').date()
-        end = datetime.strptime(
-            options['date'].get('date_to'), '%Y-%m-%d').date()
+        payment_method_list = []
+        journal_list = []
+        domain = [('payment_request_type','=','pension_payment'),('payment_state','in',('for_payment_procedure','posted','reconciled'))]
 
-        if options.get('all_entries') is False:
-            move_state_domain = ('move_id.state', '=', 'posted')
-        else:
-            move_state_domain = ('move_id.state', '!=', 'cancel')
+        payment_method_list = []
+        for select_curreny in options.get('payment_method'):
+            if select_curreny.get('selected',False)==True:
+                payment_method_list.append(select_curreny.get('id',0))
+        
+        if payment_method_list:
+            domain += [('l10n_mx_edi_payment_method_id','in',payment_method_list)]
 
-        domain = [('date', '>=', start),('date', '<=', end),move_state_domain]
-        pre_domain = [('date', '<', start),move_state_domain]
-        
-        concept_ids = self.env['detailed.statement.income'].search([('inc_exp_type','!=',False)])
-        
-        list_data = ['income','expenses']
-        
-        remant_exercised = 0
-        remant_exercised_pre = 0
-        remant_variation = 0
-        count = 1
-        for type in list_data:
-            type_concept_ids = concept_ids.filtered(lambda x:x.inc_exp_type == type)
-            if type_concept_ids:
+        for journal in options.get('journals'):
+            if journal.get('selected',False)==True:
+                journal_list.append(journal.get('id',0))
 
+        if journal_list:
+            domain += [('journal_id','in',journal_list)]
+            
+        records = self.env['account.payment'].search(domain)
+        
+        journal_ids = records.mapped('journal_id')
+        total_amount = 0
+        
+        for journal in journal_ids:
+            payment_method_ids = records.filtered(lambda a:a.journal_id.id==journal.id and a.l10n_mx_edi_payment_method_id).mapped('l10n_mx_edi_payment_method_id')
+            total_bank = 0
+            if payment_method_ids:
                 lines.append({
-                    'id': type,
-                    'name': str(type).upper(),
+                    'id': 'hierarchy1_' + str(journal.id),
+                    'name': journal.name,
                     'columns': [
-                                {'name': ''},
-                                {'name': ''},
-                                {'name': ''},
-                                {'name': ''},
+                                {'name':journal.bank_account_id and journal.bank_account_id.acc_number or ''},
+                                {'name':''},
                                 ],
-    
                     'level': 1,
                     'unfoldable': False,
                     'unfolded': True,
                 })
-                count += 1
-                for con in type_concept_ids:
-
-                    total_exercised = 0
-                    total_exercised_pre = 0
-                    total_variation = 0
-                    
-                    account_ids = con.account_ids
-
-                    lines.append({
-                        'id': 'con' + str(con.id),
-                        'name': con.concept,
-                        'columns': [
-                                    {'name': ''},
-                                    {'name': ''},
-                                    {'name': ''},
-                                    {'name': ''},
-                                    ],
-        
-                        'level': 2,
-                        'unfoldable': False,
-                        'unfolded': True,
-                        'class':'text-left'
-                    })
-
-                    for acc in account_ids:
-                    
-
-                        #values= self.env['account.move.line'].search(domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', account_ids.ids)])
-                        values= self.env['account.move.line'].search(domain + [('account_id', 'in', acc.ids)])
-                        exercised = sum(x.credit - x.debit for x in values)
-                        exercised = abs(exercised)
-                        exercised = exercised/1000
-                        total_exercised += exercised
-
-                        #values= self.env['account.move.line'].search(pre_domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', account_ids.ids)])
-                        values= self.env['account.move.line'].search(pre_domain + [('account_id', 'in', acc.ids)])
-                        exercised_pre= sum(x.credit - x.debit for x in values)
-                        exercised_pre = exercised_pre/1000
-                        
-                        total_exercised_pre += exercised_pre
-                        
-                        variation = exercised - exercised_pre
-                        total_variation += variation
-                        
-                            
-                        per = 0
-                        if exercised != 0:
-                            per = (variation*100)/exercised
-                        
-                        lines.append({
-                            'id': 'account' + str(acc.id),
-                            'name': acc.code +" "+ acc.name,
-                            'columns': [
-                                        self._format({'name': exercised},figure_type='float'),
-                                        self._format({'name': exercised_pre},figure_type='float'),
-                                        self._format({'name': variation},figure_type='float'),
-                                        {'name':per,'class':'number'},
-                                        
-                                        ],
             
-                            'level': 3,
-                            'unfoldable': False,
-                            'unfolded': True,
-                        })
-
-                    if type == 'income':
-                        remant_exercised += total_exercised
-                        remant_exercised_pre += total_exercised_pre
-                        remant_variation += total_variation
-                        
-                    elif type == 'expenses':
-                        remant_exercised -= total_exercised
-                        remant_exercised_pre -= total_exercised_pre
-                        remant_variation -= total_variation
-    
-                    lines.append({
-                        'id': 'group_total',
-                        'name': 'SUMA',
-                        'columns': [
-                                    self._format({'name': total_exercised},figure_type='float'),
-                                    self._format({'name': total_exercised_pre},figure_type='float'),
-                                    self._format({'name': total_variation},figure_type='float'),
-                                    {'name':''},
-                                    ],
-                        
-                        'level': 1,
-                        'unfoldable': False,
-                        'unfolded': True,
-                        'class':'text-right'
-                    })
-
-        lines.append({
-            'id': 'REMNANT',
-            'name': 'REMNANT',
-            'columns': [
-                        self._format({'name': remant_exercised},figure_type='float'),
-                        self._format({'name': remant_exercised_pre},figure_type='float'),
-                        self._format({'name': remant_variation},figure_type='float'),
-                        {'name':''},
-                        ],
+            for method in payment_method_ids:
             
-            'level': 1,
-            'unfoldable': False,
-            'unfolded': True,
-            #'class':'text-right'
-        })
-        
+                amount = sum(x.amount for x in records.filtered(lambda a:a.journal_id.id==journal.id and a.l10n_mx_edi_payment_method_id.id==method.id))
+                         
+                total_amount += amount
+                total_bank += amount
+                
+                lines.append({
+                    'id': 'hierarchy1_method_' + str(method.id),
+                    'name': method.name,
+                    'columns': [
+                                {'name':''},
+                                self._format({'name': amount},figure_type='float'),
+                                ],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+
+            if payment_method_ids:
+                lines.append({
+                    'id': 'total_j' + str(journal.id),
+                    'name': '',
+                    'columns': [
+                                {'name':'TOTAL'},
+                                self._format({'name': total_bank},figure_type='float'),
+                                ],
+                    'level': 1,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+                
+        if lines:
+            lines.append({
+                'id': 'hierarchy1_total',
+                'name': 'TOTAL',
+                'columns': [
+                            {'name':''},
+                            self._format({'name': total_amount},figure_type='float'),
+                            ],
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+            
         return lines
 
     def _get_report_name(self):
-        return _("State Of Income Expenses and Investment")
-
+        return _("Salaries, Alimony And Additional Benefit")
+    
     @api.model
     def _get_super_columns(self, options):
         date_cols = options.get('date') and [options['date']] or []
         date_cols += (options.get('comparison') or {}).get('periods', [])
         columns = reversed(date_cols)
-        return {'columns': columns, 'x_offset': 1, 'merge': 4}
+        return {'columns': columns, 'x_offset': 1, 'merge': 5}
 
     def get_xlsx(self, options, response=None):
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         sheet = workbook.add_worksheet(self._get_report_name()[:31])
+
         date_default_col1_style = workbook.add_format(
             {'font_name': 'Arial', 'font_size': 12, 'font_color': '#666666', 'indent': 2, 'num_format': 'yyyy-mm-dd'})
         date_default_style = workbook.add_format(
@@ -309,6 +263,7 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
         super_columns = self._get_super_columns(options)
         y_offset = 0
         col = 0
+
         sheet.merge_range(y_offset, col, 6, col, '', super_col_style)
         if self.env.user and self.env.user.company_id and self.env.user.company_id.header_logo:
             filename = 'logo.png'
@@ -316,32 +271,18 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                 self.env.user.company_id.header_logo))
             sheet.insert_image(0, 0, filename, {
                                'image_data': image_data, 'x_offset': 8, 'y_offset': 3, 'x_scale': 0.6, 'y_scale': 0.6})
-        col += 1
-        start = datetime.strptime(
-        str(options['date'].get('date_from')), '%Y-%m-%d').date()
-        end = datetime.strptime(
-        options['date'].get('date_to'), '%Y-%m-%d').date()
 
-        header_title = "NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO  "
-        header_title += "\n"
-        header_title += "GENERAL DIRECTORATE OF BUDGET CONTROL-ACCOUNTING GENERAL  "
-        header_title += "\n"
-        header_title += "STATE OF INCOME, EXPENSES AND COMPARATIVE INVESTMENTS FROM"
-        header_title += start.strftime('%B %d')
-        header_title += 'OF'
-        header_title += start.strftime('%Y')
-        header_title += 'TO'
-        header_title += end.strftime('%B %d')
-        header_title += 'OF'
-        header_title += end.strftime('%Y')
-        sheet.merge_range(y_offset, col, 5, col + 6,
+        col += 1
+        y_offset += 3
+        header_title = '''REPORTE DE LOS IMPORTES DE LOS \nDEPOSITOS ELECTRONICOS'''
+        sheet.merge_range(y_offset, col, 1, col + 1,
                           header_title, super_col_style)
         y_offset += 6
         col = 1
-        currect_time_msg = "Fecha y hora de impresión: "
-        currect_time_msg += datetime.today().strftime('%d/%m/%Y %H:%M')
-        sheet.merge_range(y_offset, col, y_offset, col + 6,
-                          currect_time_msg, currect_date_style)
+#         currect_time_msg = "Fecha y hora de impresión: "
+#         currect_time_msg += datetime.today().strftime('%d/%m/%Y %H:%M')
+#         sheet.merge_range(y_offset, col, y_offset, col + 6,
+#                           currect_time_msg, currect_date_style)
         y_offset += 1
         for row in self.get_header(options):
             x = 0
@@ -361,10 +302,12 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                     'prefetch_fields': False})
         # deactivating the prefetching saves ~35% on get_lines running time
         lines = self.with_context(ctx)._get_lines(options)
+
         if options.get('hierarchy'):
             lines = self._create_hierarchy(lines, options)
         if options.get('selected_column'):
             lines = self._sort_lines(lines, options)
+
         # write all data rows
         for y in range(0, len(lines)):
             level = lines[y].get('level')
@@ -389,6 +332,7 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
             else:
                 style = default_style
                 col1_style = default_col1_style
+
             # write the first column, with a specific style to manage the
             # indentation
             cell_type, cell_value = self._get_cell_type_value(lines[y])
@@ -397,6 +341,7 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                     y + y_offset, 0, cell_value, date_default_col1_style)
             else:
                 sheet.write(y + y_offset, 0, cell_value, col1_style)
+
             # write all the remaining cells
             for x in range(1, len(lines[y]['columns']) + 1):
                 cell_type, cell_value = self._get_cell_type_value(
@@ -407,13 +352,14 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                 else:
                     sheet.write(
                         y + y_offset, x + lines[y].get('colspan', 1) - 1, cell_value, style)
+
         workbook.close()
         output.seek(0)
         generated_file = output.read()
         output.close()
         return generated_file
 
-    def get_pdf(self, options, minimal_layout=True,line_id=None):
+    def get_pdf(self, options, minimal_layout=True):
         # As the assets are generated during the same transaction as the rendering of the
         # templates calling them, there is a scenario where the assets are unreachable: when
         # you make a request to read the assets while the transaction creating them is not done.
@@ -437,28 +383,22 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
             "account_reports.print_template",
             values=dict(rcontext),
         )
-        body_html = self.with_context(print_mode=True).get_html(options)
+        body_html = self.with_context(print_mode=True,get_sign_col=True).get_html(options)
         body_html = body_html.replace(b'<div class="o_account_reports_header">',b'<div>')
-        #<div class="o_account_reports_header">
+
         body = body.replace(b'<body class="o_account_reports_body_print">', b'<body class="o_account_reports_body_print">' + body_html)
         if minimal_layout:
             header = ''
             footer = self.env['ir.actions.report'].render_template("web.internal_layout", values=rcontext)
-            spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 20}
+            spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 10}
             footer = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
         else:
-            start = datetime.strptime(
-            str(options['date'].get('date_from')), '%Y-%m-%d').date()
-            end = datetime.strptime(
-            options['date'].get('date_to'), '%Y-%m-%d').date()
             rcontext.update({
                     'css': '',
                     'o': self.env.user,
                     'res_company': self.env.company,
-                    'start' : start,
-                    'end' : end
-            })
-            header = self.env['ir.actions.report'].render_template("jt_account_module_design.external_layout_income_expenses_comparative", values=rcontext)
+                })
+            header = self.env['ir.actions.report'].render_template("jt_supplier_payment.external_layout_pension_payment_report", values=rcontext)
             header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
             spec_paperformat_args = {}
             # Default header and footer in case the user customized web.external_layout and removed the header/footer
@@ -514,7 +454,7 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
         report = {}
         #options.get('date',{}).update({'string':''}) 
         lines = self._get_lines(options, line_id=line_id)
-        
+
         if options.get('hierarchy'):
             lines = self._create_hierarchy(lines, options)
         if options.get('selected_column'):
@@ -559,3 +499,4 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
             # append footnote as well
             html = html.replace(b'<div class="js_account_report_footnotes"></div>', self.get_html_footnotes(footnotes_to_render))
         return html
+    

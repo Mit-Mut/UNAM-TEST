@@ -9,3 +9,5 @@ class DetailedIncomeStatement(models.Model):
     concept = fields.Char(string='Concept')
     account_ids = fields.Many2many('account.account', string='Account')
     inc_exp_type = fields.Selection([('income', 'Income'), ('expenses', 'Expenses')],string='Type')
+    major = fields.Char("Major")
+    item_ids = fields.Many2many("expenditure.item","rel_item_details_statement_income",'item_id','income_id',"Item")

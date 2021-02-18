@@ -1023,7 +1023,6 @@ class AccountChartOfAccountReport(models.AbstractModel):
         #<div class="o_account_reports_header">
         body = body.replace(b'<body class="o_account_reports_body_print">', b'<body class="o_account_reports_body_print">' + body_html)
         if minimal_layout:
-            print ("Call if=====")
             header = ''
             footer = self.env['ir.actions.report'].render_template("web.internal_layout", values=rcontext)
             spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 20}
@@ -1042,10 +1041,15 @@ class AccountChartOfAccountReport(models.AbstractModel):
                     'end' : end
             })
             header = self.env['ir.actions.report'].render_template("jt_account_module_design.external_layout_fianancial_statement_report", values=rcontext)
+            #header = self.env['ir.actions.report'].render_template("jt_account_module_design.external_layout_income_exp_and_invest", values=rcontext)
+            #header = self.env['ir.actions.report'].render_template("web.external_layout", values=rcontext)
+            #header = b'<p>ABBBCC</p>'
             header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
+            #spec_paperformat_args = {'data-report-margin-top': 50, 'data-report-header-spacing': 20}
             spec_paperformat_args = {}
             # Default header and footer in case the user customized web.external_layout and removed the header/footer
             headers = header.encode()
+            
             footer = b''
             # parse header as new header contains header, body and footer
             try:
@@ -1068,7 +1072,6 @@ class AccountChartOfAccountReport(models.AbstractModel):
         landscape = False
         if len(self.with_context(print_mode=True).get_header(options)[-1]) > 5:
             landscape = True
- 
         return self.env['ir.actions.report']._run_wkhtmltopdf(
             [body],
             header=header, footer=footer,

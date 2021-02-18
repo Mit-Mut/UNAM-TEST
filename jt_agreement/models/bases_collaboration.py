@@ -538,7 +538,8 @@ class BasesCollabration(models.Model):
                 'context': {'default_dependency_id': self.dependency_id and self.dependency_id.id or False,
                             'default_bases_collaboration_id': self.id,
                             'default_current_target': self.goals,
-                            'from_modification': True
+                            'from_modification': True,
+                            'show_agreement_name': True
                             }
             }
         else:

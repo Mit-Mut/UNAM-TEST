@@ -145,7 +145,7 @@ class TaxReport(models.AbstractModel):
         if account_id:
             values= self.env['account.move.line'].search(domain + [('account_id', '=', account_id.id)])
             acc_amount_220_001_001_001 = sum(x.credit - x.debit for x in values)
-            acc_amount_220_001_001_001 = acc_amount_220_001_001_001/1000
+            #acc_amount_220_001_001_001 = acc_amount_220_001_001_001/1000
     
         #===============115.001.001============#
         acc_amount_115_001_001 = 0
@@ -153,7 +153,7 @@ class TaxReport(models.AbstractModel):
         if account_id:
             values= self.env['account.move.line'].search(domain + [('account_id', '=', account_id.id)])
             acc_amount_115_001_001 = sum(x.debit - x.credit for x in values)
-            acc_amount_115_001_001 = acc_amount_115_001_001/1000
+            #acc_amount_115_001_001 = acc_amount_115_001_001/1000
 
         #===============220.001.001.003 ============#
         acc_amount_220_001_001_003 = 0
@@ -161,7 +161,7 @@ class TaxReport(models.AbstractModel):
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
             acc_amount_220_001_001_003 = sum(x.credit - x.debit for x in values)
-            acc_amount_220_001_001_003 = acc_amount_220_001_001_003/1000
+            #acc_amount_220_001_001_003 = acc_amount_220_001_001_003/1000
 
         total_isr = acc_amount_220_001_001_001 + acc_amount_220_001_001_003
 
@@ -252,7 +252,7 @@ class TaxReport(models.AbstractModel):
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
             acc_amount_220_001_001_002 = sum(x.credit - x.debit for x in values)
-            acc_amount_220_001_001_002 = acc_amount_220_001_001_002/1000
+            #acc_amount_220_001_001_002 = acc_amount_220_001_001_002/1000
         
         lines.append({
             'id': 'hierarchy_account1',
@@ -286,7 +286,7 @@ class TaxReport(models.AbstractModel):
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
             acc_amount_220_001_002_001 = sum(x.credit - x.debit for x in values)
-            acc_amount_220_001_002_001 = acc_amount_220_001_002_001/1000
+            #acc_amount_220_001_002_001 = acc_amount_220_001_002_001/1000
 
         #===============220.001.002.002 ============#
         acc_amount_220_001_002_002 = 0
@@ -294,7 +294,7 @@ class TaxReport(models.AbstractModel):
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
             acc_amount_220_001_002_002 = sum(x.credit - x.debit for x in values)
-            acc_amount_220_001_002_002 = acc_amount_220_001_002_002/1000
+            #acc_amount_220_001_002_002 = acc_amount_220_001_002_002/1000
 
         #===============220.001.002.003 ============#
         acc_amount_220_001_002_003 = 0
@@ -302,7 +302,7 @@ class TaxReport(models.AbstractModel):
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
             acc_amount_220_001_002_003 = sum(x.credit - x.debit for x in values)
-            acc_amount_220_001_002_003 = acc_amount_220_001_002_003/1000
+            #acc_amount_220_001_002_003 = acc_amount_220_001_002_003/1000
 
          #===============220.001.002.004 ============#
         acc_amount_220_001_002_004 = 0
@@ -310,7 +310,7 @@ class TaxReport(models.AbstractModel):
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
             acc_amount_220_001_002_004 = sum(x.credit - x.debit for x in values)
-            acc_amount_220_001_002_004 = acc_amount_220_001_002_004/1000
+            #acc_amount_220_001_002_004 = acc_amount_220_001_002_004/1000
 
         #===============220.001.002.005 ============#
         acc_amount_220_001_002_005 = 0
@@ -318,7 +318,7 @@ class TaxReport(models.AbstractModel):
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
             acc_amount_220_001_002_005 = sum(x.credit - x.debit for x in values)
-            acc_amount_220_001_002_005 = acc_amount_220_001_002_005/1000
+            #acc_amount_220_001_002_005 = acc_amount_220_001_002_005/1000
 
         ret_total = acc_amount_220_001_002_001 + acc_amount_220_001_002_002 + acc_amount_220_001_002_003 + acc_amount_220_001_002_004 + acc_amount_220_001_002_005
 
@@ -416,7 +416,7 @@ class TaxReport(models.AbstractModel):
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
             acc_amount_220_001_003_001 = sum(x.credit - x.debit for x in values)
-            acc_amount_220_001_003_001 = acc_amount_220_001_003_001/1000
+            #acc_amount_220_001_003_001 = acc_amount_220_001_003_001/1000
         
         lines.append({
             'id': 'hierarchy_account1',
@@ -450,7 +450,7 @@ class TaxReport(models.AbstractModel):
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
             acc_amount_220_001_004_001 = sum(x.credit - x.debit for x in values)
-            acc_amount_220_001_004_001 = acc_amount_220_001_004_001/1000
+            #acc_amount_220_001_004_001 = acc_amount_220_001_004_001/1000
 
         #===============220.001.004.002 ============#
         acc_amount_220_001_004_002 = 0
@@ -458,7 +458,7 @@ class TaxReport(models.AbstractModel):
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
             acc_amount_220_001_004_002 = sum(x.credit - x.debit for x in values)
-            acc_amount_220_001_004_002 = acc_amount_220_001_004_002/1000
+            #acc_amount_220_001_004_002 = acc_amount_220_001_004_002/1000
 
         #===============220.001.004.003 ============#
         acc_amount_220_001_004_003 = 0
@@ -466,7 +466,7 @@ class TaxReport(models.AbstractModel):
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
             acc_amount_220_001_004_003 = sum(x.credit - x.debit for x in values)
-            acc_amount_220_001_004_003 = acc_amount_220_001_004_003/1000
+            #acc_amount_220_001_004_003 = acc_amount_220_001_004_003/1000
 
         #===============220.001.004.004 ============#
         acc_amount_220_001_004_004 = 0
@@ -474,7 +474,7 @@ class TaxReport(models.AbstractModel):
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
             acc_amount_220_001_004_004 = sum(x.credit - x.debit for x in values)
-            acc_amount_220_001_004_004 = acc_amount_220_001_004_004/1000
+            #acc_amount_220_001_004_004 = acc_amount_220_001_004_004/1000
 
         #===============220.001.004.005 ============#
         acc_amount_220_001_004_005 = 0
@@ -482,7 +482,7 @@ class TaxReport(models.AbstractModel):
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
             acc_amount_220_001_004_005 = sum(x.credit - x.debit for x in values)
-            acc_amount_220_001_004_005 = acc_amount_220_001_004_005/1000
+            #acc_amount_220_001_004_005 = acc_amount_220_001_004_005/1000
 
         #===============220.001.004.006 ============#
         acc_amount_220_001_004_006 = 0
@@ -490,7 +490,7 @@ class TaxReport(models.AbstractModel):
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
             acc_amount_220_001_004_006 = sum(x.credit - x.debit for x in values)
-            acc_amount_220_001_004_006 = acc_amount_220_001_004_006/1000
+            #acc_amount_220_001_004_006 = acc_amount_220_001_004_006/1000
 
         vat_total = acc_amount_220_001_004_001 + acc_amount_220_001_004_002 + acc_amount_220_001_004_003 + acc_amount_220_001_004_004 +  acc_amount_220_001_004_005 + acc_amount_220_001_004_006
         
@@ -601,7 +601,7 @@ class TaxReport(models.AbstractModel):
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
             acc_amount_220_001_005_001 = sum(x.credit - x.debit for x in values)
-            acc_amount_220_001_005_001 = acc_amount_220_001_005_001/1000
+            #acc_amount_220_001_005_001 = acc_amount_220_001_005_001/1000
 
         #===============220.001.005.002 ============#
         acc_amount_220_001_005_002 = 0
@@ -609,7 +609,7 @@ class TaxReport(models.AbstractModel):
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
             acc_amount_220_001_005_002 = sum(x.credit - x.debit for x in values)
-            acc_amount_220_001_005_002 = acc_amount_220_001_005_002/1000
+            #acc_amount_220_001_005_002 = acc_amount_220_001_005_002/1000
 
         ieps_pay_total = acc_amount_220_001_005_001 + acc_amount_220_001_005_002
 
@@ -660,7 +660,7 @@ class TaxReport(models.AbstractModel):
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
             acc_amount_220_001_006_001 = sum(x.credit - x.debit for x in values)
-            acc_amount_220_001_006_001 = acc_amount_220_001_006_001/1000
+            #acc_amount_220_001_006_001 = acc_amount_220_001_006_001/1000
 
         #===============220.001.006.002 ============#
         acc_amount_220_001_006_002 = 0
@@ -668,7 +668,7 @@ class TaxReport(models.AbstractModel):
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
             acc_amount_220_001_006_002 = sum(x.credit - x.debit for x in values)
-            acc_amount_220_001_006_002 = acc_amount_220_001_006_002/1000
+            #acc_amount_220_001_006_002 = acc_amount_220_001_006_002/1000
 
         #===============220.001.006.003 ============#
         acc_amount_220_001_006_003 = 0
@@ -676,7 +676,7 @@ class TaxReport(models.AbstractModel):
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
             acc_amount_220_001_006_003 = sum(x.credit - x.debit for x in values)
-            acc_amount_220_001_006_003 = acc_amount_220_001_006_003/1000
+            #acc_amount_220_001_006_003 = acc_amount_220_001_006_003/1000
 
         #===============220.001.006.004 ============#
         acc_amount_220_001_006_004 = 0
@@ -684,7 +684,7 @@ class TaxReport(models.AbstractModel):
         if account_id:            
             values= self.env['account.move.line'].search(domain+[('account_id', '=', account_id.id)])
             acc_amount_220_001_006_004 = sum(x.credit - x.debit for x in values)
-            acc_amount_220_001_006_004 = acc_amount_220_001_006_004/1000
+            #acc_amount_220_001_006_004 = acc_amount_220_001_006_004/1000
 
         vat_pay_total = acc_amount_220_001_006_001 + acc_amount_220_001_006_002 + acc_amount_220_001_006_003 + acc_amount_220_001_006_004
 

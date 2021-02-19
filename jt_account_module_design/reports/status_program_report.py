@@ -603,9 +603,31 @@ class StatusProgramReport(models.AbstractModel):
             "account_reports.print_template",
             values=dict(rcontext),
         )
+
+        start = datetime.strptime(
+        str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+        options['date'].get('date_to'), '%Y-%m-%d').date()
+
+        rcontext_test = {
+                'mode': 'print',
+                'base_url': base_url,
+                'company': self.env.company,
+            } 
+        rcontext_test.update({
+                'css': '',
+                'o': self.env.user,
+                'res_company': self.env.company,
+                'start' : start,
+                'end' : end
+        })
+        
         body_html = self.with_context(print_mode=True).get_html(options)
-        body_html = body_html.replace(b'<div class="o_account_reports_header">',b'<div style="display:none;">')
-        #<div class="o_account_reports_header">
+
+        body_header =  self.env['ir.actions.report'].render_template("jt_account_module_design.external_layout_trial_balance", values=rcontext_test)
+        body_html = body_header+body_html
+        
+        body_html = body_html.replace(b'<div class="o_account_reports_header">',b'<div style="font-size:1px;text-align:center;">')
         body = body.replace(b'<body class="o_account_reports_body_print">', b'<body class="o_account_reports_body_print">' + body_html)
         if minimal_layout:
             header = ''
@@ -625,9 +647,10 @@ class StatusProgramReport(models.AbstractModel):
                     'start' : start,
                     'end' : end
             })
-            header = self.env['ir.actions.report'].render_template("jt_account_module_design.external_layout_trial_balance", values=rcontext)
+            header = b'<p></p>'
+            # header = self.env['ir.actions.report'].render_template("jt_account_module_design.external_layout_trial_balance", values=rcontext)
             header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
-            spec_paperformat_args = {}
+            spec_paperformat_args = {'data-report-margin-top': 4, 'data-report-header-spacing': 4}
             # Default header and footer in case the user customized web.external_layout and removed the header/footer
             headers = header.encode()
             footer = b''
@@ -876,15 +899,22 @@ class StatusProgramReport(models.AbstractModel):
         '''
         # Check the security before updating the context to make sure the options are safe.
         self._check_report_security(options)
+        start = datetime.strptime(str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(str(options['date'].get('date_to')), '%Y-%m-%d').date()
+        start_date = start.strftime('%B %d')
+        s_year = start.strftime('%Y')
+        end_date = end.strftime('%B %d')
+        e_year = end.strftime('%Y')
+
 
         # Prevent inconsistency between options and context.
         self = self.with_context(self._set_context(options))
 
         templates = self._get_templates()
         report_manager = self._get_report_manager(options)
-        report = {'name': self._get_report_name(),
-                'summary': report_manager.summary,
-                'company_name': self.env.company.name,}
+        # report = {'name': self._get_report_name(),
+        #         'summary': report_manager.summary,
+        #         'company_name': self.env.company.name,}
         report = {}
         lines = self._get_lines(options, line_id=line_id)
 

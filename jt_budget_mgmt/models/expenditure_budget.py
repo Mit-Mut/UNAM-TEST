@@ -325,7 +325,7 @@ class ExpenditureBudget(models.Model):
                     authorized_amount = 0
                     try:
                         authorized_amount = float(line.authorized)
-                        if authorized_amount <= 0:
+                        if authorized_amount < 0:
                             failed_row += str(line_vals) + \
                                           "------>> Authorized Amount should be greater than 0!"
                             failed_line_ids.append(line.id)
@@ -672,7 +672,7 @@ class ExpenditureBudget(models.Model):
                     authorized_amount = 0
                     try:
                         authorized_amount = float(line.authorized)
-                        if authorized_amount == 0:
+                        if authorized_amount < 0:
                             failed_row += str(line_vals) + \
                                           "------>> Authorized Amount should be greater than 0! \n"
                             failed_line_ids.append(line.id)

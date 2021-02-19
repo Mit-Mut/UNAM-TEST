@@ -2,12 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from lxml import etree
 from lxml.objectify import fromstring
-
+from PIL import Image
 from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
 from odoo.tools.xml_utils import _check_with_xsd
 
-
+from odoo.tools.image import image_data_uri
 from odoo import models, api, _, fields, tools
 from datetime import datetime
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
@@ -18,6 +18,7 @@ import base64
 from datetime import timedelta
 from odoo.tools import config, date_utils, get_lang
 import lxml.html
+from odoo import models, fields, api, _
 from odoo.tools.misc import format_date
 
 
@@ -241,9 +242,8 @@ class AccountChartOfAccountReport(models.AbstractModel):
             debit = account_sum.get('debit', 0.0) + account_un_earn.get('debit', 0.0)
             credit = account_sum.get('credit', 0.0) + account_un_earn.get('credit', 0.0)
             balance = account_sum.get('balance', 0.0) + account_un_earn.get('balance', 0.0)
-
+            # lines.append(self._get_header_title(options))
             lines.append(self._get_account_title_line(options, account, amount_currency, debit, credit, balance, has_lines))
-
             total_debit += debit
             total_credit += credit
             total_balance += balance
@@ -277,7 +277,7 @@ class AccountChartOfAccountReport(models.AbstractModel):
                     lines.append(self._get_aml_line(options, account, aml, company_currency.round(cumulated_balance)))
 
                     load_more_remaining -= 1
-                    load_more_counter -= 1
+                    load_more_counter -= 1  
 
                 if load_more_remaining > 0:
                     # Load more line.
@@ -313,6 +313,7 @@ class AccountChartOfAccountReport(models.AbstractModel):
                     options, journal_options[0]['type'], taxes_results
                 )
         return lines
+
 
     @api.model
     def _load_more_lines(self, options, line_id, offset, load_more_remaining, balance_progress):
@@ -838,7 +839,7 @@ class AccountChartOfAccountReport(models.AbstractModel):
         name = '%s %s' % (account.code, account.name)
         if len(name) > 40 and not self._context.get('print_mode'):
             name = name[:40] + '...'
-        return {
+        res = {
             'id': 'account_%d' % account.id,
             'name': name,
             'title_hover': name,
@@ -853,6 +854,7 @@ class AccountChartOfAccountReport(models.AbstractModel):
             'unfolded': has_lines and 'account_%d' % account.id in options.get('unfolded_lines') or unfold_all,
             'colspan': 4,
         }
+        return res
 
     @api.model
     def _get_initial_balance_line(self, options, account, amount_currency, debit, credit, balance):
@@ -1018,8 +1020,29 @@ class AccountChartOfAccountReport(models.AbstractModel):
             "account_reports.print_template",
             values=dict(rcontext),
         )
+
+        start = datetime.strptime(
+        str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+        options['date'].get('date_to'), '%Y-%m-%d').date()
+        rcontext_test = {
+                'mode': 'print',
+                'base_url': base_url,
+                'company': self.env.company,
+            } 
+        rcontext_test.update({
+                'css': '',
+                'o': self.env.user,
+                'res_company': self.env.company,
+                'start' : start,
+                'end' : end
+        })
+        
         body_html = self.with_context(print_mode=True).get_html(options)
-        body_html = body_html.replace(b'<div class="o_account_reports_header">',b'<div style="display:none;">')
+        body_header =  self.env['ir.actions.report'].render_template("jt_account_module_design.external_layout_fianancial_statement_report", values=rcontext_test)
+        body_html = body_header+body_html
+        
+        body_html = body_html.replace(b'<div class="o_account_reports_header">',b'<div style="font-size:1px;text-align:center;">')
         #<div class="o_account_reports_header">
         body = body.replace(b'<body class="o_account_reports_body_print">', b'<body class="o_account_reports_body_print">' + body_html)
         if minimal_layout:
@@ -1040,13 +1063,14 @@ class AccountChartOfAccountReport(models.AbstractModel):
                     'start' : start,
                     'end' : end
             })
-            header = self.env['ir.actions.report'].render_template("jt_account_module_design.external_layout_fianancial_statement_report", values=rcontext)
+            #header = b''
+            #header = self.env['ir.actions.report'].render_template("jt_account_module_design.external_layout_fianancial_statement_report", values=rcontext)
             #header = self.env['ir.actions.report'].render_template("jt_account_module_design.external_layout_income_exp_and_invest", values=rcontext)
             #header = self.env['ir.actions.report'].render_template("web.external_layout", values=rcontext)
-            #header = b'<p>ABBBCC</p>'
+            header = b'<p>ABBBCC</p>'
             header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
             #spec_paperformat_args = {'data-report-margin-top': 50, 'data-report-header-spacing': 20}
-            spec_paperformat_args = {}
+            spec_paperformat_args = {'data-report-margin-top': 5, 'data-report-header-spacing': 8}
             # Default header and footer in case the user customized web.external_layout and removed the header/footer
             headers = header.encode()
             
@@ -1128,12 +1152,6 @@ class AccountChartOfAccountReport(models.AbstractModel):
         super_columns = self._get_super_columns(options)
         y_offset = 0
         col = 0
-        start = datetime.strptime(str(options['date'].get('date_from')), '%Y-%m-%d').date()
-        end = datetime.strptime(str(options['date'].get('date_to')), '%Y-%m-%d').date()
-        start_date = start.strftime('%B %d')
-        s_year = start.strftime('%Y')
-        end_date = end.strftime('%B %d')
-        e_year = end.strftime('%Y')
         sheet.merge_range(y_offset, col, 6, col, '', super_col_style)
         if self.env.user and self.env.user.company_id and self.env.user.company_id.header_logo:
             filename = 'logo.png'
@@ -1142,6 +1160,13 @@ class AccountChartOfAccountReport(models.AbstractModel):
             sheet.insert_image(0, 0, filename, {
                                'image_data': image_data, 'x_offset': 8, 'y_offset': 3, 'x_scale': 0.6, 'y_scale': 0.6})
         col += 1
+        start = datetime.strptime(str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(str(options['date'].get('date_to')), '%Y-%m-%d').date()
+        start_date = start.strftime('%B %d')
+        s_year = start.strftime('%Y')
+        end_date = end.strftime('%B %d')
+        e_year = end.strftime('%Y')
+
         header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nGENERAL DIRECTORATE OF BUDGET CONTROL-GENERAL
 ACCOUNTING\nGENERAL ACCOUNTING AT THE %s OF (%s) To %s OF (%s)''' % (start_date,s_year,end_date,e_year)
         sheet.merge_range(y_offset, col, 5, col + 6,
@@ -1235,12 +1260,44 @@ ACCOUNTING\nGENERAL ACCOUNTING AT THE %s OF (%s) To %s OF (%s)''' % (start_date,
 
         # Prevent inconsistency between options and context.
         self = self.with_context(self._set_context(options))
+        start = datetime.strptime(str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(str(options['date'].get('date_to')), '%Y-%m-%d').date()
+        start_date = start.strftime('%B %d')
+        s_year = start.strftime('%Y')
+        end_date = end.strftime('%B %d')
+        e_year = end.strftime('%Y')
+        # if self.env.user and self.env.user.company_id and self.env.user.company_id.header_logo:
+        #     filename = 'logo.png'
+        #     image_data = io.BytesIO(base64.standard_b64decode(
+        #         self.env.user.company_id.header_logo))
+        #     im_open = Image.open(filename)
+        #     image_120 = im_open.show();
+        rcontext ={}
+        # rcontext.update({
+        #             'css': '',
+        #             'o': self.env.user,
+        #             'res_company': self.env.company,
+        #             'start' : start,
+        #             'end' : end
+        #     })
+
+        # header2 = self.env['ir.actions.report'].render_template("jt_account_module_design.external_layout_fianancial_statement_report", values=rcontext)
+        # header = header2.decode('utf-8')
+        # headers = header.encode()
+#         header_title = ''
+#         header_title + 'UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO'
+#         header_title += '\n'
+#         header_title += 'GENERAL DIRECTORATE OF BUDGET CONTROL-GENERAL ACCOUNTING'
+#         header_title += '\n'
+#         header_title +='GENERAL ACCOUNTING AT THE'
+#         header_title += '%s OF %s To %s OF %s' % (start_date,s_year,end_date,e_year)
+#     
 
         templates = self._get_templates()
         report_manager = self._get_report_manager(options)
-        report = {'name': self._get_report_name(),
-                'summary': report_manager.summary,
-                'company_name': self.env.company.name,}
+        # report = {'name': self._get_report_name(),
+        #         'summary': report_manager.summary,
+        #         'company_name': self.env.company.name,}
         report = {}
         lines = self._get_lines(options, line_id=line_id)
 
@@ -1262,7 +1319,9 @@ ACCOUNTING\nGENERAL ACCOUNTING AT THE %s OF (%s) To %s OF (%s)''' % (start_date,
                     line['footnote'] = str(number)
                     footnotes_to_render.append({'id': f.id, 'number': number, 'text': f.text})
 
-        rcontext = {'report': report,
+        rcontext = {}
+        rcontext = {
+                    'report':report,
                     'lines': {'columns_header': self.get_header(options), 'lines': lines},
                     'options': options,
                     'context': self.env.context,
@@ -1288,70 +1347,3 @@ ACCOUNTING\nGENERAL ACCOUNTING AT THE %s OF (%s) To %s OF (%s)''' % (start_date,
             # append footnote as well
             html = html.replace(b'<div class="js_account_report_footnotes"></div>', self.get_html_footnotes(footnotes_to_render))
         return html
-
-#     def get_html(self, options, line_id=None, additional_context=None):
-#         '''
-#         return the html value of report, or html value of unfolded line
-#         * if line_id is set, the template used will be the line_template
-#         otherwise it uses the main_template. Reason is for efficiency, when unfolding a line in the report
-#         we don't want to reload all lines, just get the one we unfolded.
-#         '''
-#         # Check the security before updating the context to make sure the options are safe.
-#         self._check_report_security(options)
-# 
-#         # Prevent inconsistency between options and context.
-#         self = self.with_context(self._set_context(options))
-# 
-#         templates = self._get_templates()
-#         report_manager = self._get_report_manager(options)
-#         report = {'name': self._get_report_name(),
-#                 'summary': report_manager.summary,
-#                 'company_name': self.env.company.name,}
-#         #report = {}
-#         #options.get('date',{}).update({'string':''}) 
-#         lines = self._get_lines(options, line_id=line_id)
-#         
-#         if options.get('hierarchy'):
-#             lines = self._create_hierarchy(lines, options)
-#         if options.get('selected_column'):
-#             lines = self._sort_lines(lines, options)
-# 
-#         footnotes_to_render = []
-#         if self.env.context.get('print_mode', False):
-#             # we are in print mode, so compute footnote number and include them in lines values, otherwise, let the js compute the number correctly as
-#             # we don't know all the visible lines.
-#             footnotes = dict([(str(f.line), f) for f in report_manager.footnotes_ids])
-#             number = 0
-#             for line in lines:
-#                 f = footnotes.get(str(line.get('id')))
-#                 if f:
-#                     number += 1
-#                     line['footnote'] = str(number)
-#                     footnotes_to_render.append({'id': f.id, 'number': number, 'text': f.text})
-# 
-#         rcontext = {'report': report,
-#                     'lines': {'columns_header': self.get_header(options), 'lines': lines},
-#                     'options': {},
-#                     'context': self.env.context,
-#                     'model': self,
-#                 }
-#         if additional_context and type(additional_context) == dict:
-#             rcontext.update(additional_context)
-#         if self.env.context.get('analytic_account_ids'):
-#             rcontext['options']['analytic_account_ids'] = [
-#                 {'id': acc.id, 'name': acc.name} for acc in self.env.context['analytic_account_ids']
-#             ]
-# 
-#         render_template = templates.get('main_template', 'jt_account_module_design.financial_statement_main_template')
-#         if line_id is not None:
-#             render_template = templates.get('line_template', 'account_reports.line_template')
-#         html = self.env['ir.ui.view'].render_template(
-#             render_template,
-#             values=dict(rcontext),
-#         )
-#         if self.env.context.get('print_mode', False):
-#             for k,v in self._replace_class().items():
-#                 html = html.replace(k, v)
-#             # append footnote as well
-#             html = html.replace(b'<div class="js_account_report_footnotes"></div>', self.get_html_footnotes(footnotes_to_render))
-#         return html

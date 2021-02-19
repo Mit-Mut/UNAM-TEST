@@ -180,7 +180,7 @@ class ImportLine(models.TransientModel):
 
                     if 'authorized' in result_dict:
                         amt = result_dict.get('authorized', 0)
-                        if float(amt) <= 0:
+                        if float(amt) < 0:
                             raise UserError(_("Authorized Amount should be greater than 0!"))
                         total_budget_amount += float(amt)
                     if 'assigned' in result_dict:

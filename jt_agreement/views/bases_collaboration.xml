@@ -170,7 +170,7 @@
                                 <field name="total_operations" widget="statinfo"/>
                             </button>
                              <button name="action_modifications" type="object" class="oe_stat_button"
-                                     context="{'show_agreement_name':1}"
+                                     context="{'show_agreement_name':True}"
                                     icon="fa-random" attrs="{'invisible': [('state', '=', 'draft')]}">
                                 <field name="total_modifications" widget="statinfo"/>
                             </button>
@@ -224,12 +224,12 @@
                                 </group>
                             </page>
  -->                            
- 							<page string="Collaboration Base Contacts" name="collaboration_base_contacts">
+ 							<page string="Contacts" name="collaboration_base_contacts">
                                 <group>
                                     <group string="Owner of Dependency">
                                         <field name="employee_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                         <field name="job_id" attrs="{'readonly': [('state', '!=', 'draft')]}"
-                                            invisible="1"/>
+                                               invisible="1"/>
                                         <field name="phone" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                         <field name="holder_email" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     </group>

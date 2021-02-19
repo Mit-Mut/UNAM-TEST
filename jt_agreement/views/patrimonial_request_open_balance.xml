@@ -55,7 +55,8 @@
                                 <field name="patrimonial_beneficiary_ids" invisible="1"/>
                                 <field name="beneficiary_id" domain="[('id','in',patrimonial_beneficiary_ids)]"/>
                                 <field name="trust_provider_ids" invisible="1"/>
-                                <field name="provider_id" domain="[('id','in',trust_provider_ids)]" invisible="1"/>
+                                <field name="patrimonial_provider_ids" invisible="1"/>
+                                <field name="provider_id" domain="[('id','in',patrimonial_provider_ids)]"/>
                             </group>
                         </group>
                         <group>

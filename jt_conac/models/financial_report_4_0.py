@@ -160,7 +160,7 @@ class StatementOfFinancialPosition(models.AbstractModel):
                                  move_state_domain,
                                  ('date', '>=', date_start), ('date', '<=', date_end)])
                             if move_lines:
-                                if line.code=='2.0.0.0':
+                                if line.code=='2.0.0.0' or line.code=='3.0.0.0':
                                     balance += (sum(move_lines.mapped('credit')) - sum(move_lines.mapped('debit')))
                                 else:
                                     balance += (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
@@ -181,7 +181,7 @@ class StatementOfFinancialPosition(models.AbstractModel):
                                                         move_state_domain,
                                                         ('date', '>=', date_start), ('date', '<=', date_end)])
                                 if move_lines:
-                                    if line.code=='2.0.0.0':
+                                    if line.code=='2.0.0.0' or line.code=='3.0.0.0':
                                         balance += (sum(move_lines.mapped('credit')) - sum(move_lines.mapped('debit')))
                                     else:
                                         balance += (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
@@ -196,20 +196,39 @@ class StatementOfFinancialPosition(models.AbstractModel):
                                 main_balance_dict.update({pd: main_balance_dict.get(pd) + bal})
                             else:
                                 main_balance_dict.update({pd: bal})
+                                
                             if pd in last_total_dict.keys():
-                                last_total_dict.update({pd: last_total_dict.get(pd) + bal})
+                                if line.code=='2.0.0.0' or line.code=='3.0.0.0':
+                                    last_total_dict.update({pd: last_total_dict.get(pd) - bal})
+                                else:
+                                    last_total_dict.update({pd: last_total_dict.get(pd) + bal})
                             else:
-                                last_total_dict.update({pd: bal})
-
+                                if line.code=='2.0.0.0' or line.code=='3.0.0.0':
+                                    last_total_dict.update({pd: -bal})
+                                else:
+                                    last_total_dict.update({pd: bal})
+                                    
                             if pd in first_level_balance_dict.keys():
                                 first_level_balance_dict.update({pd: first_level_balance_dict.get(pd) + bal})
                             else:
                                 first_level_balance_dict.update({pd: bal})
-                            if line.code != '1.0.0.0':
+                                
+                            if line.code == '1.0.0.0':
                                 if pd in liabilities_total_dict.keys():
                                     liabilities_total_dict.update({pd: liabilities_total_dict.get(pd) + bal})
                                 else:
                                     liabilities_total_dict.update({pd: bal})
+
+#                             if pd in liabilities_total_dict.keys():
+#                                 if line.code=='2.0.0.0' or line.code=='3.0.0.0':
+#                                     liabilities_total_dict.update({pd: liabilities_total_dict.get(pd) - bal})
+#                                 else:
+#                                     liabilities_total_dict.update({pd: liabilities_total_dict.get(pd) + bal})
+#                             else:
+#                                 if line.code=='2.0.0.0' or line.code=='3.0.0.0':
+#                                     liabilities_total_dict.update({pd: -bal})
+#                                 else:
+#                                     liabilities_total_dict.update({pd: bal})
 
                         for pe in periods:
                             if pe.get('string') in period_dict.keys():

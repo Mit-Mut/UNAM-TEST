@@ -238,8 +238,8 @@ class WithholdingTaxReport(models.AbstractModel):
 
             net_amount = sum(x.tax_base_amount for x in move_lines)
             tax_amount = sum(x.credit - x.debit for x in move_lines)
-            net_amount = net_amount/1000
-            tax_amount = tax_amount/1000
+            #net_amount = net_amount/1000
+            #tax_amount = tax_amount/1000
             #amount = sum(x.credit-x.debit for x in move_lines)
             total += net_amount
             total_tax += tax_amount

@@ -104,6 +104,122 @@ class StatesAndProgramReports(models.AbstractModel):
         value['name'] = round(value['name'], 1)
         return value
 
+    def add_new_lines(self,lines,options,shcp,item_list,level_2_line,name,periods,period_total,main_period_total):
+
+        states_obj = self.env['states.program']
+        bud_line_obj = self.env['expenditure.budget.line']
+        adeq_obj = self.env['adequacies']
+        adequacies = adeq_obj.search([('state', '=', 'accepted')])
+
+        line_cols = []
+        
+        for period in periods:
+            period_name = period.get('string')
+            paid_amt = 0
+            amt = 0
+            ade_amt = 0
+
+            budget_lines = self.env['expenditure.budget.line']
+            date_start = datetime.strptime(str(period.get('date_from')), DEFAULT_SERVER_DATE_FORMAT).date()
+            date_end = datetime.strptime(str(period.get('date_to')), DEFAULT_SERVER_DATE_FORMAT).date()
+            if period.get('period_type') == 'month':
+                budget_lines = bud_line_obj.search([('program_code_id.item_id.item','in',item_list),('program_code_id.budget_program_conversion_id.shcp.name','=',shcp),('expenditure_budget_id.state', '=', 'validate'),
+                                                    ('state', '=', 'success'),('imported_sessional','=',False)])
+                
+            elif period.get('period_type') == 'quarter':
+                budget_lines = bud_line_obj.search([('program_code_id.item_id.item','in',item_list),('program_code_id.budget_program_conversion_id.shcp.name','=',shcp),('expenditure_budget_id.state', '=', 'validate'),
+                                                    ('state', '=', 'success'),('start_date', '>=', date_start),
+                                                    ('end_date', '<=', date_end),
+                                                    ])
+                
+            else:
+                budget_lines = bud_line_obj.search([('program_code_id.item_id.item','in',item_list),('program_code_id.budget_program_conversion_id.shcp.name','=',shcp),('expenditure_budget_id.state', '=', 'validate'),
+                                                    ('start_date', '>=', date_start), ('state', '=', 'success'),
+                                                    ('end_date', '<=', date_end),('imported_sessional','=',False)])
+            for line in budget_lines:
+                if period.get('period_type') == 'month':
+                    if date_start >= line.start_date and date_end <= line.end_date:
+                        pass
+                    else:
+                        continue
+                
+                amt += line.authorized
+                
+
+            for ade in adequacies:
+                if ade.adaptation_type == 'liquid' and ade.date_of_liquid_adu >= date_start and \
+                        ade.date_of_liquid_adu <= date_end:
+                    for line in ade.adequacies_lines_ids.filtered(lambda x:x.program and x.program.item_id.item in item_list and x.program.budget_program_conversion_id.shcp.name == shcp):
+                        if line.line_type == 'increase':
+                            ade_amt += line.amount
+                        else:
+                            ade_amt -= line.amount
+
+                elif ade.adaptation_type != 'liquid' and ade.date_of_budget_affected >= date_start \
+                        and ade.date_of_budget_affected <= date_end:
+                    for line in ade.adequacies_lines_ids.filtered(lambda x:x.program and x.program.item_id.item in item_list and x.program.budget_program_conversion_id.shcp.name == shcp):
+                        if line.line_type == 'increase':
+                            ade_amt += line.amount
+                        else:
+                            ade_amt -= line.amount
+
+            paid_budget_lines = bud_line_obj.search([('program_code_id.item_id.item','in',item_list),('program_code_id.budget_program_conversion_id.shcp.name','=',shcp),('expenditure_budget_id.state', '=', 'validate'),
+                            ('start_date', '>=', date_start), ('state', '=', 'success'),
+                            ('end_date', '<=', date_end)])
+
+            program_code_ids = paid_budget_lines.mapped('program_code_id')
+            for program in program_code_ids: 
+                self.env.cr.execute("select coalesce(sum(abs(line.balance)+abs(line.tax_price_cr)),0) as committed from account_move_line line,account_move amove where line.program_code_id in %s and amove.id=line.move_id and amove.payment_state=%s and amove.invoice_date >= %s and amove.invoice_date <= %s", (tuple(program.ids),'paid',date_start,date_end))
+                my_datas = self.env.cr.fetchone()
+                if my_datas:
+                    paid_amt += my_datas[0]              
+                
+
+            line_cols += [self._format({'name': amt},figure_type='float'),
+                      self._format({'name': ade_amt},figure_type='float'),
+                      self._format({'name': amt + ade_amt},figure_type='float'),
+                      {'name': ''}, 
+                      self._format({'name': paid_amt},figure_type='float'),
+                      self._format({'name': amt + ade_amt},figure_type='float')]                                              
+                    
+            if period_name in period_total:
+                pe_dict = period_total.get(period_name)
+                period_total.update({period_name: {'auth': pe_dict.get('auth') + amt,
+                                               'ade': pe_dict.get('ade') + ade_amt,
+                                               'modi': pe_dict.get('modi') + (amt + ade_amt),
+                                               'paid_amt' : pe_dict.get('paid_amt') + paid_amt,
+                                               'sub': pe_dict.get('sub') + (amt + ade_amt)}})
+            else:
+                period_total.update({period_name: {'auth': amt, 'ade': ade_amt,
+                                               'modi': amt + ade_amt,
+                                               'paid_amt' : paid_amt,
+                                               'sub': amt + ade_amt}})
+            if period_name in main_period_total:
+                pe_dict = main_period_total.get(period_name)
+                main_period_total.update(
+                    {period_name: {'auth': pe_dict.get('auth') + amt,
+                                   'ade': pe_dict.get('ade') + ade_amt,
+                                   'modi': pe_dict.get('modi') + (amt + ade_amt),
+                                   'paid_amt' : pe_dict.get('paid_amt') + paid_amt,
+                                   'sub': pe_dict.get('sub') + (amt + ade_amt)}})
+            else:
+                main_period_total.update({period_name: {'auth': amt, 'ade': ade_amt,
+                                               'modi': amt + ade_amt,
+                                               'paid_amt' : paid_amt,
+                                               'sub': amt + ade_amt}})
+
+        lines.append({
+            'id': 'level_two_%s' % level_2_line.id,
+            'name': name,
+            'columns': line_cols,
+            'level': 3,
+            'unfoldable': False,
+            'unfolded': False,
+            'parent_id': 'level_two_%s' % level_2_line.id,
+        })
+        
+        return lines,period_total,main_period_total
+    
     def _get_lines(self, options, line_id=None):
         states_obj = self.env['states.program']
         bud_line_obj = self.env['expenditure.budget.line']
@@ -249,7 +365,7 @@ class StatesAndProgramReports(models.AbstractModel):
             #shcp_budget_line = period_budget_lines.filtered(lambda x:x.program_code_id.budget_program_conversion_id.shcp.id==shcp.id)
             program_code_ids = period_budget_lines.mapped('program_code_id')
             for program in program_code_ids: 
-                prog_name = program.budget_program_conversion_id.desc.upper()
+                prog_name = program.budget_program_conversion_id and program.budget_program_conversion_id.desc and program.budget_program_conversion_id.desc.upper() or ''
                 prog_name = self.strip_accents(prog_name)
                 shcp = program.budget_program_conversion_id.shcp.name
                 self.env.cr.execute("select coalesce(sum(abs(line.balance)+abs(line.tax_price_cr)),0) as committed from account_move_line line,account_move amove where line.program_code_id in %s and amove.id=line.move_id and amove.payment_state=%s and amove.invoice_date >= %s and amove.invoice_date <= %s", (tuple(program.ids),'paid',period_date_from,period_date_to))
@@ -314,93 +430,105 @@ class StatesAndProgramReports(models.AbstractModel):
                     shcp_list = []
                     period_total = {}
                     
-                    for period in periods:
-                        period_name = period.get('string')
-                        if period_name in period_shcp_auth_dict.keys():
-                            if line_concept in period_shcp_auth_dict.get(period_name):
-                                for shcp, amt in period_shcp_auth_dict.get(period_name).get(line_concept).items():
-                                    if period_name in concept_dict:
-                                        shcp_dict = concept_dict.get(period_name)
-                                        if shcp in shcp_dict:
-                                            shcp_dict.update({shcp: shcp_dict.get(shcp) + amt})
-                                        else:
-                                            shcp_dict.update({shcp: amt})
-                                    else:
-                                        concept_dict.update({period_name: {shcp: amt}})
-                                    if shcp not in shcp_list:
-                                        shcp_list.append(shcp)
-                    for shcp in shcp_list:
-                        line_cols = []
+                    becas = self.env.ref('jt_conac.27').id
+                    mantenimiento = self.env.ref('jt_conac.28').id
+                    obras = self.env.ref('jt_conac.29').id
+                    
+                    if becas and becas== level_2_line.id:
+                        lines,period_total,main_period_total = self.add_new_lines(lines,options,'S243',['731','732','733','734'],level_2_line,'S243 Becas',periods,period_total,main_period_total)
+                    elif mantenimiento and mantenimiento== level_2_line.id:
+                        lines,period_total,main_period_total = self.add_new_lines(lines,options,'K027',['612','622','623','232'],level_2_line,'K027 Mantenimiento',periods,period_total,main_period_total)
+                    elif obras and obras== level_2_line.id:
+                        lines,period_total,main_period_total = self.add_new_lines(lines,options,'K009',['621'],level_2_line,'K009 Obras',periods,period_total,main_period_total)
+                    
+                    else:
                         for period in periods:
                             period_name = period.get('string')
-                            if period_name in concept_dict:
-                                if shcp in concept_dict.get(period_name).keys():
-                                    paid_amt = 0
-                                    amt = concept_dict.get(period_name).get(shcp)
-                                    ade_amt = 0
-                                    
-                                    if period_name in period_prog_dict_ade.keys():
-                                        per_dict = period_prog_dict_ade.get(period_name)
-                                        if line_concept in per_dict.keys():
-                                            shcp_dict = per_dict.get(line_concept)[0]
-                                            if shcp.name in shcp_dict.keys():
-                                                ade_amt = shcp_dict.get(shcp.name)
-                                    if period_name in period_paid_amount_dict.keys():
-                                        per_dict = period_paid_amount_dict.get(period_name)
-                                        if line_concept in per_dict.keys():
-                                            shcp_dict = per_dict.get(line_concept)[0]
-                                            if shcp.name in shcp_dict.keys():
-                                                paid_amt = shcp_dict.get(shcp.name)
-                                    
-                                    
-                                    if period_name in period_total:
-                                        pe_dict = period_total.get(period_name)
-                                        period_total.update({period_name: {'auth': pe_dict.get('auth') + amt,
-                                                                       'ade': pe_dict.get('ade') + ade_amt,
-                                                                       'modi': pe_dict.get('modi') + (amt + ade_amt),
-                                                                       'paid_amt' : pe_dict.get('paid_amt') + paid_amt,
-                                                                       'sub': pe_dict.get('sub') + (amt + ade_amt)}})
+                            if period_name in period_shcp_auth_dict.keys():
+                                if line_concept in period_shcp_auth_dict.get(period_name):
+                                    for shcp, amt in period_shcp_auth_dict.get(period_name).get(line_concept).items():
+                                        if period_name in concept_dict:
+                                            shcp_dict = concept_dict.get(period_name)
+                                            if shcp in shcp_dict:
+                                                shcp_dict.update({shcp: shcp_dict.get(shcp) + amt})
+                                            else:
+                                                shcp_dict.update({shcp: amt})
+                                        else:
+                                            concept_dict.update({period_name: {shcp: amt}})
+                                        if shcp not in shcp_list:
+                                            shcp_list.append(shcp)
+                        for shcp in shcp_list:
+                            line_cols = []
+                            for period in periods:
+                                period_name = period.get('string')
+                                if period_name in concept_dict:
+                                    if shcp in concept_dict.get(period_name).keys():
+                                        paid_amt = 0
+                                        amt = concept_dict.get(period_name).get(shcp)
+                                        ade_amt = 0
+                                        
+                                        if period_name in period_prog_dict_ade.keys():
+                                            per_dict = period_prog_dict_ade.get(period_name)
+                                            if line_concept in per_dict.keys():
+                                                shcp_dict = per_dict.get(line_concept)[0]
+                                                if shcp.name in shcp_dict.keys():
+                                                    ade_amt = shcp_dict.get(shcp.name)
+                                        if period_name in period_paid_amount_dict.keys():
+                                            per_dict = period_paid_amount_dict.get(period_name)
+                                            if line_concept in per_dict.keys():
+                                                shcp_dict = per_dict.get(line_concept)[0]
+                                                if shcp.name in shcp_dict.keys():
+                                                    paid_amt = shcp_dict.get(shcp.name)
+                                        
+                                        
+                                        if period_name in period_total:
+                                            pe_dict = period_total.get(period_name)
+                                            period_total.update({period_name: {'auth': pe_dict.get('auth') + amt,
+                                                                           'ade': pe_dict.get('ade') + ade_amt,
+                                                                           'modi': pe_dict.get('modi') + (amt + ade_amt),
+                                                                           'paid_amt' : pe_dict.get('paid_amt') + paid_amt,
+                                                                           'sub': pe_dict.get('sub') + (amt + ade_amt)}})
+                                        else:
+                                            period_total.update({period_name: {'auth': amt, 'ade': ade_amt,
+                                                                           'modi': amt + ade_amt,
+                                                                           'paid_amt' : paid_amt,
+                                                                           'sub': amt + ade_amt}})
+                                        if period_name in main_period_total:
+                                            pe_dict = main_period_total.get(period_name)
+                                            main_period_total.update(
+                                                {period_name: {'auth': pe_dict.get('auth') + amt,
+                                                               'ade': pe_dict.get('ade') + ade_amt,
+                                                               'modi': pe_dict.get('modi') + (amt + ade_amt),
+                                                               'paid_amt' : pe_dict.get('paid_amt') + paid_amt,
+                                                               'sub': pe_dict.get('sub') + (amt + ade_amt)}})
+                                        else:
+                                            main_period_total.update({period_name: {'auth': amt, 'ade': ade_amt,
+                                                                           'modi': amt + ade_amt,
+                                                                           'paid_amt' : paid_amt,
+                                                                           'sub': amt + ade_amt}})
+                                        line_cols += [self._format({'name': amt},figure_type='float'),
+                                                  self._format({'name': ade_amt},figure_type='float'),
+                                                  self._format({'name': amt + ade_amt},figure_type='float'),
+                                                  {'name': ''}, 
+                                                  self._format({'name': paid_amt},figure_type='float'),
+                                                  self._format({'name': amt + ade_amt},figure_type='float')]                                              
                                     else:
-                                        period_total.update({period_name: {'auth': amt, 'ade': ade_amt,
-                                                                       'modi': amt + ade_amt,
-                                                                       'paid_amt' : paid_amt,
-                                                                       'sub': amt + ade_amt}})
-                                    if period_name in main_period_total:
-                                        pe_dict = main_period_total.get(period_name)
-                                        main_period_total.update(
-                                            {period_name: {'auth': pe_dict.get('auth') + amt,
-                                                           'ade': pe_dict.get('ade') + ade_amt,
-                                                           'modi': pe_dict.get('modi') + (amt + ade_amt),
-                                                           'paid_amt' : pe_dict.get('paid_amt') + paid_amt,
-                                                           'sub': pe_dict.get('sub') + (amt + ade_amt)}})
-                                    else:
-                                        main_period_total.update({period_name: {'auth': amt, 'ade': ade_amt,
-                                                                       'modi': amt + ade_amt,
-                                                                       'paid_amt' : paid_amt,
-                                                                       'sub': amt + ade_amt}})
-                                    line_cols += [self._format({'name': amt},figure_type='float'),
-                                              self._format({'name': ade_amt},figure_type='float'),
-                                              self._format({'name': amt + ade_amt},figure_type='float'),
-                                              {'name': ''}, 
-                                              self._format({'name': paid_amt},figure_type='float'),
-                                              self._format({'name': amt + ade_amt},figure_type='float')]                                              
+                                        line_cols += [{'name': ''}] * 6
                                 else:
                                     line_cols += [{'name': ''}] * 6
-                            else:
-                                line_cols += [{'name': ''}] * 6
-                        name = shcp.name
-                        if shcp.desc:
-                            name += ' '
-                            name += shcp.desc
-                        lines.append({
-                            'id': 'level_two_%s' % shcp.id,
-                            'name': name,
-                            'columns': line_cols,
-                            'level': 3,
-                            'unfoldable': False,
-                            'unfolded': False,
-                            'parent_id': 'level_two_%s' % level_2_line.id,
-                        })
+                            name = shcp.name
+                            if shcp.desc:
+                                name += ' '
+                                name += shcp.desc
+                            lines.append({
+                                'id': 'level_two_%s' % shcp.id,
+                                'name': name,
+                                'columns': line_cols,
+                                'level': 3,
+                                'unfoldable': False,
+                                'unfolded': False,
+                                'parent_id': 'level_two_%s' % level_2_line.id,
+                            })
 
                     total_cols = []
                     need_to_add = False

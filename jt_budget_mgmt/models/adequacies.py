@@ -405,9 +405,9 @@ class Adequacies(models.Model):
                 amount = 0
                 try:
                     amount = float(list_result[20])
-                    if float(amount) < 10000:
+                    if float(amount) < 0:
                         failed_row += str(list_result) + \
-                                      "------>> Amount should be 10000 or greater than 10000\n"
+                                      "------>> Amount should be 0 or greater than 0\n"
                         failed_row_ids.append(pointer)
                         continue
                 except:

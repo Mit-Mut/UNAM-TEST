@@ -27,7 +27,7 @@ id,code,concept,approved_amt,ext_and_red_amt,modified_amt,accrued_amt,paid_out_a
 "jt_conac.26","1.5.1.4","Servicios de Apoyo a la Comunidad","","","","","","","jt_conac.21"
 "jt_conac.27","1.5.1.5","Becas","","","","","","","jt_conac.21"
 "jt_conac.28","1.5.1.6","Mantenimiento","","","","","","","jt_conac.21"
-"jt_conac.29","1.5.1.7","Trabajos","","","","","","","jt_conac.21"
+"jt_conac.29","1.5.1.7","Obras","","","","","","","jt_conac.21"
 "jt_conac.30","1.6.0.0","Participaciones a entidades federativas y municipios","","","","","","",""
 "jt_conac.31","1.7.0.0","Costo financiero, deuda o apoyos a deudores y ahorradores de la banca","","","","","","",""
 "jt_conac.32","1.8.0.0","Adeudos de ejercicios fiscales anteriores","","","","","","",""

@@ -209,12 +209,16 @@ class ProgramCode(models.Model):
                     b_s_month = req_line.application_date.month
                     if b_s_month in (1, 2, 3):
                         st_ass += req_line.amount_req_tranfer
+                        authorized += req_line.amount_req_tranfer
                     elif b_s_month in (4, 5, 6):
                         nd_ass += req_line.amount_req_tranfer
+                        authorized += req_line.amount_req_tranfer
                     elif b_s_month in (7, 8, 9):
                         rd_ass += req_line.amount_req_tranfer
+                        authorized += req_line.amount_req_tranfer
                     elif b_s_month in (10, 11, 12):
                         th_ass += req_line.amount_req_tranfer
+                        authorized += req_line.amount_req_tranfer
             
             verification_lines = self.env['verification.expense.line'].search([('program_code', '=', code.id),('verification_expense_id.status','=','approve')])
             for req_line in verification_lines:

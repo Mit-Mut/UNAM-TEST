@@ -169,7 +169,7 @@ class TaxReport(models.AbstractModel):
          
         lines.append({
             'id': 'hierarchy_account1',
-            'name' : 'ISR withholding wages minus subsidy', 
+            'name' : _('ISR withholding wages minus subsidy'), 
             'columns': [
                         {'name':''},
                          self._format({'name': total_bal1},figure_type='float'),
@@ -182,7 +182,7 @@ class TaxReport(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_account4',
-            'name' : '220.001.001.001 ' +'ISR SALARIES PAYROLL', 
+            'name' : '220.001.001.001 ' +_('ISR SALARIES PAYROLL'), 
             'columns': [
                          self._format({'name': acc_amount_220_001_001_001},figure_type='float'),
                          {'name':''},
@@ -195,7 +195,7 @@ class TaxReport(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_account6',
-            'name' : '220.001.001.003 ' +'ISR PAYMENT ADDITIONAL NOT TAXED', 
+            'name' : '220.001.001.003 ' +_('ISR PAYMENT ADDITIONAL NOT TAXED'), 
             'columns': [
                          self._format({'name': acc_amount_220_001_001_003},figure_type='float'),
                          {'name':''},
@@ -208,7 +208,7 @@ class TaxReport(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_account3',
-            'name' : 'Total ISR. Withholding For Salaries', 
+            'name' : _('Total ISR. Withholding For Salaries'), 
             'columns': [
                         self._format({'name': total_isr},figure_type='float'),
                          {'name': ''},
@@ -221,9 +221,9 @@ class TaxReport(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_account3',
-            'name' : 'Employment Subsidy', 
+            'name' : _('Employment Subsidy'), 
             'columns': [
-                         {'name': 'Less:'},
+                         {'name': _('Less:')},
                          {'name': ''},
                         ],
             'level': 4,
@@ -234,7 +234,7 @@ class TaxReport(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_account3',
-            'name' : '115.001.001 ' + 'employee subsidy', 
+            'name' : '115.001.001 ' + _('employee subsidy'), 
             'columns': [
                         self._format({'name': acc_amount_115_001_001},figure_type='float'),
                          {'name': ''},
@@ -256,7 +256,7 @@ class TaxReport(models.AbstractModel):
         
         lines.append({
             'id': 'hierarchy_account1',
-            'name' : 'ISR withholding For Assimilated wages', 
+            'name' : _('ISR withholding For Assimilated wages'), 
             'columns': [
                         {'name':''},
                          self._format({'name': acc_amount_220_001_001_002},figure_type='float'),
@@ -269,7 +269,7 @@ class TaxReport(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_account5',
-            'name' : '220.001.001.002 ' +'ISR ASIMILATED FEES', 
+            'name' : '220.001.001.002 ' +_('ISR ASIMILATED FEES'), 
             'columns': [
                          self._format({'name': acc_amount_220_001_001_002},figure_type='float'),
                          {'name':''},
@@ -324,7 +324,7 @@ class TaxReport(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_account1',
-            'name' : 'ISR Retained Professional Services', 
+            'name' : _('ISR Retained Professional Services'), 
             'columns': [
                         {'name':''},
                          self._format({'name': ret_total},figure_type='float'),
@@ -339,7 +339,7 @@ class TaxReport(models.AbstractModel):
         
         lines.append({
             'id': 'hierarchy_account7',
-            'name' : '220.001.002.001 ' +'ISR-SP HONORISTS 10%', 
+            'name' : '220.001.002.001 ' +_('ISR-SP HONORISTS 10%'), 
             'columns': [
                          self._format({'name': acc_amount_220_001_002_001},figure_type='float'),
                          {'name':''},
@@ -354,7 +354,7 @@ class TaxReport(models.AbstractModel):
         
         lines.append({
             'id': 'hierarchy_account8',
-            'name' : '220.001.002.002 ' +'ISR-SP COPYRIGHT', 
+            'name' : '220.001.002.002 ' +_('ISR-SP COPYRIGHT'), 
             'columns': [
                          self._format({'name': acc_amount_220_001_002_002},figure_type='float'),
                          {'name':''},
@@ -369,7 +369,7 @@ class TaxReport(models.AbstractModel):
         
         lines.append({
             'id': 'hierarchy_account9',
-            'name' : '220.001.002.003 ' +'ISR 25% RET. S / EXT FEES', 
+            'name' : '220.001.002.003 ' +_('ISR 25% RET. S / EXT FEES'), 
             'columns': [
                          self._format({'name': acc_amount_220_001_002_003},figure_type='float'),
                          {'name':''},
@@ -384,7 +384,7 @@ class TaxReport(models.AbstractModel):
         
         lines.append({
             'id': 'hierarchy_account10',
-            'name' : '220.001.002.004 ' +'ISR-SP HON. 10% cert. D.E.P. GAS', 
+            'name' : '220.001.002.004 ' +_('ISR-SP HON. 10% cert. D.E.P. GAS'), 
             'columns': [
                          self._format({'name': acc_amount_220_001_002_004},figure_type='float'),
                          {'name':''},
@@ -399,7 +399,7 @@ class TaxReport(models.AbstractModel):
         
         lines.append({
             'id': 'hierarchy_account11',
-            'name' : '220.001.002.005 ' +'ISR-SP HON. Cert. D.E.P. CONACYT', 
+            'name' : '220.001.002.005 ' +_('ISR-SP HON. Cert. D.E.P. CONACYT'), 
             'columns': [
                          self._format({'name': acc_amount_220_001_002_005},figure_type='float'),
                          {'name':''},
@@ -420,7 +420,7 @@ class TaxReport(models.AbstractModel):
         
         lines.append({
             'id': 'hierarchy_account1',
-            'name' : 'ISR Retained Lease', 
+            'name' : _('ISR Retained Lease'), 
             'columns': [
                         {'name':''},
                          self._format({'name': acc_amount_220_001_003_001},figure_type='float'),
@@ -433,7 +433,7 @@ class TaxReport(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_account12',
-            'name' : '220.001.003.001 ' +'ISR ON RENT PAID', 
+            'name' : '220.001.003.001 ' +_('ISR ON RENT PAID'), 
             'columns': [
                          self._format({'name': acc_amount_220_001_003_001},figure_type='float'),
                          {'name':''},
@@ -496,7 +496,7 @@ class TaxReport(models.AbstractModel):
         
         lines.append({
             'id': 'hierarchy_account1',
-            'name' : 'VAT Withheld', 
+            'name' : _('VAT Withheld'), 
             'columns': [
                         {'name':''},
                          self._format({'name': vat_total},figure_type='float'),
@@ -509,7 +509,7 @@ class TaxReport(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_account13',
-            'name' : '220.001.004.001 ' +'VAT-SP HONORISTSRENTAL', 
+            'name' : '220.001.004.001 ' +_('VAT-SP HONORISTSRENTAL'), 
             'columns': [
                          self._format({'name': acc_amount_220_001_004_001},figure_type='float'),
                          {'name':''},
@@ -524,7 +524,7 @@ class TaxReport(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_account14',
-            'name' : '220.001.004.002 ' +'VAT PAID', 
+            'name' : '220.001.004.002 ' +_('VAT PAID'), 
             'columns': [
                          self._format({'name': acc_amount_220_001_004_002},figure_type='float'),
                          {'name':''},
@@ -539,7 +539,7 @@ class TaxReport(models.AbstractModel):
         
         lines.append({
             'id': 'hierarchy_account15',
-            'name' : '220.001.004.003 ' +'VAT TRANSPORTATION SERVICES', 
+            'name' : '220.001.004.003 ' +_('VAT TRANSPORTATION SERVICES'), 
             'columns': [
                          self._format({'name': acc_amount_220_001_004_003},figure_type='float'),
                          {'name':''},
@@ -554,7 +554,7 @@ class TaxReport(models.AbstractModel):
         
         lines.append({
             'id': 'hierarchy_account16',
-            'name' : '220.001.004.004 ' +'VAT-SP HON. Cert. D.E.P. GASOLIN', 
+            'name' : '220.001.004.004 ' +_('VAT-SP HON. Cert. D.E.P. GASOLIN'), 
             'columns': [
                          self._format({'name': acc_amount_220_001_004_004},figure_type='float'),
                          {'name':''},
@@ -569,7 +569,7 @@ class TaxReport(models.AbstractModel):
         
         lines.append({
             'id': 'hierarchy_account17',
-            'name' : '220.001.004.005 ' +'VAT-SERV.TRANSP.CERT. D.E.P. GAS', 
+            'name' : '220.001.004.005 ' +_('VAT-SERV.TRANSP.CERT. D.E.P. GAS'), 
             'columns': [
                          self._format({'name': acc_amount_220_001_004_005},figure_type='float'),
                          {'name':''},
@@ -584,7 +584,7 @@ class TaxReport(models.AbstractModel):
         
         lines.append({
             'id': 'hierarchy_account18',
-            'name' : '220.001.004.006 ' +'VAT-SP HON. Cert. D.E.P. CONACYT', 
+            'name' : '220.001.004.006 ' +_('VAT-SP HON. Cert. D.E.P. CONACYT'), 
             'columns': [
                          self._format({'name': acc_amount_220_001_004_006},figure_type='float'),
                          {'name':''},
@@ -615,7 +615,7 @@ class TaxReport(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_account1',
-            'name' : 'IEPS Payable', 
+            'name' : _('IEPS Payable'), 
             'columns': [
                         {'name':''},
                          self._format({'name': ieps_pay_total},figure_type='float'),
@@ -628,7 +628,7 @@ class TaxReport(models.AbstractModel):
         
         lines.append({
             'id': 'hierarchy_account19',
-            'name' : '220.001.005.001 ' +'IEPS PLAG. Cert. D.E.P. T-UNAM', 
+            'name' : '220.001.005.001 ' +_('IEPS PLAG. Cert. D.E.P. T-UNAM'), 
             'columns': [
                          self._format({'name': acc_amount_220_001_005_001},figure_type='float'),
                          {'name':''},
@@ -643,7 +643,7 @@ class TaxReport(models.AbstractModel):
         
         lines.append({
             'id': 'hierarchy_account20',
-            'name' : '220.001.005.002 ' +'IEPS ALIM. NO BASIC CERT DEP', 
+            'name' : '220.001.005.002 ' +_('IEPS ALIM. NO BASIC CERT DEP'), 
             'columns': [
                          self._format({'name': acc_amount_220_001_005_002},figure_type='float'),
                          {'name':''},
@@ -690,7 +690,7 @@ class TaxReport(models.AbstractModel):
 
         lines.append({
             'id': 'hierarchy_account1',
-            'name' : 'VAT Payable', 
+            'name' : _('VAT Payable'), 
             'columns': [
                         {'name':''},
                          self._format({'name': vat_pay_total},figure_type='float'),
@@ -703,7 +703,7 @@ class TaxReport(models.AbstractModel):
         
         lines.append({
             'id': 'hierarchy_account21',
-            'name' : '220.001.006.001 ' +'TRANSFERRED VAT CFDI¦S', 
+            'name' : '220.001.006.001 ' +_('TRANSFERRED VAT CFDI¦S'), 
             'columns': [
                          self._format({'name': acc_amount_220_001_006_001},figure_type='float'),
                          {'name':''},
@@ -718,7 +718,7 @@ class TaxReport(models.AbstractModel):
         
         lines.append({
             'id': 'hierarchy_account22',
-            'name' : '220.001.006.002 ' +'VAT TO PAY YOUR', 
+            'name' : '220.001.006.002 ' +_('VAT TO PAY YOUR'), 
             'columns': [
                          self._format({'name': acc_amount_220_001_006_002},figure_type='float'),
                          {'name':''},
@@ -733,7 +733,7 @@ class TaxReport(models.AbstractModel):
         
         lines.append({
             'id': 'hierarchy_account23',
-            'name' : '220.001.006.003 ' +'VAT TO PAY GAS STATION', 
+            'name' : '220.001.006.003 ' +_('VAT TO PAY GAS STATION'), 
             'columns': [
                          self._format({'name': acc_amount_220_001_006_003},figure_type='float'),
                          {'name':''},
@@ -748,7 +748,7 @@ class TaxReport(models.AbstractModel):
         
         lines.append({
             'id': 'hierarchy_account23',
-            'name' : '220.001.006.004 ' +'VAT Balance In Favor You', 
+            'name' : '220.001.006.004 ' +_('VAT Balance In Favor You'), 
             'columns': [
                          self._format({'name': acc_amount_220_001_006_004},figure_type='float'),
                          {'name':''},
@@ -763,7 +763,7 @@ class TaxReport(models.AbstractModel):
 
         lines.append({
             'id': 'total',
-            'name' : 'Total Taxes To Pay', 
+            'name' : _('Total Taxes To Pay'), 
             'columns': [
                         {'name':''},
                          self._format({'name': total},figure_type='float'),

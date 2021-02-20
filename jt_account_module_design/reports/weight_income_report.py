@@ -186,7 +186,7 @@ class WeightIncomeReport(models.AbstractModel):
 
         lines.append({
             'id': 'TOTAL REVENUE',
-            'name': 'TOTAL REVENUE',
+            'name': _('TOTAL REVENUE'),
             'columns': [{'name': ''},
                         self._format({'name': gt_total_balance1_inc},figure_type='float'),
                         self._format({'name': gt_total_balance2_inc},figure_type='float'),
@@ -209,7 +209,7 @@ class WeightIncomeReport(models.AbstractModel):
         
         lines.append({
             'id': 'TOTAL EGRESSES',
-            'name': 'TOTAL EGRESSES',
+            'name': _('TOTAL EGRESSES'),
             'columns': [{'name': ''},
                         self._format({'name': gt_total_balance1_exp},figure_type='float'),
                         self._format({'name': gt_total_balance2_exp},figure_type='float'),
@@ -224,7 +224,7 @@ class WeightIncomeReport(models.AbstractModel):
 
         lines.append({
             'id': 'Remnants',
-            'name': 'Remnants',
+            'name': _('Remnants'),
             'columns': [{'name': ''},
                         self._format({'name': gt_total_balance1_inc - gt_total_balance1_exp},figure_type='float'),
                         self._format({'name': gt_total_balance2_inc - gt_total_balance2_exp},figure_type='float'),

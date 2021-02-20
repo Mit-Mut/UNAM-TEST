@@ -23,7 +23,7 @@
 from odoo import models, fields, api, _
 import base64
 import xlrd
-from datetime import datetime
+from datetime import datetime, timedelta
 from odoo.modules.module import get_resource_path
 from xlrd import open_workbook
 from odoo.exceptions import UserError, ValidationError
@@ -47,6 +47,8 @@ class GeneratePayrollWizard(models.TransientModel):
     
     employee_ids = fields.Many2many('hr.employee','employee_generate_payroll_wizard_rel','employee_id','wizard_id','Employees')
     payroll_process_id = fields.Many2one('custom.payroll.processing','Payroll Process')
+    file_row = fields.Integer(default=0)
+    cron_id = fields.Many2one('ir.cron',"Active Cron")
     
     def check_employee_data(self,failed_row,rfc,import_type,counter):
         failed_row += "Row " +str(counter)+" : " + str(rfc) + "------>> Invalid Employee RFC In "+str(import_type)+" Import\n"
@@ -86,8 +88,30 @@ class GeneratePayrollWizard(models.TransientModel):
     def check_parter_data(self,failed_row,partner,import_type,counter):
         failed_row +="Row " +str(counter)+" : " + str(partner) + "------>> Invalid Beneficiaries In "+str(import_type)+" Import\n"
         return failed_row
-         
-    def generate(self):
+    
+    def create_new_cron(self):
+        nextcall = datetime.now()
+        nextcall = nextcall + timedelta(seconds=5)
+        
+        cron_vals = {
+            'name': "Payroll_"+str(self.payroll_process_id.name)+"_"+str(self.id)+"_"+str(self.file_row),
+            'state': 'code',
+            'nextcall': nextcall,
+            'nextcall_copy': nextcall,
+            'numbercall': -1,
+            'code': "model.generate(%s)"%(self.id),
+            'model_id': self.env.ref('jt_payroll_payment.model_generate_payroll_wizard').id,
+            'user_id': self.env.user.id,
+            'doall':True,
+        }
+
+                    # Final process
+        cron = self.env['ir.cron'].sudo().create(cron_vals)
+                     
+    def generate(self,record_id=False):
+        if record_id:
+            self = self.env['generate.payroll.wizard'].browse(int(record_id))
+        
         if self.file:
             failed_row = ""
             
@@ -99,10 +123,18 @@ class GeneratePayrollWizard(models.TransientModel):
                 }
             line_data = []
             exit_payroll_id = False
+            employee_records = self.env['hr.employee'].search_read([], fields=['id', 'rfc'])
+            program_code_records = self.env['program.code'].search_read([], fields=['id', 'program_code'])
+            preception_records = self.env['preception'].search_read([], fields=['id', 'key'])
             #======================== payroll_perceptions ================# 
             if self.type_of_movement == 'payroll_perceptions':
-                counter = 0
-                for rowx, row in enumerate(map(sheet.row, range(1, sheet.nrows)), 1):
+                self.payroll_process_id.perception_file = self.file
+                self.payroll_process_id.perception_filename = self.filename
+                self.payroll_process_id.perception_file_index = 1
+                self.payroll_process_id.perception_file_load = True
+                return
+                counter = 0                
+                for rowx, row in enumerate(map(sheet.row, range(self.file_row, sheet.nrows)), 1):
                     counter += 1
                     rfc = row[0].value
                     program_code = row[2].value
@@ -114,7 +146,7 @@ class GeneratePayrollWizard(models.TransientModel):
                     pre_key = row[9].value
                     amount = row[10].value
 
-                    if rfc:
+                    if rfc and str(rfc).isalnum():
                         if exit_payroll_id and line_data:
                             exit_payroll_id.write({'preception_line_ids':line_data})
                             line_data = []
@@ -130,7 +162,7 @@ class GeneratePayrollWizard(models.TransientModel):
                             
                         payment_method_id = False    
                         
-                        if payment_method:         
+                        if payment_method and str(payment_method).isalnum():     
                             if  type(payment_method) is int or type(payment_method) is float:
                                 payment_method = int(payment_method)
                             payment_method_rec = self.env['l10n_mx_edi.payment.method'].search([('name','=',str(payment_method))],limit=1)
@@ -139,10 +171,16 @@ class GeneratePayrollWizard(models.TransientModel):
                             else:
                                 failed_row = self.check_payment_method_data(failed_row,payment_method,'Payroll Perceptions',counter)
                                 continue    
-                        employee_id =self.env['hr.employee'].search([('rfc','=',rfc)],limit=1)
+                        #employee_id =self.env['hr.employee'].search([('rfc','=',rfc)],limit=1)
+                        
+                        
+                        employee_id = list(filter(lambda emp: emp['rfc'] == rfc, employee_records))
+                        employee_id = employee_id[0]['id'] if employee_id else False
+                        
                         if not employee_id:
                             failed_row = self.check_employee_data(failed_row, rfc, 'Payroll Perceptions',counter)
                         if employee_id:
+                            employee_id = self.env['hr.employee'].browse(employee_id)
                             rec_check_number = check_number
                             rec_deposite_number = deposite_number
                             rec_bank_key = bank_key
@@ -173,7 +211,7 @@ class GeneratePayrollWizard(models.TransientModel):
                                     failed_row = self.check_checklog_data(failed_row,rec_check_number,'Payroll Perceptions',counter)
                                     continue
                                 
-                            if bank_account:
+                            if bank_account and str(bank_account).isalnum():
                                 if  type(bank_account) is int or type(bank_account) is float:
                                     bank_account = int(bank_account)
                                 bank_account_rec = self.env['res.partner.bank'].search([('acc_number','=',str(bank_account))],limit=1)
@@ -214,29 +252,34 @@ class GeneratePayrollWizard(models.TransientModel):
                                                     'bank_key' : rec_bank_key,
                                                     'deposite_number' : rec_deposite_number,
                                                     'check_number' : rec_check_number,
-                                                    'check_folio_id': log.id if log else False,
                                                     'l10n_mx_edi_payment_method_id':payment_method_id,
                                                     'is_pension_payment_request' : True,
                                                     'receiving_bank_acc_pay_id' : bank_account_id,
                                                     'payment_request_type':'direct_employee'})
+                                if log:
+                                    result_dict.update({'check_folio_id': log.id if log else False})
+                                    
                         else:
                             continue
 
                     program_id = False
                     if program_code:
-                        p_id = self.env['program.code'].search([('program_code','=',program_code)],limit=1)
-                        if p_id:
-                            program_id = p_id.id
-                        else:
+                        program_id = list(filter(lambda pc: pc['program_code'] == program_code, program_code_records))
+                        program_id = program_id[0]['id'] if program_id else False
+                        if not program_id:
                             failed_row = self.check_program_code_data(failed_row,program_code,'Payroll Perceptions',counter)
                             continue
-                    if pre_key:
+                    if pre_key and str(pre_key).isalnum():
+                        
                         if  type(pre_key) is int or type(pre_key) is float:
                             pre_key = int(pre_key)
                         
-                        pre_id = self.env['preception'].search([('key','=',pre_key)],limit=1)
+                        pre_id = list(filter(lambda per: per['key'] == pre_key, preception_records))
+                        pre_id = pre_id[0]['id'] if pre_id else False
+                        
+                        #pre_id = self.env['preception'].search([('key','=',pre_key)],limit=1)
                         if pre_id:
-                            line_data.append((0,0,{'program_code_id':program_id,'preception_id':pre_id.id,'amount':amount}))
+                            line_data.append((0,0,{'program_code_id':program_id,'preception_id':pre_id,'amount':amount}))
                         else:
                             failed_row = self.check_perception_data(failed_row,pre_key,'Payroll Perceptions',counter)
                             continue
@@ -251,7 +294,6 @@ class GeneratePayrollWizard(models.TransientModel):
                         exit_payroll_id = self.env['employee.payroll.file'].create(result_dict)
                         line_data = []
                         result_dict = {}
-
             #======================== payroll_deductions ================#
             if self.type_of_movement == 'payroll_deductions':
                 counter = 0

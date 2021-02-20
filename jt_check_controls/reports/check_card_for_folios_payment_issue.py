@@ -378,6 +378,7 @@ class CheckCardFolioPaymentIssue(models.AbstractModel):
             values=dict(rcontext),
         )
         body_html = self.with_context(print_mode=True).get_html(options)
+        body_html = body_html.replace(b'<div class="o_account_reports_header">',b'<div style="display:none;">')
 
         body = body.replace(b'<body class="o_account_reports_body_print">', b'<body class="o_account_reports_body_print">' + body_html)
         if minimal_layout:

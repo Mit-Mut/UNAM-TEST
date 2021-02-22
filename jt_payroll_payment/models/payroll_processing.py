@@ -59,6 +59,11 @@ class CustomPayrollProcessing(models.Model):
     perception_filename = fields.Char('FileName')
     perception_file_index = fields.Integer(default=0)
     perception_file_load = fields.Boolean(default=False)
+
+    deductions_file = fields.Binary('File to import')
+    deductions_filename = fields.Char('FileName')
+    deductions_file_index = fields.Integer(default=0)
+    deductions_file_load = fields.Boolean(default=False)
     
     def get_total_record(self):
         for rec in self:
@@ -189,6 +194,7 @@ class CustomPayrollProcessing(models.Model):
             bank_records = self.env['res.bank'].search_read([], fields=['id', 'l10n_mx_edi_code'])
             bank_account_records = self.env['res.partner.bank'].search_read([], fields=['id', 'acc_number'])
             payment_method_records = self.env['l10n_mx_edi.payment.method'].search_read([], fields=['id', 'name'])
+            payroll_process_records = self.env['employee.payroll.file'].search_read([('payroll_processing_id','=',self.id)], fields=['id','employee_id'])
             
             counter = 0
             for rowx, row in enumerate(map(sheet.row, range(self.perception_file_index, sheet.nrows)), 1):
@@ -288,8 +294,8 @@ class CustomPayrollProcessing(models.Model):
                                 continue
                         
                         
-                        payroll_process_records = self.env['employee.payroll.file'].search_read([('employee_id','=',employee_id.id),('payroll_processing_id','=',self.id)], fields=['id'])
-                        exit_payroll_id = payroll_process_records[0]['id'] if payroll_process_records else False
+                        exit_payroll_id = list(filter(lambda b: b['employee_id'][0] == employee_id.id, payroll_process_records))
+                        exit_payroll_id = exit_payroll_id[0]['id'] if exit_payroll_id else False
                         
                         if exit_payroll_id:
                             exit_payroll_id = self.env['employee.payroll.file'].browse(exit_payroll_id)
@@ -357,3 +363,109 @@ class CustomPayrollProcessing(models.Model):
         self.update_failed_file(failed_row)
         self.perception_file_index += counter
         self.perception_file_load = False
+        
+        
+
+    def process_deductions_file(self):
+        failed_row = ""
+        if self.deductions_file and self.deductions_file_load:
+            
+            data = base64.decodestring(self.deductions_file)
+            book = open_workbook(file_contents=data or b'')
+            sheet = book.sheet_by_index(0)
+
+            result_dict = {
+                }
+            line_data = []
+            exit_payroll_id = False
+            employee_records = self.env['hr.employee'].search_read([], fields=['id', 'rfc'])
+            deduction_records = self.env['deduction'].search_read([], fields=['id', 'key'])
+            payroll_process_records = self.env['employee.payroll.file'].search_read([('payroll_processing_id','=',self.id)], fields=['id','employee_id'])
+            
+            counter = 0
+
+            for rowx, row in enumerate(map(sheet.row, range(self.deductions_file_index, sheet.nrows)), 1):
+                
+                counter += 1
+                #print ("Con====",counter)
+                rfc = row[0].value
+                ded_key = row[2].value
+                amount = row[3].value
+                net_salary = row[4].value
+                
+                if rfc and str(rfc).isalnum():
+                    if counter > 40000:
+                        self.update_failed_file(failed_row)
+                        self.deductions_file_index += counter - 1
+                        return
+                    
+                    if exit_payroll_id and line_data:
+                        exit_payroll_id.write({'deduction_line_ids':line_data})
+                        line_data = []
+                        exit_payroll_id = False
+                        result_dict = {}
+                        
+                    if result_dict:
+                        result_dict.update({'deduction_line_ids':line_data})
+                        self.env['employee.payroll.file'].create(result_dict)
+                        result_dict = {}
+                        line_data = []
+                        exit_payroll_id = False
+                         
+#                    employee_id =self.env['hr.employee'].search([('rfc','=',rfc)],limit=1)
+
+                    employee_id = list(filter(lambda emp: emp['rfc'] == rfc, employee_records))
+                    employee_id = employee_id[0]['id'] if employee_id else False
+                    
+                    if not employee_id:
+                        failed_row = self.check_employee_data(failed_row,rfc,'Payroll Deductions',counter)                            
+                    if employee_id:
+                        employee_id = self.env['hr.employee'].browse(employee_id)
+
+                        exit_payroll_id = list(filter(lambda b: b['employee_id'][0] == employee_id.id, payroll_process_records))
+                        exit_payroll_id = exit_payroll_id[0]['id'] if exit_payroll_id else False
+                        exit_payroll_id = self.env['employee.payroll.file'].browse(exit_payroll_id)
+                        
+                        if exit_payroll_id:
+                            exit_payroll_id.net_salary = net_salary
+                            
+                        if not exit_payroll_id:                             
+                            result_dict.update({'payroll_processing_id':self.id,
+                                                'period_start' : self.period_start,
+                                                'period_end' : self.period_end,
+                                                'fornight' : self.fornight,
+                                                'employee_id':employee_id.id,
+                                                'net_salary':net_salary,
+                                                'is_pension_payment_request' : True,
+                                                'payment_request_type':'direct_employee'})
+                    else:
+                        continue
+
+                if ded_key:
+                    if  type(ded_key) is int or type(ded_key) is float:
+                        ded_key = int(ded_key)
+
+                    ded_id = list(filter(lambda per: per['key'] == str(ded_key), deduction_records))
+                    ded_id = ded_id[0]['id'] if ded_id else False
+                    
+                    if ded_id:
+                        line_data.append((0,0,{'deduction_id':ded_id,'amount':amount})) 
+                    else:
+                        failed_row = self.check_deduction_data(failed_row,ded_key,'Payroll Deductions',counter)
+                        continue
+                if exit_payroll_id and line_data:
+                    exit_payroll_id.write({'deduction_line_ids':line_data})
+                    line_data = []
+                    # exit_payroll_id = False
+
+                if result_dict:
+                    result_dict.update({'deduction_line_ids':line_data})
+                    exit_payroll_id = self.env['employee.payroll.file'].create(result_dict)
+                    line_data = []
+                    # exit_payroll_id = False
+                    result_dict = {}
+
+        self.update_failed_file(failed_row)
+        self.deductions_file_index += counter
+        self.deductions_file_load = False
+    

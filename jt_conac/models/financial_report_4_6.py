@@ -147,17 +147,89 @@ class StatementOfChangesInTheFinancialPosition(models.AbstractModel):
                         main_balance_dict = {}
                         main_balance_dict2 = {}
                         level_2_columns = [{'name': ''}, {'name': ''}] * len(periods)
-                        lines.append({
-                            'id': 'level_two_%s' % level_2_line.id,
-                            'name': level_2_line.display_name,
-                            'columns': level_2_columns,
-                            'level': 3,
-                            'unfoldable': True,
-                            'unfolded': True,
-                            'parent_id': 'level_one_%s' % level_1_line.id,
-                        })
-
+                        
                         level_3_lines = conac_obj.search([('parent_id', '=', level_2_line.id)])
+                        if level_3_lines:
+                            lines.append({
+                                'id': 'level_two_%s' % level_2_line.id,
+                                'name': level_2_line.display_name,
+                                'columns': level_2_columns,
+                                'level': 3,
+                                'unfoldable': True,
+                                'unfolded': True,
+                                'parent_id': 'level_one_%s' % level_1_line.id,
+                            })
+                            
+                        else:
+                            amt_columns = []
+                            period_dict = {}
+
+                            for period in periods:
+                                balance = 0
+                                date_start = datetime.strptime(str(period.get('date_from')),
+                                                               DEFAULT_SERVER_DATE_FORMAT).date()
+                                date_end = datetime.strptime(str(period.get('date_to')),
+                                                             DEFAULT_SERVER_DATE_FORMAT).date()
+
+                                move_lines = move_line_obj.sudo().search(
+                                    [('coa_conac_id', '=', level_2_line.id),
+                                     move_state_domain,
+                                     ('date', '>=', date_start), ('date', '<=', date_end)])
+                                if move_lines:
+                                    balance += (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+                                    if period.get('string') in period_dict:
+                                        period_dict.update(
+                                            {period.get('string'): period_dict.get(period.get('string')) + balance})
+                                    else:
+                                        period_dict.update({period.get('string'): balance})
+
+                            for pd, bal in period_dict.items():
+                                if bal > 0: 
+                                    if pd in main_balance_dict.keys():
+                                        main_balance_dict.update({pd: main_balance_dict.get(pd) + bal})
+                                    else:
+                                        main_balance_dict.update({pd: bal})
+                                else:
+                                    if pd in main_balance_dict2.keys():
+                                        main_balance_dict2.update({pd: main_balance_dict2.get(pd) + bal})
+                                    else:
+                                        main_balance_dict2.update({pd: bal})
+                                
+                                if bal > 0:    
+                                    if pd in last_total_dict.keys():
+                                        last_total_dict.update({pd: last_total_dict.get(pd) + bal})
+                                    else:
+                                        last_total_dict.update({pd: bal})
+                                else:
+                                    if pd in last_total_dict2.keys():
+                                        last_total_dict2.update({pd: last_total_dict2.get(pd) + bal})
+                                    else:
+                                        last_total_dict2.update({pd: bal})
+                                    
+                            for pe in periods:
+                                if pe.get('string') in period_dict.keys():
+                                    amt = period_dict.get(pe.get('string'))
+                                    origin_amt = 0
+                                    app_amt = 0
+                                    if amt > 0: 
+                                        app_amt = amt
+                                    else:
+                                        origin_amt = amt
+                                    amt_columns += [self._format({'name': abs(origin_amt)},figure_type='float'), 
+                                                    self._format({'name': app_amt},figure_type='float')]
+                                else:
+                                    amt_columns += [self._format({'name': 0.00},figure_type='float'),
+                                                     self._format({'name': 0.00},figure_type='float')]
+                            lines.append({
+                                'id': 'level_two_%s' % level_2_line.id,
+                                'name': level_2_line.display_name,
+                                'columns': amt_columns,
+                                'level': 3,
+                                'unfoldable': True,
+                                'unfolded': True,
+                                'parent_id': 'level_one_%s' % level_1_line.id,
+                            })
+                            
                         for level_3_line in level_3_lines:
                             amt_columns = []
                             period_dict = {}
@@ -285,26 +357,26 @@ class StatementOfChangesInTheFinancialPosition(models.AbstractModel):
             main_total_col += [self._format({'name': abs(origin_amt)},figure_type='float'),
                                self._format({'name': app_amt},figure_type='float')]
             
-        if self.env.user.lang == 'es_MX':
-            lines.append({
-                'id': 'total_%s' % level_1_line.id,
-                'name': 'Gran Total',
-                'columns': main_total_col,
-                'level': 2,
-                'title_hover': level_1_line.display_name,
-                'unfoldable': False,
-                'unfolded': True,
-            })
-        else:
-            lines.append({
-                'id': 'total_%s' % level_1_line.id,
-                'name': 'Main Total',
-                'columns': main_total_col,
-                'level': 2,
-                'title_hover': level_1_line.display_name,
-                'unfoldable': False,
-                'unfolded': True,
-            })
+        # if self.env.user.lang == 'es_MX':
+        #     lines.append({
+        #         'id': 'total_%s' % level_1_line.id,
+        #         'name': 'Gran Total',
+        #         'columns': main_total_col,
+        #         'level': 2,
+        #         'title_hover': level_1_line.display_name,
+        #         'unfoldable': False,
+        #         'unfolded': True,
+        #     })
+        # else:
+        #     lines.append({
+        #         'id': 'total_%s' % level_1_line.id,
+        #         'name': 'Main Total',
+        #         'columns': main_total_col,
+        #         'level': 2,
+        #         'title_hover': level_1_line.display_name,
+        #         'unfoldable': False,
+        #         'unfolded': True,
+        #     })
             
         return lines
     def _get_report_name(self):

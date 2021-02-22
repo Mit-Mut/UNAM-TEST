@@ -51,7 +51,7 @@
                                     <t t-set="company" t-value="res_company"/>
                                 </t>
                             </t>
-                            <t t-foreach="o.payment_req_ids" t-as="line" t-if="o.type_of_batch == 'nominal'">
+                            <t t-foreach="o.payment_req_ids" t-as="line" t-if="o.type_of_batch in ('nominal','pension')">
                                 <t t-if="line.selected and line.check_folio_id and line.check_status == 'Available for printing'">
                                     <!--   -->
                                     <div>

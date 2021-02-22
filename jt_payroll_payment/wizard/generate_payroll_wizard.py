@@ -296,10 +296,18 @@ class GeneratePayrollWizard(models.TransientModel):
                         result_dict = {}
             #======================== payroll_deductions ================#
             if self.type_of_movement == 'payroll_deductions':
+
+                self.payroll_process_id.deductions_file = self.file
+                self.payroll_process_id.deductions_filename = self.filename
+                self.payroll_process_id.deductions_file_index = 1
+                self.payroll_process_id.deductions_file_load = True
+                return
+                
                 counter = 0
                 for rowx, row in enumerate(map(sheet.row, range(1, sheet.nrows)), 1):
                     
                     counter += 1
+                    print ("Con====",counter)
                     rfc = row[0].value
                     ded_key = row[2].value
                     amount = row[3].value

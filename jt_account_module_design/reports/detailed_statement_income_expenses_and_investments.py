@@ -215,18 +215,39 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                     })
 
                     for acc in account_ids:
-                        values= self.env['account.move.line'].search(domain + [('budget_id','!=',False),('account_id', 'in', acc.ids)])
-                        authorized = sum(x.debit-x.credit for x in values)
-                        authorized = authorized/1000
-                        
+#                         values= self.env['account.move.line'].search(domain + [('budget_id','!=',False),('account_id', 'in', acc.ids)])
+#                         authorized = sum(x.debit-x.credit for x in values)
+#                         authorized = authorized/1000
+                        authorized = 0
+                        assign = 0
+                        transfers = 0
+                        # ======Budget Data ======#
+                        if con.item_ids:
+                            program_code_ids = self.env['program.code'].search([('item_id','in',con.item_ids.ids)])
+                            self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NULL", (tuple(program_code_ids.ids),))
+                            my_datas = self.env.cr.fetchone()
+                            if my_datas:
+                                authorized = my_datas[0]
+
+                            self.env.cr.execute("select coalesce(SUM(CASE WHEN al.line_type = %s THEN al.amount ELSE -al.amount END),0) from adequacies_lines al,adequacies a where a.state=%s and al.program in %s and a.id=al.adequacies_id", ('increase','accepted',tuple(program_code_ids.ids)))
+                            my_datas = self.env.cr.fetchone()
+                            if my_datas:
+                                assign = my_datas[0]
+                                
+                            transfers = assign
+                            assign += authorized
+                            
+                            authorized = authorized/1000
+                            assign = assign/1000
+                            transfers = transfers/1000
+                            
                         total_authorized += authorized
                         
-                        transfers = 0
                         total_transfers += transfers
 
-                        values= self.env['account.move.line'].search(domain + [('adequacy_id','!=',False),('account_id', 'in', acc.ids)])
-                        assign = sum(x.debit-x.credit for x in values)
-                        assign = assign/1000
+#                         values= self.env['account.move.line'].search(domain + [('adequacy_id','!=',False),('account_id', 'in', acc.ids)])
+#                         assign = sum(x.debit-x.credit for x in values)
+#                         assign = assign/1000
                         total_assign += assign
 
                         values= self.env['account.move.line'].search(domain + [('account_id', 'in', acc.ids)])

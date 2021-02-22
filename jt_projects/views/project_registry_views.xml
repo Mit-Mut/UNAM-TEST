@@ -58,7 +58,7 @@
                                 type="object" attrs="{'invisible': [('status', '=', 'closed')]}"/>
 
                         <button name="create_program_code" string="Create Cod. Program" class="oe_highlight"
-                                type="object" attrs="{'invisible': ['|','|',('is_code_create','=',True),('project_type','=',False),('status', '=', 'closed')]}"/>
+                                type="object" attrs="{'invisible': ['|',('project_type','=',False),('status', '=', 'closed')]}"/>
                                 
                         <field name="status" widget="statusbar" />
                     </header>

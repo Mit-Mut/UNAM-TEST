@@ -132,6 +132,13 @@
                     <attribute name="create">0</attribute>
                     <attribute name="edit">0</attribute>
                 </xpath>
+                <field name="type_of_request" position="after">
+                	<field name="type_of_request_payroll" attrs="{'invisible':[('type_of_batch','=','supplier')]}"/>
+                </field>
+                <field name="type_of_request" position="attributes">
+                	<attribute name="attrs">{'readonly':[('state','!=','draft')],'invisible':[('type_of_batch','!=','supplier')]}</attribute> 
+                </field>
+                
             </field>
         </record>
         <record id="action_cancellation_of_checks" model="ir.actions.act_window">

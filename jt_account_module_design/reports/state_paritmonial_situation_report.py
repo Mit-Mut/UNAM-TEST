@@ -172,6 +172,35 @@ class StatePartimonialSituation(models.AbstractModel):
         columns = reversed(date_cols)
         return {'columns': columns, 'x_offset': 1, 'merge': 4}
 
+    def get_month_name(self, month):
+        month_name = ''
+        if month == 1:
+            month_name = 'Enero'
+        elif month == 2:
+            month_name = 'Febrero'
+        elif month == 3:
+            month_name = 'Marzo'
+        elif month == 4:
+            month_name = 'Abril'
+        elif month == 5:
+            month_name = 'Mayo'
+        elif month == 6:
+            month_name = 'Junio'
+        elif month == 7:
+            month_name = 'Julio'
+        elif month == 8:
+            month_name = 'Agosto'
+        elif month == 9:
+            month_name = 'Septiembre'
+        elif month == 10:
+            month_name = 'Octubre'
+        elif month == 11:
+            month_name = 'Noviembre'
+        elif month == 12:
+            month_name = 'Diciembre'
+
+        return month_name.upper()
+
     def get_xlsx(self, options, response=None):
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
@@ -234,8 +263,8 @@ class StatePartimonialSituation(models.AbstractModel):
             sheet.insert_image(0, 0, filename, {
                                'image_data': image_data, 'x_offset': 8, 'y_offset': 3, 'x_scale': 0.6, 'y_scale': 0.6})
         col += 1
-        header_title = '''NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO\nGENERAL DIRECTORATE OF BUDGET CONTROL-ACCOUNTING GENERAL\nINTEGRATION OF SOME ITEMS OF THE STATE OF PATRIMONIAL SITUATION AT THE %s OF %s AND %s OF %s''' % (start_date,s_year,end_date,e_year)
-        
+        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO  \nDIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL \nINTEGRACIÓN DE ALGUNAS PARTIDAS DEL ESTADO DE SITUACIÓN PATRIMONIAL EN EL %s DE %s Y %s DE %s''' % (start_date,s_year,end_date,e_year)
+
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)
         y_offset += 6
@@ -353,12 +382,25 @@ class StatePartimonialSituation(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
             end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+
+            start_month_name = start.strftime("%B")
+            end_month_name = end.strftime("%B")
+            
+            if self.env.user.lang == 'es_MX':
+                start_month_name = self.get_month_name(start.month)
+                end_month_name = self.get_month_name(end.month)
+
+            header_date = str(start.day).zfill(2) + " " + start_month_name+" OF "+str(start.year)
+            header_date += " AND "+str(end.day).zfill(2) + " " + end_month_name +" OF "+str(end.year)
+            
+
             rcontext.update({
                     'css': '',
                     'o': self.env.user,
                     'res_company': self.env.company,
                     'start' : start,
-                    'end' : end
+                    'end' : end,
+                    'header_date' : header_date,
             })
             header = self.env['ir.actions.report'].render_template("jt_account_module_design.external_layout_state_partimonial", values=rcontext)
             header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded

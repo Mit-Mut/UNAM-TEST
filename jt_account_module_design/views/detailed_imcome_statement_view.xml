@@ -12,7 +12,7 @@
                             <field name="concept" required="1"/>
                             <field name="account_ids" widget="many2many_tags" required="1"/>
                             <field name="inc_exp_type" required="1"/>
-                            <field name="item_ids" widget="many2many_tags" attrs="{'invisible':[('inc_exp_type','!=','income')],'readonly':[('inc_exp_type','!=','income')]}"/>
+                            <field name="item_ids" widget="many2many_tags" attrs="{'invisible':[('inc_exp_type','!=','expenses')],'readonly':[('inc_exp_type','!=','expenses')]}"/>
                         </group>
                     </sheet>
                 </form>

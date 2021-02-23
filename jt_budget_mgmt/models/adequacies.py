@@ -778,8 +778,8 @@ class Adequacies(models.Model):
                     
                 else:
                     raise ValidationError(_("The amount is greater than the one assigned in the budget. \n Budget: %s \n %s" % (adequacies.budget_id.name,code_list_decrese_msg)))
-                    
-            if adequacies.adaptation_type == 'compensated' and total_decreased != total_increased:
+            
+            if adequacies.adaptation_type == 'compensated' and round(total_decreased,2) != round(total_increased,2):
                 raise ValidationError(_(
                     "The total amount of the increases and the total amount of the decreases must be equal for compensated adjustments!"))
 

@@ -34,6 +34,7 @@
                                 <field name="project_id" domain="[('project_type','in',('conacyt','concurrent','other'))]" required="1"  attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="project_number_id" readonly="1"/>
                                 <field name="program_code_id" invisible="1"/>
+                                <field name="program_code_ids" invisible="1"/>
                                 <field name="number" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="doc_type" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 
@@ -77,7 +78,7 @@
                                 widget="section_and_note_one2many" attrs="{'readonly': [('status', '!=', 'eraser')]}">
                                     <tree editable="bottom" string="Verfication Expense Line">
                                           <field name="row"/>
-                                          <field name="program_code" domain="[('id','=',parent.program_code_id)]"/>
+                                          <field name="program_code" domain="[('id','in',parent.program_code_ids)]"/>
                                          <field name="verification_expense_id" invisible="1"/>
                                          <field name="price"/>
                                          <field name="amount"/>

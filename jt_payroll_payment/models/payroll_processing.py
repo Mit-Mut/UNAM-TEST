@@ -59,11 +59,13 @@ class CustomPayrollProcessing(models.Model):
     perception_filename = fields.Char('FileName')
     perception_file_index = fields.Integer(default=0)
     perception_file_load = fields.Boolean(default=False)
-
+    perception_user = fields.Many2one('res.users')
+    
     deductions_file = fields.Binary('File to import')
     deductions_filename = fields.Char('FileName')
     deductions_file_index = fields.Integer(default=0)
     deductions_file_load = fields.Boolean(default=False)
+    deductions_user = fields.Many2one('res.users')
     
     def get_total_record(self):
         for rec in self:
@@ -175,9 +177,20 @@ class CustomPayrollProcessing(models.Model):
         from_check = False
         
         return log,from_check     
+    
+    def send_perception_notification(self):
+        if self.perception_user:
+            self.perception_user.notify_success(message='Process Completed - Please Click Again To Next Process Perception',
+                                title="Perception Process", sticky=True)
+
+    def send_deductions_notification(self):
+        if self.deductions_user:
+            self.deductions_user.notify_success(message='Process Completed - Please Click Again To Next Process Deductions',
+                                title="Deductions Process", sticky=True)
         
     def process_perception_file(self):
         failed_row = ""
+        self.perception_user = self.env.user.id
         if self.perception_file and self.perception_file_load:
             
             data = base64.decodestring(self.perception_file)
@@ -217,6 +230,7 @@ class CustomPayrollProcessing(models.Model):
                     if counter > 20000:
                         self.update_failed_file(failed_row)
                         self.perception_file_index += counter - 1
+                        self.send_perception_notification()
                         return
                     
                     if exit_payroll_id and line_data:
@@ -363,11 +377,12 @@ class CustomPayrollProcessing(models.Model):
         self.update_failed_file(failed_row)
         self.perception_file_index += counter
         self.perception_file_load = False
-        
+        self.send_perception_notification()
         
 
     def process_deductions_file(self):
         failed_row = ""
+        self.deductions_user = self.env.user.id
         if self.deductions_file and self.deductions_file_load:
             
             data = base64.decodestring(self.deductions_file)
@@ -397,6 +412,7 @@ class CustomPayrollProcessing(models.Model):
                     if counter > 40000:
                         self.update_failed_file(failed_row)
                         self.deductions_file_index += counter - 1
+                        self.send_deductions_notification()
                         return
                     
                     if exit_payroll_id and line_data:
@@ -468,4 +484,5 @@ class CustomPayrollProcessing(models.Model):
         self.update_failed_file(failed_row)
         self.deductions_file_index += counter
         self.deductions_file_load = False
+        self.send_deductions_notification()
     

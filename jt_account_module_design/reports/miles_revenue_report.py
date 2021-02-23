@@ -246,6 +246,35 @@ class WeightIncomeReport(models.AbstractModel):
     def _get_report_name(self):
         return _("Miles Revenue Report")
 
+    def get_month_name(self, month):
+        month_name = ''
+        if month == 1:
+            month_name = 'Enero'
+        elif month == 2:
+            month_name = 'Febrero'
+        elif month == 3:
+            month_name = 'Marzo'
+        elif month == 4:
+            month_name = 'Abril'
+        elif month == 5:
+            month_name = 'Mayo'
+        elif month == 6:
+            month_name = 'Junio'
+        elif month == 7:
+            month_name = 'Julio'
+        elif month == 8:
+            month_name = 'Agosto'
+        elif month == 9:
+            month_name = 'Septiembre'
+        elif month == 10:
+            month_name = 'Octubre'
+        elif month == 11:
+            month_name = 'Noviembre'
+        elif month == 12:
+            month_name = 'Diciembre'
+
+        return month_name.upper()
+
 
     def get_xlsx(self, options, response=None):
         output = io.BytesIO()
@@ -315,9 +344,9 @@ class WeightIncomeReport(models.AbstractModel):
         header_title += "DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL  "
         header_title += "\n"
         header_title += "REPORTE DE INGRESOS POR EL PERÍODO AL   "
-        header_title += start.strftime('%d DE')
+        header_title += start.strftime('%d DE ')
         header_title += start.strftime('%B DEL %Y')
-        header_title += end.strftime('Y %d DE %B DEL %Y')
+        header_title += end.strftime(' Y %d DE %B DEL %Y')
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)
         y_offset += 6
@@ -435,12 +464,24 @@ class WeightIncomeReport(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
             end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+
+            start_month_name = start.strftime("%B")
+            end_month_name = end.strftime("%B")
+            
+            if self.env.user.lang == 'es_MX':
+                start_month_name = self.get_month_name(start.month)
+                end_month_name = self.get_month_name(end.month)
+
+            header_date = str(start.day).zfill(2) + " " + start_month_name+" OF "+str(start.year)
+            header_date += " AND "+str(end.day).zfill(2) + " " + end_month_name +" OF "+str(end.year)
+            
             rcontext.update({
                     'css': '',
                     'o': self.env.user,
                     'res_company': self.env.company,
                     'start' : start,
-                    'end' : end
+                    'end' : end,
+                    'header_date' : header_date,
             })
             header = self.env['ir.actions.report'].render_template("jt_account_module_design.external_layout_miles_revenue_report", values=rcontext)
             header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded

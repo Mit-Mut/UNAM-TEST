@@ -25,10 +25,11 @@ class ProjectProgramCode(models.Model):
             total_per_exercise = 0
             
             if rec.program_code_id:
-                self.env.cr.execute("select coalesce(sum(ebl.assigned),0) from expenditure_budget_line ebl where ebl.program_code_id = %s ", (rec.program_code_id.id,))
-                my_datas = self.env.cr.fetchone()
-                if my_datas:
-                    total_assigned_amt = my_datas[0]
+                total_assigned_amt = rec.program_code_id.total_authorized_amt
+#                 self.env.cr.execute("select coalesce(sum(ebl.assigned),0) from expenditure_budget_line ebl where ebl.program_code_id = %s ", (rec.program_code_id.id,))
+#                 my_datas = self.env.cr.fetchone()
+#                 if my_datas:
+#                     total_assigned_amt = my_datas[0]
 
                 if rec.project_id and rec.project_id.is_papiit_project:
                     self.env.cr.execute("select coalesce(sum(ebl.available),0) from expenditure_budget_line ebl where ebl.program_code_id = %s",(rec.program_code_id.id,))

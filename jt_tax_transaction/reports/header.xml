@@ -32,7 +32,7 @@
 ACCOUNTING</span>
                         <br/>
                         
-                        <span>TAX WITHHOLDING REPORT FOR THE <t t-esc="start.strftime('%d %B')"/> OF <t t-esc="start.strftime('%Y')"/> AND <t t-esc="end.strftime('%d %B ')"/> OF <t t-esc="end.strftime('%Y')"/> </span>
+                        <span>TAX WITHHOLDING REPORT FOR THE <t t-esc="header_date"/> </span>
 
                     </div>
                 </div>
@@ -74,7 +74,7 @@ ACCOUNTING</span>
 ACCOUNTING</span>
                         <br/>
                         
-                        <span>REPORT OF TAXES PAYABLE FROM THE <t t-esc="start.strftime('%d %B')"/> OF <t t-esc="start.strftime('%Y')"/> AND <t t-esc="end.strftime('%d %B ')"/> OF <t t-esc="end.strftime('%Y')"/> </span>
+                        <span>REPORT OF TAXES PAYABLE FROM THE <t t-esc="header_date"/> </span>
 
                     </div>
                 </div>
@@ -117,7 +117,7 @@ TAX CHARGED  -->
                             ACCOUNTING</span>
                         <br/>
                         
-                        <span>REPORT FOR THE DETERMINATION OF THE VALUE ADDED TAX CHARGED FROM THE <t t-esc="start.strftime('%d %B')"/> OF <t t-esc="start.strftime('%Y')"/> AND <t t-esc="end.strftime('%d %B ')"/> OF <t t-esc="end.strftime('%Y')"/> </span>
+                        <span>REPORT FOR THE DETERMINATION OF THE VALUE ADDED TAX CHARGED FROM THE <t t-esc="header_date"/> </span>
 
                     </div>
                 </div>

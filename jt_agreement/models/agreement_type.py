@@ -47,9 +47,9 @@ class AgreementType(models.Model):
     @api.constrains('group')
     def _check_group(self):
         group = self.group
-        group_id = self.env['agreement.agreement.type'].search([('group','=',group),('id','!=',self.id)],limit=1)
-        if group_id:
-            raise ValidationError(_("Group Value Must Be Unique"))
+#         group_id = self.env['agreement.agreement.type'].search([('group','=',group),('id','!=',self.id)],limit=1)
+#         if group_id:
+#             raise ValidationError(_("Group Value Must Be Unique"))
         
         if group.isdigit():
             return True

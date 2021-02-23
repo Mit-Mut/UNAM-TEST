@@ -30,8 +30,7 @@
                             <span> GENERAL DIRECTORATE OF BUDGET CONTROL-GENERAL ACCOUNTING</span>
                         <br/>
                         <span style="font-size:14px;">STATE OF INCOME, EXPENSES AND COMPARATIVE INVESTMENTS FROM 
-                            <t t-esc="start.strftime('%B %d')"/> OF <t t-esc="start.strftime('%Y')"/> AND <t t-esc="end.strftime('%B %d')"/> OF <t t-esc="end.strftime('%Y')"/>
-                        </span>                        
+                            <t t-esc="header_date"/> </span>                    
                     </div>
                 </div>
             </div>
@@ -72,8 +71,7 @@
                         <br/>
 
                         <span style="font-size:14px;">INTEGRATION OF SOME ITEMS OF THE STATE OF PATRIMONIAL SITUATION TO THE 
-                            <t t-esc="start.strftime('%d %B')"/> OF <t t-esc="start.strftime('%Y')"/> AND <t t-esc="end.strftime('%d %B')"/> OF <t t-esc="end.strftime('%Y')"/>
-                        </span>
+                            <t t-esc="header_date"/> </span>
                     </div>
                 </div>
             </div>
@@ -115,8 +113,7 @@
                             </span>
                         <br/>
                         <span style="font-size:14px;">VERIFICATION BALANCE AT THE
-                            <t t-esc="start.strftime('%d %B')"/> OF <t t-esc="start.strftime('%Y')"/> AND <t t-esc="end.strftime('%d %B')"/> OF <t t-esc="end.strftime('%Y')"/>
-                        </span>
+                            <t t-esc="header_date"/> </span>
                     </div>
                 </div>
             </div>
@@ -159,7 +156,7 @@
                             </span>
                         <br/>
                         
-                        <span>STATUS OF INCOME, EXPENSES AND INVESTMENTS DETAILED FROM<t t-esc="start.strftime('%d %B')"/> OF <t t-esc="start.strftime('%Y')"/> AL <t t-esc="end.strftime('%d %B')"/> OF <t t-esc="end.strftime('%Y')"/> </span>
+                        <span>STATUS OF INCOME, EXPENSES AND INVESTMENTS DETAILED FROM<t t-esc="header_date"/> </span>
 
                     </div>
                 </div>
@@ -201,7 +198,7 @@
                             <span style="font-size:14px;">CONTROL PRESUPUESTAL-CONTADURÍA GENERAL</span>
                         <br/>
                         
-                        <span>STATUS OF INCOME, EXPENSES AND INVESTMENTS DETAILED FROM <t t-esc="start.strftime('%d %B')"/> DEL <t t-esc="start.strftime('%Y')"/> AL <t t-esc="end.strftime('%d %B')"/> DEL <t t-esc="end.strftime('%Y')"/> </span>
+                        <span>STATUS OF INCOME, EXPENSES AND INVESTMENTS DETAILED FROM <t t-esc="header_date"/> </span>
 
                     </div>
                 </div>
@@ -243,7 +240,7 @@
                         <b><span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span></b><br/>
                             <span style="font-size:14px;">DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL</span>
                         <br/>
-                        <span>REPORTE DE INGRESOS POR EL PERÍODO DEL <t t-esc="start.strftime('%d %B')"/> DEL <t t-esc="start.strftime('%Y')"/> AL <t t-esc="end.strftime('%d %B')"/> DEL <t t-esc="end.strftime('%Y')"/>  </span>
+                        <span>REPORTE DE INGRESOS POR EL PERÍODO DEL <t t-esc="header_date"/> </span>
                     </div>
                 </div>
             </div>
@@ -286,7 +283,7 @@
                             <span style="font-size:14px;">GENERAL DIRECTORATE OF BUDGET CONTROL-GENERAL ACCOUNTING</span>
                         <br/>
                         
-                        <span>GENERAL ACCOUNTING AT THE <t t-esc="start.strftime('%d %B')"/> OF <t t-esc="start.strftime('%Y')"/> AND <t t-esc="end.strftime('%d %B ')"/> OF <t t-esc="end.strftime('%Y')"/> </span>
+                        <span>GENERAL ACCOUNTING AT THE <t t-esc="header_date"/> </span>
 
                     </div>
                 </div>
@@ -329,7 +326,7 @@
 ACCOUNTING</span>
                         <br/>
                         
-                        <span>STATEMENT OF FINANCIAL POSITION AT THE <t t-esc="start.strftime(' %d %B')"/> OF <t t-esc="start.strftime('%Y')"/> AND <t t-esc="end.strftime('%d %B')"/> OF <t t-esc="end.strftime('%Y')"/> </span>
+                        <span>STATEMENT OF FINANCIAL POSITION AT THE <t t-esc="header_date"/> </span>
 
                     </div>
                 </div>
@@ -371,8 +368,8 @@ ACCOUNTING</span>
                             <span style="font-size:14px;">DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL</span>
                             <br/>
                         
-                        <span>REPORTE DE INGRESOS POR EL PERÍODO DEL  <t t-esc="start.strftime('%B %d ')"/> DEL <t t-esc="start.strftime('%Y')"/> AL <t t-esc="end.strftime('%B %d')"/> DEL <t t-esc="end.strftime('%Y')"/> </span>
-
+                        <span>REPORTE DE INGRESOS POR EL PERÍODO DEL  <t t-esc="header_date"/> </span>
+                        
                     </div>
                 </div>
             </div>

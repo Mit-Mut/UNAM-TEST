@@ -71,6 +71,16 @@ class VerficationOfExpense(models.Model):
     amount_total = fields.Monetary(string='Total', store=True, readonly=True,
         compute='_compute_amount',)
 
+    program_code_ids = fields.Many2many('program.code',string='Program Codes',compute="get_program_code_ids",store=True)
+    
+    @api.depends('project_id','project_id.project_programcode_ids','project_id.project_programcode_ids.program_code_id')
+    def get_program_code_ids(self):
+        for rec in self:
+            program_code_ids = []
+            if rec.project_id:
+                program_code_ids = rec.project_id.project_programcode_ids.mapped('program_code_id').ids
+            rec.program_code_ids = [(6, 0, program_code_ids)]
+            
     @api.depends('verifcation_expense_ids','verifcation_expense_ids.price','verifcation_expense_ids.tax_ids')
     def _compute_amount(self):
         for rec in self:

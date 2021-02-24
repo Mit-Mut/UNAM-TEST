@@ -284,6 +284,9 @@ class AnalyticalStatusOfTheExpenditureBudgetExercise(models.AbstractModel):
                                 
                                 shcp_budget_line = period_budget_lines.filtered(lambda x:x.program_code_id.item_id.id==item.id)
                                 program_code_ids = shcp_budget_line.mapped('program_code_id')
+                                
+                                move_lines = self.env['account.move.line'].search([('program_code_id.item_id','=',item.id)])
+                                program_code_ids = move_lines.mapped('program_code_id')
                                 if program_code_ids:
 #                                     self.env.cr.execute("""(select coalesce(sum(abs(amount_total_signed)),0) as committed from account_move where id in 
 #                                                         (select DISTINCT amlp.move_id from account_move_line amlp where amlp.payment_id in  

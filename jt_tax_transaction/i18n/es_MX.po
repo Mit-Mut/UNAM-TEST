@@ -329,3 +329,15 @@ msgstr "TOTAL INGRESOS"
 #, python-format
 msgid "Remnants"
 msgstr "REMANENTE"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/valueadded_tax_report.py:0
+#, python-format
+msgid "Tax in Charge / Favor"
+msgstr "Impuesto a Cargo/Favor"
+
+#. module: account_reports
+#: code:addons/account_reports/models/account_generic_tax_report.py:0
+#, python-format
+msgid "Closing Journal Entry"
+msgstr "REGISTRAR ASIENTOS"

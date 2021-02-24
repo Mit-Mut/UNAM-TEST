@@ -28,11 +28,10 @@
 
                     <div class="col-6 text-center">
                         <b><span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span></b><br/>
-                            <span style="font-size:14px;">GENERAL DIRECTORATE OF BUDGET CONTROL-GENERAL
-ACCOUNTING</span>
+                            <span style="font-size:14px;">DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL</span>
                         <br/>
                         
-                        <span>TAX WITHHOLDING REPORT FOR THE <t t-esc="header_date"/> </span>
+                        <span>INFORME DE RETENCIONES DE IMPUESTOS PARA EL <t t-esc="header_date"/> </span>
 
                     </div>
                 </div>
@@ -70,11 +69,10 @@ ACCOUNTING</span>
 
                     <div class="col-6 text-center">
                         <b><span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span></b><br/>
-                            <span style="font-size:14px;">GENERAL DIRECTORATE OF BUDGET CONTROL-GENERAL
-ACCOUNTING</span>
+                            <span style="font-size:14px;">DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL</span>
                         <br/>
                         
-                        <span>REPORT OF TAXES PAYABLE FROM THE <t t-esc="header_date"/> </span>
+                        <span>INFORME DE IMPUESTOS A PAGAR DEL <t t-esc="header_date"/> </span>
 
                     </div>
                 </div>
@@ -113,11 +111,10 @@ TAX CHARGED  -->
 
                     <div class="col-6 text-center">
                         <b><span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span></b><br/>
-                            <span style="font-size:14px;">GENERAL DIRECTORATE OF BUDGET CONTROL-GENERAL
-                            ACCOUNTING</span>
+                            <span style="font-size:14px;">DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL</span>
                         <br/>
                         
-                        <span>REPORT FOR THE DETERMINATION OF THE VALUE ADDED TAX CHARGED FROM THE <t t-esc="header_date"/> </span>
+                        <span>NFORME PARA LA DETERMINACIÓN DEL IMPUESTO SOBRE EL VALOR AÑADIDO COBRADO DEL <t t-esc="header_date"/> </span>
 
                     </div>
                 </div>

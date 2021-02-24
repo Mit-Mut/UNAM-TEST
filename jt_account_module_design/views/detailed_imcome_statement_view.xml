@@ -8,7 +8,7 @@
                 <form>
                     <sheet>
                         <group>
-                        	<field name="major" required="1"/>
+                        	<field name="major_id" required="1"/>
                             <field name="concept" required="1"/>
                             <field name="account_ids" widget="many2many_tags" required="1"/>
                             <field name="inc_exp_type" required="1"/>
@@ -24,7 +24,7 @@
             <field name="model">detailed.statement.income</field>
             <field name="arch" type="xml">
                 <tree>
-                	<field name="major" required="1"/>
+                	<field name="major_id" required="1"/>
                     <field name="concept" />
                     <field name="account_ids" widget="many2many_tags"/>
                     <field name="inc_exp_type"/>

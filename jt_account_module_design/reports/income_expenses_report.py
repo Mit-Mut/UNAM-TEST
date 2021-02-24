@@ -126,6 +126,7 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
         count = 1
         for type in list_data:
             type_concept_ids = concept_ids.filtered(lambda x:x.inc_exp_type == type)
+            major_ids = type_concept_ids.mapped('major_id')
             if type_concept_ids:
 
                 lines.append({
@@ -142,8 +143,26 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                     'unfoldable': False,
                     'unfolded': True,
                 })
+            for major in major_ids:
                 count += 1
-                for con in type_concept_ids:
+
+                lines.append({
+                    'id': 'major' + str(major.id),
+                    'name': major.name,
+                    'columns': [
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                ],
+    
+                    'level': 1,
+                    'unfoldable': False,
+                    'unfolded': True,
+                    'class':'text-left'
+                })
+                
+                for con in type_concept_ids.filtered(lambda x:x.major_id.id == major.id):
 
                     total_exercised = 0
                     total_exercised_pre = 0
@@ -350,19 +369,24 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
         str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
         options['date'].get('date_to'), '%Y-%m-%d').date()
+        start_month_name = start.strftime("%B")
+        end_month_name = end.strftime("%B")
+        
+        if self.env.user.lang == 'es_MX':
+            start_month_name = self.get_month_name(start.month)
+            end_month_name = self.get_month_name(end.month)
+
+        header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
+        header_date += " Y "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
+        
 
         header_title = "UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO   "
         header_title += "\n"
         header_title += "DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL  "
         header_title += "\n"
         header_title += "ESTADO DE INGRESOS, GASTOS E INVERSIONES COMPARATIVAS DE "
-        header_title += start.strftime('%B %d')
-        header_title += ' DE '
-        header_title += start.strftime('%Y')
-        header_title += ' A '
-        header_title += end.strftime('%B %d')
-        header_title += ' DE '
-        header_title += end.strftime('%Y')
+        header_title += str(header_date)
+
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)
         y_offset += 6
@@ -488,8 +512,8 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                 start_month_name = self.get_month_name(start.month)
                 end_month_name = self.get_month_name(end.month)
 
-            header_date = str(start.day).zfill(2) + " " + start_month_name+" OF "+str(start.year)
-            header_date += " AND "+str(end.day).zfill(2) + " " + end_month_name +" OF "+str(end.year)
+            header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
+            header_date += " Y "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
             
 
             rcontext.update({

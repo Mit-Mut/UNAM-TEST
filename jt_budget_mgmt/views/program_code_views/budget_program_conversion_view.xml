@@ -23,7 +23,7 @@
             	<form>
             		<sheet>
 	            		<group>
-	            			<field name="unam_key_id" context="{'show_program_digit':True}" options="{'no_open': True, 'no_create': True}"/>
+	            			<field name="program_key_id"  options="{'no_open': True, 'no_create': True}"/>
 	            			<field name="dep_con_id"/>
 	            			<field name="federal_part_desc"/>
                             <field name="desc" invisible="1"/>
@@ -41,7 +41,7 @@
             <field name="model">budget.program.conversion</field>
             <field name="arch" type="xml">
             	<tree>
-            		<field name="unam_key_id" context="{'show_program_digit':True}"/>
+            		<field name="program_key_id" />
            			<field name="dep_con_id"/>
            			<field name="federal_part_desc"/>
                     <field name="desc" invisible="1"/>

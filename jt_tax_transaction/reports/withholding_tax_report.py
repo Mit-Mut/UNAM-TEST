@@ -354,8 +354,8 @@ class WithholdingTaxReport(models.AbstractModel):
                 start_month_name = self.get_month_name(start.month)
                 end_month_name = self.get_month_name(end.month)
 
-            header_date = str(start.day).zfill(2) + " " + start_month_name+" OF "+str(start.year)
-            header_date += " AND "+str(end.day).zfill(2) + " " + end_month_name +" OF "+str(end.year)
+            header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
+            header_date += " Y "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
             
 
             rcontext.update({
@@ -455,7 +455,16 @@ class WithholdingTaxReport(models.AbstractModel):
             s_year = start.strftime('%Y')
             end_date = end.strftime('%B %d')
             e_year = end.strftime('%Y')
+            start_month_name = start.strftime("%B")
+            end_month_name = end.strftime("%B")
+            
+            if self.env.user.lang == 'es_MX':
+                start_month_name = self.get_month_name(start.month)
+                end_month_name = self.get_month_name(end.month)
 
+            header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
+            header_date += " Y "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
+            
 
             sheet.merge_range(y_offset, col, 6, col, '', super_col_style)
             if self.env.user and self.env.user.company_id and self.env.user.company_id.header_logo:
@@ -467,8 +476,8 @@ class WithholdingTaxReport(models.AbstractModel):
 
             col += 1
             header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nDIRECCION GENERAL DE CONTROL PRESUPUESTAL
-CONTADURIA-ACCOUNTING\nREPORTE DE RETENCIÓN DE IMPUESTOS DEL %s DE %s Y %s DE %s
-''' % (start_date,s_year,end_date,e_year)
+CONTADURÍA GENERAL\nREPORTE DE RETENCIÓN DE IMPUESTOS DEL %s
+''' % (header_date)
             sheet.merge_range(y_offset, col, 5, col + 6,
                               header_title, super_col_style)
             y_offset += 6

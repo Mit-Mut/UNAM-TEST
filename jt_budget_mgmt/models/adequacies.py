@@ -241,28 +241,37 @@ class Adequacies(models.Model):
                     failed_row_ids.append(pointer)
                     continue
 
+                # Validate Program(PR)
+                program = program_obj.validate_program(list_result[1])
+                if not program:
+                    failed_row += str(list_result) + \
+                                  "------>> Invalid Program(PR) Format\n"
+                    failed_row_ids.append(pointer)
+                    continue
+
                 # Validation Conversion Program SHCP
                 program_str = ''
                 if len(str(list_result[1])) > 1:
                     program_str = str(list_result[1]).zfill(2)
+
                     
                 conversion_item_string = ''
                 if len(str(list_result[10])) > 4:
                     conversion_item_string = str(list_result[10]).zfill(4)
                 
-                shcp = shcp_obj.validate_shcp(list_result[9], program_str,conversion_item_string)
+                shcp = shcp_obj.validate_shcp(list_result[9], program,conversion_item_string)
                 if not shcp:
                     failed_row += str(list_result) + \
                                   "------>> Invalid Conversion Program SHCP(CONPP) Format\n"
                     failed_row_ids.append(pointer)
                     continue
 
-                program = shcp and shcp.unam_key_id or False
-                if not program:
-                    failed_row += str(list_result) + \
-                                  "------>> Invalid Program(PR) Format\n"
-                    failed_row_ids.append(pointer)
-                    continue
+                #program = shcp and shcp.unam_key_id or False
+#                 if not program:
+#                     failed_row += str(list_result) + \
+#                                   "------>> Invalid Program(PR) Format\n"
+#                     failed_row_ids.append(pointer)
+#                     continue
 
 
                 # Validation Federal Item
@@ -274,13 +283,6 @@ class Adequacies(models.Model):
                     failed_row_ids.append(pointer)
                     continue
 
-                # Validate Program(PR)
-#                 program = program_obj.validate_program(list_result[1])
-#                 if not program:
-#                     failed_row += str(list_result) + \
-#                                   "------>> Invalid Program(PR) Format\n"
-#                     failed_row_ids.append(pointer)
-#                     continue
 
                 # Validate Dependency
                 dependency = dependancy_obj.validate_dependency(list_result[3])

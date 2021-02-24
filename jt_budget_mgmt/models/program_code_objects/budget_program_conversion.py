@@ -31,8 +31,9 @@ class BudgetProgramConversion(models.Model):
     _description = 'Budget Program Conversion'
     _rec_name = 'shcp'
 
-    unam_key_id = fields.Many2one('program', string='UNAM Function')
+    unam_key_id = fields.Many2one('program', string='Program')
     unam_key_code = fields.Char(related='unam_key_id.key_unam')
+    program_key_id = fields.Many2one('program.key','UNAM Function')
     
     desc = fields.Text(string='Description of key UNAM')
     shcp = fields.Many2one("shcp.code", string='Conversion of SHCP program')
@@ -45,7 +46,7 @@ class BudgetProgramConversion(models.Model):
     
     federal_part_desc = fields.Text(related='dep_con_id.federal_part_desc',string="Item SHCP Description")
     
-    _sql_constraints = [('uniq_unam_key_id', 'unique(unam_key_id,shcp,dep_con_id)',
+    _sql_constraints = [('uniq_unam_key_id', 'unique(program_key_id,shcp,dep_con_id)',
                          'The combination of UNAM function, SHCP Item and Conversion of SHCP must be unique')]
 
     @api.constrains('shcp')
@@ -108,9 +109,8 @@ class BudgetProgramConversion(models.Model):
                 if not (re.match("[A-Z]{1}\d{3}", str(shcp_str).upper())):
                     return False
                 else:
-                    print ("call===",conversion_item_string)
                     shcp = self.search(
-                        [('federal_part','=',conversion_item_string),('shcp.name', '=', shcp_str), ('unam_key_code', '=', program)], limit=1)
+                        [('federal_part','=',conversion_item_string),('shcp.name', '=', shcp_str), ('program_key_id', '=', program.program_key_id.id)], limit=1)
                     if shcp:
                         return shcp
         return False

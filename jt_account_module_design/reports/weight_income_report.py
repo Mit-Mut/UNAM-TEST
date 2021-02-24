@@ -329,6 +329,16 @@ class WeightIncomeReport(models.AbstractModel):
         str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
         options['date'].get('date_to'), '%Y-%m-%d').date()
+        start_month_name = start.strftime("%B")
+        end_month_name = end.strftime("%B")
+        
+        if self.env.user.lang == 'es_MX':
+            start_month_name = self.get_month_name(start.month)
+            end_month_name = self.get_month_name(end.month)
+
+        header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
+        header_date += " Y "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
+        
 
         sheet.merge_range(y_offset, col, 6, col, '', super_col_style)
         if self.env.user and self.env.user.company_id and self.env.user.company_id.header_logo:
@@ -343,9 +353,7 @@ class WeightIncomeReport(models.AbstractModel):
         header_title += "DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL  "
         header_title += "\n"
         header_title += "REPORTE DE INGRESOS POR EL PERÍODO DEL"
-        header_title += start.strftime('%d DE')
-        header_title += start.strftime('%B DEL %Y')
-        header_title += end.strftime('Y %d DE %B DEL %Y')
+        header_title += str(header_date)
 
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)
@@ -473,8 +481,8 @@ class WeightIncomeReport(models.AbstractModel):
                 start_month_name = self.get_month_name(start.month)
                 end_month_name = self.get_month_name(end.month)
 
-            header_date = str(start.day).zfill(2) + " " + start_month_name+" OF "+str(start.year)
-            header_date += " AND "+str(end.day).zfill(2) + " " + end_month_name +" OF "+str(end.year)
+            header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
+            header_date += " Y "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
             
             rcontext.update({
                     'css': '',

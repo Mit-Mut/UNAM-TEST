@@ -32,19 +32,11 @@ class Program(models.Model):
 
     key_unam = fields.Char(string='Key UNAM', size=2)
     desc_key_unam = fields.Text(string='Description Key UNAM')
-    digit = fields.Char(string="Key UNAM Digit",size=1,compute="get_key_unam_digit",store=True)
+    program_key_id = fields.Many2one('program.key','Key UNAM Digit')
+    #digit = fields.Char(string="Key UNAM Digit",size=1,compute="get_key_unam_digit",store=True)
     _sql_constraints = [('key_unam', 'unique(key_unam)',
                          'The key UNAM must be unique.')]
 
-    def name_get(self):
-        result = []
-        for rec in self:
-            name = rec.key_unam or ''
-            if self.env.context:
-                if rec.digit and self.env.context.get('show_program_digit',False):
-                    name = rec.digit
-            result.append((rec.id, name))
-        return result
 
     @api.constrains('key_unam')
     def _check_key_unam(self):
@@ -54,11 +46,11 @@ class Program(models.Model):
     def fill_zero(self, code):
         return str(code).zfill(2)
 
-    @api.depends('key_unam')
-    def get_key_unam_digit(self):
-        for rec in self:
-            if rec.key_unam:
-                rec.digit = rec.key_unam[0]
+#     @api.depends('key_unam')
+#     def get_key_unam_digit(self):
+#         for rec in self:
+#             if rec.key_unam:
+#                 rec.digit = rec.key_unam[0]
                  
     @api.model
     def create(self, vals):
@@ -94,3 +86,20 @@ class Program(models.Model):
                 if program:
                     return program
         return False
+
+class ProgramKey(models.Model):
+    
+    _name = 'program.key'
+    
+    name = fields.Char(string="Key UNAM Digit",size=1)
+
+    @api.constrains('name')
+    def _check_key_unam(self):
+        for rec in self:
+            if rec.name:
+                exits = self.env['program.key'].search([('id','!=',rec.id),('name','=',rec.name)])
+                if exits:
+                    raise ValidationError(_('The Key UNAM Digit must be unique.'))
+    
+    
+    

@@ -1062,8 +1062,8 @@ class AccountChartOfAccountReport(models.AbstractModel):
             start_month_name = self.get_month_name(start.month)
             end_month_name = self.get_month_name(end.month)
 
-        header_date = str(start.day).zfill(2) + " " + start_month_name+" OF "+str(start.year)
-        header_date += " AND "+str(end.day).zfill(2) + " " + end_month_name +" OF "+str(end.year)
+        header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
+        header_date += " Y "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
         
         rcontext_test = {
                 'mode': 'print',
@@ -1105,8 +1105,8 @@ class AccountChartOfAccountReport(models.AbstractModel):
                 start_month_name = self.get_month_name(start.month)
                 end_month_name = self.get_month_name(end.month)
 
-            header_date = str(start.day).zfill(2) + " " + start_month_name+" OF "+str(start.year)
-            header_date += " AND "+str(end.day).zfill(2) + " " + end_month_name +" OF "+str(end.year)
+            header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
+            header_date += " Y "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
             
             rcontext.update({
                     'css': '',
@@ -1219,9 +1219,19 @@ class AccountChartOfAccountReport(models.AbstractModel):
         s_year = start.strftime('%Y')
         end_date = end.strftime('%B %d')
         e_year = end.strftime('%Y')
+        start_month_name = start.strftime("%B")
+        end_month_name = end.strftime("%B")
+        
+        if self.env.user.lang == 'es_MX':
+            start_month_name = self.get_month_name(start.month)
+            end_month_name = self.get_month_name(end.month)
+
+        header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
+        header_date += " Y "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
+        
 
         header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nDIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL
-CONTABILIDAD GENERAL EN EL %s DE %s Y %s DE %s''' % (start_date,s_year,end_date,e_year)
+CONTABILIDAD GENERAL EN EL %s''' % (header_date)
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)
         y_offset += 6

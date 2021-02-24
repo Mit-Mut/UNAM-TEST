@@ -26,10 +26,10 @@
                              style="width:120px;height:100px;margin-top:20px;margin-right:20px;margin-bottom:20px;"/>
                     </div>
                     <div class="col-6 text-center">
-                            <span style="font-size:14px;"><b>NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO</b></span>
-                            <span> GENERAL DIRECTORATE OF BUDGET CONTROL-GENERAL ACCOUNTING</span>
+                            <span style="font-size:14px;"><b>UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</b></span>
+                            <span> DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL</span>
                         <br/>
-                        <span style="font-size:14px;">STATE OF INCOME, EXPENSES AND COMPARATIVE INVESTMENTS FROM 
+                        <span style="font-size:14px;">ESTADO DE INGRESOS, GASTOS E INVERSIONES COMPARATIVAS DE
                             <t t-esc="header_date"/> </span>                    
                     </div>
                 </div>
@@ -64,13 +64,13 @@
                     </div>
 
                     <div class="col-6 text-center">
-                        <b><span style="font-size:16px;">NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO</span></b><br/>
-                            <span style="font-size:14px;">GENERAL DIRECTORATE OF BUDGET CONTROL-ACCOUNTING GENERAL
+                        <b><span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span></b><br/>
+                            <span style="font-size:14px;">DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL
                             </span>
                         
                         <br/>
 
-                        <span style="font-size:14px;">INTEGRATION OF SOME ITEMS OF THE STATE OF PATRIMONIAL SITUATION TO THE 
+                        <span style="font-size:14px;">INTEGRACIÓN DE ALGUNAS PARTIDAS DEL ESTADO DE SITUACIÓN PATRIMONIAL AL 
                             <t t-esc="header_date"/> </span>
                     </div>
                 </div>
@@ -108,11 +108,11 @@
                     </div>
 
                     <div class="col-6 text-center">
-                        <b><span style="font-size:16px;">NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO</span></b><br/>
-                            <span style="font-size:14px;">GENERAL DIRECTORATE OF BUDGET CONTROL-ACCOUNTING GENERAL
+                        <b><span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span></b><br/>
+                            <span style="font-size:14px;">DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL
                             </span>
                         <br/>
-                        <span style="font-size:14px;">VERIFICATION BALANCE AT THE
+                        <span style="font-size:14px;">BALANZA DE COMPROBACIÓN EN EL
                             <t t-esc="header_date"/> </span>
                     </div>
                 </div>
@@ -151,12 +151,12 @@
 
                     <div class="col-6 text-center">
                         <b>
-                            <span style="font-size:16px;">NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO</span></b><br/>
-                            <span style="font-size:14px;">GENERAL DIRECTORATE OF BUDGET CONTROL-ACCOUNTING GENERAL
+                            <span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span></b><br/>
+                            <span style="font-size:14px;">DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL
                             </span>
                         <br/>
                         
-                        <span>STATUS OF INCOME, EXPENSES AND INVESTMENTS DETAILED FROM<t t-esc="header_date"/> </span>
+                        <span>ESTADO DE LOS INGRESOS, GASTOS E INVERSIONES DETALLADOS DE <t t-esc="header_date"/> </span>
 
                     </div>
                 </div>
@@ -195,10 +195,10 @@
 
                     <div class="col-6 text-center">
                         <b><span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span></b><br/>
-                            <span style="font-size:14px;">CONTROL PRESUPUESTAL-CONTADURÍA GENERAL</span>
+                            <span style="font-size:14px;">DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL</span>
                         <br/>
                         
-                        <span>STATUS OF INCOME, EXPENSES AND INVESTMENTS DETAILED FROM <t t-esc="header_date"/> </span>
+                        <span>ESTADO DE LOS INGRESOS, GASTOS E INVERSIONES DETALLADOS DE <t t-esc="header_date"/> </span>
 
                     </div>
                 </div>
@@ -280,10 +280,10 @@
  
                     <div class="col-6 text-center">
                         <b><span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span></b><br/>
-                            <span style="font-size:14px;">GENERAL DIRECTORATE OF BUDGET CONTROL-GENERAL ACCOUNTING</span>
+                            <span style="font-size:14px;">DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL</span>
                         <br/>
                         
-                        <span>GENERAL ACCOUNTING AT THE <t t-esc="header_date"/> </span>
+                        <span>CONTABILIDAD GENERAL EN EL <t t-esc="header_date"/> </span>
 
                     </div>
                 </div>
@@ -322,11 +322,10 @@
 
                     <div class="col-6 text-center">
                         <b><span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span></b><br/>
-                            <span style="font-size:14px;">GENERAL DIRECTORATE OF BUDGET CONTROL-GENERAL
-ACCOUNTING</span>
+                            <span style="font-size:14px;">DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL</span>
                         <br/>
                         
-                        <span>STATEMENT OF FINANCIAL POSITION AT THE <t t-esc="header_date"/> </span>
+                        <span>ESTADO DE LA SITUACIÓN FINANCIERA AL <t t-esc="header_date"/> </span>
 
                     </div>
                 </div>

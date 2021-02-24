@@ -120,6 +120,7 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
         
         for type in list_data:
             type_concept_ids = concept_ids.filtered(lambda x:x.inc_exp_type == type)
+            major_ids = type_concept_ids.mapped('major_id')
             if type_concept_ids:
 
                 lines.append({
@@ -136,8 +137,25 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                     'unfoldable': False,
                     'unfolded': True,
                 })
+            for major in major_ids:
+
+                lines.append({
+                    'id': 'major' + str(major.id),
+                    'name': major.name,
+                    'columns': [
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                ],
+    
+                    'level': 1,
+                    'unfoldable': False,
+                    'unfolded': True,
+                    'class':'text-left'
+                })
                 
-                for con in type_concept_ids:
+                for con in type_concept_ids.filtered(lambda x:x.major_id.id == major.id):
 
                     total_assign = 0
                     total_exercised = 0
@@ -164,11 +182,20 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
 
                     for acc in account_ids:
                     
-                        values= self.env['account.move.line'].search(domain + [('adequacy_id','!=',False),('account_id', 'in', acc.ids)])
-                        assign = sum(x.debit-x.credit for x in values)
-                        assign = assign/1000
+#                         values= self.env['account.move.line'].search(domain + [('adequacy_id','!=',False),('account_id', 'in', acc.ids)])
+#                         assign = sum(x.debit-x.credit for x in values)
+#                         assign = assign/1000
+#                         total_assign += assign
+                        assign = 0
+                        if con.item_ids:
+                            program_code_ids = self.env['program.code'].search([('item_id','in',con.item_ids.ids)])
+                            self.env.cr.execute("select coalesce(SUM(CASE WHEN al.line_type = %s THEN al.amount ELSE -al.amount END),0) from adequacies_lines al,adequacies a where a.state=%s and al.program in %s and a.id=al.adequacies_id", ('increase','accepted',tuple(program_code_ids.ids)))
+                            my_datas = self.env.cr.fetchone()
+                            if my_datas:
+                                assign = my_datas[0]
+                                assign = assign/1000
                         total_assign += assign
-
+                        
                         #values= self.env['account.move.line'].search(domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', acc.ids)])
                         values= self.env['account.move.line'].search(domain + [('account_id', 'in', acc.ids)])
                         exercised = sum(x.credit - x.debit for x in values)
@@ -324,8 +351,8 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                 start_month_name = self.get_month_name(start.month)
                 end_month_name = self.get_month_name(end.month)
 
-            header_date = str(start.day).zfill(2) + " " + start_month_name+" OF "+str(start.year)
-            header_date += " AND "+str(end.day).zfill(2) + " " + end_month_name +" OF "+str(end.year)
+            header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
+            header_date += " Y "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
             
             rcontext.update({
                     'css': '',
@@ -433,18 +460,24 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
         end = datetime.strptime(
         options['date'].get('date_to'), '%Y-%m-%d').date()
 
+        start_month_name = start.strftime("%B")
+        end_month_name = end.strftime("%B")
+        
+        if self.env.user.lang == 'es_MX':
+            start_month_name = self.get_month_name(start.month)
+            end_month_name = self.get_month_name(end.month)
+
+        header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
+        header_date += " Y "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
+        
+
         header_title = "UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO"
         header_title += "\n"
         header_title += "DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL "
         header_title += "\n"
         header_title += "ESTADO DE LOS INGRESOS, GASTOS E INVERSIONES RESUMEN DETALLADO DE "
-        header_title += start.strftime('%B %d')
-        header_title += ' DE '
-        header_title += start.strftime('%Y')
-        header_title += ' A '
-        header_title += end.strftime('%B %d')
-        header_title += ' DE '
-        header_title += end.strftime('%Y')
+        header_title += str(header_date)
+        
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)
         sheet.merge_range(y_offset, col, 5, col + 6,

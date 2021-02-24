@@ -56,6 +56,14 @@
         sequence="2"
     />
 
+    <!-- menu for program Key-->
+    <menuitem
+        id="menu_program_key"
+        name="Key UNAM"
+        parent="menu_code_catalog"
+        action="action_program_key"
+        sequence="2"
+    />
     <!-- menu for sub program -->
     <menuitem
         id="menu_sub_program"

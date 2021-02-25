@@ -40,7 +40,7 @@
                                 <field name="type_of_currency" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="expense_journal_id" required="1" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                   <field name="exchange_rate" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="custom_stage_id" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="custom_stage_id" invisible="1" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                  <field name="dependence" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="subdependence" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="type_of_operation" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
@@ -78,6 +78,7 @@
                                     <tree editable="bottom" string="Verfication Expense Line">
                                           <field name="row"/>
                                           <field name="program_code" domain="[('id','=',parent.program_code_id)]"/>
+                                          <field name="custom_stage_id"/>
                                          <field name="verification_expense_id" invisible="1"/>
                                          <field name="price"/>
                                          <field name="amount"/>

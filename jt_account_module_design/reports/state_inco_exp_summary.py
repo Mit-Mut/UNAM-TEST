@@ -112,11 +112,19 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
         
         concept_ids = self.env['detailed.statement.income'].search([('inc_exp_type','!=',False)])
         
-        list_data = ['income','expenses']
+        list_data = ['income','expenses','investments','other expenses']
         
         remant_assign = 0
         remant_exercised = 0
         remant_to_exercised = 0
+
+        expenses_assign = 0
+        expenses_exercised = 0
+        expenses_to_exercised = 0
+
+        year_assign = 0
+        year_exercised = 0
+        year_to_exercised = 0
         
         for type in list_data:
             type_concept_ids = concept_ids.filtered(lambda x:x.inc_exp_type == type)
@@ -189,11 +197,12 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                         assign = 0
                         if con.item_ids:
                             program_code_ids = self.env['program.code'].search([('item_id','in',con.item_ids.ids)])
-                            self.env.cr.execute("select coalesce(SUM(CASE WHEN al.line_type = %s THEN al.amount ELSE -al.amount END),0) from adequacies_lines al,adequacies a where a.state=%s and al.program in %s and a.id=al.adequacies_id", ('increase','accepted',tuple(program_code_ids.ids)))
-                            my_datas = self.env.cr.fetchone()
-                            if my_datas:
-                                assign = my_datas[0]
-                                assign = assign/1000
+                            if program_code_ids:
+                                self.env.cr.execute("select coalesce(SUM(CASE WHEN al.line_type = %s THEN al.amount ELSE -al.amount END),0) from adequacies_lines al,adequacies a where a.state=%s and al.program in %s and a.id=al.adequacies_id", ('increase','accepted',tuple(program_code_ids.ids)))
+                                my_datas = self.env.cr.fetchone()
+                                if my_datas:
+                                    assign = my_datas[0]
+                                    assign = assign/1000
                         total_assign += assign
                         
                         #values= self.env['account.move.line'].search(domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', acc.ids)])
@@ -232,12 +241,26 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                         remant_assign += total_assign
                         remant_exercised += total_exercised
                         remant_to_exercised += total_to_exercised
+
+                        year_assign += total_assign
+                        year_exercised += total_exercised
+                        year_to_exercised += total_to_exercised
                         
                     elif type == 'expenses':
                         remant_assign -= total_assign
                         remant_exercised -= total_exercised
                         remant_to_exercised -= total_to_exercised
-    
+                    
+                    if type != 'income':
+
+                        expenses_assign += total_assign
+                        expenses_exercised += total_exercised
+                        expenses_to_exercised += total_to_exercised
+                        
+                        year_assign -= total_assign
+                        year_exercised -= total_exercised
+                        year_to_exercised -= total_to_exercised
+                        
                     lines.append({
                         'id': 'group_total',
                         'name': 'SUMA',
@@ -254,20 +277,53 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                         'class':'text-right'
                     })
 
+            if type=="expenses":
+                lines.append({
+                    'id': 'REMNANT',
+                    'name': 'REMAINING BEFORE INVESTMENTS',
+                    'columns': [
+                                self._format({'name': remant_assign},figure_type='float'),
+                                self._format({'name': remant_exercised},figure_type='float'),
+                                {'name':''},
+                                self._format({'name': remant_to_exercised},figure_type='float'),
+                                ],
+                    
+                    'level': 1,
+                    'unfoldable': False,
+                    'unfolded': True,
+                    'class':'text-right'
+                })
+
         lines.append({
-            'id': 'REMNANT',
-            'name': 'REMNANT',
+            'id': 'Total EXPENSES',
+            'name': 'TOTAL EXPENSES, INVESTMENTS AND OTHER EXPENSES',
             'columns': [
-                        self._format({'name': remant_assign},figure_type='float'),
-                        self._format({'name': remant_exercised},figure_type='float'),
+                        self._format({'name': expenses_assign},figure_type='float'),
+                        self._format({'name': expenses_exercised},figure_type='float'),
                         {'name':''},
-                        self._format({'name': remant_to_exercised},figure_type='float'),
+                        self._format({'name': expenses_to_exercised},figure_type='float'),
                         ],
             
             'level': 1,
             'unfoldable': False,
             'unfolded': True,
-            #'class':'text-right'
+            'class':'text-right'
+        })
+
+        lines.append({
+            'id': 'Total Year',
+            'name': 'REMAINING OF THE YEAR',
+            'columns': [
+                        self._format({'name': year_assign},figure_type='float'),
+                        self._format({'name': year_exercised},figure_type='float'),
+                        {'name':''},
+                        self._format({'name': year_to_exercised},figure_type='float'),
+                        ],
+            
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+            'class':'text-right'
         })
         
         return lines
@@ -352,7 +408,7 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                 end_month_name = self.get_month_name(end.month)
 
             header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
-            header_date += " Y "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
+            header_date += " AL "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
             
             rcontext.update({
                     'css': '',
@@ -468,14 +524,14 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
             end_month_name = self.get_month_name(end.month)
 
         header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
-        header_date += " Y "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
+        header_date += " AL "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
         
 
         header_title = "UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO"
         header_title += "\n"
         header_title += "DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL "
         header_title += "\n"
-        header_title += "ESTADO DE LOS INGRESOS, GASTOS E INVERSIONES RESUMEN DETALLADO DE "
+        header_title += "ESTADO DE INGRESOS, GASTOS E INVERSIONES RESUMEN DEL "
         header_title += str(header_date)
         
         sheet.merge_range(y_offset, col, 5, col + 6,

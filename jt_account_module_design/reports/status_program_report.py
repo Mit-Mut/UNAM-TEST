@@ -526,26 +526,29 @@ class StatusProgramReport(models.AbstractModel):
             _check_with_xsd(cfdicoa, xsd)
         return cfdicoa
 
-    def get_report_filename(self, options):
-        return super(StatusProgramReport, self.with_context(
-            self._set_context(options))).get_report_filename(options).upper()
-
     def _get_report_name(self):
-        """The structure to name the Trial Balance reports is:
-        VAT + YEAR + MONTH + ReportCode
-        ReportCode:
-        BN - Trial balance with normal information
-        BC - Trial balance with with complementary information. (Now is
-        not suportes)"""
-        context = self.env.context
-        date_report = fields.Date.from_string(context['date_from']) if context.get(
-                'date_from') else fields.Date.today()
-        # return ['%s%s%sBN' % (
-        #             self.env.company.vat or '',
-        #             date_report.year,
-        #             str(date_report.month).zfill(2))]
-        res = ''
-        return res
+        return ("Trial Balance")
+
+#     def get_report_filename(self, options):
+#         return super(StatusProgramReport, self.with_context(
+#             self._set_context(options))).get_report_filename(options).upper()
+
+#     def _get_report_name(self):
+#         """The structure to name the Trial Balance reports is:
+#         VAT + YEAR + MONTH + ReportCode
+#         ReportCode:
+#         BN - Trial balance with normal information
+#         BC - Trial balance with with complementary information. (Now is
+#         not suportes)"""
+#         context = self.env.context
+#         date_report = fields.Date.from_string(context['date_from']) if context.get(
+#                 'date_from') else fields.Date.today()
+#         # return ['%s%s%sBN' % (
+#         #             self.env.company.vat or '',
+#         #             date_report.year,
+#         #             str(date_report.month).zfill(2))]
+#         res = ''
+#         return res
 
     def open_journal_items(self, options, params):
         new_params = params.copy()
@@ -645,7 +648,7 @@ class StatusProgramReport(models.AbstractModel):
             end_month_name = self.get_month_name(end.month)
 
         header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
-        header_date += " Y "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
+        header_date += " AL "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
         
 
         rcontext_test = {
@@ -784,12 +787,10 @@ class StatusProgramReport(models.AbstractModel):
         super_columns = self._get_super_columns(options)
         y_offset = 0
         col = 0
-        start = datetime.strptime(str(options['date'].get('date_from')), '%Y-%m-%d').date()
-        end = datetime.strptime(str(options['date'].get('date_to')), '%Y-%m-%d').date()
-        start_date = start.strftime('%B %d')
-        s_year = start.strftime('%Y')
-        end_date = end.strftime('%B %d')
-        e_year = end.strftime('%Y')
+        start = datetime.strptime(
+        str(options['date'].get('date_from')), '%Y-%m-%d').date()
+        end = datetime.strptime(
+        options['date'].get('date_to'), '%Y-%m-%d').date()
         start_month_name = start.strftime("%B")
         end_month_name = end.strftime("%B")
         
@@ -798,8 +799,9 @@ class StatusProgramReport(models.AbstractModel):
             end_month_name = self.get_month_name(end.month)
 
         header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
-        header_date += " Y "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
+        header_date += " AL "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
         
+
         sheet.merge_range(y_offset, col, 6, col, '', super_col_style)
         if self.env.user and self.env.user.company_id and self.env.user.company_id.header_logo:
             filename = 'logo.png'
@@ -808,8 +810,9 @@ class StatusProgramReport(models.AbstractModel):
             sheet.insert_image(0, 0, filename, {
                                'image_data': image_data, 'x_offset': 8, 'y_offset': 3, 'x_scale': 0.6, 'y_scale': 0.6})
         col += 1
-        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nGENERAL DIRECTORATE OF BUDGET CONTROL-GENERAL
-        ACCOUNTING\nVERIFICATION BALANCE AT THE %s''' % (header_date)
+        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nDIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL
+        \nBALANZA DE COMPROBACIÓN DEL %s''' % (header_date)
+
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)
         y_offset += 6
@@ -818,11 +821,9 @@ class StatusProgramReport(models.AbstractModel):
         currect_time_msg += datetime.today().strftime('%d/%m/%Y %H:%M')
         sheet.merge_range(y_offset, col, y_offset, col + 6,
                           currect_time_msg, currect_date_style)
-        y_offset += 3
-        total_col = 2
+        y_offset += 1
         for row in self.get_header(options):
             x = 0
-            total_col = 0
             for column in row:
                 colspan = column.get('colspan', 1)
                 header_label = column.get('name', '').replace(
@@ -833,17 +834,11 @@ class StatusProgramReport(models.AbstractModel):
                     sheet.merge_range(y_offset, x, y_offset,
                                       x + colspan - 1, header_label, title_style)
                 x += colspan
-                total_col += colspan
-                 
             y_offset += 1
-        total_col += 1
         ctx = self._set_context(options)
         ctx.update({'no_format': True, 'print_mode': True,
-                    'prefetch_fields': False,})
-        
-        right_offset = y_offset
+                    'prefetch_fields': False})
         # deactivating the prefetching saves ~35% on get_lines running time
-        ctx.update({'side_lines':'left'})
         lines = self.with_context(ctx)._get_lines(options)
         if options.get('hierarchy'):
             lines = self._create_hierarchy(lines, options)
@@ -891,66 +886,11 @@ class StatusProgramReport(models.AbstractModel):
                 else:
                     sheet.write(
                         y + y_offset, x + lines[y].get('colspan', 1) - 1, cell_value, style)
-
-        #==============Left======================#
-        y_offset = right_offset 
-        ctx.update({'side_lines':'right'})
-        lines = self.with_context(ctx)._get_lines(options)
-        if options.get('hierarchy'):
-            lines = self._create_hierarchy(lines, options)
-        if options.get('selected_column'):
-            lines = self._sort_lines(lines, options)
-        # write all data rows
-        for y in range(0, len(lines)):
-            level = lines[y].get('level')
-            if lines[y].get('caret_options'):
-                style = level_3_style
-                col1_style = level_3_col1_style
-            elif level == 0:
-                y_offset += 1
-                style = level_0_style
-                col1_style = style
-            elif level == 1:
-                style = level_1_style
-                col1_style = style
-            elif level == 2:
-                style = level_2_style
-                col1_style = 'total' in lines[y].get('class', '').split(
-                    ' ') and level_2_col1_total_style or level_2_col1_style
-            elif level == 3:
-                style = level_3_style
-                col1_style = 'total' in lines[y].get('class', '').split(
-                    ' ') and level_3_col1_total_style or level_3_col1_style
-            else:
-                style = default_style
-                col1_style = default_col1_style
-            # write the first column, with a specific style to manage the
-            # indentation
-            cell_type, cell_value = self._get_cell_type_value(lines[y])
-            if cell_type == 'date':
-                sheet.write_datetime(
-                    y + y_offset, total_col, cell_value, date_default_col1_style)
-            else:
-                sheet.write(y + y_offset, total_col, cell_value, col1_style)
-            # write all the remaining cells
-            for a in range(1, len(lines[y]['columns']) + 1):
-                x=a
-                cell_type, cell_value = self._get_cell_type_value(
-                    lines[y]['columns'][x - 1])
-                x = a+total_col
-                if cell_type == 'date':
-                    sheet.write_datetime(
-                        y + y_offset, x + lines[y].get('colspan', 1) - 1, cell_value, date_default_style)
-                else:
-                    sheet.write(
-                        y + y_offset, x + lines[y].get('colspan', 1) - 1, cell_value, style)
-                            
         workbook.close()
         output.seek(0)
         generated_file = output.read()
         output.close()
         return generated_file
-
 
     def get_html(self, options, line_id=None, additional_context=None):
         '''

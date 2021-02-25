@@ -426,6 +426,35 @@ class StatementOfFinancialPosition(models.AbstractModel):
         columns = reversed(date_cols)
         return {'columns': columns, 'x_offset': 1, 'merge': 1}
 
+    def get_month_name(self, month):
+        month_name = ''
+        if month == 1:
+            month_name = 'Enero'
+        elif month == 2:
+            month_name = 'Febrero'
+        elif month == 3:
+            month_name = 'Marzo'
+        elif month == 4:
+            month_name = 'Abril'
+        elif month == 5:
+            month_name = 'Mayo'
+        elif month == 6:
+            month_name = 'Junio'
+        elif month == 7:
+            month_name = 'Julio'
+        elif month == 8:
+            month_name = 'Agosto'
+        elif month == 9:
+            month_name = 'Septiembre'
+        elif month == 10:
+            month_name = 'Octubre'
+        elif month == 11:
+            month_name = 'Noviembre'
+        elif month == 12:
+            month_name = 'Diciembre'
+
+        return month_name.upper()
+
     def get_pdf(self, options, minimal_layout=True):
         # As the assets are generated during the same transaction as the rendering of the
         # templates calling them, there is a scenario where the assets are unreachable: when
@@ -464,12 +493,24 @@ class StatementOfFinancialPosition(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
             end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+            start_month_name = start.strftime("%B")
+            end_month_name = end.strftime("%B")
+            
+            if self.env.user.lang == 'es_MX':
+                start_month_name = self.get_month_name(start.month)
+                end_month_name = self.get_month_name(end.month)
+
+            header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
+            header_date += " AL "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
+            
+
             rcontext.update({
                     'css': '',
                     'o': self.env.user,
                     'res_company': self.env.company,
                     'start' : start,
-                    'end' : end
+                    'end' : end,
+                    'header_date' : header_date,
                 })
             header = self.env['ir.actions.report'].render_template("jt_conac.external_layout_of_stment_of_finan_posi", values=rcontext)
             header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
@@ -568,15 +609,19 @@ class StatementOfFinancialPosition(models.AbstractModel):
             str(options['date'].get('date_from')), '%Y-%m-%d').date()
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
+        start_month_name = start.strftime("%B")
+        end_month_name = end.strftime("%B")
+        
+        if self.env.user.lang == 'es_MX':
+            start_month_name = self.get_month_name(start.month)
+            end_month_name = self.get_month_name(end.month)
+
+        header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
+        header_date += " AL "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
+        
         header_title = _('''NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO\nSTATEMENT OF FINANCIAL POSITION''')
         header_title += "\n"
-        header_title += str(start.strftime(' %d %B'))
-        header_title += _(" OF ")
-        header_title += str(start.strftime(' %Y'))
-        header_title += _(" AND ")
-        header_title += str(end.strftime(' %d %B'))
-        header_title += _(" OF ")
-        header_title += str(end.strftime(' %Y'))
+        header_title += str(header_date)
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)
         y_offset += 6

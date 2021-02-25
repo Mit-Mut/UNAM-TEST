@@ -245,15 +245,16 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                         # ======Budget Data ======#
                         if con.item_ids:
                             program_code_ids = self.env['program.code'].search([('item_id','in',con.item_ids.ids)])
-                            self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NULL and start_date >= %s and end_date <= %s", (tuple(program_code_ids.ids),start,end))
-                            my_datas = self.env.cr.fetchone()
-                            if my_datas:
-                                authorized = my_datas[0]
-
-                            self.env.cr.execute("select coalesce(SUM(CASE WHEN al.line_type = %s THEN al.amount ELSE -al.amount END),0) from adequacies_lines al,adequacies a where a.state=%s and al.program in %s and a.id=al.adequacies_id", ('increase','accepted',tuple(program_code_ids.ids)))
-                            my_datas = self.env.cr.fetchone()
-                            if my_datas:
-                                assign = my_datas[0]
+                            if program_code_ids:
+                                self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NULL and start_date >= %s and end_date <= %s", (tuple(program_code_ids.ids),start,end))
+                                my_datas = self.env.cr.fetchone()
+                                if my_datas:
+                                    authorized = my_datas[0]
+    
+                                self.env.cr.execute("select coalesce(SUM(CASE WHEN al.line_type = %s THEN al.amount ELSE -al.amount END),0) from adequacies_lines al,adequacies a where a.state=%s and al.program in %s and a.id=al.adequacies_id", ('increase','accepted',tuple(program_code_ids.ids)))
+                                my_datas = self.env.cr.fetchone()
+                                if my_datas:
+                                    assign = my_datas[0]
                                 
                             transfers = assign
                             assign += authorized
@@ -538,7 +539,7 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                 end_month_name = self.get_month_name(end.month)
 
             header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
-            header_date += " Y "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
+            header_date += " AL "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
             
 
             rcontext.update({
@@ -721,14 +722,14 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
             end_month_name = self.get_month_name(end.month)
 
         header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
-        header_date += " Y "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
+        header_date += " AL "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
         
 
         header_title = "UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO"
         header_title += "\n"
         header_title += "DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL "
         header_title += "\n"
-        header_title += "ESTADO DE LOS INGRESOS, GASTOS E INVERSIONES DETALLADOS DE "
+        header_title += "ESTADO DE INGRESOS, GASTOS E INVERSIONES DETALLADOS DEL "
         header_title += str(header_date)
     
         sheet.merge_range(y_offset, col, 5, col + 6,

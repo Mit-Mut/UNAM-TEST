@@ -180,7 +180,7 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
             for line in data:
                 count+=1
                 sing = line[76]
-                amount = line[77:90]
+                amount = line[77:91]
                 concept = line[113:152]
                 if sing and amount and concept and sing=='-':
                     first_amount = amount[:-2]
@@ -188,9 +188,10 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                     concept = concept.rstrip()    
                     act_amount = first_amount+"."+last_amount
                     act_amount = float(act_amount)
+                    
                     match_payment =  self.payment_ids.filtered(lambda x:x.state=='draft' and x.amount==act_amount and x.santander_payment_concept==concept)
                     if match_payment:
-                        success_content += str(count)+' : '+ str(line) + "\n"                        
+                        success_content += str(count)+' : '+ str(line) + "\n"    
                         match_payment[0].post()
                     else:
                         failed_content += str(count)+' : Payment Not Found For Amount and Santander Payment Concept--->  '+ str(line) + "\n"

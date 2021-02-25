@@ -83,7 +83,7 @@
                         
  							</page>
  -->                        
- 							<page string="Collaboration Base Contacts" name="collaboration_base_contacts">
+ 							<page string="Contacts" name="collaboration_base_contacts">
                         		<group>
                         			<group>
                         				<field name="employee_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>

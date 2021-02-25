@@ -118,11 +118,20 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
         
         concept_ids = self.env['detailed.statement.income'].search([('inc_exp_type','!=',False)])
         
-        list_data = ['income','expenses']
+        list_data = ['income','expenses','investments','other expenses']
         
         remant_exercised = 0
         remant_exercised_pre = 0
         remant_variation = 0
+
+        expenses_exercised = 0
+        expenses_exercised_pre = 0
+        expenses_variation = 0
+
+        year_exercised = 0
+        year_exercised_pre = 0
+        year_variation = 0
+        
         count = 1
         for type in list_data:
             type_concept_ids = concept_ids.filtered(lambda x:x.inc_exp_type == type)
@@ -232,11 +241,25 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                         remant_exercised_pre += total_exercised_pre
                         remant_variation += total_variation
                         
+                        year_exercised += total_exercised
+                        year_exercised_pre += total_exercised
+                        year_variation += total_exercised
+                        
                     elif type == 'expenses':
                         remant_exercised -= total_exercised
                         remant_exercised_pre -= total_exercised_pre
                         remant_variation -= total_variation
-    
+                    
+                    if type != 'income':
+
+                        expenses_exercised += total_exercised
+                        expenses_exercised_pre += total_exercised
+                        expenses_variation += total_exercised
+                        
+                        year_exercised -= total_exercised
+                        year_exercised_pre -= total_exercised
+                        year_variation -= total_exercised
+                        
                     lines.append({
                         'id': 'group_total',
                         'name': 'SUMA',
@@ -252,21 +275,53 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                         'unfolded': True,
                         'class':'text-right'
                     })
+            if type=="expenses":
+                lines.append({
+                    'id': 'REMNANT',
+                    'name': 'REMAINING BEFORE INVESTMENTS',
+                    'columns': [
+                                self._format({'name': remant_exercised},figure_type='float'),
+                                self._format({'name': remant_exercised_pre},figure_type='float'),
+                                self._format({'name': remant_variation},figure_type='float'),
+                                {'name':''},
+                                ],
+                    
+                    'level': 1,
+                    'unfoldable': False,
+                    'unfolded': True,
+                    'class':'text-right'
+                })
 
         lines.append({
-            'id': 'REMNANT',
-            'name': 'REMNANT',
+            'id': 'Total EXPENSES',
+            'name': 'TOTAL EXPENSES, INVESTMENTS AND OTHER EXPENSES',
             'columns': [
-                        self._format({'name': remant_exercised},figure_type='float'),
-                        self._format({'name': remant_exercised_pre},figure_type='float'),
-                        self._format({'name': remant_variation},figure_type='float'),
-                        {'name':''},
-                        ],
-            
+                    self._format({'name': expenses_exercised},figure_type='float'),
+                    self._format({'name': expenses_exercised_pre},figure_type='float'),
+                    self._format({'name': expenses_variation},figure_type='float'),
+                    {'name': ''},
+                    ],
+        
             'level': 1,
             'unfoldable': False,
             'unfolded': True,
-            #'class':'text-right'
+            'class':'text-right'
+        })
+
+        lines.append({
+            'id': 'Total Year',
+            'name': 'REMAINING OF THE YEAR',
+            'columns': [
+                    self._format({'name': year_exercised},figure_type='float'),
+                    self._format({'name': year_exercised_pre},figure_type='float'),
+                    self._format({'name': year_variation},figure_type='float'),
+                    {'name': ''},
+                    ],
+        
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+            'class':'text-right'
         })
         
         return lines
@@ -377,14 +432,14 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
             end_month_name = self.get_month_name(end.month)
 
         header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
-        header_date += " Y "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
+        header_date += " AL "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
         
 
         header_title = "UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO   "
         header_title += "\n"
         header_title += "DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL  "
         header_title += "\n"
-        header_title += "ESTADO DE INGRESOS, GASTOS E INVERSIONES COMPARATIVAS DE "
+        header_title += "ESTADO DE INGRESOS, GASTOS E INVERSIONES COMPARATIVOS DEL "
         header_title += str(header_date)
 
         sheet.merge_range(y_offset, col, 5, col + 6,
@@ -513,7 +568,7 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                 end_month_name = self.get_month_name(end.month)
 
             header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
-            header_date += " Y "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
+            header_date += " AL "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
             
 
             rcontext.update({

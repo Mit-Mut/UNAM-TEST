@@ -276,7 +276,7 @@ class ExpenditureBudget(models.Model):
             item_obj = self.env['expenditure.item'].search_read([], fields=['id', 'item', 'exercise_type'])
             origin_obj = self.env['resource.origin'].search_read([], fields=['id', 'key_origin'])
             activity_obj = self.env['institutional.activity'].search_read([], fields=['id', 'number'])
-            shcp_obj = self.env['budget.program.conversion'].search_read([], fields=['id','program_key_id', 'shcp_name','dep_con_id','federal_part'])
+            shcp_obj = self.env['budget.program.conversion'].search_read([('shcp_name','!=',False),('program_key_id','!=',False),('dep_con_id','!=',False)], fields=['id','program_key_id', 'shcp_name','dep_con_id','federal_part'])
             #shcp_obj = self.env['budget.program.conversion'].search_read([], fields=['id','unam_key_id', 'unam_key_code', 'shcp_name','dep_con_id','federal_part'])
 #             dpc_obj = self.env['departure.conversion'].search_read([('item_id', '!=', False)],
 #                                                                    fields=['id', 'federal_part', 'item_id'])

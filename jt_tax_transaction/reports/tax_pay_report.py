@@ -1083,7 +1083,7 @@ CONTADURIA-ACCOUNTING\nINFORME DE IMPUESTOS A ENTERAR / PAGAR DEL %s DE %s Y %s 
                 end_month_name = self.get_month_name(end.month)
 
             header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
-            header_date += " Y "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
+            header_date += " AL "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
             
 
             rcontext.update({
@@ -1191,7 +1191,7 @@ CONTADURIA-ACCOUNTING\nINFORME DE IMPUESTOS A ENTERAR / PAGAR DEL %s DE %s Y %s 
                 end_month_name = self.get_month_name(end.month)
 
             header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
-            header_date += " Y "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
+            header_date += " AL "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
 
 
             sheet.merge_range(y_offset, col, 6, col, '', super_col_style)
@@ -1204,7 +1204,7 @@ CONTADURIA-ACCOUNTING\nINFORME DE IMPUESTOS A ENTERAR / PAGAR DEL %s DE %s Y %s 
 
             col += 1
             header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nDIRECCION GENERAL DE CONTROL PRESUPUESTAL
-CONTADURÍA GENERAL\nINFORME DE IMPUESTOS A PAGAR DEL  %s
+CONTADURÍA GENERAL\nREPORTE DE IMPUESTOS A ENTERAR/PAGAR DEL  %s
 ''' % (header_date)
             sheet.merge_range(y_offset, col, 5, col + 6,
                               header_title, super_col_style)

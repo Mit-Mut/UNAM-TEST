@@ -1063,7 +1063,7 @@ class AccountChartOfAccountReport(models.AbstractModel):
             end_month_name = self.get_month_name(end.month)
 
         header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
-        header_date += " Y "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
+        header_date += " AL "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
         
         rcontext_test = {
                 'mode': 'print',
@@ -1106,7 +1106,7 @@ class AccountChartOfAccountReport(models.AbstractModel):
                 end_month_name = self.get_month_name(end.month)
 
             header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
-            header_date += " Y "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
+            header_date += " AL "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
             
             rcontext.update({
                     'css': '',
@@ -1227,11 +1227,11 @@ class AccountChartOfAccountReport(models.AbstractModel):
             end_month_name = self.get_month_name(end.month)
 
         header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
-        header_date += " Y "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
+        header_date += " AL "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
         
 
         header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nDIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL
-CONTABILIDAD GENERAL EN EL %s''' % (header_date)
+CONTABILIDAD GENERAL DEL %s''' % (header_date)
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)
         y_offset += 6

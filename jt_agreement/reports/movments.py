@@ -148,6 +148,7 @@ class Movements(models.AbstractModel):
                         self._format({'name': total_amount},figure_type='float'), 
                         {'name': ''},
                         {'name': ''},
+                        {'name': ''},
                         ],
             'level': 1,
             'unfoldable': False,
@@ -200,12 +201,67 @@ class Movements(models.AbstractModel):
                         self._format({'name': total_base},figure_type='float'), 
                         {'name': ''},
                         {'name': ''},
+                        {'name': ''},
                         ],
             'level': 1,
             'unfoldable': False,
             'unfolded': True,
         })
-            
+
+        #======================== Retirements ==========================#
+
+        operations = self.env['request.open.balance'].search([('bases_collaboration_id','!=',False),('state','=','confirmed'),('type_of_operation','=','retirement'),('request_date', '>=', start), ('request_date', '<=', end)],order='request_date')
+        total_amount = 0
+
+        base_ids = operations.mapped('bases_collaboration_id')
+         
+        lines.append({
+            'id': 'hierarchy_ret',
+            'name': '',
+            'columns': [{'name': ''}, 
+                        {'name': 'Retirements'}, 
+                        {'name': ''},
+                        {'name': ''}, 
+                        {'name': ''},
+                        {'name': ''},
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+        
+        for op in operations:
+            lines.append({
+                'id': 'hierarchy_op' + str(op.id),
+                'name': op.bases_collaboration_id.convention_no,
+                'columns': [{'name': op.operation_number}, 
+                            {'name': op.name}, 
+                            self._format({'name': op.opening_balance},figure_type='float'),
+                            {'name': op.request_date}, 
+                            {'name': ''},
+                            {'name': op.observations},
+                            ],
+                'level': 3,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+            total_amount += op.opening_balance
+
+        lines.append({
+            'id': 'hierarchy_ret_total',
+            'name': '',
+            'columns': [{'name': ''}, 
+                        {'name': 'TOTAL'}, 
+                        self._format({'name': total_amount},figure_type='float'), 
+                        {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
+                        ],
+            'level': 1,
+            'unfoldable': False,
+            'unfolded': True,
+        })
+                    
         return lines
 
     @api.model

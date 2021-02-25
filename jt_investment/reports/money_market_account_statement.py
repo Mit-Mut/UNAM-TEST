@@ -95,7 +95,12 @@ class MoneyMarketAccountStatement(models.AbstractModel):
             return value
         value['name'] = round(value['name'], 1)
         return value
-
+    @api.model
+    def _get_filter_journals(self):
+        return self.env['account.journal'].search([('bank_account_id.for_investments','=',True),('type','=','bank'),
+            ('company_id', 'in', self.env.user.company_ids.ids or [self.env.company.id])
+        ], order="company_id, name")
+        
     def _get_lines(self, options, line_id=None):
         lang = self.env.user.lang
         lines = []

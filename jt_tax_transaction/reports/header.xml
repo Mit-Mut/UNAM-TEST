@@ -31,7 +31,7 @@
                             <span style="font-size:14px;">DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL</span>
                         <br/>
                         
-                        <span>INFORME DE RETENCIONES DE IMPUESTOS PARA EL <t t-esc="header_date"/> </span>
+                        <span>REPORTE DE RETENCIÓN DE IMPUESTOS DEL <t t-esc="header_date"/> </span>
 
                     </div>
                 </div>
@@ -72,7 +72,7 @@
                             <span style="font-size:14px;">DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL</span>
                         <br/>
                         
-                        <span>INFORME DE IMPUESTOS A PAGAR DEL <t t-esc="header_date"/> </span>
+                        <span>REPORTE DE IMPUESTOS A ENTERAR/PAGAR DEL <t t-esc="header_date"/> </span>
 
                     </div>
                 </div>
@@ -114,7 +114,7 @@ TAX CHARGED  -->
                             <span style="font-size:14px;">DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL</span>
                         <br/>
                         
-                        <span>NFORME PARA LA DETERMINACIÓN DEL IMPUESTO SOBRE EL VALOR AÑADIDO COBRADO DEL <t t-esc="header_date"/> </span>
+                        <span>REPORTE PARA LA DETERMINACIÓN DEL IMPUESTO SOBRE EL VALOR AGREGADO A CARGO DEL <t t-esc="header_date"/> </span>
 
                     </div>
                 </div>

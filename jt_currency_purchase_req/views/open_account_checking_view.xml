@@ -4,9 +4,10 @@
 
         <record id="account_open_tree_view" model="ir.ui.view">
             <field name="name">Opening a checking account Tree View</field>
-            <field name="model">office.signature</field>
+            <field name="model">account.open</field>
             <field name="arch" type="xml">
                 <tree>
+                	<field name="account_modification_id"/>
                     <field name="dependancy_id"/>
                     <field name="bank_id"/>
                     <field name="bank_account_id" context="{'from_account_design':True}"/>
@@ -17,13 +18,13 @@
 
         <record id="opening_checking_from_view" model="ir.ui.view">
             <field name="name">Opening a checking account Form view</field>
-            <field name="model">office.signature</field>
+            <field name="model">account.open</field>
             <field name="arch" type="xml">
                 <form>
                     <group>
                         <group>
-                        <field name="name" readonly="1"/>
-                        <field name="account_modification_id" invisible="1"/>
+                        <!-- <field name="name" readonly="1"/>  -->
+                        <field name="account_modification_id"/>
                         <field name="dependancy_id"/>
                         <field name="bank_id"/>
                      </group>

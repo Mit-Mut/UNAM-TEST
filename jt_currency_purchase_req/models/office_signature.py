@@ -27,7 +27,7 @@ class OfficeSignature(models.Model):
     _description = 'Office Signature'
 
     account_modification_id = fields.Many2one('request.accounts',domain=[('move_type','=','account_modify')])
-    name = fields.Char("Account Modification")
+    name = fields.Char("Number")
     dependancy_id = fields.Many2one('dependency', string='Dependency')
     bank_id = fields.Many2one('res.bank',string='Bank')
     bank_account_id = fields.Many2one('account.journal',"Bank Account")
@@ -45,7 +45,7 @@ class OfficeSignature(models.Model):
         trade = self.env['finance.sender.recipient.trades'].search([('template', '=', 'sign_update')], limit=1)
         return trade
 
-   
+
 
 class AccountOpenRequest(models.Model):
 
@@ -73,7 +73,7 @@ class AccountCancellation(models.Model):
     _name = 'account.cancellation'
     _description = 'Checking account cancellation'
 
-    name = fields.Char("Account Cancellation")
+    name = fields.Char("Number")
     account_cancellation_id = fields.Many2one('request.accounts',domain=[('move_type','=','account cancel')])
     dependancy_id = fields.Many2one('dependency', string='Dependency')
     bank_account_id = fields.Many2one('account.journal',related='account_cancellation_id.bank_account_id',string="Bank Account")
@@ -98,13 +98,19 @@ class OtherProcedure(models.Model):
     _name = 'other.procedure'
     _description = 'Occupation other procedures'
 
+    name = fields.Char("Number")
     account_modification_id = fields.Many2one('request.accounts',domain=[('move_type','=','account_modify')])
     dependancy_id = fields.Many2one('dependency', string='Dependency')
     bank_id = fields.Many2one('res.bank',string='Bank')
     bank_account_id = fields.Many2one('account.journal',"Bank Account")
     user_id = fields.Many2one('res.users','Responsible User')
 
-
+    @api.model
+    def create(self, vals):
+        res = super(OtherProcedure,self).create(vals)
+        seq = self.env['ir.sequence'].next_by_code('other.procedure')
+        res.name = seq        
+        return res
 
     def get_sender_recipet4(self):
         trade = self.env['finance.sender.recipient.trades'].search([('template', '=', 'other_procedures')], limit=1)

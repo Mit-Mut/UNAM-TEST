@@ -181,7 +181,7 @@
 								<field name="record_type" attrs="{'readonly': [('state', '!=', 'draft')],'invisible':[('type_of_revenue_collection','!=','deposit_cer')]}"/>
 								<field name="exercise" attrs="{'readonly': [('state', '!=', 'draft')],'invisible':[('type_of_revenue_collection','!=','deposit_cer')]}"/>
 								<field name="folio" attrs="{'readonly': [('state', '!=', 'draft')],'invisible':['|','|',('record_type','=','automatic'),('record_type','=','manual'),('type_of_revenue_collection','!=','deposit_cer')]}"/>
-								<field name="operation_key_id" attrs="{'readonly': [('state', '!=', 'draft')],'invisible':['|',('record_type','=','automatic'),('type_of_revenue_collection','!=','deposit_cer')]}"/>
+								<field name="operation_key_id" attrs="{'readonly': [('state', '!=', 'draft')],'invisible':['|',('record_type','=',False),('type_of_revenue_collection','!=','deposit_cer')]}"/>
 								<field name="concept" attrs="{'readonly': [('state', '!=', 'draft')],'invisible':['|',('record_type','=','automatic'),('type_of_revenue_collection','!=','deposit_cer')]}"/>
 								<field name="folio_upa" attrs="{'readonly': [('state', '!=', 'draft')],'invisible':['|',('record_type','=','automatic'),('type_of_revenue_collection','!=','deposit_cer')]}"/>
 								<field name="exercise_upa" attrs="{'readonly': [('state', '!=', 'draft')],'invisible':['|',('type_of_revenue_collection','!=','deposit_cer'),('record_type','!=','manual')]}"/>
@@ -197,10 +197,10 @@
                             	<field name="type_of_changes" attrs="{'readonly': [('state', '!=', 'draft')],'invisible':['|',('type_of_revenue_collection','!=','deposit_cer'),('record_type','!=','manual')]}"/>
                             	<field name="full_name" attrs="{'readonly': [('state', '!=', 'draft')],'invisible':['|',('type_of_revenue_collection','!=','deposit_cer'),('record_type','=',False)]}"/>
                             	<field name="manual_rfc" attrs="{'readonly': [('state', '!=', 'draft')],'invisible':['|',('type_of_revenue_collection','!=','deposit_cer'),('record_type','=',False)]}"/>
-                            	<field name="charge_id" attrs="{'invisible':['|',('type_of_revenue_collection','!=','deposit_cer'),('record_type','!=','manual')]}"/>
+                            	<field name="charge_id" attrs="{'invisible':['|',('type_of_revenue_collection','!=','deposit_cer'),('record_type','=',False)]}"/>
                             	<field name="base_salary" attrs="{'readonly': [('state', '!=', 'draft')],'invisible':['|',('type_of_revenue_collection','!=','deposit_cer'),('record_type','!=','manual')]}"/>
-                            	<field name="emitter" attrs="{'readonly': [('state', '!=', 'draft')],'invisible':['|',('type_of_revenue_collection','!=','deposit_cer'),('record_type','!=','manual')]}"/>
-                            	<field name="registry" attrs="{'readonly': [('state', '!=', 'draft')],'invisible':['|',('type_of_revenue_collection','!=','deposit_cer'),('record_type','!=','manual')]}"/>
+                            	<field name="emitter" attrs="{'readonly': [('state', '!=', 'draft')],'invisible':['|',('type_of_revenue_collection','!=','deposit_cer'),('record_type','=',False)]}"/>
+                            	<field name="registry" attrs="{'readonly': [('state', '!=', 'draft')],'invisible':['|',('type_of_revenue_collection','!=','deposit_cer'),('record_type','=',False)]}"/>
                             	<field name="issuer_dependency_id" attrs="{'readonly': [('state', '!=', 'draft')],'invisible':['|',('type_of_revenue_collection','!=','deposit_cer'),('record_type','!=','automatic')]}"/>
                             	<field name="cfdi_conacyt_enter" attrs="{'readonly': [('state', '!=', 'draft')],'invisible':['|',('type_of_revenue_collection','!=','deposit_cer'),('record_type','!=','automatic')]}"/>
                             	<field name="cfdi_conacyt_exercise" attrs="{'readonly': [('state', '!=', 'draft')],'invisible':['|',('type_of_revenue_collection','!=','deposit_cer'),('record_type','!=','automatic')]}"/>

@@ -604,7 +604,8 @@ class VerificationOfExpenseLine(models.Model):
             ('amount_me', 'Amount ME')
          ], string="Amount")
     tax_ids = fields.Many2many('account.tax', string="Taxes")
-
+    custom_stage_id = fields.Many2one('project.custom.stage', string='Stage')
+    
     @api.depends('price','tax_ids','amount_tax')
     def get_price_subtotal(self):
         for rec in self:

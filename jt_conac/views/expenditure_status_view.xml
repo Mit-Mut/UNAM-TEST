@@ -9,12 +9,12 @@
                     <sheet>
                         <group>
                             <field name="concept"/>
-                            <field name="approved_amt"/>
+                            <!-- <field name="approved_amt"/>
                             <field name="ext_and_red_amt"/>
                             <field name="modified_amt"/>
                             <field name="accrued_amt"/>
                             <field name="paid_out_amt"/>
-                            <field name="sub_exercise"/>
+                            <field name="sub_exercise"/> -->
                             <field name="parent_id"/>
                         </group>
                     </sheet>
@@ -28,12 +28,12 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="concept"/>
-                    <field name="approved_amt"/>
+                    <!-- <field name="approved_amt"/>
                     <field name="ext_and_red_amt"/>
                     <field name="modified_amt"/>
                     <field name="accrued_amt"/>
                     <field name="paid_out_amt"/>
-                    <field name="sub_exercise"/>
+                    <field name="sub_exercise"/> -->
                     <field name="parent_id"/>
                 </tree>
             </field>

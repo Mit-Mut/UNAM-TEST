@@ -97,6 +97,7 @@
          		  web_icon="jt_payroll_payment,static/description/finance.png"
                   sequence="5"/>
 
+<menuitem id="menu_financeboard_journal_1" name="Overview" action="account.open_account_journal_dashboard_kanban" parent="menu_payment_finance" sequence="-2" groups="account.group_account_user"/>
 
         <menuitem id="menu_finance_reports" name="Reports"
                   sequence="5" parent="menu_payment_finance"/>

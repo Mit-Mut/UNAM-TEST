@@ -74,8 +74,7 @@ class BasesCollabration(models.Model):
         'request.open.balance', 'bases_collaboration_id')
 
     employee_id = fields.Many2one('hr.employee', 'Holder of the unit')
-    job_id = fields.Many2one(
-        related="employee_id.job_id", string="Market Stall")
+    job_id = fields.Many2one('hr.job', string="Market Stall")
     phone = fields.Char(related="employee_id.work_phone",
                         string="Telephone of the unit holder")
     holder_email = fields.Char(
@@ -539,7 +538,8 @@ class BasesCollabration(models.Model):
                 'context': {'default_dependency_id': self.dependency_id and self.dependency_id.id or False,
                             'default_bases_collaboration_id': self.id,
                             'default_current_target': self.goals,
-                            'from_modification': True
+                            'from_modification': True,
+                            'show_agreement_name': True
                             }
             }
         else:

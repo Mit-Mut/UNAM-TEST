@@ -992,3 +992,260 @@ msgstr "pagos pendientes"
 #: model_terms:ir.ui.view,arch_db:jt_conac.view_conac_move_form
 msgid "to mark this invoice as paid."
 msgstr "para marcar esta factura como pagada."
+
+#. module: jt_conac
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_stment_of_finan_posi
+msgid ""
+"<span style=\"font-size:16px;\">${_(\"NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO\")}</span><br/>\n"
+"                    <span>STATEMENT OF FINANCIAL POSITION </span><br/>"
+msgstr ""
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span><br/>\n"
+"                    <span>Estado de Situación Financiera</span><br/>"
+
+#. module: jt_conac
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_analytical_income_statement
+msgid ""
+"<span style=\"font-size:16px;\">NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO</span><br/>\n"
+"                    <span>ANALYTICAL INCOME STATEMENT</span><br/>"
+msgstr ""
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span><br/>\n"
+"                    <span>Estado Analítico de Ingresos</span><br/>"
+
+#. module: jt_conac
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_analytical_statement_of_debt
+msgid ""
+"<span style=\"font-size:16px;\">NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO</span><br/>\n"
+"                    <span>ANALYTICAL STATEMENT OF DEBT AND OTHER LIABILITIES</span><br/>"
+msgstr ""
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span><br/>\n"
+"                    <span>Estado Analítico de la Deuda y Otros Pasivos</span><br/>"
+
+#. module: jt_conac
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_analytical_status_asset
+msgid ""
+"<span style=\"font-size:16px;\">NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO</span><br/>\n"
+"                    <span>ANALYTICAL STATUS OF ASSETS </span><br/>"
+msgstr ""
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span><br/>\n"
+"                    <span>Estado Analítico del Activo</span><br/>"
+
+#. module: jt_conac
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_analytical_status_expenditure_budget_ex
+msgid ""
+"<span style=\"font-size:16px;\">NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO</span><br/>\n"
+"                    <span>ANALYTICAL STATUS OF THE EXPENDITURE BUDGET EXERCISE</span><br/>"
+msgstr ""
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span><br/>\n"
+"                    <span>Estado Analítico del Ejercicio del Presupuesto de Egresos</span><br/>"
+
+#. module: jt_conac
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_state_variation
+msgid ""
+"<span style=\"font-size:16px;\">NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO</span><br/>\n"
+"                    <span>STATE OF VARIATION IN PUBLIC TREASURY </span><br/>"
+msgstr ""
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span><br/>\n"
+"                    <span>Estado de Variación en la Hacienda Pública</span><br/>"
+
+#. module: jt_conac
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_statement_cash_flow
+msgid ""
+"<span style=\"font-size:16px;\">NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO</span><br/>\n"
+"                    <span>STATEMENT OF CASH FLOWS</span><br/>"
+msgstr ""
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span><br/>\n"
+"                    <span>Estado de Flujos de Efectivo</span><br/>"
+
+#. module: jt_conac
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_statement_change
+msgid ""
+"<span style=\"font-size:16px;\">NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO</span><br/>\n"
+"                    <span>STATEMENT OF CHANGES IN THE FINANCIAL POSITION</span><br/>"
+msgstr ""
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span><br/>\n"
+"                    <span>Estado de Cambios en la Situación Financiera</span><br/>"
+
+#. module: jt_conac
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_analytical_states_and_program_reports
+msgid ""
+"<span style=\"font-size:16px;\">NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO</span><br/>\n"
+"                    <span>STATES AND PROGRAM REPORTS</span><br/>"
+msgstr ""
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span><br/>\n"
+"                    <span>Estados e Informes Programáticos</span><br/>"
+
+#. module: jt_conac
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_status_activities
+msgid ""
+"<span style=\"font-size:16px;\">NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO</span><br/>\n"
+"                    <span>STATUS OF ACTIVITIES </span><br/>"
+msgstr ""
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span><br/>\n"
+"                    <span>Estado de Actividades</span><br/>"
+
+#. module: jt_conac
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_analytical_income_statement
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_analytical_statement_of_debt
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_analytical_states_and_program_reports
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_analytical_status_asset
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_analytical_status_expenditure_budget_ex
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_state_variation
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_statement_cash_flow
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_statement_change
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_status_activities
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_stment_of_finan_posi
+msgid "AND"
+msgstr "AL"
+
+#. module: jt_conac
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_analytical_income_statement
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_analytical_statement_of_debt
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_analytical_states_and_program_reports
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_analytical_status_asset
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_analytical_status_expenditure_budget_ex
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_state_variation
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_statement_cash_flow
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_statement_change
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_status_activities
+#: model_terms:ir.ui.view,arch_db:jt_conac.external_layout_of_stment_of_finan_posi
+msgid "OF"
+msgstr "DE"
+
+#. module: jt_conac
+#: code:addons/jt_conac/models/financial_report_4_0.py:0
+#: code:addons/jt_conac/models/financial_report_4_2.py:0
+#: code:addons/jt_conac/models/financial_report_4_3.py:0
+#: code:addons/jt_conac/models/financial_report_4_4.py:0
+#: code:addons/jt_conac/models/financial_report_4_5.py:0
+#: code:addons/jt_conac/models/financial_report_4_6.py:0
+#: code:addons/jt_conac/models/financial_report_4_7.py:0
+#: code:addons/jt_conac/models/financial_report_4_8.py:0
+#: code:addons/jt_conac/models/financial_report_4_9.py:0
+#, python-format
+msgid " AND "
+msgstr " AL "
+
+#. module: jt_conac
+#: code:addons/jt_conac/models/financial_report_4_0.py:0
+#: code:addons/jt_conac/models/financial_report_4_0.py:0
+#: code:addons/jt_conac/models/financial_report_4_10.py:0
+#: code:addons/jt_conac/models/financial_report_4_10.py:0
+#: code:addons/jt_conac/models/financial_report_4_2.py:0
+#: code:addons/jt_conac/models/financial_report_4_2.py:0
+#: code:addons/jt_conac/models/financial_report_4_3.py:0
+#: code:addons/jt_conac/models/financial_report_4_3.py:0
+#: code:addons/jt_conac/models/financial_report_4_4.py:0
+#: code:addons/jt_conac/models/financial_report_4_4.py:0
+#: code:addons/jt_conac/models/financial_report_4_5.py:0
+#: code:addons/jt_conac/models/financial_report_4_5.py:0
+#: code:addons/jt_conac/models/financial_report_4_6.py:0
+#: code:addons/jt_conac/models/financial_report_4_6.py:0
+#: code:addons/jt_conac/models/financial_report_4_7.py:0
+#: code:addons/jt_conac/models/financial_report_4_7.py:0
+#: code:addons/jt_conac/models/financial_report_4_8.py:0
+#: code:addons/jt_conac/models/financial_report_4_8.py:0
+#: code:addons/jt_conac/models/financial_report_4_9.py:0
+#: code:addons/jt_conac/models/financial_report_4_9.py:0
+#, python-format
+msgid " OF "
+msgstr " DE "
+
+#. module: jt_conac
+#: code:addons/jt_conac/models/financial_report_4_0.py:0
+#, python-format
+msgid ""
+"NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO\n"
+"STATEMENT OF FINANCIAL POSITION"
+msgstr ""
+"UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\n"
+"Estado de Situación Financiera"
+
+#. module: jt_conac
+#: code:addons/jt_conac/models/financial_report_4_8.py:0
+#, python-format
+msgid ""
+"NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO\n"
+"ANALYTICAL INCOME STATEMENT"
+msgstr ""
+"UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\n"
+"Estado Analítico de Ingresos"
+
+#. module: jt_conac
+#: code:addons/jt_conac/models/financial_report_4_5.py:0
+#, python-format
+msgid ""
+"NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO\n"
+"ANALYTICAL STATEMENT OF DEBT AND OTHER LIABILITIES"
+msgstr ""
+"UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\n"
+"Estado Analítico de la Deuda y Otros Pasivos"
+
+#. module: jt_conac
+#: code:addons/jt_conac/models/financial_report_4_4.py:0
+#, python-format
+msgid ""
+"NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO\n"
+"ANALYTICAL STATUS OF ASSETS"
+msgstr ""
+"UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\n"
+"Estado Analítico del Activo"
+
+#. module: jt_conac
+#: code:addons/jt_conac/models/financial_report_4_9.py:0
+#, python-format
+msgid ""
+"NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO\n"
+"ANALYTICAL STATUS OF THE EXPENDITURE BUDGET EXERCISE"
+msgstr ""
+"UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\n"
+"Estado Analítico del Ejercicio del Presupuesto de Egresos"
+
+#. module: jt_conac
+#: code:addons/jt_conac/models/financial_report_4_3.py:0
+#, python-format
+msgid ""
+"NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO\n"
+"STATE OF VARIATION IN THE PUBLIC TREASURY"
+msgstr ""
+"UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\n"
+"Estado de Variación en la Hacienda Pública"
+
+#. module: jt_conac
+#: code:addons/jt_conac/models/financial_report_4_7.py:0
+#, python-format
+msgid ""
+"NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO\n"
+"STATEMENT OF CASH FLOWS"
+msgstr ""
+"UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\n"
+"Estado de Flujos de Efectivo"
+
+#. module: jt_conac
+#: code:addons/jt_conac/models/financial_report_4_6.py:0
+#, python-format
+msgid ""
+"NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO\n"
+"STATEMENT OF CHANGES IN THE FINANCIAL POSITION"
+msgstr ""
+"UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\n"
+"Estado de Cambios en la Situación Financiera"
+
+#. module: jt_conac
+#: code:addons/jt_conac/models/financial_report_4_10.py:0
+#, python-format
+msgid ""
+"NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO\n"
+"STATES AND PROGRAM REPORTS"
+msgstr ""
+"UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\n"
+"Estados e Informes Programáticos"
+
+#. module: jt_conac
+#: code:addons/jt_conac/models/financial_report_4_2.py:0
+#, python-format
+msgid ""
+"NATIONAL AUTONOMOUS UNIVERSITY OF MEXICO\n"
+"STATUS OF ACTIVITIES"
+msgstr ""
+"UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\n"
+"Estado de Actividades"

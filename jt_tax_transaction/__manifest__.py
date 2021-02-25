@@ -36,6 +36,7 @@
         'views/monthly_declaration_view.xml',
         'views/diot_view.xml',
         'reports/report_menu.xml',
+        'reports/header.xml',
         'security/ir.model.access.csv',
     ],
     'application': False,

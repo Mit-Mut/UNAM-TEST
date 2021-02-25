@@ -554,6 +554,28 @@ class GenerateBankLayout(models.TransientModel):
             #====== Date of last document event=======#
             file_data += '0001-01-01'
             file_data +="\r\n"
+        
+        #============== Trailer or Summary =============#
+        file_data += "T"
+        
+        total_rec = len(self.payment_ids)
+        #==== Number of records high======#
+        file_data += str(total_rec).zfill(10)
+        #==== Number of records unsubscribed======#
+        file_data += str(total_rec).zfill(10)
+        #==== Number of records change======#
+        file_data += str(total_rec).zfill(10)
+        #==== Number of records rejected high======#
+        file_data += ''.zfill(10)
+        #==== Number of records rejected low======#
+        file_data += ''.zfill(10)
+        #==== Number of records rejected changes======#
+        file_data += ''.zfill(10)
+        
+        #===== Filler ===#
+        file_data += ''.ljust(575)
+        
+        file_data +="\r\n"
         gentextfile = base64.b64encode(bytes(file_data,'utf-8'))
         self.file_data = gentextfile
         self.file_name = file_name
@@ -598,7 +620,7 @@ class GenerateBankLayout(models.TransientModel):
             if payment.payment_date:
                 file_data +=str(payment.payment_date.day).zfill(2)
                 file_data +=str(payment.payment_date.month).zfill(2)
-                file_data +=str(payment.payment_date.year)[:2]
+                file_data +=str(payment.payment_date.year)
                 file_data += '     '
             else:
                 file_data += '           '

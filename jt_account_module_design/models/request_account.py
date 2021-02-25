@@ -71,3 +71,38 @@ class AccountMoveLine(models.Model):
     is_programatic_code = fields.Boolean(related="move_id.programatic_code",store=True)
     is_ie_account = fields.Boolean(related="move_id.ie_account",store=True)
 
+
+class Dependency(models.Model):
+
+    _inherit = 'dependency' 
+    
+    def name_get(self):
+        result = []
+        if self.env.context and self.env.context.get('model','') and self.env.context.get('model','')=='account.general.ledger':
+            for rec in self:
+                name = rec.dependency or ''
+                if rec.description:
+                    name += ' ' + rec.description
+                result.append((rec.id, name))
+        else:
+            result = super(Dependency,self).name_get()
+            
+        return result
+
+class SubDependency(models.Model):
+
+    _inherit = 'sub.dependency'
+
+    def name_get(self):
+        result = []
+        if self.env.context and self.env.context.get('model','') and self.env.context.get('model','')=='account.general.ledger':
+            for rec in self:
+                name = rec.sub_dependency or ''
+                if rec.description: 
+                    name += ' ' + rec.description
+                result.append((rec.id, name))
+        else:
+            result = super(SubDependency,self).name_get()
+        return result
+   
+        

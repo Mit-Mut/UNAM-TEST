@@ -92,6 +92,8 @@ class PatrimonialResources(models.Model):
     beneficiary_ids = fields.One2many(
         'collaboration.beneficiary', 'patrimonial_id')
 
+    provider_ids = fields.One2many('collaboration.providers', 'patrimonial_id')
+    
     fund_registration_file = fields.Binary("Fund registration format")
     fund_registration_file_name = fields.Char(
         "Fund registration format File Name")
@@ -373,6 +375,11 @@ class Beneficiary(models.Model):
     patrimonial_id = fields.Many2one(
         'patrimonial.resources', 'Patrimonial Resources')
 
+class Providers(models.Model):
+    _inherit = 'collaboration.providers'
+
+    patrimonial_id = fields.Many2one('patrimonial.resources','Patrimonial Resources')
+
 
 class OpenBalance(models.Model):
     _inherit = 'request.open.balance'
@@ -381,6 +388,9 @@ class OpenBalance(models.Model):
         'res.partner', 'rel_req_bal_patrimonial_beneficiary', 'partner_id', 'req_id', compute="get_patrimonial_beneficiary_ids")
     # patrimonial_resources_id = fields.Many2one(
     #     'patrimonial.resources', 'Patrimonial Resources')
+
+    patrimonial_provider_ids = fields.Many2many(
+        'res.partner', 'rel_req_bal_patrimonial_partner', 'partner_id', 'req_id', compute="get_patrimonial_provider_ids")
 
     @api.depends('patrimonial_resources_id', 'patrimonial_resources_id.beneficiary_ids', 'patrimonial_resources_id.beneficiary_ids.employee_id')
     def get_patrimonial_beneficiary_ids(self):
@@ -392,3 +402,12 @@ class OpenBalance(models.Model):
                     if emp.user_id and emp.user_id.partner_id:
                         partner_ids.append(emp.user_id.partner_id.id)
             rec.patrimonial_beneficiary_ids = [(6, 0, partner_ids)]
+
+    @api.depends('patrimonial_resources_id', 'patrimonial_resources_id.provider_ids', 'patrimonial_resources_id.provider_ids.partner_id')
+    def get_patrimonial_provider_ids(self):
+        for rec in self:
+            if rec.patrimonial_resources_id and rec.patrimonial_resources_id.provider_ids:
+                rec.patrimonial_provider_ids = [
+                    (6, 0, rec.patrimonial_resources_id.provider_ids.mapped('partner_id').ids)]
+            else:
+                rec.patrimonial_provider_ids = [(6, 0, [])]

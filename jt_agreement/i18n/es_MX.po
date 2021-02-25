@@ -853,6 +853,10 @@ msgstr "Colaboración"
 
 #. module: jt_agreement
 #: model_terms:ir.ui.view,arch_db:jt_agreement.patrimonial_resources_form_view
+msgid "Contacts"
+msgstr "Contactos"
+
+#. module: jt_agreement
 #: model_terms:ir.ui.view,arch_db:jt_agreement.view_bases_collabration_form
 msgid "Collaboration Base Contacts"
 msgstr "Contactos de bases de colaboración"

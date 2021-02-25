@@ -22,7 +22,7 @@
                             DIRECTORATE OF REVENUE AND FINANCIAL OPERATIONS
                         </p>
                         <p style="margin-top:0;margin-bottom:0;font-size:15px;padding-left:5px;">
-                            <strong>Oficio No:</strong><span t-field="o.account_modification_id.no_trade"/><br/>
+                            <strong>Oficio No:</strong><span t-field="o.account_modification_id.legal_number"/><br/>
                             <strong>No. Solicitude:</strong><span t-field="o.account_modification_id.invoice"/><br/>
                             <strong>Asunsto:</strong>signature update<br/> 
                         </p>

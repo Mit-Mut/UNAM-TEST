@@ -137,4 +137,18 @@ class PensionPaymentLine(models.Model):
 #                 else:
 #                     res.check_final_folio_id = False     
         return result
-            
+
+class CustomPayrollProcessing(models.Model):
+
+    _inherit = 'custom.payroll.processing'
+
+    def get_perception_check_log(self,rec_check_number,rec_bank_key):
+        
+        log = self.env['check.log'].search([('folio', '=', rec_check_number),
+                ('status', 'in', ('Checkbook registration', 'Assigned for shipping',
+                'Available for printing')), ('general_status', '=', 'available'),
+                            ('bank_id.bank_id.l10n_mx_edi_code', '=', rec_bank_key)], limit=1)            
+        from_check = True
+        
+        return log,from_check
+    

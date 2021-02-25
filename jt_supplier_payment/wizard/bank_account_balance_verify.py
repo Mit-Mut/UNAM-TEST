@@ -51,7 +51,7 @@ class BankBalanceCheck(models.TransientModel):
                 'domain': [],
                 'type': 'ir.actions.act_window',
                 'target': 'new',
-                'context':{'default_account_balance':account_balance,'default_is_balance':True,'default_wizard_id':self.id},
+                'context':{'default_different_balance':self.different_balance,'default_required_balance':self.required_balance,'default_minimum_balance':self.minimum_balance,'default_account_balance':account_balance,'default_is_balance':True,'default_wizard_id':self.id},
             } 
             else:
                 self.is_balance = False

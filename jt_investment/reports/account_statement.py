@@ -99,7 +99,7 @@ class InvestmentAccountStatement(models.AbstractModel):
 
     @api.model
     def _get_filter_journals(self):
-        return self.env['account.journal'].search([('type','=','bank'),
+        return self.env['account.journal'].search([('bank_account_id.for_investments','=',True),('type','=','bank'),
             ('company_id', 'in', self.env.user.company_ids.ids or [self.env.company.id])
         ], order="company_id, name")
 

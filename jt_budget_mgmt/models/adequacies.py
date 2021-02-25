@@ -451,7 +451,6 @@ class Adequacies(models.Model):
                             ('agreement_type_id', '=', agreement_type.id),
                             ('state', '=', 'validated'),
                         ], limit=1)
-                        print ("===",program_code)
                         if program_code:
                             budget_line = self.env['expenditure.budget.line'].sudo().search(
                                 [('program_code_id', '=', program_code.id),

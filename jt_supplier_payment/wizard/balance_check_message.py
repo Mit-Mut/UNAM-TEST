@@ -16,6 +16,10 @@ class BalanceCheckWizard(models.TransientModel):
     excel_file = fields.Binary('Report')
     file_name = fields.Char('File', size=64)
     account_balance = fields.Float('Account Balance')
+    minimum_balance = fields.Float("Minimum Balance")
+    required_balance = fields.Float("Account balance required")
+    different_balance = fields.Float("Difference Between current and required balance")
+    
     def accept(self):
         return {
             'name': _('Schedule Payment'),

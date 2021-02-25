@@ -7,6 +7,9 @@
             <field name="model">account.cancellation</field>
             <field name="arch" type="xml">
                 <tree>
+
+                    <field name="name" readonly="1"/>
+                    <field name="account_cancellation_id" />
                     <field name="dependancy_id"/>
                     <field name="bank_id"/>
                     <field name="bank_account_id" context="{'from_account_design':True}"/>
@@ -23,7 +26,7 @@
                     <group>
                         <group>
                         <field name="name" readonly="1"/>
-                        <field name="account_cancellation_id" invisible="1"/>
+                        <field name="account_cancellation_id" />
                         <field name="dependancy_id"/>
                         <field name="bank_id"/>
                      </group>

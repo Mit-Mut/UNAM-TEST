@@ -32,6 +32,7 @@
                         				<field name="recipient_professional_title" invisible="1"/>
                                         <!-- Reciept-->
                                         <field name="bank_account_id"/>
+                                        <field name="account_bank_id"/>
                                         <field name="executive_id" context="{'show_recipet':True}"/>
                                         <field name="position_id" context="{'show_recipet':True}"/>
                         			</group>

@@ -75,8 +75,16 @@ class InvestmentCommittee(models.AbstractModel):
             })
 
     @api.model
+    def _get_filter_journals(self):
+        return self.env['account.journal'].search([
+            ('bank_account_id.for_investments','=',True),('company_id', 'in', self.env.user.company_ids.ids or [self.env.company.id])
+        ], order="company_id, name")
+        
+    @api.model
     def _get_filter_bank(self):
-        return self.env['res.bank'].search([])
+        bank_acc_ids = self.env['res.partner.bank'].search([('for_investments','=',True)])
+        return bank_acc_ids.mapped('bank_id')
+        
 
     @api.model
     def _init_filter_bank(self, options, previous_options=None):

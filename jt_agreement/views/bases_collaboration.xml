@@ -224,7 +224,7 @@
                                 </group>
                             </page>
  -->                            
- 							<page string="Contacts" name="collaboration_base_contacts">
+ 							<page string="Collaboration Base Contacts" name="collaboration_base_contacts">
                                 <group>
                                     <group string="Owner of Dependency">
                                         <field name="employee_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>

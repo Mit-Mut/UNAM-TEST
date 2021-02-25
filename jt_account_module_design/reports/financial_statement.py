@@ -135,7 +135,6 @@ class ReportAccountFinancialReport(models.Model):
 
     def _get_lines(self, options, line_id=None):
         lines = []
-
         domain = []
         dep_domain = []
         is_add_fiter = False
@@ -218,6 +217,9 @@ class ReportAccountFinancialReport(models.Model):
                         if data.get('no_format_name',0):
                             balance_pesos = data.get('no_format_name',0)/1000 
                             new_col.append(self._format({'name': balance_pesos},figure_type='float'))
+                        elif data.get('name',0) and isinstance(data.get('name',0), float):
+                            balance_pesos = data.get('name',0)/1000 
+                            new_col.append(self._format({'name': balance_pesos},figure_type='float'))                            
                         else:
                             new_col.append(data)
                     
@@ -231,11 +233,15 @@ class ReportAccountFinancialReport(models.Model):
                     right_lines = []
                     
                 for l in right_lines:
+                    
                     new_col = []
                     for data in l.get('columns'):
                         if data.get('no_format_name',0):
                             balance_pesos = data.get('no_format_name',0)/1000 
                             new_col.append(self._format({'name': balance_pesos},figure_type='float'))
+                        elif data.get('name',0) and isinstance(data.get('name',0), float):
+                            balance_pesos = data.get('name',0)/1000 
+                            new_col.append(self._format({'name': balance_pesos},figure_type='float'))                            
                         else:
                             new_col.append(data)
                     
@@ -257,6 +263,9 @@ class ReportAccountFinancialReport(models.Model):
                         if data.get('no_format_name',0):
                             balance_pesos = data.get('no_format_name',0)/1000 
                             new_col.append(self._format({'name': balance_pesos},figure_type='float'))
+                        elif data.get('name',0) and isinstance(data.get('name',0), float):
+                            balance_pesos = data.get('name',0)/1000 
+                            new_col.append(self._format({'name': balance_pesos},figure_type='float'))
                         else:
                             new_col.append(data)
                             
@@ -270,11 +279,13 @@ class ReportAccountFinancialReport(models.Model):
                     right_lines = []
                     
                 for l in right_lines:
-
                     new_col = []
                     for data in l.get('columns'):
                         if data.get('no_format_name',0):
                             balance_pesos = data.get('no_format_name',0)/1000 
+                            new_col.append(self._format({'name': balance_pesos},figure_type='float'))
+                        elif data.get('name',0) and isinstance(data.get('name',0), float):
+                            balance_pesos = data.get('name',0)/1000 
                             new_col.append(self._format({'name': balance_pesos},figure_type='float'))
                         else:
                             new_col.append(data)
@@ -367,7 +378,7 @@ class ReportAccountFinancialReport(models.Model):
                 end_month_name = self.get_month_name(end.month)
 
             header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
-            header_date += " Y "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
+            header_date += " AL "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
             
             rcontext.update({
                     'css': '',
@@ -476,7 +487,7 @@ class ReportAccountFinancialReport(models.Model):
             end_month_name = self.get_month_name(end.month)
 
         header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
-        header_date += " Y "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
+        header_date += " AL "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
         
         sheet.merge_range(y_offset, col, 6, col, '', super_col_style)
         if self.env.user and self.env.user.company_id and self.env.user.company_id.header_logo:
@@ -487,7 +498,7 @@ class ReportAccountFinancialReport(models.Model):
                                'image_data': image_data, 'x_offset': 8, 'y_offset': 3, 'x_scale': 0.6, 'y_scale': 0.6})
         col += 1
         header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nDIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL
-ESTADO DE LA SITUACIÓN FINANCIERA EN EL %s''' % (header_date)
+ESTADO DE SITUACIÓN FINANCIERA DEL %s''' % (header_date)
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)
         y_offset += 6
@@ -574,6 +585,7 @@ ESTADO DE LA SITUACIÓN FINANCIERA EN EL %s''' % (header_date)
         y_offset = right_offset 
         ctx.update({'side_lines':'right'})
         lines = self.with_context(ctx)._get_lines(options)
+        print (lines)
         if options.get('hierarchy'):
             lines = self._create_hierarchy(lines, options)
         if options.get('selected_column'):

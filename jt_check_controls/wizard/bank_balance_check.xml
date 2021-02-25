@@ -14,5 +14,20 @@
                 </field>
             </field>
         </record>
+
+        <record id="view_view_balance_check_wizard_inherit" model="ir.ui.view">
+            <field name="name">check.control.bank.balance.check.wizard</field>
+            <field name="model">balance.check.wizard</field>
+            <field name="inherit_id" ref="jt_supplier_payment.view_balance_check_wizard"/>
+            <field name="arch" type="xml">
+                <field name="minimum_balance" position="after">
+                    <field name="check_balance_in_transit"
+                           attrs="{'invisible':[('is_balance','=',False)]}" readonly="1"/>
+                    <field name="balance_available"
+                           attrs="{'invisible':[('is_balance','=',False)]}" readonly="1"/>
+                </field>
+            </field>
+        </record>
+        
     </data>
 </odoo>

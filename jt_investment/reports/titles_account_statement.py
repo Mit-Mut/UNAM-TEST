@@ -47,6 +47,7 @@ class TitlesAccountStatement(models.AbstractModel):
     filter_unposted_in_period = None
     MAX_LINES = None
 
+
     def _get_reports_buttons(self):
         return [
             {'name': _('Print Preview'), 'sequence': 1,
@@ -96,6 +97,12 @@ class TitlesAccountStatement(models.AbstractModel):
         value['name'] = round(value['name'], 1)
         return value
 
+    @api.model
+    def _get_filter_journals(self):
+        return self.env['account.journal'].search([('bank_account_id.for_investments','=',True),('type','=','bank'),
+            ('company_id', 'in', self.env.user.company_ids.ids or [self.env.company.id])
+        ], order="company_id, name")
+        
     def _get_lines(self, options, line_id=None):
         lines = []
 

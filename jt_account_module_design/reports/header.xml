@@ -29,7 +29,7 @@
                             <span style="font-size:14px;"><b>UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</b></span>
                             <span> DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL</span>
                         <br/>
-                        <span style="font-size:14px;">ESTADO DE INGRESOS, GASTOS E INVERSIONES COMPARATIVAS DE
+                        <span style="font-size:14px;">ESTADO DE INGRESOS, GASTOS E INVERSIONES COMPARATIVOS DEL
                             <t t-esc="header_date"/> </span>                    
                     </div>
                 </div>
@@ -70,7 +70,7 @@
                         
                         <br/>
 
-                        <span style="font-size:14px;">INTEGRACIÓN DE ALGUNAS PARTIDAS DEL ESTADO DE SITUACIÓN PATRIMONIAL AL 
+                        <span style="font-size:14px;">INTEGRACIÓN DE ALGUNOS RUBROS DEL ESTADO DE SITUACIÓN PATRIMONIAL DEL 
                             <t t-esc="header_date"/> </span>
                     </div>
                 </div>
@@ -112,7 +112,7 @@
                             <span style="font-size:14px;">DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL
                             </span>
                         <br/>
-                        <span style="font-size:14px;">BALANZA DE COMPROBACIÓN EN EL
+                        <span style="font-size:14px;">BALANZA DE COMPROBACIÓN DEL
                             <t t-esc="header_date"/> </span>
                     </div>
                 </div>
@@ -156,7 +156,7 @@
                             </span>
                         <br/>
                         
-                        <span>ESTADO DE LOS INGRESOS, GASTOS E INVERSIONES DETALLADOS DE <t t-esc="header_date"/> </span>
+                        <span>ESTADO DE INGRESOS, GASTOS E INVERSIONES DETALLADOS DEL <t t-esc="header_date"/> </span>
 
                     </div>
                 </div>
@@ -198,7 +198,7 @@
                             <span style="font-size:14px;">DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL</span>
                         <br/>
                         
-                        <span>ESTADO DE LOS INGRESOS, GASTOS E INVERSIONES DETALLADOS DE <t t-esc="header_date"/> </span>
+                        <span>ESTADO DE INGRESOS, GASTOS E INVERSIONES RESUMEN DEL <t t-esc="header_date"/> </span>
 
                     </div>
                 </div>
@@ -283,7 +283,7 @@
                             <span style="font-size:14px;">DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL</span>
                         <br/>
                         
-                        <span>CONTABILIDAD GENERAL EN EL <t t-esc="header_date"/> </span>
+                        <span>CONTABILIDAD GENERAL DEL <t t-esc="header_date"/> </span>
 
                     </div>
                 </div>
@@ -325,7 +325,7 @@
                             <span style="font-size:14px;">DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL</span>
                         <br/>
                         
-                        <span>ESTADO DE LA SITUACIÓN FINANCIERA AL <t t-esc="header_date"/> </span>
+                        <span>ESTADO DE SITUACIÓN FINANCIERA DEL <t t-esc="header_date"/> </span>
 
                     </div>
                 </div>

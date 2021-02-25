@@ -620,7 +620,7 @@ class GenerateBankLayout(models.TransientModel):
             if payment.payment_date:
                 file_data +=str(payment.payment_date.day).zfill(2)
                 file_data +=str(payment.payment_date.month).zfill(2)
-                file_data +=str(payment.payment_date.year)[:2]
+                file_data +=str(payment.payment_date.year)
                 file_data += '     '
             else:
                 file_data += '           '

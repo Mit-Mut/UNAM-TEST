@@ -38,7 +38,7 @@ class BankBalanceCheck(models.TransientModel):
                     'domain': [],
                     'type': 'ir.actions.act_window',
                     'target': 'new',
-                    'context': {'default_account_balance': account_balance, 'default_is_balance': True,
+                    'context': {'default_balance_available':self.balance_available,'default_check_balance_in_transit':self.check_balance_in_transit,'default_different_balance':self.different_balance,'default_required_balance':self.required_balance,'default_minimum_balance':self.minimum_balance,'default_account_balance': account_balance, 'default_is_balance': True,
                                 'default_wizard_id': self.id},
                 }
             else:
@@ -55,3 +55,12 @@ class BankBalanceCheck(models.TransientModel):
                     'context': {'default_account_balance': account_balance, 'default_is_balance': False,
                                 'default_wizard_id': self.id},
                 }
+                
+
+class BalanceCheckWizard(models.TransientModel):
+    
+    _inherit = 'balance.check.wizard'
+    
+    check_balance_in_transit = fields.Float("Check balance in transit")
+    balance_available = fields.Float("Balance Available")
+                    

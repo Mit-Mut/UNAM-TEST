@@ -262,7 +262,7 @@ class StatePartimonialSituation(models.AbstractModel):
             end_month_name = self.get_month_name(end.month)
 
         header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
-        header_date += " Y "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
+        header_date += " AL "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
         
 
         sheet.merge_range(y_offset, col, 6, col, '', super_col_style)
@@ -273,7 +273,7 @@ class StatePartimonialSituation(models.AbstractModel):
             sheet.insert_image(0, 0, filename, {
                                'image_data': image_data, 'x_offset': 8, 'y_offset': 3, 'x_scale': 0.6, 'y_scale': 0.6})
         col += 1
-        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO  \nDIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL \nINTEGRACIÓN DE ALGUNAS PARTIDAS DEL ESTADO DE SITUACIÓN PATRIMONIAL EN EL %s''' % (header_date)
+        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO  \nDIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL \nINTEGRACIÓN DE ALGUNOS RUBROS DEL ESTADO DE SITUACIÓN PATRIMONIAL DEL %s''' % (header_date)
 
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)
@@ -401,7 +401,7 @@ class StatePartimonialSituation(models.AbstractModel):
                 end_month_name = self.get_month_name(end.month)
 
             header_date = str(start.day).zfill(2) + " " + start_month_name+" DE "+str(start.year)
-            header_date += " Y "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
+            header_date += " AL "+str(end.day).zfill(2) + " " + end_month_name +" DE "+str(end.year)
             
 
             rcontext.update({

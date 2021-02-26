@@ -230,6 +230,9 @@ class CETES(models.Model):
             }
         }
 
+    def action_draft(self):
+        self.state = 'draft'
+        
     def action_reset_to_draft(self):
         self.state = 'draft'
         for rec in self.request_finance_ids:

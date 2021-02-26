@@ -632,15 +632,17 @@ class GeneratePayrollWizard(models.TransientModel):
                         result_dict = {}
 
             if failed_row != "":
-                content = ""
-                if self.payroll_process_id.failed_row_file:
-                    file_data = base64.b64decode(self.payroll_process_id.failed_row_file)
-                    content += io.StringIO(file_data.decode("utf-8")).read()
-                # if cron:
-                #     content = ''
-                content += "\n"
-                content += "...................Failed Rows " + \
-                           str(datetime.today()) + "...............\n"
-                content += str(failed_row)
-                failed_data = base64.b64encode(content.encode('utf-8'))
-                self.payroll_process_id.failed_row_file = failed_data
+                self.payroll_process_id.update_failed_file(failed_row,self.type_of_movement,'completed',self.env.user,self.filename)
+                
+#                 content = ""
+#                 if self.payroll_process_id.failed_row_file:
+#                     file_data = base64.b64decode(self.payroll_process_id.failed_row_file)
+#                     content += io.StringIO(file_data.decode("utf-8")).read()
+#                 # if cron:
+#                 #     content = ''
+#                 content += "\n"
+#                 content += "...................Failed Rows " + \
+#                            str(datetime.today()) + "...............\n"
+#                 content += str(failed_row)
+#                 failed_data = base64.b64encode(content.encode('utf-8'))
+#                 self.payroll_process_id.failed_row_file = failed_data

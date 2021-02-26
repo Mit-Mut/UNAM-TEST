@@ -130,10 +130,23 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
             type_concept_ids = concept_ids.filtered(lambda x:x.inc_exp_type == type)
             major_ids = type_concept_ids.mapped('major_id')
             if type_concept_ids:
+                name = ''
+                if self.env.lang == 'es_MX' and type == 'income':
+                    str1 = 'Ingression'
+                    name = str1.upper()
+                if self.env.lang == 'es_MX' and type == 'expenses':
+                    str2 = 'GASTOS'
+                    name = str2.upper()
+                if self.env.lang == 'es_MX' and type == 'investments':
+                    str3 = 'INVERSIONES'
+                    name = str3.upper()
+                if self.env.lang == 'es_MX' and type == 'other expenses':
+                    str4 = 'OTROS GASTOS'
+                    name = str4.upper()
 
                 lines.append({
                     'id': type,
-                    'name': str(type).upper(),
+                    'name': name,
                     'columns': [
                                 {'name': ''},
                                 {'name': ''},
@@ -195,14 +208,24 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
 #                         assign = assign/1000
 #                         total_assign += assign
                         assign = 0
+                        authorized = 0
                         if con.item_ids:
-                            program_code_ids = self.env['program.code'].search([('item_id','in',con.item_ids.ids)])
-                            if program_code_ids:
-                                self.env.cr.execute("select coalesce(SUM(CASE WHEN al.line_type = %s THEN al.amount ELSE -al.amount END),0) from adequacies_lines al,adequacies a where a.state=%s and al.program in %s and a.id=al.adequacies_id", ('increase','accepted',tuple(program_code_ids.ids)))
-                                my_datas = self.env.cr.fetchone()
-                                if my_datas:
-                                    assign = my_datas[0]
-                                    assign = assign/1000
+                            acc_item_ids = con.item_ids.filtered(lambda x:x.unam_account_id.id==acc.id)
+                            if acc_item_ids:
+                                program_code_ids = self.env['program.code'].search([('item_id','in',acc_item_ids.ids)])
+                                if program_code_ids:
+                                    self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NULL and start_date >= %s and end_date <= %s", (tuple(program_code_ids.ids),start,end))
+                                    my_datas = self.env.cr.fetchone()
+                                    if my_datas:
+                                        authorized = my_datas[0]
+                                        authorized = authorized/1000
+                                    
+                                    self.env.cr.execute("select coalesce(SUM(CASE WHEN al.line_type = %s THEN al.amount ELSE -al.amount END),0) from adequacies_lines al,adequacies a where a.state=%s and al.program in %s and a.id=al.adequacies_id", ('increase','accepted',tuple(program_code_ids.ids)))
+                                    my_datas = self.env.cr.fetchone()
+                                    if my_datas:
+                                        assign = my_datas[0]
+                                        assign = assign/1000
+                        assign += authorized
                         total_assign += assign
                         
                         #values= self.env['account.move.line'].search(domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', acc.ids)])
@@ -280,7 +303,7 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
             if type=="expenses":
                 lines.append({
                     'id': 'REMNANT',
-                    'name': 'REMAINING BEFORE INVESTMENTS',
+                    'name': _('REMAINING BEFORE INVESTMENTS'),
                     'columns': [
                                 self._format({'name': remant_assign},figure_type='float'),
                                 self._format({'name': remant_exercised},figure_type='float'),
@@ -296,7 +319,7 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
 
         lines.append({
             'id': 'Total EXPENSES',
-            'name': 'TOTAL EXPENSES, INVESTMENTS AND OTHER EXPENSES',
+            'name': _('TOTAL EXPENSES, INVESTMENTS AND OTHER EXPENSES'),
             'columns': [
                         self._format({'name': expenses_assign},figure_type='float'),
                         self._format({'name': expenses_exercised},figure_type='float'),
@@ -312,7 +335,7 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
 
         lines.append({
             'id': 'Total Year',
-            'name': 'REMAINING OF THE YEAR',
+            'name': _('REMAINING OF THE YEAR'),
             'columns': [
                         self._format({'name': year_assign},figure_type='float'),
                         self._format({'name': year_exercised},figure_type='float'),
@@ -533,6 +556,8 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
         header_title += "\n"
         header_title += "ESTADO DE INGRESOS, GASTOS E INVERSIONES RESUMEN DEL "
         header_title += str(header_date)
+        header_title += "\n"
+        header_title += "Cifras en Miles de Pesos"
         
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)

@@ -811,7 +811,7 @@ class StatusProgramReport(models.AbstractModel):
                                'image_data': image_data, 'x_offset': 8, 'y_offset': 3, 'x_scale': 0.6, 'y_scale': 0.6})
         col += 1
         header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nDIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL
-        \nBALANZA DE COMPROBACIÓN DEL %s''' % (header_date)
+        \nBALANZA DE COMPROBACIÓN DEL %s \nCifras en Pesos''' % (header_date)
 
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)

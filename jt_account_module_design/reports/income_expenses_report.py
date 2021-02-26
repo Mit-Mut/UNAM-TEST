@@ -137,10 +137,23 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
             type_concept_ids = concept_ids.filtered(lambda x:x.inc_exp_type == type)
             major_ids = type_concept_ids.mapped('major_id')
             if type_concept_ids:
+                name = ''
+                if self.env.lang == 'es_MX' and type == 'income':
+                    str1 = 'Ingression'
+                    name = str1.upper()
+                if self.env.lang == 'es_MX' and type == 'expenses':
+                    str2 = 'GASTOS'
+                    name = str2.upper()
+                if self.env.lang == 'es_MX' and type == 'investments':
+                    str3 = 'INVERSIONES'
+                    name = str3.upper()
+                if self.env.lang == 'es_MX' and type == 'other expenses':
+                    str4 = 'OTROS GASTOS'
+                    name = str4.upper()
 
                 lines.append({
                     'id': type,
-                    'name': str(type).upper(),
+                    'name': name,
                     'columns': [
                                 {'name': ''},
                                 {'name': ''},
@@ -278,7 +291,7 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
             if type=="expenses":
                 lines.append({
                     'id': 'REMNANT',
-                    'name': 'REMAINING BEFORE INVESTMENTS',
+                    'name': _('REMAINING BEFORE INVESTMENTS'),
                     'columns': [
                                 self._format({'name': remant_exercised},figure_type='float'),
                                 self._format({'name': remant_exercised_pre},figure_type='float'),
@@ -294,7 +307,7 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
 
         lines.append({
             'id': 'Total EXPENSES',
-            'name': 'TOTAL EXPENSES, INVESTMENTS AND OTHER EXPENSES',
+            'name': _('TOTAL EXPENSES, INVESTMENTS AND OTHER EXPENSES'),
             'columns': [
                     self._format({'name': expenses_exercised},figure_type='float'),
                     self._format({'name': expenses_exercised_pre},figure_type='float'),
@@ -310,7 +323,7 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
 
         lines.append({
             'id': 'Total Year',
-            'name': 'REMAINING OF THE YEAR',
+            'name': _('REMAINING OF THE YEAR'),
             'columns': [
                     self._format({'name': year_exercised},figure_type='float'),
                     self._format({'name': year_exercised_pre},figure_type='float'),
@@ -441,6 +454,8 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
         header_title += "\n"
         header_title += "ESTADO DE INGRESOS, GASTOS E INVERSIONES COMPARATIVOS DEL "
         header_title += str(header_date)
+        header_title += "\n"
+        header_title += "Cifras en Miles de Pesos"
 
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)

@@ -271,7 +271,7 @@ class StatesAndProgramReports(models.AbstractModel):
                 if line.program_code_id and line.program_code_id.budget_program_conversion_id and \
                         line.program_code_id.budget_program_conversion_id.desc:
                     
-                    heading_name = line.program_code_id.budget_program_conversion_id.desc.upper()
+                    heading_name = line.program_code_id.budget_program_conversion_id and line.program_code_id.budget_program_conversion_id.desc and line.program_code_id.budget_program_conversion_id.desc.upper() or ''
                     heading_name = self.strip_accents(heading_name)
                     if period_name in period_shcp_auth_dict.keys():
                         pe_dict = period_shcp_auth_dict.get(period_name)
@@ -304,7 +304,7 @@ class StatesAndProgramReports(models.AbstractModel):
                         ade.date_of_liquid_adu <= date_to:
                     for line in ade.adequacies_lines_ids:
                         if line.program:
-                            prog_name = line.program.budget_program_conversion_id.desc.upper()
+                            prog_name = line.program.budget_program_conversion_id and line.program.budget_program_conversion_id.desc and line.program.budget_program_conversion_id.desc.upper() or ''
                             prog_name = self.strip_accents(prog_name)
                             shcp = line.program.budget_program_conversion_id.shcp.name
                             if prog_name in prog_dict_ade.keys():
@@ -329,7 +329,7 @@ class StatesAndProgramReports(models.AbstractModel):
                         and ade.date_of_budget_affected <= date_to:
                     for line in ade.adequacies_lines_ids:
                         if line.program:
-                            prog_name = line.program.budget_program_conversion_id.desc.upper()
+                            prog_name = line.program.budget_program_conversion_id and line.program.budget_program_conversion_id.desc and line.program.budget_program_conversion_id.desc.upper() or ''
                             prog_name = self.strip_accents(prog_name)
                             shcp = line.program.budget_program_conversion_id.shcp.name
                             if prog_name in prog_dict_ade.keys():
@@ -358,10 +358,10 @@ class StatesAndProgramReports(models.AbstractModel):
              
             period_date_from = datetime.strptime(str(period.get('date_from')), DEFAULT_SERVER_DATE_FORMAT).date()
             period_date_to = datetime.strptime(str(period.get('date_to')), DEFAULT_SERVER_DATE_FORMAT).date()
-            period_budget_lines = bud_line_obj.search([('expenditure_budget_id.state', '=', 'validate'),
-                            ('start_date', '>=', period_date_from), ('state', '=', 'success'),
-                            ('end_date', '<=', period_date_to)])
             
+            period_budget_lines = bud_line_obj.search([('expenditure_budget_id.state', '=', 'validate'),
+                            ('start_date', '<=', period_date_from), ('state', '=', 'success'),
+                            ('end_date', '>=', period_date_to)])
             #shcp_budget_line = period_budget_lines.filtered(lambda x:x.program_code_id.budget_program_conversion_id.shcp.id==shcp.id)
             program_code_ids = period_budget_lines.mapped('program_code_id')
             for program in program_code_ids: 

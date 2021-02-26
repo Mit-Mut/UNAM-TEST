@@ -59,6 +59,8 @@
         'reports/account_statement_report.xml',
         'reports/menu_reports.xml',
         'reports/bases_collaboration_report.xml',
+        'reports/base_collaboration_report_view.xml',
+        'wizard/bases_collaboration_resemble.xml',
         'wizard/bases_collaboration.xml',
         'data/data.xml',
         'security/ir.model.access.csv',

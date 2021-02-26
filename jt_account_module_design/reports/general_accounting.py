@@ -1231,7 +1231,7 @@ class AccountChartOfAccountReport(models.AbstractModel):
         
 
         header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nDIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL
-CONTABILIDAD GENERAL DEL %s''' % (header_date)
+CONTABILIDAD GENERAL DEL %s \nCifras en Pesos''' % (header_date)
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)
         y_offset += 6

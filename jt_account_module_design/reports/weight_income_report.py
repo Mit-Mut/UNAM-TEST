@@ -354,6 +354,8 @@ class WeightIncomeReport(models.AbstractModel):
         header_title += "\n"
         header_title += "REPORTE DE INGRESOS POR EL PERÍODO DEL"
         header_title += str(header_date)
+        header_title += "\n"
+        header_title += "Cifras en Pesos"
 
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)

@@ -242,10 +242,10 @@ class StatesAndProgramReports(models.AbstractModel):
              
             period_date_from = datetime.strptime(str(period.get('date_from')), DEFAULT_SERVER_DATE_FORMAT).date()
             period_date_to = datetime.strptime(str(period.get('date_to')), DEFAULT_SERVER_DATE_FORMAT).date()
-            period_budget_lines = bud_line_obj.search([('expenditure_budget_id.state', '=', 'validate'),
-                            ('start_date', '>=', period_date_from), ('state', '=', 'success'),
-                            ('end_date', '<=', period_date_to)])
             
+            period_budget_lines = bud_line_obj.search([('expenditure_budget_id.state', '=', 'validate'),
+                            ('start_date', '<=', period_date_from), ('state', '=', 'success'),
+                            ('end_date', '>=', period_date_to)])
             #shcp_budget_line = period_budget_lines.filtered(lambda x:x.program_code_id.budget_program_conversion_id.shcp.id==shcp.id)
             program_code_ids = period_budget_lines.mapped('program_code_id')
             for program in program_code_ids: 

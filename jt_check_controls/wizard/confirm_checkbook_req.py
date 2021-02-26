@@ -32,6 +32,9 @@ class ConfirmCheckBook(models.TransientModel):
     def apply(self):
         check_req = self.env['checkbook.request'].browse(self._context.get('active_id'))
         if check_req:
+            if self.total_cash != check_req.amount_checks:
+                raise ValidationError(_('Check total does not match the number of checks requested'))
+            
             if check_req.bank_id:
                 check_req.bank_id.checkbook_no = self.checkbook_no
                 check_req.checkbook_no = self.checkbook_no

@@ -234,6 +234,8 @@ class WillPay(models.Model):
                 'default_base_collabaration_id': self.base_collaboration_id and self.base_collaboration_id.id or False,                                
             }
         }
+    def action_draft(self):
+        self.state = 'draft'
 
     def action_reset_to_draft(self):
         self.state='draft'

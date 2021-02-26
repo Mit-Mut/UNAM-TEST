@@ -341,3 +341,47 @@ msgstr "Impuesto a Cargo/Favor"
 #, python-format
 msgid "Closing Journal Entry"
 msgstr "REGISTRAR ASIENTOS"
+
+#. module: jt_account_module_design
+#: code:addons/jt_account_module_design/reports/detailed_statement_income_expenses_and_investments.py:0
+#: code:addons/jt_account_module_design/reports/income_expenses_report.py:0
+#: code:addons/jt_account_module_design/reports/state_inco_exp_summary.py:0
+#, python-format
+msgid "TOTAL EXPENSES, INVESTMENTS AND OTHER EXPENSES"
+msgstr "TOTAL GASTOS, INVERSIONES Y OTROS GASTOS"
+
+#. module: jt_account_module_design
+#: code:addons/jt_account_module_design/reports/detailed_statement_income_expenses_and_investments.py:0
+#: code:addons/jt_account_module_design/reports/income_expenses_report.py:0
+#: code:addons/jt_account_module_design/reports/state_inco_exp_summary.py:0
+#, python-format
+msgid "REMAINING BEFORE INVESTMENTS"
+msgstr "REMANENTE ANTES DE INVERSIONES"
+
+#. module: jt_account_module_design
+#: code:addons/jt_account_module_design/reports/detailed_statement_income_expenses_and_investments.py:0
+#: code:addons/jt_account_module_design/reports/income_expenses_report.py:0
+#: code:addons/jt_account_module_design/reports/state_inco_exp_summary.py:0
+#, python-format
+msgid "REMAINING OF THE YEAR"
+msgstr "REMANENTE DEL EJERCICIO"
+
+#. module: jt_account_module_design
+#: model:ir.model.fields.selection,name:jt_account_module_design.selection__detailed_statement_income__inc_exp_type__expenses
+msgid "Expenses"
+msgstr "GASTOS"
+
+#. module: jt_account_module_design
+#: model:ir.model.fields.selection,name:jt_account_module_design.selection__detailed_statement_income__inc_exp_type__income
+msgid "Income"
+msgstr "INGRESOS"
+
+#. module: jt_account_module_design
+#: model:ir.model.fields.selection,name:jt_account_module_design.selection__detailed_statement_income__inc_exp_type__other_expenses
+msgid "OTHER EXPENSES"
+msgstr "OTROS GASTOS"
+
+#. module: jt_account_module_design
+#: model:ir.model.fields.selection,name:jt_account_module_design.selection__detailed_statement_income__inc_exp_type__investments
+msgid "INVESTMENTS"
+msgstr "INVERSIONES"

@@ -2435,3 +2435,9 @@ msgstr "Departamento de Operación Financiera"
 msgid "Cannot register folios that are already registered"
 msgstr "No se pueden registrar folios que ya están registrados"
 
+#. module: jt_check_controls
+#: code:addons/jt_check_controls/wizard/confirm_checkbook_req.py:0
+#, python-format
+msgid "Check total does not match the number of checks requested"
+msgstr "El total de cheques no coincide con la cantidad de cheques solicitados"
+

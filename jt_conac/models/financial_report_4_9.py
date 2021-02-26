@@ -267,6 +267,13 @@ class AnalyticalStatusOfTheExpenditureBudgetExercise(models.AbstractModel):
                                     concept_dict.update({period_name: {item: amt}})
                                 if item not in item_list:
                                     item_list.append(item)
+                
+                new_item_list = []
+                for s_item_id in item_list:
+                    new_item_list.append(s_item_id.id)
+                if new_item_list:
+                    item_list = self.env['expenditure.item'].browse(new_item_list).sorted(key='item')
+                    
                 for item in item_list:
                     line_cols = []
                     for period in periods:

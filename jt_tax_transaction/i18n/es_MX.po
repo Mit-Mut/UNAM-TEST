@@ -1,0 +1,387 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* jt_tax_transaction
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-01-02 09:22+0000\n"
+"PO-Revision-Date: 2021-01-02 09:22+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_conagua__folio
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_lfpiorpi__folio
+msgid "Folio"
+msgstr "Folio"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_conagua__year
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_lfpiorpi__year
+msgid "Year"
+msgstr "Año"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_conagua__month
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_lfpiorpi__month
+msgid "Month"
+msgstr "Mes"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_conagua__filling_date
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_lfpiorpi__filling_date
+msgid "Filling date"
+msgstr "Fecha de presentación"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_conagua__programatic_code_id
+msgid "Programmatic code"
+msgstr "Código programático"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_conagua__observations
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_lfpiorpi__observations
+msgid "Observations"
+msgstr "Observaciones"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_conagua__application_office
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_lfpiorpi__application_office
+msgid "Application Office"
+msgstr "Oficio de solicitud"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_conagua__meter_reading
+msgid "Meter reading"
+msgstr "Lectura medidor"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_conagua__laboratory_analysis
+msgid "Laboratory analysis"
+msgstr "Análisis de laboratorio"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_conagua__statement
+msgid "Statement"
+msgstr "Declaración"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_conagua__accused
+msgid "Accused"
+msgstr "Acuse"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_conagua__payment_proof
+msgid "Proof of payment"
+msgstr "Comprobante de pago"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_lfpiorpi__dgpu_file
+msgid "DGPU file"
+msgstr "Archivo DGPU"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_lfpiorpi__statement_draft
+msgid "Statement draft"
+msgstr "Borrador de declaración"
+
+#. module: jt_tax_transaction
+#: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_lfpiorpi__shipping_ack
+msgid "Shipping acknowledgement"
+msgstr "Acuse de envío"
+
+#. module: jt_tax_transaction
+#: model:ir.ui.menu,name:jt_tax_transaction.lfpiorpi_menu
+msgid "LFPIORPI Forms"
+msgstr "Formulario LFPIORPI"
+
+#. module: jt_tax_transaction
+#: model:ir.ui.menu,name:jt_tax_transaction.menu_other_declarations
+msgid "Other Declarations"
+msgstr "Otras declaraciones"
+
+#. module: jt_tax_transaction
+#: model:ir.ui.menu,name:jt_tax_transaction.menu_tribune_operations
+msgid "Tribune Operations"
+msgstr "Operaciones del Tribunal"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "ISR withholding wages minus subsidy"
+msgstr "ISR. RETENCIÓN POR SALARIOS Menos Subsidio al Empleo (Neto)"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "Total ISR. Withholding For Salaries"
+msgstr "TOTAL ISR. RETENCIÓN POR SALARIOS"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "Employment Subsidy"
+msgstr "SUBSIDIO AL EMPLEO"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "ISR withholding For Assimilated wages"
+msgstr "ISR. RETENCIÓN POR ASIMILADOS A SALARIOS"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "ISR Retained Professional Services"
+msgstr "ISR RETENIDO SERVICIOS PROFESIONALES"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "ISR Retained Lease"
+msgstr "ISR RETENIDO ARRENDAMIENTO"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "VAT Withheld"
+msgstr "IVA RETENIDO"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "IEPS Payable"
+msgstr "IEPS POR PAGAR"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "VAT Payable"
+msgstr "IVA POR PAGAR"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "Total Taxes To Pay"
+msgstr "TOTAL DE IMPUESTOS A PAGAR"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "ISR SALARIES PAYROLL"
+msgstr "ISR SALARIOS NOMINA"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "ISR PAYMENT ADDITIONAL NOT TAXED"
+msgstr "ISR PAGO ADICIONAL NO GRAVADO"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "employee subsidy"
+msgstr "SUBSIDIO AL EMPLEO"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "ISR ASIMILATED FEES"
+msgstr "ISR HONORARIOS ASIMILADOS"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "ISR-SP HONORISTS 10%"
+msgstr "ISR-SP HONORISTAS 10%"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "ISR-SP COPYRIGHT"
+msgstr "ISR-SP DERECHOS DE AUTOR"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "ISR 25% RET. S / EXT FEES"
+msgstr "ISR 25% RET. S/HONORARIOS EXT"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "ISR-SP HON. 10% cert. D.E.P. GAS"
+msgstr "ISR-SP HON. 10% CERT. DEP. GAS"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "ISR-SP HON. Cert. D.E.P. CONACYT"
+msgstr "ISR-SP HON. CERT. DEP. CONACYT"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "ISR ON RENT PAID"
+msgstr "ISR 10% Ret. s/ Rentas Cobradas"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "VAT-SP HONORISTSRENTAL"
+msgstr "IVA-SP HONORISTAS"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "VAT PAID"
+msgstr "IVA RENTAS PAGADAS"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "VAT TRANSPORTATION SERVICES"
+msgstr "IVA SERVICIOS DE TRANSPORTE"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "VAT-SP HON. Cert. D.E.P. GASOLIN"
+msgstr "IVA-SP HON. CERT. DEP. GASOLIN"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "VAT-SERV.TRANSP.CERT. D.E.P. GAS"
+msgstr "IVA-SERV.TRANSP.CERT. DEP. GAS"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "VAT-SP HON. Cert. D.E.P. CONACYT"
+msgstr "IVA-SP HON. CERT. DEP. CONACYT"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "IEPS PLAG. Cert. D.E.P. T-UNAM"
+msgstr "IEPS PLAG. CERT. DEP. T-UNAM"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "IEPS ALIM. NO BASIC CERT DEP"
+msgstr "IEPS ALIM. NO BASIC CERT DEP"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "TRANSFERRED VAT CFDI¦S"
+msgstr "IVA TRASLADADO CFDI¦S"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "VAT TO PAY YOUR"
+msgstr "IVA POR PAGAR T. U."
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "VAT TO PAY GAS STATION"
+msgstr "IVA POR PAGAR GASOLINERA"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "VAT Balance In Favor You"
+msgstr "IVA SALDO A FAVOR T. U."
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
+#, python-format
+msgid "Less:"
+msgstr "menos:"
+
+#. module: jt_account_module_design
+#: code:addons/jt_account_module_design/reports/miles_revenue_report.py:0
+#: code:addons/jt_account_module_design/reports/weight_income_report.py:0
+#, python-format
+msgid "TOTAL EGRESSES"
+msgstr "TOTAL EGRESOS"
+
+#. module: jt_account_module_design
+#: code:addons/jt_account_module_design/reports/miles_revenue_report.py:0
+#: code:addons/jt_account_module_design/reports/weight_income_report.py:0
+#, python-format
+msgid "TOTAL REVENUE"
+msgstr "TOTAL INGRESOS"
+
+#. module: jt_account_module_design
+#: code:addons/jt_account_module_design/reports/miles_revenue_report.py:0
+#: code:addons/jt_account_module_design/reports/weight_income_report.py:0
+#, python-format
+msgid "Remnants"
+msgstr "REMANENTE"
+
+#. module: jt_tax_transaction
+#: code:addons/jt_tax_transaction/reports/valueadded_tax_report.py:0
+#, python-format
+msgid "Tax in Charge / Favor"
+msgstr "Impuesto a Cargo/Favor"
+
+#. module: account_reports
+#: code:addons/account_reports/models/account_generic_tax_report.py:0
+#, python-format
+msgid "Closing Journal Entry"
+msgstr "REGISTRAR ASIENTOS"
+
+#. module: jt_account_module_design
+#: code:addons/jt_account_module_design/reports/detailed_statement_income_expenses_and_investments.py:0
+#: code:addons/jt_account_module_design/reports/income_expenses_report.py:0
+#: code:addons/jt_account_module_design/reports/state_inco_exp_summary.py:0
+#, python-format
+msgid "TOTAL EXPENSES, INVESTMENTS AND OTHER EXPENSES"
+msgstr "TOTAL GASTOS, INVERSIONES Y OTROS GASTOS"
+
+#. module: jt_account_module_design
+#: code:addons/jt_account_module_design/reports/detailed_statement_income_expenses_and_investments.py:0
+#: code:addons/jt_account_module_design/reports/income_expenses_report.py:0
+#: code:addons/jt_account_module_design/reports/state_inco_exp_summary.py:0
+#, python-format
+msgid "REMAINING BEFORE INVESTMENTS"
+msgstr "REMANENTE ANTES DE INVERSIONES"
+
+#. module: jt_account_module_design
+#: code:addons/jt_account_module_design/reports/detailed_statement_income_expenses_and_investments.py:0
+#: code:addons/jt_account_module_design/reports/income_expenses_report.py:0
+#: code:addons/jt_account_module_design/reports/state_inco_exp_summary.py:0
+#, python-format
+msgid "REMAINING OF THE YEAR"
+msgstr "REMANENTE DEL EJERCICIO"
+
+#. module: jt_account_module_design
+#: model:ir.model.fields.selection,name:jt_account_module_design.selection__detailed_statement_income__inc_exp_type__expenses
+msgid "Expenses"
+msgstr "GASTOS"
+
+#. module: jt_account_module_design
+#: model:ir.model.fields.selection,name:jt_account_module_design.selection__detailed_statement_income__inc_exp_type__income
+msgid "Income"
+msgstr "INGRESOS"
+
+#. module: jt_account_module_design
+#: model:ir.model.fields.selection,name:jt_account_module_design.selection__detailed_statement_income__inc_exp_type__other_expenses
+msgid "OTHER EXPENSES"
+msgstr "OTROS GASTOS"
+
+#. module: jt_account_module_design
+#: model:ir.model.fields.selection,name:jt_account_module_design.selection__detailed_statement_income__inc_exp_type__investments
+msgid "INVESTMENTS"
+msgstr "INVERSIONES"

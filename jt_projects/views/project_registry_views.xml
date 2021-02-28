@@ -164,14 +164,14 @@
                             		<tree editable="bottom">
                             			<field name="program_code_id" required="1" domain="[('budget_id.state','=','validate')]"/>
                             			<field name="total_assigned_amt"/>
-                            			<field name="total_per_exercise"/>
                             			<field name="total_paid"/>
+                            			<field name="total_per_exercise"/>
                             		</tree>
                             		<form>
                             			<field name="program_code_id" required="1" domain="[('budget_id.state','=','validate')]"/>
                             			<field name="total_assigned_amt"/>
-                            			<field name="total_per_exercise"/>
                             			<field name="total_paid"/>
+                            			<field name="total_per_exercise"/>
                             		</form>
                             	</field>
                             </page>

@@ -511,3 +511,12 @@ msgstr "PROYECTOS PRESUPUESTALES DESACTIVADOS A SOLICITUD DE LA DGAPA"
 msgid "RESOURCES STAGE "
 msgstr "RECURSOS ETAPA "
 
+#. module: jt_projects
+#: code:addons/jt_projects/models/varfication_of_expense.py:0
+#, python-format
+msgid ""
+"There is not enough allocated to approve this verification of expense,verify"
+" the amount allocated to the corresponding quarter"
+msgstr "No hay suficiente monto asignado para aprobar esta comprobación de gastos,verifique"
+" el monto asignado al trimestre correspondiente"
+

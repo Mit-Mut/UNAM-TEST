@@ -32,10 +32,11 @@ class ProjectProgramCode(models.Model):
 #                     total_assigned_amt = my_datas[0]
 
                 if rec.project_id and rec.project_id.is_papiit_project:
+                    total_per_exercise = rec.program_code_id.total_authorized_amt
                     self.env.cr.execute("select coalesce(sum(ebl.available),0) from expenditure_budget_line ebl where ebl.program_code_id = %s",(rec.program_code_id.id,))
                     my_datas = self.env.cr.fetchone()
                     if my_datas:
-                        total_per_exercise = my_datas[0]
+                        total_assigned_amt = my_datas[0]
     
                     self.env.cr.execute("""(select coalesce(sum(abs(line.balance)+abs(line.tax_price_cr)),0) from account_move_line line,account_move amove,account_payment apay 
                                         where  line.program_code_id = %s and amove.id=line.move_id and amove.payment_state=%s and apay.payment_request_id = amove.id)""", (rec.program_code_id.id,'paid',))

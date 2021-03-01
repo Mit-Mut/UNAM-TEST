@@ -1249,3 +1249,15 @@ msgid ""
 msgstr ""
 "UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\n"
 "Estado de Actividades"
+
+#. module: jt_conac
+#: code:addons/jt_conac/models/financial_report_4_0.py:0
+#, python-format
+msgid "BUDGET ACCOUNTS"
+msgstr "CUENTAS DE ORDEN"
+
+#. module: jt_conac
+#: code:addons/jt_conac/models/financial_report_4_0.py:0
+#, python-format
+msgid "Total BUDGET ACCOUNTS"
+msgstr "Total CUENTAS DE ORDEN"

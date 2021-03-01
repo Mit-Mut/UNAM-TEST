@@ -485,7 +485,7 @@ msgstr ""
 #. module: jt_supplier_payment
 #: model:account.financial.html.report.line,name:jt_supplier_payment.account_financial_report_budget_account
 msgid "BUDGET ACCOUNTS"
-msgstr ""
+msgstr "CUENTAS DE ORDEN"
 
 #. module: jt_supplier_payment
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_bank_balance_check__is_balance
@@ -610,7 +610,7 @@ msgstr "Número de sucursal"
 #. module: jt_supplier_payment
 #: model:account.account.type,name:jt_supplier_payment.data_account_type_budget_accounts
 msgid "Budget Accounts"
-msgstr ""
+msgstr "CUENTAS DE ORDEN"
 
 #. module: jt_supplier_payment
 #: model:ir.model.fields.selection,name:jt_supplier_payment.selection__account_payment__net_cash_availability__cecoban

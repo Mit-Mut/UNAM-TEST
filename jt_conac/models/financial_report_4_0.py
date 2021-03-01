@@ -344,7 +344,7 @@ class StatementOfFinancialPosition(models.AbstractModel):
         budget_accounts = self.env['account.account'].search([('user_type_id','=',budget_user_type.id)])
         lines.append({
             'id': 'hierarchy_' + 'budget_accounts',
-            'name': 'BUDGET ACCOUNTS',
+            'name': _('BUDGET ACCOUNTS'),
             'columns': [{'name': ''}] * len(periods),
             'level': 1,
             'unfoldable': False,
@@ -405,7 +405,7 @@ class StatementOfFinancialPosition(models.AbstractModel):
 
         lines.append({
             'id': 'budget_total_amount' ,
-            'name': 'Total BUDGET ACCOUNTS',
+            'name': _('Total BUDGET ACCOUNTS'),
             'columns': total_col,
             'level': 1,
             'unfoldable': False,

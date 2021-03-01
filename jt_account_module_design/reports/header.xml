@@ -375,7 +375,8 @@
                             <span style="font-size:14px;">DIRECCIÓN GENERAL DE CONTROL PRESUPUESTAL-CONTADURÍA GENERAL</span>
                             <br/>
                         
-                        <span>REPORTE DE INGRESOS POR EL PERÍODO DEL  <t t-esc="header_date"/> </span>
+                        <span>REPORTE DE INGRESOS POR EL PERÍODO DEL  <t t-esc="header_date"/> </span><br/>
+                        <span>Cifras en Miles de Pesos</span>
                         
                     </div>
                 </div>

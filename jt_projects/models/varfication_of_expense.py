@@ -88,10 +88,31 @@ class VerficationOfExpense(models.Model):
             rec.amount_tax = sum(x.amount_tax for x in rec.verifcation_expense_ids)
             rec.amount_total = rec.amount_untaxed + rec.amount_tax 
             
-
+    def check_program_code_assign_amount(self):
+        for rec in self:
+            if rec.verifcation_expense_ids:
+                for program in rec.verifcation_expense_ids.mapped('program_code'):
+                    lines = rec.verifcation_expense_ids.filtered(lambda x:x.program_code.id == program.id)
+                    total_verification_amount = sum(x.subtotal for x in lines)
+                    total_assign_amount = 0
+                    
+                    b_s_month = rec.reg_date.month
+                    if b_s_month in (1, 2, 3):
+                        total_assign_amount = program.total_1_assigned_amt
+                    elif b_s_month in (4, 5, 6):
+                        total_assign_amount = program.total_2_assigned_amt
+                    elif b_s_month in (7, 8, 9):
+                        total_assign_amount = program.total_3_assigned_amt
+                    elif b_s_month in (10, 11, 12):
+                        total_assign_amount = program.total_4_assigned_amt
+                    
+                    if total_assign_amount < total_verification_amount:
+                        raise ValidationError(_("There is not enough allocated to approve this verification of expense,verify the amount allocated to the corresponding quarter"))
+                        
     def action_approve(self):
-
+        self.check_program_code_assign_amount()
         self.status = 'approve'
+        
         if self.expense_journal_id:
             journal = self.expense_journal_id
             if not journal.ai_credit_account_id or not journal.conac_ai_credit_account_id \

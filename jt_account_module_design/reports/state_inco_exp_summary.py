@@ -220,15 +220,17 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                         exercised = exercised/1000
                         total_exercised += exercised
 
-                        values= self.env['account.move.line'].search(domain + [('budget_id','!=',False),('account_id', 'in', acc.ids)])
-                        to_exercised = sum(x.debit-x.credit for x in values)
-                        to_exercised = to_exercised/1000
+#                         values= self.env['account.move.line'].search(domain + [('budget_id','!=',False),('account_id', 'in', acc.ids)])
+#                         to_exercised = sum(x.debit-x.credit for x in values)
+#                         to_exercised = to_exercised/1000
                         
+                        to_exercised = assign - exercised
                         total_to_exercised += to_exercised
                             
                         per = 0
-                        if assign > 0:
-                            per = (exercised*100)/assign
+                        if assign != 0:
+                            per = (exercised/assign)*100
+                            per = round(per,2)
                         
                         account_lines.append({
                             'id': 'account' + str(acc.id),
@@ -270,13 +272,17 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                         year_exercised -= total_exercised
                         year_to_exercised -= total_to_exercised
 
+                    if total_assign != 0:
+                        total_per = (total_exercised/total_assign)*100
+                        total_per = round(per,2)
+
                     lines.append({
                         'id': 'con' + str(con.id),
                         'name': con.concept,
                         'columns': [
                                     self._format({'name': total_assign},figure_type='float'),
                                     self._format({'name': total_exercised},figure_type='float'),
-                                    {'name':''},
+                                    {'name':total_per,'class':'number'},
                                     self._format({'name': total_to_exercised},figure_type='float'),
                                     ],
         
@@ -292,7 +298,7 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                         'columns': [
                                     self._format({'name': total_assign},figure_type='float'),
                                     self._format({'name': total_exercised},figure_type='float'),
-                                    {'name':''},
+                                    {'name':total_per,'class':'number'},
                                     self._format({'name': total_to_exercised},figure_type='float'),
                                     ],
                         
@@ -304,13 +310,18 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                     })
 
             if type=="expenses":
+
+                if remant_assign != 0:
+                    remant_per = (remant_exercised/remant_assign)*100
+                    remant_per = round(remant_per,2)
+                
                 lines.append({
                     'id': 'REMNANT',
                     'name': _('REMAINING BEFORE INVESTMENTS'),
                     'columns': [
                                 self._format({'name': remant_assign},figure_type='float'),
                                 self._format({'name': remant_exercised},figure_type='float'),
-                                {'name':''},
+                                {'name':remant_per,'class':'number'},
                                 self._format({'name': remant_to_exercised},figure_type='float'),
                                 ],
                     
@@ -320,13 +331,17 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                     'class':'text-right'
                 })
 
+        if expenses_assign != 0:
+            expenses_per = (expenses_exercised/expenses_assign)*100
+            expenses_per = round(expenses_per,2)
+
         lines.append({
             'id': 'Total EXPENSES',
             'name': _('TOTAL EXPENSES, INVESTMENTS AND OTHER EXPENSES'),
             'columns': [
                         self._format({'name': expenses_assign},figure_type='float'),
                         self._format({'name': expenses_exercised},figure_type='float'),
-                        {'name':''},
+                        {'name':expenses_per,'class':'number'},
                         self._format({'name': expenses_to_exercised},figure_type='float'),
                         ],
             
@@ -336,13 +351,17 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
             'class':'text-right'
         })
 
+        if year_assign != 0:
+            year_per = (year_exercised/year_assign)*100
+            year_per = round(year_per,2)
+
         lines.append({
             'id': 'Total Year',
             'name': _('REMAINING OF THE YEAR'),
             'columns': [
                         self._format({'name': year_assign},figure_type='float'),
                         self._format({'name': year_exercised},figure_type='float'),
-                        {'name':''},
+                        {'name':year_per,'class':'number'},
                         self._format({'name': year_to_exercised},figure_type='float'),
                         ],
             

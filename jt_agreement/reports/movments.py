@@ -219,7 +219,7 @@ class Movements(models.AbstractModel):
             'id': 'hierarchy_ret',
             'name': '',
             'columns': [{'name': ''}, 
-                        {'name': 'Retirements'}, 
+                        {'name': _('Retirements')}, 
                         {'name': ''},
                         {'name': ''}, 
                         {'name': ''},

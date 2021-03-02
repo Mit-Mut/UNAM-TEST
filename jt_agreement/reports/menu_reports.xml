@@ -16,6 +16,7 @@
             action="action_account_statements_collaboration"
         />
 
+
         <!-- Movements report -->
         <record id="action_movement" model="ir.actions.client">
             <field name="name">Movements Of Agreements</field>
@@ -45,6 +46,39 @@
             sequence="4"
             action="action_payment_detail"
         />
+
+
+        <record id="action_accounting_operation_increases" model="ir.actions.client">
+            <field name="name">Account Operations Increases</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'jt_agreement.account.operation.increases'}" />
+        </record>
+        
+        <menuitem
+            id="menu_account_operation_increases"
+            name="Account Operations Increases"
+            parent="menu_report_agreement"
+            sequence="4"
+            action="action_accounting_operation_increases"
+        />
+
+
+                <!-- Account operation withdraw -->
+        <record id="action_account_operation_withdraw" model="ir.actions.client">
+            <field name="name">Account Operation Withdraw</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'jt_agreement.account.operation.withdraw'}" />
+        </record>
+
+        <menuitem
+            id="menu_accounting_operation_withdraw_id"
+            name="Accounting Operations-Withdrawals"
+            parent="menu_report_agreement"
+            sequence="5"
+            action="action_account_operation_withdraw"
+        />
+
+
 
 	<!-- PDF Headers -->
 

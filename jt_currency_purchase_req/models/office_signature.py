@@ -76,8 +76,10 @@ class AccountCancellation(models.Model):
     name = fields.Char("Number")
     account_cancellation_id = fields.Many2one('request.accounts',domain=[('move_type','=','account cancel')])
     dependancy_id = fields.Many2one('dependency', string='Dependency')
-    bank_account_id = fields.Many2one('account.journal',related='account_cancellation_id.bank_account_id',string="Bank Account")
-    bank_id = fields.Many2one('res.bank',related='bank_account_id.bank_id',string='Bank')
+    #bank_account_id = fields.Many2one('account.journal',related='account_cancellation_id.bank_account_id',string="Bank Account")
+    #bank_id = fields.Many2one('res.bank',related='bank_account_id.bank_id',string='Bank')
+    bank_id = fields.Many2one('res.bank',string='Bank')
+    bank_account_id = fields.Many2one('account.journal',"Bank Account")
     user_id = fields.Many2one('hr.employee',related="account_cancellation_id.user_id",string='Responsible User')   
 
     @api.model
@@ -105,12 +107,12 @@ class OtherProcedure(models.Model):
     bank_account_id = fields.Many2one('account.journal',"Bank Account")
     user_id = fields.Many2one('res.users','Responsible User')
 
-    @api.model
-    def create(self, vals):
-        res = super(OtherProcedure,self).create(vals)
-        seq = self.env['ir.sequence'].next_by_code('other.procedure')
-        res.name = seq        
-        return res
+    # @api.model
+    # def create(self, vals):
+    #     res = super(OtherProcedure,self).create(vals)
+    #     seq = self.env['ir.sequence'].next_by_code('other.procedure')
+    #     res.name = seq        
+    #     return res
 
     def get_sender_recipet4(self):
         trade = self.env['finance.sender.recipient.trades'].search([('template', '=', 'other_procedures')], limit=1)

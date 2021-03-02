@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Report of accounting operations-withdrawals-->
+        <template id="external_layout_accounting_operation_withdraw" name="external_layout_accounting_operation_withdraw">
+            <t t-if="not o" t-set="o" t-value="doc"/>
+            <t t-if="not company">
+                <!-- Multicompany -->
+                <t t-if="company_id">
+                    <t t-set="company" t-value="company_id"/>
+                </t>
+                <t t-elif="o and 'company_id' in o">
+                    <t t-set="company" t-value="o.company_id.sudo()"/>
+                </t>
+                <t t-else="else">
+                    <t t-set="company" t-value="res_company"/>
+                </t>
+            </t>
+            <div class="header">
+                <div class="row">
+                        <div class="col-2" align="left">
+                            <img t-attf-src="data:image/png;base64,{{company.header_logo}}"
+                                 style="width:120px;height:100px;margin-top:20px;margin-right:20px;margin-bottom:20px;"/>
+                        </div>
+                        <div class="col-3" style="padding-left:15px;padding-top:10px;margin:top:30px;">
+                            <img src="/jt_check_controls/static/src/img/dgf.png"
+                                 style="max-height:140px;width:60%"/>
+                        </div>
+                        <div class="col-3" style="padding-left:15px;padding-top:10px;margin:top:30px;">
+                            <p style="margin-top:0;margin-bottom:0;font-size:16px;"><b>UNIVERSITY PATRONATE-TREASURY</b></p>
+                            <p style="margin-top:0;margin-bottom:0;font-size:15px;">Directorate-General for Finance</p>
+                            <p style="margin-top:0;margin-bottom:0;font-size:15px;">Registro de Operaciones Contables</p>
+                        </div>
+                        <div class="col-4 text-left" style="vertical-align: bottom;">
+                            <span>Fecha y hora de impresión</span>
+                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/>
+                        </div>
+                </div>
+            </div>
+            <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
+                 t-att-data-oe-lang="o and o.env.context.get('lang')">
+                <t t-raw="0"/>
+            </div>
+            <div     class="footer">
+                <div class="row">
+                    <div class="col-6">
+                        <hr style="width:40%;color:black;"/><br/>
+                        <strong>RESPONSABLE DE IMPRESION</strong>
+                    </div>
+                    <div class="col-6">
+                        <hr/><br/>
+                        <strong>VO.BO.</strong>
+                    </div>
+                </div>
+            </div>
+        </template>
+</data>
+</odoo>

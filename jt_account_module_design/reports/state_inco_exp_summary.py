@@ -130,9 +130,9 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
             type_concept_ids = concept_ids.filtered(lambda x:x.inc_exp_type == type)
             major_ids = type_concept_ids.mapped('major_id')
             if type_concept_ids:
-                name = ''
+                name = type.upper()
                 if self.env.lang == 'es_MX' and type == 'income':
-                    str1 = 'Ingression'
+                    str1 = 'INGRESOS'
                     name = str1.upper()
                 if self.env.lang == 'es_MX' and type == 'expenses':
                     str2 = 'GASTOS'
@@ -177,7 +177,7 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                 })
                 
                 for con in type_concept_ids.filtered(lambda x:x.major_id.id == major.id):
-
+                    account_lines = []
                     total_assign = 0
                     total_exercised = 0
                     total_to_exercised = 0
@@ -185,21 +185,6 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                     
                     account_ids = con.account_ids
 
-                    lines.append({
-                        'id': 'con' + str(con.id),
-                        'name': con.concept,
-                        'columns': [
-                                    {'name': ''},
-                                    {'name': ''},
-                                    {'name': ''},
-                                    {'name': ''},
-                                    ],
-        
-                        'level': 2,
-                        'unfoldable': False,
-                        'unfolded': True,
-                        'class':'text-left'
-                    })
 
                     for acc in account_ids:
                     
@@ -245,7 +230,7 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                         if assign > 0:
                             per = (exercised*100)/assign
                         
-                        lines.append({
+                        account_lines.append({
                             'id': 'account' + str(acc.id),
                             'name': acc.code +" "+ acc.name,
                             'columns': [
@@ -258,6 +243,7 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                             'level': 3,
                             'unfoldable': False,
                             'unfolded': True,
+                            'parent_id': 'con' + str(con.id),
                         })
 
                     if type == 'income':
@@ -283,7 +269,23 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                         year_assign -= total_assign
                         year_exercised -= total_exercised
                         year_to_exercised -= total_to_exercised
-                        
+
+                    lines.append({
+                        'id': 'con' + str(con.id),
+                        'name': con.concept,
+                        'columns': [
+                                    self._format({'name': total_assign},figure_type='float'),
+                                    self._format({'name': total_exercised},figure_type='float'),
+                                    {'name':''},
+                                    self._format({'name': total_to_exercised},figure_type='float'),
+                                    ],
+        
+                        'level': 2,
+                        'unfoldable': True,
+                        'unfolded': False,
+                        'class':'text-left'
+                    })
+                    lines += account_lines
                     lines.append({
                         'id': 'group_total',
                         'name': 'SUMA',
@@ -297,7 +299,8 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                         'level': 1,
                         'unfoldable': False,
                         'unfolded': True,
-                        'class':'text-right'
+                        'class':'text-right',
+                        'parent_id': 'con' + str(con.id),
                     })
 
             if type=="expenses":

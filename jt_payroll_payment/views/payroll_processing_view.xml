@@ -7,8 +7,8 @@
             <field name="arch" type="xml">
                 <form>
                   	<header>
-                  		<button string="Process Perception" name="process_perception_file" attrs="{'invisible':[('perception_file_load','=',False)]}" type="object" class="oe_highlight"/>
-                  		<button string="Process Deduction" name="process_deductions_file" attrs="{'invisible':[('deductions_file_load','=',False)]}" type="object" class="oe_highlight"/>
+                  		<button string="Process Perception" name="process_perception_cron" attrs="{'invisible':[('perception_hide','=',True)]}" type="object" class="oe_highlight"/>
+                  		<button string="Process Deduction" name="process_deductions_cron" attrs="{'invisible':[('deductions_hide','=',True)]}" type="object" class="oe_highlight"/>
                   		<button string='Generate Payroll' name='generate_payroll' attrs="{'invisible':['|',('perception_file_load','=',True),('deductions_file_load','=',True)]}" type="object" class="oe_highlight"/>
                   		<button string='Generate Adjustment' name='generate_adjustment' type="object"
                                 class="oe_highlight"/>
@@ -47,12 +47,13 @@
                                 <field name="perception_filename" invisible="1"/>
                                 <field name="perception_file_index" invisible="1"/>
                                 <field name="perception_file_load" invisible="1"/>
-
+								<field name="perception_hide" invisible="1"/>
+								
                                 <field name="deductions_file" filename="deductions_filename" readonly="1" invisible="1"/>
                                 <field name="deductions_filename" invisible="1"/>
                                 <field name="deductions_file_index" invisible="1"/>
                                 <field name="deductions_file_load" invisible="1"/>
-                                
+                                <field name="deductions_hide" invisible="1"/>
                              </group>
                         </group>
                         <notebook>

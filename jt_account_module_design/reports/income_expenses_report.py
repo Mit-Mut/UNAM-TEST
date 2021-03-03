@@ -212,6 +212,7 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                         #values= self.env['account.move.line'].search(pre_domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', account_ids.ids)])
                         values= self.env['account.move.line'].search(pre_domain + [('account_id', 'in', acc.ids)])
                         exercised_pre= sum(x.credit - x.debit for x in values)
+                        exercised_pre = abs(exercised_pre)
                         exercised_pre = exercised_pre/1000
                         
                         total_exercised_pre += exercised_pre
@@ -220,7 +221,9 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                         total_variation += variation
                         
                             
-                        per = 0
+                        per = 0.00
+                        if exercised:
+                            per = 100.00
                         if exercised_pre != 0:
                             per = (exercised/exercised_pre)*100
                             per = round(per,2)
@@ -249,8 +252,8 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                         remant_variation += total_variation
                         
                         year_exercised += total_exercised
-                        year_exercised_pre += total_exercised
-                        year_variation += total_exercised
+                        year_exercised_pre += total_exercised_pre
+                        year_variation += total_variation
                         
                     elif type == 'expenses':
                         remant_exercised -= total_exercised
@@ -260,14 +263,16 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                     if type != 'income':
 
                         expenses_exercised += total_exercised
-                        expenses_exercised_pre += total_exercised
-                        expenses_variation += total_exercised
+                        expenses_exercised_pre += total_exercised_pre
+                        expenses_variation += total_variation
                         
                         year_exercised -= total_exercised
-                        year_exercised_pre -= total_exercised
-                        year_variation -= total_exercised
+                        year_exercised_pre -= total_exercised_pre
+                        year_variation -= total_variation
 
-                    total_per = 0
+                    total_per = 0.00
+                    if total_exercised:
+                        total_per = 100.00
                     if total_exercised_pre !=0:
                         total_per = (total_exercised/total_exercised_pre)*100
                         total_per = round(total_per,2)
@@ -305,7 +310,9 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                         'parent_id': 'con' + str(con.id),
                     })
             if type=="expenses":
-                remant_per = 0
+                remant_per = 0.00
+                if remant_exercised:
+                    remant_per = 100.00
                 if remant_exercised_pre != 0:
                     remant_per = (remant_exercised/remant_exercised_pre)*100
                     remant_per = round(remant_per,2)
@@ -325,7 +332,9 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                     'unfolded': True,
                     'class':'text-right'
                 })
-        expenses_per = 0
+        expenses_per = 0.00
+        if expenses_exercised:
+            expenses_per = 100.00
         if expenses_exercised_pre != 0:
             expenses_per = (expenses_exercised/expenses_exercised_pre)*100
             expenses_per = round(expenses_per,2)
@@ -345,7 +354,9 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
             'unfolded': True,
             'class':'text-right'
         })
-        year_per = 0
+        year_per = 0.00
+        if year_exercised:
+            year_per = 100.00
         if year_exercised_pre != 0:
             year_per = float((year_exercised/year_exercised_pre)*100)
             year_per = round(year_per,2)

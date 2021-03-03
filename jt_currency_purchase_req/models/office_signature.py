@@ -25,7 +25,7 @@ class OfficeSignature(models.Model):
 
     _name = 'office.signature'
     _description = 'Office Signature'
-
+    _rec_name = 'name'
     account_modification_id = fields.Many2one('request.accounts',domain=[('move_type','=','account_modify')])
     name = fields.Char("Number")
     dependancy_id = fields.Many2one('dependency', string='Dependency')
@@ -40,6 +40,13 @@ class OfficeSignature(models.Model):
         res.name = seq        
         return res
 
+    @api.onchange('account_modification_id')
+    def onchange_account_modification(self):
+
+        if self.account_modification_id:
+
+            self.bank_account_id = self.account_modification_id.request_line_ids and self.account_modification_id.request_line_ids[0].bank_account_id.id or False
+
 
     def get_sender_recipet1(self):
         trade = self.env['finance.sender.recipient.trades'].search([('template', '=', 'sign_update')], limit=1)
@@ -51,14 +58,22 @@ class AccountOpenRequest(models.Model):
 
     _name = 'account.open'
     _description = 'Opening a checking account'
-
+    _rec_name = 'name'
     
+    name = fields.Char("Number")
     account_modification_id = fields.Many2one('request.accounts',domain=[('move_type','=','account_modify')])
     dependancy_id = fields.Many2one('dependency', string='Dependency')
     bank_id = fields.Many2one('res.bank',string='Bank')
     bank_account_id = fields.Many2one('account.journal',"Bank Account")
     user_id = fields.Many2one('res.users','Responsible User')
 
+
+    @api.model
+    def create(self, vals):
+        res = super(AccountOpenRequest,self).create(vals)
+        seq = self.env['ir.sequence'].next_by_code('account.open')
+        res.name = seq        
+        return res
 
 
     def get_sender_recipet2(self):
@@ -99,6 +114,7 @@ class OtherProcedure(models.Model):
 
     _name = 'other.procedure'
     _description = 'Occupation other procedures'
+    _rec_name = 'name'
 
     name = fields.Char("Number")
     account_modification_id = fields.Many2one('request.accounts',domain=[('move_type','=','account_modify')])
@@ -107,12 +123,12 @@ class OtherProcedure(models.Model):
     bank_account_id = fields.Many2one('account.journal',"Bank Account")
     user_id = fields.Many2one('res.users','Responsible User')
 
-    # @api.model
-    # def create(self, vals):
-    #     res = super(OtherProcedure,self).create(vals)
-    #     seq = self.env['ir.sequence'].next_by_code('other.procedure')
-    #     res.name = seq        
-    #     return res
+    @api.model
+    def create(self, vals):
+        res = super(OtherProcedure,self).create(vals)
+        seq = self.env['ir.sequence'].next_by_code('other.procedure')
+        res.name = seq        
+        return res
 
     def get_sender_recipet4(self):
         trade = self.env['finance.sender.recipient.trades'].search([('template', '=', 'other_procedures')], limit=1)

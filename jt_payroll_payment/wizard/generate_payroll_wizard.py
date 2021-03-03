@@ -132,6 +132,7 @@ class GeneratePayrollWizard(models.TransientModel):
                 self.payroll_process_id.perception_filename = self.filename
                 self.payroll_process_id.perception_file_index = 1
                 self.payroll_process_id.perception_file_load = True
+                self.payroll_process_id.perception_hide = False
                 return
                 counter = 0                
                 for rowx, row in enumerate(map(sheet.row, range(self.file_row, sheet.nrows)), 1):
@@ -301,6 +302,7 @@ class GeneratePayrollWizard(models.TransientModel):
                 self.payroll_process_id.deductions_filename = self.filename
                 self.payroll_process_id.deductions_file_index = 1
                 self.payroll_process_id.deductions_file_load = True
+                self.payroll_process_id.deductions_hide = False
                 return
                 
                 counter = 0

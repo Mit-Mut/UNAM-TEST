@@ -227,7 +227,9 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                         to_exercised = assign - exercised
                         total_to_exercised += to_exercised
                             
-                        per = 0
+                        per = 0.00
+                        if assign:
+                            per = 100.00
                         if assign != 0:
                             per = (exercised/assign)*100
                             per = round(per,2)
@@ -271,7 +273,9 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                         year_assign -= total_assign
                         year_exercised -= total_exercised
                         year_to_exercised -= total_to_exercised
-
+                    total_per = 0.00
+                    if total_exercised:
+                        total_per = 100.00
                     if total_assign != 0:
                         total_per = (total_exercised/total_assign)*100
                         total_per = round(per,2)
@@ -310,7 +314,9 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                     })
 
             if type=="expenses":
-
+                remant_per = 0.00
+                if remant_exercised:
+                    remant_per = 100.00
                 if remant_assign != 0:
                     remant_per = (remant_exercised/remant_assign)*100
                     remant_per = round(remant_per,2)
@@ -330,7 +336,9 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                     'unfolded': True,
                     'class':'text-right'
                 })
-
+        expenses_per = 0.00
+        if expenses_exercised:
+            expenses_per = 100.00
         if expenses_assign != 0:
             expenses_per = (expenses_exercised/expenses_assign)*100
             expenses_per = round(expenses_per,2)
@@ -350,7 +358,9 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
             'unfolded': True,
             'class':'text-right'
         })
-
+        year_per = 0.00
+        if year_exercised:
+            year_per = 100.00
         if year_assign != 0:
             year_per = (year_exercised/year_assign)*100
             year_per = round(year_per,2)

@@ -1309,6 +1309,9 @@ class RequestOpenBalance(models.Model):
                     unam_move.action_post()
 
     def request(self):
+        if self.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure') and self.bases_collaboration_id and self.bases_collaboration_id.available_bal < self.opening_balance:
+            raise ValidationError(_('​Available Balance Is Less Then Requested Balance!'))
+            
         self.env['request.open.balance.invest'].create({
             'name': self.name,
             'operation_number': self.operation_number,

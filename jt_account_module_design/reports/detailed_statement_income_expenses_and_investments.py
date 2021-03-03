@@ -190,7 +190,7 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
             
             for major in major_ids:  
                                 
-                total_per = 0
+                total_per = 100
                 lines.append({
                     'id': 'major' + str(major.id),
                     'name': major.name,
@@ -292,10 +292,12 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                         total_to_exercised += to_exercised
                          
                             
-                        per = 0
+                        per = 0.00
+                        if exercised:
+                            per = 100.00
                         if assign > 0:
-                            per = (exercised*100)/assign
-                    
+                            per = (exercised/assign)*100
+                            
                         account_lines.append({
                             'id': 'account' + str(acc.id),
                             'name': str(acc.code) +" "+ str(acc.name),
@@ -368,6 +370,12 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                         year_exercised -= total_exercised
                         year_to_exercised -= total_to_exercised
 
+                    total_per = 0.00
+                    if total_exercised:
+                        total_per = 100.00
+                    if total_assign > 0:
+                        total_per = (total_exercised/total_assign)*100
+
                     lines.append({
                         'id': 'con' + str(con.id),
                         'name': con.concept,
@@ -380,7 +388,7 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                                     self._format({'name': total_e_income},figure_type='float'),
                                     self._format({'name': total_extra_book},figure_type='float'),
                                     self._format({'name': total_exercised},figure_type='float'),
-                                    {'name': ''},
+                                    {'name': total_per,'class':'number'},
                                     self._format({'name': total_to_exercised},figure_type='float'),
                                     ],
         
@@ -402,7 +410,7 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                                     self._format({'name': total_e_income},figure_type='float'),
                                     self._format({'name': total_extra_book},figure_type='float'),
                                     self._format({'name': total_exercised},figure_type='float'),
-                                    {'name': ''},
+                                    {'name': total_per,'class':'number'},
                                     self._format({'name': total_to_exercised},figure_type='float'),
                                     ],
                         
@@ -413,6 +421,13 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                         'parent_id': 'con' + str(con.id),
                     })
             if type=="expenses":
+
+                remant_per = 0.00
+                if remant_exercised:
+                    remant_per = 100.00
+                if remant_assign > 0:
+                    remant_per = (remant_exercised/remant_assign)*100
+                
                 lines.append({
                     'id': 'REMNANT',
                     'name': _('REMAINING BEFORE INVESTMENTS'),
@@ -425,7 +440,7 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                             self._format({'name': remant_e_income},figure_type='float'),
                             self._format({'name': remant_extra_book},figure_type='float'),
                             self._format({'name': remant_exercised},figure_type='float'),
-                            {'name': ''},
+                            {'name': remant_per,'class':'number'},
                             self._format({'name': remant_to_exercised},figure_type='float'),
                             ],
                 
@@ -434,6 +449,12 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                 'unfolded': True,
                 'class':'text-right'
             })
+
+        expenses_per = 0.00
+        if expenses_exercised:
+            expenses_per = 100.00
+        if expenses_assign > 0:
+            expenses_per = (expenses_exercised/expenses_assign)*100
 
         lines.append({
             'id': 'Total EXPENSES',
@@ -447,7 +468,7 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                     self._format({'name': expenses_e_income},figure_type='float'),
                     self._format({'name': expenses_extra_book},figure_type='float'),
                     self._format({'name': expenses_exercised},figure_type='float'),
-                    {'name': ''},
+                    {'name': expenses_per,'class':'number'},
                     self._format({'name': expenses_to_exercised},figure_type='float'),
                     ],
         
@@ -456,6 +477,12 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
             'unfolded': True,
             'class':'text-right'
         })
+
+        year_per = 0.00
+        if year_exercised:
+            year_per = 100.00
+        if year_assign > 0:
+            year_per = (year_exercised/year_assign)*100
 
         lines.append({
             'id': 'Total Year',
@@ -469,7 +496,7 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                     self._format({'name': year_e_income},figure_type='float'),
                     self._format({'name': year_extra_book},figure_type='float'),
                     self._format({'name': year_exercised},figure_type='float'),
-                    {'name': ''},
+                    {'name': year_per,'class':'number'},
                     self._format({'name': year_to_exercised},figure_type='float'),
                     ],
         

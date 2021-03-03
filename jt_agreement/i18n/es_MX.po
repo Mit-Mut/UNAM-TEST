@@ -2209,7 +2209,7 @@ msgstr "Movimientos"
 #: model:ir.ui.menu,name:jt_agreement.menu_movements_collaboration
 #, python-format
 msgid "Movements Of Agreements"
-msgstr "​ Movimientos de Convenios"
+msgstr "​Movimientos de Convenios"
 
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_collaboration_providers__partner_id
@@ -3678,4 +3678,4 @@ msgstr ""
 #: code:addons/jt_agreement/reports/movments.py:0
 #, python-format
 msgid "Retirements"
-msgstr "​ Retiros"
+msgstr "​​RETIROS"

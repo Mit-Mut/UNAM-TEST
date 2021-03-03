@@ -209,7 +209,7 @@ class StatesAndProgramReports(models.AbstractModel):
                                                'sub': amt + ade_amt}})
 
         lines.append({
-            'id': 'level_two_%s' % level_2_line.id,
+            'id': 'level_two_1_%s' % level_2_line.id,
             'name': name,
             'columns': line_cols,
             'level': 3,
@@ -284,7 +284,6 @@ class StatesAndProgramReports(models.AbstractModel):
 #                 if line.program_code_id and line.program_code_id.budget_program_conversion_id and \
 #                         line.program_code_id.budget_program_conversion_id.desc:
                 if line.program_code_id and line.program_code_id.desc_program and self.check_extra_item(line.program_code_id):
-                    
                     heading_name = line.program_code_id.desc_program.upper()
                     heading_name = self.strip_accents(heading_name)
                     if period_name in period_shcp_auth_dict.keys():
@@ -379,7 +378,7 @@ class StatesAndProgramReports(models.AbstractModel):
             #shcp_budget_line = period_budget_lines.filtered(lambda x:x.program_code_id.budget_program_conversion_id.shcp.id==shcp.id)
             program_code_ids = period_budget_lines.mapped('program_code_id')
             for program in program_code_ids: 
-                prog_name = line.program.desc_program and line.program.desc_program.upper() or ''
+                prog_name = program.desc_program and program.desc_program.upper() or ''
                 prog_name = self.strip_accents(prog_name)
                 shcp = program.budget_program_conversion_id.shcp.name
                 self.env.cr.execute("select coalesce(sum(abs(line.balance)+abs(line.tax_price_cr)),0) as committed from account_move_line line,account_move amove where line.program_code_id in %s and amove.id=line.move_id and amove.payment_state=%s and amove.invoice_date >= %s and amove.invoice_date <= %s", (tuple(program.ids),'paid',period_date_from,period_date_to))

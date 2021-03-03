@@ -49,6 +49,7 @@
         'security/ir.model.access.csv',
         'data/data.xml',
         'data/ir_sequence.xml',
+        'data/cron.xml',
         'views/assets.xml',
         'views/adjustments_cases_view.xml',
         'views/payroll_processing_view.xml',

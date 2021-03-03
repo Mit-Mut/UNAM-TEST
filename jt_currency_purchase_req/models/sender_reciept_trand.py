@@ -14,7 +14,7 @@ class SenderRecipientTradesFinance(models.Model):
     
         
     bank_account_id = fields.Many2one('res.bank','Bank')
-    account_bank_id = fields.Many2one('res.partner.bank','Bank')
+    account_bank_id = fields.Many2one('res.partner.bank','Bank Account')
     bank_acc_id = fields.Many2one('account.journal',"Bank Account")
     executive_id = fields.Many2one('executive.data',string='Executive Data')
     position_id = fields.Many2one('executive.data',string='Position')

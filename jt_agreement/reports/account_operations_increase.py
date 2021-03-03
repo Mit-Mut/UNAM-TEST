@@ -103,7 +103,7 @@ class AccountOperationIncreases(models.AbstractModel):
             options['date'].get('date_to'), '%Y-%m-%d').date()
         
         
-        move_lines = self.env['account.move.line'].search([('request_id.type_of_operation','in',('increase','increase_by_closing')),('request_id','!=',False),('request_id.bases_collaboration_id','!=',False),('date', '>=', start), ('date', '<=', end)])
+        move_lines = self.env['account.move.line'].search([('request_id.type_of_operation','in',('open_bal','increase','increase_by_closing')),('request_id','!=',False),('request_id.bases_collaboration_id','!=',False),('date', '>=', start), ('date', '<=', end)],order='date')
         total_debit = 0
         total_credit = 0
         

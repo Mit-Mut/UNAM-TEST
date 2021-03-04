@@ -124,6 +124,19 @@
                 action="action_status_program_report"
                 sequence="9"/>
 
+		<!-- Trial Balance Base -->
+       <record id="action_trial_balance_base_inherit" model="ir.actions.client">
+            <field name="name">Trial Balance</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model':'jt_account_module_design.trial.balance.base'}" />
+        </record>
+
+        <!-- added menu for the status program report -->
+        <menuitem id="menu_trial_balance_base_inherit" 
+                name="Trial Balance Base" 
+                parent="special_reports_submenu" 
+                action="action_trial_balance_base_inherit"
+                sequence="9"/>		
         <!-- general accounting action -->
         <record id="action_general_accounting" model="ir.actions.client">
             <field name="name">General Accouting</field>

@@ -273,12 +273,14 @@
                                     <field name="committe_ids" attrs="{'readonly': [('state', '!=', 'draft')]}">
                                         <tree editable="top">
                                             <field name="column_id"/>
-                                            <field name="column_position_id"/>
+                                            <field name="column_position_id" invisible="1"/>
+                                            <field name="position_column"/>
                                         </tree>
                                         <form>
                                             <group>
                                                 <field name="column_id"/>
-                                                <field name="column_position_id"/>
+                                                <field name="column_position_id" invisible="1"/>
+                                                <field name="position_column"/>
                                             </group>
                                         </form>
                                     </field>

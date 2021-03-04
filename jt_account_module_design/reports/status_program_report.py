@@ -46,7 +46,29 @@ class AccountGeneralLedgerReport(models.AbstractModel):
     def _get_options_domain(self, options):
         # OVERRIDE
         domain = super(AccountGeneralLedgerReport, self)._get_options_domain(options)
-
+        
+#         if self.env.context and self.env.context.get('model','')=='jt_account_module_design.general.ledger.inherit':
+#             new_domain = []
+#             start = False
+#             end = False
+#             #if options.get('date',False) and options.get('date',{}).get('mode','')=='range':
+#             if options.get('date',False) and options['date'].get('date_from',False):
+#                     start = datetime.strptime(str(options['date'].get('date_from')), '%Y-%m-%d').date()
+#             if options.get('date',False) and options['date'].get('date_to',False):
+#                     end = datetime.strptime(options['date'].get('date_to'), '%Y-%m-%d').date()
+#             
+#             for d in domain:
+#                 if d[0] == 'date':
+#                     if start:
+#                         new_domain.append(('date','>=',start))
+#                         start = False
+#                     elif end:
+#                         new_domain.append(('date','<=',end))
+#                     else:
+#                           new_domain.append(d)
+#                 else:
+#                     new_domain.append(d)
+#             #domain = new_domain 
         is_add_fiter = False
         is_add_dep_fiter = False
         dep_domain = []
@@ -62,7 +84,6 @@ class AccountGeneralLedgerReport(models.AbstractModel):
         if is_add_dep_fiter:
             move_lines_ids = self.env['account.move.line'].search(dep_domain)
             domain += [('move_id','in',move_lines_ids.mapped('move_id').ids)]
-        
         return domain
     
 class StatusProgramReport(models.AbstractModel):

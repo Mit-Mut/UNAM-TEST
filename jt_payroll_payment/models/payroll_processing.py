@@ -204,12 +204,12 @@ class CustomPayrollProcessing(models.Model):
     
     def send_perception_notification(self):
         if self.perception_user:
-            self.perception_user.notify_success(message='Process Completed - Please Click Again To Next Process Perception',
+            self.perception_user.notify_success(message='Active batch process is completed, new batch process will auto activate in few seconds if any data pending to validate.',
                                 title="Perception Process", sticky=True)
 
     def send_deductions_notification(self):
         if self.deductions_user:
-            self.deductions_user.notify_success(message='Process Completed - Please Click Again To Next Process Deductions',
+            self.deductions_user.notify_success(message='Active batch process is completed, new batch process will auto activate in few seconds if any data pending to validate.',
                                 title="Deductions Process", sticky=True)
 
     def create_perception_cron(self):
@@ -239,6 +239,8 @@ class CustomPayrollProcessing(models.Model):
         self.perception_user = self.env.user.id
         self.perception_hide = True
         self.create_perception_cron()
+        self.perception_user.notify_success(message='Batch process will auto activate in few seconds.',
+                            title="Perception Process", sticky=True)
         
     def process_perception_file(self,record_id=False):
         if record_id:
@@ -463,6 +465,8 @@ class CustomPayrollProcessing(models.Model):
         self.deductions_user = self.env.user.id
         self.deductions_hide = True
         self.create_deductions_cron()
+        self.deductions_user.notify_success(message='Batch process will auto activate in few seconds',
+                            title="Deductions Process", sticky=True)
 
     def process_deductions_file(self,record_id=False):
         if record_id:

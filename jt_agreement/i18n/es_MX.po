@@ -2727,6 +2727,11 @@ msgstr ""
 
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_committee__column_position_id
+msgid "Job"
+msgstr "Job"
+
+#. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_committee__position_column
 msgid "Position / Appointment column"
 msgstr "Puesto/Nombramiento"
 

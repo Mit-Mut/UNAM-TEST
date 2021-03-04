@@ -725,9 +725,10 @@ class Committe(models.Model):
 
     column_id = fields.Many2one('hr.employee', "Column Name")
     column_position_id = fields.Many2one(
-        'hr.job', "Position / Appointment column")
+        'hr.job', "Job")
     collaboration_id = fields.Many2one('bases.collaboration')
-
+    position_column = fields.Char("Position / Appointment column")
+    
     @api.onchange('column_id')
     def onchange_column_id(self):
         if self.column_id and self.column_id.job_id:
@@ -1309,6 +1310,9 @@ class RequestOpenBalance(models.Model):
                     unam_move.action_post()
 
     def request(self):
+        if self.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure') and self.bases_collaboration_id and self.bases_collaboration_id.available_bal < self.opening_balance:
+            raise ValidationError(_('​Available Balance Is Less Then Requested Balance!'))
+            
         self.env['request.open.balance.invest'].create({
             'name': self.name,
             'operation_number': self.operation_number,

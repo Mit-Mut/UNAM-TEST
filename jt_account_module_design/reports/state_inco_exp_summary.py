@@ -130,10 +130,23 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
             type_concept_ids = concept_ids.filtered(lambda x:x.inc_exp_type == type)
             major_ids = type_concept_ids.mapped('major_id')
             if type_concept_ids:
+                name = type.upper()
+                if self.env.lang == 'es_MX' and type == 'income':
+                    str1 = 'INGRESOS'
+                    name = str1.upper()
+                if self.env.lang == 'es_MX' and type == 'expenses':
+                    str2 = 'GASTOS'
+                    name = str2.upper()
+                if self.env.lang == 'es_MX' and type == 'investments':
+                    str3 = 'INVERSIONES'
+                    name = str3.upper()
+                if self.env.lang == 'es_MX' and type == 'other expenses':
+                    str4 = 'OTROS GASTOS'
+                    name = str4.upper()
 
                 lines.append({
                     'id': type,
-                    'name': str(type).upper(),
+                    'name': name,
                     'columns': [
                                 {'name': ''},
                                 {'name': ''},
@@ -164,7 +177,7 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                 })
                 
                 for con in type_concept_ids.filtered(lambda x:x.major_id.id == major.id):
-
+                    account_lines = []
                     total_assign = 0
                     total_exercised = 0
                     total_to_exercised = 0
@@ -172,21 +185,6 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                     
                     account_ids = con.account_ids
 
-                    lines.append({
-                        'id': 'con' + str(con.id),
-                        'name': con.concept,
-                        'columns': [
-                                    {'name': ''},
-                                    {'name': ''},
-                                    {'name': ''},
-                                    {'name': ''},
-                                    ],
-        
-                        'level': 2,
-                        'unfoldable': False,
-                        'unfolded': True,
-                        'class':'text-left'
-                    })
 
                     for acc in account_ids:
                     
@@ -195,14 +193,24 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
 #                         assign = assign/1000
 #                         total_assign += assign
                         assign = 0
+                        authorized = 0
                         if con.item_ids:
-                            program_code_ids = self.env['program.code'].search([('item_id','in',con.item_ids.ids)])
-                            if program_code_ids:
-                                self.env.cr.execute("select coalesce(SUM(CASE WHEN al.line_type = %s THEN al.amount ELSE -al.amount END),0) from adequacies_lines al,adequacies a where a.state=%s and al.program in %s and a.id=al.adequacies_id", ('increase','accepted',tuple(program_code_ids.ids)))
-                                my_datas = self.env.cr.fetchone()
-                                if my_datas:
-                                    assign = my_datas[0]
-                                    assign = assign/1000
+                            acc_item_ids = con.item_ids.filtered(lambda x:x.unam_account_id.id==acc.id)
+                            if acc_item_ids:
+                                program_code_ids = self.env['program.code'].search([('item_id','in',acc_item_ids.ids)])
+                                if program_code_ids:
+                                    self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NULL and start_date >= %s and end_date <= %s", (tuple(program_code_ids.ids),start,end))
+                                    my_datas = self.env.cr.fetchone()
+                                    if my_datas:
+                                        authorized = my_datas[0]
+                                        authorized = authorized/1000
+                                    
+                                    self.env.cr.execute("select coalesce(SUM(CASE WHEN al.line_type = %s THEN al.amount ELSE -al.amount END),0) from adequacies_lines al,adequacies a where a.state=%s and al.program in %s and a.id=al.adequacies_id", ('increase','accepted',tuple(program_code_ids.ids)))
+                                    my_datas = self.env.cr.fetchone()
+                                    if my_datas:
+                                        assign = my_datas[0]
+                                        assign = assign/1000
+                        assign += authorized
                         total_assign += assign
                         
                         #values= self.env['account.move.line'].search(domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', acc.ids)])
@@ -212,17 +220,21 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                         exercised = exercised/1000
                         total_exercised += exercised
 
-                        values= self.env['account.move.line'].search(domain + [('budget_id','!=',False),('account_id', 'in', acc.ids)])
-                        to_exercised = sum(x.debit-x.credit for x in values)
-                        to_exercised = to_exercised/1000
+#                         values= self.env['account.move.line'].search(domain + [('budget_id','!=',False),('account_id', 'in', acc.ids)])
+#                         to_exercised = sum(x.debit-x.credit for x in values)
+#                         to_exercised = to_exercised/1000
                         
+                        to_exercised = assign - exercised
                         total_to_exercised += to_exercised
                             
-                        per = 0
-                        if assign > 0:
-                            per = (exercised*100)/assign
+                        per = 0.00
+                        if assign:
+                            per = 100.00
+                        if assign != 0:
+                            per = (exercised/assign)*100
+                            per = round(per,2)
                         
-                        lines.append({
+                        account_lines.append({
                             'id': 'account' + str(acc.id),
                             'name': acc.code +" "+ acc.name,
                             'columns': [
@@ -235,6 +247,7 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                             'level': 3,
                             'unfoldable': False,
                             'unfolded': True,
+                            'parent_id': 'con' + str(con.id),
                         })
 
                     if type == 'income':
@@ -260,31 +273,61 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                         year_assign -= total_assign
                         year_exercised -= total_exercised
                         year_to_exercised -= total_to_exercised
-                        
+                    total_per = 0.00
+                    if total_exercised:
+                        total_per = 100.00
+                    if total_assign != 0:
+                        total_per = (total_exercised/total_assign)*100
+                        total_per = round(per,2)
+
+                    lines.append({
+                        'id': 'con' + str(con.id),
+                        'name': con.concept,
+                        'columns': [
+                                    self._format({'name': total_assign},figure_type='float'),
+                                    self._format({'name': total_exercised},figure_type='float'),
+                                    {'name':total_per,'class':'number'},
+                                    self._format({'name': total_to_exercised},figure_type='float'),
+                                    ],
+        
+                        'level': 2,
+                        'unfoldable': True,
+                        'unfolded': False,
+                        'class':'text-left'
+                    })
+                    lines += account_lines
                     lines.append({
                         'id': 'group_total',
                         'name': 'SUMA',
                         'columns': [
                                     self._format({'name': total_assign},figure_type='float'),
                                     self._format({'name': total_exercised},figure_type='float'),
-                                    {'name':''},
+                                    {'name':total_per,'class':'number'},
                                     self._format({'name': total_to_exercised},figure_type='float'),
                                     ],
                         
                         'level': 1,
                         'unfoldable': False,
                         'unfolded': True,
-                        'class':'text-right'
+                        'class':'text-right',
+                        'parent_id': 'con' + str(con.id),
                     })
 
             if type=="expenses":
+                remant_per = 0.00
+                if remant_exercised:
+                    remant_per = 100.00
+                if remant_assign != 0:
+                    remant_per = (remant_exercised/remant_assign)*100
+                    remant_per = round(remant_per,2)
+                
                 lines.append({
                     'id': 'REMNANT',
-                    'name': 'REMAINING BEFORE INVESTMENTS',
+                    'name': _('REMAINING BEFORE INVESTMENTS'),
                     'columns': [
                                 self._format({'name': remant_assign},figure_type='float'),
                                 self._format({'name': remant_exercised},figure_type='float'),
-                                {'name':''},
+                                {'name':remant_per,'class':'number'},
                                 self._format({'name': remant_to_exercised},figure_type='float'),
                                 ],
                     
@@ -293,14 +336,20 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
                     'unfolded': True,
                     'class':'text-right'
                 })
+        expenses_per = 0.00
+        if expenses_exercised:
+            expenses_per = 100.00
+        if expenses_assign != 0:
+            expenses_per = (expenses_exercised/expenses_assign)*100
+            expenses_per = round(expenses_per,2)
 
         lines.append({
             'id': 'Total EXPENSES',
-            'name': 'TOTAL EXPENSES, INVESTMENTS AND OTHER EXPENSES',
+            'name': _('TOTAL EXPENSES, INVESTMENTS AND OTHER EXPENSES'),
             'columns': [
                         self._format({'name': expenses_assign},figure_type='float'),
                         self._format({'name': expenses_exercised},figure_type='float'),
-                        {'name':''},
+                        {'name':expenses_per,'class':'number'},
                         self._format({'name': expenses_to_exercised},figure_type='float'),
                         ],
             
@@ -309,14 +358,20 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
             'unfolded': True,
             'class':'text-right'
         })
+        year_per = 0.00
+        if year_exercised:
+            year_per = 100.00
+        if year_assign != 0:
+            year_per = (year_exercised/year_assign)*100
+            year_per = round(year_per,2)
 
         lines.append({
             'id': 'Total Year',
-            'name': 'REMAINING OF THE YEAR',
+            'name': _('REMAINING OF THE YEAR'),
             'columns': [
                         self._format({'name': year_assign},figure_type='float'),
                         self._format({'name': year_exercised},figure_type='float'),
-                        {'name':''},
+                        {'name':year_per,'class':'number'},
                         self._format({'name': year_to_exercised},figure_type='float'),
                         ],
             
@@ -533,6 +588,8 @@ class IncomeExpensesandInvestmentSummary(models.AbstractModel):
         header_title += "\n"
         header_title += "ESTADO DE INGRESOS, GASTOS E INVERSIONES RESUMEN DEL "
         header_title += str(header_date)
+        header_title += "\n"
+        header_title += "Cifras en Miles de Pesos"
         
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)

@@ -153,10 +153,23 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
             major_ids = type_concept_ids.mapped('major_id')
 
             if type_concept_ids:
+                name = type.upper()
+                if self.env.lang == 'es_MX' and type == 'income':
+                    str1 = 'INGRESOS'
+                    name = str1.upper()
+                if self.env.lang == 'es_MX' and type == 'expenses':
+                    str2 = 'GASTOS'
+                    name = str2.upper()
+                if self.env.lang == 'es_MX' and type == 'investments':
+                    str3 = 'INVERSIONES'
+                    name = str3.upper()
+                if self.env.lang == 'es_MX' and type == 'other expenses':
+                    str4 = 'OTROS GASTOS'
+                    name = str4.upper()
 
                 lines.append({
                     'id': type,
-                    'name': str(type).upper(),
+                    'name': name,
                     'columns': [
                                 {'name': ''},
                                 {'name': ''},
@@ -177,7 +190,7 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
             
             for major in major_ids:  
                                 
-                total_per = 0
+                total_per = 100
                 lines.append({
                     'id': 'major' + str(major.id),
                     'name': major.name,
@@ -201,7 +214,7 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                 })
                 
                 for con in type_concept_ids.filtered(lambda x:x.major_id.id == major.id):
-
+                    account_lines = []
                     total_authorized = 0
                     total_transfers = 0
                     total_assign = 0
@@ -213,27 +226,6 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                     
                     account_ids = con.account_ids
                     
-                    lines.append({
-                        'id': 'con' + str(con.id),
-                        'name': con.concept,
-                        'columns': [
-                                    {'name': ''},
-                                    {'name': ''},
-                                    {'name': ''},
-                                    {'name': ''},
-                                    {'name': ''},
-                                    {'name': ''},
-                                    {'name': ''},
-                                    {'name': ''},
-                                    {'name': ''},
-                                    {'name': ''},
-                                    ],
-        
-                        'level': 2,
-                        'unfoldable': False,
-                        'unfolded': True,
-                        'class':'text-left'
-                    })
 
                     for acc in account_ids:
 #                         values= self.env['account.move.line'].search(domain + [('budget_id','!=',False),('account_id', 'in', acc.ids)])
@@ -244,17 +236,19 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                         transfers = 0
                         # ======Budget Data ======#
                         if con.item_ids:
-                            program_code_ids = self.env['program.code'].search([('item_id','in',con.item_ids.ids)])
-                            if program_code_ids:
-                                self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NULL and start_date >= %s and end_date <= %s", (tuple(program_code_ids.ids),start,end))
-                                my_datas = self.env.cr.fetchone()
-                                if my_datas:
-                                    authorized = my_datas[0]
-    
-                                self.env.cr.execute("select coalesce(SUM(CASE WHEN al.line_type = %s THEN al.amount ELSE -al.amount END),0) from adequacies_lines al,adequacies a where a.state=%s and al.program in %s and a.id=al.adequacies_id", ('increase','accepted',tuple(program_code_ids.ids)))
-                                my_datas = self.env.cr.fetchone()
-                                if my_datas:
-                                    assign = my_datas[0]
+                            acc_item_ids = con.item_ids.filtered(lambda x:x.unam_account_id.id==acc.id)
+                            if acc_item_ids:
+                                program_code_ids = self.env['program.code'].search([('item_id','in',acc_item_ids.ids)])
+                                if program_code_ids:
+                                    self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NULL and start_date >= %s and end_date <= %s", (tuple(program_code_ids.ids),start,end))
+                                    my_datas = self.env.cr.fetchone()
+                                    if my_datas:
+                                        authorized = my_datas[0]
+        
+                                    self.env.cr.execute("select coalesce(SUM(CASE WHEN al.line_type = %s THEN al.amount ELSE -al.amount END),0) from adequacies_lines al,adequacies a where a.state=%s and al.program in %s and a.id=al.adequacies_id", ('increase','accepted',tuple(program_code_ids.ids)))
+                                    my_datas = self.env.cr.fetchone()
+                                    if my_datas:
+                                        assign = my_datas[0]
                                 
                             transfers = assign
                             assign += authorized
@@ -298,11 +292,13 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                         total_to_exercised += to_exercised
                          
                             
-                        per = 0
+                        per = 0.00
+                        if exercised:
+                            per = 100.00
                         if assign > 0:
-                            per = (exercised*100)/assign
-                    
-                        lines.append({
+                            per = (exercised/assign)*100
+                            
+                        account_lines.append({
                             'id': 'account' + str(acc.id),
                             'name': str(acc.code) +" "+ str(acc.name),
                             'columns': [
@@ -321,9 +317,12 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                             'level': 3,
                             'unfoldable': False,
                             'unfolded': True,
+                            'parent_id': 'con' + str(con.id),
                         })
 
                     if type == 'income':
+                        # if self.env.user.lang == 'es_MX':
+                        #         type.update({'name':'INGRESOS'})
                         remant_authorized += total_authorized
                         remant_transfers += total_transfers
                         remant_assign += total_assign
@@ -370,7 +369,35 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                         year_extra_book -= total_extra_book
                         year_exercised -= total_exercised
                         year_to_exercised -= total_to_exercised
-    
+
+                    total_per = 0.00
+                    if total_exercised:
+                        total_per = 100.00
+                    if total_assign > 0:
+                        total_per = (total_exercised/total_assign)*100
+
+                    lines.append({
+                        'id': 'con' + str(con.id),
+                        'name': con.concept,
+                        'columns': [
+                                    self._format({'name': total_authorized},figure_type='float'),
+                                    self._format({'name': total_transfers},figure_type='float'),
+                                    self._format({'name': total_assign},figure_type='float'),
+                                    {'name': ''},
+                                    self._format({'name': total_contable_exercised},figure_type='float'),
+                                    self._format({'name': total_e_income},figure_type='float'),
+                                    self._format({'name': total_extra_book},figure_type='float'),
+                                    self._format({'name': total_exercised},figure_type='float'),
+                                    {'name': total_per,'class':'number'},
+                                    self._format({'name': total_to_exercised},figure_type='float'),
+                                    ],
+        
+                        'level': 2,
+                        'unfoldable': True,
+                        'unfolded': False,
+                        'class':'text-left'
+                    })
+                    lines += account_lines
                     lines.append({
                         'id': 'group_total',
                         'name': 'SUMA',
@@ -383,19 +410,27 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                                     self._format({'name': total_e_income},figure_type='float'),
                                     self._format({'name': total_extra_book},figure_type='float'),
                                     self._format({'name': total_exercised},figure_type='float'),
-                                    {'name': ''},
+                                    {'name': total_per,'class':'number'},
                                     self._format({'name': total_to_exercised},figure_type='float'),
                                     ],
                         
                         'level': 1,
                         'unfoldable': False,
                         'unfolded': True,
-                        'class':'text-right'
+                        'class':'text-right',
+                        'parent_id': 'con' + str(con.id),
                     })
             if type=="expenses":
+
+                remant_per = 0.00
+                if remant_exercised:
+                    remant_per = 100.00
+                if remant_assign > 0:
+                    remant_per = (remant_exercised/remant_assign)*100
+                
                 lines.append({
                     'id': 'REMNANT',
-                    'name': 'REMAINING BEFORE INVESTMENTS',
+                    'name': _('REMAINING BEFORE INVESTMENTS'),
                     'columns': [
                             self._format({'name': remant_authorized},figure_type='float'),
                             self._format({'name': remant_transfers},figure_type='float'),
@@ -405,7 +440,7 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                             self._format({'name': remant_e_income},figure_type='float'),
                             self._format({'name': remant_extra_book},figure_type='float'),
                             self._format({'name': remant_exercised},figure_type='float'),
-                            {'name': ''},
+                            {'name': remant_per,'class':'number'},
                             self._format({'name': remant_to_exercised},figure_type='float'),
                             ],
                 
@@ -415,9 +450,15 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                 'class':'text-right'
             })
 
+        expenses_per = 0.00
+        if expenses_exercised:
+            expenses_per = 100.00
+        if expenses_assign > 0:
+            expenses_per = (expenses_exercised/expenses_assign)*100
+
         lines.append({
             'id': 'Total EXPENSES',
-            'name': 'TOTAL EXPENSES, INVESTMENTS AND OTHER EXPENSES',
+            'name': _('TOTAL EXPENSES, INVESTMENTS AND OTHER EXPENSES'),
             'columns': [
                     self._format({'name': expenses_authorized},figure_type='float'),
                     self._format({'name': expenses_transfers},figure_type='float'),
@@ -427,7 +468,7 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                     self._format({'name': expenses_e_income},figure_type='float'),
                     self._format({'name': expenses_extra_book},figure_type='float'),
                     self._format({'name': expenses_exercised},figure_type='float'),
-                    {'name': ''},
+                    {'name': expenses_per,'class':'number'},
                     self._format({'name': expenses_to_exercised},figure_type='float'),
                     ],
         
@@ -437,9 +478,15 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
             'class':'text-right'
         })
 
+        year_per = 0.00
+        if year_exercised:
+            year_per = 100.00
+        if year_assign > 0:
+            year_per = (year_exercised/year_assign)*100
+
         lines.append({
             'id': 'Total Year',
-            'name': 'REMAINING OF THE YEAR',
+            'name': _('REMAINING OF THE YEAR'),
             'columns': [
                     self._format({'name': year_authorized},figure_type='float'),
                     self._format({'name': year_transfers},figure_type='float'),
@@ -449,7 +496,7 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                     self._format({'name': year_e_income},figure_type='float'),
                     self._format({'name': year_extra_book},figure_type='float'),
                     self._format({'name': year_exercised},figure_type='float'),
-                    {'name': ''},
+                    {'name': year_per,'class':'number'},
                     self._format({'name': year_to_exercised},figure_type='float'),
                     ],
         
@@ -731,6 +778,8 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
         header_title += "\n"
         header_title += "ESTADO DE INGRESOS, GASTOS E INVERSIONES DETALLADOS DEL "
         header_title += str(header_date)
+        header_title += "\n"
+        header_title += "Cifras en Miles de Pesos"
     
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)
@@ -810,3 +859,4 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
         generated_file = output.read()
         output.close()
         return generated_file
+

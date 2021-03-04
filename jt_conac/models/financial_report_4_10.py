@@ -209,7 +209,7 @@ class StatesAndProgramReports(models.AbstractModel):
                                                'sub': amt + ade_amt}})
 
         lines.append({
-            'id': 'level_two_%s' % level_2_line.id,
+            'id': 'level_two_1_%s' % level_2_line.id,
             'name': name,
             'columns': line_cols,
             'level': 3,
@@ -219,7 +219,20 @@ class StatesAndProgramReports(models.AbstractModel):
         })
         
         return lines,period_total,main_period_total
-    
+
+    def check_extra_item(self,program_code_id):
+        if program_code_id.budget_program_conversion_id and program_code_id.budget_program_conversion_id.shcp and program_code_id.budget_program_conversion_id.shcp.name:
+            if 'S243' == program_code_id.budget_program_conversion_id.shcp.name:
+                if program_code_id.item_id.item in ['731','732','733','734']:
+                    return False
+            if 'K027' == program_code_id.budget_program_conversion_id.shcp.name:
+                if program_code_id.item_id.item in ['612','622','623','232']:
+                    return False
+            if 'K009' == program_code_id.budget_program_conversion_id.shcp.name:
+                if program_code_id.item_id.item in ['621']:
+                    return False
+                
+        return True
     def _get_lines(self, options, line_id=None):
         states_obj = self.env['states.program']
         bud_line_obj = self.env['expenditure.budget.line']
@@ -268,10 +281,10 @@ class StatesAndProgramReports(models.AbstractModel):
                         pass
                     else:
                         continue
-                if line.program_code_id and line.program_code_id.budget_program_conversion_id and \
-                        line.program_code_id.budget_program_conversion_id.desc:
-                    
-                    heading_name = line.program_code_id.budget_program_conversion_id.desc.upper()
+#                 if line.program_code_id and line.program_code_id.budget_program_conversion_id and \
+#                         line.program_code_id.budget_program_conversion_id.desc:
+                if line.program_code_id and line.program_code_id.desc_program and self.check_extra_item(line.program_code_id):
+                    heading_name = line.program_code_id.desc_program.upper()
                     heading_name = self.strip_accents(heading_name)
                     if period_name in period_shcp_auth_dict.keys():
                         pe_dict = period_shcp_auth_dict.get(period_name)
@@ -304,7 +317,7 @@ class StatesAndProgramReports(models.AbstractModel):
                         ade.date_of_liquid_adu <= date_to:
                     for line in ade.adequacies_lines_ids:
                         if line.program:
-                            prog_name = line.program.budget_program_conversion_id.desc.upper()
+                            prog_name = line.program.desc_program and line.program.desc_program.upper() or ''
                             prog_name = self.strip_accents(prog_name)
                             shcp = line.program.budget_program_conversion_id.shcp.name
                             if prog_name in prog_dict_ade.keys():
@@ -329,7 +342,7 @@ class StatesAndProgramReports(models.AbstractModel):
                         and ade.date_of_budget_affected <= date_to:
                     for line in ade.adequacies_lines_ids:
                         if line.program:
-                            prog_name = line.program.budget_program_conversion_id.desc.upper()
+                            prog_name = line.program.desc_program and line.program.desc_program.upper() or ''
                             prog_name = self.strip_accents(prog_name)
                             shcp = line.program.budget_program_conversion_id.shcp.name
                             if prog_name in prog_dict_ade.keys():
@@ -358,14 +371,14 @@ class StatesAndProgramReports(models.AbstractModel):
              
             period_date_from = datetime.strptime(str(period.get('date_from')), DEFAULT_SERVER_DATE_FORMAT).date()
             period_date_to = datetime.strptime(str(period.get('date_to')), DEFAULT_SERVER_DATE_FORMAT).date()
-            period_budget_lines = bud_line_obj.search([('expenditure_budget_id.state', '=', 'validate'),
-                            ('start_date', '>=', period_date_from), ('state', '=', 'success'),
-                            ('end_date', '<=', period_date_to)])
             
+            period_budget_lines = bud_line_obj.search([('expenditure_budget_id.state', '=', 'validate'),
+                            ('start_date', '<=', period_date_from), ('state', '=', 'success'),
+                            ('end_date', '>=', period_date_to)])
             #shcp_budget_line = period_budget_lines.filtered(lambda x:x.program_code_id.budget_program_conversion_id.shcp.id==shcp.id)
             program_code_ids = period_budget_lines.mapped('program_code_id')
             for program in program_code_ids: 
-                prog_name = program.budget_program_conversion_id and program.budget_program_conversion_id.desc and program.budget_program_conversion_id.desc.upper() or ''
+                prog_name = program.desc_program and program.desc_program.upper() or ''
                 prog_name = self.strip_accents(prog_name)
                 shcp = program.budget_program_conversion_id.shcp.name
                 self.env.cr.execute("select coalesce(sum(abs(line.balance)+abs(line.tax_price_cr)),0) as committed from account_move_line line,account_move amove where line.program_code_id in %s and amove.id=line.move_id and amove.payment_state=%s and amove.invoice_date >= %s and amove.invoice_date <= %s", (tuple(program.ids),'paid',period_date_from,period_date_to))

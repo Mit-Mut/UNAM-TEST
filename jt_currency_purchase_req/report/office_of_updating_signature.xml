@@ -159,8 +159,10 @@
                             <div class="row">
                                 <div class="col-12" style="padding-left:15px;">
                                     <p style="padding-left:25px;">As indicated below:</p>
+                                        <span t-field="o.bank_account_id.bank_account_id.acc_number"/>-<span t-field="o.bank_account_id.company_partner_id.name"/>
                                     <br/>
                                     <br/>
+
                                     
                                     <center>
                                     <table class="table-bordered" style="font-size:15px;width:auto;height:100%;" cellspacing="10px" cellpadding="10px">

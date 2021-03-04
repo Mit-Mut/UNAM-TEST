@@ -16,4 +16,4 @@ access_deduction_line,deduction.line,model_deduction_line,,1,1,1,1
 access_pension_payment_line,pension.payment.line,model_pension_payment_line,,1,1,1,1
 access_additional_payments_line,additional.payments.line,model_additional_payments_line,,1,1,1,1
 access_additional_pension_payments_line,additional.pension.payments.line,model_additional_pension_payments_line,,1,1,1,1
-
+access_payroll_processing_failed_log,payroll.processing.failed.log,model_payroll_processing_failed_log,,1,1,1,1

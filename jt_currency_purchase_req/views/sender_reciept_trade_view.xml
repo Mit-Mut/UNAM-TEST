@@ -33,6 +33,7 @@
                                         <!-- Reciept-->
                                         <field name="bank_account_id"/>
                                         <field name="account_bank_id"/>
+                                        <field name="bank_acc_id" invisible="1"/>
                                         <field name="executive_id" context="{'show_recipet':True}"/>
                                         <field name="position_id" context="{'show_recipet':True}"/>
                         			</group>

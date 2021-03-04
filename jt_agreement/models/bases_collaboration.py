@@ -301,21 +301,21 @@ class BasesCollabration(models.Model):
 
     def get_opening_balance(self):
         deposite = sum(x.opening_balance for x in self.request_open_balance_ids.filtered(lambda x: x.state == 'confirmed'
-              and x.request_date < self.report_start_date and \
+              and x.request_date and x.request_date < self.report_start_date and \
               x.type_of_operation in ('open_bal', 'increase', 'increase_by_closing')))
         retiros = sum(x.opening_balance for x in self.request_open_balance_ids.filtered(lambda x: x.state == 'confirmed'
-              and x.request_date < self.report_start_date and \
+              and x.request_date and x.request_date < self.report_start_date and \
               x.type_of_operation in ('retirement', 'withdrawal', 'withdrawal_cancellation', 'withdrawal_closure')))
         bal = deposite - retiros
         return bal
 
     def get_deposite(self):
-        deposite = sum(x.opening_balance for x in self.request_open_balance_ids.filtered(lambda x: x.state == 'confirmed' and x.request_date >=
+        deposite = sum(x.opening_balance for x in self.request_open_balance_ids.filtered(lambda x: x.state == 'confirmed' and x.request_date and x.request_date >=
                                                                                          self.report_start_date and x.request_date <= self.report_end_date and x.type_of_operation in ('open_bal', 'increase', 'increase_by_closing')))
         return deposite
 
     def get_retiros(self):
-        retiros = sum(x.opening_balance for x in self.request_open_balance_ids.filtered(lambda x: x.state == 'confirmed' and x.request_date >=
+        retiros = sum(x.opening_balance for x in self.request_open_balance_ids.filtered(lambda x: x.state == 'confirmed' and x.request_date and x.request_date >=
                                                                                         self.report_start_date and x.request_date <= self.report_end_date and x.type_of_operation in ('retirement', 'withdrawal', 'withdrawal_cancellation', 'withdrawal_closure')))
         return retiros
 
@@ -323,7 +323,7 @@ class BasesCollabration(models.Model):
 
         req_date = self.request_open_balance_ids.filtered(lambda x: self.report_start_date and self.report_end_date \
             and x.state=='confirmed' and \
-            x.request_date >= self.report_start_date and x.request_date <= self.report_end_date).mapped('request_date')
+            x.request_date and x.request_date >= self.report_start_date and x.request_date <= self.report_end_date).mapped('request_date')
 
         lang = self.env.user.lang
         req_date += self.rate_base_ids.filtered(lambda x: self.report_start_date and self.report_end_date and \
@@ -725,9 +725,10 @@ class Committe(models.Model):
 
     column_id = fields.Many2one('hr.employee', "Column Name")
     column_position_id = fields.Many2one(
-        'hr.job', "Position / Appointment column")
+        'hr.job', "Job")
     collaboration_id = fields.Many2one('bases.collaboration')
-
+    position_column = fields.Char("Position / Appointment column")
+    
     @api.onchange('column_id')
     def onchange_column_id(self):
         if self.column_id and self.column_id.job_id:
@@ -1309,6 +1310,9 @@ class RequestOpenBalance(models.Model):
                     unam_move.action_post()
 
     def request(self):
+        if self.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure') and self.bases_collaboration_id and self.bases_collaboration_id.available_bal < self.opening_balance:
+            raise ValidationError(_('​Available Balance Is Less Then Requested Balance!'))
+            
         self.env['request.open.balance.invest'].create({
             'name': self.name,
             'operation_number': self.operation_number,

@@ -59,6 +59,7 @@ class CustomPayrollProcessing(models.Model):
     perception_filename = fields.Char('FileName')
     perception_file_index = fields.Integer(default=0)
     perception_file_load = fields.Boolean(default=False)
+    perception_hide = fields.Boolean(default=True)
     perception_user = fields.Many2one('res.users')
     
     deductions_file = fields.Binary('File to import')
@@ -66,6 +67,10 @@ class CustomPayrollProcessing(models.Model):
     deductions_file_index = fields.Integer(default=0)
     deductions_file_load = fields.Boolean(default=False)
     deductions_user = fields.Many2one('res.users')
+    deductions_hide = fields.Boolean(default=True)
+    
+    failed_log_ids = fields.One2many("payroll.processing.failed.log",'payroll_processing_id','Failed Logs')
+    cron_id = fields.Many2one("ir.cron")
     
     def get_total_record(self):
         for rec in self:
@@ -118,12 +123,27 @@ class CustomPayrollProcessing(models.Model):
                 'domain':[('id','in',self.payroll_ids.ids)]
             }
 
-    def update_failed_file(self,failed_row):
-
+    def update_failed_file(self,failed_row,type_of_movement,state,user_id,import_file_name):
+        
+        failed_line_id = False
+        failed_line_ids = self.failed_log_ids.filtered(lambda x:x.type_of_movement == type_of_movement and x.state == 'in_progress')
+        if failed_line_ids:
+            failed_line_id = failed_line_ids[0]
+            
         if failed_row != "":
             content = ""
-            if self.failed_row_file:
-                file_data = base64.b64decode(self.failed_row_file)
+            
+            if not failed_line_id:
+                vals = {'payroll_processing_id':self.id,
+                        'import_file_name' : import_file_name,
+                        'user_id' : user_id.id,
+                        'type_of_movement' : type_of_movement,
+                        'state' : state,
+                    }
+                failed_line_id = self.env['payroll.processing.failed.log'].create(vals)
+                
+            if failed_line_id.failed_row_file:
+                file_data = base64.b64decode(failed_line_id.failed_row_file)
                 content += io.StringIO(file_data.decode("utf-8")).read()
                 
             content += "\n"
@@ -131,8 +151,12 @@ class CustomPayrollProcessing(models.Model):
                        str(datetime.today()) + "...............\n"
             content += str(failed_row)
             failed_data = base64.b64encode(content.encode('utf-8'))
-            self.failed_row_file = failed_data
+            failed_line_id.failed_row_file = failed_data
 
+        if failed_line_id and state=='completed':
+            failed_line_id.state = 'completed'
+            
+        
     def check_employee_data(self,failed_row,rfc,import_type,counter):
         failed_row += "Row " +str(counter)+" : " + str(rfc) + "------>> Invalid Employee RFC In "+str(import_type)+" Import\n"
         return failed_row
@@ -180,17 +204,49 @@ class CustomPayrollProcessing(models.Model):
     
     def send_perception_notification(self):
         if self.perception_user:
-            self.perception_user.notify_success(message='Process Completed - Please Click Again To Next Process Perception',
+            self.perception_user.notify_success(message='Active batch process is completed, new batch process will auto activate in few seconds if any data pending to validate.',
                                 title="Perception Process", sticky=True)
 
     def send_deductions_notification(self):
         if self.deductions_user:
-            self.deductions_user.notify_success(message='Process Completed - Please Click Again To Next Process Deductions',
+            self.deductions_user.notify_success(message='Active batch process is completed, new batch process will auto activate in few seconds if any data pending to validate.',
                                 title="Deductions Process", sticky=True)
+
+    def create_perception_cron(self):
+        cron_name = str(self.name).replace(' ', '') + "_Perception_" + str(datetime.now()).replace(' ', '')
+        nextcall = datetime.now()
+        nextcall = nextcall + timedelta(seconds=10)
+
+        cron_vals = {
+            'name': cron_name,
+            'state': 'code',
+            'nextcall': nextcall,
+            'nextcall_copy': nextcall,
+            'numbercall': -1,
+            'code': "model.process_perception_file()",
+            'model_id': self.env.ref('jt_payroll_payment.model_custom_payroll_processing').id,
+            'user_id': self.env.user.id,
+            'payroll_processing_id': self.id,
+            'doall':True,
+        }
+
+        cron = self.env['ir.cron'].sudo().create(cron_vals)
+        self.cron_id = cron.id
+        cron.write(
+            {'code': "model.process_perception_file(" + str(self.id) + ")"})
         
-    def process_perception_file(self):
-        failed_row = ""
+    def process_perception_cron(self):
         self.perception_user = self.env.user.id
+        self.perception_hide = True
+        self.create_perception_cron()
+        self.perception_user.notify_success(message='Batch process will auto activate in few seconds.',
+                            title="Perception Process", sticky=True)
+        
+    def process_perception_file(self,record_id=False):
+        if record_id:
+            self = self.env['custom.payroll.processing'].browse(record_id)
+        failed_row = ""
+        
         if self.perception_file and self.perception_file_load:
             
             data = base64.decodestring(self.perception_file)
@@ -228,9 +284,10 @@ class CustomPayrollProcessing(models.Model):
 
                 if rfc and str(rfc).isalnum():
                     if counter > 20000:
-                        self.update_failed_file(failed_row)
+                        self.update_failed_file(failed_row,'payroll_perceptions','in_progress',self.perception_user,self.perception_filename)
                         self.perception_file_index += counter - 1
                         self.send_perception_notification()
+                        self.create_perception_cron()
                         return
                     
                     if exit_payroll_id and line_data:
@@ -374,15 +431,49 @@ class CustomPayrollProcessing(models.Model):
                     line_data = []
                     result_dict = {}
                     
-        self.update_failed_file(failed_row)
+        self.update_failed_file(failed_row,'payroll_perceptions','completed',self.perception_user,self.perception_filename)
         self.perception_file_index += counter
         self.perception_file_load = False
+        #self.perception_hide = False
         self.send_perception_notification()
         
 
-    def process_deductions_file(self):
-        failed_row = ""
+    def create_deductions_cron(self):
+        cron_name = str(self.name).replace(' ', '') + "_deductions_" + str(datetime.now()).replace(' ', '')
+        nextcall = datetime.now()
+        nextcall = nextcall + timedelta(seconds=10)
+
+        cron_vals = {
+            'name': cron_name,
+            'state': 'code',
+            'nextcall': nextcall,
+            'nextcall_copy': nextcall,
+            'numbercall': -1,
+            'code': "model.process_deductions_file()",
+            'model_id': self.env.ref('jt_payroll_payment.model_custom_payroll_processing').id,
+            'user_id': self.env.user.id,
+            'payroll_processing_id': self.id,
+            'doall':True,
+        }
+
+        cron = self.env['ir.cron'].sudo().create(cron_vals)
+        self.cron_id = cron.id
+        cron.write(
+            {'code': "model.process_deductions_file(" + str(self.id) + ")"})
+        
+    def process_deductions_cron(self):
         self.deductions_user = self.env.user.id
+        self.deductions_hide = True
+        self.create_deductions_cron()
+        self.deductions_user.notify_success(message='Batch process will auto activate in few seconds',
+                            title="Deductions Process", sticky=True)
+
+    def process_deductions_file(self,record_id=False):
+        if record_id:
+            self = self.env['custom.payroll.processing'].browse(record_id)
+        
+        failed_row = ""
+        #self.deductions_user = self.env.user.id
         if self.deductions_file and self.deductions_file_load:
             
             data = base64.decodestring(self.deductions_file)
@@ -410,9 +501,10 @@ class CustomPayrollProcessing(models.Model):
                 
                 if rfc and str(rfc).isalnum():
                     if counter > 40000:
-                        self.update_failed_file(failed_row)
+                        self.update_failed_file(failed_row,'payroll_deductions','in_progress',self.deductions_user,self.deductions_filename)
                         self.deductions_file_index += counter - 1
                         self.send_deductions_notification()
+                        self.process_deductions_cron()
                         return
                     
                     if exit_payroll_id and line_data:
@@ -481,8 +573,64 @@ class CustomPayrollProcessing(models.Model):
                     # exit_payroll_id = False
                     result_dict = {}
 
-        self.update_failed_file(failed_row)
+        self.update_failed_file(failed_row,'payroll_deductions','completed',self.deductions_user,self.deductions_filename)
         self.deductions_file_index += counter
         self.deductions_file_load = False
+        #self.deductions_hide = False
         self.send_deductions_notification()
+    
+    def remove_cron_records(self):
+        crons = self.env['ir.cron'].sudo().search(
+            [('payroll_processing_id', '!=', False)])
+        for cron in crons:
+            self.cron_id = cron.id
+            if cron.payroll_processing_id and cron.payroll_processing_id.cron_id and cron.payroll_processing_id.cron_id.id== cron.id:
+                 if cron.payroll_processing_id.deductions_file_load or cron.payroll_processing_id.perception_file_load:
+                    continue
+            if cron.payroll_processing_id:
+                try:
+                    cron.sudo().unlink()
+                except:
+                    pass
+        
+class PayrollProcessingFailedLog(models.Model):
+    
+    _name = 'payroll.processing.failed.log'
+    _order = 'id desc'
+    
+    payroll_processing_id = fields.Many2one('custom.payroll.processing','Payroll processing')
+    import_file_name = fields.Char("Import File Name")
+    user_id = fields.Many2one('res.users','Imported by')
+    failed_row_file = fields.Binary(string='Failed Rows File')
+    fialed_row_filename = fields.Char(
+        string='Log File', default="Failed_Rows.txt")
+        
+    type_of_movement = fields.Selection([('payroll_perceptions','Payroll Perceptions'),
+                                         ('payroll_deductions','Payroll Deductions'),
+                                         ('pension_payment','Pension Payment'),
+                                         ('additional_payments','Additional Payments'),
+                                         ('additional_pension_payments','Additional Pension Payments')
+                                         ],string='Type of Movement')
+    
+    state = fields.Selection([('in_progress','In Progress'),
+                                         ('completed','Completed'),
+                                         ],string='Status')
+    
+    process_date_time = fields.Datetime('Process Date',default=lambda self: fields.Datetime.now())
+    
+
+    def download_file(self):
+        self.ensure_one()
+        return {
+                'type': 'ir.actions.act_url',
+                'target':'download',
+                 'url': "web/content/?model=payroll.processing.failed.log&id=" + str(self.id) + "&filename_field=fialed_row_filename&field=failed_row_file&download=true&filename=" + self.fialed_row_filename,
+            }    
+
+class Cron(models.Model):
+
+    _inherit = 'ir.cron'
+
+    payroll_processing_id = fields.Many2one('custom.payroll.processing','Payroll Process') 
+    
     

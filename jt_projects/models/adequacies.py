@@ -28,6 +28,7 @@ from xlrd import open_workbook
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from dateutil.relativedelta import relativedelta
 
 class Adequacies(models.Model):
     _inherit = 'adequacies'
@@ -186,6 +187,12 @@ class ProgramCode(models.Model):
             lines = bud_line_obj.search([('program_code_id', '=', code.id),
                                          ('expenditure_budget_id.state', '=', 'validate')])
             authorized = assigned = st_ass = nd_ass = rd_ass = th_ass = 0
+            amount_of_previous_q = 0
+            today = datetime.today()
+            
+            current_year = today.year
+            current_month = today.month
+            
             for line in lines:
                 if not line.imported_sessional:
                     authorized += line.authorized
@@ -207,31 +214,85 @@ class ProgramCode(models.Model):
             for req_line in request_lines:
                 if req_line.application_date:
                     b_s_month = req_line.application_date.month
+                    year = req_line.application_date.year
                     if b_s_month in (1, 2, 3):
-                        st_ass += req_line.amount_req_tranfer
-                        authorized += req_line.amount_req_tranfer
+                        if year != current_year and current_year > year and code.conacyt_code:  
+                            amount_of_previous_q += req_line.amount_req_tranfer
+                        elif year == current_year and current_month not in (1, 2, 3) and current_month > b_s_month and code.conacyt_code:  
+                            amount_of_previous_q += req_line.amount_req_tranfer
+                        else:
+                            st_ass += req_line.amount_req_tranfer
+                            authorized += req_line.amount_req_tranfer
                     elif b_s_month in (4, 5, 6):
-                        nd_ass += req_line.amount_req_tranfer
-                        authorized += req_line.amount_req_tranfer
+                        if year != current_year and current_year > year and code.conacyt_code:  
+                            amount_of_previous_q += req_line.amount_req_tranfer
+                        elif year == current_year and current_month not in (1, 2, 3) and current_month > b_s_month and code.conacyt_code:  
+                            amount_of_previous_q += req_line.amount_req_tranfer
+                        else:
+                            nd_ass += req_line.amount_req_tranfer
+                            authorized += req_line.amount_req_tranfer
                     elif b_s_month in (7, 8, 9):
-                        rd_ass += req_line.amount_req_tranfer
-                        authorized += req_line.amount_req_tranfer
+                        if year != current_year and current_year > year and code.conacyt_code:  
+                            amount_of_previous_q += req_line.amount_req_tranfer
+                        elif year == current_year and current_month not in (1, 2, 3) and current_month > b_s_month and code.conacyt_code:  
+                            amount_of_previous_q += req_line.amount_req_tranfer
+                        else:
+                            rd_ass += req_line.amount_req_tranfer
+                            authorized += req_line.amount_req_tranfer
                     elif b_s_month in (10, 11, 12):
-                        th_ass += req_line.amount_req_tranfer
-                        authorized += req_line.amount_req_tranfer
+                        if year != current_year and current_year > year and code.conacyt_code:  
+                            amount_of_previous_q += req_line.amount_req_tranfer
+                        elif year == current_year and current_month not in (1, 2, 3) and current_month > b_s_month and code.conacyt_code:  
+                            amount_of_previous_q += req_line.amount_req_tranfer
+                        else:
+                            th_ass += req_line.amount_req_tranfer
+                            authorized += req_line.amount_req_tranfer
             
             verification_lines = self.env['verification.expense.line'].search([('program_code', '=', code.id),('verification_expense_id.status','=','approve')])
             for req_line in verification_lines:
                 if req_line.verification_expense_id and  req_line.verification_expense_id.reg_date:
                     b_s_month = req_line.verification_expense_id.reg_date.month
+                    year = req_line.verification_expense_id.reg_date.year
                     if b_s_month in (1, 2, 3):
-                        st_ass -= req_line.subtotal
+                        if year != current_year and current_year > year and code.conacyt_code:  
+                            amount_of_previous_q -= req_line.subtotal
+                        elif year == current_year and current_month not in (1, 2, 3) and current_month > b_s_month and code.conacyt_code:  
+                            amount_of_previous_q -= req_line.subtotal
+                        else:
+                            st_ass -= req_line.subtotal
+                            
                     elif b_s_month in (4, 5, 6):
-                        nd_ass -= req_line.subtotal
+                        if year != current_year and current_year > year and current_month > b_s_month and code.conacyt_code:  
+                            amount_of_previous_q -= req_line.subtotal
+                        elif year == current_year and current_month not in (1, 2, 3) and code.conacyt_code:  
+                            amount_of_previous_q -= req_line.subtotal
+                        else:
+                            nd_ass -= req_line.subtotal
                     elif b_s_month in (7, 8, 9):
-                        rd_ass -= req_line.subtotal
+                        if year != current_year and current_year > year and code.conacyt_code:  
+                            amount_of_previous_q -= req_line.subtotal
+                        elif year == current_year and current_month not in (1, 2, 3) and current_month > b_s_month and code.conacyt_code:  
+                            amount_of_previous_q -= req_line.subtotal
+                        else:
+                            rd_ass -= req_line.subtotal
                     elif b_s_month in (10, 11, 12):
-                        th_ass -= req_line.subtotal
+                        if year != current_year and current_year > year and code.conacyt_code:  
+                            amount_of_previous_q -= req_line.subtotal
+                        elif year == current_year and current_month not in (1, 2, 3) and current_month > b_s_month and code.conacyt_code:  
+                            amount_of_previous_q -= req_line.subtotal
+                        else:
+                            th_ass -= req_line.subtotal
+
+            if current_month in (1, 2, 3):
+                st_ass += amount_of_previous_q
+            elif current_month in (4, 5, 6):
+                nd_ass += amount_of_previous_q
+            elif current_month in (7, 8, 9):
+                rd_ass += amount_of_previous_q
+            elif current_month in (10, 11, 12):
+                th_ass += amount_of_previous_q
+
+ 
                 
             code.total_assigned_amt = assigned
             code.total_authorized_amt = authorized

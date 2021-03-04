@@ -21,7 +21,8 @@
 #
 ##############################################################################
 from odoo import models, api, _
-from datetime import datetime
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tools.misc import formatLang
 from odoo.tools.misc import xlsxwriter
@@ -112,9 +113,14 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
             move_state_domain = ('move_id.state', '=', 'posted')
         else:
             move_state_domain = ('move_id.state', '!=', 'cancel')
-
+        
+        pre_year_date = start - relativedelta(years=1)
+        pre_start_date = pre_year_date.replace(month=1, day=1)
+        pre_end_date = pre_year_date.replace(month=12, day=31)
+        
+        
         domain = [('date', '>=', start),('date', '<=', end),move_state_domain]
-        pre_domain = [('date', '<', start),move_state_domain]
+        pre_domain = [('date', '>=', pre_start_date),('date', '<=', pre_end_date),move_state_domain]
         
         concept_ids = self.env['detailed.statement.income'].search([('inc_exp_type','!=',False)])
         
@@ -137,10 +143,23 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
             type_concept_ids = concept_ids.filtered(lambda x:x.inc_exp_type == type)
             major_ids = type_concept_ids.mapped('major_id')
             if type_concept_ids:
+                name = type.upper()
+                if self.env.lang == 'es_MX' and type == 'income':
+                    str1 = 'INGRESOS'
+                    name = str1.upper()
+                if self.env.lang == 'es_MX' and type == 'expenses':
+                    str2 = 'GASTOS'
+                    name = str2.upper()
+                if self.env.lang == 'es_MX' and type == 'investments':
+                    str3 = 'INVERSIONES'
+                    name = str3.upper()
+                if self.env.lang == 'es_MX' and type == 'other expenses':
+                    str4 = 'OTROS GASTOS'
+                    name = str4.upper()
 
                 lines.append({
                     'id': type,
-                    'name': str(type).upper(),
+                    'name': name,
                     'columns': [
                                 {'name': ''},
                                 {'name': ''},
@@ -172,28 +191,13 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                 })
                 
                 for con in type_concept_ids.filtered(lambda x:x.major_id.id == major.id):
-
+                    account_lines = []
                     total_exercised = 0
                     total_exercised_pre = 0
                     total_variation = 0
                     
                     account_ids = con.account_ids
 
-                    lines.append({
-                        'id': 'con' + str(con.id),
-                        'name': con.concept,
-                        'columns': [
-                                    {'name': ''},
-                                    {'name': ''},
-                                    {'name': ''},
-                                    {'name': ''},
-                                    ],
-        
-                        'level': 2,
-                        'unfoldable': False,
-                        'unfolded': True,
-                        'class':'text-left'
-                    })
 
                     for acc in account_ids:
                     
@@ -208,6 +212,7 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                         #values= self.env['account.move.line'].search(pre_domain + [('move_id.payment_state','in',('for_payment_procedure','payment_not_applied')),('account_id', 'in', account_ids.ids)])
                         values= self.env['account.move.line'].search(pre_domain + [('account_id', 'in', acc.ids)])
                         exercised_pre= sum(x.credit - x.debit for x in values)
+                        exercised_pre = abs(exercised_pre)
                         exercised_pre = exercised_pre/1000
                         
                         total_exercised_pre += exercised_pre
@@ -216,11 +221,15 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                         total_variation += variation
                         
                             
-                        per = 0
-                        if exercised != 0:
-                            per = (variation*100)/exercised
+                        per = 0.00
+                        if exercised:
+                            per = 100.00
+                        if exercised_pre != 0:
+                            per = (exercised/exercised_pre)*100
+                            per = round(per,2)
+                            #per = (variation*100)/exercised
                         
-                        lines.append({
+                        account_lines.append({
                             'id': 'account' + str(acc.id),
                             'name': acc.code +" "+ acc.name,
                             'columns': [
@@ -234,6 +243,7 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                             'level': 3,
                             'unfoldable': False,
                             'unfolded': True,
+                            'parent_id': 'con' + str(con.id),
                         })
 
                     if type == 'income':
@@ -242,8 +252,8 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                         remant_variation += total_variation
                         
                         year_exercised += total_exercised
-                        year_exercised_pre += total_exercised
-                        year_variation += total_exercised
+                        year_exercised_pre += total_exercised_pre
+                        year_variation += total_variation
                         
                     elif type == 'expenses':
                         remant_exercised -= total_exercised
@@ -253,13 +263,36 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                     if type != 'income':
 
                         expenses_exercised += total_exercised
-                        expenses_exercised_pre += total_exercised
-                        expenses_variation += total_exercised
+                        expenses_exercised_pre += total_exercised_pre
+                        expenses_variation += total_variation
                         
                         year_exercised -= total_exercised
-                        year_exercised_pre -= total_exercised
-                        year_variation -= total_exercised
+                        year_exercised_pre -= total_exercised_pre
+                        year_variation -= total_variation
+
+                    total_per = 0.00
+                    if total_exercised:
+                        total_per = 100.00
+                    if total_exercised_pre !=0:
+                        total_per = (total_exercised/total_exercised_pre)*100
+                        total_per = round(total_per,2)
                         
+                    lines.append({
+                        'id': 'con' + str(con.id),
+                        'name': con.concept,
+                        'columns': [
+                                    self._format({'name': total_exercised},figure_type='float'),
+                                    self._format({'name': total_exercised_pre},figure_type='float'),
+                                    self._format({'name': total_variation},figure_type='float'),
+                                    {'name':total_per,'class':'number'},
+                                    ],
+        
+                        'level': 2,
+                        'unfoldable': True,
+                        'unfolded': False,
+                        'class':'text-left'
+                    })
+                    lines += account_lines    
                     lines.append({
                         'id': 'group_total',
                         'name': 'SUMA',
@@ -267,23 +300,31 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                                     self._format({'name': total_exercised},figure_type='float'),
                                     self._format({'name': total_exercised_pre},figure_type='float'),
                                     self._format({'name': total_variation},figure_type='float'),
-                                    {'name':''},
+                                    {'name':total_per,'class':'number'},
                                     ],
                         
                         'level': 1,
                         'unfoldable': False,
                         'unfolded': True,
-                        'class':'text-right'
+                        'class':'text-right',
+                        'parent_id': 'con' + str(con.id),
                     })
             if type=="expenses":
+                remant_per = 0.00
+                if remant_exercised:
+                    remant_per = 100.00
+                if remant_exercised_pre != 0:
+                    remant_per = (remant_exercised/remant_exercised_pre)*100
+                    remant_per = round(remant_per,2)
+                    
                 lines.append({
                     'id': 'REMNANT',
-                    'name': 'REMAINING BEFORE INVESTMENTS',
+                    'name': _('REMAINING BEFORE INVESTMENTS'),
                     'columns': [
                                 self._format({'name': remant_exercised},figure_type='float'),
                                 self._format({'name': remant_exercised_pre},figure_type='float'),
                                 self._format({'name': remant_variation},figure_type='float'),
-                                {'name':''},
+                                {'name':remant_per,'class':'number'},
                                 ],
                     
                     'level': 1,
@@ -291,15 +332,21 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
                     'unfolded': True,
                     'class':'text-right'
                 })
-
+        expenses_per = 0.00
+        if expenses_exercised:
+            expenses_per = 100.00
+        if expenses_exercised_pre != 0:
+            expenses_per = (expenses_exercised/expenses_exercised_pre)*100
+            expenses_per = round(expenses_per,2)
+            
         lines.append({
             'id': 'Total EXPENSES',
-            'name': 'TOTAL EXPENSES, INVESTMENTS AND OTHER EXPENSES',
+            'name': _('TOTAL EXPENSES, INVESTMENTS AND OTHER EXPENSES'),
             'columns': [
                     self._format({'name': expenses_exercised},figure_type='float'),
                     self._format({'name': expenses_exercised_pre},figure_type='float'),
                     self._format({'name': expenses_variation},figure_type='float'),
-                    {'name': ''},
+                    {'name':expenses_per,'class':'number'},
                     ],
         
             'level': 1,
@@ -307,15 +354,21 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
             'unfolded': True,
             'class':'text-right'
         })
+        year_per = 0.00
+        if year_exercised:
+            year_per = 100.00
+        if year_exercised_pre != 0:
+            year_per = float((year_exercised/year_exercised_pre)*100)
+            year_per = round(year_per,2)
 
         lines.append({
             'id': 'Total Year',
-            'name': 'REMAINING OF THE YEAR',
+            'name': _('REMAINING OF THE YEAR'),
             'columns': [
                     self._format({'name': year_exercised},figure_type='float'),
                     self._format({'name': year_exercised_pre},figure_type='float'),
                     self._format({'name': year_variation},figure_type='float'),
-                    {'name': ''},
+                    {'name':year_per,'class':'number'},
                     ],
         
             'level': 1,
@@ -441,6 +494,8 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
         header_title += "\n"
         header_title += "ESTADO DE INGRESOS, GASTOS E INVERSIONES COMPARATIVOS DEL "
         header_title += str(header_date)
+        header_title += "\n"
+        header_title += "Cifras en Miles de Pesos"
 
         sheet.merge_range(y_offset, col, 5, col + 6,
                           header_title, super_col_style)

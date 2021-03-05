@@ -56,7 +56,7 @@ class DetailsBudgetSummaryReport(models.TransientModel):
     name = fields.Char("Name")
     report_file = fields.Binary("Download Report", filters='.xls')
 
-
+               
     @api.onchange('filter_date')
     def onchange_filter(self):
         if self.filter_date:
@@ -759,9 +759,30 @@ class DetailsBudgetSummaryReport(models.TransientModel):
             self.name = 'reporte_detallado_de_presupuesto.xls'
         else:
             self.name = 'details_budget_report.xls'
-        self.state = 'download'
+        #self.state = 'download'
             
-
+        #=======================#
+        attch_obj = self.env['ir.attachment']
+        vals = {'name': self.name,
+                'datas': out,
+                'res_model': 'jt_budget_mgmt.details.budget.summary.report',
+                }
+        attach_ids = attch_obj.search([
+            ('res_model', '=', 'jt_budget_mgmt.details.budget.summary.report')])
+        if attach_ids:
+            try:
+                attach_ids.sudo().unlink()
+            except:
+                pass
+        doc_id = attch_obj.sudo().create(vals)
+        
+        return {
+            'type': 'ir.actions.act_url',
+            'url': 'web/content/%s?download=true' % (doc_id.id),
+            'target': 'current',
+            'tag': 'close',
+        }
+        #========================================#
         return {
             'name': _('Report'),
             'view_type': 'form',
@@ -773,9 +794,3 @@ class DetailsBudgetSummaryReport(models.TransientModel):
             'target': 'new',
             'res_id': self.id,
         }
-            
-               
-        
-        
-        
-        

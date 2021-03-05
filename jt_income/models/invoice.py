@@ -510,6 +510,15 @@ class Invoice(models.Model):
         result = super(Invoice, self).create(vals_list)
         self.set_pdf_remplate_data(result)
         for rec in result:
+            rec._onchange_income_invoice_line_ids()
+            if rec.type_of_revenue_collection:
+                rec._onchange_income_invoice_deposit_manual()
+                rec._onchange_income_invoice_deposit_automatic()
+                rec._onchange_income_invoice_billing_return_checked()
+                rec._onchange_income_invoice_billing()
+                rec._onchange_income_invoice_trades_dgoae()
+            
+            
             if rec.type_of_revenue_collection=='deposit_cer' and rec.record_type=='manual' and rec.income_bank_journal_id:
                 if not rec.income_bank_journal_id.default_debit_account_id:
                     if self.env.user.lang == 'es_MX':

@@ -36,6 +36,7 @@ class InvTransferRequest(models.TransientModel):
     user_id = fields.Many2one('res.users', default=lambda self: self.env.user.id, string="Applicant")
     line_ids = fields.One2many('inv.transfer.request.line','wizard_id')
     destination_investment_id = fields.Many2one('investment.investment', "Destination Investment")
+    selected = fields.Boolean('Transfer')
     
 #     @api.onchange('bank_account_id')
 #     def onchange_bank_account_id(self):
@@ -146,7 +147,54 @@ class InvTransferRequest(models.TransientModel):
                 'from_opt_transfer' : True
             }
         )
-            
+    def select_lines(self):
+        for line in self.line_ids:
+            line.check = True
+            line.onchange_amount_to_transfer_select()
+        self.selected = True
+        return {
+            'name': 'Approve Request',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': False,
+            'res_model': 'inv.transfer.request',
+            'res_id':self.id,
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+                'show_for_agreement': True,
+                'show_agreement_name': True,
+                'active_id':self.env.context.get('active_id',0),
+            }
+        }        
+
+    def deselect_lines(self):
+        for line in self.line_ids:
+            line.check = False
+            line.onchange_amount_to_transfer_select()
+        self.selected = False
+        return {
+            'name': 'Approve Request',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': False,
+            'res_model': 'inv.transfer.request',
+            'res_id':self.id,
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+                'show_for_agreement': True,
+                'show_agreement_name': True,
+                'active_id':self.env.context.get('active_id',0),
+            }
+        }        
+
+    @api.onchange('line_ids','line_ids.amount_to_transfer','line_ids.check')
+    def onchange_amount_to_transfer(self):
+        line_amount = sum(x.amount_to_transfer for x in self.line_ids.filtered(lambda a:a.check))
+        print ("====",line_amount)
+        self.amount = line_amount
+        
 class InvTransferRequestLine(models.TransientModel):
     _name = 'inv.transfer.request.line'
     _description = "Inv Transfer Request Line"
@@ -165,4 +213,16 @@ class InvTransferRequestLine(models.TransientModel):
         if self.amount_to_transfer > self.amount:
             self.amount_to_transfer = 0
             return {'warning': {'title': _("Warning"), 'message': 'Not Enough Balance'}}
+        line_amount = sum(x.amount_to_transfer for x in self.wizard_id.line_ids.filtered(lambda a:a.check))
+        self.wizard_id.amount = line_amount
+          
+    @api.onchange('check')
+    def onchange_amount_to_transfer_select(self):
+        if self.check:
+            self.amount_to_transfer = self.amount
+        else:
+            self.amount_to_transfer = 0
+
+        line_amount = sum(x.amount_to_transfer for x in self.wizard_id.line_ids.filtered(lambda a:a.check))
+        self.wizard_id.amount = line_amount
             

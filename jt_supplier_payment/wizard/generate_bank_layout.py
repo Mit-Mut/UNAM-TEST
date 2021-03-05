@@ -574,7 +574,7 @@ class GenerateBankLayout(models.TransientModel):
         
         #===== Filler ===#
         file_data += ''.ljust(575)
-        
+        file_data += ''.ljust(730)
         file_data +="\r\n"
         gentextfile = base64.b64encode(bytes(file_data,'utf-8'))
         self.file_data = gentextfile

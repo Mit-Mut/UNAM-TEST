@@ -1,4 +1,5 @@
-from odoo import fields, models, api
+from odoo import fields, models, api,_
+from odoo.exceptions import ValidationError, UserError
 
 class ApproveBlankCheck(models.TransientModel):
     _name = 'approve.blank.check'
@@ -19,6 +20,11 @@ class ApproveBlankCheck(models.TransientModel):
     checkbook_no = fields.Char(related='checkbook_req_id.checkbook_no')
     intial_folio = fields.Integer("Intial Folio")
     final_folio = fields.Integer("Final Folio")
+
+    @api.constrains('intial_folio', 'final_folio')
+    def _check_amount(self):
+        if ((self.final_folio - self.intial_folio) + 1) != self.number_of_checks_auth:
+            raise ValidationError(_('The folios registered do not match the number of checks authorized'))
 
     @api.onchange('bank_account_id')
     def onchange_bank_account_id(self):

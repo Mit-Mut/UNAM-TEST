@@ -35,7 +35,7 @@
                             <group>
                             	<field name="user_id"/>
                                 <field name="unit_req_transfer_id" context="{'bal_user_id': user_id,
-                                    'show_for_agreement':1}"/>
+                                    'show_for_agreement':1}" readonly="1"/>
                                 <field name="dependency_id" context="{'show_for_agreement':1}" />
                                 <field name="sub_dependency_id" attrs="{'invisible':[('is_agr','=',False)]}" domain="[('dependency_id','=',dependency_id)]" context="{'show_for_supplier_payment':1}"/>
                             	<field name="origin_resource_id" readonly="1"/>

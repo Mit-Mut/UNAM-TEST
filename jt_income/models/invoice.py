@@ -510,8 +510,9 @@ class Invoice(models.Model):
         result = super(Invoice, self).create(vals_list)
         self.set_pdf_remplate_data(result)
         for rec in result:
-            rec._onchange_income_invoice_line_ids()
+            
             if rec.type_of_revenue_collection:
+                rec._onchange_income_invoice_line_ids()
                 rec._onchange_income_invoice_deposit_manual()
                 rec._onchange_income_invoice_deposit_automatic()
                 rec._onchange_income_invoice_billing_return_checked()

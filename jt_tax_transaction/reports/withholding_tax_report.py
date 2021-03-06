@@ -234,8 +234,8 @@ class WithholdingTaxReport(models.AbstractModel):
 
         #====================================== Direct Account ========#
         for line in account_ids:
-            move_lines= self.env['account.move.line'].search([('account_id','=',line.id),('date', '>=', start),('date', '<=', end),move_state_domain])
-
+            #move_lines= self.env['account.move.line'].search([('account_id','=',line.id),('date', '>=', start),('date', '<=', end),move_state_domain])
+            move_lines= self.env['account.move.line'].search([('account_id','=',line.id),('date', '<=', end),move_state_domain])
             net_amount = sum(x.tax_base_amount for x in move_lines)
             tax_amount = sum(x.credit - x.debit for x in move_lines)
             #net_amount = net_amount/1000

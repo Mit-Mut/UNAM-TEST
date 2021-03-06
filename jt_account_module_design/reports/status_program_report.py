@@ -48,6 +48,7 @@ class AccountGeneralLedgerReport(models.AbstractModel):
         domain = super(AccountGeneralLedgerReport, self)._get_options_domain(options)
         
 #         if self.env.context and self.env.context.get('model','')=='jt_account_module_design.general.ledger.inherit':
+#             #print ("===",options['date'])
 #             new_domain = []
 #             start = False
 #             end = False
@@ -56,7 +57,7 @@ class AccountGeneralLedgerReport(models.AbstractModel):
 #                     start = datetime.strptime(str(options['date'].get('date_from')), '%Y-%m-%d').date()
 #             if options.get('date',False) and options['date'].get('date_to',False):
 #                     end = datetime.strptime(options['date'].get('date_to'), '%Y-%m-%d').date()
-#             
+#              
 #             for d in domain:
 #                 if d[0] == 'date':
 #                     if start:
@@ -68,7 +69,7 @@ class AccountGeneralLedgerReport(models.AbstractModel):
 #                           new_domain.append(d)
 #                 else:
 #                     new_domain.append(d)
-#             #domain = new_domain 
+            #domain = new_domain
         is_add_fiter = False
         is_add_dep_fiter = False
         dep_domain = []

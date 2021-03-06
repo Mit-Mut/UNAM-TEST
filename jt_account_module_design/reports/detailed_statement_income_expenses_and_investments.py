@@ -114,7 +114,8 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
         else:
             move_state_domain = ('move_id.state', '!=', 'cancel')
 
-        domain = [('date', '>=', start),('date', '<=', end),move_state_domain]
+        #domain = [('date', '>=', start),('date', '<=', end),move_state_domain]
+        domain = [('date', '<=', end),move_state_domain]
         
         concept_ids = self.env['detailed.statement.income'].search([('inc_exp_type','!=',False)])
         
@@ -240,7 +241,8 @@ class DetailStatementOfIncomeExpensesandInvestment(models.AbstractModel):
                             if acc_item_ids:
                                 program_code_ids = self.env['program.code'].search([('item_id','in',acc_item_ids.ids)])
                                 if program_code_ids:
-                                    self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NULL and start_date >= %s and end_date <= %s", (tuple(program_code_ids.ids),start,end))
+                                    #self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NULL and start_date >= %s and end_date <= %s", (tuple(program_code_ids.ids),start,end))
+                                    self.env.cr.execute("select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where ebl.program_code_id in %s and ebl.imported_sessional IS NULL and end_date <= %s", (tuple(program_code_ids.ids),end))
                                     my_datas = self.env.cr.fetchone()
                                     if my_datas:
                                         authorized = my_datas[0]

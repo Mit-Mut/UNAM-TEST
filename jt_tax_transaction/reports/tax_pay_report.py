@@ -132,8 +132,8 @@ class TaxReport(models.AbstractModel):
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
-        domain = [('date', '>=', start),('date', '<=', end),move_state_domain]
-        
+        #domain = [('date', '>=', start),('date', '<=', end),move_state_domain]
+        domain = [('date', '<=', end),move_state_domain]
         month_name = self.get_month_name(start.month)
 
         prev = start.replace(day=1) - timedelta(days=1)

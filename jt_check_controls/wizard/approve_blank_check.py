@@ -45,6 +45,9 @@ class ApproveBlankCheck(models.TransientModel):
                                                 ('folio', '>=', self.intial_folio),
                                                 ('folio', '!=', int(self.checkbook_req_id.print_sample_folio_number)),
                                                 ('folio', '<=', self.final_folio)])
+            if not check_logs:
+                raise ValidationError(_('The folios entered are not registered or are not available within the indicated checkbook, please verify.'))
+            
             for log in check_logs:
                 log.status = 'Assigned for shipping'
                 log.dependence_id = check_req.dependence_id and check_req.dependence_id.id or False

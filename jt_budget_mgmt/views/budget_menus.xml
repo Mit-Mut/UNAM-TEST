@@ -56,14 +56,6 @@
         sequence="2"
     />
 
-    <!-- menu for program Key-->
-    <menuitem
-        id="menu_program_key"
-        name="Key UNAM"
-        parent="menu_code_catalog"
-        action="action_program_key"
-        sequence="2"
-    />
     <!-- menu for sub program -->
     <menuitem
         id="menu_sub_program"
@@ -144,6 +136,15 @@
         sequence="11"
     />
 
+    <!-- menu for program Key-->
+    <menuitem
+        id="menu_program_key"
+        name="Key UNAM"
+        parent="menu_extra_views"
+        action="action_program_key"
+        sequence="20"
+    />
+    
     <menuitem
         id="menu_quarter_budget"
         name="Quarter"
@@ -210,13 +211,13 @@
 	 
     <!-- menu for agreement type -->
    
-    <menuitem
+    <!-- <menuitem
         id="menu_agreement_type"
         name="Type of agreement (TC)"
         parent="menu_code_catalog"
         action="action_agreement_type"
         sequence="17"
-    />
+    /> -->
 	
     <!-- menu for budget -->
     <menuitem

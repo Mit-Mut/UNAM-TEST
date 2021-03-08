@@ -107,8 +107,9 @@ class WeightIncomeReport(models.AbstractModel):
         else:
             move_state_domain = ('move_id.state', '!=', 'cancel')
 
-        domain = [('date', '>=', start),('date', '<=', end),move_state_domain]
-
+        #domain = [('date', '>=', start),('date', '<=', end),move_state_domain]
+        domain = [('date', '<=', end),move_state_domain]
+        
         concept_ids = self.env['miles.revenue'].search([])
 
         gt_total_balance1_inc = 0

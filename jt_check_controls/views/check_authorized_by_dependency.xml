@@ -22,8 +22,8 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="dependency_id"/>
-                                <field name="subdependency_id"/>
+                                <field name="dependency_id" options="{'no_create': True, 'no_edit': True, 'no_create_edit': True}"/>
+                                <field name="subdependency_id" domain="[('dependency_id','=',dependency_id)]" options="{'no_create': True, 'no_edit': True, 'no_create_edit': True}"/>
                                 <field name="area"/>
                             </group>
                             <group>

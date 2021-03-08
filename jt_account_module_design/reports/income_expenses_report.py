@@ -119,7 +119,8 @@ class StateIncomeExpensesInvestment(models.AbstractModel):
         pre_end_date = pre_year_date.replace(month=12, day=31)
         
         
-        domain = [('date', '>=', start),('date', '<=', end),move_state_domain]
+        #domain = [('date', '>=', start),('date', '<=', end),move_state_domain]
+        domain = [('date', '<=', end),move_state_domain]
         pre_domain = [('date', '>=', pre_start_date),('date', '<=', pre_end_date),move_state_domain]
         
         concept_ids = self.env['detailed.statement.income'].search([('inc_exp_type','!=',False)])

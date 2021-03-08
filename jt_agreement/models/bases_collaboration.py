@@ -41,6 +41,8 @@ class BasesCollabration(models.Model):
     available_bal = fields.Monetary("Available Balance")
     agreement_type_id = fields.Many2one(
         'agreement.agreement.type', 'Agreement Type')
+    agreement_type_group = fields.Char("Agreement Type Group",size=1)
+    
     fund_type_id = fields.Many2one('fund.type', "Fund Type")
     fund_id = fields.Many2one('agreement.fund', 'Fund')
     dependency_obs = fields.Text("Dependency Observations")
@@ -388,6 +390,11 @@ class BasesCollabration(models.Model):
     @api.model
     def create(self, vals):
         res = super(BasesCollabration, self).create(vals)
+        if res.agreement_type_id and res.agreement_type_group:
+            type_id = self.env['agreement.agreement.type'].search([('group','=',res.agreement_type_group),('name','=',res.agreement_type_id.name)],limit=1)
+            if type_id:
+                res.agreement_type_id = type_id.id
+                
         if res and res.beneficiary_ids:
             if not res.no_beneficiary_allowed or (res.no_beneficiary_allowed and
                                                   res.no_beneficiary_allowed < len(res.beneficiary_ids)):

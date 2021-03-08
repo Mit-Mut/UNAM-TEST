@@ -47,6 +47,41 @@ class ValueaddedTaxReport(models.AbstractModel):
             value['name'] = round(value['name'], 1)
         return value
 
+    def _compute_from_amls_taxes(self, options, dict_to_fill, period_number):
+        """ Fills dict_to_fill with the data needed to generate the report, when
+        the report is set to group its line by tax grid.
+        """
+        sql = self._sql_cash_based_taxes()
+        tables, where_clause, where_params = self.env['account.move.line'].with_context(date_from=False)._query_get()
+        print ("where_clause===",where_clause)
+        print ("where_params===",where_params)
+        query = sql % (tables, where_clause, tables, where_clause)
+        self.env.cr.execute(query, where_params + where_params)
+        results = self.env.cr.fetchall()
+        print ("results===",results)
+        for result in results:
+            
+            if result[0] in dict_to_fill:
+                dict_to_fill[result[0]]['periods'][period_number]['net'] = result[1]
+                dict_to_fill[result[0]]['periods'][period_number]['tax'] = result[2]
+                dict_to_fill[result[0]]['show'] = True
+        sql = self._sql_net_amt_regular_taxes()
+        query = sql % (tables, where_clause)
+        self.env.cr.execute(query, where_params)
+        results = self.env.cr.fetchall()
+        for result in results:
+            if result[0] in dict_to_fill:
+                dict_to_fill[result[0]]['periods'][period_number]['net'] = result[1]
+                dict_to_fill[result[0]]['show'] = True
+        sql = self._sql_tax_amt_regular_taxes()
+        query = sql % (tables, where_clause)
+        self.env.cr.execute(query, where_params)
+        results = self.env.cr.fetchall()
+        for result in results:
+            if result[0] in dict_to_fill:
+                dict_to_fill[result[0]]['periods'][period_number]['tax'] = result[1]
+                dict_to_fill[result[0]]['show'] = True
+
     def _get_lines(self, options, line_id=None):
         lines = super(ValueaddedTaxReport,self)._get_lines(options,line_id)
         col_list = []

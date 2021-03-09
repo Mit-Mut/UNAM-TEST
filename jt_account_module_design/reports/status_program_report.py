@@ -46,7 +46,6 @@ class AccountGeneralLedgerReport(models.AbstractModel):
     def _get_options_domain(self, options):
         # OVERRIDE
         domain = super(AccountGeneralLedgerReport, self)._get_options_domain(options)
-        
 #         if self.env.context and self.env.context.get('model','')=='jt_account_module_design.general.ledger.inherit':
 #             #print ("===",options['date'])
 #             new_domain = []
@@ -457,7 +456,6 @@ class StatusProgramReport(models.AbstractModel):
             'accounts': accounts,
             'type': 'N',
         }
-        print(chart)
         return chart
 
     @api.model
@@ -518,12 +516,19 @@ class StatusProgramReport(models.AbstractModel):
             
             grouped_accounts.setdefault(account, [])
             for i, res in enumerate(periods_results):
+                
                 if i == 0:
                     initial_balances[account] = res.get('initial_balance', {}).get('balance', 0.0)
+#                 grouped_accounts[account].append({
+#                     'balance': res.get('sum', {}).get('balance', 0.0),
+#                     'debit': res.get('sum', {}).get('debit', 0.0),
+#                     'credit': res.get('sum', {}).get('credit', 0.0),
+#                 })
+
                 grouped_accounts[account].append({
-                    'balance': res.get('sum', {}).get('balance', 0.0),
-                    'debit': res.get('sum', {}).get('debit', 0.0),
-                    'credit': res.get('sum', {}).get('credit', 0.0),
+                    'balance': res.get('sum', {}).get('balance', 0.0) - res.get('initial_balance', {}).get('balance', 0.0),
+                    'debit': res.get('sum', {}).get('debit', 0.0) - res.get('initial_balance', {}).get('debit', 0.0),
+                    'credit': res.get('sum', {}).get('credit', 0.0) - res.get('initial_balance', {}).get('credit', 0.0),
                 })
         
         return self._post_process(grouped_accounts, initial_balances, options, comparison_table)

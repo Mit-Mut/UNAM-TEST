@@ -153,8 +153,7 @@ class StatusOfActivities(models.AbstractModel):
 
                             move_lines = move_line_obj.sudo().search(
                                 [('coa_conac_id', '=', level_2_line.id),
-                                 move_state_domain,
-                                 ('date', '>=', date_start), ('date', '<=', date_end)])
+                                 move_state_domain,('date', '<=', date_end)])
                             if move_lines:
                                 balance = 0
                                 if line.code in ('4.0.0.0'):
@@ -177,9 +176,7 @@ class StatusOfActivities(models.AbstractModel):
                                                              DEFAULT_SERVER_DATE_FORMAT).date()
 
                                 move_lines = move_line_obj.sudo().search([('coa_conac_id', '=', level_3_line.id),
-                                                                          move_state_domain,
-                                                                          ('date', '>=', date_start),
-                                                                          ('date', '<=', date_end)])
+                                                                          move_state_domain,('date', '<=', date_end)])
                                 if move_lines:
                                     balance = 0
                                     if line.code in ('4.0.0.0'):

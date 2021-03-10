@@ -176,8 +176,7 @@ class AnalyticalStatusOfAssets(models.AbstractModel):
 
                                 move_lines = move_line_obj.sudo().search(
                                     [('coa_conac_id', '=', level_3_line.id),
-                                     move_state_domain,
-                                     ('date', '>=', date_start), ('date', '<=', date_end)])
+                                     move_state_domain,('date', '<=', date_end)])
                                 if move_lines:
                                     balance += (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
                                     if period.get('string') in period_dict:
@@ -196,9 +195,7 @@ class AnalyticalStatusOfAssets(models.AbstractModel):
                                                                  DEFAULT_SERVER_DATE_FORMAT).date()
 
                                     move_lines = move_line_obj.sudo().search([('coa_conac_id', '=', level_4_line.id),
-                                                                              move_state_domain,
-                                                                              ('date', '>=', date_start),
-                                                                              ('date', '<=', date_end)])
+                                                                              move_state_domain,('date', '<=', date_end)])
                                     if move_lines:
                                         balance += (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
                                         if period.get('string') in period_dict:

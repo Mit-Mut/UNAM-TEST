@@ -157,8 +157,7 @@ class StatementOfFinancialPosition(models.AbstractModel):
 
                             move_lines = move_line_obj.sudo().search(
                                 [('coa_conac_id', '=', level_2_line.id),
-                                 move_state_domain,
-                                 ('date', '>=', date_start), ('date', '<=', date_end)])
+                                 move_state_domain,('date', '<=', date_end)])
                             if move_lines:
                                 if line.code=='2.0.0.0' or line.code=='3.0.0.0':
                                     balance += (sum(move_lines.mapped('credit')) - sum(move_lines.mapped('debit')))
@@ -178,8 +177,7 @@ class StatementOfFinancialPosition(models.AbstractModel):
                                 date_end = datetime.strptime(str(period.get('date_to')), DEFAULT_SERVER_DATE_FORMAT).date()
                                 
                                 move_lines = move_line_obj.sudo().search([('coa_conac_id', '=', level_3_line.id),
-                                                        move_state_domain,
-                                                        ('date', '>=', date_start), ('date', '<=', date_end)])
+                                                        move_state_domain,('date', '<=', date_end)])
                                 if move_lines:
                                     if line.code=='2.0.0.0' or line.code=='3.0.0.0':
                                         balance += (sum(move_lines.mapped('credit')) - sum(move_lines.mapped('debit')))
@@ -363,8 +361,7 @@ class StatementOfFinancialPosition(models.AbstractModel):
 
                 move_lines = move_line_obj.sudo().search(
                     [('account_id', '=', b_account.id),
-                     move_state_domain,
-                     ('date', '>=', date_start), ('date', '<=', date_end)])
+                     move_state_domain,('date', '<=', date_end)])
                 if move_lines:
                     balance += (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
                     if period.get('string') in period_dict:

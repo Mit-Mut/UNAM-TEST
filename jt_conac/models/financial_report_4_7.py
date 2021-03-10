@@ -187,8 +187,7 @@ class StatementOfCashFlows(models.AbstractModel):
                         if level_2_line.coa_conac_ids:
                             move_lines = move_line_obj.sudo().search(
                                 [('coa_conac_id', 'in', level_2_line.coa_conac_ids.ids),
-                                 move_state_domain,
-                                 ('date', '>=', date_start),('date', '<=', date_end)])
+                                 move_state_domain,('date', '<=', date_end)])
                             if move_lines:
                                 per_amount = (sum(move_lines.mapped('credit')) - sum(move_lines.mapped('debit')))
                                 
@@ -280,8 +279,7 @@ class StatementOfCashFlows(models.AbstractModel):
                 per_amount = 0
                 move_lines = move_line_obj.sudo().search(
                     [('coa_conac_id', 'in', conac_account_ids.ids),
-                     move_state_domain,
-                     ('date', '>=', date_start),('date', '<=', date_end)])
+                     move_state_domain,('date', '<=', date_end)])
                 if move_lines:
                     per_amount = (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
     

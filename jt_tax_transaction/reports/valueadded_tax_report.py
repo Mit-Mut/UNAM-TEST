@@ -60,7 +60,6 @@ class ValueaddedTaxReport(models.AbstractModel):
         results = self.env.cr.fetchall()
         print ("results===",results)
         for result in results:
-            
             if result[0] in dict_to_fill:
                 dict_to_fill[result[0]]['periods'][period_number]['net'] = result[1]
                 dict_to_fill[result[0]]['periods'][period_number]['tax'] = result[2]

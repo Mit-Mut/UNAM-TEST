@@ -169,6 +169,7 @@ class AnalyticalStatusOfAssets(models.AbstractModel):
 
                             for period in periods:
                                 balance = 0
+                                inc_balance = 0
                                 date_start = datetime.strptime(str(period.get('date_from')),
                                                                DEFAULT_SERVER_DATE_FORMAT).date()
                                 date_end = datetime.strptime(str(period.get('date_to')),
@@ -177,18 +178,24 @@ class AnalyticalStatusOfAssets(models.AbstractModel):
                                 move_lines = move_line_obj.sudo().search(
                                     [('coa_conac_id', '=', level_3_line.id),
                                      move_state_domain,('date', '<=', date_end)])
-                                if move_lines:
-                                    balance += (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
-                                    if period.get('string') in period_dict:
-                                        period_dict.update(
-                                            {period.get('string'): period_dict.get(period.get('string')) + balance})
-                                    else:
-                                        period_dict.update({period.get('string'): balance})
+                                balance += (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+                                
+                                move_lines = move_line_obj.sudo().search(
+                                    [('coa_conac_id', '=', level_3_line.id),
+                                     move_state_domain,('date', '<=', date_start)])
+                                inc_balance += (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+                                
+                                if period.get('string') in period_dict:
+                                    period_dict.update(
+                                        {period.get('string'): {'inc_balance':period_dict.get(period.get('string'),{}).get('inc_balance',0.0) + inc_balance,'amt':period_dict.get(period.get('string'),{}).get('amt',0.0) + balance}})                                            
+                                else:
+                                    period_dict.update({period.get('string'): {'amt':balance,'inc_balance':inc_balance}})
 
                             level_4_lines = conac_obj.search([('parent_id', '=', level_3_line.id)])
                             for level_4_line in level_4_lines:
                                 for period in periods:
                                     balance = 0
+                                    inc_balance = 0
                                     date_start = datetime.strptime(str(period.get('date_from')),
                                                                    DEFAULT_SERVER_DATE_FORMAT).date()
                                     date_end = datetime.strptime(str(period.get('date_to')),
@@ -196,28 +203,36 @@ class AnalyticalStatusOfAssets(models.AbstractModel):
 
                                     move_lines = move_line_obj.sudo().search([('coa_conac_id', '=', level_4_line.id),
                                                                               move_state_domain,('date', '<=', date_end)])
-                                    if move_lines:
-                                        balance += (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
-                                        if period.get('string') in period_dict:
-                                            period_dict.update(
-                                                {period.get('string'): period_dict.get(period.get('string')) + balance})
-                                        else:
-                                            period_dict.update({period.get('string'): balance})
+                                    balance += (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+
+                                    move_lines = move_line_obj.sudo().search([('coa_conac_id', '=', level_4_line.id),
+                                                                              move_state_domain,('date', '<=', date_start)])
+                                    inc_balance += (sum(move_lines.mapped('debit')) - sum(move_lines.mapped('credit')))
+                                    
+                                    if period.get('string') in period_dict:
+                                        period_dict.update(
+                                            {period.get('string'): {'inc_balance':period_dict.get(period.get('string'),{}).get('inc_balance',0.0) + inc_balance,'amt':period_dict.get(period.get('string'),{}).get('amt',0.0) + balance}})
+                                    else:
+                                        period_dict.update({period.get('string'): {'amt':balance,'inc_balance':inc_balance}})
 
                             for pd, bal in period_dict.items():
                                 if pd in main_balance_dict.keys():
-                                    main_balance_dict.update({pd: main_balance_dict.get(pd) + bal})
+                                    main_balance_dict.update({pd: {'inc_balance':main_balance_dict.get(pd,{}).get('inc_balance',0.0) + bal.get('inc_balance',0),'amt':main_balance_dict.get(pd,{}).get('amt',0.0) + bal.get('amt',0)}})
                                 else:
-                                    main_balance_dict.update({pd: bal})
+                                    main_balance_dict.update({pd: {'inc_balance':bal.get('inc_balance',0),'amt':bal.get('amt',0)}})
+                                    
                                 if pd in last_total_dict.keys():
-                                    last_total_dict.update({pd: last_total_dict.get(pd) + bal})
+                                    last_total_dict.update({pd: {'inc_balance':last_total_dict.get(pd,{}).get('inc_balance',0) + bal.get('inc_balance',0.0),'amt':last_total_dict.get(pd,{}).get('amt',0) + bal.get('amt',0.0)}})
                                 else:
-                                    last_total_dict.update({pd: bal})
-
+                                    last_total_dict.update({pd: {'inc_balance':bal.get('inc_balance',0),'amt':bal.get('amt',0)}})
+                                    
                             for pe in periods:
                                 if pe.get('string') in period_dict.keys():
-                                    amt =  period_dict.get(pe.get('string'))
-                                    amt_columns += [self._format({'name': 0.00},figure_type='float'),
+                                                           
+                                    amt =  period_dict.get(pe.get('string',{})).get('amt',0.0)
+                                    inc_balance =  period_dict.get(pe.get('string',{})).get('inc_balance',0.0)
+                                    
+                                    amt_columns += [self._format({'name': inc_balance},figure_type='float'),
                                                     self._format({'name': amt},figure_type='float'),  
                                                     self._format({'name': 0.00},figure_type='float'),
                                                     self._format({'name': amt},figure_type='float'),
@@ -239,9 +254,10 @@ class AnalyticalStatusOfAssets(models.AbstractModel):
                         total_col = []
                         for pe in periods:
                             if pe.get('string') in main_balance_dict.keys():
-                                amt = main_balance_dict.get(pe.get('string'))
+                                amt = main_balance_dict.get(pe.get('string'),{}).get('amt',0.0)
+                                inc_balance = main_balance_dict.get(pe.get('string'),{}).get('inc_balance',0.0)
                                 
-                                total_col += [self._format({'name': 0.00},figure_type='float'),
+                                total_col += [self._format({'name': inc_balance},figure_type='float'),
                                               self._format({'name': amt},figure_type='float'),
                                               self._format({'name': 0.00},figure_type='float'),
                                               self._format({'name': amt},figure_type='float'),
@@ -265,8 +281,10 @@ class AnalyticalStatusOfAssets(models.AbstractModel):
         main_total_col = []
         for pe in periods:
             if pe.get('string') in last_total_dict.keys():
-                amt = last_total_dict.get(pe.get('string'))
-                main_total_col += [self._format({'name': 0.00},figure_type='float'),
+                amt = last_total_dict.get(pe.get('string'),{}).get('amt',0.0)
+                inc_balance = last_total_dict.get(pe.get('string'),{}).get('inc_balance',0.0)
+                
+                main_total_col += [self._format({'name': inc_balance},figure_type='float'),
                                   self._format({'name': amt},figure_type='float'),
                                   self._format({'name': 0.00},figure_type='float'),
                                   self._format({'name': amt},figure_type='float'),

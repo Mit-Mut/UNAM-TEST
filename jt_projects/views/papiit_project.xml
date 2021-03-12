@@ -25,8 +25,8 @@
             <field name="act_window_id" ref="action_project_papiit_1"/>
         </record>
 
-        <menuitem id="menu_project_registry_papiit" name="Projects" action="action_project_papiit_1"
-                  parent="supplier_payment_request_main_menu" sequence="1"/>
+        <menuitem id="menu_project_registry_papiit" name="UPA PAPIIT Projects" action="action_project_papiit_1"
+        parent="supplier_payment_request_main_menu" sequence="1"/>
     	
 	</data>
 </odoo>

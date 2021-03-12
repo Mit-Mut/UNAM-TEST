@@ -68,6 +68,7 @@
         'views/project_custom_type_view.xml',
         'wizard/program_code_create_view.xml',
         'views/income_invoice_view.xml',
+        'views/project_view_inherit.xml',
     ],
     'application': False,
     'installable': True,

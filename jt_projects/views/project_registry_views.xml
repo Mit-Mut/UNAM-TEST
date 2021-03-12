@@ -233,7 +233,7 @@
         <menuitem id="menu_conacyt" name="CONACYT"
                   parent="project.menu_main_pm" sequence="5"/>
 
-        <menuitem id="menu_project_registry" name="Projects" action="project_registry_action_conacyt"
+        <menuitem id="menu_project_registry" name="CONACYT Projects" action="project_registry_action_conacyt"
                   parent="menu_conacyt" sequence="1"/>
     </data>
 </odoo>

@@ -20,6 +20,27 @@ msgstr ""
 msgid ", on behalf of the National Autonomous University of Mexico."
 msgstr ", en nombre de la Universidad Nacional Autónoma de México."
 
+
+#. module: jt_check_controls
+#: code:addons/jt_check_controls/models/payment_batch_supplier.py:0
+#, python-format
+msgid ""
+" A new check folio cannot be assigned to a check that has been confirmed as "
+"Printed."
+msgstr ""
+" No se puede asignar un nuevo folio de cheque a un cheque que se ha confirmado como
+Impreso."
+
+#. module: jt_check_controls
+#: code:addons/jt_check_controls/models/checkbook_req.py:0
+#, python-format
+msgid ""
+"The check folio (number:%s) was already requested to be sent to escrow, only"
+" approval is pending."
+msgstr ""
+"El folio de cheque (Número:%s) ya se solicitó el envió a custodia, solo está pendiente su aprobación."
+
+
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_registration_template
 msgid ", they belong to checking account no."

@@ -354,18 +354,23 @@ class CheckListLine(models.Model):
         return res
 
     def action_send_to_custody(self):
-        cancel_checks = self.env['cancel.checks']
         for rec in self:
             if rec.status == 'Cancelled':
-                cancel_checks.create({
-                    'check_folio':rec.folio,
-                    'dependency_id': rec.dependence_id and rec.dependence_id.id or False,
-                    'check_status': rec.status,
-                    'bank_id': rec.bank_id.id if rec.bank_id else False,
-                    'bank_account_id': rec.bank_account_id.id if rec.bank_account_id else False,
-                    'checkbook_no': rec.bank_id.checkbook_no if rec.bank_id else False,
-                    'check_log_id': rec.id
-                    })
+                domain = [('check_folio','=',rec.folio),('dependency_id','=',rec.dependence_id.id),('check_status','=',rec.status),
+                    ('bank_id','=',rec.bank_id.id),('bank_account_id','=',rec.bank_account_id.id),('checkbook_no','=',rec.bank_id.checkbook_no),('check_log_id','=',rec.id)]
+                cancel_checks = self.env['cancel.checks'].search(domain)
+                if cancel_checks :
+                    raise ValidationError(_('The check folio (number:%s) was already requested to be sent to escrow, only approval is pending.')%(rec.folio))
+                else:
+                    cancel_checks.create({
+                        'check_folio':rec.folio,
+                        'dependency_id': rec.dependence_id and rec.dependence_id.id or False,
+                        'check_status': rec.status,
+                        'bank_id': rec.bank_id.id if rec.bank_id else False,
+                        'bank_account_id': rec.bank_account_id.id if rec.bank_account_id else False,
+                        'checkbook_no': rec.bank_id.checkbook_no if rec.bank_id else False,
+                        'check_log_id': rec.id
+                        })
 
     def unlink(self):
         for rec in self:

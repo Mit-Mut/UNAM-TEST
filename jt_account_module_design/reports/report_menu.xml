@@ -51,6 +51,13 @@
                 "context" eval="{'model': 'jt_account_module_design.miles.revenue.report'}" />
         </record>
 
+        <!-- Daily Control Report menu  -->
+        <record id="action_daily_control_report" model="ir.actions.client">
+            <field name="name">Daily Control report</field>
+            <field name="tag">account_report</field>
+            <field name=
+                "context" eval="{'model':'jt_account_module_design.daily.control.report'}" />
+        </record>
 
 
 
@@ -166,6 +173,12 @@
                 action="action_financial_positional_statement"
                 sequence="11"/>
 
+                <!-- added menu for the daily control-->
+        <menuitem id="menu_daily_control_report" 
+                name="Daily Control" 
+                parent="jt_payroll_payment.menu_finance_reports" 
+                action="action_daily_control_report"
+                sequence="20"/>
 
     </data>
 </odoo>

@@ -21,10 +21,10 @@ class ApproveBlankCheck(models.TransientModel):
     intial_folio = fields.Integer("Intial Folio")
     final_folio = fields.Integer("Final Folio")
 
-    @api.constrains('intial_folio', 'final_folio')
-    def _check_amount(self):
-        if ((self.final_folio - self.intial_folio) + 1) != self.number_of_checks_auth:
-            raise ValidationError(_('The folios registered do not match the number of checks authorized'))
+#     @api.constrains('intial_folio', 'final_folio')
+#     def _check_amount(self):
+#         if ((self.final_folio - self.intial_folio) + 1) != self.number_of_checks_auth:
+#             raise ValidationError(_('The folios registered do not match the number of checks authorized'))
 
     @api.onchange('bank_account_id')
     def onchange_bank_account_id(self):
@@ -34,6 +34,12 @@ class ApproveBlankCheck(models.TransientModel):
     def apply(self):
         check_req = self.env['blank.checks.request'].browse(self._context.get('active_id'))
         if check_req:
+            if check_req.amount_checks != self.number_of_checks_auth:
+                raise ValidationError(_('The total amount of checks authorized cannot be greater than the total amount of checks requested.'))
+
+            if ((self.final_folio - self.intial_folio) + 1) != self.number_of_checks_auth:
+                raise ValidationError(_('The folios registered do not match the number of checks authorized'))
+            
             check_req.department = self.department
             check_req.bank_account_id = self.bank_account_id.id
             check_req.checkbook_req_id = self.checkbook_req_id.id

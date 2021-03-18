@@ -28,8 +28,8 @@ msgid ""
 " A new check folio cannot be assigned to a check that has been confirmed as "
 "Printed."
 msgstr ""
-" No se puede asignar un nuevo folio de cheque a un cheque que se ha confirmado como
-Impreso."
+" No se puede asignar un nuevo folio de cheque a un cheque que se ha confirmado "
+"como Impreso."
 
 #. module: jt_check_controls
 #: code:addons/jt_check_controls/models/checkbook_req.py:0
@@ -2476,3 +2476,12 @@ msgid ""
 "indicated checkbook, please verify."
 msgstr "Los folios ingresados no se encuentran registrados o no están disponibles dentro de la "
 "chequera indicada, favor de verificar."
+
+#. module: jt_check_controls
+#: code:addons/jt_check_controls/wizard/approve_blank_check.py:0
+#, python-format
+msgid ""
+"The total amount of checks authorized cannot be greater than the total "
+"amount of checks requested."
+msgstr "El total de cheques autorizados no puede ser mayor al total "
+"de cheques solicitados."

@@ -1685,10 +1685,37 @@ class RequestOpenBalanceFinance(models.Model):
                                    "Payments")
     payment_count = fields.Integer(compute="count_payment", string="Payments")
 
+    #=== New fields OS-Odoo-06 =========#
+    def _get_prepare_by_employe(self):
+        emp_id = self.env['hr.employee'].search([('user_id','=',self.env.user.id)],limit=1)
+        if emp_id:
+            return emp_id.id
+        else:
+            return False
+        
+    trasnfer_request = fields.Selection([('investments','Investments'),('projects','Projects'),('finances','Finances')],string='Transfer Request')
+    is_manual = fields.Boolean(string="Manual Registration",copy=False,default=False)
+    attention_to_emp_id = fields.Many2one("hr.employee","Attention to")
+    prepared_by_emp_id = fields.Many2one("hr.employee","Prepared by",default=_get_prepare_by_employe)
+    prepared_by_user_id = fields.Many2one("hr.employee",string="Creation Users",default=lambda self: self.env.user.id)
+    prepared_by_dept_id = fields.Many2one(related="prepared_by_emp_id.department_id",string="Department to which it belongs")
+    
+    authorized_by_emp_id = fields.Many2one("hr.employee","Authorized by")
+    authorized_by_user_id = fields.Many2one("hr.employee",string="Authorized Users")
+    authorized_by_dept_id = fields.Many2one(related="authorized_by_emp_id.department_id",string="Department to which the authorizing person belongs")
+    
     @api.constrains('operation_number')
     def _check_operation_number(self):
         if self.operation_number and not self.operation_number.isnumeric():
             raise ValidationError(_('Operation Number must be Numeric.'))
+
+    @api.model
+    def create(self, vals):
+        res = super(RequestOpenBalanceFinance, self).create(vals)
+        if res.is_manual:
+            name = self.env['ir.sequence'].next_by_code('request.open.balance.finance.manual')
+            res.invoice = name
+        return res
 
     def open_payments(self):
         action = self.env.ref('account.action_account_payments').read()[0]
@@ -1722,9 +1749,11 @@ class RequestOpenBalanceFinance(models.Model):
 
     def approve_finance(self):
         self.state = 'approved'
-#         for rec in self.payment_ids:
-#             rec.
-
+        self.authorized_by_user_id = self.env.user.id
+        emp_id = self.env['hr.employee'].search([('user_id','=',self.env.user.id)],limit=1)
+        if emp_id:
+            self.authorized_by_emp_id = emp_id.id
+        
     def canceled_finance(self):
         self.state = 'canceled'
 

@@ -183,7 +183,7 @@
          </record>
 
           <record id="project_registry_action_conacyt" model="ir.actions.act_window">
-            <field name="name">Projects</field>
+            <field name="name">CONACYT Projects</field>
             <field name="res_model">project.project</field>
             <field name="view_mode">tree,form</field>
 			<field name="domain">[('project_type','!=',False)]</field>

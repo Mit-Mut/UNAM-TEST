@@ -4671,8 +4671,6 @@ msgid "Project: Send rating"
 msgstr "Proyecto: Enviar valoración"
 
 #. modules: jt_projects, project
-#: model:ir.actions.act_window,name:jt_projects.action_project_papiit_1
-#: model:ir.ui.menu,name:jt_projects.menu_project_registry_papiit
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.actions.act_window,name:project.open_view_project_all_config
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__project_ids
@@ -4686,12 +4684,13 @@ msgstr "Proyecto: Enviar valoración"
 #: model_terms:ir.ui.view,arch_db:project.rating_index
 #: model_terms:ir.ui.view,arch_db:project.view_project
 msgid "Projects"
-msgstr "Proyectos UPA PAPIIT"
+msgstr "Proyectos"
 
-#. modules: jt_projects, project
-#: model:ir.actions.act_window,name:jt_projects.project_registry_action_conacyt
-msgid "Projects"
-msgstr "Proyectos CONACYT"
+#. module: jt_projects
+#: model:ir.actions.act_window,name:jt_projects.action_project_papiit_1
+#: model:ir.ui.menu,name:jt_projects.menu_project_registry_papiit
+msgid "UPA PAPIIT Projects"
+msgstr "Proyectos UPA PAPIIT"
 
 #. module: jt_projects
 #: model:ir.model.fields,field_description:jt_projects.field_account_bank_statement_import_journal_creation__is_purchase_of_foreign_curr
@@ -6643,6 +6642,7 @@ msgid "visibility"
 msgstr ""
 
 #. module: jt_projects
+#: model:ir.actions.act_window,name:jt_projects.project_registry_action_conacyt
 #: model:ir.ui.menu,name:jt_projects.menu_project_registry
 msgid "CONACYT Projects"
 msgstr "Proyectos CONACYT"

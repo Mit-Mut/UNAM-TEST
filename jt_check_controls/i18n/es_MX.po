@@ -28,8 +28,7 @@ msgid ""
 " A new check folio cannot be assigned to a check that has been confirmed as "
 "Printed."
 msgstr ""
-" No se puede asignar un nuevo folio de cheque a un cheque que se ha confirmado como
-Impreso."
+" No se puede asignar un nuevo folio de cheque a un cheque que se ha confirmado como impreso."
 
 #. module: jt_check_controls
 #: code:addons/jt_check_controls/models/checkbook_req.py:0

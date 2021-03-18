@@ -91,6 +91,7 @@ class ApproveInvestmentBalReq(models.TransientModel):
                 'state': 'requested',
                 'fund_id' : self.fund_id and self.fund_id.id or False,
                 'amount_type' : self.amount_type,
+                'trasnfer_request':'investments',
             }
         )
         if self.bonds_id:

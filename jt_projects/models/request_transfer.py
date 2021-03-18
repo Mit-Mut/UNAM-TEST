@@ -83,7 +83,7 @@ class RequestTransfer(models.Model):
             'agreement_number': self.aggrement,
             'dependency_id' : self.dependency_id and self.dependency_id.id or False,
             'sub_dependency_id' : self.subdependency_id and self.subdependency_id.id or False,
-
+            'trasnfer_request':'projects',
         }
         self.env['request.open.balance.finance'].create(record)
 

@@ -2,7 +2,7 @@
 <odoo>
     <data>
          <record id="action_project_papiit_1" model="ir.actions.act_window">
-            <field name="name">Projects</field>
+            <field name="name">UPA PAPIIT Projects</field>
             <field name="res_model">project.project</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="domain">[('is_papiit_project','=',True)]</field>

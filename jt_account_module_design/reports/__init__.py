@@ -10,3 +10,4 @@ from . import general_ledger
 from . import general_accounting
 from . import financial_statement
 from . import trial_balance_base
+from . import daily_control_report

@@ -34,7 +34,8 @@ class ApproveBlankCheck(models.TransientModel):
     def apply(self):
         check_req = self.env['blank.checks.request'].browse(self._context.get('active_id'))
         if check_req:
-            if check_req.amount_checks != self.number_of_checks_auth:
+            amount_checks = check_req.amount_checks
+            if amount_checks < self.number_of_checks_auth:
                 raise ValidationError(_('The total amount of checks authorized cannot be greater than the total amount of checks requested.'))
 
             if ((self.final_folio - self.intial_folio) + 1) != self.number_of_checks_auth:

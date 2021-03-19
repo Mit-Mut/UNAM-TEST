@@ -64,6 +64,15 @@ class AccountPayment(models.Model):
 
     employee_partner_type = fields.Selection([('employee','Employee'),('alimony','Alimony')],string='Partner Type',copy=False)
     
+    no_validate_payment = fields.Boolean(string="Not Validated",copy=False,default=False,compute="get_status_of_payment",store=True)
+    
+    @api.depends('payment_state')
+    def get_status_of_payment(self):
+        for rec in self:
+            no_validate_payment = False
+            if rec.payment_state and rec.payment_state=='for_payment_procedure':
+                no_validate_payment = True
+            rec.no_validate_payment = no_validate_payment
             
     @api.depends('journal_id','journal_id.bank_format','journal_id.load_bank_format')
     def check_bank_format_type(self):

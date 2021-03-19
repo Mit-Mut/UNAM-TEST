@@ -1697,11 +1697,11 @@ class RequestOpenBalanceFinance(models.Model):
     is_manual = fields.Boolean(string="Manual Registration",copy=False,default=False)
     attention_to_emp_id = fields.Many2one("hr.employee","Attention to")
     prepared_by_emp_id = fields.Many2one("hr.employee","Prepared by",default=_get_prepare_by_employe)
-    prepared_by_user_id = fields.Many2one("hr.employee",string="Creation Users",default=lambda self: self.env.user.id)
+    prepared_by_user_id = fields.Many2one("res.users",string="Creation Users",default=lambda self: self.env.user.id)
     prepared_by_dept_id = fields.Many2one(related="prepared_by_emp_id.department_id",string="Department to which it belongs")
     
     authorized_by_emp_id = fields.Many2one("hr.employee","Authorized by")
-    authorized_by_user_id = fields.Many2one("hr.employee",string="Authorized Users")
+    authorized_by_user_id = fields.Many2one("res.users",string="Authorized Users")
     authorized_by_dept_id = fields.Many2one(related="authorized_by_emp_id.department_id",string="Department to which the authorizing person belongs")
     
     @api.constrains('operation_number')
@@ -1753,7 +1753,19 @@ class RequestOpenBalanceFinance(models.Model):
         emp_id = self.env['hr.employee'].search([('user_id','=',self.env.user.id)],limit=1)
         if emp_id:
             self.authorized_by_emp_id = emp_id.id
-        
+        if self.prepared_by_user_id:
+            activity_type = self.env.ref('mail.mail_activity_data_todo').id
+            summary = "Approve Transfer Request"
+            if self.invoice:
+                summary = "Approve '" + str(self.invoice) + "' Transfer Request"
+            
+            activity_obj = self.env['mail.activity']
+            model_id = self.env['ir.model'].sudo().search([('model', '=', 'request.open.balance.finance')]).id
+            activity_obj.create({'activity_type_id': activity_type,
+                               'res_model': 'request.open.balance.finance', 'res_id': self.id,
+                               'res_model_id':model_id,
+                               'summary': summary, 'user_id': self.prepared_by_user_id.id})
+            
     def canceled_finance(self):
         self.state = 'canceled'
 
@@ -1762,6 +1774,18 @@ class RequestOpenBalanceFinance(models.Model):
 
     def reject_finance(self):
         self.state = 'rejected'
+        if self.prepared_by_user_id:
+            activity_type = self.env.ref('mail.mail_activity_data_todo').id
+            summary = "Reject Transfer Request"
+            if self.invoice:
+                summary = "Reject '" + str(self.invoice) + "' Transfer Request"
+            
+            activity_obj = self.env['mail.activity']
+            model_id = self.env['ir.model'].sudo().search([('model', '=', 'request.open.balance.finance')]).id
+            activity_obj.create({'activity_type_id': activity_type,
+                               'res_model': 'request.open.balance.finance', 'res_id': self.id,
+                               'res_model_id':model_id,
+                               'summary': summary, 'user_id': self.prepared_by_user_id.id})
 
     def action_schedule_transfers(self):
         payment_obj = self.env['account.payment']

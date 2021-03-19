@@ -22,6 +22,7 @@
             <field name="arch" type="xml">
                 <field name="state" position="before">
             		<field name="payment_state"/>
+            		<field name="no_validate_payment"/>
             	</field>
             	<field name="state" position="attributes">
             		<attribute name='invisible'>1</attribute>
@@ -100,6 +101,7 @@
             		<field name="is_hide_hsbc" invisible="1"/>
             		<field name="is_hide_santander" invisible="1"/>
             		<field name="is_hide_jp_morgan" invisible="1"/>
+            		<field name="no_validate_payment"/>
             	</field>
             	<field name="partner_type" position="after">
             		<field name="employee_partner_type" attrs="{'invisible':[('payment_request_type','not in',('pension_payment','payroll_payment'))],'required':[('payment_request_type','in',('pension_payment','payroll_payment'))]}"/>
@@ -175,6 +177,8 @@
             		<filter string="Reconciled" name="payment_state_reconciled" domain="[('payment_state', '=', 'reconciled')]"/>
             		<filter string="Rejected" name="payment_state_rejected" domain="[('payment_state', '=', 'rejected')]"/>
             		<filter string="Cancelled" name="payment_state_cancelled" domain="[('payment_state', '=', 'cancelled')]"/>
+            		<filter string="Not Validated" name="no_validate_payment" domain="[('no_validate_payment', '=', True)]"/>
+            		
             	</xpath>
             	<xpath expr="//filter[@name='state_draft']" position="attributes">
             		<attribute name='invisible'>1</attribute>

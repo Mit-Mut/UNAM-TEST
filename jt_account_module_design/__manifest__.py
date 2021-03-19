@@ -38,6 +38,7 @@
         'views/miles_revenue_view.xml',
         'views/detailed_imcome_statement_view.xml',
         'views/account_move_line.xml',
+        'reports/transfer_request_report_view.xml',
  #       'reports/filter_template.xml',
         'security/ir.model.access.csv',
     ],

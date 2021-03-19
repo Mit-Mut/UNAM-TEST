@@ -189,8 +189,8 @@
                         			</group>
                         		</group>
                         	</page>
-                            <page name="cancellation_info" string="Cancellation Information"
-                                attrs="{'invisible': [('state', 'not in', ('in_force', 'to_be_cancelled', 'cancelled'))]}">
+                            <!-- attrs="{'invisible': [('state', 'not in', ('in_force', 'to_be_cancelled', 'cancelled'))]}" -->
+                            <page name="cancellation_info" string="Cancellation Information">
                                 <group>
                                     <field name="cancel_date"/>
                                     <field name="supporing_doc"/>

@@ -55,8 +55,16 @@ class ApproveBlankCheck(models.TransientModel):
             if not check_logs:
                 raise ValidationError(_('The folios entered are not registered or are not available within the indicated checkbook, please verify.'))
             
-            for log in check_logs:
-                log.status = 'Assigned for shipping'
-                log.dependence_id = check_req.dependence_id and check_req.dependence_id.id or False
-                log.subdependence_id = check_req.subdependence_id and check_req.subdependence_id.id or False
-                check_req.log_ids = [(4, log.id)]
+            check_vals = {'status':'Assigned for shipping',
+                          'dependence_id' : check_req.dependence_id and check_req.dependence_id.id or False,
+                          'subdependence_id' : check_req.subdependence_id and check_req.subdependence_id.id or False,
+                          
+                          }
+            check_logs.write(check_vals)
+            check_req.log_ids = [(6, 0, check_logs.ids)]
+            
+#             for log in check_logs:
+#                 log.status = 'Assigned for shipping'
+#                 log.dependence_id = check_req.dependence_id and check_req.dependence_id.id or False
+#                 log.subdependence_id = check_req.subdependence_id and check_req.subdependence_id.id or False
+#                 check_req.log_ids = [(4, log.id)]

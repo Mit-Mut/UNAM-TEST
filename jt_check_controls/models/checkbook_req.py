@@ -295,6 +295,9 @@ class CheckListLine(models.Model):
                                        ('cancelled', 'Cancelled'),
                                        ('paid', 'Paid')], compute='_compute_general_status',store=True)
 
+    _sql_constraints = [('uniq_check_folio_bank_id', 'unique(folio,bank_id)',
+                         _('Cannot register folios that are already registered'))]
+
     @api.depends('status')
     def _compute_general_status(self):
         for rec in self:
@@ -311,32 +314,32 @@ class CheckListLine(models.Model):
             else:
                 rec.general_status = False
 
-    @api.constrains('folio','bank_id')
-    def _check_stage_identifier(self):
-        for check in self:
-            if check.folio and check.bank_id:
-                other_check = self.env['check.log'].search([('id','!=',check.id),('folio','=',check.folio),('bank_id','=',check.bank_id.id)])
-                print ("Other Check---",other_check)
-                if other_check:
-                    raise ValidationError(_('Cannot register folios that are already registered'))
+#     @api.constrains('folio','bank_id')
+#     def _check_stage_identifier(self):
+#         for check in self:
+#             if check.folio and check.bank_id:
+#                 other_check = self.env['check.log'].search([('id','!=',check.id),('folio','=',check.folio),('bank_id','=',check.bank_id.id)])
+#                 print ("Other Check---",other_check)
+#                 if other_check:
+#                     raise ValidationError(_('Cannot register folios that are already registered'))
 
     def write(self, vals):
-        
-        if self.status == 'Cancelled' and vals.get('status') in ('Checkbook registration', 'Assigned for shipping',
-          'Available for printing', 'Printed', 'Delivered', 'In transit', 'Sent to protection',
-           'Protected and in transit', 'Protected', 'Detained', 'Withdrawn from circulation'):
-            raise ValidationError(_("You can't change check log from 'Cancelled' to following status: \n"
-                                    "Checkbook registration \n"
-                                    "Assigned for shipping \n"
-                                    "Available for printing \n"
-                                    "Printed \n"
-                                    "Delivered \n"
-                                    "In transit \n"
-                                    "Sent to protection \n"
-                                    "Protected and in transit \n"
-                                    "Protected \n"
-                                    "Detained \n"
-                                    "Withdrawn from circulation \n"))
+        for rec in self:
+            if rec.status == 'Cancelled' and vals.get('status') in ('Checkbook registration', 'Assigned for shipping',
+              'Available for printing', 'Printed', 'Delivered', 'In transit', 'Sent to protection',
+               'Protected and in transit', 'Protected', 'Detained', 'Withdrawn from circulation'):
+                raise ValidationError(_("You can't change check log from 'Cancelled' to following status: \n"
+                                        "Checkbook registration \n"
+                                        "Assigned for shipping \n"
+                                        "Available for printing \n"
+                                        "Printed \n"
+                                        "Delivered \n"
+                                        "In transit \n"
+                                        "Sent to protection \n"
+                                        "Protected and in transit \n"
+                                        "Protected \n"
+                                        "Detained \n"
+                                        "Withdrawn from circulation \n"))
         if vals.get('status',False) and vals.get('status','')=='Cancelled':
             today = datetime.today().date()
             vals.update({'date_cancellation':today})

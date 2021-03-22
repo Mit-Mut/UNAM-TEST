@@ -41,6 +41,7 @@
         'reports/transfer_request_report_view.xml',
  #       'reports/filter_template.xml',
         'security/ir.model.access.csv',
+        'wizard/confirm_payment_date_view.xml',
     ],
 
     'application': False,

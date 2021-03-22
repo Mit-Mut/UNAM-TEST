@@ -2452,6 +2452,7 @@ msgstr "Departamento de Operación Financiera"
 
 #. module: jt_check_controls
 #: code:addons/jt_check_controls/models/checkbook_req.py:0
+#: model:ir.model.constraint,message:jt_check_controls.constraint_check_log_uniq_check_folio_bank_id
 #, python-format
 msgid "Cannot register folios that are already registered"
 msgstr "No se pueden registrar folios que ya están registrados"

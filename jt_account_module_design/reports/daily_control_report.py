@@ -63,6 +63,28 @@ class DailyControlReport(models.Model):
             {'name':_('Folios')}
         ]
 
+    def _format(self, value, figure_type):
+        if self.env.context.get('no_format'):
+            return value
+        value['no_format_name'] = value['name']
+
+        if figure_type == 'float':
+            currency_id = self.env.company.currency_id
+            if currency_id.is_zero(value['name']):
+                # don't print -0.0 in reports
+                value['name'] = abs(value['name'])
+                value['class'] = 'number text-muted'
+            value['name'] = formatLang(
+                self.env, value['name'], currency_obj=currency_id)
+            value['class'] = 'number'
+            return value
+        if figure_type == 'percents':
+            value['name'] = str(round(value['name'] * 100, 1)) + '%'
+            value['class'] = 'number'
+            return value
+        value['name'] = round(value['name'], 1)
+        return value
+
     def _get_lines(self, options, line_id=None):
         lines = []
 
@@ -71,15 +93,35 @@ class DailyControlReport(models.Model):
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
         records = self.env['request.open.balance.finance'].search(
-            [('create_date', '>=', start), ('create_date', '<=', end)])
-        list_data = ['MXN','USD']
-        for type in list_data:
-            currency_type_ids = records.filtered(lambda x:x.currency_id.name == type)
-            if currency_type_ids :
+            [('date_required', '>=', start), ('date_required', '<=', end)])
+        currency_ids = records.mapped('currency_id')
+        folio_all = 'Folios de la Operacion : '
+        
+        for currency_id in currency_ids:
+            total_egresos = 0
+            total_amount = 0
+            
+            lines.append({
+                'id': "currency_"+str(currency_id.id),
+                'name': currency_id.name,
+                'columns': [
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                           
+                            ],
 
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+            dest_journal_ids = records.filtered(lambda x:x.currency_id.id==currency_id.id).mapped('desti_bank_account_id')
+            for journal_id in dest_journal_ids:
                 lines.append({
-                    'id': type,
-                    'name': type,
+                    'id': "journal_"+str(journal_id.id),
+                    'name': journal_id.name,
                     'columns': [
                                 {'name': ''},
                                 {'name': ''},
@@ -89,35 +131,71 @@ class DailyControlReport(models.Model):
                                
                                 ],
     
-                    'level': 1,
+                    'level': 2,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+                dest_transfer_ids = records.filtered(lambda x:x.currency_id.id==currency_id.id and x.desti_bank_account_id.id==journal_id.id)
+                amount = sum(x.amount for x in dest_transfer_ids)
+                total_egresos += amount
+                total_amount += amount
+                folio = ''
+                for rec in dest_transfer_ids:
+                    if rec.invoice:
+                        folio+=rec.invoice+","
+                        folio_all += rec.invoice+","
+                        
+                lines.append({
+                    'id': "journal_2_"+str(journal_id.id),
+                    'name': journal_id.bank_account_id and journal_id.bank_account_id.acc_number or '',
+                    'columns': [
+                                {'name': 'Proveedores'},
+                                self._format({'name': amount},figure_type='float'),
+                                self._format({'name': 0.0},figure_type='float'),
+                                self._format({'name': amount},figure_type='float'),
+                                {'name': folio},
+                               
+                                ],
+    
+                    'level': 3,
                     'unfoldable': False,
                     'unfolded': True,
                 })
 
-                for record in currency_type_ids:  
-                                
-                    total_per = 100
-                    lines.append({
-                        'id': 'record' + str(record.id),
-                        'name': record.bank_account_id.name,
-                        'columns': [
-                                    {'name': ''},
-                                    {'name': ''},
-                                    {'name': ''},
-                                    {'name': ''},
-                                    {'name': ''},
-                                  
-                                    ],
-        
-                        'level': 1,
-                        'unfoldable': False,
-                        'unfolded': True,
-                        'class':'text-left'
-                    })
+            lines.append({
+                'id': "currency_total_"+str(currency_id.id),
+                'name': 'Suma Total',
+                'columns': [
+                            {'name': ''},
+                            self._format({'name': total_egresos},figure_type='float'),
+                            self._format({'name': 0.0},figure_type='float'),
+                            self._format({'name': total_amount},figure_type='float'),
+                            {'name': ''},
+                           
+                            ],
 
-
-
-
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+        if currency_ids:
+            lines.append({
+                'id': "folio_total",
+                'name': folio_all,
+                'columns': [
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                           
+                            ],
+    
+                'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+                
         return lines
 
 

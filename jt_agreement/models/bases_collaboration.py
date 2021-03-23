@@ -360,19 +360,27 @@ class BasesCollabration(models.Model):
                         opt = 'Incremento por cierre'
                 debit = 0
                 credit = 0  
+                retiros = 0
+                increments = 0
+                bal_final = 0
                 if line.type_of_operation in ('open_bal','increase','increase_by_closing'):         
                     final += line.opening_balance
                     debit = line.opening_balance
                 elif line.type_of_operation in ('withdrawal','retirement','withdrawal_cancellation','withdrawal_closure'):
                     final -= line.opening_balance
                     credit = line.opening_balance
-                    
+                intial_bal = 0
+                intial_bal = debit - credit
+                bal_final = intial_bal + debit - credit 
                 lines.append({
                               'date':line.request_date,
+                              'operation_number':line.operation_number,
+                              'inital_bal':intial_bal,
                               'opt': opt,
                               'debit':debit,
                               'credit' : credit,
-                              'final' : final
+                              'final' : final,
+                              'bal_final':bal_final
                               })
 
             for line in self.rate_base_ids.filtered(lambda x:x.interest_date == req):
@@ -382,7 +390,8 @@ class BasesCollabration(models.Model):
                               'opt': 'Intereses' if lang == 'es_MX' else 'Interest',
                               'debit':line.interest_rate,
                               'credit' : 0.0,
-                              'final' : final
+                              'final' : final,
+
                               })
         
         return lines

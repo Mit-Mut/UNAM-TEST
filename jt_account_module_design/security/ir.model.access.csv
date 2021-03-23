@@ -3,3 +3,5 @@ access_integration_statement_asset,integration_statement_asset,model_integration
 access_miles_revenue,miles_revenue,model_miles_revenue,base.group_user,1,1,1,1
 access_detailed_statement_income,detailed_statement_income,model_detailed_statement_income,base.group_user,1,1,1,1
 access_income_major_details,income_major_details,model_income_major_details,base.group_user,1,1,1,1
+access_provision,provision,model_provision,,1,1,1,1
+access_provision_line,provision_line,model_provision_line,,1,1,1,1

@@ -157,13 +157,13 @@ class ProjectRegistry(models.Model):
 #                 if project_id:
 #                     raise ValidationError(_('The combination of the Agreement Type and Agreement Number fields must be unique'))
 
-    @api.constrains('number','custom_project_type_id')
+    @api.constrains('number','custom_project_type_id','custom_stage_id')
     def _project_number_project_type_unique(self):
         for record in self:
-            if record.custom_project_type_id and record.number:
-                project_id = self.env['project.project'].search([('id', '!=', record.id),('custom_project_type_id','=',record.custom_project_type_id.id),('number','=',record.number)],limit=1)
+            if record.custom_stage_id and record.number and record.custom_project_type_id:
+                project_id = self.env['project.project'].search([('id', '!=', record.id),('custom_stage_id','=',record.custom_stage_id.id),('custom_project_type_id','=',record.custom_project_type_id.id),('number','=',record.number)],limit=1)
                 if project_id:
-                    raise ValidationError(_('The combination of the Project Type Identifier and Project Number fields must be unique'))
+                    raise ValidationError(_('The combination of the Project Type Identifier,Stage and Project Number fields must be unique'))
 
     @api.model
     def create(self, vals):

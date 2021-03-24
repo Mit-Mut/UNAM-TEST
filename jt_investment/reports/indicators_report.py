@@ -102,7 +102,7 @@ class IndicatorsReport(models.AbstractModel):
                 # don't print -0.0 in reports
                 value['name'] = abs(value['name'])
                 value['class'] = 'number text-muted'
-            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id)
+            value['name'] = formatLang(self.env, value['name'], currency_obj=currency_id,digits=4)
             value['class'] = 'number'
             return value
         if figure_type == 'percents':

@@ -98,6 +98,15 @@ class CheckbookRequest(models.Model):
                                  'res_model_id': model_id,
                                  'summary': summary, 'user_id': user.id})
 
+    @api.constrains('bank_id','bank_account_id')
+    def _check_bank_and_bank_account(self):
+        if self.bank_id and self.bank_account_id:
+            auth = self.env['minimum.checks'].search([('bank_id', '=', self.bank_id.id),('bank_account_id', '=', self.bank_account_id.id)])
+            if not auth :
+                raise ValidationError(
+                    _('The Bank and Bank Account  is not  authorized to minimum Checks'))
+
+
     def action_approve(self):
         self.ensure_one()
         self.state = 'approved'

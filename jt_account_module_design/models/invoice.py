@@ -261,17 +261,11 @@ class Provision(models.Model):
     def action_draft_budget(self):
         self.ensure_one()
         self.payment_state = 'draft'
-        # conac_move = self.line_ids.filtered(lambda x:x.conac_move)
-        # conac_move.sudo().unlink()
-        # for line in self.line_ids:
-        #     line.coa_conac_id = False 
-        
-        # self.add_budget_available_amount()
 
     def unlink(self):
         for rec in self:
-            if rec.payment_state not in ['registered']:
-                raise UserError(_('You cannot delete an entry which has been confirmed.'))
+            if rec.payment_state not in ['provision']:
+                raise UserError(_('You cannot delete an entry which has been provision state.'))
         return super(Provision, self).unlink()
 
 
@@ -397,114 +391,10 @@ class Provision(models.Model):
     def action_register(self):
 
         self.payment_state = 'registered'
-        if self.journal_id:
-            journal = self.journal_id
-            # if not journal.ai_credit_account_id or not journal.conac_ai_credit_account_id \
-            #         or not journal.ai_debit_account_id or not journal.conac_ai_debit_account_id:
-            #     if self.env.user.lang == 'es_MX':
-            #         raise ValidationError(
-            #             _("Por favor configure la cuenta UNAM y CONAC en diario!"))
-            #     else:
-            #         raise ValidationError(
-            #             _("Please configure UNAM and CONAC account in journal!"))
-
-            # if not journal.ei_credit_account_id or not journal.conac_ei_credit_account_id \
-            #         or not journal.ei_debit_account_id or not journal.conac_ei_debit_account_id:
-            #     if self.env.user.lang == 'es_MX':
-            #         raise ValidationError(
-            #             _("Por favor configure la cuenta UNAM y CONAC en diario!"))
-            #     else:
-            #         raise ValidationError(
-            #             _("Please configure UNAM and CONAC account in journal!"))
-
-            # today = datetime.today().date()
-            # user = self.env.user
-            # partner_id = user.partner_id.id
-            # if self.partner_id:
-            #     partner_id = self.partner_id.id
-                
-            # amount = self.amount_total
-            # lines = [(0, 0, {
-            #          'account_id': journal.ei_credit_account_id.id,
-            #          'coa_conac_id': journal.conac_ei_credit_account_id.id,
-            #          'credit': amount,
-            #          'partner_id': partner_id,
-            #          'provision_id': self.id,
-            #         }),
-            #          (0, 0, {
-            #              'account_id': journal.ei_debit_account_id.id,
-            #              'coa_conac_id': journal.conac_ei_debit_account_id.id,
-            #              'debit': amount,
-            #              'partner_id': partner_id,
-            #              'provision_id': self.id,
-            #          }),                                 
-
-
-            # ]
-            # item_expense_account_ids = self.provision_line_ids.mapped('program_code.item_id.unam_account_id')
-            # for account_id in item_expense_account_ids:
-            #     item_amount = sum(x.subtotal for x in self.provision_line_ids.filtered(lambda x:x.program_code and x.program_code.item_id and x.program_code.item_id.unam_account_id and x.program_code.item_id.unam_account_id.id==account_id.id))
-
-            #     lines.append((0, 0, {
-            #                      'account_id': journal.ai_credit_account_id.id,
-            #                      'coa_conac_id': journal.conac_ai_credit_account_id.id,
-            #                      'credit': item_amount,
-            #                      'partner_id': partner_id,
-            #                      'provision_id': self.id,
-            #                  }))                
-            #     lines.append((0, 0, {
-            #                      'account_id': account_id.id,
-            #                      'coa_conac_id': account_id.coa_conac_id and account_id.coa_conac_id.id or False,
-            #                      'debit': item_amount,
-            #                      'partner_id': partner_id,
-            #                      'provision_id': self.id,
-            #                  }))
-                
-            #===================particular Item records ===============#
-                #===== Group 511 ======#
-            # item_line_ids = self.provision_line_ids.filtered(lambda x:x.program_code and x.program_code.item_id.item in ('511','512','513','514','515','516','517','521','523','524','531'))
-            # if item_line_ids:
-
-            #     if not journal.capitalizable_credit_account_id or not journal.conac_capitalizable_credit_account_id \
-            #             or not journal.capitalizable_debit_account_id or not journal.conac_capitalizable_debit_account_id:
-            #         if self.env.user.lang == 'es_MX':
-            #             raise ValidationError(
-            #                 _("Por favor configure la cuenta UNAM y CONAC en diario!"))
-            #         else:
-            #             raise ValidationError(
-            #                 _("Please configure UNAM and CONAC account in journal!"))
-                
-            #     item_amount = sum(x.subtotal for x in item_line_ids)
-                     
-            #     lines.append((0, 0, {
-            #                      'account_id': journal.capitalizable_credit_account_id.id,
-            #                      'coa_conac_id': journal.conac_capitalizable_credit_account_id.id,
-            #                      'credit': item_amount,
-            #                      'partner_id': partner_id,
-            #                      'provision_id': self.id,
-            #                  }))
-                
-            #     lines.append((0, 0, {
-            #                          'account_id': journal.capitalizable_debit_account_id.id,
-            #                          'coa_conac_id': journal.conac_capitalizable_debit_account_id.id,
-            #                          'debit': item_amount,
-            #                          'partner_id': partner_id,
-            #                          'provision_id': self.id,
-            #                      }))
-
-            # unam_move_val = {'ref': self.display_name,  'conac_move': True,
-            #                  'dependancy_id' : self.dependancy_id and self.dependancy_id.id or False,
-            #                  'sub_dependancy_id': self.sub_dependancy_id and self.sub_dependancy_id.id or False,
-            #                  'date': today, 'journal_id': journal.id, 'company_id': self.env.user.company_id.id,
-            #                  'line_ids': lines}
-            
-            # move_obj = self.env['account.move']
-            # unam_move = move_obj.create(unam_move_val)
-            # unam_move.action_post()
-
-
-
-
+        for move in self:
+            payment_lines = move.provision_line_ids.filtered(lambda x:not x.program_code)
+            if payment_lines:
+                raise ValidationError("Please add program code into invoice lines")
 
 
 
@@ -513,21 +403,35 @@ class ProvisionLine(models.Model):
     _name = 'provision.line'
     _description = 'Provision Line'
 
-    product_id = fields.Many2one('product.product',"Product")
+
+    line = fields.Integer('Line')
+    concept = fields.Char('Concept')
+    vat = fields.Char('Vat')
+    retIVA = fields.Char('RetIVA')
+
     provision_id = fields.Many2one('provision', string='Provision')
+    stage = fields.Many2one(related='provision_id.stage', string='Stage',readonly=False)    
+    excercise = fields.Char(related='provision_id.excercise', string='excercise',readonly=False)
+    product_id = fields.Many2one('product.product',"Product")
     program_code = fields.Many2one('program.code', string='Program Code')
     egress_key_id = fields.Many2one("egress.keys", string="Egress Key")
+    operation_type_id = fields.Many2one('operation.type',
+                                        related='provision_id.operation_type_id', string="Operation Type")
+    operation_type_name = fields.Char(
+        related='provision_id.operation_type_id.name', string='name')
+
     type_of_bussiness_line = fields.Char("Type Of Bussiness Line")
     other_amounts = fields.Monetary("Other Amounts")
+    project_key = fields.Char(string='Project Key')
+    invoice_vault_folio = fields.Char('Invoice vault folio')
     turn_type = fields.Char("Turn type")
     invoice_uuid = fields.Char("Invoice UUID")
     invoice_series = fields.Char("Invoice Series")
-    folio_invoice = fields.Char("Folio Invoice")
+    invoice_folio = fields.Char("Invoice Folio")
     vault_folio = fields.Char("Vault folio")
     account_id = fields.Many2one('account.account', string='Account',
         index=True, ondelete="restrict", check_company=True,
         domain=[('deprecated', '=', False)])
-
     quantity = fields.Float(string='Quantity',
         default=1.0, digits='Product Unit of Measure',
         help="The optional quantity expressed by this line, eg: number of product sold. "

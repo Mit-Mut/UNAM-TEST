@@ -54,3 +54,5 @@ class ReasonRejection(models.TransientModel):
                 else:
                     rec.balance_req_id.state = 'rejected'
                     rec.balance_req_id.reason_rejection = self.name
+          
+

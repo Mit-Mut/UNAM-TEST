@@ -118,25 +118,34 @@
                         <field name="reason_rejection" readonly="1" attrs="{'invisible': [('payment_state', 'not in', ('rejected'))]}"/>
                         <field name="reason_cancellation" readonly="1" attrs="{'invisible': [('payment_state', 'not in', ('cancel'))]}"/>
                         <notebook>
-
                             <page string='Inovice Lines' name='invoice_tab'>
                                 <field name="provision_line_ids"
                                 widget="section_and_note_one2many">
                                     <tree editable="bottom" string="Provision Line">
-                                        <field name="product_id"/>
-                                        <field name="account_id"/>
-                                        <field name="program_code"/>
-                                        <field name="turn_type"/>
-                                        <field name="type_of_bussiness_line"/>
+                                        <field name="line"/>
+                                        <field name="concept"/>
                                         <field name="egress_key_id"/>
+                                        <field name="account_id"
+                                           groups="account.group_account_user"
+                                           domain="[('deprecated', '=', False), ('user_type_id.type', 'not in', ('receivable', 'payable')), ('company_id', '=', parent.company_id)]" string="Bill"/>
+                                        <field name="program_code"/>
+                                        <field name="type_of_bussiness_line"/>
+                                        <field name="stage"/>
+                                        <field name="excercise"/>
+                                        <field name="vat" invisible="1"/>
+                                        <field name="project_key"/>
+                                        <field name="invoice_vault_folio"/>
                                         <field name="invoice_uuid"/>
                                         <field name="invoice_series"/>
-                                        <field name="folio_invoice"/>
+                                        <field name="invoice_folio"/>
                                         <field name="vault_folio"/>
+                                        <field name="retIVA"/>
+                                        <field name="operation_type_id" invisible="1"/>
+                                        <field name="operation_type_name" invisible="1"/>
                                         <field name="quantity"/>
                                         <field name="price_unit"/>
                                         <field name="other_amounts"/>
-                                        <field name="discount"/>
+                                        <field name="discount" invisible="1"/>
                                         <field name="tax_ids" widget="many2many_tags"/>
                                         <field name="subtotal"/>
                                         <field name="provision_id" invisible="1"/>
@@ -153,7 +162,6 @@
                             <page string="Journal Items" name="accounts">
                                 <field name="line_ids" readonly="1"/>
                             </page>
-
                             <page name="more_info" string="More Information">
                                 <group>
                                     <group name="reason" string="Reason">

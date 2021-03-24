@@ -360,19 +360,27 @@ class BasesCollabration(models.Model):
                         opt = 'Incremento por cierre'
                 debit = 0
                 credit = 0  
+                retiros = 0
+                increments = 0
+                bal_final = 0
                 if line.type_of_operation in ('open_bal','increase','increase_by_closing'):         
                     final += line.opening_balance
                     debit = line.opening_balance
                 elif line.type_of_operation in ('withdrawal','retirement','withdrawal_cancellation','withdrawal_closure'):
                     final -= line.opening_balance
                     credit = line.opening_balance
-                    
+                intial_bal = 0
+                intial_bal = debit - credit
+                bal_final = intial_bal + debit - credit 
                 lines.append({
                               'date':line.request_date,
+                              'operation_number':line.operation_number,
+                              'inital_bal':intial_bal,
                               'opt': opt,
                               'debit':debit,
                               'credit' : credit,
-                              'final' : final
+                              'final' : final,
+                              'bal_final':bal_final
                               })
 
             for line in self.rate_base_ids.filtered(lambda x:x.interest_date == req):
@@ -382,7 +390,8 @@ class BasesCollabration(models.Model):
                               'opt': 'Intereses' if lang == 'es_MX' else 'Interest',
                               'debit':line.interest_rate,
                               'credit' : 0.0,
-                              'final' : final
+                              'final' : final,
+
                               })
         
         return lines
@@ -1563,6 +1572,17 @@ class RequestOpenBalanceInvestment(models.Model):
             raise ValidationError(_('Operation Number must be Numeric.'))
 
     def reject_request(self):
+
+        activity_type = self.env.ref('mail.mail_activity_data_todo').id
+        summary = "Rejection'" + str(self.name) + "'Increases and withdrawals"
+        activity_obj = self.env['mail.activity']
+        model_id = self.env['ir.model'].sudo().search([('model', '=', 'request.open.balance.invest')]).id
+        activity_obj.create({'activity_type_id': activity_type,
+                           'res_model': 'request.open.balance.invest', 'res_id': self.id,
+                           'res_model_id':model_id,
+                           'summary': summary, 'user_id': self.user_id.id})
+
+
         return {
             'name': 'Reason for Rejection',
             'view_type': 'form',
@@ -1588,6 +1608,15 @@ class RequestOpenBalanceInvestment(models.Model):
             is_agr = False
             is_balance = True
             dependency_id = self.trust_id and self.trust_id.dependency_id and self.trust_id.dependency_id.id or False
+        activity_type = self.env.ref('mail.mail_activity_data_todo').id
+        summary = "Approve'" + str(self.name) + "'Increases and withdrawals"
+        activity_obj = self.env['mail.activity']
+        model_id = self.env['ir.model'].sudo().search([('model', '=', 'request.open.balance.invest')]).id
+        activity_obj.create({'activity_type_id': activity_type,
+                           'res_model': 'request.open.balance.invest', 'res_id': self.id,
+                           'res_model_id':model_id,
+                           'summary': summary, 'user_id': self.user_id.id})
+
         return {
             'name': 'Approve Request',
             'view_type': 'form',

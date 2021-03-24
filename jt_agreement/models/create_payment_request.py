@@ -25,7 +25,16 @@ class PaymentRequest(models.Model):
     account_number = fields.Char("Beneficiary account number")
     payment_request_number = fields.Char("Payment Request Number")
     state = fields.Selection([('draft', 'Draft'),
-                              ('requested', 'Requested')], 'State', default='draft')
+                              ('requested', 'Requested'),('paid','Paid'),('reject','Rejected')], 'State', default='draft')
+
+    
+    def action_paid(self):
+
+        self.state = 'paid'
+
+    def action_reject(self):
+
+        self.state = 'reject'
 
     @api.depends('beneficiary_id','balance_req_id','balance_req_id.bases_collaboration_id','balance_req_id.bases_collaboration_id.beneficiary_ids')
     def get_bank_ids(self):

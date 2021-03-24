@@ -660,39 +660,39 @@
                             <group>
                             	<field name="is_manual" invisible="1"/>
                                 <field name="invoice" invisible="1"/>
-                                <field name="operation_number" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="attention_to_emp_id" attrs="{'invisible':[('is_manual','=',False)],'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="agreement_number" attrs="{'invisible':[('is_manual','=',True)],'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="bank_account_id" attrs="{'invisible':[('is_manual','=',True)],'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="desti_bank_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="amount" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="currency_id" attrs="{'invisible':[('is_manual','=',False)],'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="dependency_id" context="{'show_for_agreement':1}" attrs="{'invisible':[('is_manual','=',True)],'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="sub_dependency_id" context="{'show_for_agreement':1}" attrs="{'invisible':[('is_manual','=',True)],'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="operation_number" attrs="{'readonly':[('state', 'not in', ('draft','requested'))]}"/>
+                                <field name="attention_to_emp_id" attrs="{'invisible':[('trasnfer_request','!=','finances')],'readonly':[('state', 'not in', ('draft','requested'))]}"/>
+                                <field name="agreement_number" attrs="{'invisible':[('trasnfer_request','!=','investments')],'readonly':[('state', 'not in', ('draft','requested'))]}"/>
+                                <field name="bank_account_id" attrs="{'readonly':[('state', 'not in', ('draft','requested'))]}"/>
+                                <field name="desti_bank_account_id" attrs="{'readonly':[('state', 'not in', ('draft','requested'))]}"/>
+                                <field name="amount" attrs="{'readonly':[('state', 'not in', ('draft','requested'))]}"/>
+                                <field name="currency_id" attrs="{'invisible':[('trasnfer_request','!=','finances')],'readonly':[('state', 'not in', ('draft','requested'))]}"/>
+                                <field name="dependency_id" context="{'show_for_agreement':1}" attrs="{'invisible':[('trasnfer_request','=','finances')],'readonly':[('state', 'not in', ('draft','requested'))]}"/>
+                                <field name="sub_dependency_id" context="{'show_for_agreement':1}" attrs="{'invisible':[('trasnfer_request','=','finances')],'readonly':[('state', 'not in', ('draft','requested'))]}"/>
                                 <field name="trasnfer_request" readonly="1"/>
                                 
-                                <field name="prepared_by_emp_id" readonly="1" attrs="{'invisible':[('is_manual','=',False)]}"/>
+                                <field name="prepared_by_emp_id" readonly="1" attrs="{'invisible':[('trasnfer_request','!=','finances')]}"/>
                                 <field name="prepared_by_user_id" invisible="1"/>
-                                <field name="prepared_by_dept_id" attrs="{'invisible':[('is_manual','=',False)]}"/>
+                                <field name="prepared_by_dept_id" attrs="{'invisible':[('trasnfer_request','!=','finances')]}"/>
                                 
                             </group>
                             <group>
-                                <field name="date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="concept" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="user_id" attrs="{'invisible':[('is_manual','=',True)],'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="date" attrs="{'readonly':[('state', 'not in', ('draft','requested'))]}"/>
+                                <field name="concept" attrs="{'readonly':[('state', 'not in', ('draft','requested'))]}"/>
+                                <field name="user_id" attrs="{'invisible':[('trasnfer_request','=','finances')],'readonly':[('state', 'not in', ('draft','requested'))]}"/>
                                 <field name="unit_req_transfer_id" context="{'show_for_agreement':1}"
-                                       attrs="{'invisible':[('is_manual','=',True)],'readonly': [('state', '!=', 'draft')]}"/>
+                                       attrs="{'invisible':[('trasnfer_request','!=','investments')],'readonly':[('state', 'not in', ('draft','requested'))]}"/>
                                 <field name="date_required" required="1" attrs="{'readonly':
                                 [('state', 'not in', ('draft','requested'))]}"/>
-                                <field name="fund_id" invisible="1" attrs="{'invisible':[('is_manual','=',True)],'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="investment_fund_id" attrs="{'invisible':[('is_manual','=',True)],'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="fund_type" attrs="{'invisible':[('is_manual','=',True)],'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="agreement_type_id" attrs="{'invisible':[('is_manual','=',True)],'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="base_collabaration_id" attrs="{'invisible':[('is_manual','=',True)],'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="fund_id" invisible="1" attrs="{'invisible':[('trasnfer_request','!=','investments')],'readonly':[('state', 'not in', ('draft','requested'))]}"/>
+                                <field name="investment_fund_id" attrs="{'invisible':[('trasnfer_request','!=','investments')],'readonly':[('state', 'not in', ('draft','requested'))]}"/>
+                                <field name="fund_type" attrs="{'invisible':[('trasnfer_request','!=','investments')],'readonly':[('state', 'not in', ('draft','requested'))]}"/>
+                                <field name="agreement_type_id" attrs="{'invisible':[('trasnfer_request','!=','investments')],'readonly':[('state', 'not in', ('draft','requested'))]}"/>
+                                <field name="base_collabaration_id" attrs="{'invisible':[('trasnfer_request','!=','investments')],'readonly':[('state', 'not in', ('draft','requested'))]}"/>
 
-                                <field name="authorized_by_emp_id" readonly="1" attrs="{'invisible':[('is_manual','=',False)]}"/>
+                                <field name="authorized_by_emp_id" readonly="1" attrs="{'invisible':[('trasnfer_request','!=','finances')]}"/>
                                 <field name="authorized_by_user_id" invisible="1"/>
-                                <field name="authorized_by_dept_id" attrs="{'invisible':[('is_manual','=',False)]}"/>
+                                <field name="authorized_by_dept_id" attrs="{'invisible':[('trasnfer_request','!=','finances')]}"/>
                                 
                             </group>
                         </group>

@@ -8,3 +8,4 @@ from . import generate_account_statement
 from . import bases_collaboration
 from . import amounts_to_invest
 from . import base_collaboration_resemble
+from . import contract_assistant

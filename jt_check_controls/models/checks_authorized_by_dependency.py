@@ -1,4 +1,5 @@
 from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
 class CheckAuthorizedByDependency(models.Model):
 
@@ -23,3 +24,20 @@ class CheckAuthorizedByDependency(models.Model):
                                                                    ('state', '=', 'confirmed')])
                 rec.checks_authorized_on_previous_app = sum(x.amount_checks for x in check_reqs)
                 rec.checks_remaining_to_auth = rec.max_authorized_checks - rec.checks_authorized_on_previous_app
+
+
+
+    @api.constrains('dependency_id', 'subdependency_id')
+    def _check_dependence(self):
+        for rec in self:
+            if rec.dependency_id and rec.subdependency_id:
+                auth = self.env['check.authorized.dependency'].search([('dependency_id', '=', rec.dependency_id.id),
+                                                                       ('subdependency_id', '=', rec.subdependency_id.id),('id','!=',rec.id)], limit=1)
+                print('auth',auth)
+                if auth:
+                    if self.env.user.lang == 'es_MX':
+                        raise ValidationError(
+                            _('La dependencia y subdependencia que intenta guardar ya se encuentra registrada'))                    
+                    else:
+                        raise ValidationError(
+                            _('The dependency and subdependency you are trying to save is already registered'))

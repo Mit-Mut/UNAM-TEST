@@ -31,6 +31,7 @@
     'license': 'AGPL-3',
     'depends': ['account_accountant', 'l10n_mx','jt_projects','l10n_mx_reports','jt_conac'],
     'data': [
+        'data/seq.xml',
         'reports/header.xml',
         'reports/report_menu.xml',
         'views/account_request_inherit.xml',
@@ -38,8 +39,11 @@
         'views/miles_revenue_view.xml',
         'views/detailed_imcome_statement_view.xml',
         'views/account_move_line.xml',
+        'views/provision_view.xml',
+        'reports/transfer_request_report_view.xml',
  #       'reports/filter_template.xml',
         'security/ir.model.access.csv',
+        'wizard/confirm_payment_date_view.xml',
     ],
 
     'application': False,

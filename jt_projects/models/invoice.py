@@ -60,7 +60,6 @@ class AccountMoveLine(models.Model):
 
     _inherit = 'account.move.line'
 
-    invoice_id = fields.Many2one
     concept = fields.Char('Concept')
     bill = fields.Many2one('account.account')
     vat = fields.Char('Vat')

@@ -98,6 +98,15 @@ class CheckbookRequest(models.Model):
                                  'res_model_id': model_id,
                                  'summary': summary, 'user_id': user.id})
 
+    @api.constrains('bank_id','bank_account_id')
+    def _check_bank_and_bank_account(self):
+        if self.bank_id and self.bank_account_id:
+            auth = self.env['minimum.checks'].search([('bank_id', '=', self.bank_id.id),('bank_account_id', '=', self.bank_account_id.id)])
+            if not auth :
+                raise ValidationError(
+                    _('The Bank and Bank Account  is not  authorized to minimum Checks'))
+
+
     def action_approve(self):
         self.ensure_one()
         self.state = 'approved'
@@ -295,6 +304,9 @@ class CheckListLine(models.Model):
                                        ('cancelled', 'Cancelled'),
                                        ('paid', 'Paid')], compute='_compute_general_status',store=True)
 
+    _sql_constraints = [('uniq_check_folio_bank_id', 'unique(folio,bank_id)',
+                         _('Cannot register folios that are already registered'))]
+
     @api.depends('status')
     def _compute_general_status(self):
         for rec in self:
@@ -311,32 +323,32 @@ class CheckListLine(models.Model):
             else:
                 rec.general_status = False
 
-    @api.constrains('folio','bank_id')
-    def _check_stage_identifier(self):
-        for check in self:
-            if check.folio and check.bank_id:
-                other_check = self.env['check.log'].search([('id','!=',check.id),('folio','=',check.folio),('bank_id','=',check.bank_id.id)])
-                print ("Other Check---",other_check)
-                if other_check:
-                    raise ValidationError(_('Cannot register folios that are already registered'))
+#     @api.constrains('folio','bank_id')
+#     def _check_stage_identifier(self):
+#         for check in self:
+#             if check.folio and check.bank_id:
+#                 other_check = self.env['check.log'].search([('id','!=',check.id),('folio','=',check.folio),('bank_id','=',check.bank_id.id)])
+#                 print ("Other Check---",other_check)
+#                 if other_check:
+#                     raise ValidationError(_('Cannot register folios that are already registered'))
 
     def write(self, vals):
-        
-        if self.status == 'Cancelled' and vals.get('status') in ('Checkbook registration', 'Assigned for shipping',
-          'Available for printing', 'Printed', 'Delivered', 'In transit', 'Sent to protection',
-           'Protected and in transit', 'Protected', 'Detained', 'Withdrawn from circulation'):
-            raise ValidationError(_("You can't change check log from 'Cancelled' to following status: \n"
-                                    "Checkbook registration \n"
-                                    "Assigned for shipping \n"
-                                    "Available for printing \n"
-                                    "Printed \n"
-                                    "Delivered \n"
-                                    "In transit \n"
-                                    "Sent to protection \n"
-                                    "Protected and in transit \n"
-                                    "Protected \n"
-                                    "Detained \n"
-                                    "Withdrawn from circulation \n"))
+        for rec in self:
+            if rec.status == 'Cancelled' and vals.get('status') in ('Checkbook registration', 'Assigned for shipping',
+              'Available for printing', 'Printed', 'Delivered', 'In transit', 'Sent to protection',
+               'Protected and in transit', 'Protected', 'Detained', 'Withdrawn from circulation'):
+                raise ValidationError(_("You can't change check log from 'Cancelled' to following status: \n"
+                                        "Checkbook registration \n"
+                                        "Assigned for shipping \n"
+                                        "Available for printing \n"
+                                        "Printed \n"
+                                        "Delivered \n"
+                                        "In transit \n"
+                                        "Sent to protection \n"
+                                        "Protected and in transit \n"
+                                        "Protected \n"
+                                        "Detained \n"
+                                        "Withdrawn from circulation \n"))
         if vals.get('status',False) and vals.get('status','')=='Cancelled':
             today = datetime.today().date()
             vals.update({'date_cancellation':today})
@@ -354,18 +366,23 @@ class CheckListLine(models.Model):
         return res
 
     def action_send_to_custody(self):
-        cancel_checks = self.env['cancel.checks']
         for rec in self:
             if rec.status == 'Cancelled':
-                cancel_checks.create({
-                    'check_folio':rec.folio,
-                    'dependency_id': rec.dependence_id and rec.dependence_id.id or False,
-                    'check_status': rec.status,
-                    'bank_id': rec.bank_id.id if rec.bank_id else False,
-                    'bank_account_id': rec.bank_account_id.id if rec.bank_account_id else False,
-                    'checkbook_no': rec.bank_id.checkbook_no if rec.bank_id else False,
-                    'check_log_id': rec.id
-                    })
+                domain = [('check_folio','=',rec.folio),('dependency_id','=',rec.dependence_id.id),('check_status','=',rec.status),
+                    ('bank_id','=',rec.bank_id.id),('bank_account_id','=',rec.bank_account_id.id),('checkbook_no','=',rec.bank_id.checkbook_no),('check_log_id','=',rec.id)]
+                cancel_checks = self.env['cancel.checks'].search(domain)
+                if cancel_checks :
+                    raise ValidationError(_('The check folio (number:%s) was already requested to be sent to escrow, only approval is pending.')%(rec.folio))
+                else:
+                    cancel_checks.create({
+                        'check_folio':rec.folio,
+                        'dependency_id': rec.dependence_id and rec.dependence_id.id or False,
+                        'check_status': rec.status,
+                        'bank_id': rec.bank_id.id if rec.bank_id else False,
+                        'bank_account_id': rec.bank_account_id.id if rec.bank_account_id else False,
+                        'checkbook_no': rec.bank_id.checkbook_no if rec.bank_id else False,
+                        'check_log_id': rec.id
+                        })
 
     def unlink(self):
         for rec in self:

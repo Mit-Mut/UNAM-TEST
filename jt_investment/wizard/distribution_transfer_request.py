@@ -153,7 +153,8 @@ class DistributionTransferRequest(models.TransientModel):
                 'line_opt_ids' : opt_lines,
                 'investment_operation_ids' : [(6,0,inv_opt_lines)],
                 'from_opt_transfer' : True,
-                'distribution_income_id' : self.distribution_income_id and self.distribution_income_id.id or False
+                'distribution_income_id' : self.distribution_income_id and self.distribution_income_id.id or False,
+                'trasnfer_request':'investments',
             }
         )
         self.distribution_income_id.action_requested()

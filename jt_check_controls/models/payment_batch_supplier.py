@@ -234,6 +234,9 @@ class PaymentBatchSupplier(models.Model):
         check_payment_req_obj = self.env['check.payment.req']
         for rec in self:
             if rec.checkbook_req_id:
+                payment_record = rec.payment_req_ids.filtered(lambda x: x.check_status == 'Printed' and x.selected == True)
+                if payment_record :
+                    raise ValidationError(_(' A new check folio cannot be assigned to a check that has been confirmed as Printed.'))
                 count = rec.payment_req_ids.filtered(lambda x: x.selected == True)
                 logs = check_log_obj.search([('checklist_id.checkbook_req_id', '=', rec.checkbook_req_id.id),
                         ('status', '=', 'Available for printing')],order='folio').ids
@@ -483,7 +486,6 @@ class CheckPaymentRequests(models.Model):
             # Une los dos dígitos
             digitos = str(DIG1) + str(dig2)
             record.zone = digitos
-            print('record',record.zone)
         return zone
 
 

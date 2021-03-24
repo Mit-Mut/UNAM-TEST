@@ -360,19 +360,27 @@ class BasesCollabration(models.Model):
                         opt = 'Incremento por cierre'
                 debit = 0
                 credit = 0  
+                retiros = 0
+                increments = 0
+                bal_final = 0
                 if line.type_of_operation in ('open_bal','increase','increase_by_closing'):         
                     final += line.opening_balance
                     debit = line.opening_balance
                 elif line.type_of_operation in ('withdrawal','retirement','withdrawal_cancellation','withdrawal_closure'):
                     final -= line.opening_balance
                     credit = line.opening_balance
-                    
+                intial_bal = 0
+                intial_bal = debit - credit
+                bal_final = intial_bal + debit - credit 
                 lines.append({
                               'date':line.request_date,
+                              'operation_number':line.operation_number,
+                              'inital_bal':intial_bal,
                               'opt': opt,
                               'debit':debit,
                               'credit' : credit,
-                              'final' : final
+                              'final' : final,
+                              'bal_final':bal_final
                               })
 
             for line in self.rate_base_ids.filtered(lambda x:x.interest_date == req):
@@ -382,7 +390,8 @@ class BasesCollabration(models.Model):
                               'opt': 'Intereses' if lang == 'es_MX' else 'Interest',
                               'debit':line.interest_rate,
                               'credit' : 0.0,
-                              'final' : final
+                              'final' : final,
+
                               })
         
         return lines
@@ -1563,6 +1572,17 @@ class RequestOpenBalanceInvestment(models.Model):
             raise ValidationError(_('Operation Number must be Numeric.'))
 
     def reject_request(self):
+
+        activity_type = self.env.ref('mail.mail_activity_data_todo').id
+        summary = "Rejection'" + str(self.name) + "'Increases and withdrawals"
+        activity_obj = self.env['mail.activity']
+        model_id = self.env['ir.model'].sudo().search([('model', '=', 'request.open.balance.invest')]).id
+        activity_obj.create({'activity_type_id': activity_type,
+                           'res_model': 'request.open.balance.invest', 'res_id': self.id,
+                           'res_model_id':model_id,
+                           'summary': summary, 'user_id': self.user_id.id})
+
+
         return {
             'name': 'Reason for Rejection',
             'view_type': 'form',
@@ -1588,6 +1608,15 @@ class RequestOpenBalanceInvestment(models.Model):
             is_agr = False
             is_balance = True
             dependency_id = self.trust_id and self.trust_id.dependency_id and self.trust_id.dependency_id.id or False
+        activity_type = self.env.ref('mail.mail_activity_data_todo').id
+        summary = "Approve'" + str(self.name) + "'Increases and withdrawals"
+        activity_obj = self.env['mail.activity']
+        model_id = self.env['ir.model'].sudo().search([('model', '=', 'request.open.balance.invest')]).id
+        activity_obj.create({'activity_type_id': activity_type,
+                           'res_model': 'request.open.balance.invest', 'res_id': self.id,
+                           'res_model_id':model_id,
+                           'summary': summary, 'user_id': self.user_id.id})
+
         return {
             'name': 'Approve Request',
             'view_type': 'form',
@@ -1685,10 +1714,37 @@ class RequestOpenBalanceFinance(models.Model):
                                    "Payments")
     payment_count = fields.Integer(compute="count_payment", string="Payments")
 
+    #=== New fields OS-Odoo-06 =========#
+    def _get_prepare_by_employe(self):
+        emp_id = self.env['hr.employee'].search([('user_id','=',self.env.user.id)],limit=1)
+        if emp_id:
+            return emp_id.id
+        else:
+            return False
+        
+    trasnfer_request = fields.Selection([('investments','Investments'),('projects','Projects'),('finances','Finances')],string='Transfer Request')
+    is_manual = fields.Boolean(string="Manual Registration",copy=False,default=False)
+    attention_to_emp_id = fields.Many2one("hr.employee","Attention to")
+    prepared_by_emp_id = fields.Many2one("hr.employee","Prepared by",default=_get_prepare_by_employe)
+    prepared_by_user_id = fields.Many2one("res.users",string="Creation Users",default=lambda self: self.env.user.id)
+    prepared_by_dept_id = fields.Many2one(related="prepared_by_emp_id.department_id",string="Department to which it belongs")
+    
+    authorized_by_emp_id = fields.Many2one("hr.employee","Authorized by")
+    authorized_by_user_id = fields.Many2one("res.users",string="Authorized Users")
+    authorized_by_dept_id = fields.Many2one(related="authorized_by_emp_id.department_id",string="Department to which the authorizing person belongs")
+    
     @api.constrains('operation_number')
     def _check_operation_number(self):
         if self.operation_number and not self.operation_number.isnumeric():
             raise ValidationError(_('Operation Number must be Numeric.'))
+
+    @api.model
+    def create(self, vals):
+        res = super(RequestOpenBalanceFinance, self).create(vals)
+        if res.is_manual:
+            name = self.env['ir.sequence'].next_by_code('request.open.balance.finance.manual')
+            res.invoice = name
+        return res
 
     def open_payments(self):
         action = self.env.ref('account.action_account_payments').read()[0]
@@ -1722,9 +1778,23 @@ class RequestOpenBalanceFinance(models.Model):
 
     def approve_finance(self):
         self.state = 'approved'
-#         for rec in self.payment_ids:
-#             rec.
-
+        self.authorized_by_user_id = self.env.user.id
+        emp_id = self.env['hr.employee'].search([('user_id','=',self.env.user.id)],limit=1)
+        if emp_id:
+            self.authorized_by_emp_id = emp_id.id
+        if self.prepared_by_user_id:
+            activity_type = self.env.ref('mail.mail_activity_data_todo').id
+            summary = "Approve Transfer Request"
+            if self.invoice:
+                summary = "Approve '" + str(self.invoice) + "' Transfer Request"
+            
+            activity_obj = self.env['mail.activity']
+            model_id = self.env['ir.model'].sudo().search([('model', '=', 'request.open.balance.finance')]).id
+            activity_obj.create({'activity_type_id': activity_type,
+                               'res_model': 'request.open.balance.finance', 'res_id': self.id,
+                               'res_model_id':model_id,
+                               'summary': summary, 'user_id': self.prepared_by_user_id.id})
+            
     def canceled_finance(self):
         self.state = 'canceled'
 
@@ -1733,6 +1803,18 @@ class RequestOpenBalanceFinance(models.Model):
 
     def reject_finance(self):
         self.state = 'rejected'
+        if self.prepared_by_user_id:
+            activity_type = self.env.ref('mail.mail_activity_data_todo').id
+            summary = "Reject Transfer Request"
+            if self.invoice:
+                summary = "Reject '" + str(self.invoice) + "' Transfer Request"
+            
+            activity_obj = self.env['mail.activity']
+            model_id = self.env['ir.model'].sudo().search([('model', '=', 'request.open.balance.finance')]).id
+            activity_obj.create({'activity_type_id': activity_type,
+                               'res_model': 'request.open.balance.finance', 'res_id': self.id,
+                               'res_model_id':model_id,
+                               'summary': summary, 'user_id': self.prepared_by_user_id.id})
 
     def action_schedule_transfers(self):
         payment_obj = self.env['account.payment']

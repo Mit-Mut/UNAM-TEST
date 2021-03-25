@@ -163,6 +163,63 @@ class Adequacies(models.Model):
             'target': 'new',
         }
 
+    def create_new_budget_line(self,program_code):
+        budget_line = self.env['expenditure.budget.line'].sudo().create({
+            'expenditure_budget_id':self.budget_id.id,
+            'program_code_id': program_code.id,
+            'start_date': self.budget_id.from_date,
+            'end_date': self.budget_id.to_date,
+            'state':'success',
+            })
+        #=== Q1 Line ================#
+        start_date = self.budget_id.from_date.replace(month=1, day=1)
+        end_date = self.budget_id.from_date.replace(month=3, day=31)
+        self.env['expenditure.budget.line'].sudo().create({
+            'expenditure_budget_id':self.budget_id.id,
+            'program_code_id': program_code.id,
+            'start_date': start_date,
+            'end_date': end_date,
+            'state':'success',
+            })
+        #=== Q2 Line ================#
+        start_date = self.budget_id.from_date.replace(month=4, day=1)
+        end_date = self.budget_id.from_date.replace(month=6, day=30)
+        self.env['expenditure.budget.line'].sudo().create({
+            'expenditure_budget_id':self.budget_id.id,
+            'program_code_id': program_code.id,
+            'start_date': start_date,
+            'end_date': end_date,
+            'state':'success',
+            })
+        #=== Q3 Line ================#
+        start_date = self.budget_id.from_date.replace(month=7, day=1)
+        end_date = self.budget_id.from_date.replace(month=9, day=30)
+        self.env['expenditure.budget.line'].sudo().create({
+            'expenditure_budget_id':self.budget_id.id,
+            'program_code_id': program_code.id,
+            'start_date': start_date,
+            'end_date': end_date,
+            'state':'success',
+            })
+        #=== Q1 Line ================#
+        start_date = self.budget_id.from_date.replace(month=10, day=1)
+        end_date = self.budget_id.from_date.replace(month=12, day=31)
+        self.env['expenditure.budget.line'].sudo().create({
+            'expenditure_budget_id':self.budget_id.id,
+            'program_code_id': program_code.id,
+            'start_date': start_date,
+            'end_date': end_date,
+            'state':'success',
+            })
+        
+        return budget_line
+    
+    def create_new_program_code(self,program_vals):
+        program_vals.update({'budget_id':self.budget_id.id})
+        program_code = self.env['program.code'].with_context().create(program_vals)
+        budget_line = self.create_new_budget_line(program_code)
+        return program_code
+    
     def validate_and_add_budget_line(self, record_id=False, cron_id=False):
         if record_id:
             self = self.env['adequacies'].browse(int(record_id))
@@ -451,10 +508,40 @@ class Adequacies(models.Model):
                             ('agreement_type_id', '=', agreement_type.id),
                             ('state', '=', 'validated'),
                         ], limit=1)
+                        
+                        #========== Added code for the OS-ODOO-010 Document===========#
+                        if not program_code and typee=='increase':
+                            program_vals = {
+                                'year': year.id,
+                                'program_id': program.id,
+                                'sub_program_id': subprogram.id,
+                                'dependency_id': dependency.id,
+                                'sub_dependency_id': subdependency.id,
+                                'item_id': item.id,
+                                'resource_origin_id': origin_resource.id,
+                                'institutional_activity_id': institutional_activity.id,
+                                'budget_program_conversion_id': shcp.id,
+                                'conversion_item_id': conversion_item.id,
+                                'expense_type_id': expense_type.id,
+                                'location_id': geo_location.id,
+                                'portfolio_id': wallet_key.id,
+                                'project_type_id': project_type.id,
+                                'stage_id': stage.id,
+                                'agreement_type_id': agreement_type.id,
+                                'state': 'validated'
+                            }
+                            program_code = self.create_new_program_code(program_vals)
+                        #========== End code for the OS-ODOO-010 Document===========#
+                            
                         if program_code:
                             budget_line = self.env['expenditure.budget.line'].sudo().search(
                                 [('program_code_id', '=', program_code.id),
                                  ('expenditure_budget_id', '=', self.budget_id.id)], limit=1)
+                            #========== Added code for the OS-ODOO-010 Document===========#
+                            if not budget_line:
+                                budget_line = self.create_new_budget_line(program_code)
+                            #========== END code for the OS-ODOO-010 Document===========#
+                                
                             if not budget_line:
                                 failed_row += str(list_result) + \
                                               "------>> Budget line not found for program code!"
@@ -678,6 +765,14 @@ class Adequacies(models.Model):
                     [('program_code_id', '=', line.program.id),
                      ('expenditure_budget_id', '=', self.budget_id.id)])
                 budget_line_assign = False
+                #====== Added changes for OS-ODOO-010 ===============#
+                if not budget_lines_check:
+                    new_b_line = self.create_new_budget_line(line.program)
+                    budget_lines_check = self.env['expenditure.budget.line'].sudo().search(
+                        [('program_code_id', '=', line.program.id),
+                         ('expenditure_budget_id', '=', self.budget_id.id)])
+                    
+                #=========End ==================
                 if adequacies.adaptation_type == 'compensated':
                     b_month = adequacies.date_of_budget_affected.month
                 else:

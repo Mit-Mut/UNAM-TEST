@@ -261,7 +261,7 @@ class CheckListLine(models.Model):
     _rec_name = 'folio'
 
     checklist_id = fields.Many2one("checklist", "Checkbook Request")
-    folio = fields.Integer("Folio")
+    folio = fields.Integer(string="Folio",group_operator=False)
     related_check_folio_id = fields.Many2one('check.log', "Related Checks", copy=False)
     bank_id = fields.Many2one('account.journal',"Bank")
     bank_account_id = fields.Many2one('res.partner.bank', "Bank Account")
@@ -304,6 +304,8 @@ class CheckListLine(models.Model):
                                        ('cancelled', 'Cancelled'),
                                        ('paid', 'Paid')], compute='_compute_general_status',store=True)
 
+    is_cancel_from_print_incorrect = fields.Boolean(string="Is Cancel From Print",copy=False)
+    
     _sql_constraints = [('uniq_check_folio_bank_id', 'unique(folio,bank_id)',
                          _('Cannot register folios that are already registered'))]
 
@@ -353,7 +355,7 @@ class CheckListLine(models.Model):
             today = datetime.today().date()
             vals.update({'date_cancellation':today})
         res = super(CheckListLine, self).write(vals)
-        if vals.get('status',False) and vals.get('status','')=='Cancelled':
+        if vals.get('status',False) and vals.get('status','')=='Cancelled' and not vals.get('is_cancel_from_print_incorrect',False):
             for check in self:
                 records = self.env['account.move'].search([('check_folio_id','=',check.id),('payment_state','!=','payment_method_cancelled')])
                 for payment in records: 

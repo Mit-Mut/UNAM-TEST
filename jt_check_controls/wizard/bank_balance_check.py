@@ -1,5 +1,6 @@
 from odoo import models, fields,_,api
 from odoo.exceptions import UserError, ValidationError
+from datetime import datetime, timedelta
 
 class BankBalanceCheck(models.TransientModel):
 
@@ -7,7 +8,9 @@ class BankBalanceCheck(models.TransientModel):
 
     check_balance_in_transit = fields.Float("Check balance in transit")
     balance_available = fields.Float("Balance Available")
-
+    amount_trasnfer_sent = fields.Float("Amount of transfers between accounts scheduled for the day")
+    amount_trasnfer_confirmed= fields.Float("Amount of transfers between accounts confirmed during the day")
+    
     def verify_balance(self):
         account_balance = 0
         if not self.account_id:
@@ -20,6 +23,11 @@ class BankBalanceCheck(models.TransientModel):
                                                       ('status', '=', 'Delivered')])
             total_check_amt = sum(x.check_amount for x in check_req)
             account_balance = sum(x.debit - x.credit for x in values)
+            
+            today_date = datetime.today().date()  
+            transfer_request_sent = self.env['request.open.balance.finance'].search([('date_required','=',today_date),('state','=','sent'),('desti_bank_account_id','=',self.journal_id.id)])
+            transfer_request_confirm = self.env['request.open.balance.finance'].search([('date_required','=',today_date),('state','=','confirmed'),('desti_bank_account_id','=',self.journal_id.id)])
+            
             if account_balance >= self.total_amount:
                 self.is_balance = True
                 self.account_balance = account_balance
@@ -27,8 +35,11 @@ class BankBalanceCheck(models.TransientModel):
                 self.required_balance = self.total_amount
                 self.different_balance = account_balance - self.total_amount
                 self.check_balance_in_transit = total_check_amt
-                self.balance_available = account_balance - total_check_amt
-
+                self.amount_trasnfer_sent = sum(x.amount for x in transfer_request_sent)
+                self.amount_trasnfer_confirmed = sum(x.amount for x in transfer_request_confirm)
+                
+                self.balance_available = account_balance - total_check_amt + self.amount_trasnfer_sent + self.amount_trasnfer_confirmed
+                
                 return {
                     'name': 'Balance',
                     'view_type': 'form',
@@ -39,7 +50,7 @@ class BankBalanceCheck(models.TransientModel):
                     'type': 'ir.actions.act_window',
                     'target': 'new',
                     'context': {'default_balance_available':self.balance_available,'default_check_balance_in_transit':self.check_balance_in_transit,'default_different_balance':self.different_balance,'default_required_balance':self.required_balance,'default_minimum_balance':self.minimum_balance,'default_account_balance': account_balance, 'default_is_balance': True,
-                                'default_wizard_id': self.id},
+                                'default_wizard_id': self.id,'default_amount_trasnfer_sent':self.amount_trasnfer_sent,'default_amount_trasnfer_confirmed':self.amount_trasnfer_confirmed},
                 }
             else:
                 self.is_balance = False
@@ -63,4 +74,6 @@ class BalanceCheckWizard(models.TransientModel):
     
     check_balance_in_transit = fields.Float("Check balance in transit")
     balance_available = fields.Float("Balance Available")
+    amount_trasnfer_sent = fields.Float("Amount of transfers between accounts scheduled for the day")
+    amount_trasnfer_confirmed= fields.Float("Amount of transfers between accounts confirmed during the day")
                     

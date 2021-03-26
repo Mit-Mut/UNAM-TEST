@@ -17,9 +17,11 @@ class RescheduleRequest(models.TransientModel):
             move.l10n_mx_edi_payment_method_id = self.l10n_mx_edi_payment_method_id.id
             move.is_from_reschedule_payment = True
             move.payment_issuing_bank_id = False
+            move.batch_folio = 0
             conac_move = move.line_ids.filtered(lambda x: x.conac_move)
             conac_move.sudo().unlink()
             for line in move.line_ids:
                 line.coa_conac_id = False
-            move.payment_state = 'for_payment_procedure'
+            #move.payment_state = 'for_payment_procedure'
+            move.payment_state = 'registered'
             move.add_budget_available_amount()

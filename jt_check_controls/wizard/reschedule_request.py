@@ -25,6 +25,7 @@ class RescheduleRequest(models.TransientModel):
             else:
                 conac_move = move.line_ids.filtered(lambda x: x.conac_move)
                 conac_move.sudo().unlink()                
-                move.payment_state = 'for_payment_procedure'
+                move.payment_state = 'registered'
+                move.batch_folio = ''
                 move.add_budget_available_amount()
     

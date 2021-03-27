@@ -144,6 +144,16 @@
         action="action_program_key"
         sequence="20"
     />
+
+        <!-- menu for SHCP Games-->
+    <menuitem
+        id="menu_shcp_games"
+        name="Key SHCP Games"
+        parent="menu_extra_views"
+        action="action_shcp_budget"
+        sequence="40"
+    />
+
     
     <menuitem
         id="menu_quarter_budget"

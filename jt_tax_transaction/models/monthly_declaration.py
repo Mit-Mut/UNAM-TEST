@@ -83,8 +83,9 @@ class MonthlyDeclaration(models.Model):
                 rec.year_id = False
     @api.model 
     def create(self, values):            
-        if values.get('state'):    
-            values['state'] = 'declared'     
+#         if values.get('state'):    
+#             values['state'] = 'declared'
+        values.update({'state':'declared'})         
         return super(MonthlyDeclaration, self ).create (values)
 
     def get_invoice_line_vals(self):

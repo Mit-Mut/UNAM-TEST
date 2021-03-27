@@ -20,7 +20,7 @@ class BankBalanceCheck(models.TransientModel):
             values = self.env['account.move.line'].search(
                 [('account_id', '=', self.account_id.id), ('move_id.state', '=', 'posted')])
             check_req = self.env['check.log'].search([('checklist_id.checkbook_req_id.bank_id', '=', self.journal_id.id),
-                                                      ('status', '=', 'Delivered')])
+                                                      ('status', 'in', ('Delivered','In transit'))])
             total_check_amt = sum(x.check_amount for x in check_req)
             account_balance = sum(x.debit - x.credit for x in values)
             

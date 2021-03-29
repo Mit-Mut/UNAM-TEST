@@ -2486,3 +2486,28 @@ msgid ""
 "amount of checks requested."
 msgstr "El total de cheques autorizados no puede ser mayor al total "
 "de cheques solicitados."
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_balance_check_wizard__check_balance_in_transit
+#: model:ir.model.fields,field_description:jt_check_controls.field_bank_balance_check__check_balance_in_transit
+msgid "Check balance in transit"
+msgstr "Saldo de cheques en tránsito"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_balance_check_wizard__balance_available
+#: model:ir.model.fields,field_description:jt_check_controls.field_bank_balance_check__balance_available
+msgid "Balance Available"
+msgstr "Saldo disponible"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_balance_check_wizard__amount_trasnfer_sent
+#: model:ir.model.fields,field_description:jt_check_controls.field_bank_balance_check__amount_trasnfer_sent
+msgid "Amount of transfers between accounts scheduled for the day"
+msgstr "Monto de transferencias entre cuentas programadas en el día"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_balance_check_wizard__amount_trasnfer_confirmed
+#: model:ir.model.fields,field_description:jt_check_controls.field_bank_balance_check__amount_trasnfer_confirmed
+msgid "Amount of transfers between accounts confirmed during the day"
+msgstr "Monto de transferencias entre cuentas confirmadas en el día"
+

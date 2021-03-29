@@ -327,6 +327,7 @@ msgid "Account Balance"
 msgstr "Saldo de la cuenta"
 
 #. module: jt_supplier_payment
+#: model:ir.model.fields,field_description:jt_supplier_payment.field_balance_check_wizard__required_balance
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_bank_balance_check__required_balance
 msgid "Account balance required"
 msgstr "Saido requerido en la cuenta"
@@ -859,6 +860,7 @@ msgid "Destination Account"
 msgstr "Cuenta Destino"
 
 #. module: jt_supplier_payment
+#: model:ir.model.fields,field_description:jt_supplier_payment.field_balance_check_wizard__different_balance
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_bank_balance_check__different_balance
 msgid "Difference Between current and required balance"
 msgstr "Diferencia entre el saido actual y el requerido"

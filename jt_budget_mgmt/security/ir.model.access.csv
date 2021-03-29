@@ -36,4 +36,4 @@ access_report_files,requested_report_files_by_user,model_report_files,base.group
 access_favourite_summary_report,favourite_summary_report,model_favourite_summary_report,base.group_user,1,1,1,1
 access_budget_line_move_line_links,budget_line_move_line_links,model_budget_line_move_line_links,,1,1,1,1
 access_program_key,program_key,model_program_key,base.group_user,1,1,1,1
-
+access_budget_shcp_game,shcp_game,model_shcp_game,,1,1,1,1

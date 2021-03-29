@@ -20,22 +20,25 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
-from . import shcp_games
-from . import program
-from . import sub_program
-from . import dependency
-from . import sub_dependency
-from . import expenditure_item
-from . import verifying_digit
-from . import resource_origin
-from . import institutional_activity
-from . import budget_program_conversion
-from . import shcp_code
-from . import departure_conversion
-from . import expense_type
-from . import geographic_location
-from . import key_wallet
-from . import project_type
-from . import stage
-from . import agreement_type
+
+class SHCPGame(models.Model):
+
+    _name = 'shcp.game'
+    _description = 'Conversion Key with Item'
+    _rec_name = 'conversion_key'
+
+    conversion_key = fields.Char('Conversion Key')
+
+    _sql_constraints = [('conversion_key', 'unique(conversion_key)', 'The  Conversion Key must be unique.')]
+    
+    @api.constrains('conversion_key')
+    def _check_name(self):
+        if self.conversion_key:
+            if not str(self.conversion_key).isnumeric():
+                raise ValidationError(_('The Conversion Key must be numeric value'))
+            
+            if len(self.conversion_key) != 5:
+                raise ValidationError(_('The Conversion Key size must be five.'))

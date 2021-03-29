@@ -101,6 +101,7 @@
         'views/different_payroll_payment_view.xml',
         'views/conac_move_view.xml',
         'views/pension_payment_request.xml',
+        'views/shcp_game.xml',
         # Main Menu File
         'views/budget_menus.xml',
         

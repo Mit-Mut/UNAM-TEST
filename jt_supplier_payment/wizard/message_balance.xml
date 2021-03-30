@@ -31,12 +31,12 @@
 
                     <group>
                     	<group>
-                    		<field name="account_balance" attrs="{'invisible':[('is_balance','=',False)]}" readonly="1"/>
-                    		<field name="minimum_balance" attrs="{'invisible':[('is_balance','=',False)]}" readonly="1"/>
+                    		<field name="account_balance"  readonly="1"/>
+                    		<field name="minimum_balance"  readonly="1"/>
                     	</group>
                     	<group>
-                    		<field name="required_balance" attrs="{'invisible':[('is_balance','=',False)]}" readonly="1"/>
-                    		<field name="different_balance" attrs="{'invisible':[('is_balance','=',False)]}" readonly="1"/>
+                    		<field name="required_balance"  readonly="1"/>
+                    		<field name="different_balance"  readonly="1"/>
                     	</group>
                     </group>
                     

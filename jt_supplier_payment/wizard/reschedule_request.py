@@ -23,5 +23,5 @@ class RescheduleRequest(models.TransientModel):
             for line in move.line_ids:
                 line.coa_conac_id = False
             #move.payment_state = 'for_payment_procedure'
-            move.payment_state = 'registered'
+            move.payment_state = 'approved_payment'
             move.add_budget_available_amount()

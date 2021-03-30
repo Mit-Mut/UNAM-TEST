@@ -27,13 +27,13 @@
             <field name="arch" type="xml">
                 <field name="minimum_balance" position="after">
                     <field name="check_balance_in_transit"
-                           attrs="{'invisible':[('is_balance','=',False)]}" readonly="1"/>
+                            readonly="1"/>
                     <field name="amount_trasnfer_sent"
-                           attrs="{'invisible':[('is_balance','=',False)]}" readonly="1"/>
+                            readonly="1"/>
                     <field name="amount_trasnfer_confirmed"
-                           attrs="{'invisible':[('is_balance','=',False)]}" readonly="1"/>
+                            readonly="1"/>
                     <field name="balance_available"
-                           attrs="{'invisible':[('is_balance','=',False)]}" readonly="1"/>
+                            readonly="1"/>
                 </field>
             </field>
         </record>

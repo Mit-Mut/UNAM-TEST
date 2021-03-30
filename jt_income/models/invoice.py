@@ -37,7 +37,7 @@ class Invoice(models.Model):
     type_of_revenue_collection = fields.Selection([('billing', 'Billing'),
                                                    ('deposit_cer', 'Certificates of deposit'),
                                                    ('dgae_ref', 'Reference of DGAE'),
-                                                   ('dgoae_trades', 'Trades DGOAE')], "Type of Revenue Collection")
+                                                   ('dgoae_trades', 'Trades DGOAE')], string="Type of Revenue Collection",copy=False)
     income_bank_journal_id = fields.Many2one('account.journal', "Bank")
     income_bank_account = fields.Many2one(related="income_bank_journal_id.bank_account_id", string="Bank Account")
     reception_date = fields.Date("Reception Date")
@@ -510,8 +510,7 @@ class Invoice(models.Model):
         result = super(Invoice, self).create(vals_list)
         self.set_pdf_remplate_data(result)
         for rec in result:
-            
-            if rec.type_of_revenue_collection:
+            if rec.type_of_revenue_collection and rec.type=='out_invoice':
                 rec._onchange_income_invoice_line_ids()
                 rec._onchange_income_invoice_deposit_manual()
                 rec._onchange_income_invoice_deposit_automatic()

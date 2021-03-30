@@ -71,7 +71,7 @@
                                         <group>
                                             <field name="imported" invisible="1"/>
                                             <field name="adequacies_id" invisible="1"/>
-                                            <field name="program" required="1" attrs="{'readonly': [('imported', '=', True)]}" /> 
+                                            <field name="program" required="1" attrs="{'readonly': [('imported', '=', True)]}" domain="[('state', '=', 'validated'), '|',('budget_id', '=', parent.budget_id),('budget_id', '=', False)]"/> 
                                             <field name="line_type" required="1"/>
                                             <field name="amount" required="1"/>
                                             <field name="creation_type" required="1" attrs="{'readonly': [('imported', '=', False)]}"/>

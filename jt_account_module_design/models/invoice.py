@@ -23,13 +23,14 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
 from datetime import datetime, timedelta
+from datetime import date
 
 
 class Provision(models.Model):
 
     _name = 'provision'
     _description = 'Provision'
-    rec_name = 'number'
+    _rec_name = 'number'
 
     @api.model
     def _get_default_journal(self):
@@ -196,6 +197,16 @@ class Provision(models.Model):
         'Show Beneficiary Key', default=False)
     excercise = fields.Char('excercise')
 
+    @api.model
+    def _get_default_invoice_date(self):
+        today = date.today().strftime("%d/%m/%Y")
+        self.invoice_date = today
+
+
+    invoice_date = fields.Date(string='Invoice/Bill Date', readonly=True, index=True, copy=False,
+        states={'draft': [('readonly', False)]},
+        default=_get_default_invoice_date)
+
     is_show_student_account = fields.Boolean(
         'Show Student Account', default=False)
     is_show_category_key = fields.Boolean('Show Category Key', default=False)
@@ -224,7 +235,8 @@ class Provision(models.Model):
     previous_number = fields.Char("Previous Number", size=11)
     previous = fields.Monetary('Previous')
     agreement_type_id = fields.Many2one('agreement.type',string="Agreement Type")
-
+    move_ids = fields.One2many('account.move','provision_id')
+    
     # More info Tab
     # responsible_category_key = fields.Char("Responsible category key")
     responsible_job_position = fields.Many2one(
@@ -252,22 +264,150 @@ class Provision(models.Model):
         return res
 
     def action_cancel_budget(self):
-
-        for rec in self:
-
-            rec.payment_status = 'cancel'
+        self.ensure_one()
+        self.payment_state = 'cancel'
 
 
     def action_draft_budget(self):
         self.ensure_one()
         self.payment_state = 'draft'
 
+
     def unlink(self):
         for rec in self:
-            if rec.payment_state not in ['provision']:
-                raise UserError(_('You cannot delete an entry which has been provision state.'))
+            if rec.payment_state not in ['draft']:
+                raise UserError(_('You cannot delete an entry which has been not draft state.'))
         return super(Provision, self).unlink()
 
+    def action_payment_request(self):
+        return {
+                'name': 'Operations',
+                'view_type': 'form',
+                'view_mode': 'tree,form',
+                'views': [(self.env.ref("jt_supplier_payment.payment_req_tree_view").id, 'tree'), (self.env.ref("jt_supplier_payment.payment_req_form_view").id, 'form')],
+                'res_model': 'account.move',
+                'domain': [('provision_id', '=', self.id)],
+                'type': 'ir.actions.act_window',
+            }
+
+    def create_payment_request(self):
+        
+        vals = {'payment_bank_id':self.payment_bank_id and self.payment_bank_id.id or False,
+                'payment_bank_account_id': self.payment_bank_account_id and self.payment_bank_account_id.id or False,
+                'payment_issuing_bank_id': self.payment_issuing_bank_id and self.payment_issuing_bank_id.id or False,
+                'l10n_mx_edi_payment_method_id' : self.l10n_mx_edi_payment_method_id and self.l10n_mx_edi_payment_method_id.id or False,
+                'partner_id' : self.partner_id and self.partner_id.id or False,
+                'type' : 'in_invoice',
+                'journal_id' : self.journal_id and self.journal_id.id or False,
+                'invoice_date' : self.invoice_date,
+                #'invoice_line_ids':invoice_line_vals,
+                'is_payment_request' : True,
+                'provision_id':self.id,
+                'currency_id':self.currency_id and self.currency_id.id or False,
+                'folio':self.folio,
+                }
+
+        return self.env['account.move'].create(vals)
+    
+    def generate_payment_request(self):
+        for rec in self:
+            if rec.payment_state != 'provision':
+                raise UserError(_('You can generate payment request only for provision state.'))
+            rec.create_payment_request()
+            
+    @api.onchange('partner_id')
+    def onchange_partner_bak_account(self):
+        if self.partner_id and self.partner_id.bank_ids:
+            self.payment_bank_account_id = self.partner_id.bank_ids[0].id
+            self.payment_bank_id = self.partner_id.bank_ids[
+                0].bank_id and self.partner_id.bank_ids[0].bank_id.id or False
+        else:
+            self.payment_bank_account_id = False
+            self.payment_bank_id = False
+
+
+
+    def action_validate_budget(self):
+        self.ensure_one()
+        str_msg = "Budgetary Insufficiency For Program Code\n\n"
+        if self.env.user.lang == 'es_MX':
+            str_msg = "Insuficiencia Presupuestal para el código del programa\n\n"
+        is_check = False
+        budget_msg = "Budget sufficiency"
+        if self.env.user.lang == 'es_MX':
+            budget_msg = "Suficiencia Presupuestal"
+            
+        for line in self.provision_line_ids.filtered(lambda x:x.program_code):
+            total_available_budget = 0
+            if line.program_code:
+                budget_line = self.env['expenditure.budget.line']
+                budget_lines = self.env['expenditure.budget.line'].sudo().search(
+                [('program_code_id', '=', line.program_code.id),
+                 ('expenditure_budget_id', '=', line.program_code.budget_id.id),
+                 ('expenditure_budget_id.state', '=', 'validate')])
+                print('budget lines',budget_line)
+                if self.invoice_date and budget_lines:
+                    b_month = self.invoice_date.month
+                    for b_line in budget_lines:
+                        if b_line.start_date:
+                            b_s_month = b_line.start_date.month
+                            if b_month in (1, 2, 3) and b_s_month in (1, 2, 3):
+                                budget_line += b_line
+                            elif b_month in (4, 5, 6) and b_s_month in (4, 5, 6):
+                                budget_line += b_line
+                            elif b_month in (7, 8, 9) and b_s_month in (7, 8, 8):
+                                budget_line += b_line
+                            elif b_month in (10, 11, 12) and b_s_month in (10, 11, 12):
+                                budget_line += b_line
+                    
+                    total_available_budget = sum(x.available for x in budget_line)
+                    
+            line_amount =  0
+            line_amount = line.subtotal
+            print('total available budget',total_available_budget)
+            print('line amount',line_amount)
+            if total_available_budget < line_amount:
+                is_check = True
+                program_name = ''
+                if line.program_code:
+                    program_name = line.program_code.program_code
+                    avl_amount = " Available Amount Is "
+                    if self.env.user.lang == 'es_MX':
+                        avl_amount = " Disponible Monto "
+                    str_msg += program_name+avl_amount+str(total_available_budget)+"\n\n"
+                    
+        if is_check:
+            return {
+                        'name': _('Budgetary Insufficiency'),
+                        'type': 'ir.actions.act_window',
+                        'res_model': 'budget.insufficien.wiz',
+                        'view_mode': 'form',
+                        'view_type': 'form',
+                        'views': [(False, 'form')],
+                        'target': 'new',
+                        'context':{'default_msg':str_msg,'default_provision_id':self.id,'default_is_budget_suf':False}
+                    }
+        else:
+            return {
+                        'name': _('Budget sufficiency'),
+                        'type': 'ir.actions.act_window',
+                        'res_model': 'budget.insufficien.wiz',
+                        'view_mode': 'form',
+                        'view_type': 'form',
+                        'views': [(False, 'form')],
+                        'target': 'new',
+                        'context':{'default_msg':budget_msg,'default_provision_id':self.id,'default_is_budget_suf':True}
+                    }
+
+
+    def generate_folio(self):
+        folio = ''
+        if self.upa_key and self.upa_key.organization:
+            folio += self.upa_key.organization + "/"
+        if self.upa_document_type and self.upa_document_type.document_number:
+            folio += self.upa_document_type.document_number + "/"
+        folio += self.env['ir.sequence'].next_by_code('payment.folio')
+        self.folio = folio
 
     @api.onchange('operation_type_id')
     def onchange_operation_type_id(self):
@@ -392,6 +532,11 @@ class Provision(models.Model):
 
         self.payment_state = 'registered'
         for move in self:
+            move.generate_folio()
+            if not self.commitment_date:
+                today = datetime.today()
+                current_date = today + timedelta(days=30)
+                move.commitment_date = current_date
             payment_lines = move.provision_line_ids.filtered(lambda x:not x.program_code)
             if payment_lines:
                 raise ValidationError("Please add program code into invoice lines")
@@ -408,7 +553,6 @@ class ProvisionLine(models.Model):
     concept = fields.Char('Concept')
     vat = fields.Char('Vat')
     retIVA = fields.Char('RetIVA')
-
     provision_id = fields.Many2one('provision', string='Provision')
     stage = fields.Many2one(related='provision_id.stage', string='Stage',readonly=False)    
     excercise = fields.Char(related='provision_id.excercise', string='excercise',readonly=False)
@@ -419,7 +563,8 @@ class ProvisionLine(models.Model):
                                         related='provision_id.operation_type_id', string="Operation Type")
     operation_type_name = fields.Char(
         related='provision_id.operation_type_id.name', string='name')
-
+    journal_id = fields.Many2one(related='provision_id.journal_id', store=True, index=True, copy=False)
+    company_id = fields.Many2one(related='provision_id.company_id', store=True, readonly=True)
     type_of_bussiness_line = fields.Char("Type Of Bussiness Line")
     other_amounts = fields.Monetary("Other Amounts")
     project_key = fields.Char(string='Project Key')
@@ -442,9 +587,32 @@ class ProvisionLine(models.Model):
     price_unit = fields.Monetary('Price',digits='Product Price')
     subtotal = fields.Monetary(string='Subtotal',compute='get_price_subtotal',store=True)
     amount_tax = fields.Monetary(string='Tax Amount',compute='get_tax_amount',store=True)
-    currency_id = fields.Many2one(
-        'res.currency', default=lambda self: self.env.user.company_id.currency_id)
+    currency_id = fields.Many2one(related='company_id.currency_id',string='Company Currency',
+        readonly=True, store=True,
+        help='Utility field to express amount currency')
     tax_ids = fields.Many2many('account.tax', string="Taxes")
+
+    @api.onchange('program_code')
+    def onchange_program_code(self):
+        if self.program_code and self.program_code.item_id and self.program_code.item_id.unam_account_id:
+            self.account_id = self.program_code.item_id.unam_account_id.id
+
+    # @api.depends('subtotal', 'price_total')
+    # def get_price_tax_cr(self):
+    #     for rec in self:
+
+    #         if rec.currency_id and rec.company_id.currency_id and rec.currency_id != rec.company_id.currency_id:
+    #             amount_currency = abs(rec.price_total - rec.subtotal)
+    #             balance = self.currency_id._convert(
+    #                 amount_currency, rec.company_currency_id, rec.company_id, rec.move_id.date)
+    #             rec.tax_price_cr = balance
+    #         else:
+    #             balance = abs(rec.price_total - rec.subtotal)
+    #             rec.tax_price_cr = balance
+
+    # tax_price_cr = fields.Monetary(string='Tax Price', store=True, readonly=True,
+    #                                currency_field='currency_id', compute="get_price_tax_cr")
+
 
 
     @api.depends('price_unit','tax_ids','amount_tax')
@@ -462,7 +630,11 @@ class ProvisionLine(models.Model):
             rec.amount_tax = amount 
 
 
-
+class AccountMove(models.Model):
+    _inherit = 'account.move'
+    
+    provision_id = fields.Many2one('provision','Provision')
+    
 class AccountMoveLine(models.Model):
 
     _inherit = 'account.move.line'

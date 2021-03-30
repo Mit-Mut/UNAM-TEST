@@ -7,10 +7,10 @@
             <field name="model">departure.conversion</field>
             <field name="arch" type="xml">
                 <search string="Departure conversion">
-                    <field name="federal_part"/>
+                    <field name="conversion_key_id"/>
                     <field name="item_id"/>
                     <group expand="1" string="Group By">
-                        <filter string="Federal part" name='federal_part' context="{'group_by':'federal_part'}"/>
+                        <filter string="Convesion" name='conversion_key_id' context="{'group_by':'conversion_key_id'}"/>
                         <filter string="Item of Expenditure" name='item_id' context="{'group_by':'item_id'}"/>
                     </group>
                 </search>
@@ -26,7 +26,8 @@
                     <sheet>
                         <group>
                         	<field name="item_id" required="1"/>
-                            <field name="federal_part" required="1"/>
+                        	<field name="conversion_key_id" required="1" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="federal_part" invisible="1"/>
                             <field name="federal_part_desc"/>
                         </group>
                     </sheet>
@@ -41,7 +42,8 @@
             <field name="arch" type="xml">
                 <tree>
                 	<field name="item_id"/>
-                    <field name="federal_part"/>
+                	<field name="conversion_key_id"/>
+                    <field name="federal_part" invisible="1"/>
                     <field name="federal_part_desc"/>
                 </tree>
             </field>

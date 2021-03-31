@@ -96,9 +96,51 @@
          <menuitem id="menu_payment_finance" name="Finance"
          		  web_icon="jt_payroll_payment,static/description/finance.png"
                   sequence="5"/>
+                  
+	<!-- Menu and view for the journal into finance main menu -->
+       <record id="form_financeboard_journal_1" model="ir.ui.view">
+            <field name="name">Account Journal</field>
+            <field name="model">account.journal</field>
+            <field eval="100" name="priority"/>
+            <field name="arch" type="xml">
+            	<tree>
+            		<field name="name"/>
+            		<field name="bank_account_id"/>
+            		<field name="min_balance"/>
+            		<field name="has_checkbook"/>
+            		<field name="currency_id"/>
+            	</tree>
+            </field>
+        </record>
+          
+       <record id="action_financeboard_journal_1" model="ir.actions.act_window">
+            <field name="name">Overview</field>
+            <field name="res_model">account.journal</field>
+            <field name="view_mode">tree,kanban,form</field>
+        </record>
 
-<menuitem id="menu_financeboard_journal_1" name="Overview" action="account.open_account_journal_dashboard_kanban" parent="menu_payment_finance" sequence="-2" groups="account.group_account_user"/>
+		<record id="action_financeboard_journal_1_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="form_financeboard_journal_1"/>
+            <field name="act_window_id" ref="action_financeboard_journal_1"/>
+        </record>
+        <record id="action_financeboard_journal_1_kanban" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="account.account_journal_dashboard_kanban_view"/>
+            <field name="act_window_id" ref="action_financeboard_journal_1"/>
+        </record>
+	
+	 <record id="action_financeboard_journal_1_form" model="ir.actions.act_window.view">
+            <field eval="3" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account.view_account_bank_journal_form"/>
+            <field name="act_window_id" ref="action_financeboard_journal_1"/>
+        </record>
+	<menuitem id="menu_financeboard_journal_1" name="Overview" action="action_financeboard_journal_1" parent="menu_payment_finance" sequence="-2" groups="account.group_account_user"/>
 
+	<!--  -->
         <menuitem id="menu_finance_reports" name="Reports"
                   sequence="5" parent="menu_payment_finance"/>
 

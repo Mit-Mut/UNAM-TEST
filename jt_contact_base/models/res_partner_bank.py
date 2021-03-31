@@ -57,9 +57,9 @@ class ResBank(models.Model):
     @api.constrains('branch_number')
     def check_branch_number(self):
         if self.branch_number:
-            pattern = "^[0-9]{4}$"
+            pattern = "^[a-zA-Z0-9_]+$"
             if not re.match(pattern, self.branch_number):
-                raise UserError(_('The Branch Number should be of 4 digits.'))
+                raise UserError(_('The Branch Number value should be alphanumeric type.'))
         if self.branch_number and len(self.branch_number) != 4:
             raise UserError(_('The Branch Number should be of 4 digits.'))
 

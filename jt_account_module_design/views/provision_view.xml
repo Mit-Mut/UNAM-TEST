@@ -17,7 +17,7 @@
 
                         <button name="action_validate_budget" string="Validate budget" class="oe_highlight" type="object" attrs="{'invisible':[('payment_state', '!=', 'registered')]}"/>
 
-                        <button name="action_cancel_budget" string="Cancel" class="oe_highlight" type="object"  attrs="{'invisible':[('payment_state', 'in', ('paid','cancel'))]}"/>
+                        <button name="action_cancel_budget" string="Cancel" class="oe_highlight" type="object"  attrs="{'invisible':[('payment_state', 'in', ('rejected','provision','cancel'))]}"/>
 
                    <!--      <button name="action_reschedule" string="Reschedule" class="oe_highlight" type="object"  attrs="{'invisible': [('payment_state', '!=', 'payment_not_applied')]}"/>
  -->
@@ -51,24 +51,26 @@
                                 <field name="company_id" invisible="1"/>
                                 <field name="currency_id" invisible="1"/>
                                 <field name="rfc" readonly="1"/>
+                                <field name="dependancy_id" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="sub_dependancy_id" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="date_receipt" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="invoice_date" required="1" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="folio_dependency" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="administrative_forms" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="no_of_document" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="sheets" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="l10n_mx_edi_payment_method_id" attrs="{'readonly':[('payment_state', 'not in', ('draft','registered','for_payment_procedure'))]}"/>
+                                <field name="currency_id" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
+                                <field name="journal_id" readonly="1"/>
+                                <field name="previous_number" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                
+                                <field name="holder_of_dependency_id" string="Holder of the Unit" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                 <field name="operation_name" invisible="1"/>
                                 <field name="student_account" attrs="{'invisible':[('operation_name','not in',('Scholarship holders','Becarios'))],'required':[('operation_name','in',('Scholarship holders','Becarios'))],'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                 <field name="transfer_key" attrs="{'invisible':[('operation_name','!=','Becarios')],'required':[('operation_name','=','Becarios')],'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                 <field name="category_key" attrs="{'invisible':[('operation_name','not in',('Per diem','Travel expenses','Viáticos'))],'required':[('operation_name','in',('Per diem','Travel expenses','Viáticos'))],'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                 <field name="workstation_id"  attrs="{'invisible': [('operation_name', 'not in',('Viaticum','Travel expenses','Viáticos'))],'readonly':[('payment_state', 'not in', ('draft'))]}"/>
-                                <field name="administrative_forms" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
-                                <field name="no_of_document" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                 <field name="vault_folio" invisible="1"/>
-                                <field name="currency_id" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
-                                <field name="journal_id" readonly="1"/>
-                                <field name="payment_bank_id" attrs="{'required':[('payment_state','in',('draft','registered'))],'readonly':[('payment_state', 'not in', ('registered','draft','for_payment_procedure'))]}"/>
-
-                                <field name="payment_bank_account_id"  string="Payment receipt bank account" attrs="{'required':[('payment_state','in',('draft','registered'))],'readonly':[('payment_state', 'not in', ('registered','draft','for_payment_procedure'))]}"/>
-
-                                <field name="payment_issuing_bank_id" string="Payment issuing Bank" attrs="{'readonly':[('payment_state', 'not in', ('draft''registered'))]}"/>
-                                <field name="payment_issuing_bank_acc_id" attrs="{'readonly':[('payment_state', 'not in', ('draft''registered'))]}"/>
-                                <field name="administrative_secretary_id" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
-                                <field name="holder_of_dependency_id" string="Holder of the Unit" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                 <field name="invoice_uuid" invisible="1"/>
                                 <field name="invoice_series" invisible="1"/>
                                 <field name="folio_invoice" invisible="1"/>
@@ -77,10 +79,22 @@
                                 <field name="line" invisible="1"/>
                             </group>
                             <group>
-                                <field name="invoice_date" required="1" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
-                                <field name="req_registration_date" required="1" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="administrative_secretary_id" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="user_registering_id" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="upa_key" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="upa_document_type" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="document_type" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="operation_type_id" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="folio" readonly="1"/>
+                                <field name="date_approval_request" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="payment_bank_id" attrs="{'required':[('payment_state','in',('draft','registered'))],'readonly':[('payment_state', 'not in', ('registered','draft','for_payment_procedure'))]}"/>
+                                <field name="payment_bank_account_id"  string="Payment receipt bank account" attrs="{'required':[('payment_state','in',('draft','registered'))],'readonly':[('payment_state', 'not in', ('registered','draft','for_payment_procedure'))]}"/>
+                                <field name="payment_issuing_bank_id" string="Payment issuing Bank" attrs="{'readonly':[('payment_state', 'not in', ('draft''registered'))]}"/>
+                                <field name="payment_issuing_bank_acc_id" attrs="{'readonly':[('payment_state', 'not in', ('draft''registered'))]}"/>
+                                <field name="batch_folio" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                 
-                                <field name="project_number_id" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}" context="{'from_conacyt':1}" domain="[('is_papiit_project','=',True)]"/>
+                                <field name="req_registration_date" invisible="1" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="project_number_id" invisible="1" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}" context="{'from_conacyt':1}" domain="[('is_papiit_project','=',True)]"/>
                                 <!-- <field name="responsible_id" attrs="{'invisible': [('operation_type_id', 'not in',('REIMBURSEMENT TO THIRD PARTIES','PLANE TICKETS','PAYMENT TO SUPPLIER'))]}"/> -->
                                 <field name="responsible_id" attrs="{'invisible':[('operation_name','not in',('Creación de cuentas por pagar','Creation of accounts payable','Boletos de ​ avión','Air tickets',
                                     'Becarios','Interns','Reembolso a terceros','Reimbursement to third parties',
@@ -89,34 +103,20 @@
                                     '​ SOLICITUD DE PAGO EN M.E. (PROVEEDORES)','REQUEST FOR PAYMENT IN ME(SUPPLIERS)','PAGO A SUPERIORES ​ Y CONTRATISTAS','PAYMENT TO SUPPLIERS AND CONTRACTORS'
                                     ))],'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                     
-                                <field name="project_code" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
-                                <field name="agreement_number" readonly="1"/>
+                                <field name="project_code" invisible="1" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="agreement_number" invisible="1" readonly="1"/>
                                 <field name="stage" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}" invisible="1"/>
-                                <field name="dependancy_id" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
-                                <field name="sub_dependancy_id" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
-                                <field name="folio_dependency" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
-                                <field name="folio" readonly="1"/>
-                                <field name="operation_type_id" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
-                                <field name="date_receipt" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
-                                <field name="date_approval_request" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
-                                <field name="sheets" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
-                                
-                                <field name="l10n_mx_edi_payment_method_id" attrs="{'readonly':[('payment_state', 'not in', ('draft','registered','for_payment_procedure'))]}"/>
-
-                                <field name="document_type" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
-                                <field name="upa_key" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
-                                <field name="upa_document_type" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
-                                <field name="batch_folio" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/> 
+                                 
                                 <field name="is_papiit_project" invisible="1"/>                              
                                 <field name="leaves" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}" invisible="1"/>
                                 
-                                <field name="exchange_rate" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
-                                <field name="foreign_currency_amount" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
-                                <field name="previous" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="exchange_rate" invisible="1" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="foreign_currency_amount"  invisible="1" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                
                                 <field name="reason_rejection_req" attrs="{'invisible': [('payment_state', '!=','rejected')]}" readonly="1"/>
                                 <field name="reason_rejection" attrs="{'invisible': [('payment_state', '!=','payment_not_applied')]}" readonly="1"/>
                                 <field name="reason_cancellation" attrs="{'invisible':[('payment_state', '!=', 'cancel')],'readonly': [('payment_state', '!=', 'draft')]}"/>
-                                <field name="agreement_type_id" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="agreement_type_id" invisible="1" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                 
                             </group>
                         </group>
@@ -128,34 +128,40 @@
                                 <field name="provision_line_ids"
                                 widget="section_and_note_one2many">
                                     <tree editable="bottom" string="Provision Line">
-                                        <field name="line"/>
-                                        <field name="concept"/>
-                                        <field name="egress_key_id"/>
+                                        <field name="line" invisible="1"/>
+                                        <field name="concept" invisible="1"/>
+                                        <field name="product_id"/>
+                                        <field name="name"/>
                                         <field name="account_id"
                                            groups="account.group_account_user"
-                                           domain="[('deprecated', '=', False), ('user_type_id.type', 'not in', ('receivable', 'payable')), ('company_id', '=', parent.company_id)]" string="Bill"/>
-                                        <field name="program_code"/>
+                                           domain="[('deprecated', '=', False), ('user_type_id.type', 'not in', ('receivable', 'payable')), ('company_id', '=', parent.company_id)]" required="1"/>
+                                        <field name="program_code_id"/>
+                                        <field name="turn_type"/>
                                         <field name="type_of_bussiness_line"/>
-                                        <field name="stage"/>
-                                        <field name="excercise"/>
-                                        <field name="vat" invisible="1"/>
-                                        <field name="project_key"/>
-                                        <field name="invoice_vault_folio"/>
+                                        <field name="egress_key_id"/>
                                         <field name="invoice_uuid"/>
-                                        <field name="invoice_series"/>
-                                        <field name="invoice_folio"/>
+                                        <field name="folio_invoice"/>
                                         <field name="vault_folio"/>
-                                        <field name="retIVA"/>
-                                        <field name="company_id" invisible="1"/>
-                                        <field name="journal_id" invisible="1"/>
-                                        <field name="operation_type_id" invisible="1"/>
-                                        <field name="operation_type_name" invisible="1"/>
                                         <field name="quantity"/>
                                         <field name="price_unit"/>
                                         <field name="other_amounts"/>
                                         <field name="discount" invisible="1"/>
                                         <field name="tax_ids" widget="many2many_tags"/>
                                         <field name="subtotal"/>
+                                        
+                                        <field name="stage" invisible="1"/>
+                                        <field name="excercise" invisible="1"/>
+                                        <field name="vat" invisible="1"/>
+                                        <field name="project_key" invisible="1"/>
+                                        <field name="invoice_vault_folio" invisible="1"/>
+                                        
+                                        <field name="invoice_series" invisible="1"/>
+                                        <field name="retIVA" invisible="1"/>
+                                        <field name="company_id" invisible="1"/>
+                                        <field name="journal_id" invisible="1"/>
+                                        <field name="operation_type_id" invisible="1"/>
+                                        <field name="operation_type_name" invisible="1"/>
+                                        
                                         <field name="provision_id" invisible="1"/>
                                          
                                     </tree>

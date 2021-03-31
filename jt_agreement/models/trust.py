@@ -34,7 +34,8 @@ class Trust(models.Model):
 
     name = fields.Char("Trust Name")
     bank_id = fields.Many2one('res.bank','Banking institution')
-
+    bank_account_id = fields.Many2one('account.journal',string='Bank Account',domain=[('type','=','bank')])
+    register_date = fields.Date('Date of registration in the system',default=datetime.today())
     street = fields.Char(related='bank_id.street')
     street2 = fields.Char(related='bank_id.street2')
     city = fields.Char(related='bank_id.city')

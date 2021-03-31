@@ -24,7 +24,8 @@
             		<sheet>
 	            		<group>
 	            			<field name="program_key_id"  options="{'no_open': True, 'no_create': True}"/>
-	            			<field name="dep_con_id"/>
+	            			<field name="dep_con_id" invisible="1"/>
+	            			<field name="conversion_key_id"/>
 	            			<field name="federal_part_desc"/>
                             <field name="desc" invisible="1"/>
                             <field name="shcp" required="1"/>
@@ -42,7 +43,8 @@
             <field name="arch" type="xml">
             	<tree>
             		<field name="program_key_id" />
-           			<field name="dep_con_id"/>
+           			<field name="dep_con_id" invisible="1"/>
+           			<field name="conversion_key_id"/>
            			<field name="federal_part_desc"/>
                     <field name="desc" invisible="1"/>
                     <field name="shcp"/>

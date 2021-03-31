@@ -42,7 +42,11 @@ class BudgetProgramConversion(models.Model):
     description = fields.Text(string='Description conversion of SHCP program')
 
     dep_con_id = fields.Many2one('departure.conversion','SHCP Item')
-    federal_part = fields.Char(related='dep_con_id.federal_part')
+    
+    conversion_key_id = fields.Many2one('shcp.game','Conversion with Item')
+    federal_part = fields.Char(related='conversion_key_id.conversion_key')
+    
+    #federal_part = fields.Char(related='dep_con_id.federal_part')
     
     federal_part_desc = fields.Text(related='dep_con_id.federal_part_desc',string="Item SHCP Description")
     

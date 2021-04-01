@@ -89,6 +89,7 @@
                                 <field name="sub_dependency_id" domain="[('dependency_id','=',dependency_id)]" context="{'show_for_supplier_payment':1}" readonly="1"/>
                                 <field name="currency_id" options="{'no_create': True}" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         		<field name="yield_id" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="rate_of_returns" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         	</group>
                         </group>
                     <notebook>

@@ -23,6 +23,8 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 from odoo.exceptions import ValidationError
+import re
+
 
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
@@ -154,9 +156,13 @@ class HrEmployee(models.Model):
     @api.onchange('branch_number')
     def onchange_branch_number(self):
         if self.branch_number:
-            if not self.branch_number.isdigit():
-                raise UserError(
-                    _('The Branch Number should only consist of digits.'))
+            # if not self.branch_number.isdigit():
+            #     raise UserError(
+            #         _('The Branch Number should only consist of digits.'))
+            pattern = "^[a-zA-Z0-9_]+$"
+            if not re.match(pattern, self.branch_number):
+                raise UserError(_('The Branch Number value should be alphanumeric type.'))
+
             if len(self.branch_number) > 4:
                 raise UserError(
                     _('The Branch Number should be of 4 digits only.'))

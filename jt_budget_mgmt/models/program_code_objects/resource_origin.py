@@ -36,14 +36,15 @@ class ResourceOrigin(models.Model):
         ('02', '02'),
         ('03', '03'),
         ('04', '04'),
-        ('05', '05')], string='Key origin of the resource')
+        ('05', '05'),
+        ('06','06')], string='Key origin of the resource')
     desc = fields.Selection([
         ('subsidy', 'Federal Subsidy'),
         ('income', 'Extraordinary Income'),
         ('service', 'Education Services'),
         ('financial', 'Financial'),
         ('other', 'Other Products'),
-        ('pef', 'Returns Reassignment PEF')],
+        ('pef', 'Returns Reassignment PEF'),('unam','Store UNAM')],
         string='Description of origin of the resource')
 
     _sql_constraints = [('key_origin', 'unique(key_origin)', 'The key origin must be unique.')]
@@ -62,6 +63,8 @@ class ResourceOrigin(models.Model):
         elif self.key_origin == '04' and self.desc != 'other':
             flag = True
         elif self.key_origin == '05' and self.desc != 'pef':
+            flag = True
+        elif self.key_origin == '06' and self.desc != 'unam':
             flag = True
         if flag:
             raise ValidationError(_('Please select correct key Origin of the resource!'))

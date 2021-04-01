@@ -58,7 +58,8 @@ class PurchaseSaleSecurity(models.Model):
     
     request_finance_ids = fields.One2many(
         'request.open.balance.finance', 'purchase_sale_security_id',copy=False)
-
+    rate_of_returns = fields.Many2one('rate.of.returns', string="Rate Of Returns")
+    
     #====== Accounting Fields =========#
 
     investment_income_account_id = fields.Many2one('account.account','Income Account')

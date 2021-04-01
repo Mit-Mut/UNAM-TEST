@@ -332,13 +332,13 @@ class Adequacies(models.Model):
 
 
                 # Validation Federal Item
-                conversion_item = shcp and shcp.dep_con_id or False
-                  
-                if not conversion_item:
-                    failed_row += str(list_result) + \
-                                  "------>> Invalid SHCP Games(CONPA) Format\n"
-                    failed_row_ids.append(pointer)
-                    continue
+#                 conversion_item = shcp and shcp.dep_con_id or False
+#                   
+#                 if not conversion_item:
+#                     failed_row += str(list_result) + \
+#                                   "------>> Invalid SHCP Games(CONPA) Format\n"
+#                     failed_row_ids.append(pointer)
+#                     continue
 
 
                 # Validate Dependency
@@ -403,12 +403,12 @@ class Adequacies(models.Model):
 
                 
                 # Validation Federal Item
-#                 conversion_item = dpc_obj.validate_conversion_item(list_result[10],item.id)
-#                 if not conversion_item:
-#                     failed_row += str(list_result) + \
-#                                   "------>> Invalid SHCP Games(CONPA) Format\n"
-#                     failed_row_ids.append(pointer)
-#                     continue
+                conversion_item = dpc_obj.validate_conversion_item(list_result[10],item.id)
+                if not conversion_item:
+                    failed_row += str(list_result) + \
+                                  "------>> Invalid SHCP Games(CONPA) Format\n"
+                    failed_row_ids.append(pointer)
+                    continue
 
                 # Validation Expense Type
                 expense_type = expense_type_obj.validate_expense_type(list_result[11])

@@ -60,7 +60,7 @@
                                 <field name="permanent_instructions" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1" />
                                 <field name="fund_observation" attrs="{'readonly': [('state', '!=', 'draft')]}"  required="1"/>
                                 <field name="yield_id" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                
+                                <field name="rate_of_returns" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
                         </group>
                         <group>

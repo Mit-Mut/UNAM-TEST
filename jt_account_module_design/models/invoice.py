@@ -256,6 +256,7 @@ class Provision(models.Model):
             rec.amount_total = rec.amount_untaxed + rec.amount_tax 
 
 
+
     @api.model
     def create(self,vals):
         res = super(Provision, self).create(vals)
@@ -291,7 +292,26 @@ class Provision(models.Model):
             }
 
     def create_payment_request(self):
-        
+        invoice_line_vals = []
+        for line in self.provision_line_ids:
+            line_vals = {
+                'product_id':line.product_id and line.product_id.id or False,
+                'name' : line.name,
+                'account_id':line.account_id and line.account_id.id or False,
+                'quantity' : line.quantity,
+                'price_unit' : line.price_unit,
+                'program_code_id' : line.program_code_id and line.program_code_id.id or False,
+                'turn_type' : line.turn_type,
+                'type_of_bussiness_line' : line.type_of_bussiness_line, 
+                'egress_key_id' : line.egress_key_id and line.egress_key_id.id or False,
+                'invoice_uuid' : line.invoice_uuid,
+                'folio_invoice' : line.folio_invoice,
+                'vault_folio' : line.vault_folio,
+                'other_amounts' : line.other_amounts,
+                'tax_ids' : [(6,0,line.tax_ids.ids)]
+                }
+            invoice_line_vals.append((0,0,line_vals))
+            
         vals = {'payment_bank_id':self.payment_bank_id and self.payment_bank_id.id or False,
                 'payment_bank_account_id': self.payment_bank_account_id and self.payment_bank_account_id.id or False,
                 'payment_issuing_bank_id': self.payment_issuing_bank_id and self.payment_issuing_bank_id.id or False,
@@ -300,11 +320,32 @@ class Provision(models.Model):
                 'type' : 'in_invoice',
                 'journal_id' : self.journal_id and self.journal_id.id or False,
                 'invoice_date' : self.invoice_date,
-                #'invoice_line_ids':invoice_line_vals,
+                'invoice_line_ids':invoice_line_vals,
                 'is_payment_request' : True,
                 'provision_id':self.id,
                 'currency_id':self.currency_id and self.currency_id.id or False,
                 'folio':self.folio,
+                'dependancy_id':self.dependancy_id and self.dependancy_id.id or False,
+                'sub_dependancy_id' : self.sub_dependancy_id and self.sub_dependancy_id.id or False,
+                'date_receipt':self.date_receipt,
+                'folio_dependency':self.folio_dependency,
+                'administrative_forms' : self.administrative_forms,
+                'no_of_document' : self.no_of_document,
+                'sheets' : self.sheets,
+                'previous_number' : self.previous_number,
+                'administrative_secretary_id' : self.administrative_secretary_id and self.administrative_secretary_id.id or False,
+                'user_registering_id' : self.user_registering_id and self.user_registering_id.id or False,
+                'upa_key' : self.upa_key and self.upa_key.id or False,
+                'upa_document_type' : self.upa_document_type and self.upa_document_type.id or False,
+                'document_type' : self.document_type,
+                'operation_type_id' : self.operation_type_id and self.operation_type_id.id or False,
+                'folio' : self.folio,
+                'date_approval_request' : self.date_approval_request,
+                'payment_bank_id' : self.payment_bank_id and self.payment_bank_id.id or False,
+                'payment_bank_account_id' : self.payment_bank_account_id and self.payment_bank_account_id.id or False,
+                'payment_issuing_bank_id' : self.payment_issuing_bank_id and self.payment_issuing_bank_id.id or False,
+                'payment_issuing_bank_acc_id' : self.payment_issuing_bank_acc_id and self.payment_issuing_bank_acc_id.id or False,
+                'batch_folio' : self.batch_folio,
                 }
 
         return self.env['account.move'].create(vals)
@@ -337,13 +378,13 @@ class Provision(models.Model):
         if self.env.user.lang == 'es_MX':
             budget_msg = "Suficiencia Presupuestal"
             
-        for line in self.provision_line_ids.filtered(lambda x:x.program_code):
+        for line in self.provision_line_ids.filtered(lambda x:x.program_code_id):
             total_available_budget = 0
-            if line.program_code:
+            if line.program_code_id:
                 budget_line = self.env['expenditure.budget.line']
                 budget_lines = self.env['expenditure.budget.line'].sudo().search(
-                [('program_code_id', '=', line.program_code.id),
-                 ('expenditure_budget_id', '=', line.program_code.budget_id.id),
+                [('program_code_id', '=', line.program_code_id.id),
+                 ('expenditure_budget_id', '=', line.program_code_id.budget_id.id),
                  ('expenditure_budget_id.state', '=', 'validate')])
                 print('budget lines',budget_line)
                 if self.invoice_date and budget_lines:
@@ -369,8 +410,8 @@ class Provision(models.Model):
             if total_available_budget < line_amount:
                 is_check = True
                 program_name = ''
-                if line.program_code:
-                    program_name = line.program_code.program_code
+                if line.program_code_id:
+                    program_name = line.program_code_id.program_code
                     avl_amount = " Available Amount Is "
                     if self.env.user.lang == 'es_MX':
                         avl_amount = " Disponible Monto "
@@ -537,9 +578,49 @@ class Provision(models.Model):
                 today = datetime.today()
                 current_date = today + timedelta(days=30)
                 move.commitment_date = current_date
-            payment_lines = move.provision_line_ids.filtered(lambda x:not x.program_code)
+            payment_lines = move.provision_line_ids.filtered(lambda x:not x.program_code_id)
             if payment_lines:
                 raise ValidationError("Please add program code into invoice lines")
+
+
+    def create_journal_line_for_approved_payment(self):
+        if self.journal_id and (not self.journal_id.default_credit_account_id or not \
+            self.journal_id.default_debit_account_id):
+            raise ValidationError(_("Configure Default Debit and Credit Account in %s!" % \
+                                    self.journal_id.name))
+        
+        amount_total = sum(x.subtotal for x in self.provision_line_ids.filtered(lambda x:x.program_code_id))    
+        if self.currency_id != self.company_id.currency_id:
+            amount_currency = abs(amount_total)
+            balance = self.currency_id._convert(amount_currency, self.company_currency_id, self.company_id, self.date)
+            currency_id = self.currency_id and self.currency_id.id or False
+        else:
+            balance = abs(amount_total)
+            amount_currency = 0.0
+            currency_id = False
+            
+        self.line_ids = [(0, 0, {
+                                     'account_id': self.journal_id.default_credit_account_id.id,
+                                     'coa_conac_id': self.journal_id.conac_credit_account_id.id,
+                                     'credit': balance, 
+                                     'amount_currency' : -amount_currency,
+                                     'exclude_from_invoice_tab': True,
+                                     'conac_move' : True,
+                                     'currency_id' : currency_id,
+                                     'move_id':False,
+                                 }), 
+                        (0, 0, {
+                                     'account_id': self.journal_id.default_debit_account_id.id,
+                                     'coa_conac_id': self.journal_id.conac_debit_account_id.id,
+                                     'debit': balance,
+                                     'amount_currency' : amount_currency,
+                                     'exclude_from_invoice_tab': True,
+                                     'conac_move' : True,
+                                     'currency_id' : currency_id,
+                                     'move_id':False,
+                                 })]
+          
+        #self.conac_move = True
 
 
 
@@ -557,7 +638,8 @@ class ProvisionLine(models.Model):
     stage = fields.Many2one(related='provision_id.stage', string='Stage',readonly=False)    
     excercise = fields.Char(related='provision_id.excercise', string='excercise',readonly=False)
     product_id = fields.Many2one('product.product',"Product")
-    program_code = fields.Many2one('program.code', string='Program Code')
+    name = fields.Char(string='Label')
+    program_code_id = fields.Many2one('program.code', string='Program Code')
     egress_key_id = fields.Many2one("egress.keys", string="Egress Key")
     operation_type_id = fields.Many2one('operation.type',
                                         related='provision_id.operation_type_id', string="Operation Type")
@@ -572,8 +654,10 @@ class ProvisionLine(models.Model):
     turn_type = fields.Char("Turn type")
     invoice_uuid = fields.Char("Invoice UUID")
     invoice_series = fields.Char("Invoice Series")
-    invoice_folio = fields.Char("Invoice Folio")
+    
+    folio_invoice = fields.Char("Folio Invoice")
     vault_folio = fields.Char("Vault folio")
+    
     account_id = fields.Many2one('account.account', string='Account',
         index=True, ondelete="restrict", check_company=True,
         domain=[('deprecated', '=', False)])
@@ -592,10 +676,10 @@ class ProvisionLine(models.Model):
         help='Utility field to express amount currency')
     tax_ids = fields.Many2many('account.tax', string="Taxes")
 
-    @api.onchange('program_code')
+    @api.onchange('program_code_id')
     def onchange_program_code(self):
-        if self.program_code and self.program_code.item_id and self.program_code.item_id.unam_account_id:
-            self.account_id = self.program_code.item_id.unam_account_id.id
+        if self.program_code_id and self.program_code_id.item_id and self.program_code_id.item_id.unam_account_id:
+            self.account_id = self.program_code_id.item_id.unam_account_id.id
 
     # @api.depends('subtotal', 'price_total')
     # def get_price_tax_cr(self):
@@ -614,11 +698,23 @@ class ProvisionLine(models.Model):
     #                                currency_field='currency_id', compute="get_price_tax_cr")
 
 
+    def create(self, vals):
+        lines = super(ProvisionLine, self).create(vals)
+        if any(lines.filtered(lambda x: not x.egress_key_id)):
+            raise ValidationError(_("Please add Egress Key into lines"))
+        return lines
+
+    def write(self, vals):
+        result = super(ProvisionLine, self).write(vals)
+        if 'egress_key_id' in vals:
+            if any(self.filtered(lambda x:not x.egress_key_id and x.provision_id.payment_state == 'draft')):
+                raise ValidationError(_("Please add Egress Key into lines"))
+        return result
 
     @api.depends('price_unit','tax_ids','amount_tax')
     def get_price_subtotal(self):
         for rec in self:
-            rec.subtotal = rec.price_unit + rec.amount_tax
+            rec.subtotal = (rec.price_unit*rec.quantity) + rec.amount_tax
   
     @api.depends('price_unit','tax_ids')
     def get_tax_amount(self):
@@ -634,6 +730,7 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
     
     provision_id = fields.Many2one('provision','Provision')
+    is_provision_request = fields.Boolean("Provision Request",copy=False)
     
 class AccountMoveLine(models.Model):
 

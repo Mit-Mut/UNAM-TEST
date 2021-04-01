@@ -42,7 +42,8 @@
                     	</div>
                     	<group>
 	                        <group>
-	                            <field name="name" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+	                            
+                                <field name="name" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 	                            
 	                            <field name="bank_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <label for="street" string="Bank Address"/>
@@ -54,10 +55,11 @@
                                     <field name="zip" readonly="1" placeholder="ZIP" class="o_address_zip"/>
                                     <field name="country" readonly="1" placeholder="Country" class="o_address_country" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
                                 </div>
-	                            
+                                <field name="bank_account_id" string="Bank Account"/>
 	                            <field name="dependency_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 	                            <field name="dependency_desc" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 	                            <field name="goals" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="register_date"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 	                        </group>
 	                        <group>
 	                            <field name="opening_balance" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
@@ -200,6 +202,7 @@
                         			</group>
                         		</group>
                         	</page>
+                            
                             <page name="cancellation_info" string="Cancellation Information"
                                 attrs="{'invisible': [('state', 'not in', ('in_force', 'to_be_cancelled', 'cancelled'))]}">
                                 <group>

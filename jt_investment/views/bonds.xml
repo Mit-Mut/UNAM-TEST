@@ -89,7 +89,8 @@
                                 <field name="is_federal_subsidy_resources" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="origin_resource_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="observations" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="yield_id" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>                            
+                                <field name="yield_id" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="rate_of_returns" attrs="{'readonly': [('state', '!=', 'draft')]}"/>                            
                             </group>
                         </group>
                         <notebook>

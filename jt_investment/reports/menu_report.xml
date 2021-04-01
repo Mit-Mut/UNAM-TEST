@@ -165,6 +165,23 @@
             sequence="22"
             action="action_investment_committee_new"
         />
+
+        <!-- 8.12 Report of Investment Funds in Productive Monthly Accounts -->
+        <record id="action_investment_funds_in_productive_monthly_accounts" model="ir.actions.client">
+            <field name="name">Report of Investment Funds in Productive Monthly Accounts</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'jt_investment.investment.funds.productive.monthly.accounts'}"/>
+        </record>
+
+        <menuitem
+            id="menu_investment_funds_in_productive_monthly"
+            name="Report of Investment Funds in Productive Monthly Accounts"
+            parent="submenu_menu_investment_reports"
+            sequence="23"
+            action="action_investment_funds_in_productive_monthly_accounts"
+        />
+
+
 		<!-- Account Statement -->
         <record id="action_account_statement" model="ir.actions.client">
             <field name="name">Account Statements</field>

@@ -24,6 +24,6 @@ class BudegtInsufficiencWiz(models.TransientModel):
             self.provision_id.date_approval_request = datetime.today().date()
             self.provision_id.is_from_reschedule_payment = False
             #self.decrease_available_amount()
-            #self.move_id.create_journal_line_for_approved_payment()
+            self.provision_id.create_journal_line_for_approved_payment()
             
         return res

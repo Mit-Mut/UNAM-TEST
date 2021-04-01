@@ -56,7 +56,8 @@ class WillPay(models.Model):
     compound_interest_estimated_yield = fields.Float(string="Estimated Yield",compute="get_compound_interest_estimated_yield",store=True)
     compound_interest_real_performance = fields.Float(string="Real Performance")
     compound_estimated_real_variation = fields.Float(string="Estimated vs. Real Yield Variation",compute="get_compound_estimated_real_variation",store=True)
-
+    rate_of_returns = fields.Many2one('rate.of.returns', string="Rate Of Returns")
+    
     #====== Accounting Fields =========#
 
     investment_income_account_id = fields.Many2one('account.account','Income Account')

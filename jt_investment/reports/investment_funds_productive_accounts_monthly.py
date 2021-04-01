@@ -32,10 +32,10 @@ import lxml.html
 from datetime import datetime ,timedelta,date
 import json
 
-class InvestmentFundsinProductiveAccounts(models.AbstractModel):
-    _name = "jt_investment.investment.funds.productive.accounts"
+class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
+    _name = "jt_investment.investment.funds.productive.monthly.accounts"
     _inherit = "account.coa.report"
-    _description = "Report of Investment Funds in Productive Accounts"
+    _description = "Report of Investment Funds in Monthly Productive Accounts"
 
     filter_date = {'mode': 'range', 'filter': 'this_month'}
     filter_comparison = {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
@@ -48,7 +48,6 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
     filter_hierarchy = None
     filter_unposted_in_period = None
     MAX_LINES = None
-
     filter_funds = True
 
 
@@ -119,25 +118,26 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
 
     def _get_templates(self):
         templates = super(
-            InvestmentFundsinProductiveAccounts, self)._get_templates()
+            InvestmentFundsinProductiveAccountsMonthly, self)._get_templates()
         templates[
             'main_table_header_template'] = 'account_reports.main_table_header'
         templates['main_template'] = 'account_reports.main_template'
         return templates
 
     def _get_columns_name(self, options):
+        
         return [
             {'name': _('Dias')},
             {'name': _('Mes')},
             {'name': _('Fecha')},
             {'name': _('Bank')},
-            {'name': _('Fund')},
-            {'name': _('Type of Fund')},
-            {'name': _('Agreement Type')},
-            {'name': _('Name Of Agreements')},
             {'name': _('TIIE 28')},
             {'name': _('Capital')},
             {'name': _('Entradas')},
+            {'name':_('Fondos Ligados a Convenios')},
+            {'name':_('Fondos de Recursos Patrimoniales')},
+            {'name':_(' Fondo Institucional de Fortalecimiento')},
+            {'name':_(' Fondo de Mantenimiento Mayor')},
             {'name': _('Salidas')},
             {'name': _('Saldo Final')},
             {'name': _('Promedio Diario')},
@@ -247,10 +247,7 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
         previous_domain = domain + [('date_required','<',start)]
         
         main_domain = domain + [('date_required','>=',start),('date_required','<=',end)]
-        
-        
         records = self.env['investment.operation'].search(main_domain)
-        
         previous_records = self.env['investment.operation'].search(previous_domain)
         
         
@@ -337,19 +334,21 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                         p_rate = period_rate_id.rate_days_28
                 total_avg_final += final_amount
                 precision = self.env['decimal.precision'].precision_get('Productive Accounts')
+                
+    
                 lines.append({
                     'id': 'hierarchy' + str(rec.id),
                     'name': rec.date_required.day,
                     'columns': [{'name': month_name}, 
                                 {'name': rec.date_required.day},
                                 {'name': rec.investment_id.journal_id and rec.investment_id.journal_id.name or ''},
-                                {'name': rec.investment_fund_id and rec.investment_fund_id.fund_id and rec.investment_fund_id.fund_id.name or ''},
-                                {'name': rec.fund_type and rec.fund_type.name or ''},
-                                {'name': rec.agreement_type_id and rec.agreement_type_id.name or ''},
-                                {'name': rec.base_collabaration_id and rec.base_collabaration_id.name or ''},
                                 self._format({'name': p_rate},figure_type='float',digit=precision,is_currency=False),
                                 self._format({'name': capital},figure_type='float',digit=2,is_currency=True),
                                 self._format({'name': entradas},figure_type='float',digit=2,is_currency=True),
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
                                 self._format({'name': salidas},figure_type='float',digit=2,is_currency=True),
                                 self._format({'name': final_amount},figure_type='float',digit=2,is_currency=True),
                                 self._format({'name': total_avg_final/rec.date_required.day},figure_type='float',digit=2,is_currency=True),
@@ -358,7 +357,7 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                     'unfoldable': False,
                     'unfolded': True,
                 })
-    
+
             lines.append({
                 'id': 'hierarchy_total',
                 'name': 'Total',
@@ -366,12 +365,12 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                             {'name': ''},
                             {'name': ''},
                             {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
-                            {'name': ''},
                             self._format({'name': total_capital},figure_type='float',digit=2,is_currency=True),
                             self._format({'name': total_entradas},figure_type='float',digit=2,is_currency=True),
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
+                            {'name': ''},
                             self._format({'name': total_salidas},figure_type='float',digit=2,is_currency=True),
                             self._format({'name': final_amount},figure_type='float',digit=2,is_currency=True),
                             {'name': ''},
@@ -481,6 +480,60 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                 'name': '',
                 'columns': period_name,
                 'level': 1,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        # ==========================================================================
+        lines.append({
+                'id': 'hierarchy_or_inst',
+                'name': '',
+                'columns': [
+                         {'name':'Fondos Ligados a Convenios'},
+                         {'name':''},
+                        ],
+                'level': 2,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        # ==========================================================================
+        lines.append({
+                'id': 'hierarchy_fondos_patri',
+                'name': '',
+                'columns': [
+                         {'name':'Fondos de Recursos Patrimoniales'},
+                         {'name':''},
+                        ],
+                'level': 2,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+        # # ==========================================================================
+      
+        lines.append({
+                'id': 'hierarchy_fondos_inst',
+                'name': '',
+                'columns': [
+                         {'name':'Fondo Institucional de Fortalecimiento'},
+                         {'name':''},
+                        ],
+                'level': 2,
+                'unfoldable': False,
+                'unfolded': True,
+            })
+
+
+                # ==========================================================================
+        lines.append({
+                'id': 'hierarchy_fondos_man',
+                'name': '',
+                'columns': [
+                         {'name':'Fondo de Mantenimiento Mayor'},
+                         {'name':''},
+                        ],
+                'level': 2,
                 'unfoldable': False,
                 'unfolded': True,
             })

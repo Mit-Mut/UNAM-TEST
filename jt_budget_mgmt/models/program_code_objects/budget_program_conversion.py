@@ -48,10 +48,10 @@ class BudgetProgramConversion(models.Model):
     
     #federal_part = fields.Char(related='dep_con_id.federal_part')
     
-    federal_part_desc = fields.Text(related='dep_con_id.federal_part_desc',string="Item SHCP Description")
+    federal_part_desc = fields.Text(related='conversion_key_id.conversion_key_desc',string="Item SHCP Description")
     
-    _sql_constraints = [('uniq_unam_key_id', 'unique(program_key_id,shcp,dep_con_id)',
-                         'The combination of UNAM function, SHCP Item and Conversion of SHCP must be unique')]
+    _sql_constraints = [('uniq_unam_key_id', 'unique(program_key_id,shcp,conversion_key_id)',
+                         'The combination of UNAM function, Conversion with Item and Conversion of SHCP must be unique')]
 
     @api.constrains('shcp')
     def _check_shcp(self):

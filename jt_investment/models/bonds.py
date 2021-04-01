@@ -65,7 +65,8 @@ class Bonds(models.Model):
     monthly_real_interest = fields.Float(string="Real Interest")
 
     monthly_profit_variation = fields.Float(string="Estimated vs Real Profit Variation",compute="get_month_profit_variation",store=True)
-
+    rate_of_returns = fields.Many2one('rate.of.returns', string="Rate Of Returns")
+    
     #====== Accounting Fields =========#
 
     investment_income_account_id = fields.Many2one('account.account','Income Account')

@@ -93,6 +93,7 @@ class InvestmentFunds(models.Model):
     request_finance_ids = fields.One2many(
         'request.open.balance.finance', 'investment_fund_id')
     yield_id = fields.Many2one('yield.destination',string="Yield Destination")
+    rate_of_returns = fields.Many2one('rate.of.returns', string="Rate Of Returns")
 
 
     @api.model

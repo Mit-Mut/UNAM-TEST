@@ -63,6 +63,7 @@ class Investment(models.Model):
     real_profit = fields.Float(string="Real Profit")
     profit_variation = fields.Float(
         string="Estimated vs Real Profit Variation", compute="get_profit_variation", store=True)
+    rate_of_returns = fields.Many2one('rate.of.returns', string="Rate Of Returns")
 
     #====== Accounting Fields =========#
 

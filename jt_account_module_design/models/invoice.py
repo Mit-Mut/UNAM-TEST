@@ -583,6 +583,45 @@ class Provision(models.Model):
                 raise ValidationError("Please add program code into invoice lines")
 
 
+    def create_journal_line_for_approved_payment(self):
+        if self.journal_id and (not self.journal_id.default_credit_account_id or not \
+            self.journal_id.default_debit_account_id):
+            raise ValidationError(_("Configure Default Debit and Credit Account in %s!" % \
+                                    self.journal_id.name))
+        
+        amount_total = sum(x.subtotal for x in self.provision_line_ids.filtered(lambda x:x.program_code_id))    
+        if self.currency_id != self.company_id.currency_id:
+            amount_currency = abs(amount_total)
+            balance = self.currency_id._convert(amount_currency, self.company_currency_id, self.company_id, self.date)
+            currency_id = self.currency_id and self.currency_id.id or False
+        else:
+            balance = abs(amount_total)
+            amount_currency = 0.0
+            currency_id = False
+            
+        self.line_ids = [(0, 0, {
+                                     'account_id': self.journal_id.default_credit_account_id.id,
+                                     'coa_conac_id': self.journal_id.conac_credit_account_id.id,
+                                     'credit': balance, 
+                                     'amount_currency' : -amount_currency,
+                                     'exclude_from_invoice_tab': True,
+                                     'conac_move' : True,
+                                     'currency_id' : currency_id,
+                                     'move_id':False,
+                                 }), 
+                        (0, 0, {
+                                     'account_id': self.journal_id.default_debit_account_id.id,
+                                     'coa_conac_id': self.journal_id.conac_debit_account_id.id,
+                                     'debit': balance,
+                                     'amount_currency' : amount_currency,
+                                     'exclude_from_invoice_tab': True,
+                                     'conac_move' : True,
+                                     'currency_id' : currency_id,
+                                     'move_id':False,
+                                 })]
+          
+        #self.conac_move = True
+
 
 
 class ProvisionLine(models.Model):
@@ -675,7 +714,7 @@ class ProvisionLine(models.Model):
     @api.depends('price_unit','tax_ids','amount_tax')
     def get_price_subtotal(self):
         for rec in self:
-            rec.subtotal = rec.price_unit + rec.amount_tax
+            rec.subtotal = (rec.price_unit*rec.quantity) + rec.amount_tax
   
     @api.depends('price_unit','tax_ids')
     def get_tax_amount(self):
@@ -691,6 +730,7 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
     
     provision_id = fields.Many2one('provision','Provision')
+    is_provision_request = fields.Boolean("Provision Request",copy=False)
     
 class AccountMoveLine(models.Model):
 

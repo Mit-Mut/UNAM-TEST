@@ -68,6 +68,8 @@ class CETES(models.Model):
 
     origin_resource_id = fields.Many2one('sub.origin.resource', "Origin of the resource")
     concept = fields.Text("Application Concept")
+    rate_of_returns = fields.Many2one('rate.of.returns', string="Rate Of Returns")
+    
     #====== Accounting Fields =========#
 
     investment_income_account_id = fields.Many2one(

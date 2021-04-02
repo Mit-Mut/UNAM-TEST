@@ -1,0 +1,1200 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* jt_currency_purchase_req
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-04-02 12:44+0000\n"
+"PO-Revision-Date: 2021-04-02 12:44+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.office_cancellation_template
+msgid ""
+"<b>Additional observations of the checkbook:</b><br/>\n"
+"                                   <span>We inform you that the account was not used, no checkbook is returned, because it was destroyed</span>"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.office_cancellation_template
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.updating_signature_template
+msgid "<b>Atn:</b>"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
+msgid "<b>Dependencia:</b>"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.updating_signature_template
+msgid "<b>attached information:</b>"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
+msgid ""
+"<br/>\n"
+"                                    <span><b>Object of the Comes Alive​ to: Specific Account:</b></span>"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_registration1
+msgid ""
+"<br/>\n"
+"                            <strong>Asunsto:</strong>Checking Account Opening<br/>"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_cancellation
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_other_formalities
+msgid ""
+"<br/>\n"
+"                            <strong>Asunsto:</strong>Checking account cancellation<br/>\n"
+"                            <strong>Dependencia:</strong>:"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_registration
+msgid ""
+"<br/>\n"
+"                            <strong>Asunsto:</strong>signature update<br/>"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_cancellation
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_registration
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_registration1
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_other_formalities
+msgid ""
+"<br/>\n"
+"                            <strong>No. Solicitude:</strong>"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_other_formalities
+msgid "<span style=\"font-size:15px\">General Director Of Finance</span>"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_cancellation
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_registration
+msgid "<span style=\"font-size:15px\">General Director Of the Finance</span>"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_cancellation
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_registration
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_registration1
+msgid "<span style=\"font-size:15px\">Treasurer of the UNAM</span>"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_registration1
+msgid "<span style=\"font-size:15px;\">General Director Of Finance</span>"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_other_formalities
+msgid ""
+"<span>\"Thank you in advance for the attention paid, we stay with you\".</span><br/>\n"
+"                        <span style=\"font-size:15px\">\n"
+"                        Kind regards,                            <br/>\n"
+"                        </span>\n"
+"                        <span style=\"font-size:15px\">\n"
+"                            \"BY MY RACE THE SPIRIT WILL SPEAK\"\n"
+"                        </span><br/>"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_registration
+msgid ""
+"<span>Sin Particular ,agradecemos la atencion a la presente y aprovechamos la oportunidad para enviarle un cordial saludo.</span><br/>\n"
+"                        <span style=\"font-size:15px\">\n"
+"                            Kind regards,\n"
+"                            <br/>\n"
+"                        </span>\n"
+"                        <span style=\"font-size:15px\">\n"
+"                            \"BY MY RACE THE SPIRIT WILL SPEAK\"\n"
+"                        </span><br/>\n"
+"                        <span style=\"font-size:15px\">\n"
+"                            Ciudad Universitaria, Cd. Mx., A\n"
+"                            <br/>\n"
+"                         </span>"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_registration1
+msgid ""
+"<span>Sin Particular ,agradecemos la atencion a la presente y aprovechamos la oportunidad para enviarle un cordial saludo.</span><br/>\n"
+"                        <span style=\"font-size:15px\">\n"
+"                            Kind regards,\n"
+"                            <br/>\n"
+"                        </span>\n"
+"                        <span style=\"font-size:15px;\">\n"
+"                            \"BY MY RACE THE SPIRIT WILL SPEAK\"\n"
+"                        </span><br/>"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_cancellation
+msgid ""
+"<span>Thank you in advance for the attention paid, we stay with you\".</span><br/>\n"
+"                        <span style=\"font-size:15px\">\n"
+"                            Kind regards,\n"
+"                            <br/>\n"
+"                        </span>\n"
+"                        <span style=\"font-size:15px\">\n"
+"                            \"BY MY RACE THE SPIRIT WILL SPEAK\"\n"
+"                        </span><br/>"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_cancellation
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_registration
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_registration1
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_other_formalities
+msgid "<strong>Oficio No:</strong>"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_cancellation__account_cancellation_id
+#: model:ir.ui.menu,name:jt_currency_purchase_req.finance_menu_cancel_request
+msgid "Account Cancellation"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.ui.menu,name:jt_currency_purchase_req.menu_account_management
+msgid "Account Management"
+msgstr "Administración de cuentas"
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_open__account_modification_id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_office_signature__account_modification_id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_other_procedure__account_modification_id
+#: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__request_accounts__move_type__account_modify
+msgid "Account Modification"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.office_cancellation_template
+msgid "Account Number:"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_bank_statement_import_journal_creation__account_open_request_id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_journal__account_open_request_id
+msgid "Account Request"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_bank_statement_import_journal_creation__account_type
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_journal__account_type
+msgid "Account Type"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.ui.menu,name:jt_currency_purchase_req.menu_account_modification
+msgid "Account modification"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model,name:jt_currency_purchase_req.model_request_accounts_line
+msgid "Account modification line"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.comission_profit_from_view
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.open_request_accounts_bank_from_view
+msgid "Accounting Notes"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_comission_profit__amount
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_dollar_fund__amount
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote__amount
+msgid "Amount"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.actions.act_window,name:jt_currency_purchase_req.action_application_request
+msgid "Application Request"
+msgstr "Solicitud de solicitud"
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.request_open_account_confirm_form_view
+msgid "Apply"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.comission_profit_from_view
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.dollar_fund_from
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.quote_finance_from
+msgid "Approve"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__comission_profit__status__approved
+#: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__dollar_fund__status__approve
+#: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__quote__status__approve
+msgid "Approved"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.updating_signature_template
+msgid "As indicated below:"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
+msgid "Attached information:"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_bank_statement_import_journal_creation__auth_sign_ids
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_journal__auth_sign_ids
+msgid "Auth Sign"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model,name:jt_currency_purchase_req.model_auth_sign
+msgid "Authorized Signature"
+msgstr "firmas autorizadas"
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.account_bank_journal_form_inherit_view
+msgid "Authorized Signatures"
+msgstr "firmas autorizadas"
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_cancellation__bank_id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_open__bank_id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_finance_sender_recipient_trades__bank_account_id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_office_signature__bank_id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_other_procedure__bank_id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote__bank_id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts_line__bank_account_id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_confirm__bank_id
+msgid "Bank"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_cancellation__bank_account_id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_open__bank_account_id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_comission_profit__bank_account_id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_finance_sender_recipient_trades__account_bank_id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_finance_sender_recipient_trades__bank_acc_id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_office_signature__bank_account_id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_other_procedure__bank_account_id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts_line__bank_acc_number_id
+msgid "Bank Account"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote__bank_ref
+msgid "Bank Reference"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
+msgid ""
+"By means of this document,we allow ourselves to request that youopen a non-"
+"productive checking account according to the following guidelines<br/>"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.ui.menu,name:jt_currency_purchase_req.menu_cale_pay_post
+msgid "Calendar for payment posting"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.request_open_account_confirm_form_view
+msgid "Cancel"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.actions.act_window,name:jt_currency_purchase_req.finance_cancellation_request_action
+msgid "Cancellation Request"
+msgstr "Solicitud de cancelación"
+
+#. module: jt_currency_purchase_req
+#: model:ir.ui.menu,name:jt_currency_purchase_req.menu_cancellation_account
+msgid "Cancellation of checking account"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__comission_profit__type_of_comission__check_paid_per_window
+msgid "Check paid per Window"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.actions.act_window,name:jt_currency_purchase_req.action_account_cancellation
+#: model:ir.model,name:jt_currency_purchase_req.model_account_cancellation
+#: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__finance_sender_recipient_trades__template__check_acc_cancellation
+msgid "Checking account cancellation"
+msgstr "Comprobando la cancelación de la cuenta"
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_cancellation
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_registration1
+msgid "Ciudad Universitaria, Cd. Mx., A"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__comission_profit__type_of_record__commision
+msgid "Comission"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_move_line__commision_profit_id
+msgid "Comission Profit"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model,name:jt_currency_purchase_req.model_comission_profit
+#: model:ir.ui.menu,name:jt_currency_purchase_req.balnk_check_request_menu
+msgid "Commision And Profit"
+msgstr "Comisión y beneficio"
+
+#. module: jt_currency_purchase_req
+#: model:ir.actions.act_window,name:jt_currency_purchase_req.action_commision
+msgid "Commision And profit"
+msgstr "Comisión y beneficio"
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
+msgid "Concept:"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.modification_account_from_view
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.open_request_accounts_bank_from_view
+msgid "Confirm"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.actions.act_window,name:jt_currency_purchase_req.action_request_open_account_confirmation
+msgid "Confirm Request"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.cancellation_request_finance_view
+msgid "Confirmed"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
+msgid "Copy of proof of address"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
+msgid "Copy of the Organic Law of UNAM"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
+msgid "Copy of the RFC of the UNAM"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
+msgid "Copy of the identifications of the signatories"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
+msgid "Copy of the internal regulations of the P University BoardTrustees"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_cancellation__create_uid
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_open__create_uid
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_application_request__create_uid
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_auth_sign__create_uid
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_comission_profit__create_uid
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_dollar_fund__create_uid
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_finance_sender_recipient_trades__create_uid
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_office_signature__create_uid
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_other_procedure__create_uid
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote__create_uid
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts_line__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_cancellation__create_date
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_open__create_date
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_application_request__create_date
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_auth_sign__create_date
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_comission_profit__create_date
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_dollar_fund__create_date
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_finance_sender_recipient_trades__create_date
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_office_signature__create_date
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_other_procedure__create_date
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote__create_date
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts_line__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_application_request__currency_id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_dollar_fund__currency_id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote__currency_id
+msgid "Currency"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_registration
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_registration1
+msgid "DIRECTORATE OF REVENUE AND FINANCIAL OPERATIONS"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_comission_profit__journal_id
+msgid "Daily"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_application_request__date
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts__cancellation_date
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts__modification_date
+msgid "Date"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.ui.menu,name:jt_currency_purchase_req.menu_dollar_fund
+msgid "Delivery of resources in the dollar fund"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.updating_signature_template
+msgid "Dependencia:"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_cancellation__dependancy_id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_open__dependancy_id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_office_signature__dependancy_id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_other_procedure__dependancy_id
+msgid "Dependency"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_bank_statement_import_journal_creation__dependency_id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_journal__dependency_id
+msgid "Dependency Key"
+msgstr "Clave de Dependencia"
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_comission_profit__description
+msgid "Description"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_cancellation__display_name
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_open__display_name
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_application_request__display_name
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_auth_sign__display_name
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_comission_profit__display_name
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_dollar_fund__display_name
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_finance_sender_recipient_trades__display_name
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_office_signature__display_name
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_other_procedure__display_name
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote__display_name
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts_line__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.actions.act_window,name:jt_currency_purchase_req.action_dollar_fund
+#: model:ir.model,name:jt_currency_purchase_req.model_dollar_fund
+msgid "Dollar Fund"
+msgstr "Fondo en dólares"
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__application_request__status__draft
+#: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__comission_profit__status__draft
+#: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__dollar_fund__status__draft
+#: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__quote__status__draft
+msgid "Draft"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_finance_sender_recipient_trades__employee_ids
+msgid "EMPLOYEES COPIED"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_finance_sender_recipient_trades__recipient_emp_id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_finance_sender_recipient_trades__sender_emp_id
+msgid "Employee"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote__exchange_rate
+msgid "Exchange Rate"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_finance_sender_recipient_trades__executive_id
+msgid "Executive Data"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.ui.menu,name:jt_currency_purchase_req.menu_federal_grant_registeration
+msgid "Federal Grant Registeration"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_dollar_fund__attach_invoice
+msgid "Field to attach invoice"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model,name:jt_currency_purchase_req.model_finance_sender_recipient_trades
+msgid "Finance Sender Recipient Trades"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__account_journal__account_type__fixed
+msgid "Fixed"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_comission_profit__folio
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.modification_account_from_view
+msgid "Folio"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_cancellation
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_other_formalities
+msgid "GENERAL ADDRESS OF FINANZAS"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_registration
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_registration1
+msgid "GENERAL DIRECTORATE OF FINANCE"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.cancellation_request_finance_view
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.modification_account_from_view
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.open_request_accounts_bank_from_view
+msgid "Generate Request"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__auth_sign__movement__high
+msgid "High"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_cancellation__id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_open__id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_application_request__id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_auth_sign__id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_comission_profit__id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_dollar_fund__id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_finance_sender_recipient_trades__id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_office_signature__id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_other_procedure__id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote__id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts_line__id
+msgid "ID"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_cancellation
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_other_formalities
+msgid "INCOME DIRECTION AND FINANCIAL OPERATION"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.updating_signature_template
+msgid "Identification copy (s) of the signer (s)"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__comission_profit__type_of_record__interest
+msgid "Interest"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model,name:jt_currency_purchase_req.model_account_journal
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_auth_sign__journal_id
+msgid "Journal"
+msgstr "Diario"
+
+#. module: jt_currency_purchase_req
+#: model:ir.model,name:jt_currency_purchase_req.model_account_move_line
+msgid "Journal Item"
+msgstr "Apunte contable"
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_comission_profit__move_line_ids
+msgid "Journal Items"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_cancellation____last_update
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_open____last_update
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_application_request____last_update
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_auth_sign____last_update
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_comission_profit____last_update
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_dollar_fund____last_update
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_finance_sender_recipient_trades____last_update
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_office_signature____last_update
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_other_procedure____last_update
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote____last_update
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts_line____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_cancellation__write_uid
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_open__write_uid
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_application_request__write_uid
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_auth_sign__write_uid
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_comission_profit__write_uid
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_dollar_fund__write_uid
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_finance_sender_recipient_trades__write_uid
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_office_signature__write_uid
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_other_procedure__write_uid
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote__write_uid
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts_line__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_cancellation__write_date
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_open__write_date
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_application_request__write_date
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_auth_sign__write_date
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_comission_profit__write_date
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_dollar_fund__write_date
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_finance_sender_recipient_trades__write_date
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_office_signature__write_date
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_other_procedure__write_date
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote__write_date
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts_line__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_cancellation
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_registration
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_registration1
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_other_formalities
+msgid "Logo"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__auth_sign__movement__low
+msgid "Low"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_open_balance_finance__manger
+msgid "Manager's Name"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts__move_type
+msgid "Move Type"
+msgstr "Tipo de movimiento"
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_auth_sign__movement
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.updating_signature_template
+msgid "Movement"
+msgstr "Movimiento"
+
+#. module: jt_currency_purchase_req
+#: model:ir.ui.menu,name:jt_currency_purchase_req.menu_movement_type
+msgid "Movement Type"
+msgstr "Tipo de movimiento"
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_auth_sign__employee_id
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.updating_signature_template
+msgid "Name"
+msgstr "Nombre"
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
+msgid "Name of the UNAM account:"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts__no_trade
+msgid "No. Trade"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_cancellation__name
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_open__name
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_office_signature__name
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_other_procedure__name
+msgid "Number"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_application_request__no_of_currencies
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote__no_of_currencies
+msgid "Number Of Currencies"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.sender_recipient_trades_finance_from
+msgid "Occupation Compensation"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.actions.act_window,name:jt_currency_purchase_req.action_other_procedures
+#: model:ir.model,name:jt_currency_purchase_req.model_other_procedure
+msgid "Occupation other procedures"
+msgstr "Ocupación otros procedimientos"
+
+#. module: jt_currency_purchase_req
+#: model:ir.actions.report,name:jt_currency_purchase_req.open_cancellation_checking_account_action
+msgid "Office Cancellation Checking Account"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.actions.report,name:jt_currency_purchase_req.updating_signature_action
+msgid "Office Of Updating Signature"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.actions.report,name:jt_currency_purchase_req.office_other_formalities_action
+msgid "Office Other Formalities"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model,name:jt_currency_purchase_req.model_office_signature
+msgid "Office Signature"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.ui.menu,name:jt_currency_purchase_req.menu_signautre_update
+msgid "Office of updating signatures"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.ui.menu,name:jt_currency_purchase_req.menu_trade
+msgid "Offices"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.actions.act_window,name:jt_currency_purchase_req.action_open_account_checking
+msgid "Open Account Checking View"
+msgstr "Abrir vista de cuenta corriente"
+
+#. module: jt_currency_purchase_req
+#: model:ir.actions.report,name:jt_currency_purchase_req.open_checking_account_action
+msgid "Open a Checking Account"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model,name:jt_currency_purchase_req.model_account_open
+#: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__finance_sender_recipient_trades__template__open_check_acc
+#: model:ir.ui.menu,name:jt_currency_purchase_req.menu_checking_account
+msgid "Opening a checking account"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__account_journal__account_type__operational_fund
+msgid "Operational Fund"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__finance_sender_recipient_trades__template__other_procedures
+msgid "Other Procedures"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.ui.menu,name:jt_currency_purchase_req.menu_other_procedure
+msgid "Other procedures"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_auth_sign__ownership
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.updating_signature_template
+msgid "Ownership"
+msgstr "Propiedad"
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
+msgid "Persons authorized to sign:"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: code:addons/jt_currency_purchase_req/models/commision_and_profit.py:0
+#, python-format
+msgid "Please configure UNAM and CONAC account in Item!"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: code:addons/jt_currency_purchase_req/models/commision_and_profit.py:0
+#, python-format
+msgid "Please configure UNAM and CONAC account in journal!"
+msgstr "Por favor configure la cuenta UNAM y CONAC en diario!"
+
+#. module: jt_currency_purchase_req
+#: code:addons/jt_currency_purchase_req/models/commision_and_profit.py:0
+#, python-format
+msgid "Por favor configure la cuenta UNAM y CONAC en diario!"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: code:addons/jt_currency_purchase_req/models/commision_and_profit.py:0
+#, python-format
+msgid "Por favor configure la cuenta UNAM y CONAC en item!"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_auth_sign__poistion
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_finance_sender_recipient_trades__position_id
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.updating_signature_template
+msgid "Position"
+msgstr "Posición"
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_finance_sender_recipient_trades__recipient_professional_title
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_finance_sender_recipient_trades__sender_professional_title
+msgid "Professional Title"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_comission_profit__programmatic_code_id
+msgid "Programmatic Code"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts_line__user_id
+msgid "Project Manager"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts_line__project_id
+msgid "Project Number"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.cancellation_request_finance_view
+msgid "Project Type"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.ui.menu,name:jt_currency_purchase_req.menu_quote
+msgid "Quote"
+msgstr "Cita"
+
+#. module: jt_currency_purchase_req
+#: model:ir.model,name:jt_currency_purchase_req.model_quote
+msgid "Quotes"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.sender_recipient_trades_finance_from
+msgid "RECIPIENT"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_application_request__reg_denomination
+msgid "Register denomination"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.cancellation_request_finance_view
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.modification_account_from_view
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.open_request_accounts_bank_from_view
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.quote_finance_from
+msgid "Reject"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__quote__status__reject
+msgid "Rejected"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: code:addons/jt_currency_purchase_req/models/account_modification.py:0
+#: code:addons/jt_currency_purchase_req/models/quote.py:0
+#: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__application_request__status__request
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.application_request_finance_from
+#, python-format
+msgid "Request"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model,name:jt_currency_purchase_req.model_request_open_balance_finance
+msgid "Request Transfer"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.ui.menu,name:jt_currency_purchase_req.menu_request_account
+msgid "Request for new account"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.actions.act_window,name:jt_currency_purchase_req.account_modification_action
+msgid "Request for updating bank accounts"
+msgstr "Solicitud de actualización de cuentas bancarias"
+
+#. module: jt_currency_purchase_req
+#: model:ir.model,name:jt_currency_purchase_req.model_request_accounts
+msgid "Request to open account"
+msgstr "Solicitud de apertura de cuenta"
+
+#. module: jt_currency_purchase_req
+#: model:ir.ui.menu,name:jt_currency_purchase_req.menu_request_application
+msgid "Requests"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.actions.act_window,name:jt_currency_purchase_req.fiance_request_accounts_action
+msgid "Requests to open an account"
+msgstr "Solicitudes para abrir una cuenta"
+
+#. module: jt_currency_purchase_req
+#: model:ir.ui.menu,name:jt_currency_purchase_req.menu_resource_req_foreign_ex_purchase
+msgid "Resource Requests for Foreign Exchange Purchase"
+msgstr "Solicitudes de recursos para la compra de divisas"
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_cancellation__user_id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_open__user_id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_office_signature__user_id
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_other_procedure__user_id
+msgid "Responsible User"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote__bank_account_id
+msgid "Retirement account"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.sender_recipient_trades_finance_from
+msgid "SENDER"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.modification_account_from_view
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.open_request_accounts_bank_from_view
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.quote_finance_from
+msgid "Send Request"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.actions.act_window,name:jt_currency_purchase_req.action_sender_recipient_trades_finance
+msgid "Sender and Recipient of Trades"
+msgstr "Remitente y destinatario de transacciones"
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote__shedule_date
+msgid "Shedule Date"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__finance_sender_recipient_trades__template__sign_update
+msgid "Signature Update"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_application_request__status
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_comission_profit__status
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_dollar_fund__status
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote__status
+msgid "Status"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_registration1
+msgid "TREASURY"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_finance_sender_recipient_trades__template
+msgid "Template"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
+msgid ""
+"The conditions of the signatures pooled as follows: 2 of 4 (“A” with “A”) we"
+" also request the allocation of 100 checks"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
+msgid "This account must be linked to the"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_finance_sender_recipient_trades__recipient_title
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_finance_sender_recipient_trades__sender_title
+msgid "Title"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.ui.menu,name:jt_currency_purchase_req.menu_sender_recipient_trades_finance
+msgid "Trades Sender and Recipient"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__comission_profit__type_of_comission__transfer
+msgid "Transfers"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_comission_profit__type_of_comission
+msgid "Type Of Commision"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_comission_profit__type_of_record
+msgid "Type Of Record"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_auth_sign__type_of_signature
+msgid "Type Of Signature"
+msgstr "Tipo de firma"
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.updating_signature_template
+msgid "Type Of signature"
+msgstr "Tipo de firma"
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_registration1
+msgid "UNIVERSITY BOARD OF TRUSTEES"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_registration
+msgid "UNIVERSITY BOARD OF TRUSTEES-TREASURY"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_cancellation
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_other_formalities
+msgid ""
+"UNIVERSITY PATRONAGE -\n"
+"TREASURY"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_other_formalities
+msgid "University City, Cd. Mx."
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.actions.act_window,name:jt_currency_purchase_req.action_update_signature
+msgid "Update Signature"
+msgstr "Actualizar firma"
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.modification_account_from_view
+msgid "Updated data"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.quote_finance_from
+msgid "Validate"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__quote__status__validate
+msgid "Validated"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.updating_signature_template
+msgid ""
+"We hereby request to incorporate changes into the signatures of the "
+"following account(s)."
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.office_cancellation_template
+msgid ""
+"With this we request that As of this date, the account (s) are canceled"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_open_balance_finance__worker
+msgid "Worker's Name"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts_line__request_id
+msgid "account request"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model,name:jt_currency_purchase_req.model_application_request
+msgid "application.request"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.cancellation_request_finance_view
+msgid "approved"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
+msgid ""
+"contracts that are in the name of the National Autonomous University of "
+"Mexico and register it in the check protection service."
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: code:addons/jt_currency_purchase_req/models/quote.py:0
+#, python-format
+msgid "date should be after deterioration to the posting date"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts__legal_number
+msgid "legal Number"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
+msgid ""
+"ofCopy of the deed testimony 102. 430. PA Vol. 4749, pages 665254 Issued by the Public Notary 153, which contains the powers granted in favor of the Treasurer and the Director General of Finance as legal\n"
+"                                      representatives of the UNAM"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.actions.act_window,name:jt_currency_purchase_req.action_quotes
+msgid "quote"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts__request_line_ids
+msgid "request line"
+msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.model,name:jt_currency_purchase_req.model_request_confirm
+msgid "request.confirm"
+msgstr ""

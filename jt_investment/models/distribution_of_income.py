@@ -300,7 +300,7 @@ class DistributionOfIncome(models.Model):
         
         if self.start_date:
             domain.append(('date_required','>=',self.start_date))
-            capital_domain.append(('date_required','<=',self.start_date))
+            capital_domain.append(('date_required','<',self.start_date))
         if self.end_date:
             domain.append(('date_required','<=',self.end_date))
             
@@ -378,14 +378,14 @@ class DistributionOfIncome(models.Model):
                 for capital_base in clb_base_ids:
                     capital_next_line = False
                     pre_capital_lines = capital_lines.filtered(lambda x:x.base_collabaration_id.id==capital_base.id and x.investment_id.id == inv.id and x.investment_fund_id.id == fund.id)
-                    cal_vals,capital = self.get_previous_capital(cal_vals,pre_capital_lines,capital_next_line,inv,capital_fund,capital_base)
+                    cal_vals,capital = self.get_previous_capital(cal_vals,pre_capital_lines,capital_next_line,inv,fund,capital_base)
             
             for fund in investment_fund_ids:
                 clb_base_ids = opt_lines.filtered(lambda x:x.investment_id.id == inv.id and x.investment_fund_id.id == fund.id).mapped('base_collabaration_id')
                 for capital_base in capital_lines.filtered(lambda x:x.investment_id.id == inv.id and x.investment_fund_id.id == fund.id and x.base_collabaration_id.id not in clb_base_ids.ids).mapped('base_collabaration_id'):
                     capital_next_line = False
                     pre_capital_lines = capital_lines.filtered(lambda x:x.base_collabaration_id.id==capital_base.id and x.investment_id.id == inv.id and x.investment_fund_id.id == fund.id)
-                    cal_vals,capital = self.get_previous_capital(cal_vals,pre_capital_lines,capital_next_line,inv,capital_fund,capital_base)
+                    cal_vals,capital = self.get_previous_capital(cal_vals,pre_capital_lines,capital_next_line,inv,fund,capital_base)
                 
                  
                 for base in clb_base_ids:
@@ -414,7 +414,6 @@ class DistributionOfIncome(models.Model):
                         
                     if line:
                         cal_vals,capital,days = self.create_line_records(line,line,capital,cal_vals,pre_line,days)
-                    
         self.calculation_line_ids = cal_vals 
 
     def action_confirm(self):

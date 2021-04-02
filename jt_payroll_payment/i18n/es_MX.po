@@ -1490,7 +1490,7 @@ msgstr "Pago de Nómina"
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__calendar_payment_regis__type_pay__payment_schedule
 #: model_terms:ir.ui.view,arch_db:jt_payroll_payment.cale_pay_reg_search_view
 msgid "Payment schedule"
-msgstr "Programación de pago"
+msgstr "Calendario de pago"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__payroll_request_type__university
@@ -1983,3 +1983,8 @@ msgstr ""
 #: model:ir.model,name:jt_payroll_payment.model_preception_line
 msgid "preception.line"
 msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.ui.menu,name:jt_payroll_payment.menu_financeboard_journal_1
+msgid "Overview"
+msgstr "Visión de conjunto"

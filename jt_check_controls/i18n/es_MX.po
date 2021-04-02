@@ -1878,20 +1878,8 @@ msgid "Payment"
 msgstr "Pagos"
 
 #. module: jt_check_controls
-#: model:ir.model.fields,field_description:jt_check_controls.field_check_payment_req__payment_batch_id
-#: model:ir.ui.menu,name:jt_check_controls.payment_batch_main_menu
-msgid "Payment Batch"
-msgstr ""
-
-#. module: jt_check_controls
 #: model:ir.model,name:jt_check_controls.model_payment_batch_supplier
 msgid "Payment Batch Supplier"
-msgstr ""
-
-#. module: jt_check_controls
-#: model:ir.actions.act_window,name:jt_check_controls.action_payment_batch_supplier
-#: model:ir.ui.menu,name:jt_check_controls.payment_batch_supplier_menu
-msgid "Payment Batch(Supplier)"
 msgstr ""
 
 #. module: jt_check_controls
@@ -2511,3 +2499,50 @@ msgstr "Monto de transferencias entre cuentas programadas en el día"
 msgid "Amount of transfers between accounts confirmed during the day"
 msgstr "Monto de transferencias entre cuentas confirmadas en el día"
 
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_payment_req__payment_batch_id
+#: model:ir.ui.menu,name:jt_check_controls.payment_batch_main_menu
+#: model:ir.ui.menu,name:jt_check_controls.payment_batch_menu_finance
+msgid "Payment Batch"
+msgstr "Lote de pago"
+
+#. module: jt_check_controls
+#: model:ir.actions.act_window,name:jt_check_controls.action_payment_batch_supplier
+#: model:ir.actions.act_window,name:jt_check_controls.action_payment_batch_supplier_finance
+#: model:ir.ui.menu,name:jt_check_controls.payment_batch_supplier_menu
+#: model:ir.ui.menu,name:jt_check_controls.payment_batch_supplier_menu_finance
+msgid "Payment Batch(Supplier)"
+msgstr "Lote de pago (proveedor)"
+
+#. module: jt_check_controls
+#: model:ir.actions.act_window,name:jt_check_controls.action_payment_batch_payroll
+#: model:ir.ui.menu,name:jt_check_controls.payment_batch_payroll_menu
+#: model:ir.ui.menu,name:jt_check_controls.payment_batch_payroll_menu_finance
+msgid "Payment Batch(Payroll)"
+msgstr "Lote de pago (nómina)"
+
+#. module: jt_check_controls
+#: model:ir.actions.act_window,name:jt_check_controls.action_payment_batch_project
+#: model:ir.ui.menu,name:jt_check_controls.payment_batch_project_menu
+#: model:ir.ui.menu,name:jt_check_controls.payment_batch_project_menu_finance
+msgid "Payment Batch(Project)"
+msgstr "Lote de pago (proyecto)"
+
+#. module: jt_check_controls
+#: model:ir.actions.act_window,name:jt_check_controls.action_payment_batch_pension
+#: model:ir.ui.menu,name:jt_check_controls.payment_batch_pension_menu
+#: model:ir.ui.menu,name:jt_check_controls.payment_batch_pension_menu_finance
+msgid "Payment Batch(Pension Payment)"
+msgstr "Lote de pago (pago de pensión)"
+
+#. module: jt_check_controls
+#: model:ir.actions.act_window,name:jt_check_controls.action_cancellation_of_checks
+#: model:ir.ui.menu,name:jt_check_controls.menu_action_cancellation_of_checks
+msgid "Cancellation of checks"
+msgstr "Cancelación de cheques"
+
+#. module: jt_check_controls
+#: model:ir.actions.act_window,name:jt_check_controls.action_revocation_reissue_check_finance
+#: model:ir.ui.menu,name:jt_check_controls.menu_revocation_reissue_check_finance
+msgid "Revocations"
+msgstr "Revocaciones"

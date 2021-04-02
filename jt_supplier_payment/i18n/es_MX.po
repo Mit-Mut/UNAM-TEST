@@ -1639,7 +1639,7 @@ msgstr "Informe de Solicitud de Pago"
 #: model:ir.ui.menu,name:jt_supplier_payment.payroll_payment_schedule_menu_programm
 #: model:ir.ui.menu,name:jt_supplier_payment.supplier_payment_request_menu_programm
 msgid "Payment Schedule"
-msgstr "Programación de Pago"
+msgstr "Calendario de pago"
 
 #. module: jt_supplier_payment
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_account_move__payment_state
@@ -2508,3 +2508,27 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:jt_supplier_payment.view_balance_check_wizard
 msgid "the selected bank account has sufficient balance to execute"
 msgstr "la cuenta bancaria seleccionada tiene saldo suficiente para ejecutar"
+
+#. module: jt_supplier_payment
+#: model:ir.actions.act_window,name:jt_supplier_payment.pension_payroll_payment_request_action
+#: model:ir.ui.menu,name:jt_supplier_payment.pension_payroll_payment_request_menu
+msgid "Pension Payment Request"
+msgstr "Calendario de pagos de pensiones"
+
+#. module: jt_supplier_payment
+#: model:ir.actions.act_window,name:jt_supplier_payment.pension_payment_account_payment_action
+#: model:ir.ui.menu,name:jt_supplier_payment.pension_payment_account_payment_menu
+msgid "Pension Payments"
+msgstr "Pagos de pensión"
+
+#. module: jt_supplier_payment
+#: model:ir.model.fields,field_description:jt_supplier_payment.field_account_payment__no_validate_payment
+#: model_terms:ir.ui.view,arch_db:jt_supplier_payment.inherited_view_account_payment_search
+msgid "Not Validated"
+msgstr "No Validado"
+
+#. module: jt_supplier_payment
+#: model:ir.model.fields,field_description:jt_supplier_payment.field_account_payment__employee_partner_type
+msgid "Partner Type"
+msgstr "Tipo de socio"
+

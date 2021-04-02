@@ -3035,7 +3035,7 @@ msgstr "Solicitud de pago"
 #: model:ir.actions.act_window,name:jt_budget_mgmt.different_payroll_payment_schedule_programming_action
 #: model:ir.ui.menu,name:jt_budget_mgmt.different_payroll_payment_schedule_menu_programm
 msgid "Payment Schedule"
-msgstr ""
+msgstr "Calendario de pago"
 
 #. module: jt_budget_mgmt
 #: model:ir.model,name:jt_budget_mgmt.model_account_payment
@@ -5014,3 +5014,10 @@ msgstr ""
 #, python-format
 msgid "to print report."
 msgstr "imprimir Reporte."
+
+#. module: jt_budget_mgmt
+#: model:ir.actions.act_window,name:jt_budget_mgmt.pension_payroll_payment_schedule_programming_action
+#: model:ir.ui.menu,name:jt_budget_mgmt.pension_payroll_payment_schedule_menu_programm
+msgid "Pension Payment Schedule"
+msgstr "Calendario de pagos de pensiones"
+

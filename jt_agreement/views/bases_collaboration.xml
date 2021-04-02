@@ -184,7 +184,7 @@
                                 <field name="subdependency_id" attrs="{'readonly': [('state', '!=', 'draft')]}"
                                 domain="[('dependency_id', '=', dependency_id)]"/>
                                 <field name="desc_subdependency" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="agreement_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="agreement_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
                                 <field name="fund_type_id" readonly="1" force_save="1"/>
                                 <field name="dependency_obs" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="next_no" invisible="1"/>
@@ -194,8 +194,8 @@
                             </group>
                             <group>
                             	<field name="is_specific" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="convention_no" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="n_report" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="convention_no" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
+                                <field name="n_report" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
                                 <field name="journal_id" invisible="1"/>
                                 <field name="opening_bal" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="available_bal" readonly="1"/>

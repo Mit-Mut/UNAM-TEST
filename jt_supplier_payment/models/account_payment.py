@@ -149,7 +149,18 @@ class AccountPayment(models.Model):
             payment_request = self.env['account.move'].search([('id', '=', self.payment_request_id.id)])
             payment_request.payment_state = 'for_payment_procedure'
         return result
-
+    
+    def set_bank_tab_data(self):
+        if self.journal_id and self.journal_id.bank_format == 'bbva_sit':
+            sit_operation_code = 'payment_interbank'
+            sit_reference = '9999'
+            if self.partner_id and self.partner_id.bank_ids and self.partner_id.bank_ids[0].l10n_mx_edi_clabe:
+                if self.partner_id.bank_ids[0].l10n_mx_edi_clabe.startswith('012'):
+                    sit_operation_code = 'payment_on_account_bancomer'
+                    sit_reference = '    '
+            self.sit_operation_code = sit_operation_code
+            self.sit_reference = sit_reference
+             
     def action_validate_payment_procedure(self):
         for rec in self:
             if not rec.name:
@@ -172,7 +183,8 @@ class AccountPayment(models.Model):
                         raise UserError(_("You have to define a sequence for %s in your company.") % (sequence_code,))
             rec.banamex_concept = rec.name
             rec.payment_state = 'for_payment_procedure'            
-
+            rec.set_bank_tab_data()
+            
     def action_reschedule_payment_procedure(self):
         for payment in self:
             payment.action_draft()

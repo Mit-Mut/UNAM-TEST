@@ -76,13 +76,17 @@ class InvestmentCommittee(models.AbstractModel):
 
     @api.model
     def _get_filter_journals(self):
-        return self.env['account.journal'].search([
-            ('bank_account_id.for_investments','=',True),('company_id', 'in', self.env.user.company_ids.ids or [self.env.company.id])
+        return self.env['account.journal'].search([('company_id', 'in', self.env.user.company_ids.ids or [self.env.company.id])
         ], order="company_id, name")
+        
+#         return self.env['account.journal'].search([
+#             ('bank_account_id.for_investments','=',True),('company_id', 'in', self.env.user.company_ids.ids or [self.env.company.id])
+#         ], order="company_id, name")
         
     @api.model
     def _get_filter_bank(self):
-        bank_acc_ids = self.env['res.partner.bank'].search([('for_investments','=',True)])
+        #bank_acc_ids = self.env['res.partner.bank'].search([('for_investments','=',True)])
+        bank_acc_ids = self.env['res.partner.bank'].search([])
         return bank_acc_ids.mapped('bank_id')
         
 
@@ -272,6 +276,9 @@ class InvestmentCommittee(models.AbstractModel):
         for account in productive_ids:
             total_amount += account.actual_amount
             precision = self.env['decimal.precision'].precision_get('Productive Accounts')
+            fund_id = False
+            if account.line_ids:
+                fund_id = account.line_ids.mapped('investment_fund_id')
             lines.append({
                 'id': 'hierarchy_account' + str(account.id),
                 'name' : '', 
@@ -280,7 +287,7 @@ class InvestmentCommittee(models.AbstractModel):
                             {'name':account.currency_id.name},
                             self._format({'name': account.actual_amount},figure_type='float',digit=2,is_currency=True),
                             {'name': 'Cuentas productivas'},
-                            {'name': ''},
+                            {'name': fund_id and fund_id[0].fund_id and fund_id[0].fund_id.name or ''},
                             {'name': account.rate_of_returns and account.rate_of_returns.name or ''},
                             self._format({'name': account.interest_rate},figure_type='float',digit=precision,is_currency=False),
                             self._format({'name': account.extra_percentage},figure_type='float',digit=precision,is_currency=False),
@@ -290,7 +297,7 @@ class InvestmentCommittee(models.AbstractModel):
                 'unfoldable': False,
                 'unfolded': True,
             })
-
+            
         lines.append({
             'id': 'hierarchy_account_productivas_total',
             'name': 'Total',
@@ -1183,7 +1190,7 @@ class InvestmentCommittee(models.AbstractModel):
             sheet.insert_image(0,0, filename, {'image_data': image_data,'x_offset':8,'y_offset':3,'x_scale':0.6,'y_scale':0.6})
         
         col += 1
-        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICOO\nUNIVERSITY BOARD\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nCOMITÉ DE INVERSIONES'''
+        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICOO\nPATRONATO UNIVERSITARIO\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nCOMITÉ DE INVERSIONES'''
         sheet.merge_range(y_offset, col, 5, col+6, header_title,super_col_style)
         y_offset += 6
         col=1

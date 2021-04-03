@@ -87,6 +87,8 @@ class AccountMove(models.Model):
         if 'default_is_project_payment' in self._context:
             journal = self.env.ref(
                 'jt_payroll_payment.project_payment_request_jour')
+        if 'default_is_provision_request' in self._context:
+            journal = self.env.ref('jt_supplier_payment.payment_request_jour')
 
         return journal
 
@@ -168,6 +170,7 @@ class AccountMove(models.Model):
     reason_rejection = fields.Text("Reason for Rejection")
     reason_cancellation = fields.Text("Reason for Cancellation")
     is_payment_request = fields.Boolean("Payment Request")
+    is_provision_request = fields.Boolean("Provision Request",copy=False)
     type = fields.Selection(selection_add=[('payment_req', 'Payment Request')])
 
     # More info Tab

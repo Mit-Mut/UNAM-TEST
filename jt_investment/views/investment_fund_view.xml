@@ -99,6 +99,7 @@
                     			<tree create="0">
                     				<field name="investment_fund_id" invisible="1"/>
                     				<field name="investment_id"/>
+                                    <field name="date_required" string="Date"/>
                     				<field name="type_of_operation"/>
                     				<field name="agreement_number"/>
                     				<field name="base_collabaration_id"/>

@@ -92,7 +92,7 @@ class BasesCollabrationModification(models.Model):
                 'availability_account_id': collaboration.availability_account_id.id if collaboration.availability_account_id
                 else False
             })
-            withdrawal_req.action_confirmed()
+            #withdrawal_req.action_confirmed()
             collaboration.state = 'to_be_cancelled'
         self.state = 'confirmed'
 

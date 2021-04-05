@@ -383,6 +383,7 @@ class InvestmentAccountStatement(models.AbstractModel):
         level_3_col1_total_style = workbook.add_format({'font_name': 'Arial', 'bold': True, 'font_size': 12, 'font_color': '#666666', 'indent': 1})
         level_3_style = workbook.add_format({'font_name': 'Arial', 'font_size': 12, 'font_color': '#666666'})
         currect_date_style = workbook.add_format({'font_name': 'Arial', 'bold': True, 'align': 'right'})
+        currect_left_style = workbook.add_format({'font_name': 'Arial', 'bold': True, 'align': 'left'})
         currect_date_style.set_border(0)
         super_col_style.set_border(0)
         #Set the first column width to 50
@@ -403,14 +404,34 @@ class InvestmentAccountStatement(models.AbstractModel):
             image_data = io.BytesIO(base64.standard_b64decode(self.env.user.company_id.header_logo))
             sheet.insert_image(0,0, filename, {'image_data': image_data,'x_offset':8,'y_offset':3,'x_scale':0.6,'y_scale':0.6})
         
+        period_name = ''
+        start_date = datetime.strptime(options.get('date').get('date_from'), DEFAULT_SERVER_DATE_FORMAT)
+        end_date = datetime.strptime(options.get('date').get('date_to'), DEFAULT_SERVER_DATE_FORMAT)
+        if start_date and end_date:
+            period_name += "Del " + str(start_date.day)
+
+            period_name += ' ' + self.get_month_name(start_date.month)
+            if start_date.year != end_date.year:
+                period_name += ' ' + str(start_date.year)
+
+            period_name += " al " + str(end_date.day) + " de " + self.get_month_name(end_date.month) + " " \
+                           + str(end_date.year)
+
+        header_intial = options.get('intial')
+        header_withdrawal = options.get('withdrawal')
+        header_increment = options.get('increment')
+        actual = (header_increment + header_intial) - header_withdrawal
         col += 1
-        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICOO\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nCOMITÉ DE INVERSIONES'''
+        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nDIRECCIÓN GENERAL DE FINANZAS\nDIRECCIÓN DE INGRESOS Y OPERATIÓN FINANCIERA\nDEPTO. DE OPERACIÓN FINANCIERA\nESTADO DE CUENTA:%s'''% (period_name)
         sheet.merge_range(y_offset, col, 5, col+6, header_title,super_col_style)
         y_offset += 6
         col=1
-        currect_time_msg = "Fecha y hora de impresión: "
-        currect_time_msg += datetime.today().strftime('%d/%m/%Y %H:%M')
-        sheet.merge_range(y_offset, col, y_offset, col+6, currect_time_msg,currect_date_style)
+        # currect_time_msg = ''
+        # currect_time_msg += "CUENTAS PRODUCTIVAS"
+        # sheet.merge_range(y_offset, col, y_offset, col+6, currect_time_msg,currect_left_style)
+        # currect_time_msg += "Saldo Inicial"
+        # currect_time_msg += str(self._format({'name': header_intial},figure_type='float',digit=2).get('name'))
+        # sheet.merge_range(y_offset, col, y_offset, col+6, currect_time_msg,currect_left_style)
         y_offset += 1
         for row in self.get_header(options):
             x = 0
@@ -568,7 +589,7 @@ class InvestmentAccountStatement(models.AbstractModel):
                 'extra_data': True
             })
             header = self.env['ir.actions.report'].with_context(period_name=period_name).render_template(
-                "jt_investment.external_layout_investment_committee",
+                "jt_investment.external_layout_fund_account_statement",
                 values=rcontext)
             header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
             spec_paperformat_args = {'data-report-margin-top': 55, 'data-report-header-spacing': 50}

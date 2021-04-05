@@ -730,13 +730,20 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
     
     provision_id = fields.Many2one('provision','Provision')
-    is_provision_request = fields.Boolean("Provision Request",copy=False)
+    
     is_provision_request_generate = fields.Boolean("Provision Request",copy=False)
     
     provision_payment_state = fields.Selection([('draft', 'Draft'), ('registered', 'Registered'),
                                     ('provision', 'Provisions'),
                                     ('rejected', 'Rejected'),
                                     ('cancel', 'Cancel')], default='draft', copy=False)
+
+    @api.constrains('previous_number')
+    def _check_previous_number(self):
+        for rec in self.filtered(lambda x:x.is_provision_request and x.previous_number):
+            code_id = self.env['account.move'].search([('previous_number','=',rec.previous_number),('id','!=',rec.id)],limit=1)
+            if code_id:
+                raise ValidationError(_("Previous Number Must Be Unique"))
     
     def action_register(self):
         result = super(AccountMove,self).action_register()

@@ -730,8 +730,55 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
     
     provision_id = fields.Many2one('provision','Provision')
-    is_provision_request = fields.Boolean("Provision Request",copy=False)
     
+    is_provision_request_generate = fields.Boolean("Provision Request",copy=False)
+    
+    provision_payment_state = fields.Selection([('draft', 'Draft'), ('registered', 'Registered'),
+                                    ('provision', 'Provisions'),
+                                    ('rejected', 'Rejected'),
+                                    ('cancel', 'Cancel')], default='draft', copy=False)
+
+    @api.constrains('previous_number')
+    def _check_previous_number(self):
+        for rec in self.filtered(lambda x:x.is_provision_request and x.previous_number):
+            code_id = self.env['account.move'].search([('previous_number','=',rec.previous_number),('id','!=',rec.id)],limit=1)
+            if code_id:
+                raise ValidationError(_("Previous Number Must Be Unique"))
+    
+    def action_register(self):
+        result = super(AccountMove,self).action_register()
+        for move in self:
+            if move.is_provision_request:
+                move.provision_payment_state = 'registered'
+        return result
+    
+    def action_draft_budget(self):
+        result = super(AccountMove,self).action_draft_budget()
+        if self.is_provision_request:
+            self.provision_payment_state = 'draft'
+        return result
+    
+    def action_cancel_budget(self):
+        result = super(AccountMove,self).action_cancel_budget()
+        if self.is_provision_request:
+            self.provision_payment_state = 'cancel'
+        return result
+    
+    def generate_payment_request(self):
+        self.is_payment_request = True
+        self.is_provision_request_generate = True
+
+    def action_provision_payment_request(self):
+        return {
+                'name': 'Operations',
+                'view_type': 'form',
+                'view_mode': 'tree,form',
+                'views': [(self.env.ref("jt_supplier_payment.payment_req_tree_view").id, 'tree'), (self.env.ref("jt_supplier_payment.payment_req_form_view").id, 'form')],
+                'res_model': 'account.move',
+                'domain': [('id', '=', self.id)],
+                'type': 'ir.actions.act_window',
+            }
+        
 class AccountMoveLine(models.Model):
 
     _inherit = 'account.move.line'

@@ -44,6 +44,7 @@
  #       'reports/filter_template.xml',
         'security/ir.model.access.csv',
         'wizard/confirm_payment_date_view.xml',
+        'wizard/invoice_date_wizard_view.xml',
     ],
 
     'application': False,

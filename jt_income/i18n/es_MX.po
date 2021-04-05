@@ -2689,7 +2689,7 @@ msgstr "Remitente y destinatario de oficios"
 #: model:ir.actions.act_window,name:jt_income.action_sender_recipient_trades
 #: model:ir.ui.menu,name:jt_income.menu_sender_recipient_trades
 msgid "Sender and Recipient of Trades"
-msgstr "Remitente y destinatario de oficios"
+msgstr "Remitente y destinatario de transacciones"
 
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_income_annual_report__september

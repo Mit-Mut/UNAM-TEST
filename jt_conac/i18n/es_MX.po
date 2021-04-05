@@ -673,7 +673,7 @@ msgstr "Otra información"
 #. module: jt_conac
 #: model:ir.ui.menu,name:jt_conac.menu_overview_conac
 msgid "Overview"
-msgstr "Información general"
+msgstr "Visión de conjunto"
 
 #. module: jt_conac
 #: code:addons/jt_conac/models/financial_report_4_10.py:0 code:addons/jt_conac/models/financial_report_4_9.py:0

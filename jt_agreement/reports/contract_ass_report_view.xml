@@ -74,7 +74,7 @@
                             <br/>
                             <br/>
                             <br/>
-                        <span t-set="opening_bal" t-value="o.get_opening_balance()"/>
+                        <span t-set="opening_bal" t-value="o.opening_bal"/>
                         <span t-set="deposite" t-value="o.get_deposite()"/>
                         <span t-set="retiros" t-value="o.get_retiros()"/>
                         <span t-set="actual" t-value="opening_bal+deposite-retiros"/>
@@ -95,7 +95,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            <tr class="style1" t-foreach="o.get_report_lines()" t-as="line">
+                            <tr class="style1" t-foreach="o.get_contract_assistant_report_lines()" t-as="line">
                         
                                 <td style="text-align:left;"><span t-esc="line['date']"/></td>
                                 <td style="text-align:left;"><span t-esc="line['operation_number']"/></td>

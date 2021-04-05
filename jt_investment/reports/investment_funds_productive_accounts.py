@@ -696,9 +696,21 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
             filename = 'logo.png'
             image_data = io.BytesIO(base64.standard_b64decode(self.env.user.company_id.header_logo))
             sheet.insert_image(0,0, filename, {'image_data': image_data,'x_offset':8,'y_offset':3,'x_scale':0.6,'y_scale':0.6})
+        period_name = ''
+        start_date = datetime.strptime(options.get('date').get('date_from'), DEFAULT_SERVER_DATE_FORMAT)
+        end_date = datetime.strptime(options.get('date').get('date_to'), DEFAULT_SERVER_DATE_FORMAT)
+        if start_date and end_date:
+            period_name += "Del " + str(start_date.day)
+
+            period_name += ' ' + self.get_month_name(start_date.month)
+            if start_date.year != end_date.year:
+                period_name += ' ' + str(start_date.year)
+
+            period_name += " al " + str(end_date.day) + " de " + self.get_month_name(end_date.month) + " " \
+                           + str(end_date.year)
         
         col += 1
-        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICOO\nUNIVERSITY BOARD\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nINFORME DE FONDOS DE INVERSIÓN EN CUENTAS PRODUCTIVAS'''
+        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nUNIVERSITY BOARD\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nINFORME DE FONDOS DE INVERSIÓN EN CUENTAS PRODUCTIVAS'''
         sheet.merge_range(y_offset, col, 5, col+14, header_title,super_col_style)
         y_offset += 6
         col=1

@@ -522,7 +522,7 @@ class InvestmentAccountStatement(models.AbstractModel):
                     'extra_data': True,
                     'company_currency_id': self.env.user.company_id.currency_id
                 })
-            header = self.env['ir.actions.report'].render_template("jt_investment.external_layout_investment_committee",
+            header = self.env['ir.actions.report'].render_template("jt_investment.external_layout_fund_account_statement",
                 values=rcontext)
             header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
             spec_paperformat_args = {'data-report-margin-top': 55, 'data-report-header-spacing': 50}

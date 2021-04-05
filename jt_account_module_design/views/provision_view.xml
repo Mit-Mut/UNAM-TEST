@@ -133,7 +133,7 @@
                                 <field name="upa_key" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                 <field name="upa_document_type" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                 <field name="document_type" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
-                                <field name="operation_type_id" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="operation_type_id" domain="[('op_number','=','13')]" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                 <field name="folio" readonly="1"/>
                                 <field name="date_approval_request" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                 <field name="payment_bank_id" attrs="{'required':[('payment_state','in',('draft','registered'))],'readonly':[('payment_state', 'not in', ('registered','draft','for_payment_procedure'))]}"/>
@@ -605,7 +605,8 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="partner_id"/>
-                    <field name="payment_state"/>
+                    <field name="provision_payment_state"/>
+                    <field name="payment_state" invisible="1"/>
                     <field name="state" invisible="1"/>
                 </tree>
             </field>

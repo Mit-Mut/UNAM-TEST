@@ -58,6 +58,9 @@ class ConfirmCheckBook(models.TransientModel):
                     # 'dependence_id': check_req.dependence_id.id if check_req.dependence_id else False,
                     # 'subdependence_id': check_req.subdependence_id.id if check_req.subdependence_id else False
                 }))
+                if len(check_log_list) > 500000 and check_log_list:
+                    checklist.checklist_lines = check_log_list
+                    check_log_list = []
             if check_log_list:
                 checklist.checklist_lines = check_log_list
                 

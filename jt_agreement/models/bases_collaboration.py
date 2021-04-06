@@ -248,6 +248,12 @@ class BasesCollabration(models.Model):
         })
         return balance_dict
 
+    def get_interes(self):
+        interest = sum(x.interest_rate for x in self.rate_base_ids.filtered(lambda x:x.interest_date and x.interest_date >= self.report_start_date and x.interest_date <= self.report_end_date))
+        interest = round(interest,2)
+        print('interest',interest)
+        return interest
+
     def get_next_year_name(self, date):
         year_name = ''
         if date:

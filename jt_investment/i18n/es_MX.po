@@ -4630,3 +4630,9 @@ msgstr "Cuenta de débito de CONAC"
 msgid "CONAC Credit Account"
 msgstr "Cuenta de crédito de CONAC"
 
+#. module: jt_investment
+#: model:ir.actions.client,name:jt_investment.action_investment_funds_in_productive_monthly_accounts
+#: model:ir.ui.menu,name:jt_investment.menu_investment_funds_in_productive_monthly
+msgid "Report of Investment Funds in Productive Monthly Accounts"
+msgstr "Reporte de Fondos Institucionales en Cuentas Productivas"
+

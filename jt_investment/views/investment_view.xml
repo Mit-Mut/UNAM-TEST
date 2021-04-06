@@ -102,7 +102,7 @@
 
                                 <field name="dependency_id" context="{'show_for_supplier_payment':1}" readonly="1"/>
                                 <field name="sub_dependency_id" domain="[('dependency_id','=',dependency_id)]" context="{'show_for_supplier_payment':1}" readonly="1"/>
-                        		<field name="yield_id" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        		<field name="yield_id"  attrs="{'readonly': [('state', '!=', 'draft')],'required':[('state', '=', 'draft')]}"/>
                             <field name="rate_of_returns" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         	</group>
                         </group>

@@ -420,6 +420,7 @@ class InvestmentOperation(models.Model):
     is_request_generated = fields.Boolean(default=False, copy=False)
     concept = fields.Text("Application Concept")
     distribution_income_id = fields.Many2one('distribution.of.income','Distribution Income')
+    interest_rate_base_id = fields.Many2one('interest.rate.base',copy=False)
     
     def unlink(self):
         for rec in self:

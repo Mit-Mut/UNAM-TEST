@@ -21,7 +21,6 @@
 #
 ##############################################################################
 from odoo import models, api, _
-from datetime import datetime
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tools.misc import formatLang
 from odoo.tools.misc import xlsxwriter
@@ -29,7 +28,7 @@ import io
 import base64
 from odoo.tools import config, date_utils, get_lang
 import lxml.html
-
+from datetime import datetime ,timedelta,date
 
 class ReportIncreasesandWithdrawals(models.AbstractModel):
     _name = "jt_investment.report.increases.and.withdrawals"
@@ -265,7 +264,8 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
                                                                             ('open_bal','increase','increase_by_closing')))
             inc_balance -= sum(x.amount for x in inc_records.filtered(lambda x:x.investment_id.journal_id.id == bank.id and x.type_of_operation in
                                                ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure')))
-
+            first_inc_balance = inc_balance
+            
             lines.append({
                 'id': 'hierarchy_total',
                 'name': bank.name,
@@ -282,49 +282,88 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
                 'unfoldable': False,
                 'unfolded': True,
             })
-        
-            for rec in opt_lines.filtered(lambda x:x.investment_id.journal_id.id == bank.id):
-                month_name = self.get_month_name(rec.date_required.month)
-                entradas = 0
-                salidas  = 0
-                
-                if rec.type_of_operation in ('open_bal','increase','increase_by_closing'):
-                    entradas = rec.amount
-                    total_entradas += rec.amount
-                    final_amount += rec.amount
-                if rec.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure'):
-                    salidas = rec.amount
-                    total_salidas += rec.amount
-                    final_amount -= rec.amount
-                final_amount += inc_balance
+
+            day_diff = end - start
+            day_diff = day_diff.days+1
+            new_date = start
+            count = 0
+            
+            
+            
+            for month_date in range(day_diff):
+                count += 1
                 p_rate = 0
-                if rec.date_required:
+                month_name = self.get_month_name(new_date.month)
+                
+                if new_date:
                     period_rate_id = self.env['investment.period.rate'].search(
-                        [('rate_date', '=', rec.date_required), ('product_type', '=', 'TIIE')], limit=1)
+                        [('rate_date', '=', new_date), ('product_type', '=', 'TIIE')], limit=1)
                     if period_rate_id:
                         p_rate = period_rate_id.rate_days_28
                     else:
                         period_rate_id = self.env['investment.period.rate'].search(
-                            [('rate_date', '<', rec.date_required), ('product_type', '=', 'TIIE')], limit=1,
+                            [('rate_date', '<', new_date), ('product_type', '=', 'TIIE')], limit=1,
                             order='rate_date desc')
                         p_rate = period_rate_id.rate_days_28
-                lines.append({
-                    'id': 'hierarchy' + str(rec.id),
-                    'name': rec.date_required.day,
-                    'columns': [{'name': month_name},
-                                {'name':rec.investment_id.journal_id and rec.investment_id.journal_id.bank_id and rec.investment_id.journal_id.bank_id.name or ''},
-                                {'name':rec.investment_id and rec.investment_id.currency_id and rec.investment_id.currency_id.name or ''},
-                                self._format({'name': p_rate},figure_type='float',digit=precision,is_currency=False),
-                                self._format({'name': inc_balance},figure_type='float',digit=2,is_currency=True),
-                                self._format({'name': entradas},figure_type='float',digit=2,is_currency=True),
-                                self._format({'name': salidas},figure_type='float',digit=2,is_currency=True),
-                                self._format({'name': final_amount},figure_type='float',digit=2,is_currency=True),
-                                ],
-                    'level': 3,
-                    'unfoldable': False,
-                    'unfolded': True,
-                })
-                inc_balance = 0
+        
+                current_date_line = opt_lines.filtered(lambda x:x.investment_id.journal_id.id == bank.id and x.date_required and x.date_required==new_date)
+                if not current_date_line:
+                    final_amount += inc_balance
+                    inc_balance = 0
+                    first_inc_balance = final_amount
+
+                    lines.append({
+                        'id': 'hierarchy' + str(new_date),
+                        'name': new_date.day,
+                        'columns': [{'name': month_name},
+                                    {'name':''},
+                                    {'name':''},
+                                    self._format({'name': p_rate},figure_type='float',digit=precision,is_currency=False),
+                                    self._format({'name': first_inc_balance},figure_type='float',digit=2,is_currency=True),
+                                    self._format({'name': 0.0},figure_type='float',digit=2,is_currency=True),
+                                    self._format({'name': 0.0},figure_type='float',digit=2,is_currency=True),
+                                    self._format({'name': final_amount},figure_type='float',digit=2,is_currency=True),
+                                    ],
+                        'level': 3,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+                     
+                for rec in current_date_line:
+                    
+                    entradas = 0
+                    salidas  = 0
+                    
+                    if rec.type_of_operation in ('open_bal','increase','increase_by_closing'):
+                        entradas = rec.amount
+                        total_entradas += rec.amount
+                        final_amount += rec.amount
+                    if rec.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure'):
+                        salidas = rec.amount
+                        total_salidas += rec.amount
+                        final_amount -= rec.amount
+                    final_amount += inc_balance
+                    
+                    lines.append({
+                        'id': 'hierarchy' + str(rec.id),
+                        'name': rec.date_required.day,
+                        'columns': [{'name': month_name},
+                                    {'name':rec.investment_id.journal_id and rec.investment_id.journal_id.bank_id and rec.investment_id.journal_id.bank_id.name or ''},
+                                    {'name':rec.investment_id and rec.investment_id.currency_id and rec.investment_id.currency_id.name or ''},
+                                    self._format({'name': p_rate},figure_type='float',digit=precision,is_currency=False),
+                                    self._format({'name': first_inc_balance},figure_type='float',digit=2,is_currency=True),
+                                    self._format({'name': entradas},figure_type='float',digit=2,is_currency=True),
+                                    self._format({'name': salidas},figure_type='float',digit=2,is_currency=True),
+                                    self._format({'name': final_amount},figure_type='float',digit=2,is_currency=True),
+                                    ],
+                        'level': 3,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+                    inc_balance = 0
+                    first_inc_balance = final_amount
+                new_date =  start + timedelta(days=count)
+                
             lines.append({
                 'id': 'hierarchy',
                 'name': 'Total',

@@ -279,7 +279,8 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
         value['name'] = round(value['name'], 1)
         return value
 
-    def get_fund_amount(self,origin,domain,date_start,date_end):
+    def get_fund_amount(self,origin,bank,domain,date_start,date_end):
+        print ("bank===",bank)
         domain_fund = domain + [('date_required','>=',date_start),('date_required','<=',date_end)]
         records_fund = self.env['investment.operation'].search(domain_fund)
 
@@ -287,12 +288,12 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
         inc_records_fund = self.env['investment.operation'].search(inc_domain_fund)
 
         amount = 0
-        amount += sum(x.amount for x in inc_records_fund.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal') and x.investment_fund_id.fund_id.id==origin.id))
-        amount -= sum(x.amount for x in inc_records_fund.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure') and x.investment_fund_id.fund_id.id==origin.id))
+        amount += sum(x.amount for x in inc_records_fund.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal') and x.investment_fund_id.fund_id.id==origin.id and x.investment_id.journal_id.id==bank.id))
+        amount -= sum(x.amount for x in inc_records_fund.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure') and x.investment_fund_id.fund_id.id==origin.id and x.investment_id.journal_id.id==bank.id))
         
     
-        amount += sum(x.amount for x in records_fund.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal') and x.investment_fund_id.fund_id.id==origin.id))
-        amount -= sum(x.amount for x in records_fund.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure') and x.investment_fund_id.fund_id.id==origin.id))
+        amount += sum(x.amount for x in records_fund.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal') and x.investment_fund_id.fund_id.id==origin.id and x.investment_id.journal_id.id==bank.id))
+        amount -= sum(x.amount for x in records_fund.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure') and x.investment_fund_id.fund_id.id==origin.id and x.investment_id.journal_id.id==bank.id))
 
         return amount
             
@@ -398,66 +399,108 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                     header_intial += rec.amount
                 elif rec.type_of_operation in ('retirement', 'withdrawal', 'withdrawal_cancellation', 'withdrawal_closure'):
                     header_intial -= rec.amount
-               
-            for rec in opt_lines.filtered(lambda x:x.investment_id.journal_id.id == bank.id).sorted('date_required'):
-                capital = header_intial
-                entradas = 0
-                salidas  = 0
-                
-                month_name = self.get_month_name(rec.date_required.month)
-                if rec.type_of_operation == 'open_bal':
-                    capital = rec.amount
-                    final_amount += rec.amount
-                    total_capital += rec.amount
-                if rec.type_of_operation in ('increase','increase_by_closing'):
-                    entradas = rec.amount
-                    total_entradas += rec.amount
-                    final_amount += rec.amount
-                if rec.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure'):
-                    salidas = rec.amount
-                    total_salidas += rec.amount
-                    final_amount -= rec.amount
-                final_amount += header_intial
-                total_capital += header_intial
-                header_intial = 0
                     
+            day_diff = end - start
+            day_diff = day_diff.days+1
+            new_date = start
+            count = 0
+            
+            
+            
+            for month_date in range(day_diff):
+                count += 1
+                month_name = self.get_month_name(new_date.month)
                 p_rate = 0
-                if rec.date_required:
-                    period_rate_id = self.env['investment.period.rate'].search([('rate_date','=',rec.date_required),('product_type','=','TIIE')],limit=1)
+                if new_date:
+                    period_rate_id = self.env['investment.period.rate'].search([('rate_date','=',new_date),('product_type','=','TIIE')],limit=1)
                     if period_rate_id:
                         p_rate = period_rate_id.rate_days_28
                     else:
-                        period_rate_id = self.env['investment.period.rate'].search([('rate_date','<',rec.date_required),('product_type','=','TIIE')],limit=1,order='rate_date desc')
+                        period_rate_id = self.env['investment.period.rate'].search([('rate_date','<',new_date),('product_type','=','TIIE')],limit=1,order='rate_date desc')
                         p_rate = period_rate_id.rate_days_28
-                total_avg_final += final_amount
-                precision = self.env['decimal.precision'].precision_get('Productive Accounts')
                 
-                columns = [{'name': month_name}, 
-                                {'name': rec.date_required.day},
-                                {'name': rec.investment_id.journal_id and rec.investment_id.journal_id.name or ''},
-                                self._format({'name': p_rate},figure_type='float',digit=precision,is_currency=False),
-                                self._format({'name': capital},figure_type='float',digit=2,is_currency=True),
-                                self._format({'name': entradas},figure_type='float',digit=2,is_currency=True),
-                            ]
-                for r in origin_ids_data:
-                    fund_amount = 0.0
-                    if r.id==rec.investment_fund_id.fund_id.id:
-                        fund_amount = self.get_fund_amount(r,domain,start,end)
-                    columns += [self._format({'name': fund_amount},figure_type='float',digit=2,is_currency=True)]
-                    
-                columns +=  [
-                                self._format({'name': salidas},figure_type='float',digit=2,is_currency=True),
-                                self._format({'name': final_amount},figure_type='float',digit=2,is_currency=True),
-                                self._format({'name': total_avg_final/rec.date_required.day},figure_type='float',digit=2,is_currency=True),
+                current_date_line = opt_lines.filtered(lambda x:x.investment_id.journal_id.id == bank.id and x.date_required and x.date_required==new_date).sorted('date_required')
+                if not current_date_line:
+                    columns = [{'name': month_name}, 
+                                    {'name': new_date.day},
+                                    {'name': ''},
+                                    self._format({'name': p_rate},figure_type='float',digit=precision,is_currency=False),
+                                    self._format({'name': 0.0},figure_type='float',digit=2,is_currency=True),
+                                    self._format({'name': 0.0},figure_type='float',digit=2,is_currency=True),
                                 ]
-                lines.append({
-                    'id': 'hierarchy' + str(rec.id),
-                    'name': rec.date_required.day,
-                    'columns': columns,
-                    'level': 3,
-                    'unfoldable': False,
-                    'unfolded': True,
-                })
+                    for r in origin_ids_data:
+                        fund_amount = 0.0
+#                         if r.id==rec.investment_fund_id.fund_id.id:
+#                             fund_amount = self.get_fund_amount(r,domain,start,end)
+                        columns += [self._format({'name': fund_amount},figure_type='float',digit=2,is_currency=True)]
+                        
+                    columns +=  [
+                                    self._format({'name': 0.0},figure_type='float',digit=2,is_currency=True),
+                                    self._format({'name': 0.0},figure_type='float',digit=2,is_currency=True),
+                                    self._format({'name': 0.0},figure_type='float',digit=2,is_currency=True),
+                                    ]
+                    lines.append({
+                        'id': 'hierarchy' + str(new_date),
+                        'name': new_date.day,
+                        'columns': columns,
+                        'level': 3,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+                    
+                for rec in current_date_line:
+                    capital = header_intial
+                    entradas = 0
+                    salidas  = 0
+                    
+                    
+                    if rec.type_of_operation == 'open_bal':
+                        capital = rec.amount
+                        final_amount += rec.amount
+                        total_capital += rec.amount
+                    if rec.type_of_operation in ('increase','increase_by_closing'):
+                        entradas = rec.amount
+                        total_entradas += rec.amount
+                        final_amount += rec.amount
+                    if rec.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure'):
+                        salidas = rec.amount
+                        total_salidas += rec.amount
+                        final_amount -= rec.amount
+                    final_amount += header_intial
+                    total_capital += header_intial
+                    header_intial = 0
+                        
+                    total_avg_final += final_amount
+                    precision = self.env['decimal.precision'].precision_get('Productive Accounts')
+                    
+                    columns = [{'name': month_name}, 
+                                    {'name': rec.date_required.day},
+                                    {'name': rec.investment_id.journal_id and rec.investment_id.journal_id.name or ''},
+                                    self._format({'name': p_rate},figure_type='float',digit=precision,is_currency=False),
+                                    self._format({'name': capital},figure_type='float',digit=2,is_currency=True),
+                                    self._format({'name': entradas},figure_type='float',digit=2,is_currency=True),
+                                ]
+                    for r in origin_ids_data:
+                        fund_amount = 0.0
+                        if r.id==rec.investment_fund_id.fund_id.id:
+                            fund_amount = self.get_fund_amount(r,bank,domain,start,end)
+                        columns += [self._format({'name': fund_amount},figure_type='float',digit=2,is_currency=True)]
+                        
+                    columns +=  [
+                                    self._format({'name': salidas},figure_type='float',digit=2,is_currency=True),
+                                    self._format({'name': final_amount},figure_type='float',digit=2,is_currency=True),
+                                    self._format({'name': total_avg_final/rec.date_required.day},figure_type='float',digit=2,is_currency=True),
+                                    ]
+                    lines.append({
+                        'id': 'hierarchy' + str(rec.id),
+                        'name': rec.date_required.day,
+                        'columns': columns,
+                        'level': 3,
+                        'unfoldable': False,
+                        'unfolded': True,
+                    })
+                new_date =  start + timedelta(days=count)
+                
             columns =[{'name': ''}, 
                             {'name': ''},
                             {'name': ''},

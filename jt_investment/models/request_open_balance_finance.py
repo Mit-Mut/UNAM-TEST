@@ -119,9 +119,13 @@ class BasesCollabration(models.Model):
         
         if self.investment_operation_id:
             self.investment_operation_id.action_done()
-
+            if self.investment_operation_id.interest_rate_base_id and self.investment_operation_id.interest_rate_base_id.base_id:
+                self.investment_operation_id.interest_rate_base_id.base_id.available_bal += self.investment_operation_id.interest_rate_base_id.interest_rate
+                 
         for line in self.investment_operation_ids:
             line.action_done()
+            if line.interest_rate_base_id and line.interest_rate_base_id.base_id:
+                line.interest_rate_base_id.base_id.available_bal += line.interest_rate_base_id.interest_rate
             
         if self.distribution_income_id:
             self.distribution_income_id.action_confirmed()

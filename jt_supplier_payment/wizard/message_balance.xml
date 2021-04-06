@@ -42,7 +42,7 @@
                     
                     <footer>
                         <button string="Accept" name="accept" type="object" class="oe_highlight" attrs="{'invisible':[('is_balance','=',False)]}"/>
-                        <button string="Generate Report" name="generate_report" type="object" class="oe_highlight" attrs="{'invisible':[('is_balance','=',True)]}"/>
+                        <button string="Generate Report" name="generate_report" type="object" class="oe_highlight"/>
                         <button string="Cancel" class="btn btn-secondary" special="cancel" attrs="{'invisible':[('is_balance','=',True)]}"/>
                     </footer>
                 </form>

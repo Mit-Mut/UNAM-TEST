@@ -109,6 +109,16 @@ class DistributionTransferRequest(models.TransientModel):
 #                 'date_required' : self.date,
 #                 })
 
+            if self.date:
+                today = self.date
+            else:
+                today = datetime.today().date()
+
+            interest_rate_base_id = False
+            if line.base_collabaration_id:
+                interest_rate_base_id = self.env['interest.rate.base'].create({'base_id':line.base_collabaration_id.id,'interest_rate':line.amount_to_transfer,'interest_date':today})
+                interest_rate_base_id = interest_rate_base_id.id
+                
             ot_id=self.env['investment.operation'].create({
                 'investment_id': self.destination_investment_id.id,
                 'agreement_number': line.agreement_number,
@@ -116,7 +126,7 @@ class DistributionTransferRequest(models.TransientModel):
                 'desti_bank_account_id' : self.desti_bank_account_id.id if self.desti_bank_account_id else False,
                 'amount' : line.amount_to_transfer,
                 'investment_fund_id' : line.investment_fund_id and line.investment_fund_id.id or False,
-                'type_of_operation':'open_bal',
+                'type_of_operation':'increase',
                 'line_state' : 'requested',
                 'base_collabaration_id' : line.base_collabaration_id and line.base_collabaration_id.id or False,
                 'fund_type': line.base_collabaration_id.fund_type_id.id if line.base_collabaration_id and \
@@ -130,16 +140,11 @@ class DistributionTransferRequest(models.TransientModel):
                 'origin_resource_id': origin_resource_id,
                 'user_id': self.user_id.id if self.user_id else False,
                 'date_required' : self.date,
-                'distribution_income_id' : self.distribution_income_id and self.distribution_income_id.id or False
+                'distribution_income_id' : self.distribution_income_id and self.distribution_income_id.id or False,
+                'interest_rate_base_id' : interest_rate_base_id,
                 })
             inv_opt_lines.append(ot_id.id)
-            if self.date:
-                today = self.date
-            else:
-                today = datetime.today().date()
                  
-            if line.base_collabaration_id:
-                self.env['interest.rate.base'].create({'base_id':line.base_collabaration_id.id,'interest_rate':line.amount_to_transfer,'interest_date':today})
                  
         self.env['request.open.balance.finance'].create(
             {

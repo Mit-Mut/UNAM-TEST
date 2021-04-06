@@ -65,13 +65,14 @@
                 <span t-set="opening_bal" t-value="o.get_opening_balance()"/>
                 <span t-set="deposite" t-value="o.get_deposite()"/>
                 <span t-set="retiros" t-value="o.get_retiros()"/>
+                <span t-set="intereses" t-value="o.get_interes()"/>
                 <span t-set="actual" t-value="opening_bal+deposite-retiros"/>
                 
                 <table style="width:100%">
                     <span t-set="period_name" t-value="o.get_period_name()"/>
                     <tr style="width:100%">
                         <th style="width:10%;text-align:left;">Fondo:</th>
-                        <td style="width:50%;text-align:left;"><span t-field="o.name"/></td>
+                        <td style="width:50%;text-align:left;"><span t-field="o.fund_type_id"/></td>
                         <th style="width:15%;text-align:left;">Periodo:</th>
                         <td style="width:35%;text-align:left;"><span t-esc="period_name"/></td>
                     </tr>
@@ -122,7 +123,7 @@
                         <th></th>
                         <th></th>
                         <th style="text-align:right;"><span>(+)Intereses:</span></th>
-                        <th class="style1 border1" style="text-align:right;"><span t-esc="retiros" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></th>
+                        <th class="style1 border1" style="text-align:right;"><span t-esc="intereses" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></th>
                     </tr>
                     <!-- 
                     <tr style="width:100%;" class="border">

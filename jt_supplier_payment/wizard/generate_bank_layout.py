@@ -591,7 +591,10 @@ class GenerateBankLayout(models.TransientModel):
                     additional += payment.dependancy_id.dependency + "-"
             if payment.sub_dependancy_id and payment.sub_dependancy_id.sub_dependency:
                 additional += payment.sub_dependancy_id.sub_dependency + " "
-            additional += "PLEASE KEEP YOUR BANKING NFORMATION UPDATED"    
+            if self.env.user.lang == 'es_MX':
+                additional += "FAVOR DE MANTENER ACTUALIZADA SU INFORMACIÓN BANCARIA"
+            else: 
+                additional += "PLEASE KEEP YOUR BANKING NFORMATION UPDATED"    
             file_data += additional.ljust(700)
             #======= FILLER =======#
             file_data += ''.ljust(10) 

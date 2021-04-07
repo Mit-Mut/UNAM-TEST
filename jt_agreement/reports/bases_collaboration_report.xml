@@ -66,7 +66,7 @@
                 <span t-set="deposite" t-value="o.get_deposite()"/>
                 <span t-set="retiros" t-value="o.get_retiros()"/>
                 <span t-set="intereses" t-value="o.get_interes()"/>
-                <span t-set="actual" t-value="opening_bal+deposite-retiros"/>
+                <span t-set="actual" t-value="deposite-retiros+intereses"/>
                 
                 <table style="width:100%">
                     <span t-set="period_name" t-value="o.get_period_name()"/>

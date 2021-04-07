@@ -259,7 +259,7 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
         try:
             failed_content = ''
             success_content = ''
-            
+            print ("call===1111")
             file_data = base64.b64decode(self.file_data)
             data = io.StringIO(file_data.decode("utf-8"))
             data.seek(0)
@@ -274,11 +274,11 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                     #account_no = line[3]
                 #    continue
                 if line[0]!='22':
+                    failed_content += str(count)+' : First Column Data Will "22" only For Payment Match---> '+ str(line) + "\n"
                     continue
                 payment_charge = line[7]
                 amount = line[8]
                 data_line = line[0]
-                
                 if data_line and data_line=='22' and amount and payment_charge and payment_charge=='1':
                     act_amount = float(amount)
                     
@@ -290,7 +290,6 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                         failed_content += str(count)+' :Payment Not Found For Amount---> '+ str(line) + "\n"
                 else:
                     failed_content += str(count)+' :Please set data line 22 and payment charge 1---> '+ str(line) + "\n"
-                
                 
             if failed_content:
                 failed_data = base64.b64encode(failed_content.encode('utf-8'))

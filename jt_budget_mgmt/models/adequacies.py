@@ -171,46 +171,61 @@ class Adequacies(models.Model):
             'end_date': self.budget_id.to_date,
             'state':'success',
             })
-        #=== Q1 Line ================#
-        start_date = self.budget_id.from_date.replace(month=1, day=1)
-        end_date = self.budget_id.from_date.replace(month=3, day=31)
-        self.env['expenditure.budget.line'].sudo().create({
-            'expenditure_budget_id':self.budget_id.id,
-            'program_code_id': program_code.id,
-            'start_date': start_date,
-            'end_date': end_date,
-            'state':'success',
-            })
-        #=== Q2 Line ================#
-        start_date = self.budget_id.from_date.replace(month=4, day=1)
-        end_date = self.budget_id.from_date.replace(month=6, day=30)
-        self.env['expenditure.budget.line'].sudo().create({
-            'expenditure_budget_id':self.budget_id.id,
-            'program_code_id': program_code.id,
-            'start_date': start_date,
-            'end_date': end_date,
-            'state':'success',
-            })
-        #=== Q3 Line ================#
-        start_date = self.budget_id.from_date.replace(month=7, day=1)
-        end_date = self.budget_id.from_date.replace(month=9, day=30)
-        self.env['expenditure.budget.line'].sudo().create({
-            'expenditure_budget_id':self.budget_id.id,
-            'program_code_id': program_code.id,
-            'start_date': start_date,
-            'end_date': end_date,
-            'state':'success',
-            })
-        #=== Q1 Line ================#
-        start_date = self.budget_id.from_date.replace(month=10, day=1)
-        end_date = self.budget_id.from_date.replace(month=12, day=31)
-        self.env['expenditure.budget.line'].sudo().create({
-            'expenditure_budget_id':self.budget_id.id,
-            'program_code_id': program_code.id,
-            'start_date': start_date,
-            'end_date': end_date,
-            'state':'success',
-            })
+        control_assign_ids = self.env['control.assigned.amounts'].search([('success_line_ids','!=',False),('budget_id','=',self.budget_id.id),('state','=','validated')])
+        print ("==control_assign_ids==",control_assign_ids)
+        for control_assign in control_assign_ids:
+            print ("==control_assign.success_line_ids==",control_assign.success_line_ids)
+            first_line = control_assign.success_line_ids[0]
+             
+            #=== Q1 Line ================#
+            start_date = first_line.start_date
+            end_date = first_line.end_date
+            self.env['expenditure.budget.line'].sudo().create({
+                'expenditure_budget_id':self.budget_id.id,
+                'program_code_id': program_code.id,
+                'start_date': start_date,
+                'end_date': end_date,
+                'state':'success',
+                })
+            self.env['control.assigned.amounts.lines'].sudo().create({
+                'assigned_amount_id':control_assign.id,
+                'program_code_id': program_code.id,
+                'start_date': start_date,
+                'end_date': end_date,
+                'state':'success',
+                'budget_id' : self.budget_id.id,
+                })
+            
+#         #=== Q2 Line ================#
+#         start_date = self.budget_id.from_date.replace(month=4, day=1)
+#         end_date = self.budget_id.from_date.replace(month=6, day=30)
+#         self.env['expenditure.budget.line'].sudo().create({
+#             'expenditure_budget_id':self.budget_id.id,
+#             'program_code_id': program_code.id,
+#             'start_date': start_date,
+#             'end_date': end_date,
+#             'state':'success',
+#             })
+#         #=== Q3 Line ================#
+#         start_date = self.budget_id.from_date.replace(month=7, day=1)
+#         end_date = self.budget_id.from_date.replace(month=9, day=30)
+#         self.env['expenditure.budget.line'].sudo().create({
+#             'expenditure_budget_id':self.budget_id.id,
+#             'program_code_id': program_code.id,
+#             'start_date': start_date,
+#             'end_date': end_date,
+#             'state':'success',
+#             })
+#         #=== Q4 Line ================#
+#         start_date = self.budget_id.from_date.replace(month=10, day=1)
+#         end_date = self.budget_id.from_date.replace(month=12, day=31)
+#         self.env['expenditure.budget.line'].sudo().create({
+#             'expenditure_budget_id':self.budget_id.id,
+#             'program_code_id': program_code.id,
+#             'start_date': start_date,
+#             'end_date': end_date,
+#             'state':'success',
+#             })
         
         return budget_line
     
@@ -893,7 +908,13 @@ class Adequacies(models.Model):
             liq_adequacy_jour = self.env.ref('jt_conac.liq_adequacy_jour')
             if liq_adequacy_jour:
                 self.journal_id = liq_adequacy_jour.id
-
+    
+    def set_new_program_state(self):
+        for line in self.adequacies_lines_ids.filtered(lambda x:x.program and x.program.state=='draft'):
+            line.program.state = 'validated'
+        for line in self.adequacies_lines_ids.filtered(lambda x:x.program and not x.program.budget_id):
+            line.program.budget_id = self.budget_id.id
+            
     def accept(self):
         self.validate_data()
         for line in self.adequacies_lines_ids:
@@ -1054,7 +1075,8 @@ class Adequacies(models.Model):
                 unam_move = move_obj.create(unam_move_val)
                 unam_move.action_post()
         self.state = 'accepted'
-
+        self.set_new_program_state()
+        
     def reject(self):
         self.state = 'rejected'
 

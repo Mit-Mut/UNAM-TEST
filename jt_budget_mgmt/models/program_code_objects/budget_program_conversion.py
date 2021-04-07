@@ -31,7 +31,7 @@ class BudgetProgramConversion(models.Model):
     _description = 'Budget Program Conversion'
     _rec_name = 'shcp'
 
-    unam_key_id = fields.Many2one('program', string='Program')
+    unam_key_id = fields.Many2one('program', string='P')
     unam_key_code = fields.Char(related='unam_key_id.key_unam')
     program_key_id = fields.Many2one('program.key','UNAM Function')
     
@@ -41,7 +41,7 @@ class BudgetProgramConversion(models.Model):
     
     description = fields.Text(string='Description conversion of SHCP program')
 
-    dep_con_id = fields.Many2one('departure.conversion','SHCP Item')
+    dep_con_id = fields.Many2one('departure.conversion','SI')
     
     conversion_key_id = fields.Many2one('shcp.game','Conversion with Item')
     federal_part = fields.Char(related='conversion_key_id.conversion_key')

@@ -66,11 +66,35 @@
             		<attribute name="attrs">{'invisible':[('payment_state','!=','for_payment_procedure')]}</attribute>
             		<attribute name="states"></attribute>
             	</xpath>
+                  <field name="payment_type" position="attributes">
+                        <attribute name="attrs">{'readonly':[('payment_state', '!=', 'draft')]}</attribute>
+                  </field>
+                  <field name="partner_id" position="attributes">
+                        <attribute name="attrs">{'readonly':[('payment_state', '!=', 'draft')]}</attribute>
+                  </field>
+                  <field name="amount" position="attributes">
+                        <attribute name="attrs">{'readonly':[('payment_state', '!=', 'draft')]}</attribute>
+                  </field>
+                  <field name="communication" position="attributes">
+                        <attribute name="attrs">{'readonly':[('payment_state', '!=', 'draft')]}</attribute>
+                  </field>
+                  <field name="journal_id" position="attributes">
+                        <attribute name="attrs">{'readonly':[('payment_state', '!=', 'draft')]}</attribute>
+                  </field>
+                  <field name="l10n_mx_edi_payment_method_id" position="attributes">
+                        <attribute name="attrs">{'readonly':[('payment_state', '!=', 'draft')]}</attribute>
+                  </field>
+                  <field name="l10n_mx_edi_origin" position="attributes">
+                        <attribute name="attrs">{'readonly':[('payment_state', '!=', 'draft')]}</attribute>
+                  </field>
+                  <field name="destination_journal_id" position="attributes">
+                        <attribute name="attrs">{'readonly':[('payment_state', '!=', 'draft')]}</attribute>
+                  </field>
                   <field name="payment_date" position="attributes">
-                        <attribute name="attrs">{'readonly':[('state', 'not in', ('draft','for_payment_procedure'))]}</attribute>
+                        <attribute name="attrs">{'readonly':[('payment_state', 'not in', ('draft','for_payment_procedure'))]}</attribute>
                   </field>
             	<field name="payment_date" position="before">
-            		<field name="payment_request_id" readonly="1"  context="{'form_view_ref': 'jt_supplier_payment.payment_req_form_view'}"/>
+            		<field name="payment_request_id" readonly="1"  context="{'form_view_ref': 'jt_supplier_payment.payment_req_form_view'}" attrs="{'readonly':[('payment_state', '!=', 'draft')]}"/>
             	</field>
             	<field name="partner_bank_account_id" position="attributes">
             		<attribute name="invisible">1</attribute>
@@ -83,19 +107,19 @@
             		<attribute name='invisible'>1</attribute>
             	</field>
             	<field name="communication" position="after">
-            		<field name="payment_bank_id"/>
-            		<field name="payment_bank_account_id"/>
+            		<field name="payment_bank_id" attrs="{'readonly':[('payment_state', '!=', 'draft')]}"/>
+            		<field name="payment_bank_account_id" attrs="{'readonly':[('payment_state', '!=', 'draft')]}"/>
             	</field>
             	<field name="partner_id" position="after">
             		<field name="baneficiary_key"/>
             	</field>
             	<field name="journal_id" position="after">
-            		<field name="batch_folio"/>
-            		<field name="folio"/>
+            		<field name="batch_folio" attrs="{'readonly':[('payment_state', '!=', 'draft')]}"/>
+            		<field name="folio" attrs="{'readonly':[('payment_state', '!=', 'draft')]}"/>
             		<field name="payment_request_type" invisible="1"/>
-            		<field name="is_different_payroll_request" attrs="{'invisible':[('payment_request_type','!=','different_to_payroll')]}"/>
-            		<field name="fornight" attrs="{'invisible':[('payment_request_type','!=','payroll_payment')]}"/>
-            		<field name="payroll_request_type" attrs="{'invisible':[('payment_request_type','!=','payroll_payment')]}"/>
+            		<field name="is_different_payroll_request" attrs="{'invisible':[('payment_request_type','!=','different_to_payroll')] , 'readonly':[('payment_state', '!=', 'draft')]}"/>
+            		<field name="fornight" attrs="{'invisible':[('payment_request_type','!=','payroll_payment')] , 'readonly':[('payment_state', '!=', 'draft')]}"/>
+            		<field name="payroll_request_type" attrs="{'invisible':[('payment_request_type','!=','payroll_payment')] , 'readonly':[('payment_state', '!=', 'draft')]}"/>
             		<field name="reason_for_rejection" readonly="1" attrs="{'invisible':[('payment_state','!=','rejected')]}"/>
             		<field name="reason_for_cancel" readonly="1" attrs="{'invisible':[('payment_state','!=','cancelled')]}"/>
             		<field name="is_hide_banamex" invisible="1"/>
@@ -104,60 +128,60 @@
             		<field name="is_hide_hsbc" invisible="1"/>
             		<field name="is_hide_santander" invisible="1"/>
             		<field name="is_hide_jp_morgan" invisible="1"/>
-            		<field name="no_validate_payment"/>
+            		<field name="no_validate_payment" attrs="{'readonly':[('payment_state', '!=', 'draft')]}"/>
             	</field>
             	<field name="partner_type" position="after">
-            		<field name="employee_partner_type" attrs="{'invisible':[('payment_request_type','not in',('pension_payment','payroll_payment'))],'required':[('payment_request_type','in',('pension_payment','payroll_payment'))]}"/>
+            		<field name="employee_partner_type" attrs="{'invisible':[('payment_request_type','not in',('pension_payment','payroll_payment'))],'required':[('payment_request_type','in',('pension_payment','payroll_payment'))] , 'readonly':[('payment_state', '!=', 'draft')]}"/>
             	</field>
             	<field name="partner_type" position="attributes">
-            		<attribute name="attrs">{'required': [('state', '=', 'draft'), ('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': ['|',('payment_request_type','in',('pension_payment','payroll_payment')),('payment_type', 'not in', ('inbound', 'outbound'))]}</attribute>
+            		<attribute name="attrs">{'readonly': [('payment_state', '!=', 'draft')], 'required': [('state', '=', 'draft'), ('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': ['|',('payment_request_type','in',('pension_payment','payroll_payment')),('payment_type', 'not in', ('inbound', 'outbound'))]}</attribute>      
             	</field>
 	            <xpath expr="//sheet/group[1]" position="after">
 	            	<notebook>
 	            		<page string="Banamex" name="banamex" attrs="{'invisible':[('is_hide_banamex','=',True)]}">
 	            			<group>
-	            				<field name="banamex_description" attrs="{'readonly':[('state', 'not in', ('draft','for_payment_procedure'))]}"/>
-	            				<field name="banamex_concept" attrs="{'readonly':[('state', 'not in', ('draft','for_payment_procedure'))]}"/>
-	            				<field name="banamex_reference" attrs="{'readonly':[('state', 'not in', ('draft','for_payment_procedure'))]}"/>
+	            				<field name="banamex_description" attrs="{'readonly':[('payment_state', 'not in', ('draft','for_payment_procedure'))]}"/>
+	            				<field name="banamex_concept" attrs="{'readonly':[('payment_state', 'not in', ('draft','for_payment_procedure'))]}"/>
+	            				<field name="banamex_reference" attrs="{'readonly':[('payment_state', 'not in', ('draft','for_payment_procedure'))]}"/>
 	            			</group>
 	            		</page>
 	            		<page string="BBVA Bancomer Net Cash" name="bbva_net_cash" attrs="{'invisible':[('is_hide_bbva_net','=',True)]}">
 	            			<group>
-	            				<field name="net_cash_reference" attrs="{'readonly':[('state', 'not in', ('draft','for_payment_procedure'))]}"/>
-	            				<field name="net_cash_availability" attrs="{'readonly':[('state', 'not in', ('draft','for_payment_procedure'))]}"/>
+	            				<field name="net_cash_reference" attrs="{'readonly':[('payment_state', 'not in', ('draft','for_payment_procedure'))]}"/>
+	            				<field name="net_cash_availability" attrs="{'readonly':[('payment_state', 'not in', ('draft','for_payment_procedure'))]}"/>
 	            			</group>
 	            		</page>
 	            		<page string="BBVA Bancomer SIT" name="bbva_sit" attrs="{'invisible':[('is_hide_bbva_sit','=',True)]}">
 	            			<group>
-	            				<field name="sit_file_key" attrs="{'readonly':[('state', 'not in', ('draft','for_payment_procedure'))]}"/>
-	            				<field name="sit_operation_code" attrs="{'readonly':[('state', 'not in', ('draft','for_payment_procedure'))]}"/>
-	            				<field name="sit_reference" attrs="{'readonly':[('state', 'not in', ('draft','for_payment_procedure'))]}"/>
-	            				<field name="sit_reason_for_payment" attrs="{'readonly':[('state', 'not in', ('draft','for_payment_procedure'))]}"/>
-	            				<field name="sit_additional_data" attrs="{'readonly':[('state', 'not in', ('draft','for_payment_procedure'))]}"/>
+	            				<field name="sit_file_key" attrs="{'readonly':[('payment_state', 'not in', ('draft','for_payment_procedure'))]}"/>
+	            				<field name="sit_operation_code" attrs="{'readonly':[('payment_state', 'not in', ('draft','for_payment_procedure'))]}"/>
+	            				<field name="sit_reference" attrs="{'readonly':[('payment_state', 'not in', ('draft','for_payment_procedure'))]}"/>
+	            				<field name="sit_reason_for_payment" attrs="{'readonly':[('payment_state', 'not in', ('draft','for_payment_procedure'))]}"/>
+	            				<field name="sit_additional_data" attrs="{'readonly':[('payment_state', 'not in', ('draft','for_payment_procedure'))]}"/>
 	            			</group>
 	            		</page>
 	            		<page string="HSBC" name="hsbc" attrs="{'invisible':[('is_hide_hsbc','=',True)]}">
 	            			<group>
-	            				<field name="hsbc_reference" attrs="{'readonly':[('state', 'not in', ('draft','for_payment_procedure'))]}"/>
+	            				<field name="hsbc_reference" attrs="{'readonly':[('payment_state', 'not in', ('draft','for_payment_procedure'))]}"/>
 	            			</group>
 	            		</page>
 	            		<page string="Santander" name="santander" attrs="{'invisible':[('is_hide_santander','=',True)]}">
 	            			<group>
-	            				<field name="santander_payment_concept" attrs="{'readonly':[('state', 'not in', ('draft','for_payment_procedure'))]}"/>
+	            				<field name="santander_payment_concept" attrs="{'readonly':[('payment_state', 'not in', ('draft','for_payment_procedure'))]}"/>
 	            			</group>
 	            		</page>
 	            		<page string="JP Morgan" name="jp_morgan" attrs="{'invisible':[('is_hide_jp_morgan','=',True)]}">
 	            			<group>
 	            				<group>
-	            					<field name="jp_payment_concept" attrs="{'readonly':[('state', 'not in', ('draft','for_payment_procedure'))]}"/>
-	            					<field name="jp_method" attrs="{'readonly':[('state', 'not in', ('draft','for_payment_procedure'))]}"/>
-	            					<field name="jp_bank_transfer" attrs="{'readonly':[('state', 'not in', ('draft','for_payment_procedure'))]}"/>
-	            					<field name="jp_id_type" attrs="{'readonly':[('state', 'not in', ('draft','for_payment_procedure'))]}"/>
-	            					<field name="jp_id_type_beneficiary_bank" attrs="{'readonly':[('state', 'not in', ('draft','for_payment_procedure'))]}"/>
-	            					<field name="jp_charges" attrs="{'readonly':[('state', 'not in', ('draft','for_payment_procedure'))]}"/>
+	            					<field name="jp_payment_concept" attrs="{'readonly':[('payment_state', 'not in', ('draft','for_payment_procedure'))]}"/>
+	            					<field name="jp_method" attrs="{'readonly':[('payment_state', 'not in', ('draft','for_payment_procedure'))]}"/>
+	            					<field name="jp_bank_transfer" attrs="{'readonly':[('payment_state', 'not in', ('draft','for_payment_procedure'))]}"/>
+	            					<field name="jp_id_type" attrs="{'readonly':[('payment_state', 'not in', ('draft','for_payment_procedure'))]}"/>
+	            					<field name="jp_id_type_beneficiary_bank" attrs="{'readonly':[('payment_state', 'not in', ('draft','for_payment_procedure'))]}"/>
+	            					<field name="jp_charges" attrs="{'readonly':[('payment_state', 'not in', ('draft','for_payment_procedure'))]}"/>
 	            				</group>
 	            				<group>
-	            					<field name="jp_drawdown_type" attrs="{'readonly':[('state', 'not in', ('draft','for_payment_procedure'))]}"/>
+	            					<field name="jp_drawdown_type" attrs="{'readonly':[('payment_state', 'not in', ('draft','for_payment_procedure'))]}"/>
 	            				</group>
 	            			</group>
 	            		</page>

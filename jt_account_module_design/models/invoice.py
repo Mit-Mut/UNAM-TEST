@@ -767,6 +767,7 @@ class AccountMove(models.Model):
     def generate_payment_request(self):
         self.is_payment_request = True
         self.is_provision_request_generate = True
+        self.is_create_from_provision = True
 
     def action_provision_payment_request(self):
         return {

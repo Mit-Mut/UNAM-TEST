@@ -30,10 +30,11 @@ class DepartureConversion(models.Model):
     _description = 'Conversion with Departure'
     _rec_name = 'conversion_key_id'
 
-    federal_part = fields.Char(string='Federal part', size=5)
-    federal_part_desc = fields.Text(string='Federal part description')
+    federal_part = fields.Char(string='FP', size=5)
+    
     item_id = fields.Many2one('expenditure.item','Item of Expenditure')
     conversion_key_id = fields.Many2one('shcp.game','Conversion Key')
+    federal_part_desc = fields.Text(related='conversion_key_id.conversion_key_desc',string='Federal part description')
     
     _sql_constraints = [('federal_part', 'unique(conversion_key_id,item_id)', 'The Conversion Key must be unique per Item of Expenditure.')]
 

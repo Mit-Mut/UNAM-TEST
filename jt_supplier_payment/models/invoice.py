@@ -171,6 +171,7 @@ class AccountMove(models.Model):
     reason_cancellation = fields.Text("Reason for Cancellation")
     is_payment_request = fields.Boolean("Payment Request")
     is_provision_request = fields.Boolean("Provision Request",copy=False)
+    is_create_from_provision = fields.Boolean("Provision Request",copy=False)
     type = fields.Selection(selection_add=[('payment_req', 'Payment Request')])
 
     # More info Tab
@@ -223,7 +224,18 @@ class AccountMove(models.Model):
     check_number = fields.Char("Check number")
     bank_key = fields.Char("Bank Key")
     previous_number = fields.Char("Previous Number", size=11)
-
+    set_readonly_into_payment = fields.Boolean(string='Set Readonly',copy=False,store=True,compute="get_set_readonly_into_payment_view")
+    
+    @api.depends('payment_state','is_create_from_provision','is_payment_request')
+    def get_set_readonly_into_payment_view(self):
+        for rec in self:
+            set_readonly_into_payment = False
+            if not rec.is_create_from_provision and rec.payment_state != 'draft':
+                set_readonly_into_payment = True
+            elif rec.is_create_from_provision and rec.payment_state not in ('draft','approved_payment'):
+                set_readonly_into_payment = True
+            rec.set_readonly_into_payment = set_readonly_into_payment
+            
     @api.depends('payment_state', 'is_payroll_payment_request', 'is_payment_request', 'state')
     def get_conac_line_display(self):
         for rec in self:

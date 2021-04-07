@@ -17,9 +17,9 @@ class ConfirmPaymentDate(models.TransientModel):
             return ''
 
         for payment in self.env['account.move'].browse(active_ids):
-            if payment.payment_state not in ('registered','draft'):
+            if payment.payment_state not in ('registered','draft','approved_payment','for_payment_procedure '):
                 raise UserError(_("You can set the Invoice date  only for those payments which are in "
-                "'Draft and For Registered'!"))
+                "'Draft,registered,For Payment Procedure and Approved Payment'!"))
         
 
         
@@ -36,7 +36,7 @@ class ConfirmPaymentDate(models.TransientModel):
 
     def set_invoice_date(self):
         for inv in self.invoice_ids:
-            if inv.payment_state not in ('draft','registered'):
+            if inv.payment_state not in ('draft','registered','for_payment_procedure','approved_payment'):
                 raise UserError(_("You can set the Invoice date  only for those payments which are in "
                 "'Draft and For Payment Procedure'!"))
             if inv:

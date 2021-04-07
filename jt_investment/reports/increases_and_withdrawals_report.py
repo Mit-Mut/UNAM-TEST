@@ -739,7 +739,10 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
             values=dict(rcontext),
         )
         body_html = self.with_context(print_mode=True).get_html(options)
+        body_header =  self.env['ir.actions.report'].render_template("jt_investment.external_layout_report_increases_and_withdrawals", values=rcontext)
+        body_html = body_header+body_html
 
+        body_html = body_html.replace(b'<div class="o_account_reports_header">',b'<div style="font-size:1px;text-align:center;">')
         body = body.replace(b'<body class="o_account_reports_body_print">', b'<body class="o_account_reports_body_print">' + body_html)
         if minimal_layout:
             header = ''
@@ -752,7 +755,8 @@ class ReportIncreasesandWithdrawals(models.AbstractModel):
                     'o': self.env.user,
                     'res_company': self.env.company,
                 })
-            header = self.env['ir.actions.report'].render_template("jt_investment.external_layout_report_increases_and_withdrawals", values=rcontext)
+            # header = self.env['ir.actions.report'].render_template("jt_investment.external_layout_report_increases_and_withdrawals", values=rcontext)
+            header = b'<p>ABBBCC</p>'
             header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
             spec_paperformat_args = {}
             # Default header and footer in case the user customized web.external_layout and removed the header/footer

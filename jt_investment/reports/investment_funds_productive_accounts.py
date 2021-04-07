@@ -336,7 +336,7 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                         period_rate_id = self.env['investment.period.rate'].search([('rate_date','<',rec.date_required),('product_type','=','TIIE')],limit=1,order='rate_date desc')
                         p_rate = period_rate_id.rate_days_28
                 total_avg_final += final_amount
-                precision = self.env['decimal.precision'].precision_get('Productive Accounts')
+                # precision = self.env['decimal.precision'].precision_get('Productive Accounts')
                 lines.append({
                     'id': 'hierarchy' + str(rec.id),
                     'name': rec.date_required.day,
@@ -347,7 +347,7 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                                 {'name': rec.fund_type and rec.fund_type.name or ''},
                                 {'name': rec.agreement_type_id and rec.agreement_type_id.name or ''},
                                 {'name': rec.base_collabaration_id and rec.base_collabaration_id.name or ''},
-                                self._format({'name': p_rate},figure_type='float',digit=precision,is_currency=False),
+                                self._format({'name': p_rate},figure_type='float',digit=2,is_currency=False),
                                 self._format({'name': capital},figure_type='float',digit=2,is_currency=True),
                                 self._format({'name': entradas},figure_type='float',digit=2,is_currency=True),
                                 self._format({'name': salidas},figure_type='float',digit=2,is_currency=True),

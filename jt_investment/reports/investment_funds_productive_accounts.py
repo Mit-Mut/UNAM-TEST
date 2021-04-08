@@ -347,7 +347,7 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                                 {'name': rec.fund_type and rec.fund_type.name or ''},
                                 {'name': rec.agreement_type_id and rec.agreement_type_id.name or ''},
                                 {'name': rec.base_collabaration_id and rec.base_collabaration_id.name or ''},
-                                self._format({'name': p_rate},figure_type='float',digit=2,is_currency=False),
+                                self._format({'name': p_rate},figure_type='float',digit=4,is_currency=False),
                                 self._format({'name': capital},figure_type='float',digit=2,is_currency=True),
                                 self._format({'name': entradas},figure_type='float',digit=2,is_currency=True),
                                 self._format({'name': salidas},figure_type='float',digit=2,is_currency=True),

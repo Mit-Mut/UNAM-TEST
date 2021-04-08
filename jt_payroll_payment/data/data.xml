@@ -15,6 +15,13 @@
 	        <field name="type">purchase</field>
 	    </record>
 
+	     <record id="project_payment_request_jour" model="account.journal">
+	        <field name="name">Project Payment Request Journal</field>
+	        <field name="code">PPAR</field>
+	        <field name="currency_id" ref="base.MXN"/>
+	        <field name="type">purchase</field>
+	    </record>
+
         <record id="project_verfication_expense_jour" model="account.journal">
             <field name="name">Project Verification Request Journal</field>
             <field name="code">PVEJ</field>

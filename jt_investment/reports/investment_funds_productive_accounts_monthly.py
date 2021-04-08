@@ -424,7 +424,7 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                     columns = [{'name': month_name}, 
                                     {'name': new_date.day},
                                     {'name': ''},
-                                    self._format({'name': p_rate},figure_type='float',digit=precision,is_currency=False),
+                                    self._format({'name': p_rate},figure_type='float',digit=2,is_currency=False),
                                     self._format({'name': 0.0},figure_type='float',digit=2,is_currency=True),
                                     self._format({'name': 0.0},figure_type='float',digit=2,is_currency=True),
                                 ]
@@ -471,12 +471,12 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                     header_intial = 0
                         
                     total_avg_final += final_amount
-                    precision = self.env['decimal.precision'].precision_get('Productive Accounts')
+                    # precision = self.env['decimal.precision'].precision_get('Productive Accounts')
                     
                     columns = [{'name': month_name}, 
                                     {'name': rec.date_required.day},
                                     {'name': rec.investment_id.journal_id and rec.investment_id.journal_id.name or ''},
-                                    self._format({'name': p_rate},figure_type='float',digit=precision,is_currency=False),
+                                    self._format({'name': p_rate},figure_type='float',digit=2,is_currency=False),
                                     self._format({'name': capital},figure_type='float',digit=2,is_currency=True),
                                     self._format({'name': entradas},figure_type='float',digit=2,is_currency=True),
                                 ]

@@ -248,6 +248,12 @@ class BasesCollabration(models.Model):
         })
         return balance_dict
 
+    def get_interes(self):
+        interest = sum(x.interest_rate for x in self.rate_base_ids.filtered(lambda x:x.interest_date and x.interest_date >= self.report_start_date and x.interest_date <= self.report_end_date))
+        interest = round(interest,2)
+        print('interest',interest)
+        return interest
+
     def get_next_year_name(self, date):
         year_name = ''
         if date:
@@ -320,6 +326,57 @@ class BasesCollabration(models.Model):
         retiros = sum(x.opening_balance for x in self.request_open_balance_ids.filtered(lambda x: x.state == 'confirmed' and x.request_date and x.request_date >=
                                                                                         self.report_start_date and x.request_date <= self.report_end_date and x.type_of_operation in ('retirement', 'withdrawal', 'withdrawal_cancellation', 'withdrawal_closure')))
         return retiros
+
+    def get_contract_assistant_report_lines(self):
+
+        req_date = self.request_open_balance_ids.filtered(lambda x: self.report_start_date and self.report_end_date \
+            and x.state=='confirmed' and x.type_of_operation in ('increase','retirement') and \
+            x.request_date and x.request_date >= self.report_start_date and x.request_date <= self.report_end_date).mapped('request_date')
+
+        lang = self.env.user.lang
+
+        if req_date:
+            req_date = list(set(req_date))
+            req_date =  sorted(req_date)
+        
+        final = 0
+        lines = []
+        for req in req_date:
+            opt_lines = self.request_open_balance_ids.filtered(lambda x:x.state=='confirmed' and x.request_date == req)
+            for line in opt_lines:
+                opt = dict(line._fields['type_of_operation'].selection).get(line.type_of_operation)
+                #opt = line.type_of_operation
+                if lang == 'es_MX':
+                    if line.type_of_operation=='increase':
+                        opt = 'Incremento'
+                    elif line.type_of_operation=='retirement':
+                        opt = 'Retiro'
+                debit = 0
+                credit = 0  
+                retiros = 0
+                increments = 0
+                bal_final = 0
+                if line.type_of_operation in ('increase'):         
+                    final += line.opening_balance
+                    debit = line.opening_balance
+                elif line.type_of_operation in ('retirement'):
+                    final -= line.opening_balance
+                    credit = line.opening_balance
+                intial_bal = 0
+                intial_bal = debit - credit
+                bal_final = intial_bal + debit - credit 
+                lines.append({
+                              'date':line.request_date,
+                              'operation_number':line.operation_number,
+                              'inital_bal':intial_bal,
+                              'opt': opt,
+                              'debit':debit,
+                              'credit' : credit,
+                              'final' : final,
+                              'bal_final':bal_final
+                              })
+        
+        return lines
 
     def get_report_lines(self):
 
@@ -1677,15 +1734,17 @@ class RequestOpenBalanceFinance(models.Model):
     operation_number = fields.Char("Operation Number")
     agreement_number = fields.Char("Agreement Number")
     bank_account_id = fields.Many2one(
-        'account.journal', "Bank and Origin Account")
+        'account.journal', "Origin Bank")
+    origin_account = fields.Many2one(related="bank_account_id.bank_account_id" , string="Account Origin")
     desti_bank_account_id = fields.Many2one(
-        'account.journal', "Destination Bank and Account")
+        'account.journal', "Destination Bank")
+    desti_account = fields.Many2one(related="desti_bank_account_id.bank_account_id" , string="Destination Account")
     currency_id = fields.Many2one(
         'res.currency', default=lambda self: self.env.user.company_id.currency_id)
     amount = fields.Monetary("Amount")
     dependency_id = fields.Many2one('dependency', "Dependency")
     sub_dependency_id = fields.Many2one('sub.dependency', "Subdependency")
-    date = fields.Date("Application date")
+    date = fields.Date("Application date",default=fields.Date.today)
     concept = fields.Text("Application Concept")
     user_id = fields.Many2one(
         'res.users', default=lambda self: self.env.user.id, string="Applicant")
@@ -1727,11 +1786,11 @@ class RequestOpenBalanceFinance(models.Model):
     attention_to_emp_id = fields.Many2one("hr.employee","Attention to")
     prepared_by_emp_id = fields.Many2one("hr.employee","Prepared by",default=_get_prepare_by_employe)
     prepared_by_user_id = fields.Many2one("res.users",string="Creation Users",default=lambda self: self.env.user.id)
-    prepared_by_dept_id = fields.Many2one(related="prepared_by_emp_id.department_id",string="Department to which it belongs")
+    prepared_by_dept_id = fields.Many2one(related="prepared_by_user_id.department_id",string="Department to which it belongs")
     
     authorized_by_emp_id = fields.Many2one("hr.employee","Authorized by")
     authorized_by_user_id = fields.Many2one("res.users",string="Authorized Users")
-    authorized_by_dept_id = fields.Many2one(related="authorized_by_emp_id.department_id",string="Department to which the authorizing person belongs")
+    authorized_by_dept_id = fields.Many2one(related="authorized_by_user_id.department_id",string="Department to which the authorizing person belongs")
     
     @api.constrains('operation_number')
     def _check_operation_number(self):
@@ -1744,6 +1803,9 @@ class RequestOpenBalanceFinance(models.Model):
         if res.is_manual:
             name = self.env['ir.sequence'].next_by_code('request.open.balance.finance.manual')
             res.invoice = name
+        if not res.operation_number:
+            rec = self.env['ir.sequence'].next_by_code('request.open.balance.finance')
+            res.operation_number = rec
         return res
 
     def open_payments(self):

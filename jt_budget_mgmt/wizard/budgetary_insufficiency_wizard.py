@@ -32,16 +32,19 @@ class BudegtInsufficiencWiz(models.TransientModel):
     is_budget_suf = fields.Boolean(default=False)
     move_id = fields.Many2one('account.move','Move')
     move_ids = fields.Many2many('account.move', 'rel_wizard_budget_move', 'move_id', 'rel_wiz_move_id')
+    insufficient_move_ids = fields.Many2many('account.move', 'rel_wizard_budget_insufficient_move', 'move_id', 'rel_wiz_move_id')
     
     def action_ok(self):
         move_str_msg_dict = self._context.get('move_str_msg_dict')
-        if self.move_ids and not self.move_id:
-            for move in self.move_ids:
+        if self.insufficient_move_ids and not self.move_id:
+            for move in self.insufficient_move_ids:
                 move.payment_state = 'rejected'
                 move.reason_rejection = move_str_msg_dict.get(str(move.id))
+            self.action_budget_allocation()
         else:
             self.move_id.payment_state = 'rejected'
             self.move_id.reason_rejection = self.msg
+        
         
     def decrease_available_amount(self):
         for line in self.move_id.invoice_line_ids:

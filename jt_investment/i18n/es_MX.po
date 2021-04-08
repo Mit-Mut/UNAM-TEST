@@ -1894,15 +1894,35 @@ msgstr "Primero"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_approve_investment_bal_req__investment_id
-#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__first_number
-#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__first_number
 #: model:ir.model.fields,field_description:jt_investment.field_investment_investment__first_number
 #: model:ir.model.fields,field_description:jt_investment.field_investment_operation__investment_id
-#: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__first_number
+msgid "First Number:"
+msgstr "Folio Cuenta Productiva:"
+
+#. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__first_number
+msgid "First Number:"
+msgstr "Folio Pagaré:"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__first_number
+msgid "First Number:"
+msgstr "Folio Bonos:"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__first_number
+msgid "First Number:"
+msgstr "Folio Udibonos:"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__first_number
+msgid "First Number:"
+msgstr "Folio Cetes:"
+
+#. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__first_number
 msgid "First Number:"
-msgstr "Consecutivo:"
+msgstr "Folio Títulos:"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_investment__is_fixed_rate
@@ -2360,7 +2380,6 @@ msgid "Inversión Total"
 msgstr ""
 
 #. module: jt_investment
-#: model:ir.actions.act_window,name:jt_investment.action_investment_investment
 #: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__investment_id
 #: model:ir.model.fields,field_description:jt_investment.field_distribution_of_income__investment_id
 #: model:ir.model.fields,field_description:jt_investment.field_maturity_report__investment_id
@@ -2372,7 +2391,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:jt_investment.selection__investment_will_pay__kind_of_product__investment
 #: model:ir.model.fields.selection,name:jt_investment.selection__product_template__type__investment
 #: model:ir.ui.menu,name:jt_investment.main_menu_investment
-#: model:ir.ui.menu,name:jt_investment.menu_productive_accounts_investment
 #: model_terms:ir.ui.view,arch_db:jt_investment.investment_bonds_form
 #: model_terms:ir.ui.view,arch_db:jt_investment.investment_cetes_form
 #: model_terms:ir.ui.view,arch_db:jt_investment.investment_investment_form
@@ -2382,6 +2400,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:jt_investment.view_investment_funds_form
 msgid "Investment"
 msgstr "Inversiones"
+
+#. module: jt_investment
+#: model:ir.actions.act_window,name:jt_investment.action_investment_investment
+#: model:ir.ui.menu,name:jt_investment.menu_productive_accounts_investment
+msgid "Investment"
+msgstr "Cuentas Productivas"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_funds__investment_account_id
@@ -4630,3 +4654,20 @@ msgstr "Cuenta de débito de CONAC"
 msgid "CONAC Credit Account"
 msgstr "Cuenta de crédito de CONAC"
 
+#. module: jt_investment
+#: model:ir.actions.client,name:jt_investment.action_investment_funds_in_productive_monthly_accounts
+#: model:ir.ui.menu,name:jt_investment.menu_investment_funds_in_productive_monthly
+msgid "Report of Investment Funds in Productive Monthly Accounts"
+msgstr "Reporte de Fondos Institucionales en Cuentas Productivas"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__rate_of_returns
+#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__rate_of_returns
+#: model:ir.model.fields,field_description:jt_investment.field_investment_funds__rate_of_returns
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__rate_of_returns
+#: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__rate_of_returns
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__rate_of_returns
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__rate_of_returns
+#: model:ir.model.fields,field_description:jt_investment.field_rate_of_returns__name
+msgid "Rate Of Returns"
+msgstr "Tasa de Rendimientos"

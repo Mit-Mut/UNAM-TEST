@@ -33,5 +33,13 @@
             <field name="company_id" eval="False"/>
         </record>
 
+        <record id="seq_request_open_balance_finance1" model="ir.sequence">
+            <field name="name">Request Open Balance Finance </field>
+            <field name="code">request.open.balance.finance</field>
+            <field name="padding">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+
     </data>
 </odoo>

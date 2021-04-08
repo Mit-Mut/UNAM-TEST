@@ -15,7 +15,7 @@
                     <field name="fund_type_id"/>
                     <field name="agreement_type_id"/>
                     <field name="fund_id"/>
-                    <field name="base_collabaration_id"/>
+                    <field name="base_collabaration_id" context="{'show_agreement_name': True}"/>
                 </tree>
             </field>
         </record>
@@ -43,7 +43,7 @@
                                 <field name="fund_id" />
 			                    <field name="fund_type_id" />
 			                    <field name="agreement_type_id" />
-			                    <field name="base_collabaration_id"/>
+			                    <field name="base_collabaration_id" context="{'show_agreement_name': True}"/>
                         		<field name="term" required="1"/>
                         		<field name="observations" required="1"/>
                         	</group>
@@ -68,6 +68,7 @@
          <record id="action_investment_contract" model="ir.actions.act_window">
             <field name="name">Investment Contract</field>
             <field name="res_model">investment.contract</field>
+            <field name="context">{'show_for_agreement':True, 'show_agreement_name': True}</field>
         </record>
 
         <menuitem id="menu_investment_contract" name="Investment Contract" sequence="5"

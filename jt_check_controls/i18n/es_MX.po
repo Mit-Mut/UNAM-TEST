@@ -851,8 +851,10 @@ msgstr "Regresar A Borrador"
 #: model:ir.model.fields,field_description:jt_check_controls.field_check_log__bank_id
 #: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__bank_id
 #: model:ir.model.fields,field_description:jt_check_controls.field_minimum_checks__bank_id
+#: model:ir.model.fields,field_description:jt_check_controls.field_reissue_checks__bank_id
+#: model:ir.ui.menu,name:jt_check_controls.menu_bank_check_contorl
 msgid "Bank"
-msgstr "Banco"
+msgstr "Bancos"
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_approve_blank_check__bank_account_id
@@ -870,10 +872,11 @@ msgid "Bank Balance Check"
 msgstr "Verificación de saldo bancario"
 
 #. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_cancel_checks__batch_folio
 #: model:ir.model.fields,field_description:jt_check_controls.field_payment_batch_supplier__batch_folio
 #: model:ir.model.fields,field_description:jt_check_controls.field_send_checks__batch_folio
 msgid "Batch Folio"
-msgstr "Folio por lotes"
+msgstr "Folio de lote"
 
 #. module: jt_check_controls
 #: model:ir.actions.report,name:jt_check_controls.blank_check_request
@@ -988,10 +991,12 @@ msgstr "Revise el documento de entrega"
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_cancel_checks__check_folio
-#: model:ir.model.fields,field_description:jt_check_controls.field_check_payment_req__check_folio
-#: model:ir.model.fields,field_description:jt_check_controls.field_send_checks_line__check_folio
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_payment_req__check_folio_id
+#: model:ir.model.fields,field_description:jt_check_controls.field_confirm_check_payment_req__check_folio_id
+#: model:ir.model.fields,field_description:jt_check_controls.field_reissue_checks__check_log_id
+#: model:ir.model.fields,field_description:jt_check_controls.field_send_checks_line__check_log_id
 msgid "Check Folio"
-msgstr "Revisa el folio"
+msgstr "Folio de cheque"
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_send_checks__check_line_ids
@@ -1056,7 +1061,7 @@ msgstr "Comprobar el estado"
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_res_bank__check_validity
 msgid "Check Validity"
-msgstr "Comprobar la validez"
+msgstr "Vigencia de cheques (días)"
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_cancel_checks__checkbook_no
@@ -1072,11 +1077,14 @@ msgid "Checkbook No"
 msgstr "Chequera No."
 
 #. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_approve_blank_check__checkbook_no
 #: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__checkbook_no
 #: model:ir.model.fields,field_description:jt_check_controls.field_checklist__checkbook_no
 #: model:ir.model.fields,field_description:jt_check_controls.field_confirm_checkbook__checkbook_no
+#: model:ir.model.fields,field_description:jt_check_controls.field_expiration_validity_check__checkbook_no
+#: model:ir.model.fields,field_description:jt_check_controls.field_send_checks_line__checkbook_no
 msgid "Checkbook No."
-msgstr "Chequera No."
+msgstr "No. de chequera"
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_payment_batch_supplier__checkbook_req_id
@@ -1208,18 +1216,13 @@ msgstr "Confirmar la chequera"
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__confirmation_letter
 msgid "Confirmation Letter"
-msgstr "Offcio de Confirmación"
+msgstr "Oficio de Confirmación"
 
 #. module: jt_check_controls
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__blank_checks_request__state__confirmed
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__checkbook_request__state__confirmed
 msgid "Confirmed"
 msgstr "Confirmado"
-
-#. module: jt_check_controls
-#: model:ir.ui.menu,name:jt_check_controls.menu_control_check_destruction
-msgid "Control for check destruction"
-msgstr "control de la destrucción de cheques"
 
 #. module: jt_check_controls
 #: model:ir.model,name:jt_check_controls.model_copied_employees
@@ -1310,10 +1313,14 @@ msgid "Department"
 msgstr "Departamento"
 
 #. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_available_check__dependence_id
 #: model:ir.model.fields,field_description:jt_check_controls.field_blank_checks_request__dependence_id
 #: model:ir.model.fields,field_description:jt_check_controls.field_check_authorized_dependency__dependency_id
 #: model:ir.model.fields,field_description:jt_check_controls.field_check_log__dependence_id
 #: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__dependence_id
+#: model:ir.model.fields,field_description:jt_check_controls.field_expiration_validity_check__dependence_id
+#: model:ir.model.fields,field_description:jt_check_controls.field_reissue_checks__dependence_id
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.available_check_search
 msgid "Dependence"
 msgstr "Dependencia"
 
@@ -1445,7 +1452,7 @@ msgstr ""
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__folio_legal
 msgid "Folio Legal"
-msgstr "Folio Offcio"
+msgstr "Folio de oficio"
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_cancel_checks__message_follower_ids
@@ -1487,7 +1494,10 @@ msgid "General Directorate of Personnel"
 msgstr "Dirección General de Personal"
 
 #. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_available_check__general_status
 #: model:ir.model.fields,field_description:jt_check_controls.field_check_log__general_status
+#: model:ir.model.fields,field_description:jt_check_controls.field_reissue_checks__general_status
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.available_check_search
 msgid "General Status"
 msgstr "Estado general"
 
@@ -1715,11 +1725,6 @@ msgid "Logo"
 msgstr ""
 
 #. module: jt_check_controls
-#: model:ir.model.fields,field_description:jt_check_controls.field_cancel_checks__batch_folio
-msgid "Batch Folio"
-msgstr ""
-
-#. module: jt_check_controls
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__approve_blank_check__department__morelia
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__blank_checks_request__department__morelia
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__check_distribution_modules__module__morelia
@@ -1847,7 +1852,7 @@ msgstr "Of. No."
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_blank_checks_request__delivery_of_checks
 msgid "Office of delivery of checks to dependency"
-msgstr ""
+msgstr "Oficio de envio de cheques para la dependencia"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.trade_configuration_form_view
@@ -1977,9 +1982,15 @@ msgid "Reason for Request"
 msgstr "Motivo de la solicitud"
 
 #. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_available_check__reason_cancellation
 #: model:ir.model.fields,field_description:jt_check_controls.field_check_log__reason_cancellation
 msgid "Reason for cancellation"
-msgstr "Razón de la cancelación"
+msgstr "Razon de cancelación"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_reissue_checks__reason_cancellation
+msgid "Reason for Cancellation"
+msgstr "Razon de cancelación"
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_check_log__reason_retention
@@ -2019,9 +2030,10 @@ msgid "Rejected"
 msgstr "Rechazado"
 
 #. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_log__related_check_folio_id
 #: model:ir.model.fields,field_description:jt_check_controls.field_check_log__related_checks
 msgid "Related Checks"
-msgstr "Chequeos relacionados"
+msgstr "Cheques relacionados"
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_minimum_checks__reorder_point
@@ -2063,7 +2075,7 @@ msgstr "Usuario responsable"
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_send_checks__responsible
 msgid "Responsible for shipping"
-msgstr ""
+msgstr "Responsable de envío"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.trade_configuration_form_view
@@ -2114,12 +2126,12 @@ msgstr ""
 #. module: jt_check_controls
 #: model:ir.model,name:jt_check_controls.model_send_checks
 msgid "Sending Checks To File"
-msgstr ""
+msgstr "Envío de cheques al archivo"
 
 #. module: jt_check_controls
 #: model:ir.ui.menu,name:jt_check_controls.menu_sending_checks
 msgid "Sending checks to file"
-msgstr ""
+msgstr "Envío de cheques al archivo"
 
 #. module: jt_check_controls
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__sent_to_protection
@@ -2151,10 +2163,14 @@ msgstr ""
 "Planificada: futuras actividades."
 
 #. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_available_check__subdependence_id
 #: model:ir.model.fields,field_description:jt_check_controls.field_blank_checks_request__subdependence_id
 #: model:ir.model.fields,field_description:jt_check_controls.field_check_authorized_dependency__subdependency_id
 #: model:ir.model.fields,field_description:jt_check_controls.field_check_log__subdependence_id
 #: model:ir.model.fields,field_description:jt_check_controls.field_checkbook_request__subdependence_id
+#: model:ir.model.fields,field_description:jt_check_controls.field_expiration_validity_check__subdependence_id
+#: model:ir.model.fields,field_description:jt_check_controls.field_reissue_checks__subdependence_id
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.available_check_search
 msgid "Subdependence"
 msgstr "Subdependencia"
 
@@ -2184,12 +2200,12 @@ msgstr "Título"
 #: model:ir.model.fields,field_description:jt_check_controls.field_checklist__total_cash
 #: model:ir.model.fields,field_description:jt_check_controls.field_confirm_checkbook__total_cash
 msgid "Total Checks"
-msgstr "Chequeos totales"
+msgstr "Cheques totales"
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_send_checks__total_checks
 msgid "Total Number of Checks"
-msgstr ""
+msgstr "Total de numero de cheques"
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_copied_employees__trade_config_id
@@ -2546,3 +2562,166 @@ msgstr "Cancelación de cheques"
 #: model:ir.ui.menu,name:jt_check_controls.menu_revocation_reissue_check_finance
 msgid "Revocations"
 msgstr "Revocaciones"
+
+#. module: jt_check_controls
+#: model:ir.ui.menu,name:jt_check_controls.request_for_changes_to_the_check
+msgid "Request for changes to the check"
+msgstr "Solicitudes de cambios al cheque"
+
+#. module: jt_check_controls
+#: model:ir.actions.act_window,name:jt_check_controls.action_expiration_validity_check
+#: model:ir.ui.menu,name:jt_check_controls.menu_expiration_validity_check
+msgid "Expiration in the validity of checks"
+msgstr "Caducidad en la vigencia de los cheques"
+
+#. module: jt_check_controls
+#: model:ir.actions.act_window,name:jt_check_controls.action_available_check
+#: model:ir.ui.menu,name:jt_check_controls.menu_available_check
+msgid "Available Checks"
+msgstr "Cheques disponibles"
+
+#. module: jt_check_controls
+#: model:ir.ui.menu,name:jt_check_controls.menu_control_check_destruction
+msgid "Control for check destruction"
+msgstr "Control para destrucción de cheques "
+
+#. module: jt_check_controls
+#: model:ir.ui.menu,name:jt_check_controls.report_main_menu
+msgid "Reports"
+msgstr "Reportes"
+
+#. module: jt_check_controls
+#: model:ir.actions.act_window,name:jt_check_controls.action_request_for_changes_to_the_check_supplier
+#: model:ir.ui.menu,name:jt_check_controls.menu_request_for_changes_to_the_check_supplier
+msgid "Suppliers"
+msgstr "Proveedores"
+
+#. module: jt_check_controls
+#: model:ir.actions.act_window,name:jt_check_controls.action_request_for_changes_to_the_check_payroll
+#: model:ir.ui.menu,name:jt_check_controls.menu_request_for_changes_to_the_check_payroll
+msgid "Payroll"
+msgstr "Nómina"
+
+#. module: jt_check_controls
+#: model:ir.actions.act_window,name:jt_check_controls.action_request_for_changes_to_the_check_pension
+#: model:ir.ui.menu,name:jt_check_controls.menu_request_for_changes_to_the_check_pension
+msgid "Pension Payment"
+msgstr "Pensión"
+
+#. module: jt_check_controls
+#: model:ir.actions.act_window,name:jt_check_controls.action_request_for_changes_to_the_check_project
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__payment_batch_supplier__type_of_batch__project
+#: model:ir.model.fields.selection,name:jt_check_controls.selection__reissue_checks__type_of_batch__project
+#: model:ir.ui.menu,name:jt_check_controls.menu_request_for_changes_to_the_check_project
+msgid "Project"
+msgstr "Proyecto"
+
+#. module: jt_check_controls
+#: model:ir.actions.act_window,name:jt_check_controls.action_type_of_reissue
+#: model:ir.model,name:jt_check_controls.model_type_of_reissue
+#: model:ir.ui.menu,name:jt_check_controls.menu_type_of_reissue
+msgid "Type Of Reissue"
+msgstr "Tipo de Reexpedición"
+
+#. module: jt_check_controls
+#: model:ir.actions.client,name:jt_check_controls.action_check_summary_report
+#: model:ir.ui.menu,name:jt_check_controls.check_summary_submenu
+msgid "Check Summary"
+msgstr "Sumaria de cheques"
+
+#. module: jt_check_controls
+#: code:addons/jt_check_controls/reports/payroll_report.py:0
+#: model:ir.actions.client,name:jt_check_controls.action_payroll_report
+#: model:ir.model,name:jt_check_controls.model_jt_check_controls_payroll_report
+#: model:ir.ui.menu,name:jt_check_controls.payroll_report_submenu
+#, python-format
+msgid "Payroll Report"
+msgstr "Reporte de Nóminas"
+
+#. module: jt_check_controls
+#: code:addons/jt_check_controls/reports/check_protection.py:0
+#: model:ir.model,name:jt_check_controls.model_jt_check_controls_check_protection
+#: model:ir.ui.menu,name:jt_check_controls.check_protection_report_submenu
+#, python-format
+msgid "Check Protection"
+msgstr "Protección de cheques"
+
+#. module: jt_check_controls
+#: code:addons/jt_check_controls/reports/check_protection_control_certificate.py:0
+#: model:ir.model,name:jt_check_controls.model_jt_check_controls_check_protection_control_control_certificate
+#: model:ir.ui.menu,name:jt_check_controls.check_protection_control_certificate_submenu
+#, python-format
+msgid "Check Protection Control Certificate"
+msgstr "Cedula de control de protección de cheques"
+
+#. module: jt_check_controls
+#: model:ir.actions.client,name:jt_check_controls.action_check_protection_control_certificate
+msgid " Check Protection Control Certificate "
+msgstr "Cedula de control de protección de cheques"
+
+#. module: jt_check_controls
+#: model:ir.ui.menu,name:jt_check_controls.amount_of_payroll_check_submenu
+msgid "Report of payroll check amounts"
+msgstr "Reporte de los importes de los cheques de nómina"
+
+#. module: jt_check_controls
+#: model:ir.actions.client,name:jt_check_controls.action_amounts_of_payroll_checks
+msgid "Report of payroll check amounts "
+msgstr "Reporte de los importes de los cheques de nómina"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_res_bank__check_protection_term
+msgid "Check Protection Term"
+msgstr "Vigencia de protección de cheques"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_available_check__check_folio_id
+#: model:ir.model.fields,field_description:jt_check_controls.field_cancel_available_check__check_folio_ids
+#: model:ir.model.fields,field_description:jt_check_controls.field_expiration_validity_check__check_folio_id
+#: model:ir.model.fields,field_description:jt_check_controls.field_expiration_validity_check__check_no
+msgid "Check number"
+msgstr "Numero de cheque"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_expiration_validity_check__payment_name
+msgid "Application number"
+msgstr "Numero de solicitud"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_expiration_validity_check__partner_id
+#: model:ir.model.fields,field_description:jt_check_controls.field_reissue_checks__partner_id
+msgid "Beneficiary"
+msgstr "Beneficiario"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_expiration_validity_check__date_printing
+msgid "Check issue date"
+msgstr "Fecha de expedición"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_expiration_validity_check__date_expiration
+msgid "Effective date"
+msgstr "Fecha de expiración"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_expiration_validity_check__check_validity
+msgid "Days of validity"
+msgstr "Dias de vigencia"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_expiration_validity_check__status
+msgid "Check status"
+msgstr "Estado del cheque"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_available_check__is_physical_check
+#: model:ir.model.fields,field_description:jt_check_controls.field_cancel_available_check__is_physical_check
+#: model:ir.model.fields,field_description:jt_check_controls.field_check_log__is_physical_check
+#: model:ir.model.fields,field_description:jt_check_controls.field_reissue_checks__is_physical_check
+msgid "Do you have the physical check?"
+msgstr "¿Cuenta con el cheque fisico?"
+
+#. module: jt_check_controls
+#: model:ir.model.fields,field_description:jt_check_controls.field_type_of_reissue__name
+msgid "Description of the reissue"
+msgstr "Descripción de la reexpedición"

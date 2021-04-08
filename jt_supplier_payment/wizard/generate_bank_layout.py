@@ -414,7 +414,7 @@ class GenerateBankLayout(models.TransientModel):
         #======== FILLER =========
         file_data += ''.ljust(1251)
         file_data +="\r\n"
-
+        total_amount = 0
         #============= Payment  Details =========#              
         for payment in self.payment_ids:
 
@@ -528,6 +528,7 @@ class GenerateBankLayout(models.TransientModel):
             #======= Document key ========#
             file_data += 'FA'
             #====== Amount Data =========
+            total_amount += payment.amount
             amount = round(payment.amount, 2)
             amount = "%.2f" % payment.amount
             amount = str(amount).split('.')
@@ -590,7 +591,10 @@ class GenerateBankLayout(models.TransientModel):
                     additional += payment.dependancy_id.dependency + "-"
             if payment.sub_dependancy_id and payment.sub_dependancy_id.sub_dependency:
                 additional += payment.sub_dependancy_id.sub_dependency + " "
-            additional += "PLEASE KEEP YOUR BANKING NFORMATION UPDATED"    
+            if self.env.user.lang == 'es_MX':
+                additional += "FAVOR DE MANTENER ACTUALIZADA SU INFORMACIÓN BANCARIA"
+            else: 
+                additional += "PLEASE KEEP YOUR BANKING NFORMATION UPDATED"    
             file_data += additional.ljust(700)
             #======= FILLER =======#
             file_data += ''.ljust(10) 
@@ -605,26 +609,50 @@ class GenerateBankLayout(models.TransientModel):
             file_data +="\r\n"
         
         #============== Trailer or Summary =============#
-        file_data += "T"
-        
-        total_rec = len(self.payment_ids)
-        #==== Number of records high======#
-        file_data += str(total_rec).zfill(10)
-        #==== Number of records unsubscribed======#
-        file_data += str(total_rec).zfill(10)
-        #==== Number of records change======#
-        file_data += str(total_rec).zfill(10)
-        #==== Number of records rejected high======#
-        file_data += ''.zfill(10)
-        #==== Number of records rejected low======#
-        file_data += ''.zfill(10)
-        #==== Number of records rejected changes======#
-        file_data += ''.zfill(10)
-        
-        #===== Filler ===#
-        file_data += ''.ljust(575)
-        file_data += ''.ljust(730)
-        file_data +="\r\n"
+        if self.payment_ids and self.payment_ids[0].currency_id and self.payment_ids[0].currency_id.name=='MXN':  
+            file_data += "T"
+            
+            total_rec = len(self.payment_ids)
+            #==== Number of records high======#
+            file_data += str(total_rec).zfill(10)
+            #==== Import Total MXP Highs======#
+            amount = "%.2f" % total_amount
+            amount = str(amount).split('.')
+            file_data +=str(amount[0]).zfill(13)
+            file_data +=str(amount[1])
+            #==== Number of records MXP divestitures======#
+            file_data += str(total_rec).zfill(10)
+            #==== Total amount Retirements MXP======#
+            file_data +=str(amount[0]).zfill(13)
+            file_data +=str(amount[1])
+            #===== Filler ===#
+            file_data += ''.zfill(200)
+            file_data += ''.ljust(1115)
+            file_data +="\r\n"
+        else:
+            file_data += "T"
+            
+            total_rec = len(self.payment_ids)
+            #=====FILLER=====#
+            file_data += ''.zfill(250)
+            #============Number of records==============#
+            file_data += str(total_rec).zfill(10)
+            #============== Total Amount ============#
+            amount = "%.2f" % total_amount
+            amount = str(amount).split('.')
+            file_data +=str(amount[0]).zfill(13)
+            file_data +=str(amount[1])
+            #============Number of records==============#
+            file_data += str(total_rec).zfill(10)
+            #============== Total Amount ============#
+            amount = "%.2f" % total_amount
+            amount = str(amount).split('.')
+            file_data +=str(amount[0]).zfill(13)
+            file_data +=str(amount[1])
+            #=====FILLER=====#
+            file_data += ''.zfill(100)
+            
+            file_data +="\r\n"
         gentextfile = base64.b64encode(bytes(file_data,'utf-8'))
         self.file_data = gentextfile
         self.file_name = file_name

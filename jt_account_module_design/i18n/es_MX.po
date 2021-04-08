@@ -57,6 +57,12 @@ msgid ""
 msgstr ""
 
 #. module: jt_account_module_design
+#: model:ir.actions.server,name:jt_account_module_design.action_invoice_date_all
+msgid "Date Change"
+msgstr "Cambio de Fecha"
+
+
+#. module: jt_account_module_design
 #: model_terms:ir.ui.view,arch_db:jt_account_module_design.external_layout_miles_revenue_report
 msgid ""
 "<b><span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span></b><br/>\n"
@@ -2177,3 +2183,4 @@ msgstr ""
 #: model:ir.actions.client,name:jt_account_module_design.action_weight_income_report
 msgid "weight income report"
 msgstr ""
+

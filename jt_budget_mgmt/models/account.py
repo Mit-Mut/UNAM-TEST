@@ -157,6 +157,9 @@ class AccountMove(models.Model):
                 if request.id in insufficient_move_ids:
                     move_str_msg_dict.update({request.id: move_str_msg})
         if is_check:
+            new_sufficient_move_ids = list(set(sufficient_move_ids)-set(insufficient_move_ids))
+            print ("sufficient_move_ids===",new_sufficient_move_ids)
+            print ("insufficient_move_ids===",insufficient_move_ids)
             return {
                 'name': _('Budgetary Insufficiency'),
                 'type': 'ir.actions.act_window',
@@ -167,7 +170,9 @@ class AccountMove(models.Model):
                 'target': 'new',
                 'context': {'default_msg': str_msg, 'default_is_budget_suf': False,
                             'move_str_msg_dict': move_str_msg_dict,
-                            'default_move_ids': [(4, move) for move in insufficient_move_ids]}
+                            'default_move_ids': [(4, move) for move in new_sufficient_move_ids],
+                            'default_insufficient_move_ids': [(4, move) for move in insufficient_move_ids]
+                            }
             }
         else:
             return {

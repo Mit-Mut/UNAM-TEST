@@ -380,10 +380,10 @@ class DetailsBudgetSummaryReport(models.TransientModel):
                         atype.agreement_type as type_of_agreement,atypen.number_agreement as number_of_agreement,
                         
                         (select coalesce(sum(ebl.authorized),0) from expenditure_budget_line ebl where pc.id=ebl.program_code_id and start_date >= %s and end_date <= %s and EXTRACT(MONTH FROM start_date) = 1 and EXTRACT(MONTH FROM end_date) = 12) as assigned,
-                        (select coalesce(sum(ebl.assigned),0) from expenditure_budget_line ebl where pc.id=ebl.program_code_id and start_date >= %s and end_date <= %s) as assigned_1st,
-                        (select coalesce(sum(ebl.assigned),0) from expenditure_budget_line ebl where pc.id=ebl.program_code_id and start_date >= %s and end_date <= %s) as assigned_2nd,
-                        (select coalesce(sum(ebl.assigned),0) from expenditure_budget_line ebl where pc.id=ebl.program_code_id and start_date >= %s and end_date <= %s) as assigned_3rd,
-                        (select coalesce(sum(ebl.assigned),0) from expenditure_budget_line ebl where pc.id=ebl.program_code_id and start_date >= %s and end_date <= %s) as assigned_4th,
+                        (select coalesce(sum(ebl.assigned),0) from control_assigned_amounts_lines ebl where pc.id=ebl.program_code_id and start_date >= %s and end_date <= %s) as assigned_1st,
+                        (select coalesce(sum(ebl.assigned),0) from control_assigned_amounts_lines ebl where pc.id=ebl.program_code_id and start_date >= %s and end_date <= %s) as assigned_2nd,
+                        (select coalesce(sum(ebl.assigned),0) from control_assigned_amounts_lines ebl where pc.id=ebl.program_code_id and start_date >= %s and end_date <= %s) as assigned_3rd,
+                        (select coalesce(sum(ebl.assigned),0) from control_assigned_amounts_lines ebl where pc.id=ebl.program_code_id and start_date >= %s and end_date <= %s) as assigned_4th,
                         
                         (select (select coalesce(SUM(CASE WHEN al.line_type = %s THEN al.amount ELSE 0 END),0) from adequacies_lines al,adequacies a where a.state=%s and a.adaptation_type = %s and a.date_of_budget_affected >= %s and a.date_of_budget_affected <= %s and al.program = pc.id and a.id=al.adequacies_id)
                         + (select coalesce(SUM(CASE WHEN al.line_type = %s THEN al.amount ELSE 0 END),0) from adequacies_lines al,adequacies a where a.state=%s and a.adaptation_type = %s and a.date_of_liquid_adu >= %s and a.date_of_liquid_adu <= %s and al.program = pc.id and a.id=al.adequacies_id)) as annual_expansion,

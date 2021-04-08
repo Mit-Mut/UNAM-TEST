@@ -27,7 +27,8 @@
                      <sheet>
                      	 
 						<div class="oe_button_box" name="button_box">
-                            <button name="action_provision_payment_request" string="Payment Request" type="object" class="oe_stat_button" icon="fa-random" attrs="{'invisible': ['|',('is_provision_request_generate','=',False),('provision_payment_state', '!=', 'provision')]}">
+                            <button name="action_provision_payment_request" type="object" class="oe_stat_button" icon="fa-random" attrs="{'invisible': [('total_provision_move','=',0)]}">
+                            	<field name="total_provision_move" widget="statinfo"/>
                             </button>
 
                         </div>

@@ -1561,7 +1561,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_agreement.field_investment_funds__first_number
 #: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance_invest__first_number
 msgid "First Number:"
-msgstr "Cuenta Productiva:"
+msgstr "Folio de Fondo:"
 
 #. module: jt_agreement
 #: code:addons/jt_agreement/reports/account_operations_increase.py:0

@@ -1869,12 +1869,16 @@ msgid "Reject"
 msgstr "Rehcazar"
 
 #. module: jt_supplier_payment
-#: model:ir.model.fields.selection,name:jt_supplier_payment.selection__account_move__payment_state__rejected
-#: model:ir.model.fields.selection,name:jt_supplier_payment.selection__account_payment__payment_state__rejected
 #: model:ir.model.fields.selection,name:jt_supplier_payment.selection__bank_transfer_request__state__rejected
 #: model_terms:ir.ui.view,arch_db:jt_supplier_payment.inherited_view_account_payment_search
 msgid "Rejected"
 msgstr "Registrada"
+
+#. module: jt_supplier_payment
+#: model:ir.model.fields.selection,name:jt_supplier_payment.selection__account_payment__payment_state__rejected
+#: model:ir.model.fields.selection,name:jt_supplier_payment.selection__account_move__payment_state__rejected
+msgid "Rejected"
+msgstr "Rechazada"
 
 #. module: jt_supplier_payment
 #: model:ir.model.fields.selection,name:jt_supplier_payment.selection__account_payment__jp_charges__remitter

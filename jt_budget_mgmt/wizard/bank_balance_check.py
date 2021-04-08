@@ -5,7 +5,7 @@ class BankBalanceCheck(models.TransientModel):
 
     _inherit = 'bank.balance.check'
     
-
+    
     def get_payment_data(self,invoice,data):
         data = super(BankBalanceCheck,self).get_payment_data(invoice,data)
         data.update({'dependancy_id':invoice.dependancy_id and invoice.dependancy_id.id or False,

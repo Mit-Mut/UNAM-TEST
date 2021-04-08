@@ -33,7 +33,7 @@
                             </h1>
 
                             <!-- Select next number header (only invoices) -->
-                            <span class="o_form_label" attrs="{'invisible': [('invoice_sequence_number_next_prefix', '=', False)]}">First Number:</span>
+                            <!-- <span class="o_form_label" attrs="{'invisible': [('invoice_sequence_number_next_prefix', '=', False)]}">First Number:</span> -->
 
                             <!-- Number -->
                             <h1 class="mt0">
@@ -635,6 +635,9 @@
                     <field name="partner_id"/>
                     <field name="invoice_date"/>
                     <field name="payment_state"/>
+                    <field name="folio_dependency"/>
+                    <field name="currency_id"/>
+                    <field name="amount_total"/>
                     <field name="type" invisible="1"/>
                     <field name="state" invisible="1"/>
                 </tree>

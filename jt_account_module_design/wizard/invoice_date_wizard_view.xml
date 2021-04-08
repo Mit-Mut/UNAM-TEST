@@ -2,17 +2,17 @@
 <odoo>
     <data>
 
-      <record id="view_confirm_invoice_date_wizard" model="ir.ui.view">
+      <record id="view_confirm_payment_term_wizard" model="ir.ui.view">
             <field name="name">confirm.invoice.date.view</field>
             <field name="model">confirm.invoice.date</field>
             <field name="arch" type="xml">
-                <form string="Confirm Invoice Date">
+                <form string="Confirm Payment Terms">
                     <group>
-                        <field name="inv_date" required="1"  options="{'no_open': True, 'no_create': True}"/>
+                        <field name="invoice_date_due" required="1" force_save="1" placeholder="Date"/>
                         
                     </group>
                     <footer>
-                        <button string="Generate" name="set_invoice_date" type="object" class="oe_highlight"/>
+                        <button string="Generate" name="set_payment_terms" type="object" class="oe_highlight"/>
                         <button string="Cancel" class="btn btn-secondary" special="cancel"/>
                     </footer>
                 </form>

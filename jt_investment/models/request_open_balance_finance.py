@@ -221,9 +221,10 @@ class BasesCollabration(models.Model):
  
         if self.will_pay_id:
             self.will_pay_id.action_canceled()
- 
-        if self.investment_fund_id:
-            self.investment_fund_id.action_canceled()
+        
+        if not self.investment_operation_id and not self.investment_operation_ids: 
+            if self.investment_fund_id:
+                self.investment_fund_id.action_canceled()
  
         if self.distribution_id:
             self.distribution_id.action_canceled()

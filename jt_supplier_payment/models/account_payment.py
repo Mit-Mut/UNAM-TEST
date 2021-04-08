@@ -21,11 +21,11 @@ class AccountPayment(models.Model):
                               readonly=True, default='draft', copy=False, string="Status")
     baneficiary_key = fields.Char('Baneficiary Key', related='partner_id.password_beneficiary', store=True)
          
-    banamex_description = fields.Char('Description',size=24)
+    banamex_description = fields.Char('Description')
     banamex_concept = fields.Char('Concept',size=34)
     banamex_reference = fields.Char('Reference',size=10)
     
-    net_cash_reference = fields.Char('Reference',size=7)
+    net_cash_reference = fields.Char('Reference')
     net_cash_availability = fields.Selection([('SPEI','SPEI'),('CECOBAN','CECOBAN')],string='Availability')
     
     sit_file_key = fields.Char('File Key',size=30)
@@ -181,7 +181,7 @@ class AccountPayment(models.Model):
                     rec.name = self.env['ir.sequence'].next_by_code(sequence_code, sequence_date=rec.payment_date)
                     if not rec.name and rec.payment_type != 'transfer':
                         raise UserError(_("You have to define a sequence for %s in your company.") % (sequence_code,))
-            rec.banamex_concept = rec.name
+            #rec.banamex_concept = rec.name
             rec.payment_state = 'for_payment_procedure'            
             rec.set_bank_tab_data()
             

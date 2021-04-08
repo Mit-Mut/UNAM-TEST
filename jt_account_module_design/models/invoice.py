@@ -235,7 +235,7 @@ class Provision(models.Model):
     previous_number = fields.Char("Previous Number", size=11)
     previous = fields.Monetary('Previous')
     agreement_type_id = fields.Many2one('agreement.type',string="Agreement Type")
-    move_ids = fields.One2many('account.move','provision_id')
+    
     
     # More info Tab
     # responsible_category_key = fields.Char("Responsible category key")
@@ -729,8 +729,9 @@ class ProvisionLine(models.Model):
 class AccountMove(models.Model):
     _inherit = 'account.move'
     
-    provision_id = fields.Many2one('provision','Provision')
-    
+    provision_move_id = fields.Many2one('account.move','Provision')
+    provision_move_ids = fields.One2many('account.move','provision_move_id')
+    total_provision_move = fields.Integer(compute="total_provision_move_ids",store=True,string="Payment Request")
     is_provision_request_generate = fields.Boolean("Provision Request",copy=False)
     
     provision_payment_state = fields.Selection([('draft', 'Draft'), ('registered', 'Registered'),
@@ -738,10 +739,41 @@ class AccountMove(models.Model):
                                     ('rejected', 'Rejected'),
                                     ('cancel', 'Cancel')], default='draft', copy=False)
 
+    def check_previous_number_records(self):
+        provision_id = self.env['account.move'].search([('is_provision_request','=',True),('previous_number','=',self.previous_number)],limit=1)
+        if not provision_id:
+            raise ValidationError(_("Previous Number %s not found into provision")%self.previous_number)
+        provision_payment_ids = self.env['account.move'].search([('is_payment_request','=',True),('previous_number','=',self.previous_number)])
+        total_payment = sum(x.amount_total for x in  provision_payment_ids)
+        if provision_id.amount_total < total_payment:
+            raise ValidationError(_("Total Payment amount %f exceeds the original amount of the provision %f")%(total_payment,provision_id.amount_total))
+        provision_program_ids = provision_id.invoice_line_ids.mapped('program_code_id').ids
+        
+        for line in self.invoice_line_ids.filtered(lambda x:x.program_code_id):
+            if line.program_code_id.id not in provision_program_ids:
+                raise ValidationError(_("Program Code %s not found into provision")%(line.program_code_id.program_code))
+        if not self.is_create_from_provision:
+            self.provision_move_id = provision_id.id
+            self.is_create_from_provision = True
+            self.create_journal_line_for_approved_payment()
+            self.payment_state = 'approved_payment'
+        
+    @api.model
+    def create(self, vals):
+        res = super(AccountMove, self).create(vals)
+        if res.previous_number and res.is_payment_request:
+            res.check_previous_number_records()
+        return res
+    
+    @api.depends('provision_move_ids')
+    def total_provision_move_ids(self):
+        for rec in self:
+            rec.total_provision_move = len(rec.provision_move_ids)
+            
     @api.constrains('previous_number')
     def _check_previous_number(self):
         for rec in self.filtered(lambda x:x.is_provision_request and x.previous_number):
-            code_id = self.env['account.move'].search([('previous_number','=',rec.previous_number),('id','!=',rec.id)],limit=1)
+            code_id = self.env['account.move'].search([('is_provision_request','=',True),('previous_number','=',rec.previous_number),('id','!=',rec.id)],limit=1)
             if code_id:
                 raise ValidationError(_("Previous Number Must Be Unique"))
     
@@ -765,9 +797,14 @@ class AccountMove(models.Model):
         return result
     
     def generate_payment_request(self):
-        self.is_payment_request = True
-        self.is_provision_request_generate = True
-        self.is_create_from_provision = True
+        vals = {'folio_dependency':False,'is_provision_request':False,
+                'payment_state':'approved_payment','provision_move_id':self.id,
+                'is_create_from_provision':True,'invoice_date':self.invoice_date}
+        new_move = self.copy(vals)
+        new_move.is_payment_request = True
+        if new_move.previous_number:
+            new_move.check_previous_number_records()
+        #self.is_provision_request_generate = True
 
     def action_provision_payment_request(self):
         return {
@@ -776,7 +813,7 @@ class AccountMove(models.Model):
                 'view_mode': 'tree,form',
                 'views': [(self.env.ref("jt_supplier_payment.payment_req_tree_view").id, 'tree'), (self.env.ref("jt_supplier_payment.payment_req_form_view").id, 'form')],
                 'res_model': 'account.move',
-                'domain': [('id', '=', self.id)],
+                'domain': [('provision_move_id', '=', self.id)],
                 'type': 'ir.actions.act_window',
             }
         

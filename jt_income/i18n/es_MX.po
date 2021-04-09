@@ -2350,7 +2350,7 @@ msgstr ""
 #: model:ir.ui.menu,name:jt_income.menu_invoice_payment_income
 #: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
 msgid "Payments"
-msgstr "Pagos"
+msgstr "Cobros"
 
 #. module: jt_income
 #: model:ir.model.fields.selection,name:jt_income.selection__association_distribution_ie_accounts__proration_calculation__percentage_price

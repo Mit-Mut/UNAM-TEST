@@ -473,12 +473,6 @@ msgid "Annual"
 msgstr ""
 
 #. module: jt_agreement
-#: model:ir.model.fields,field_description:jt_agreement.field_approve_investment_bal_req__user_id
-#: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance_finance__user_id
-msgid "Applicant"
-msgstr ""
-
-#. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_approve_investment_bal_req__concept
 #: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance_finance__concept
 msgid "Application Concept"
@@ -3512,11 +3506,6 @@ msgid "Trade Number"
 msgstr "Número de oficio"
 
 #. module: jt_agreement
-#: model:ir.actions.act_window,name:jt_agreement.action_req_open_balance_finance
-msgid "Transfer Request"
-msgstr "Solicitud de transferencia"
-
-#. module: jt_agreement
 #: model:ir.ui.menu,name:jt_agreement.menu_transfer_req_agreement
 msgid "Transfer Requests"
 msgstr "Solicitud de transferencias"
@@ -3963,3 +3952,52 @@ msgstr "Retiro"
 #, python-format
 msgid "​Available Balance Is Less Then Requested Balance!"
 msgstr "¡Saldo disponible es menor al solicitado!"
+
+#. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance_finance__origin_account
+msgid "Account Origin"
+msgstr "Cuenta origen"
+
+#. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance_finance__desti_account
+msgid "Destination Account"
+msgstr "Cuenta destino"
+
+#. module: jt_agreement
+#: model:ir.actions.act_window,name:jt_agreement.action_req_open_balance_finance
+#: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance_finance__trasnfer_request
+#: model_terms:ir.ui.view,arch_db:jt_agreement.request_open_balance_finance_search
+msgid "Transfer Request"
+msgstr "Solicitud de transferencia"
+
+#. module: jt_agreement
+#: model_terms:ir.ui.view,arch_db:jt_agreement.view_req_open_balance_form_finance
+msgid "Prepared By"
+msgstr "Realizado por"
+
+#. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance_finance__prepared_by_dept_id
+msgid "Department to which it belongs"
+msgstr "Departamento al cual pertenece"
+
+#. module: jt_agreement
+#: model_terms:ir.ui.view,arch_db:jt_agreement.view_req_open_balance_form_finance
+msgid "Elaboration Date"
+msgstr "Fecha de elaboración"
+
+#. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_approve_investment_bal_req__user_id
+#: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance_finance__user_id
+msgid "Applicant"
+msgstr "Aplicado por"
+
+#. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance_finance__authorized_by_emp_id
+#: model_terms:ir.ui.view,arch_db:jt_agreement.view_req_open_balance_form_finance
+msgid "Authorized by"
+msgstr "Autorizado por"
+
+#. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance_finance__authorized_by_dept_id
+msgid "Department to which the authorizing person belongs"
+msgstr "Departamento al que pertenece la persona que autoriza"

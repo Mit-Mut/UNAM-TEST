@@ -2725,3 +2725,35 @@ msgstr "¿Cuenta con el cheque fisico?"
 #: model:ir.model.fields,field_description:jt_check_controls.field_type_of_reissue__name
 msgid "Description of the reissue"
 msgstr "Descripción de la reexpedición"
+
+#. module: jt_check_controls
+#: model:ir.actions.server,name:jt_check_controls.action_assign_check_folio
+msgid "Assign Check Folio"
+msgstr "Asignar folio de cheque"
+
+#. module: jt_check_controls
+#: model:ir.actions.server,name:jt_check_controls.action_deliver_checks
+msgid "Deliver Checks"
+msgstr "Entregar cheques"
+
+#. module: jt_check_controls
+#: model:ir.actions.server,name:jt_check_controls.action_layout_check_protection
+msgid "Layout Check Protection"
+msgstr "Layout protección de cheques"
+
+#. module: jt_check_controls
+#: model:ir.actions.server,name:jt_check_controls.action_send_file_to_protection
+msgid "Send File to Protection"
+msgstr "Enviar archivo a protección"
+
+#. module: jt_check_controls
+#: model:ir.actions.server,name:jt_check_controls.action_protected_checks
+msgid "Protected Checks"
+msgstr "Proteger cheques"
+
+#. module: jt_check_controls
+#: code:addons/jt_check_controls/models/payment_batch_supplier.py:0
+#, python-format
+msgid "Cannot assign a new check folio because they already have one"
+msgstr "No se puede asignar un nuevo folio de cheque por que ya cuentan con uno"
+

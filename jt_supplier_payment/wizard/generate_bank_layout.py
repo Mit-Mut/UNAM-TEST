@@ -812,11 +812,11 @@ class GenerateBankLayout(models.TransientModel):
             file_data += 'WIRES'
             file_data += ','
             # ======== BIC /SWIFT ======
-            if payment.journal_id and payment.journal_id.bank_id:
-                bank_code = ''
-                if payment.journal_id.bank_id.bic:
-                    bank_code = payment.journal_id.bank_id.bic
-                file_data += bank_code            
+            if payment.journal_id and payment.journal_id.bank_id and payment.journal_id.bank_id.country:
+                if payment.journal_id.bank_id.country.code and payment.journal_id.bank_id.country.code=='MX':
+                    file_data += payment.journal_id.bank_id.l10n_mx_edi_code or ''
+                else:
+                    file_data += payment.journal_id.bank_id.bic or ''
             file_data += ','
 
             #==========Bank Account ========#

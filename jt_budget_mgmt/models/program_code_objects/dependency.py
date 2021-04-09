@@ -32,7 +32,8 @@ class Dependency(models.Model):
 
     dependency = fields.Char(string='Dependency', size=3)
     description = fields.Text(string='Dependency description')
-
+    sort_description = fields.Text(string='Dependency Sort Description')
+    
     _sql_constraints = [('dependency', 'unique(dependency)', 'The dependency must be unique.')]
 
     def name_get(self):

@@ -626,7 +626,7 @@ class ReportProductiveAccounts(models.AbstractModel):
             sheet.insert_image(0,0, filename, {'image_data': image_data,'x_offset':8,'y_offset':3,'x_scale':0.6,'y_scale':0.6})
         
         col += 1
-        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICOO\nUNIVERSITY BOARD\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nINFORME DE CUENTAS PRODUCTIVAS'''
+        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nPATRONATO UNIVERSITARIO\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nREPORTE DE CUENTAS PRODUCTIVAS'''
         sheet.merge_range(y_offset, col, 5, col+6, header_title,super_col_style)
         y_offset += 6
         col=1
@@ -744,21 +744,13 @@ class ReportProductiveAccounts(models.AbstractModel):
 
                 period_name += " al " + str(end_date.day) + " de " + self.get_month_name(end_date.month) + " " \
                                + str(end_date.year)
-            header_intial = options.get('intial')
-            header_withdrawal = options.get('withdrawal')
-            header_increment = options.get('increment')
-            actual = (header_increment + header_intial) - header_withdrawal
             rcontext.update({
                 'css': '',
                 'o': self.env.user,
                 'res_company': self.env.company,
                 'period_name': period_name,
                 'name': 'CUENTAS PRODUCTIVAS',
-                'intial': str(self._format({'name': header_intial},figure_type='float',digit=2).get('name')),
-                'increment': str(self._format({'name': header_increment},figure_type='float',digit=2).get('name')),
-                'withdrawal': str(self._format({'name': header_withdrawal},figure_type='float',digit=2).get('name')),
-                'actual': str(self._format({'name': actual},figure_type='float',digit=2).get('name')),
-                'extra_data': True
+
             })
             header = self.env['ir.actions.report'].with_context(period_name=period_name).render_template(
                 "jt_investment.external_layout_fund_account_statement",

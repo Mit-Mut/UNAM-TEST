@@ -801,10 +801,19 @@ class AccountMove(models.Model):
                 'payment_state':'approved_payment','provision_move_id':self.id,
                 'is_create_from_provision':True,'invoice_date':self.invoice_date}
         new_move = self.copy(vals)
+        #new_move = self.copy_data(vals)
         new_move.is_payment_request = True
+        for line in new_move.invoice_line_ids.filtered(lambda x:x.program_code_id):
+            current_program_lines = self.env['account.move.line'].search([('exclude_from_invoice_tab','=',False),('program_code_id','=',line.program_code_id.id),('move_id','!=',new_move.id),('move_id','in',self.provision_move_ids.ids)])
+            total_price = sum(x.price_unit for x in current_program_lines)
+            new_price = line.price_unit - total_price
+            
+            if new_price < 0:
+                new_price = 0
+            line.with_context(check_move_validity=False).price_unit = new_price
+            new_move.with_context(check_move_validity=False)._onchange_invoice_line_ids()
         if new_move.previous_number:
             new_move.check_previous_number_records()
-        #self.is_provision_request_generate = True
 
     def action_provision_payment_request(self):
         return {

@@ -468,7 +468,7 @@ class ReportOfInvestmentFunds(models.AbstractModel):
             sheet.insert_image(0,0, filename, {'image_data': image_data,'x_offset':8,'y_offset':3,'x_scale':0.6,'y_scale':0.6})
         
         col += 1
-        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICOO\nUNIVERSITY BOARD\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nINFORME DE FONDOS DE INVERSIÓN'''
+        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nPATRONATO UNIVERSITARIO\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nREPORTE DE FONDOS DE INVERSIÓN'''
         sheet.merge_range(y_offset, col, 5, col+7, header_title,super_col_style)
         y_offset += 6
         col=1

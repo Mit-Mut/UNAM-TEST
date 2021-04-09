@@ -210,7 +210,7 @@ class AccountPayment(models.Model):
                                      'conac_move' : True,
                                      'amount_currency' : -amount_currency,
                                      'currency_id' : currency_id,                                     
-                                     
+                                     'partner_id':invoice.partner_id and invoice.partner_id.id or False,
                                  }), 
                         (0, 0, {
                                      'account_id': self.journal_id.paid_debit_account_id and self.journal_id.paid_debit_account_id.id or False,
@@ -219,8 +219,8 @@ class AccountPayment(models.Model):
                                      'exclude_from_invoice_tab': True,
                                      'conac_move' : True,
                                      'amount_currency' : amount_currency,
-                                     'currency_id' : currency_id,                                     
-                                     
+                                     'currency_id' : currency_id,
+                                     'partner_id':invoice.partner_id and invoice.partner_id.id or False,                                     
                                  })]
     
     def post(self):

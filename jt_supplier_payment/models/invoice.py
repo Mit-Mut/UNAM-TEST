@@ -138,7 +138,7 @@ class AccountMove(models.Model):
     upa_document_type = fields.Many2one(
         'upa.document.type', string="Document Type UPA")
     provenance = fields.Text("Provenance")
-    batch_folio = fields.Integer("Batch Folio")
+    batch_folio = fields.Integer(string="Batch Folio",group_operator=False)
     vault_folio = fields.Char("Vault folio")
     payment_bank_id = fields.Many2one('res.bank', "Bank of receipt of payment")
     payment_bank_account_id = fields.Many2one(

@@ -710,7 +710,7 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                            + str(end_date.year)
         
         col += 1
-        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nUNIVERSITY BOARD\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nINFORME DE FONDOS DE INVERSIÓN EN CUENTAS PRODUCTIVAS'''
+        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nPATRONATO UNIVERSITARIO\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nREPORTE DE FONDOS DE INVERSIÓN EN CUENTAS PRODUCTIVAS'''
         sheet.merge_range(y_offset, col, 5, col+14, header_title,super_col_style)
         y_offset += 6
         col=1

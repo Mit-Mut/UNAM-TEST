@@ -32,12 +32,12 @@
             </field>
         </record>
 
-        <act_window name="Generate Bases collaboration Resemble"
+     <!--    <act_window name="Generate Bases collaboration Resemble"
             id="action_generate_bases_collaboration_resemble"
             res_model="jt_agreement.bases.resemble"
             binding_model="bases.collaboration"
             view_mode="form"
             target="new"
-        />
+        /> -->
 	</data>
 </odoo>

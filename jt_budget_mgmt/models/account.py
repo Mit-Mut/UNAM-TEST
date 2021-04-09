@@ -369,6 +369,7 @@ class AccountMove(models.Model):
                                      'exclude_from_invoice_tab': True,
                                      'conac_move' : True,
                                      'currency_id' : currency_id,
+                                     'partner_id':self.partner_id and self.partner_id.id or False,
                                  }), 
                         (0, 0, {
                                      'account_id': self.journal_id.default_debit_account_id.id,
@@ -378,6 +379,7 @@ class AccountMove(models.Model):
                                      'exclude_from_invoice_tab': True,
                                      'conac_move' : True,
                                      'currency_id' : currency_id,
+                                     'partner_id':self.partner_id and self.partner_id.id or False,
                                  })]
           
         self.conac_move = True

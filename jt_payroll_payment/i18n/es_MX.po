@@ -1985,6 +1985,7 @@ msgid "preception.line"
 msgstr ""
 
 #. module: jt_payroll_payment
+#: model:ir.actions.act_window,name:jt_payroll_payment.action_financeboard_journal_1
 #: model:ir.ui.menu,name:jt_payroll_payment.menu_financeboard_journal_1
 msgid "Overview"
 msgstr "Visión de conjunto"

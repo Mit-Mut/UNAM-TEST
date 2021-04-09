@@ -26,6 +26,7 @@
 	            		<group>
 	            			<field name="dependency" required="1"/>
                             <field name="description"/>
+                            <field name="sort_description"/>
 	            		</group>
 	            	</sheet>
             	</form>
@@ -40,6 +41,7 @@
             	<tree>
             		<field name="dependency"/>
                     <field name="description"/>
+                    <field name="sort_description"/>
             	</tree>
             </field>
         </record>

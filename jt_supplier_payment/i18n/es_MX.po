@@ -330,7 +330,7 @@ msgstr "Saldo de la cuenta"
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_balance_check_wizard__required_balance
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_bank_balance_check__required_balance
 msgid "Account balance required"
-msgstr "Saido requerido en la cuenta"
+msgstr "Saldo requerido en la cuenta"
 
 #. module: jt_supplier_payment
 #: model_terms:ir.ui.view,arch_db:jt_supplier_payment.different_payroll_payment_req_form_view
@@ -535,7 +535,7 @@ msgstr "Verificación de saldo bancario"
 #. module: jt_supplier_payment
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_bank_balance_check__journal_id
 msgid "Bank Of Payment Issue"
-msgstr "Problema con el banco de pago"
+msgstr "Banco emisor de pago"
 
 #. module: jt_supplier_payment
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_account_payment__jp_bank_transfer
@@ -863,7 +863,7 @@ msgstr "Cuenta Destino"
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_balance_check_wizard__different_balance
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_bank_balance_check__different_balance
 msgid "Difference Between current and required balance"
-msgstr "Diferencia entre el saido actual y el requerido"
+msgstr "Diferencia entre el saldo actual y el requerido"
 
 #. module: jt_supplier_payment
 #: model:ir.model.fields.selection,name:jt_supplier_payment.selection__generate_batch_sheet__payment_type__different_payroll
@@ -2234,7 +2234,7 @@ msgstr "Débito total"
 #. module: jt_supplier_payment
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_bank_balance_check__total_request
 msgid "Total Request"
-msgstr "Solicitud total"
+msgstr "Cantidad de solicitudes"
 
 #. module: jt_supplier_payment
 #: code:addons/jt_supplier_payment/reports/cash_payment_calculation.py:0

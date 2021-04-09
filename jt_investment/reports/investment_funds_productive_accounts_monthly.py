@@ -280,7 +280,6 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
         return value
 
     def get_fund_amount(self,origin,bank,domain,date_start,date_end):
-        print ("bank===",bank)
         domain_fund = domain + [('date_required','>=',date_start),('date_required','<=',date_end)]
         records_fund = self.env['investment.operation'].search(domain_fund)
 
@@ -424,7 +423,7 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                     columns = [{'name': month_name}, 
                                     {'name': new_date.day},
                                     {'name': ''},
-                                    self._format({'name': p_rate},figure_type='float',digit=2,is_currency=False),
+                                    self._format({'name': p_rate},figure_type='float',digit=4,is_currency=False),
                                     self._format({'name': 0.0},figure_type='float',digit=2,is_currency=True),
                                     self._format({'name': 0.0},figure_type='float',digit=2,is_currency=True),
                                 ]
@@ -476,7 +475,7 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                     columns = [{'name': month_name}, 
                                     {'name': rec.date_required.day},
                                     {'name': rec.investment_id.journal_id and rec.investment_id.journal_id.name or ''},
-                                    self._format({'name': p_rate},figure_type='float',digit=2,is_currency=False),
+                                    self._format({'name': p_rate},figure_type='float',digit=4,is_currency=False),
                                     self._format({'name': capital},figure_type='float',digit=2,is_currency=True),
                                     self._format({'name': entradas},figure_type='float',digit=2,is_currency=True),
                                 ]
@@ -893,7 +892,7 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
             sheet.insert_image(0,0, filename, {'image_data': image_data,'x_offset':8,'y_offset':3,'x_scale':0.6,'y_scale':0.6})
         
         col += 1
-        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICOO\nUNIVERSITY BOARD\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nINFORME DE FONDOS DE INVERSIÓN EN CUENTAS PRODUCTIVAS'''
+        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nPATRONATO UNIVERSITARIO\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nREPORTE DE FONDOS DE INVERSIÓN EN CUENTAS PRODUCTIVAS'''
         sheet.merge_range(y_offset, col, 5, col+14, header_title,super_col_style)
         y_offset += 6
         col=1

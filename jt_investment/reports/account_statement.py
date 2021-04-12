@@ -184,11 +184,18 @@ class InvestmentAccountStatement(models.AbstractModel):
         #===== Investment =======#
         journal_ids = productive_ids.mapped('investment_id.journal_id')
         for journal in journal_ids:
-            capital = header_intial
+            intial_current = 0
+            for rec in prev_productive_ids.filtered(lambda x:x.investment_id.journal_id.id == journal.id):
+                if rec.type_of_operation in ('increase', 'increase_by_closing', 'open_bal'):
+                    intial_current += rec.amount
+                elif rec.type_of_operation in ('retirement', 'withdrawal', 'withdrawal_cancellation', 'withdrawal_closure'):
+                    intial_current -= rec.amount
+            
+            capital = intial_current
             total_inc = 0
             total_with = 0
             total_final = 0
-            final = header_intial
+            final = intial_current
             
             records = productive_ids.filtered(lambda x:x.investment_id.journal_id.id == journal.id).sorted(key='date_required')
             lines.append({
@@ -422,17 +429,26 @@ class InvestmentAccountStatement(models.AbstractModel):
         header_increment = options.get('increment')
         actual = (header_increment + header_intial) - header_withdrawal
         col += 1
-        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nDIRECCIÓN GENERAL DE FINANZAS\nDIRECCIÓN DE INGRESOS Y OPERATIÓN FINANCIERA\nDEPTO. DE OPERACIÓN FINANCIERA\nESTADO DE CUENTA:%s'''% (period_name)
-        sheet.merge_range(y_offset, col, 5, col+6, header_title,super_col_style)
+        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nPATRONATO UNIVERSITARIO\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCIÓN DE FINANZAS\nREPORTE DE CUENTAS PRODUCTIVAS'''
+        sheet.merge_range(y_offset, col, 5, col+5, header_title,super_col_style)
         y_offset += 6
-        col=1
-        # currect_time_msg = ''
-        # currect_time_msg += "CUENTAS PRODUCTIVAS"
-        # sheet.merge_range(y_offset, col, y_offset, col+6, currect_time_msg,currect_left_style)
-        # currect_time_msg += "Saldo Inicial"
-        # currect_time_msg += str(self._format({'name': header_intial},figure_type='float',digit=2).get('name'))
-        # sheet.merge_range(y_offset, col, y_offset, col+6, currect_time_msg,currect_left_style)
+        currect_time_msg = ''
+        currect_time_msg += "Estado de cuenta : CUENTAS PRODUCTIVAS"
+        sheet.merge_range(y_offset, col, y_offset, col+5, currect_time_msg,currect_left_style)
+        #col += 1
         y_offset += 1
+        currect_time_msg = "Saldo Inicial  :  "
+        currect_time_msg += str(self._format({'name': header_intial},figure_type='float',digit=2).get('name'))
+        currect_time_msg += "\n(+) Incrementos  :  "
+        currect_time_msg += str(self._format({'name': header_increment},figure_type='float',digit=2).get('name'))
+        currect_time_msg += "\n(-) Retiros  :  "
+        currect_time_msg += str(self._format({'name': header_withdrawal},figure_type='float',digit=2).get('name'))
+        currect_time_msg += "\nSaldo Actual:  :  "
+        currect_time_msg += str(self._format({'name': actual},figure_type='float',digit=2).get('name'))
+        sheet.merge_range(y_offset, col, y_offset+3, col+5, currect_time_msg,currect_date_style)
+        y_offset += 4
+        col=1
+        
         for row in self.get_header(options):
             x = 0
             for column in row:
@@ -589,7 +605,7 @@ class InvestmentAccountStatement(models.AbstractModel):
                 'extra_data': True
             })
             header = self.env['ir.actions.report'].with_context(period_name=period_name).render_template(
-                "jt_investment.external_layout_fund_account_statement",
+                "jt_investment.external_layout_productive_account_statement",
                 values=rcontext)
             header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
             spec_paperformat_args = {'data-report-margin-top': 55, 'data-report-header-spacing': 50}

@@ -151,6 +151,69 @@
             </field>
         </record>
 
+        <record id="view_bases_collabration_pivot" model="ir.ui.view">
+            <field name="name">Bases Collabration pivot view</field>
+            <field name="model">bases.collaboration</field>
+            <field name="arch" type="xml">
+                <pivot string="Bases Of Collaboration" disable_linking="True">
+                    <field name="name" type="row"/>
+                    <field name="opening_bal" type="measure"/>
+                    <field name="available_bal" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="view_bases_collabration_kanban" model="ir.ui.view">
+            <field name="name">Bases Collabration Kanban view</field>
+            <field name="model">bases.collaboration</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile" create="0" group_create="0" >
+                    <field name="name"/>
+                    <field name="agreement_type_id"/>
+                    <field name="fund_type_id"/>
+                    <field name="available_bal"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row mb4">
+                                    <div class="col-6">
+                                        Agreement Name:
+                                    </div>
+                                    <div class="col-6">
+                                        <strong><span><field name="name"/></span></strong>
+                                    </div>
+                                </div>
+                                <div class="row mb4">
+                                    <div class="col-6">
+                                        Agreement Type:
+                                    </div>
+                                    <div class="col-6">
+                                        <strong><span><field name="agreement_type_id"/></span></strong>
+                                    </div>
+                                </div>
+                                <div class="row mb4">
+                                    <div class="col-6">
+                                        Fund Type:
+                                    </div>
+                                    <div class="col-6">
+                                        <strong><span><field name="fund_type_id"/></span></strong>
+                                    </div>
+                                </div>
+                                <div class="row mb4">
+                                    <div class="col-6">
+                                        Available Balance:
+                                    </div>
+                                    <div class="col-6">
+                                        <strong><span><field name="available_bal"/></span></strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="view_bases_collabration_form" model="ir.ui.view">
             <field name="name">Bases Collabration Form view</field>
             <field name="model">bases.collaboration</field>
@@ -403,7 +466,7 @@
         <record id="action_bases_collabration" model="ir.actions.act_window">
             <field name="name">Bases of Collabration</field>
             <field name="res_model">bases.collaboration</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,kanban,pivot</field>
             <field name="context">{'from_agreement':True,'show_agreement_name':True}</field>
         </record>
 

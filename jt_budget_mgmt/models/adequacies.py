@@ -163,7 +163,7 @@ class Adequacies(models.Model):
             'target': 'new',
         }
 
-    def create_new_budget_line(self,program_code):
+    def create_new_budget_line(self,program_code,amount):
         budget_line = self.env['expenditure.budget.line'].sudo().create({
             'expenditure_budget_id':self.budget_id.id,
             'program_code_id': program_code.id,
@@ -171,15 +171,20 @@ class Adequacies(models.Model):
             'end_date': self.budget_id.to_date,
             'state':'success',
             })
+        b_month = False
+        if self.date_of_budget_affected and self.adaptation_type == 'compensated':
+            b_month = self.date_of_budget_affected.month
+        if self.date_of_liquid_adu and self.adaptation_type == 'liquid':
+            b_month = self.date_of_liquid_adu.month
+            
         control_assign_ids = self.env['control.assigned.amounts'].search([('success_line_ids','!=',False),('budget_id','=',self.budget_id.id),('state','=','validated')])
-        print ("==control_assign_ids==",control_assign_ids)
         for control_assign in control_assign_ids:
-            print ("==control_assign.success_line_ids==",control_assign.success_line_ids)
             first_line = control_assign.success_line_ids[0]
              
             #=== Q1 Line ================#
             start_date = first_line.start_date
             end_date = first_line.end_date
+            b_s_month = start_date.month
             self.env['expenditure.budget.line'].sudo().create({
                 'expenditure_budget_id':self.budget_id.id,
                 'program_code_id': program_code.id,
@@ -187,6 +192,15 @@ class Adequacies(models.Model):
                 'end_date': end_date,
                 'state':'success',
                 })
+            assigned = 0
+            if b_month and b_month in (1, 2, 3) and b_s_month in (1, 2, 3):
+                assigned = amount
+            elif b_month and b_month in (4, 5, 6) and b_s_month in (4, 5, 6):
+                assigned = amount
+            elif b_month and b_month in (7, 8, 9) and b_s_month in (7, 8, 8):
+                assigned = amount
+            elif b_month and b_month in (10, 11, 12) and b_s_month in (10, 11, 12):
+                assigned = amount
             self.env['control.assigned.amounts.lines'].sudo().create({
                 'assigned_amount_id':control_assign.id,
                 'program_code_id': program_code.id,
@@ -194,6 +208,8 @@ class Adequacies(models.Model):
                 'end_date': end_date,
                 'state':'success',
                 'budget_id' : self.budget_id.id,
+                'assigned' : assigned,
+                'available' : assigned,
                 })
             
 #         #=== Q2 Line ================#
@@ -229,10 +245,10 @@ class Adequacies(models.Model):
         
         return budget_line
     
-    def create_new_program_code(self,program_vals):
+    def create_new_program_code(self,program_vals,amount):
         program_vals.update({'budget_id':self.budget_id.id})
         program_code = self.env['program.code'].with_context().create(program_vals)
-        budget_line = self.create_new_budget_line(program_code)
+        budget_line = self.create_new_budget_line(program_code,amount)
         return program_code
     
     def validate_and_add_budget_line(self, record_id=False, cron_id=False):
@@ -545,7 +561,7 @@ class Adequacies(models.Model):
                                 'agreement_type_id': agreement_type.id,
                                 'state': 'validated'
                             }
-                            program_code = self.create_new_program_code(program_vals)
+                            program_code = self.create_new_program_code(program_vals,amount)
                         #========== End code for the OS-ODOO-010 Document===========#
                             
                         if program_code:

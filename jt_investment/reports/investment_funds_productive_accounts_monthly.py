@@ -368,6 +368,7 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
         bank_account_ids = opt_lines.mapped('investment_id.journal_id')
         for bank in bank_account_ids:
             total_avg_final = 0
+            record_date_day = 1
             total_capital = 0
             final_amount = 0
             total_entradas = 0
@@ -435,8 +436,8 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                         
                     columns +=  [
                                     self._format({'name': 0.0},figure_type='float',digit=2,is_currency=True),
-                                    self._format({'name': 0.0},figure_type='float',digit=2,is_currency=True),
-                                    self._format({'name': 0.0},figure_type='float',digit=2,is_currency=True),
+                                    self._format({'name': final_amount},figure_type='float',digit=2,is_currency=True),
+                                    self._format({'name': total_avg_final/record_date_day},figure_type='float',digit=2,is_currency=True),
                                     ]
                     lines.append({
                         'id': 'hierarchy' + str(new_date),
@@ -451,7 +452,7 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                     capital = header_intial
                     entradas = 0
                     salidas  = 0
-                    
+                    record_date_day = rec.date_required.day
                     
                     if rec.type_of_operation == 'open_bal':
                         capital = rec.amount
@@ -488,7 +489,7 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                     columns +=  [
                                     self._format({'name': salidas},figure_type='float',digit=2,is_currency=True),
                                     self._format({'name': final_amount},figure_type='float',digit=2,is_currency=True),
-                                    self._format({'name': total_avg_final/rec.date_required.day},figure_type='float',digit=2,is_currency=True),
+                                    self._format({'name': total_avg_final/record_date_day},figure_type='float',digit=2,is_currency=True),
                                     ]
                     lines.append({
                         'id': 'hierarchy' + str(rec.id),

@@ -618,6 +618,12 @@ msgid "Bank Account"
 msgstr "Cuenta de banco"
 
 #. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_agreement_trust__
+#: model_terms:ir.ui.view,arch_db:jt_agreement.agreement_trust_form
+msgid "Bank Account"
+msgstr "Cuenta bancaria"
+
+#. module: jt_agreement
 #: model:ir.model,name:jt_agreement.model_res_partner_bank
 msgid "Bank Accounts"
 msgstr "Cuentas bancarias"
@@ -1249,6 +1255,7 @@ msgid "Date of registration in the basis"
 msgstr ""
 
 #. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_agreement_trust__register_date
 #: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration__registration_date
 #: model:ir.model.fields,field_description:jt_agreement.field_patrimonial_resources__registration_date
 msgid "Date of registration in the system"
@@ -3861,7 +3868,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration__yields
 #: model:ir.model.fields,field_description:jt_agreement.field_interest_rate_operation__yields
 msgid "Yields"
-msgstr ""
+msgstr "Honorarios"
 
 #. module: jt_agreement
 #: code:addons/jt_agreement/models/bases_collaboration.py:0

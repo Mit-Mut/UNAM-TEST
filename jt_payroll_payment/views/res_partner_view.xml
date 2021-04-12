@@ -59,9 +59,9 @@
             <field name="res_model">res.partner</field>
             <field name="view_mode">kanban,tree,form,activity</field>
             <field name="search_view_id" ref="base.view_res_partner_filter"/>
-             <field name="domain">[('beneficiary_type', '=', 'scholarship')]</field>
+             <field name="domain">[('beneficiary_type', '=', 'scholar')]</field>
             <field name="context">{'default_is_company': True,
-                                   'default_beneficiary_type': 'scholarship'}</field>
+                                   'default_beneficiary_type': 'scholar'}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a contact in your address book

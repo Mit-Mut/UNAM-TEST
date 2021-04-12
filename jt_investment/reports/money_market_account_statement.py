@@ -678,16 +678,25 @@ class MoneyMarketAccountStatement(models.AbstractModel):
         actual = (header_increment + header_intial) - header_withdrawal
         col += 1
         header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nDIRECCIÓN GENERAL DE FINANZAS\nDIRECCIÓN DE INGRESOS Y OPERATIÓN FINANCIERA\nDEPTO. DE OPERACIÓN FINANCIERA\nESTADO DE CUENTA:%s'''% (period_name)
-        sheet.merge_range(y_offset, col, 5, col+6, header_title,super_col_style)
+        sheet.merge_range(y_offset, col, 5, col+5, header_title,super_col_style)
         y_offset += 6
-        col=1
-        # currect_time_msg = ''
-        # currect_time_msg += "CUENTAS PRODUCTIVAS"
-        # sheet.merge_range(y_offset, col, y_offset, col+6, currect_time_msg,currect_left_style)
-        # currect_time_msg += "Saldo Inicial"
-        # currect_time_msg += str(self._format({'name': header_intial},figure_type='float',digit=2).get('name'))
-        # sheet.merge_range(y_offset, col, y_offset, col+6, currect_time_msg,currect_left_style)
+        currect_time_msg = ''
+        currect_time_msg += "Estado de cuenta : MERCADO DE DINERO"
+        sheet.merge_range(y_offset, col, y_offset, col+5, currect_time_msg,currect_left_style)
+        #col += 1
         y_offset += 1
+        currect_time_msg = "Saldo Inicial  :  "
+        currect_time_msg += str(self._format({'name': header_intial},figure_type='float',digit=2).get('name'))
+        currect_time_msg += "\n(+) Incrementos  :  "
+        currect_time_msg += str(self._format({'name': header_increment},figure_type='float',digit=2).get('name'))
+        currect_time_msg += "\n(-) Retiros  :  "
+        currect_time_msg += str(self._format({'name': header_withdrawal},figure_type='float',digit=2).get('name'))
+        currect_time_msg += "\nSaldo Actual:  :  "
+        currect_time_msg += str(self._format({'name': actual},figure_type='float',digit=2).get('name'))
+        sheet.merge_range(y_offset, col, y_offset+3, col+5, currect_time_msg,currect_date_style)
+        y_offset += 4
+        col=1
+        
         for row in self.get_header(options):
             x = 0
             for column in row:

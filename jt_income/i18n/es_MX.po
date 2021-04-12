@@ -908,7 +908,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_income.field_sender_recipient_trades__create_uid
 #: model:ir.model.fields,field_description:jt_income.field_sub_origin_resource__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creado por"
 
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_activity_catalog__create_date
@@ -924,7 +924,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_income.field_sender_recipient_trades__create_date
 #: model:ir.model.fields,field_description:jt_income.field_sub_origin_resource__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Fecha de creación"
 
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__credit
@@ -1883,7 +1883,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_income.field_sender_recipient_trades__write_uid
 #: model:ir.model.fields,field_description:jt_income.field_sub_origin_resource__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Última modificación por"
 
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_activity_catalog__write_date
@@ -1899,7 +1899,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_income.field_sender_recipient_trades__write_date
 #: model:ir.model.fields,field_description:jt_income.field_sub_origin_resource__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Última fecha de modificación"
 
 #. module: jt_income
 #: model:ir.model.fields.selection,name:jt_income.selection__account_move__income_activity__leasing_real_estate
@@ -2346,6 +2346,7 @@ msgid "Payment way, is found in the SAT catalog."
 msgstr ""
 
 #. module: jt_income
+#: model:ir.actions.act_window,name:jt_income.action_account_income_payments
 #: model:ir.model,name:jt_income.model_account_payment
 #: model:ir.ui.menu,name:jt_income.menu_invoice_payment_income
 #: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
@@ -3396,3 +3397,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:jt_income.inherited_account_journal_form_view
 msgid "Earned Income"
 msgstr "Ingreso Ganado"
+
+#. module: jt_income
+#: model_terms:ir.ui.view,arch_db:jt_income.view_account_payment_form_income_inherit
+msgid "Payment Type"
+msgstr "Tipo de cobro"
+

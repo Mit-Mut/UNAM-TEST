@@ -75,6 +75,10 @@
                   <field name="amount" position="attributes">
                         <attribute name="attrs">{'readonly':[('payment_state', '!=', 'draft')]}</attribute>
                   </field>
+                  <xpath expr="//group[@name='right_column']/div[@name='amount_div']/field[@name='amount']" position="attributes">
+                        <attribute name="attrs">{'readonly':[('payment_state', '!=', 'draft')]}</attribute>
+                  </xpath>
+                  
                   <field name="currency_id" position="attributes">
                         <attribute name="attrs">{'readonly':[('payment_state', '!=', 'draft')]}</attribute>
                   </field>

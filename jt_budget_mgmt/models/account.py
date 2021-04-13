@@ -370,6 +370,7 @@ class AccountMove(models.Model):
                                      'conac_move' : True,
                                      'currency_id' : currency_id,
                                      'partner_id':self.partner_id and self.partner_id.id or False,
+                                     'is_for_approved_payment' : True,
                                  }), 
                         (0, 0, {
                                      'account_id': self.journal_id.default_debit_account_id.id,
@@ -380,6 +381,7 @@ class AccountMove(models.Model):
                                      'conac_move' : True,
                                      'currency_id' : currency_id,
                                      'partner_id':self.partner_id and self.partner_id.id or False,
+                                     'is_for_approved_payment' : True,
                                  })]
           
         self.conac_move = True

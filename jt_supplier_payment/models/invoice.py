@@ -24,7 +24,15 @@ from odoo import models, fields, api, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
 from datetime import datetime, timedelta
 
-
+class ScholarshipPaymentBreakdown(models.Model):
+    _name = 'scholarship.payment.breakdown'
+    
+    name = fields.Char("Beneficiary Name")
+    bank_id = fields.Many2one('res.bank','Bank')
+    payment_concept = fields.Char('Payment Concept')
+    amount = fields.Float("Amount")
+    move_id = fields.Many2one('account.move','Move')
+    
 class AccountMove(models.Model):
 
     _inherit = 'account.move'
@@ -225,6 +233,10 @@ class AccountMove(models.Model):
     bank_key = fields.Char("Bank Key")
     previous_number = fields.Char("Previous Number", size=11)
     set_readonly_into_payment = fields.Boolean(string='Set Readonly',copy=False,store=True,compute="get_set_readonly_into_payment_view")
+    type_of_payment_custom = fields.Selection([('scholarships','Scholarships'),('Provider','Provider')],string="Type Of Request")
+    layout_scholarship_data = fields.Binary(string='Layout Scholarship')
+    layout_scholarship_filename = fields.Char(string='Layout Scholarship Filename')
+    scholarship_breakdown_ids=fields.One2many('scholarship.payment.breakdown','move_id')
     
     @api.depends('payment_state','is_create_from_provision','is_payment_request')
     def get_set_readonly_into_payment_view(self):
@@ -583,6 +595,8 @@ class AccountMoveLine(models.Model):
 
     _inherit = 'account.move.line'
 
+    is_for_approved_payment = fields.Boolean(string="For Approved Payment",default=False)
+
     payment_req_id = fields.Many2one('account.move')
     egress_key_id = fields.Many2one("egress.keys", string="Egress Key")
     type_of_bussiness_line = fields.Char("Type Of Bussiness Line")
@@ -597,7 +611,7 @@ class AccountMoveLine(models.Model):
     invoice_series = fields.Char("Invoice Series")
     folio_invoice = fields.Char("Folio Invoice")
     vault_folio = fields.Char("Vault folio")
-
+    
     @api.depends('price_subtotal', 'price_total')
     def get_price_tax_cr(self):
         for rec in self:

@@ -753,7 +753,7 @@ class ReportProductiveAccounts(models.AbstractModel):
 
             })
             header = self.env['ir.actions.report'].with_context(period_name=period_name).render_template(
-                "jt_investment.external_layout_fund_account_statement",
+                "jt_investment.external_layout_report_productive_accounts",
                 values=rcontext)
             header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
             spec_paperformat_args = {'data-report-margin-top': 55, 'data-report-header-spacing': 50}
@@ -761,7 +761,7 @@ class ReportProductiveAccounts(models.AbstractModel):
             headers = header.encode()
             footer = b''
             # parse header as new header contains header, body and footer
-            try:
+            try:    
                 root = lxml.html.fromstring(header)
                 match_klass = "//div[contains(concat(' ', normalize-space(@class), ' '), ' {} ')]"
 

@@ -34,6 +34,10 @@
             	<field name="batch_folio" position="attributes">
             		<field name="readonly">0</field>
             	</field>
+            	<field name="type_of_payment_custom" position="attributes">
+            		<attributes name="readonly">0</attributes>
+            	</field>
+            	
             	<field name="payment_issuing_bank_id" position="attributes">
             		<attribute name="readonly">0</attribute>
             	</field>

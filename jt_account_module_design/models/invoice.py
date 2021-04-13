@@ -743,6 +743,9 @@ class AccountMove(models.Model):
         provision_id = self.env['account.move'].search([('is_provision_request','=',True),('previous_number','=',self.previous_number)],limit=1)
         if not provision_id:
             raise ValidationError(_("Previous Number %s not found into provision")%self.previous_number)
+        if provision_id.partner_id and self.partner_id and provision_id.partner_id.id != self.partner_id.id:
+            raise ValidationError(_("Should NOT allow placing a different provider"))
+        
         provision_payment_ids = self.env['account.move'].search([('is_payment_request','=',True),('previous_number','=',self.previous_number)])
         total_payment = sum(x.amount_total for x in  provision_payment_ids)
         if provision_id.amount_total < total_payment:
@@ -758,12 +761,33 @@ class AccountMove(models.Model):
             self.create_journal_line_for_approved_payment()
             self.payment_state = 'approved_payment'
         
-    @api.model
-    def create(self, vals):
-        res = super(AccountMove, self).create(vals)
-        if res.previous_number and res.is_payment_request:
-            res.check_previous_number_records()
-        return res
+    @api.model_create_multi
+    def create(self, vals_list):
+        result = super(AccountMove, self).create(vals_list)
+        for res in result: 
+            if res.previous_number and res.is_payment_request:
+                res.check_previous_number_records()
+        return result
+
+    def write(self,vals):
+        result = super(AccountMove, self).write(vals)
+        
+        if vals.get('previous_number',False) or vals.get('line_ids',[]):
+            for rec in self.filtered(lambda x:x.previous_number and x.is_payment_request):
+                rec.check_previous_number_records()
+        
+        if vals.get('partner_id',False):
+            for rec in self.filtered(lambda x:x.is_create_from_provision and x.previous_number and x.is_payment_request):
+                rec.check_previous_number_records()
+
+#         if vals.get('line_ids',[]):
+#             for rec in self.filtered(lambda x:x.is_create_from_provision and x.previous_number and x.is_payment_request):
+#                 payment_move_lines = rec.line_ids.filtered(lambda x:x.is_for_approved_payment)
+#                 if payment_move_lines:
+#                     payment_move_lines.unlink()
+#                     rec.with_contect('call_from_new_lines').create_journal_line_for_approved_payment()
+        
+        return result
     
     @api.depends('provision_move_ids')
     def total_provision_move_ids(self):
@@ -814,7 +838,12 @@ class AccountMove(models.Model):
             new_move.with_context(check_move_validity=False)._onchange_invoice_line_ids()
         if new_move.previous_number:
             new_move.check_previous_number_records()
-
+        payment_move_lines = new_move.line_ids.filtered(lambda x:x.is_for_approved_payment)
+        if payment_move_lines:
+            payment_move_lines.unlink()
+        new_move.create_journal_line_for_approved_payment()
+        self.state='cancel'
+        
     def action_provision_payment_request(self):
         return {
                 'name': 'Operations',
@@ -824,6 +853,7 @@ class AccountMove(models.Model):
                 'res_model': 'account.move',
                 'domain': [('provision_move_id', '=', self.id)],
                 'type': 'ir.actions.act_window',
+                'context':{'from_provision_view':True}
             }
         
 class AccountMoveLine(models.Model):
@@ -831,3 +861,37 @@ class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
     provision_id = fields.Many2one('provision')
+
+    def update_payment_approve_amount_provision(self,payment_move_lines):
+        amount_total = sum(x.price_total for x in self.move_id.invoice_line_ids.filtered(lambda x:x.program_code_id))    
+        if self.move_id.currency_id != self.move_id.company_id.currency_id:
+            amount_currency = abs(amount_total)
+            balance = self.move_id.currency_id._convert(amount_currency, self.move_id.company_currency_id, self.move_id.company_id, self.move_id.date)
+            currency_id = self.move_id.currency_id and self.move_id.currency_id.id or False
+        else:
+            balance = abs(amount_total)
+            amount_currency = 0.0
+            currency_id = False
+            
+        for pat_line in payment_move_lines:
+            if pat_line.credit > 0:
+                pat_line.credit = balance
+                pat_line.amount_currency =  -amount_currency
+            else:
+                pat_line.debit = balance
+                pat_line.amount_currency =  amount_currency
+                
+    def write(self, vals):
+        result = super(AccountMoveLine,self).write(vals)
+        if vals.get('price_unit'):
+            for line in self.filtered(lambda x:not x.exclude_from_invoice_tab and x.move_id and x.move_id.is_create_from_provision and x.move_id.previous_number and x.move_id.is_payment_request):
+                rec = line.move_id
+                payment_move_lines = rec.line_ids.filtered(lambda x:x.is_for_approved_payment)
+                if payment_move_lines:
+                    line.update_payment_approve_amount_provision(payment_move_lines)
+#                     print ("payment_move_lines exist =======",payment_move_lines)
+#                     payment_move_lines.sudo().unlink()
+#                     rec.with_context(call_from_new_lines=True).create_journal_line_for_approved_payment()
+
+        return result
+        

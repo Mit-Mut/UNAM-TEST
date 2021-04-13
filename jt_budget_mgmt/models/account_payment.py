@@ -50,7 +50,19 @@ class AccountPayment(models.Model):
                     santander_payment_concept += self.name
                 self.santander_payment_concept = santander_payment_concept
             if self.journal_id.bank_format == 'bbva_sit' or self.journal_id.load_bank_format == 'bbva_bancomer':
-                is_hide_bbva_sit = False
+                sit_additional_data = 'PAGOUNAM - '
+                if self.dependancy_id and self.dependancy_id.description:
+                    sit_additional_data += self.dependancy_id.description +" "
+                if self.dependancy_id and self.dependancy_id.dependency:
+                    sit_additional_data += self.dependancy_id.dependency +"-"
+                if self.sub_dependancy_id and self.sub_dependancy_id.sub_dependency:
+                    sit_additional_data += self.sub_dependancy_id.sub_dependency
+                if self.env.user.lang == 'es_MX':
+                    sit_additional_data += "FAVOR DE MANTENER ACTUALIZADA SU INFORMACIÓN BANCARIA"
+                else: 
+                    sit_additional_data += "PLEASE KEEP YOUR BANKING INFORMATION UPDATED"    
+                
+                self.sit_additional_data = sit_additional_data
             if self.journal_id.bank_format in ('bbva_tnn_ptc','bbva_tsc_pcs') or self.journal_id.load_bank_format == 'bbva_bancomer':
                 today_date = datetime.today().date()
                 if self.payment_date and self.payment_date == today_date:

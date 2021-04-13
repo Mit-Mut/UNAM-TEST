@@ -570,7 +570,7 @@ class Adequacies(models.Model):
                                  ('expenditure_budget_id', '=', self.budget_id.id)], limit=1)
                             #========== Added code for the OS-ODOO-010 Document===========#
                             if not budget_line:
-                                budget_line = self.create_new_budget_line(program_code)
+                                budget_line = self.create_new_budget_line(program_code,amount)
                             #========== END code for the OS-ODOO-010 Document===========#
                                 
                             if not budget_line:
@@ -798,7 +798,7 @@ class Adequacies(models.Model):
                 budget_line_assign = False
                 #====== Added changes for OS-ODOO-010 ===============#
                 if not budget_lines_check:
-                    new_b_line = self.create_new_budget_line(line.program)
+                    new_b_line = self.create_new_budget_line(line.program,line.amount)
                     budget_lines_check = self.env['expenditure.budget.line'].sudo().search(
                         [('program_code_id', '=', line.program.id),
                          ('expenditure_budget_id', '=', self.budget_id.id)])

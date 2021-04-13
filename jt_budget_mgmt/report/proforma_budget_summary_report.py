@@ -681,12 +681,13 @@ class ProformaBudgetSummaryReport(models.AbstractModel):
                 
             elif column in ('Committed', 'Comprometido'):
                 need_columns_with_format.append('committed')
-                col_query += ',(select coalesce(sum(abs(line.balance)+abs(line.tax_price_cr)),0) from account_move_line line,account_move amove where pc.id=line.program_code_id and amove.id=line.move_id and amove.payment_state=%s and amove.invoice_date >= %s and amove.invoice_date <= %s) as Committed'
+                col_query += ',(select coalesce(sum(abs(line.balance)+abs(line.tax_price_cr)),0) from account_move_line line,account_move amove where pc.id=line.program_code_id and amove.id=line.move_id and amove.payment_state=%s and amove.invoice_date >= %s and amove.invoice_date <= %s and amove.is_create_from_provision IS NULL) as Committed'
                 tuple_where_data.append('approved_payment')
                 tuple_where_data.append(start)
                 tuple_where_data.append(end)
+                
                 #=== Grand Total ======#
-                self.env.cr.execute("select coalesce(sum(abs(line.balance)+abs(line.tax_price_cr)),0) from account_move_line line,account_move amove where line.program_code_id in %s and amove.id=line.move_id and amove.payment_state=%s and amove.invoice_date >= %s and amove.invoice_date <= %s", (tuple(program_code_list),'approved_payment',start,end))
+                self.env.cr.execute("select coalesce(sum(abs(line.balance)+abs(line.tax_price_cr)),0) from account_move_line line,account_move amove where line.program_code_id in %s and amove.id=line.move_id and amove.payment_state=%s and amove.invoice_date >= %s and amove.invoice_date <= %s and amove.is_create_from_provision IS NULL", (tuple(program_code_list),'approved_payment',start,end))
                 my_datas = self.env.cr.fetchone()
                 if my_datas:
                     grand_total_dict.update({'committed':my_datas[0]})

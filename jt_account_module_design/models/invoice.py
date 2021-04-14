@@ -729,8 +729,6 @@ class ProvisionLine(models.Model):
 class AccountMove(models.Model):
     _inherit = 'account.move'
     
-    provision_move_id = fields.Many2one('account.move','Provision')
-    provision_move_ids = fields.One2many('account.move','provision_move_id')
     total_provision_move = fields.Integer(compute="total_provision_move_ids",store=True,string="Payment Request")
     is_provision_request_generate = fields.Boolean("Provision Request",copy=False)
     
@@ -779,13 +777,6 @@ class AccountMove(models.Model):
         if vals.get('partner_id',False):
             for rec in self.filtered(lambda x:x.is_create_from_provision and x.previous_number and x.is_payment_request):
                 rec.check_previous_number_records()
-
-#         if vals.get('line_ids',[]):
-#             for rec in self.filtered(lambda x:x.is_create_from_provision and x.previous_number and x.is_payment_request):
-#                 payment_move_lines = rec.line_ids.filtered(lambda x:x.is_for_approved_payment)
-#                 if payment_move_lines:
-#                     payment_move_lines.unlink()
-#                     rec.with_contect('call_from_new_lines').create_journal_line_for_approved_payment()
         
         return result
     
@@ -809,15 +800,18 @@ class AccountMove(models.Model):
         return result
     
     def action_draft_budget(self):
-        result = super(AccountMove,self).action_draft_budget()
+        self.ensure_one()
         if self.is_provision_request:
             self.provision_payment_state = 'draft'
+        result = super(AccountMove,self).action_draft_budget()
         return result
     
     def action_cancel_budget(self):
+        for record in self.filtered(lambda x:x.is_provision_request):
+            record.provision_payment_state = 'cancel'
+            record.cancel_payment_revers_entry()
+            record.add_budget_available_amount()
         result = super(AccountMove,self).action_cancel_budget()
-        if self.is_provision_request:
-            self.provision_payment_state = 'cancel'
         return result
     
     def generate_payment_request(self):

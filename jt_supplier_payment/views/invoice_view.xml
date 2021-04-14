@@ -11,8 +11,10 @@
 					<header>
 					 	<button name="action_register" string="Register" class="oe_highlight" type="object"
                                 attrs="{'invisible': [('payment_state', '!=', 'draft')]}"/>
+                        <!-- 
                         <button name="action_draft" string="Draft" class="oe_highlight" type="object"
                         attrs="{'invisible': [('payment_state','not in',('approved_payment','for_payment_procedure'))]}"/>
+                         -->
 					 	<button name="action_reschedule" string="Reschedule" class="oe_highlight" type="object"
                                 attrs="{'invisible': [('payment_state', '!=', 'payment_not_applied')]}"/>
                         <field name="payment_state" widget="statusbar"

@@ -1261,7 +1261,7 @@ class RequestOpenBalance(models.Model):
             
         if payment_reqs:
             return {
-                'name': 'Payment Requests',
+                'name': _('Payment Requests'),
                 'view_type': 'form',
                 'view_mode': 'tree,form',
                 'res_model': 'payment.request',

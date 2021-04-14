@@ -237,6 +237,9 @@ class AccountMove(models.Model):
     layout_scholarship_data = fields.Binary(string='Layout Scholarship')
     layout_scholarship_filename = fields.Char(string='Layout Scholarship Filename')
     scholarship_breakdown_ids=fields.One2many('scholarship.payment.breakdown','move_id')
+
+    provision_move_id = fields.Many2one('account.move','Provision')
+    provision_move_ids = fields.One2many('account.move','provision_move_id')
     
     @api.depends('payment_state','is_create_from_provision','is_payment_request')
     def get_set_readonly_into_payment_view(self):

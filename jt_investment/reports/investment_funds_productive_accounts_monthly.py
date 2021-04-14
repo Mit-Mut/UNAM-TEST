@@ -560,10 +560,10 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                                          DEFAULT_SERVER_DATE_FORMAT).date()
 
                 
-                domain_bank_period = domain + [('date_required','>=',date_start),('date_required','<=',date_end),('investment_id.journal_id.bank_id','=',journal.id)]
+                domain_bank_period = domain + [('investment_id.journal_id','in',bank_account_ids.ids),('date_required','>=',date_start),('date_required','<=',date_end),('investment_id.journal_id.bank_id','=',journal.id)]
                 records_bank_periods = self.env['investment.operation'].search(domain_bank_period)
 
-                inc_domain_bank_period = domain + [('date_required','<',date_start),('investment_id.journal_id.bank_id','=',journal.id)]
+                inc_domain_bank_period = domain + [('investment_id.journal_id','in',bank_account_ids.ids),('date_required','<',date_start),('investment_id.journal_id.bank_id','=',journal.id)]
                 inc_records_bank_periods = self.env['investment.operation'].search(inc_domain_bank_period)
 
                 amount = 0
@@ -700,10 +700,10 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                                          DEFAULT_SERVER_DATE_FORMAT).date()
 
 
-                domain_fund = domain + [('date_required','>=',date_start),('date_required','<=',date_end)]
+                domain_fund = domain + [('investment_id.journal_id','in',bank_account_ids.ids),('date_required','>=',date_start),('date_required','<=',date_end)]
                 records_fund = self.env['investment.operation'].search(domain_fund)
 
-                inc_domain_fund = domain + [('date_required','<',date_start)]
+                inc_domain_fund = domain + [('investment_id.journal_id','in',bank_account_ids.ids),('date_required','<',date_start)]
                 inc_records_fund = self.env['investment.operation'].search(inc_domain_fund)
 
                 amount = 0
@@ -788,10 +788,10 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                 date_end = datetime.strptime(str(period.get('date_to')),
                                          DEFAULT_SERVER_DATE_FORMAT).date()
 
-                domain_currency_period = domain + [('date_required','>=',date_start),('date_required','<=',date_end),('investment_id.currency_id','=',currency.id)]
+                domain_currency_period = domain + [('investment_id.journal_id','in',bank_account_ids.ids),('date_required','>=',date_start),('date_required','<=',date_end),('investment_id.currency_id','=',currency.id)]
                 records_periods = self.env['investment.operation'].search(domain_currency_period)
 
-                inc_domain_currency_period = domain + [('date_required','<',date_start),('investment_id.currency_id','=',currency.id)]
+                inc_domain_currency_period = domain + [('investment_id.journal_id','in',bank_account_ids.ids),('date_required','<',date_start),('investment_id.currency_id','=',currency.id)]
                 inc_records_periods = self.env['investment.operation'].search(inc_domain_currency_period)
 
                 amount = 0

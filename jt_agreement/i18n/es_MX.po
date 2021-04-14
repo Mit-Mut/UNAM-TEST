@@ -465,7 +465,7 @@ msgstr "Cantidad a retirar"
 #. module: jt_agreement
 #: model:ir.actions.act_window,name:jt_agreement.action_amounts_to_invest_bases_collaboration
 msgid "Amounts to Invest"
-msgstr ""
+msgstr "Informe de Importes a Invertir"
 
 #. module: jt_agreement
 #: model:ir.model.fields.selection,name:jt_agreement.selection__recurring_payment_template__payment_period__annual
@@ -2007,7 +2007,7 @@ msgstr "Incrementos y retiros"
 #. module: jt_agreement
 #: model_terms:ir.ui.view,arch_db:jt_agreement.view_bases_collabration_form
 msgid "Information for Closing"
-msgstr "Información de cirre"
+msgstr "Información de Cierre"
 
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_agreement_trust__interest_account_id
@@ -2869,9 +2869,11 @@ msgid "Payment Request Number"
 msgstr "Número de solicitud de pago"
 
 #. module: jt_agreement
+#: code:addons/jt_agreement/models/bases_collaboration.py:0
 #: model_terms:ir.ui.view,arch_db:jt_agreement.view_req_open_balance_form
 #: model_terms:ir.ui.view,arch_db:jt_agreement.view_req_open_balance_patrimonial_form
 #: model_terms:ir.ui.view,arch_db:jt_agreement.view_req_open_balance_trust_form
+#, python-format
 msgid "Payment Requests"
 msgstr "Solicitudes de pago"
 
@@ -4008,3 +4010,23 @@ msgstr "Autorizado por"
 #: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance_finance__authorized_by_dept_id
 msgid "Department to which the authorizing person belongs"
 msgstr "Departamento al que pertenece la persona que autoriza"
+
+#. module: jt_agreement
+#: model:ir.ui.menu,name:jt_agreement.menu_accounting_operation_interest_id
+msgid "Accounting operations-Interests"
+msgstr "Operaciones Contables-Intereses"
+
+#. module: jt_agreement
+#: model:ir.actions.act_window,name:jt_agreement.action_generate_contract_assistant
+msgid "Generate Contract Assistant"
+msgstr "Auxiliar de Contrato"
+
+#. module: jt_agreement
+#: model:ir.model.fields.selection,name:jt_agreement.selection__payment_request__state__paid
+msgid "Paid"
+msgstr "PAGADO"
+
+#. module: jt_agreement
+#: model:ir.model.fields.selection,name:jt_agreement.selection__payment_request__state__reject
+msgid "Rejected"
+msgstr "RECHAZADO"

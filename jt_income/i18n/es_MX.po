@@ -4,41 +4,18 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 13.0+e-20201027\n"
+"Project-Id-Version: Odoo Server 13.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-24 21:24+0000\n"
-"PO-Revision-Date: 2020-11-24 21:24+0000\n"
+"POT-Creation-Date: 2021-04-13 23:01+0000\n"
+"PO-Revision-Date: 2021-04-13 18:38-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
+"Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: \n"
-
-#. module: jt_income
-#: code:addons/jt_income/models/account_payment.py:0
-#, python-format
-msgid "Please configure UNAM and CONAC Accrued Income Account!"
-msgstr "Por favor configure las cuentas de Ingresos en el Diario del Banco seleccionado"
-
-#. module: jt_income
-#: code:addons/jt_income/models/product.py:0
-#: model:ir.model.constraint,message:jt_income.constraint_product_template_unique_default_code
-#, python-format
-msgid "Internal Reference must be unique."
-msgstr "La Referencia Interna debe de ser única."
-
-#. module: jt_income
-#: model:ir.model.constraint,message:jt_income.constraint_res_partner_bank_acc_number_uniq
-msgid "Account Number must be unique."
-msgstr "El Número de Cuenta debe de ser único"
-
-#. module: jt_income
-#: code:addons/jt_income/models/res_partner_bank.py:0
-#: model:ir.model.constraint,message:jt_income.constraint_res_partner_bank_clabe_uniq
-#, python-format
-msgid "CLABE must be unique."
-msgstr "La CLABE debe de ser única."
+"Language: es_MX\n"
+"X-Generator: Poedit 2.4.2\n"
 
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_7_document
@@ -52,9 +29,7 @@ msgstr ""
 
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_3_document
-msgid ""
-", le informo que su solicitud de condonación de indemnización del 20% "
-"establecida en la Circular"
+msgid ", le informo que su solicitud de condonación de indemnización del 20% establecida en la Circular"
 msgstr ""
 
 #. module: jt_income
@@ -78,8 +53,7 @@ msgid "20 % DE INDEMNIZACIÓN"
 msgstr ""
 
 #. module: jt_income
-#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_1_document
-#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_4_document
+#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_1_document model_terms:ir.ui.view,arch_db:jt_income.invoice_format_4_document
 msgid "202."
 msgstr ""
 
@@ -92,7 +66,7 @@ msgstr "2° formato de aplicación 20%"
 #. module: jt_income
 #: model:ir.actions.report,name:jt_income.invoice_pdf_format4_name
 msgid "2° FORMATO DE APLICACIÓN 20%"
-msgstr ""
+msgstr "2° FORMATO DE APLICACIÓN 20%"
 
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_4_document
@@ -109,9 +83,7 @@ msgstr ""
 
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_5_document
-msgid ""
-"<b>A t e n t a m e n t e <br/>\"POR MI RAZA HABLARÁ EL "
-"ESPÍRITU\"</b><br/>Ciudad Universitaria,  Cd. Mx.,"
+msgid "<b>A t e n t a m e n t e <br/>\"POR MI RAZA HABLARÁ EL ESPÍRITU\"</b><br/>Ciudad Universitaria,  Cd. Mx.,"
 msgstr ""
 
 #. module: jt_income
@@ -123,11 +95,8 @@ msgid ""
 msgstr ""
 
 #. module: jt_income
-#: model_terms:ir.ui.view,arch_db:jt_income.external_layout_1
-#: model_terms:ir.ui.view,arch_db:jt_income.external_layout_2
-#: model_terms:ir.ui.view,arch_db:jt_income.external_layout_3
-#: model_terms:ir.ui.view,arch_db:jt_income.external_layout_4
-#: model_terms:ir.ui.view,arch_db:jt_income.external_layout_5
+#: model_terms:ir.ui.view,arch_db:jt_income.external_layout_1 model_terms:ir.ui.view,arch_db:jt_income.external_layout_2 model_terms:ir.ui.view,arch_db:jt_income.external_layout_3
+#: model_terms:ir.ui.view,arch_db:jt_income.external_layout_4 model_terms:ir.ui.view,arch_db:jt_income.external_layout_5
 msgid "<b>C.c.p.     </b>"
 msgstr ""
 
@@ -146,25 +115,18 @@ msgid ""
 msgstr ""
 
 #. module: jt_income
-#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_5_document
-#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_6_document
-msgid ""
-"<b>Dirección General de Finanzas<br/> Dirección de Ingresos y Op. "
-"Financiera<br/>Departamento de Ingresos</b>"
+#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_5_document model_terms:ir.ui.view,arch_db:jt_income.invoice_format_6_document
+msgid "<b>Dirección General de Finanzas<br/> Dirección de Ingresos y Op. Financiera<br/>Departamento de Ingresos</b>"
 msgstr ""
 
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_2_document
-msgid ""
-"<b>Dirección General de Finanzas<br/> Dirección de Ingresos y Op. "
-"Financiera<br/>Departamento de Ingresos<br/></b>"
+msgid "<b>Dirección General de Finanzas<br/> Dirección de Ingresos y Op. Financiera<br/>Departamento de Ingresos<br/></b>"
 msgstr ""
 
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_4_document
-msgid ""
-"<b>Dirección General de Finanzas<br/>Dirección de Ingresos y Op. "
-"Financiera<br/> Departamento de Ingresos<br/></b>"
+msgid "<b>Dirección General de Finanzas<br/>Dirección de Ingresos y Op. Financiera<br/> Departamento de Ingresos<br/></b>"
 msgstr ""
 
 #. module: jt_income
@@ -175,8 +137,7 @@ msgid ""
 msgstr ""
 
 #. module: jt_income
-#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_4_document
-#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_5_document
+#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_4_document model_terms:ir.ui.view,arch_db:jt_income.invoice_format_5_document
 msgid ""
 "<br/>\n"
 "                                    P r e s e n t e"
@@ -248,14 +209,12 @@ msgid "<br/><br/>Asunto: Notificación de Cheque Devuelto"
 msgstr ""
 
 #. module: jt_income
-#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_1_document
-#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_3_document
+#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_1_document model_terms:ir.ui.view,arch_db:jt_income.invoice_format_3_document
 msgid "<br/>Asunto: 20% de Indemnización"
 msgstr ""
 
 #. module: jt_income
-#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_2_document
-#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_4_document
+#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_2_document model_terms:ir.ui.view,arch_db:jt_income.invoice_format_4_document
 #: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_5_document
 msgid "<br/>Of. No."
 msgstr ""
@@ -280,22 +239,14 @@ msgstr ""
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
 msgid ""
-"<span class=\"o_form_label mx-3 oe_edit_only\" attrs=\"{'invisible': [ '|', "
-"'|', '|', ('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', "
-"False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', "
-"'in_refund', 'out_receipt', 'in_receipt'))]}\"> or </span>"
+"<span class=\"o_form_label mx-3 oe_edit_only\" attrs=\"{'invisible': [ '|', '|', '|', ('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', False), ('type', 'not in', "
+"('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}\"> or </span>"
 msgstr ""
 
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
-msgid ""
-"<span class=\"o_form_label\" attrs=\"{'invisible': "
-"[('invoice_sequence_number_next_prefix', '=', False)]}\">First "
-"Number:</span>"
-msgstr ""
-"<span class=\"o_form_label\" attrs=\"{'invisible': "
-"[('invoice_sequence_number_next_prefix', '=', False)]}\">Primer "
-"número:</span>"
+msgid "<span class=\"o_form_label\" attrs=\"{'invisible': [('invoice_sequence_number_next_prefix', '=', False)]}\">First Number:</span>"
+msgstr "<span class=\"o_form_label\" attrs=\"{'invisible': [('invoice_sequence_number_next_prefix', '=', False)]}\">Primer número:</span>"
 
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.pdf_external_layout_income_annual_report
@@ -309,16 +260,12 @@ msgstr ""
 
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_7_document
-msgid ""
-"<u>Ya  que  el  trámite  inicial  fue  cancelado  por  el   sistema,  se  "
-"realizara   nuevamente  la  Solicitud  de  Certificado de  Depósito.</u>"
+msgid "<u>Ya  que  el  trámite  inicial  fue  cancelado  por  el   sistema,  se  realizara   nuevamente  la  Solicitud  de  Certificado de  Depósito.</u>"
 msgstr ""
 
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_6_document
-msgid ""
-"<u>Ya que el trámite inicial fue cancelado por el sistema,  se realizara "
-"nuevamente la Solicitud de Certificado de Depósito. </u>"
+msgid "<u>Ya que el trámite inicial fue cancelado por el sistema,  se realizara nuevamente la Solicitud de Certificado de Depósito. </u>"
 msgstr ""
 
 #. module: jt_income
@@ -327,6 +274,16 @@ msgid ""
 "A t e n t a m e n t e <br/>\n"
 "                            \"POR MI RAZA HABLARÁ EL ESPÍRITU\"<br/>\n"
 "                            Ciudad Universitaria,  Cd. Mx.,"
+msgstr ""
+
+#. module: jt_income
+#: model_terms:ir.ui.view,arch_db:jt_income.pdf_income_annual_report_1
+msgid "ABRIL"
+msgstr ""
+
+#. module: jt_income
+#: model_terms:ir.ui.view,arch_db:jt_income.pdf_income_annual_report_1
+msgid "AGOSTO"
 msgstr ""
 
 #. module: jt_income
@@ -364,6 +321,12 @@ msgid "Account Name"
 msgstr ""
 
 #. module: jt_income
+#: code:addons/jt_income/models/res_partner_bank.py:0 model:ir.model.constraint,message:jt_income.constraint_res_partner_bank_acc_number_uniq
+#, python-format
+msgid "Account Number must be unique."
+msgstr "El Número de Cuenta debe de ser único"
+
+#. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__account_root_id
 msgid "Account Root"
 msgstr ""
@@ -384,11 +347,6 @@ msgid "Accounts"
 msgstr "Cuenta contable"
 
 #. module: jt_income
-#: model_terms:ir.ui.view,arch_db:jt_income.inherited_account_journal_form_view
-msgid "Accrued Income"
-msgstr ""
-
-#. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_association_distribution_ie_accounts__active
 msgid "Active"
 msgstr "Activo"
@@ -399,9 +357,7 @@ msgid "Activity"
 msgstr "Actividad"
 
 #. module: jt_income
-#: model:ir.actions.act_window,name:jt_income.activity_catalog_action
-#: model:ir.model,name:jt_income.model_activity_catalog
-#: model:ir.ui.menu,name:jt_income.menu_activity_catalog
+#: model:ir.actions.act_window,name:jt_income.activity_catalog_action model:ir.model,name:jt_income.model_activity_catalog model:ir.ui.menu,name:jt_income.menu_activity_catalog
 msgid "Activity Catalog"
 msgstr "Actividad"
 
@@ -422,16 +378,6 @@ msgstr "Agregar una línea"
 
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
-msgid "Add a note"
-msgstr ""
-
-#. module: jt_income
-#: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
-msgid "Add a section"
-msgstr ""
-
-#. module: jt_income
-#: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
 msgid "Add an internal note..."
 msgstr ""
 
@@ -441,8 +387,7 @@ msgid "Addressee"
 msgstr "Destinatario"
 
 #. module: jt_income
-#: model:ir.model,name:jt_income.model_adequacies
-#: model:ir.model.fields,field_description:jt_income.field_account_move__adequacies_ids
+#: model:ir.model,name:jt_income.model_adequacies model:ir.model.fields,field_description:jt_income.field_account_move__adequacies_ids
 msgid "Adequacies"
 msgstr "Adecuaciones"
 
@@ -494,12 +439,9 @@ msgid "Anexamos copia del oficio"
 msgstr ""
 
 #. module: jt_income
-#: code:addons/jt_income/reports/new_annual_income_report.py:0
-#: model:ir.actions.act_window,name:jt_income.action_income_by_item_month
-#: model:ir.actions.act_window,name:jt_income.action_income_by_item_month_wizard
-#: model:ir.actions.client,name:jt_income.action_new_annual_income_report
-#: model:ir.actions.report,name:jt_income.income_by_item_report
-#: model:ir.model,name:jt_income.model_jt_income_annual_income_report
+#: code:addons/jt_income/reports/new_annual_income_report.py:0 model:ir.actions.act_window,name:jt_income.action_income_by_item_month
+#: model:ir.actions.act_window,name:jt_income.action_income_by_item_month_wizard model:ir.actions.client,name:jt_income.action_new_annual_income_report
+#: model:ir.actions.report,name:jt_income.income_by_item_report model:ir.model,name:jt_income.model_jt_income_annual_income_report
 #: model:ir.ui.menu,name:jt_income.menu_new_annual_income_report
 #, python-format
 msgid "Annual Income Report"
@@ -538,8 +480,7 @@ msgid "Association Distribution IE Accounts Lines"
 msgstr ""
 
 #. module: jt_income
-#: model:ir.actions.act_window,name:jt_income.action_association_distribution_ie_accounts
-#: model:ir.ui.menu,name:jt_income.menu_association_distribution_ie_accounts
+#: model:ir.actions.act_window,name:jt_income.action_association_distribution_ie_accounts model:ir.ui.menu,name:jt_income.menu_association_distribution_ie_accounts
 msgid "Association and distribution of IE accounts"
 msgstr "Asociación y distribución de cuentas IE"
 
@@ -552,11 +493,8 @@ msgid ""
 msgstr ""
 
 #. module: jt_income
-#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_6_document
-#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_7_document
-msgid ""
-"Atentamente<br/>“POR MI RAZA HABLARA EL ESPIRITU”<br/>Cd. Universitaria, Cd."
-" Mx.,"
+#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_6_document model_terms:ir.ui.view,arch_db:jt_income.invoice_format_7_document
+msgid "Atentamente<br/>“POR MI RAZA HABLARA EL ESPIRITU”<br/>Cd. Universitaria, Cd. Mx.,"
 msgstr ""
 
 #. module: jt_income
@@ -587,15 +525,13 @@ msgid "Bank Account"
 msgstr "Cuenta bancaria"
 
 #. module: jt_income
-#: model:ir.actions.act_window,name:jt_income.action_account_bank_journal_income
-#: model:ir.model,name:jt_income.model_res_partner_bank
+#: model:ir.actions.act_window,name:jt_income.action_account_bank_journal_income model:ir.model,name:jt_income.model_res_partner_bank
 #: model:ir.ui.menu,name:jt_income.menu_partner_bank_account_income_set
 msgid "Bank Accounts"
 msgstr "Cuentas bancarias"
 
 #. module: jt_income
-#: model:ir.model.fields,field_description:jt_income.field_account_payment__bank_reference
-#: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
+#: model:ir.model.fields,field_description:jt_income.field_account_payment__bank_reference model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
 msgid "Bank Reference"
 msgstr "Referencia bancaria"
 
@@ -651,8 +587,7 @@ msgid "CERTIFICADO DE DEPOSITO POR RECUPERACIÓN DE CHEQUE"
 msgstr ""
 
 #. module: jt_income
-#: model:ir.model.fields,field_description:jt_income.field_account_move_line__cfdi_20
-#: model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__cfdi_20
+#: model:ir.model.fields,field_description:jt_income.field_account_move_line__cfdi_20 model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__cfdi_20
 msgid "CFDI 20%"
 msgstr ""
 
@@ -677,6 +612,12 @@ msgid "CFDI Exercise CONACYT entry"
 msgstr "Ejercicio CFDI CONACYT Ingreso"
 
 #. module: jt_income
+#: code:addons/jt_income/models/res_partner_bank.py:0 model:ir.model.constraint,message:jt_income.constraint_res_partner_bank_clabe_uniq
+#, python-format
+msgid "CLABE must be unique."
+msgstr "La CLABE debe de ser única."
+
+#. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__conac_accrued_income_credit_account_id
 #: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__conac_estimate_income_credit_account_id
 #: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__conac_income_run_credit_account_id
@@ -686,7 +627,7 @@ msgstr "Ejercicio CFDI CONACYT Ingreso"
 #: model:ir.model.fields,field_description:jt_income.field_account_journal__conac_income_run_credit_account_id
 #: model:ir.model.fields,field_description:jt_income.field_account_journal__conac_recover_income_credit_account_id
 msgid "CONAC Credit Account"
-msgstr ""
+msgstr "Cuenta de crédito de CONAC"
 
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__conac_accrued_income_debit_account_id
@@ -698,7 +639,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_income.field_account_journal__conac_income_run_debit_account_id
 #: model:ir.model.fields,field_description:jt_income.field_account_journal__conac_recover_income_debit_account_id
 msgid "CONAC Debit Account"
-msgstr ""
+msgstr "Cuenta de débito de CONAC"
 
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_account_move__conacyt_project_name
@@ -713,6 +654,16 @@ msgstr "Clave de proyecto CONACYT"
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.income_annual_report
 msgid "CONCURSO DE SELECCIÓN"
+msgstr ""
+
+#. module: jt_income
+#: model_terms:ir.ui.view,arch_db:jt_income.pdf_income_annual_report_1
+msgid "CUENTA"
+msgstr ""
+
+#. module: jt_income
+#: model_terms:ir.ui.view,arch_db:jt_income.pdf_income_annual_report_1
+msgid "CUENTA BANCARIA"
 msgstr ""
 
 #. module: jt_income
@@ -787,29 +738,20 @@ msgid "Company Currency"
 msgstr ""
 
 #. module: jt_income
-#: model:ir.model.fields,help:jt_income.field_income_invoice_move_line__company_id
-msgid "Company related to this journal"
-msgstr ""
-
-#. module: jt_income
 #: model:ir.model.fields.selection,name:jt_income.selection__liquid_adjustments_manual_deposite__adaptation_type__compensated
 msgid "Compensated Adjustments"
 msgstr ""
 
 #. module: jt_income
 #: model:ir.model.fields,help:jt_income.field_income_invoice_move_line__tax_audit
-msgid ""
-"Computed field, listing the tax grids impacted by this line, and the amount "
-"it applies to each of them."
+msgid "Computed field, listing the tax grids impacted by this line, and the amount it applies to each of them."
 msgstr ""
 
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_3_document
 msgid ""
-"Con el objetivo de evitar en lo sucesivo las circunstancias que dieron "
-"origen a una eventual condonación, me permito sugerir que los pagos se "
-"realicen mediante transferencia bancaria a las cuentas señaladas en la "
-"circular en comento."
+"Con el objetivo de evitar en lo sucesivo las circunstancias que dieron origen a una eventual condonación, me permito sugerir que los pagos se realicen mediante transferencia "
+"bancaria a las cuentas señaladas en la circular en comento."
 msgstr ""
 
 #. module: jt_income
@@ -845,7 +787,6 @@ msgstr "Configuración"
 
 #. module: jt_income
 #: code:addons/jt_income/models/invoice.py:0
-#: code:addons/jt_income/models/invoice.py:0
 #, python-format
 msgid "Configure la cuenta de débito predeterminada del Banco %s"
 msgstr ""
@@ -856,14 +797,12 @@ msgid "Contact"
 msgstr "Contacto"
 
 #. module: jt_income
-#: model:ir.model.fields,field_description:jt_income.field_res_partner__contact_type
-#: model:ir.model.fields,field_description:jt_income.field_res_users__contact_type
+#: model:ir.model.fields,field_description:jt_income.field_res_partner__contact_type model:ir.model.fields,field_description:jt_income.field_res_users__contact_type
 msgid "Contact Type"
 msgstr "Tipo de Contacto"
 
 #. module: jt_income
-#: model:ir.model.fields,field_description:jt_income.field_res_partner__income_control
-#: model:ir.model.fields,field_description:jt_income.field_res_users__income_control
+#: model:ir.model.fields,field_description:jt_income.field_res_partner__income_control model:ir.model.fields,field_description:jt_income.field_res_users__income_control
 msgid "Control"
 msgstr ""
 
@@ -889,9 +828,7 @@ msgstr ""
 
 #. module: jt_income
 #: model_terms:ir.actions.act_window,help:jt_income.action_move_income_out_invoice_type
-msgid ""
-"Create invoices, register payments and keep track of the discussions with "
-"your customers."
+msgid "Create invoices, register payments and keep track of the discussions with your customers."
 msgstr ""
 
 #. module: jt_income
@@ -901,14 +838,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_income.field_deposit_certificate_type__create_uid
 #: model:ir.model.fields,field_description:jt_income.field_income_by_item_report_data__create_uid
 #: model:ir.model.fields,field_description:jt_income.field_income_by_item_report_wizard__create_uid
-#: model:ir.model.fields,field_description:jt_income.field_income_cash_cut__create_uid
-#: model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__create_uid
+#: model:ir.model.fields,field_description:jt_income.field_income_cash_cut__create_uid model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__create_uid
 #: model:ir.model.fields,field_description:jt_income.field_liquid_adjustments_manual_deposite__create_uid
-#: model:ir.model.fields,field_description:jt_income.field_payment_of_income__create_uid
-#: model:ir.model.fields,field_description:jt_income.field_sender_recipient_trades__create_uid
+#: model:ir.model.fields,field_description:jt_income.field_payment_of_income__create_uid model:ir.model.fields,field_description:jt_income.field_sender_recipient_trades__create_uid
 #: model:ir.model.fields,field_description:jt_income.field_sub_origin_resource__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creado por"
 
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_activity_catalog__create_date
@@ -917,18 +852,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_income.field_deposit_certificate_type__create_date
 #: model:ir.model.fields,field_description:jt_income.field_income_by_item_report_data__create_date
 #: model:ir.model.fields,field_description:jt_income.field_income_by_item_report_wizard__create_date
-#: model:ir.model.fields,field_description:jt_income.field_income_cash_cut__create_date
-#: model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__create_date
+#: model:ir.model.fields,field_description:jt_income.field_income_cash_cut__create_date model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__create_date
 #: model:ir.model.fields,field_description:jt_income.field_liquid_adjustments_manual_deposite__create_date
-#: model:ir.model.fields,field_description:jt_income.field_payment_of_income__create_date
-#: model:ir.model.fields,field_description:jt_income.field_sender_recipient_trades__create_date
+#: model:ir.model.fields,field_description:jt_income.field_payment_of_income__create_date model:ir.model.fields,field_description:jt_income.field_sender_recipient_trades__create_date
 #: model:ir.model.fields,field_description:jt_income.field_sub_origin_resource__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Fecha de creación"
 
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__credit
 msgid "Credit"
+msgstr ""
+
+#. module: jt_income
+#: model:ir.model.fields.selection,name:jt_income.selection__account_move__voucher_type__credit_note
+msgid "Credit Note"
 msgstr ""
 
 #. module: jt_income
@@ -956,8 +894,7 @@ msgstr ""
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_income_by_item_report_data__currency_name
 #: model:ir.model.fields,field_description:jt_income.field_income_by_item_report_wizard__currency_id
-#: model:ir.model.fields,field_description:jt_income.field_income_cash_cut__currency_id
-#: model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__currency_id
+#: model:ir.model.fields,field_description:jt_income.field_income_cash_cut__currency_id model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__currency_id
 msgid "Currency"
 msgstr "Moneda"
 
@@ -1007,19 +944,27 @@ msgid "DEPENDENCIA:      INSTITUTO DE FÍSICA"
 msgstr ""
 
 #. module: jt_income
+#: model_terms:ir.ui.view,arch_db:jt_income.pdf_income_annual_report_1
+msgid "DESCRIPTION CUENTA CONTABLE"
+msgstr ""
+
+#. module: jt_income
+#: model_terms:ir.ui.view,arch_db:jt_income.pdf_income_annual_report_1
+msgid "DICIEMBRE"
+msgstr ""
+
+#. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_liquid_adjustments_manual_deposite__journal_id
 msgid "Daily"
 msgstr "Diario"
 
 #. module: jt_income
-#: model:ir.actions.act_window,name:jt_income.action_daily_cash_cuts
-#: model:ir.ui.menu,name:jt_income.menu_daily_cash_cur
+#: model:ir.actions.act_window,name:jt_income.action_daily_cash_cuts model:ir.ui.menu,name:jt_income.menu_daily_cash_cur
 msgid "Daily cash cuts"
 msgstr "Corte de caja diarios"
 
 #. module: jt_income
-#: model:ir.model.fields,field_description:jt_income.field_income_cash_cut__cut_date
-#: model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__date
+#: model:ir.model.fields,field_description:jt_income.field_income_cash_cut__cut_date model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__date
 #: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
 msgid "Date"
 msgstr "Fecha y hora"
@@ -1059,7 +1004,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_income.field_account_journal__income_run_credit_account_id
 #: model:ir.model.fields,field_description:jt_income.field_account_journal__recover_income_credit_account_id
 msgid "Default Credit Account"
-msgstr ""
+msgstr "Cuenta de crédito por defecto"
 
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__accrued_income_debit_account_id
@@ -1071,7 +1016,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_income.field_account_journal__income_run_debit_account_id
 #: model:ir.model.fields,field_description:jt_income.field_account_journal__recover_income_debit_account_id
 msgid "Default Debit Account"
-msgstr ""
+msgstr "Cuenta de débito por defecto"
 
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_association_distribution_ie_accounts__ie_account_line_ids
@@ -1080,8 +1025,7 @@ msgid "Definition"
 msgstr "Definición"
 
 #. module: jt_income
-#: model:ir.model.fields,field_description:jt_income.field_income_cash_cut__dependancy_id
-#: model:ir.model.fields,field_description:jt_income.field_product_product__unit_id
+#: model:ir.model.fields,field_description:jt_income.field_income_cash_cut__dependancy_id model:ir.model.fields,field_description:jt_income.field_product_product__unit_id
 #: model:ir.model.fields,field_description:jt_income.field_product_template__unit_id
 msgid "Dependency"
 msgstr "Dependencia"
@@ -1106,8 +1050,7 @@ msgstr ""
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_activity_catalog__description
 #: model:ir.model.fields,field_description:jt_income.field_association_distribution_ie_accounts__desc
-#: model:ir.model.fields,field_description:jt_income.field_payment_of_income__description
-#: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
+#: model:ir.model.fields,field_description:jt_income.field_payment_of_income__description model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
 msgid "Description"
 msgstr "Descripción"
 
@@ -1209,6 +1152,16 @@ msgid "EMPLOYEES COPIED"
 msgstr "EMPLEADOS COPIADOS"
 
 #. module: jt_income
+#: model_terms:ir.ui.view,arch_db:jt_income.pdf_income_annual_report_1
+msgid "ENERO"
+msgstr ""
+
+#. module: jt_income
+#: model_terms:ir.ui.view,arch_db:jt_income.inherited_account_journal_form_view
+msgid "Earned Income"
+msgstr "Ingreso Ganado"
+
+#. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_account_move__emitter
 msgid "Emitter"
 msgstr "Emisor"
@@ -1261,7 +1214,7 @@ msgstr "Inscripciones y Colegiaturas"
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.inherited_account_journal_form_view
 msgid "Estimate Income"
-msgstr ""
+msgstr "Ingreso Estimado"
 
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_account_move__exchange_rate
@@ -1299,8 +1252,7 @@ msgid "Expenditure Budget"
 msgstr "Presupuesto de Egresos"
 
 #. module: jt_income
-#: code:addons/jt_income/reports/new_annual_income_report.py:0
-#: code:addons/jt_income/reports/new_income_annual_report.py:0
+#: code:addons/jt_income/reports/new_annual_income_report.py:0 code:addons/jt_income/reports/new_income_annual_report.py:0
 #, python-format
 msgid "Export (XLSX)"
 msgstr "Exportar (XLSX)"
@@ -1322,6 +1274,11 @@ msgstr "Ingreso extraordinario/propio"
 #: model:ir.model.fields,field_description:jt_income.field_income_by_item_report_data__extraordinary_income
 msgid "Extraordinary Income"
 msgstr "Ingresos Extraordinarios"
+
+#. module: jt_income
+#: model_terms:ir.ui.view,arch_db:jt_income.pdf_income_annual_report_1
+msgid "FEBRERO"
+msgstr ""
 
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_income_by_item_month_report__fif_funds
@@ -1468,10 +1425,8 @@ msgid "Generate Reports"
 msgstr ""
 
 #. module: jt_income
-#: model_terms:ir.ui.view,arch_db:jt_income.income_annual_report_search_view
-#: model_terms:ir.ui.view,arch_db:jt_income.income_by_item_month_report_search_view
-#: model_terms:ir.ui.view,arch_db:jt_income.income_by_item_report_data_search_view
-#: model_terms:ir.ui.view,arch_db:jt_income.income_cash_cut_search
+#: model_terms:ir.ui.view,arch_db:jt_income.income_annual_report_search_view model_terms:ir.ui.view,arch_db:jt_income.income_by_item_month_report_search_view
+#: model_terms:ir.ui.view,arch_db:jt_income.income_by_item_report_data_search_view model_terms:ir.ui.view,arch_db:jt_income.income_cash_cut_search
 msgid "Group By"
 msgstr ""
 
@@ -1496,37 +1451,27 @@ msgid "Hide Budget Refund"
 msgstr ""
 
 #. module: jt_income
-#: model:ir.model.fields,field_description:jt_income.field_account_move__income_id
-#: model:ir.model.fields,field_description:jt_income.field_activity_catalog__activity_id
-#: model:ir.model.fields,field_description:jt_income.field_activity_catalog__id
-#: model:ir.model.fields,field_description:jt_income.field_association_distribution_ie_accounts__id
+#: model:ir.model.fields,field_description:jt_income.field_account_move__income_id model:ir.model.fields,field_description:jt_income.field_activity_catalog__activity_id
+#: model:ir.model.fields,field_description:jt_income.field_activity_catalog__id model:ir.model.fields,field_description:jt_income.field_association_distribution_ie_accounts__id
 #: model:ir.model.fields,field_description:jt_income.field_association_distribution_ie_accounts_line__id
-#: model:ir.model.fields,field_description:jt_income.field_deposit_certificate_type__id
-#: model:ir.model.fields,field_description:jt_income.field_income_annual_report__id
-#: model:ir.model.fields,field_description:jt_income.field_income_by_item_month_report__id
-#: model:ir.model.fields,field_description:jt_income.field_income_by_item_report_data__id
-#: model:ir.model.fields,field_description:jt_income.field_income_by_item_report_wizard__id
-#: model:ir.model.fields,field_description:jt_income.field_income_cash_cut__id
-#: model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__id
-#: model:ir.model.fields,field_description:jt_income.field_jt_income_annual_income_report__id
+#: model:ir.model.fields,field_description:jt_income.field_deposit_certificate_type__id model:ir.model.fields,field_description:jt_income.field_income_annual_report__id
+#: model:ir.model.fields,field_description:jt_income.field_income_by_item_month_report__id model:ir.model.fields,field_description:jt_income.field_income_by_item_report_data__id
+#: model:ir.model.fields,field_description:jt_income.field_income_by_item_report_wizard__id model:ir.model.fields,field_description:jt_income.field_income_cash_cut__id
+#: model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__id model:ir.model.fields,field_description:jt_income.field_jt_income_annual_income_report__id
 #: model:ir.model.fields,field_description:jt_income.field_jt_income_income_annual_report__id
-#: model:ir.model.fields,field_description:jt_income.field_liquid_adjustments_manual_deposite__id
-#: model:ir.model.fields,field_description:jt_income.field_payment_of_income__id
-#: model:ir.model.fields,field_description:jt_income.field_sender_recipient_trades__id
-#: model:ir.model.fields,field_description:jt_income.field_sub_origin_resource__id
+#: model:ir.model.fields,field_description:jt_income.field_liquid_adjustments_manual_deposite__id model:ir.model.fields,field_description:jt_income.field_payment_of_income__id
+#: model:ir.model.fields,field_description:jt_income.field_sender_recipient_trades__id model:ir.model.fields,field_description:jt_income.field_sub_origin_resource__id
 msgid "ID"
 msgstr "ID de Actividad"
 
 #. module: jt_income
-#: model:ir.model.fields,field_description:jt_income.field_product_product__activity_id
-#: model:ir.model.fields,field_description:jt_income.field_product_template__activity_id
+#: model:ir.model.fields,field_description:jt_income.field_product_product__activity_id model:ir.model.fields,field_description:jt_income.field_product_template__activity_id
 msgid "ID Activity"
 msgstr "ID Actividad"
 
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_association_distribution_ie_accounts_line__ie_account_id
-#: model:ir.model.fields,field_description:jt_income.field_product_product__ie_account_id
-#: model:ir.model.fields,field_description:jt_income.field_product_template__ie_account_id
+#: model:ir.model.fields,field_description:jt_income.field_product_product__ie_account_id model:ir.model.fields,field_description:jt_income.field_product_template__ie_account_id
 msgid "IE Account"
 msgstr "Cuenta IE"
 
@@ -1578,12 +1523,8 @@ msgstr ""
 #. module: jt_income
 #: code:addons/jt_income/models/invoice.py:0
 #, python-format
-msgid ""
-"If you want to use \"Off-Balance Sheet\" accounts, all the accounts of the "
-"journal entry must be of this type"
-msgstr ""
-"Si deseas usar cuentas \"Fuera de Estado de Situación\", todas las cuentas "
-"de la entrada contable deben de ser de este tipo."
+msgid "If you want to use \"Off-Balance Sheet\" accounts, all the accounts of the journal entry must be of this type"
+msgstr "Si deseas usar cuentas \"Fuera de Estado de Situación\", todas las cuentas de la entrada contable deben de ser de este tipo."
 
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
@@ -1594,25 +1535,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__for_income
 #: model:ir.model.fields,field_description:jt_income.field_account_journal__for_income
 #: model:ir.model.fields,field_description:jt_income.field_account_setup_bank_manual_config__for_income
-#: model:ir.model.fields,field_description:jt_income.field_res_partner_bank__for_income
-#: model:ir.model.fields.selection,name:jt_income.selection__account_move__voucher_type__income
+#: model:ir.model.fields,field_description:jt_income.field_res_partner_bank__for_income model:ir.model.fields.selection,name:jt_income.selection__account_move__voucher_type__income
 #: model:ir.model.fields.selection,name:jt_income.selection__association_distribution_ie_accounts__scope_of_application__income
 msgid "Income"
 msgstr "Ingreso"
 
 #. module: jt_income
-#: model:ir.ui.menu,name:jt_income.main_menu_income
-#: model:ir.ui.menu,name:jt_income.submenu_menu_income
-msgid "Incomes"
-msgstr "Ingresos"
-
-#. module: jt_income
-#: code:addons/jt_income/reports/new_income_annual_report.py:0
-#: model:ir.actions.act_window,name:jt_income.action_income_annual_report
-#: model:ir.actions.client,name:jt_income.action_new_income_annual_report
-#: model:ir.actions.report,name:jt_income.pdf_income_annual_report
-#: model:ir.model,name:jt_income.model_income_annual_report
-#: model:ir.model,name:jt_income.model_jt_income_income_annual_report
+#: code:addons/jt_income/reports/new_income_annual_report.py:0 model:ir.actions.act_window,name:jt_income.action_income_annual_report
+#: model:ir.actions.client,name:jt_income.action_new_income_annual_report model:ir.actions.report,name:jt_income.pdf_income_annual_report
+#: model:ir.model,name:jt_income.model_income_annual_report model:ir.model,name:jt_income.model_jt_income_income_annual_report
 #: model:ir.ui.menu,name:jt_income.menu_new_income_annual_report
 #, python-format
 msgid "Income Annual Report"
@@ -1673,8 +1604,7 @@ msgid "Income Sub-subaccount"
 msgstr "Subsubcuenta"
 
 #. module: jt_income
-#: model:ir.model.fields,field_description:jt_income.field_account_move__income_type
-#: model:ir.model.fields,field_description:jt_income.field_sub_origin_resource__income_type
+#: model:ir.model.fields,field_description:jt_income.field_account_move__income_type model:ir.model.fields,field_description:jt_income.field_sub_origin_resource__income_type
 msgid "Income Type"
 msgstr "Tipo de ingreso"
 
@@ -1686,7 +1616,7 @@ msgstr ""
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.inherited_account_journal_form_view
 msgid "Income to run"
-msgstr ""
+msgstr "Ingreso por Ejecutar"
 
 #. module: jt_income
 #: model:ir.model,name:jt_income.model_income_by_item_report_data
@@ -1697,6 +1627,11 @@ msgstr ""
 #: model:ir.model,name:jt_income.model_income_by_item_report_wizard
 msgid "IncomeBYItemReportWizard"
 msgstr ""
+
+#. module: jt_income
+#: model:ir.ui.menu,name:jt_income.main_menu_income model:ir.ui.menu,name:jt_income.submenu_menu_income
+msgid "Incomes"
+msgstr "Ingresos"
 
 #. module: jt_income
 #: code:addons/jt_income/reports/new_annual_income_report.py:0
@@ -1717,9 +1652,7 @@ msgstr ""
 
 #. module: jt_income
 #: model:ir.model.fields,help:jt_income.field_income_cash_cut__l10n_mx_edi_payment_method_id
-msgid ""
-"Indicates the way the payment was/will be received, where the options could "
-"be: Cash, Nominal Check, Credit Card, etc."
+msgid "Indicates the way the payment was/will be received, where the options could be: Cash, Nominal Check, Credit Card, etc."
 msgstr ""
 
 #. module: jt_income
@@ -1733,6 +1666,18 @@ msgstr ""
 #, python-format
 msgid "Inscripciones y Colegiaturas"
 msgstr ""
+
+#. module: jt_income
+#: code:addons/jt_income/models/product.py:0
+#, python-format
+msgid "Internal Reference NULL Not Allowed!"
+msgstr ""
+
+#. module: jt_income
+#: code:addons/jt_income/models/product.py:0 model:ir.model.constraint,message:jt_income.constraint_product_template_unique_default_code
+#, python-format
+msgid "Internal Reference must be unique."
+msgstr "La Referencia Interna debe de ser única."
 
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__account_internal_type
@@ -1755,8 +1700,7 @@ msgid "Invoice Move"
 msgstr ""
 
 #. module: jt_income
-#: model:ir.actions.act_window,name:jt_income.action_move_income_out_invoice_type
-#: model:ir.ui.menu,name:jt_income.menu_invoice_income
+#: model:ir.actions.act_window,name:jt_income.action_move_income_out_invoice_type model:ir.ui.menu,name:jt_income.menu_invoice_income
 msgid "Invoices"
 msgstr "Facturas"
 
@@ -1776,13 +1720,22 @@ msgid "Issuer Dependency"
 msgstr "Dependencia Emisora"
 
 #. module: jt_income
+#: model_terms:ir.ui.view,arch_db:jt_income.pdf_income_annual_report_1
+msgid "JULIO"
+msgstr ""
+
+#. module: jt_income
+#: model_terms:ir.ui.view,arch_db:jt_income.pdf_income_annual_report_1
+msgid "JUNIO"
+msgstr ""
+
+#. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_income_annual_report__january
 msgid "January"
 msgstr ""
 
 #. module: jt_income
-#: model:ir.model,name:jt_income.model_account_journal
-#: model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__journal_id
+#: model:ir.model,name:jt_income.model_account_journal model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__journal_id
 msgid "Journal"
 msgstr "Diario"
 
@@ -1835,7 +1788,6 @@ msgstr "Justificación del Movimiento"
 
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_account_move_line__l10n_mx_edi_product_code_sat_id
-#: model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__l10n_mx_edi_product_code_sat_id
 msgid "Key Product SAT"
 msgstr "Clave Producto SAT"
 
@@ -1875,15 +1827,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_income.field_association_distribution_ie_accounts_line__write_uid
 #: model:ir.model.fields,field_description:jt_income.field_deposit_certificate_type__write_uid
 #: model:ir.model.fields,field_description:jt_income.field_income_by_item_report_data__write_uid
-#: model:ir.model.fields,field_description:jt_income.field_income_by_item_report_wizard__write_uid
-#: model:ir.model.fields,field_description:jt_income.field_income_cash_cut__write_uid
+#: model:ir.model.fields,field_description:jt_income.field_income_by_item_report_wizard__write_uid model:ir.model.fields,field_description:jt_income.field_income_cash_cut__write_uid
 #: model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__write_uid
 #: model:ir.model.fields,field_description:jt_income.field_liquid_adjustments_manual_deposite__write_uid
-#: model:ir.model.fields,field_description:jt_income.field_payment_of_income__write_uid
-#: model:ir.model.fields,field_description:jt_income.field_sender_recipient_trades__write_uid
+#: model:ir.model.fields,field_description:jt_income.field_payment_of_income__write_uid model:ir.model.fields,field_description:jt_income.field_sender_recipient_trades__write_uid
 #: model:ir.model.fields,field_description:jt_income.field_sub_origin_resource__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Última modificación por"
 
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_activity_catalog__write_date
@@ -1892,14 +1842,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_income.field_deposit_certificate_type__write_date
 #: model:ir.model.fields,field_description:jt_income.field_income_by_item_report_data__write_date
 #: model:ir.model.fields,field_description:jt_income.field_income_by_item_report_wizard__write_date
-#: model:ir.model.fields,field_description:jt_income.field_income_cash_cut__write_date
-#: model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__write_date
+#: model:ir.model.fields,field_description:jt_income.field_income_cash_cut__write_date model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__write_date
 #: model:ir.model.fields,field_description:jt_income.field_liquid_adjustments_manual_deposite__write_date
-#: model:ir.model.fields,field_description:jt_income.field_payment_of_income__write_date
-#: model:ir.model.fields,field_description:jt_income.field_sender_recipient_trades__write_date
+#: model:ir.model.fields,field_description:jt_income.field_payment_of_income__write_date model:ir.model.fields,field_description:jt_income.field_sender_recipient_trades__write_date
 #: model:ir.model.fields,field_description:jt_income.field_sub_origin_resource__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Última fecha de modificación"
 
 #. module: jt_income
 #: model:ir.model.fields.selection,name:jt_income.selection__account_move__income_activity__leasing_real_estate
@@ -1923,8 +1871,7 @@ msgid "Lines from \"Off-Balance Sheet\" accounts cannot be reconciled"
 msgstr "Las líneas de las cuentas \"fuera de balance\" no se pueden conciliar"
 
 #. module: jt_income
-#: code:addons/jt_income/models/invoice.py:0
-#: model:ir.model.fields.selection,name:jt_income.selection__liquid_adjustments_manual_deposite__adaptation_type__liquid
+#: code:addons/jt_income/models/invoice.py:0 model:ir.model.fields.selection,name:jt_income.selection__liquid_adjustments_manual_deposite__adaptation_type__liquid
 #, python-format
 msgid "Liquid Adjustments"
 msgstr "Liquidez"
@@ -1937,6 +1884,16 @@ msgstr ""
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.view_liquid_adjustments_manual_deposite
 msgid "Liquidity"
+msgstr ""
+
+#. module: jt_income
+#: model_terms:ir.ui.view,arch_db:jt_income.pdf_income_annual_report_1
+msgid "MARZO"
+msgstr ""
+
+#. module: jt_income
+#: model_terms:ir.ui.view,arch_db:jt_income.pdf_income_annual_report_1
+msgid "MAYO"
 msgstr ""
 
 #. module: jt_income
@@ -2035,16 +1992,24 @@ msgid "Movement date"
 msgstr "Fecha de Movimiento"
 
 #. module: jt_income
+#: model_terms:ir.ui.view,arch_db:jt_income.pdf_income_annual_report_1
+msgid "NOMBRE"
+msgstr ""
+
+#. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.income_annual_report
 msgid "NOMINA"
 msgstr ""
 
 #. module: jt_income
-#: model:ir.model.fields,field_description:jt_income.field_account_move__payment_method_name
-#: model:ir.model.fields,field_description:jt_income.field_deposit_certificate_type__name
+#: model_terms:ir.ui.view,arch_db:jt_income.pdf_income_annual_report_1
+msgid "NOVIEMBRE"
+msgstr ""
+
+#. module: jt_income
+#: model:ir.model.fields,field_description:jt_income.field_account_move__payment_method_name model:ir.model.fields,field_description:jt_income.field_deposit_certificate_type__name
 #: model:ir.model.fields,field_description:jt_income.field_income_annual_report__sub_origin_name
-#: model:ir.model.fields,field_description:jt_income.field_income_annual_report__sub_origin_resource_id
-#: model:ir.model.fields,field_description:jt_income.field_income_cash_cut__name
+#: model:ir.model.fields,field_description:jt_income.field_income_annual_report__sub_origin_resource_id model:ir.model.fields,field_description:jt_income.field_income_cash_cut__name
 #: model_terms:ir.ui.view,arch_db:jt_income.income_annual_report_search_view
 msgid "Name"
 msgstr "Nombre"
@@ -2065,8 +2030,7 @@ msgid "No Follow-up"
 msgstr ""
 
 #. module: jt_income
-#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_5_document
-#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_6_document
+#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_5_document model_terms:ir.ui.view,arch_db:jt_income.invoice_format_6_document
 #: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_7_document
 msgid "No."
 msgstr ""
@@ -2078,8 +2042,7 @@ msgid "Nombre"
 msgstr ""
 
 #. module: jt_income
-#: code:addons/jt_income/reports/new_annual_income_report.py:0
-#: model:ir.model.fields,field_description:jt_income.field_income_by_item_month_report__nomina
+#: code:addons/jt_income/reports/new_annual_income_report.py:0 model:ir.model.fields,field_description:jt_income.field_income_by_item_month_report__nomina
 #: model:ir.model.fields,field_description:jt_income.field_income_by_item_report_data__nomina
 #, python-format
 msgid "Nomina"
@@ -2118,6 +2081,11 @@ msgid "Number receipts"
 msgstr "No. Recibos"
 
 #. module: jt_income
+#: model_terms:ir.ui.view,arch_db:jt_income.pdf_income_annual_report_1
+msgid "OCTUBRE"
+msgstr ""
+
+#. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_1_document
 msgid "OFICIO D.D.IA LA CONTADURIA GENERAL"
 msgstr ""
@@ -2154,8 +2122,7 @@ msgid "Odoo helps you easily track all activities related to a customer."
 msgstr ""
 
 #. module: jt_income
-#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_1_document
-#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_3_document
+#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_1_document model_terms:ir.ui.view,arch_db:jt_income.invoice_format_3_document
 #: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_6_document
 msgid "Of. No."
 msgstr ""
@@ -2219,12 +2186,8 @@ msgid "Own"
 msgstr "Propio"
 
 #. module: jt_income
-#: model_terms:ir.ui.view,arch_db:jt_income.external_layout_1
-#: model_terms:ir.ui.view,arch_db:jt_income.external_layout_2
-#: model_terms:ir.ui.view,arch_db:jt_income.external_layout_3
-#: model_terms:ir.ui.view,arch_db:jt_income.external_layout_4
-#: model_terms:ir.ui.view,arch_db:jt_income.external_layout_5
-#: model_terms:ir.ui.view,arch_db:jt_income.external_layout_6
+#: model_terms:ir.ui.view,arch_db:jt_income.external_layout_1 model_terms:ir.ui.view,arch_db:jt_income.external_layout_2 model_terms:ir.ui.view,arch_db:jt_income.external_layout_3
+#: model_terms:ir.ui.view,arch_db:jt_income.external_layout_4 model_terms:ir.ui.view,arch_db:jt_income.external_layout_5 model_terms:ir.ui.view,arch_db:jt_income.external_layout_6
 #: model_terms:ir.ui.view,arch_db:jt_income.external_layout_7
 msgid ""
 "PATRONATO UNIVERSITARIO<br/>\n"
@@ -2242,8 +2205,7 @@ msgid ""
 msgstr ""
 
 #. module: jt_income
-#: code:addons/jt_income/reports/new_annual_income_report.py:0
-#: code:addons/jt_income/reports/new_income_annual_report.py:0
+#: code:addons/jt_income/reports/new_annual_income_report.py:0 code:addons/jt_income/reports/new_income_annual_report.py:0
 #, python-format
 msgid "PDF"
 msgstr ""
@@ -2275,22 +2237,19 @@ msgid "Partner"
 msgstr ""
 
 #. module: jt_income
-#: code:addons/jt_income/reports/new_annual_income_report.py:0
-#: model:ir.model.fields,field_description:jt_income.field_income_by_item_month_report__patrimonial_income
+#: code:addons/jt_income/reports/new_annual_income_report.py:0 model:ir.model.fields,field_description:jt_income.field_income_by_item_month_report__patrimonial_income
 #: model:ir.model.fields,field_description:jt_income.field_income_by_item_report_data__patrimonial_income
 #, python-format
 msgid "Patrimonial Income"
 msgstr "Ingresos patrimoniales"
 
 #. module: jt_income
-#: model:ir.model.fields,field_description:jt_income.field_income_cash_cut__l10n_mx_edi_payment_method_id
-#: model_terms:ir.ui.view,arch_db:jt_income.income_cash_cut_search
+#: model:ir.model.fields,field_description:jt_income.field_income_cash_cut__l10n_mx_edi_payment_method_id model_terms:ir.ui.view,arch_db:jt_income.income_cash_cut_search
 msgid "Payment Method"
 msgstr "Método de pago"
 
 #. module: jt_income
-#: model:ir.actions.act_window,name:jt_income.action_payment_of_income
-#: model:ir.ui.menu,name:jt_income.menu_payment_of_income
+#: model:ir.actions.act_window,name:jt_income.action_payment_of_income model:ir.ui.menu,name:jt_income.menu_payment_of_income
 msgid "Payment Of"
 msgstr "Cobro de"
 
@@ -2305,7 +2264,7 @@ msgid "Payment Supplement"
 msgstr "Complemento de pago"
 
 #. module: jt_income
-#: model:ir.model.fields,field_description:jt_income.field_account_move__income_payment_type
+#: model:ir.model.fields,field_description:jt_income.field_account_move__income_payment_type model_terms:ir.ui.view,arch_db:jt_income.view_account_payment_form_income_inherit
 msgid "Payment Type"
 msgstr "Tipo de pago"
 
@@ -2320,15 +2279,10 @@ msgid "Payment in a singlePUE"
 msgstr "Pago en una sola exhibición PUE"
 
 #. module: jt_income
-#: model:ir.model.fields,field_description:jt_income.field_account_move__payment_of_id
-#: model:ir.model.fields,field_description:jt_income.field_payment_of_income__name
-msgid "Payment of"
-msgstr "Cobro de"
-
-#. module: jt_income
+#: model:ir.model.fields,field_description:jt_income.field_account_move__payment_of_id model:ir.model.fields,field_description:jt_income.field_payment_of_income__name
 #: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
 msgid "Payment of"
-msgstr "Producto"
+msgstr "Cobro de"
 
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_account_move__income_payment_ref
@@ -2346,11 +2300,20 @@ msgid "Payment way, is found in the SAT catalog."
 msgstr ""
 
 #. module: jt_income
-#: model:ir.model,name:jt_income.model_account_payment
-#: model:ir.ui.menu,name:jt_income.menu_invoice_payment_income
-#: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
+#: model:ir.actions.act_window,name:jt_income.action_account_income_payments model:ir.model,name:jt_income.model_account_payment
+#: model:ir.ui.menu,name:jt_income.menu_invoice_payment_income model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
 msgid "Payments"
-msgstr "Pagos"
+msgstr "Cobros"
+
+#. module: jt_income
+#: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
+msgid "Payments Register"
+msgstr ""
+
+#. module: jt_income
+#: model_terms:ir.actions.act_window,help:jt_income.action_account_income_payments
+msgid "Payments are used to register liquidity movements. You can process those payments by your own means or by using installed facilities."
+msgstr ""
 
 #. module: jt_income
 #: model:ir.model.fields.selection,name:jt_income.selection__association_distribution_ie_accounts__proration_calculation__percentage_price
@@ -2364,7 +2327,6 @@ msgstr ""
 
 #. module: jt_income
 #: code:addons/jt_income/models/invoice.py:0
-#: code:addons/jt_income/models/invoice.py:0
 #, python-format
 msgid "Please Configure Default Debit Account of Bank %s"
 msgstr ""
@@ -2376,10 +2338,20 @@ msgid "Please configure IE Accounts 100% Percentage"
 msgstr ""
 
 #. module: jt_income
+#: code:addons/jt_income/models/account_payment.py:0
+#, python-format
+msgid "Please configure UNAM and CONAC Accrued Income Account!"
+msgstr "Por favor configure las cuentas de Ingresos en el Diario del Banco seleccionado"
+
+#. module: jt_income
+#: code:addons/jt_income/models/account_payment.py:0
+#, python-format
+msgid "Please configure UNAM and CONAC Recover Income Account!"
+msgstr ""
+
+#. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_5_document
-msgid ""
-"Por instrucciones del Lic. Alejandro Macias Ortega, Director de la Dirección"
-" General de Finanzas,  en  relación al oficio"
+msgid "Por instrucciones del Lic. Alejandro Macias Ortega, Director de la Dirección General de Finanzas,  en  relación al oficio"
 msgstr ""
 
 #. module: jt_income
@@ -2398,8 +2370,7 @@ msgid "Price"
 msgstr "Precio"
 
 #. module: jt_income
-#: code:addons/jt_income/reports/new_annual_income_report.py:0
-#: code:addons/jt_income/reports/new_income_annual_report.py:0
+#: code:addons/jt_income/reports/new_annual_income_report.py:0 code:addons/jt_income/reports/new_income_annual_report.py:0
 #, python-format
 msgid "Print Preview"
 msgstr "Vista previa de impresión"
@@ -2495,10 +2466,14 @@ msgid "Quantity:"
 msgstr ""
 
 #. module: jt_income
-#: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
-#: model_terms:ir.ui.view,arch_db:jt_income.sender_recipient_trades_from
+#: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view model_terms:ir.ui.view,arch_db:jt_income.sender_recipient_trades_from
 msgid "RECIPIENT"
 msgstr "Remitente"
+
+#. module: jt_income
+#: model_terms:ir.ui.view,arch_db:jt_income.pdf_income_annual_report_1
+msgid "RESUMEN"
+msgstr ""
 
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_account_move__manual_rfc
@@ -2543,7 +2518,7 @@ msgstr "Tipo de registro"
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.inherited_account_journal_form_view
 msgid "Recover Income"
-msgstr ""
+msgstr "Ingreso Recaudado"
 
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__ref
@@ -2563,9 +2538,13 @@ msgstr "Referencias DGAE"
 
 #. module: jt_income
 #: model:ir.model,name:jt_income.model_account_payment_register
-#: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
 msgid "Register Payment"
 msgstr "Registrar pago"
+
+#. module: jt_income
+#: model_terms:ir.actions.act_window,help:jt_income.action_account_income_payments
+msgid "Register a payment"
+msgstr ""
 
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_account_move__registry
@@ -2583,8 +2562,7 @@ msgid "Related CFDI"
 msgstr "CFDI relacionado"
 
 #. module: jt_income
-#: model:ir.model.fields,field_description:jt_income.field_sub_origin_resource__report_name
-#: model:ir.ui.menu,name:jt_income.menu_income_report
+#: model:ir.model.fields,field_description:jt_income.field_sub_origin_resource__report_name model:ir.ui.menu,name:jt_income.menu_income_report
 msgid "Report"
 msgstr "Reportes"
 
@@ -2595,8 +2573,7 @@ msgid "Reporting format returned check"
 msgstr "Formato de notificación de cheque devuelto"
 
 #. module: jt_income
-#: model_terms:ir.ui.view,arch_db:jt_income.income_annual_report_search_view
-#: model_terms:ir.ui.view,arch_db:jt_income.income_by_item_month_report_search_view
+#: model_terms:ir.ui.view,arch_db:jt_income.income_annual_report_search_view model_terms:ir.ui.view,arch_db:jt_income.income_by_item_month_report_search_view
 #: model_terms:ir.ui.view,arch_db:jt_income.income_by_item_report_data_search_view
 msgid "Reports"
 msgstr ""
@@ -2627,16 +2604,25 @@ msgid "Reverse Entry"
 msgstr ""
 
 #. module: jt_income
+#: model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__l10n_mx_edi_product_code_sat_id
+msgid "SAT Code"
+msgstr ""
+
+#. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_account_move_line__l10n_mx_edi_uom_code_sat_id
 #: model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__l10n_mx_edi_uom_code_sat_id
 msgid "SAT Key Unit"
 msgstr "Clave de Unidad SAT"
 
 #. module: jt_income
-#: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
-#: model_terms:ir.ui.view,arch_db:jt_income.sender_recipient_trades_from
+#: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view model_terms:ir.ui.view,arch_db:jt_income.sender_recipient_trades_from
 msgid "SENDER"
 msgstr "Destinatario"
+
+#. module: jt_income
+#: model_terms:ir.ui.view,arch_db:jt_income.pdf_income_annual_report_1
+msgid "SEPTIEMBRE"
+msgstr ""
 
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.income_annual_report
@@ -2646,6 +2632,11 @@ msgstr ""
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.income_annual_report
 msgid "SUMA TOTAL"
+msgstr ""
+
+#. module: jt_income
+#: model_terms:ir.ui.view,arch_db:jt_income.pdf_income_annual_report_1
+msgid "SUMAS"
 msgstr ""
 
 #. module: jt_income
@@ -2686,8 +2677,7 @@ msgid "Sender Recipient Trades"
 msgstr "Remitente y destinatario de oficios"
 
 #. module: jt_income
-#: model:ir.actions.act_window,name:jt_income.action_sender_recipient_trades
-#: model:ir.ui.menu,name:jt_income.menu_sender_recipient_trades
+#: model:ir.actions.act_window,name:jt_income.action_sender_recipient_trades model:ir.ui.menu,name:jt_income.menu_sender_recipient_trades
 msgid "Sender and Recipient of Trades"
 msgstr "Remitente y destinatario de transacciones"
 
@@ -2723,16 +2713,13 @@ msgid "Sign"
 msgstr ""
 
 #. module: jt_income
-#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_2_document
-#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_3_document
-#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_4_document
-#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_5_document
+#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_2_document model_terms:ir.ui.view,arch_db:jt_income.invoice_format_3_document
+#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_4_document model_terms:ir.ui.view,arch_db:jt_income.invoice_format_5_document
 msgid "Sin más por el momento, quedo de usted enviándole un cordial saludo."
 msgstr ""
 
 #. module: jt_income
-#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_6_document
-#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_7_document
+#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_6_document model_terms:ir.ui.view,arch_db:jt_income.invoice_format_7_document
 msgid "Sin otro particular por el momento, le envió un cordial saludo."
 msgstr ""
 
@@ -2787,14 +2774,12 @@ msgid "Sub Origin"
 msgstr ""
 
 #. module: jt_income
-#: model:ir.actions.act_window,name:jt_income.sub_origin_resource_action
-#: model:ir.ui.menu,name:jt_income.menu_sub_origin_resource_income
+#: model:ir.actions.act_window,name:jt_income.sub_origin_resource_action model:ir.ui.menu,name:jt_income.menu_sub_origin_resource_income
 msgid "Sub Origin of Resource"
 msgstr "Sub origen del recurso"
 
 #. module: jt_income
-#: model:ir.model,name:jt_income.model_sub_origin_resource
-#: model:ir.model.fields,field_description:jt_income.field_sub_origin_resource__name
+#: model:ir.model,name:jt_income.model_sub_origin_resource model:ir.model.fields,field_description:jt_income.field_sub_origin_resource__name
 msgid "Sub origin of Resource"
 msgstr "Sub origen del recurso"
 
@@ -2807,8 +2792,7 @@ msgstr "Subdependencia"
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_account_move_line__subproduct_count
 #: model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__subproduct_count
-#: model:ir.model.fields,field_description:jt_income.field_product_product__sub_product
-#: model:ir.model.fields,field_description:jt_income.field_product_template__sub_product
+#: model:ir.model.fields,field_description:jt_income.field_product_product__sub_product model:ir.model.fields,field_description:jt_income.field_product_template__sub_product
 msgid "Subproduct"
 msgstr "Subproducto"
 
@@ -2835,8 +2819,7 @@ msgid "Subsidy Receivable"
 msgstr "Subsidio por cobrar"
 
 #. module: jt_income
-#: model:ir.model.fields,field_description:jt_income.field_income_cash_cut__subtotal
-#: model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__price_subtotal
+#: model:ir.model.fields,field_description:jt_income.field_income_cash_cut__subtotal model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__price_subtotal
 #: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
 msgid "Subtotal"
 msgstr ""
@@ -2858,7 +2841,7 @@ msgid "Surcharges PS"
 msgstr "Recargos PS"
 
 #. module: jt_income
-#: model_terms:ir.ui.view,arch_db:jt_income.income_annual_report
+#: model_terms:ir.ui.view,arch_db:jt_income.income_annual_report model_terms:ir.ui.view,arch_db:jt_income.pdf_income_annual_report_1
 msgid "TOTAL"
 msgstr ""
 
@@ -2869,9 +2852,7 @@ msgstr ""
 
 #. module: jt_income
 #: model:ir.model.fields,help:jt_income.field_income_invoice_move_line__tag_ids
-msgid ""
-"Tags assigned to this line by the tax creating it, if any. It determines its"
-" impact on financial reports."
+msgid "Tags assigned to this line by the tax creating it, if any. It determines its impact on financial reports."
 msgstr ""
 
 #. module: jt_income
@@ -2891,13 +2872,11 @@ msgstr ""
 
 #. module: jt_income
 #: model:ir.model.fields,help:jt_income.field_income_invoice_move_line__tax_repartition_line_id
-msgid ""
-"Tax repartition line that caused the creation of this move line, if any"
+msgid "Tax repartition line that caused the creation of this move line, if any"
 msgstr ""
 
 #. module: jt_income
-#: model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__tax_ids
-#: model_terms:ir.ui.view,arch_db:jt_income.income_cash_cut_search
+#: model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__tax_ids model_terms:ir.ui.view,arch_db:jt_income.income_cash_cut_search
 msgid "Taxes"
 msgstr "Impuestos"
 
@@ -2918,39 +2897,29 @@ msgstr ""
 
 #. module: jt_income
 #: model:ir.model.fields,help:jt_income.field_income_invoice_move_line__balance
-msgid ""
-"Technical field holding the debit - credit in order to open meaningful graph"
-" views from reports"
+msgid "Technical field holding the debit - credit in order to open meaningful graph views from reports"
 msgstr ""
 
 #. module: jt_income
 #: model:ir.model.fields,help:jt_income.field_income_invoice_move_line__always_set_currency_id
-msgid ""
-"Technical field used to compute the monetary field. As currency_id is not a "
-"required field, we need to use either the foreign currency, either the "
-"company one."
+msgid "Technical field used to compute the monetary field. As currency_id is not a required field, we need to use either the foreign currency, either the company one."
 msgstr ""
 
 #. module: jt_income
 #: model:ir.model.fields,help:jt_income.field_income_invoice_move_line__exclude_from_invoice_tab
-msgid ""
-"Technical field used to exclude some lines from the invoice_line_ids tab in "
-"the form view."
+msgid "Technical field used to exclude some lines from the invoice_line_ids tab in the form view."
 msgstr ""
 
 #. module: jt_income
 #: model:ir.model.fields,help:jt_income.field_income_invoice_move_line__recompute_tax_line
-msgid ""
-"Technical field used to know on which lines the taxes must be recomputed."
+msgid "Technical field used to know on which lines the taxes must be recomputed."
 msgstr ""
 
 #. module: jt_income
 #: model:ir.model.fields,help:jt_income.field_income_invoice_move_line__tax_exigible
 msgid ""
-"Technical field used to mark a tax line as exigible in the vat report or not"
-" (only exigible journal items are displayed). By default all new journal "
-"items are directly exigible, but with the feature cash_basis on taxes, some "
-"will become exigible only when the payment is recorded."
+"Technical field used to mark a tax line as exigible in the vat report or not (only exigible journal items are displayed). By default all new journal items are directly exigible, "
+"but with the feature cash_basis on taxes, some will become exigible only when the payment is recorded."
 msgstr ""
 
 #. module: jt_income
@@ -2959,12 +2928,9 @@ msgid "Technical field used to retrieve the cash rounding line."
 msgstr ""
 
 #. module: jt_income
-#: model:ir.model.fields,field_description:jt_income.field_account_move__template1
-#: model:ir.model.fields,field_description:jt_income.field_account_move__template2
-#: model:ir.model.fields,field_description:jt_income.field_account_move__template3
-#: model:ir.model.fields,field_description:jt_income.field_account_move__template4
-#: model:ir.model.fields,field_description:jt_income.field_account_move__template5
-#: model:ir.model.fields,field_description:jt_income.field_account_move__template6
+#: model:ir.model.fields,field_description:jt_income.field_account_move__template1 model:ir.model.fields,field_description:jt_income.field_account_move__template2
+#: model:ir.model.fields,field_description:jt_income.field_account_move__template3 model:ir.model.fields,field_description:jt_income.field_account_move__template4
+#: model:ir.model.fields,field_description:jt_income.field_account_move__template5 model:ir.model.fields,field_description:jt_income.field_account_move__template6
 #: model:ir.model.fields,field_description:jt_income.field_sender_recipient_trades__template
 msgid "Template"
 msgstr "Plantilla"
@@ -2977,9 +2943,7 @@ msgstr ""
 #. module: jt_income
 #: model:ir.model.fields,help:jt_income.field_income_invoice_move_line__account_internal_type
 msgid ""
-"The 'Internal Type' is used for features available on different types of "
-"accounts: liquidity type is for cash or bank accounts, payable/receivable is"
-" for vendor/customer accounts."
+"The 'Internal Type' is used for features available on different types of accounts: liquidity type is for cash or bank accounts, payable/receivable is for vendor/customer accounts."
 msgstr ""
 
 #. module: jt_income
@@ -3009,18 +2973,12 @@ msgstr "La cuenta %s (%s) es obsoleta. "
 #. module: jt_income
 #: code:addons/jt_income/models/invoice.py:0
 #, python-format
-msgid ""
-"The account selected on your journal entry forces to provide a secondary "
-"currency. You should remove the secondary currency on the account."
-msgstr ""
-"La cuenta seleccionada en su entrada de diario obliga a proporcionar una "
-"moneda secundaria. Debe eliminar la moneda secundaria en la cuenta."
+msgid "The account selected on your journal entry forces to provide a secondary currency. You should remove the secondary currency on the account."
+msgstr "La cuenta seleccionada en su entrada de diario obliga a proporcionar una moneda secundaria. Debe eliminar la moneda secundaria en la cuenta."
 
 #. module: jt_income
 #: model:ir.model.fields,help:jt_income.field_income_invoice_move_line__amount_currency
-msgid ""
-"The amount expressed in an optional other currency if it is a multi-currency"
-" entry."
+msgid "The amount expressed in an optional other currency if it is a multi-currency entry."
 msgstr ""
 
 #. module: jt_income
@@ -3035,22 +2993,17 @@ msgstr ""
 
 #. module: jt_income
 #: model:ir.model.fields,help:jt_income.field_income_invoice_move_line__quantity
-msgid ""
-"The optional quantity expressed by this line, eg: number of product sold. "
-"The quantity is not a legal requirement but is very useful for some reports."
+msgid "The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very useful for some reports."
 msgstr ""
 
 #. module: jt_income
 #: model:ir.model.fields,help:jt_income.field_income_invoice_move_line__amount_residual_currency
-msgid ""
-"The residual amount on a journal item expressed in its currency (possibly "
-"not the company currency)."
+msgid "The residual amount on a journal item expressed in its currency (possibly not the company currency)."
 msgstr ""
 
 #. module: jt_income
 #: model:ir.model.fields,help:jt_income.field_income_invoice_move_line__amount_residual
-msgid ""
-"The residual amount on a journal item expressed in the company currency."
+msgid "The residual amount on a journal item expressed in the company currency."
 msgstr ""
 
 #. module: jt_income
@@ -3060,27 +3013,20 @@ msgstr ""
 
 #. module: jt_income
 #: model:ir.model.fields,help:jt_income.field_income_invoice_move_line__date_maturity
-msgid ""
-"This field is used for payable and receivable journal entries. You can put "
-"the limit date for the payment of this line."
+msgid "This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line."
 msgstr ""
 
 #. module: jt_income
 #: model:ir.model.fields,help:jt_income.field_account_move_line__l10n_mx_edi_product_code_sat_id
-#: model:ir.model.fields,help:jt_income.field_income_invoice_move_line__l10n_mx_edi_product_code_sat_id
-msgid ""
-"This value is required in CFDI version 3.3 to express the code of the "
-"product or service covered by the present concept. Must be used a key from "
-"the SAT catalog."
+msgid "This value is required in CFDI version 3.3 to express the code of the product or service covered by the present concept. Must be used a key from the SAT catalog."
 msgstr ""
 
 #. module: jt_income
 #: model:ir.model.fields,help:jt_income.field_account_move_line__l10n_mx_edi_uom_code_sat_id
 #: model:ir.model.fields,help:jt_income.field_income_invoice_move_line__l10n_mx_edi_uom_code_sat_id
 msgid ""
-"This value is required in CFDI version 3.3 to specify the standardized unit "
-"of measure code applicable to the quantity expressed in the concept. The "
-"unit must correspond to the description in the concept."
+"This value is required in CFDI version 3.3 to specify the standardized unit of measure code applicable to the quantity expressed in the concept. The unit must correspond to the "
+"description in the concept."
 msgstr ""
 
 #. module: jt_income
@@ -3102,16 +3048,13 @@ msgid "Title"
 msgstr "Título"
 
 #. module: jt_income
-#: code:addons/jt_income/reports/new_annual_income_report.py:0
-#: code:addons/jt_income/reports/new_annual_income_report.py:0
-#: code:addons/jt_income/reports/new_income_annual_report.py:0
+#: code:addons/jt_income/reports/new_annual_income_report.py:0 code:addons/jt_income/reports/new_income_annual_report.py:0
 #: model:ir.model.fields,field_description:jt_income.field_income_annual_report__total
 #: model:ir.model.fields,field_description:jt_income.field_income_by_item_month_report__total_other_expense
 #: model:ir.model.fields,field_description:jt_income.field_income_by_item_month_report__total_other_income
 #: model:ir.model.fields,field_description:jt_income.field_income_by_item_report_data__total_other_expense
 #: model:ir.model.fields,field_description:jt_income.field_income_by_item_report_data__total_other_income
-#: model:ir.model.fields,field_description:jt_income.field_income_cash_cut__total
-#: model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__price_total
+#: model:ir.model.fields,field_description:jt_income.field_income_cash_cut__total model:ir.model.fields,field_description:jt_income.field_income_invoice_move_line__price_total
 #: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view
 #, python-format
 msgid "Total"
@@ -3149,8 +3092,7 @@ msgid "Type Of Changes"
 msgstr "Tipo de cambio"
 
 #. module: jt_income
-#: model:ir.actions.act_window,name:jt_income.deposit_certificate_type_action
-#: model:ir.model,name:jt_income.model_deposit_certificate_type
+#: model:ir.actions.act_window,name:jt_income.deposit_certificate_type_action model:ir.model,name:jt_income.model_deposit_certificate_type
 #: model:ir.ui.menu,name:jt_income.menu_deposit_certificate_type
 msgid "Type of Deposit Certificate"
 msgstr "Tipo de certificado de depósitoripción"
@@ -3198,8 +3140,7 @@ msgid "UoM"
 msgstr ""
 
 #. module: jt_income
-#: model:ir.model.fields,field_description:jt_income.field_income_cash_cut__user_id
-#: model_terms:ir.ui.view,arch_db:jt_income.income_cash_cut_search
+#: model:ir.model.fields,field_description:jt_income.field_income_cash_cut__user_id model_terms:ir.ui.view,arch_db:jt_income.income_cash_cut_search
 msgid "User"
 msgstr "Usuario"
 
@@ -3224,27 +3165,21 @@ msgid "Voucher Type"
 msgstr "Tipo de comprobante"
 
 #. module: jt_income
-#: code:addons/jt_income/reports/new_annual_income_report.py:0
-#: code:addons/jt_income/reports/new_income_annual_report.py:0
+#: code:addons/jt_income/reports/new_annual_income_report.py:0 code:addons/jt_income/reports/new_income_annual_report.py:0
 #, python-format
 msgid "XLSX"
 msgstr ""
 
 #. module: jt_income
-#: model:ir.model.fields,field_description:jt_income.field_income_annual_report__year
-#: model:ir.model.fields,field_description:jt_income.field_income_by_item_month_report__year
-#: model:ir.model.fields,field_description:jt_income.field_income_by_item_report_data__year
-#: model_terms:ir.ui.view,arch_db:jt_income.income_annual_report_search_view
-#: model_terms:ir.ui.view,arch_db:jt_income.income_by_item_month_report_search_view
-#: model_terms:ir.ui.view,arch_db:jt_income.income_by_item_report_data_search_view
+#: model:ir.model.fields,field_description:jt_income.field_income_annual_report__year model:ir.model.fields,field_description:jt_income.field_income_by_item_month_report__year
+#: model:ir.model.fields,field_description:jt_income.field_income_by_item_report_data__year model_terms:ir.ui.view,arch_db:jt_income.income_annual_report_search_view
+#: model_terms:ir.ui.view,arch_db:jt_income.income_by_item_month_report_search_view model_terms:ir.ui.view,arch_db:jt_income.income_by_item_report_data_search_view
 msgid "Year"
 msgstr ""
 
 #. module: jt_income
 #: model:ir.model.fields,help:jt_income.field_income_invoice_move_line__blocked
-msgid ""
-"You can check this box to mark this journal item as a litigation with the "
-"associated partner"
+msgid "You can check this box to mark this journal item as a litigation with the associated partner"
 msgstr ""
 
 #. module: jt_income
@@ -3256,17 +3191,12 @@ msgstr "No puede usar impuestos en líneas con una cuenta fuera de balance"
 #. module: jt_income
 #: code:addons/jt_income/models/invoice.py:0
 #, python-format
-msgid ""
-"You cannot use this general account in this journal, check the tab 'Entry "
-"Controls' on the related journal."
-msgstr ""
-"No puede utilizar esta cuenta general en este diario, compruebe la pestaña "
-"'Controles de asiento' en el diario relacionado."
+msgid "You cannot use this general account in this journal, check the tab 'Entry Controls' on the related journal."
+msgstr "No puede utilizar esta cuenta general en este diario, compruebe la pestaña 'Controles de asiento' en el diario relacionado."
 
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_4_document
-msgid ""
-"absorberá el importe del 20% de indemnización por un importe de  -------"
+msgid "absorberá el importe del 20% de indemnización por un importe de  -------"
 msgstr ""
 
 #. module: jt_income
@@ -3300,10 +3230,8 @@ msgid "del  banco"
 msgstr ""
 
 #. module: jt_income
-#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_2_document
-#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_4_document
-#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_5_document
-#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_6_document
+#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_2_document model_terms:ir.ui.view,arch_db:jt_income.invoice_format_4_document
+#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_5_document model_terms:ir.ui.view,arch_db:jt_income.invoice_format_6_document
 msgid "del banco"
 msgstr ""
 
@@ -3314,9 +3242,7 @@ msgstr ""
 
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_2_document
-msgid ""
-"en virtud de que el importe del cheque devueltos fue cubierto dentro de los "
-"5 primeros días"
+msgid "en virtud de que el importe del cheque devueltos fue cubierto dentro de los 5 primeros días"
 msgstr ""
 
 #. module: jt_income
@@ -3326,29 +3252,22 @@ msgstr ""
 
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_5_document
-msgid ""
-"le  informo  que <b> no se aplicará el  20% de  indemnización</b> por un "
-"importe de  -------------------------"
+msgid "le  informo  que <b> no se aplicará el  20% de  indemnización</b> por un importe de  -------------------------"
 msgstr ""
 
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_2_document
-msgid ""
-"le informo que  <b>se  condona  el  20% de  indemnización</b> por un importe"
-" de"
+msgid "le informo que  <b>se  condona  el  20% de  indemnización</b> por un importe de"
 msgstr ""
 
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_1_document
-msgid ""
-"le informo que <b>el 20% de indemnización </b>fue liquidada, por lo cual la "
-"dependencia solicita su reintegro a la cuenta de Ingresos Extraordinarios"
+msgid "le informo que <b>el 20% de indemnización </b>fue liquidada, por lo cual la dependencia solicita su reintegro a la cuenta de Ingresos Extraordinarios"
 msgstr ""
 
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_4_document
-msgid ""
-"los cuales se hará el cargo a la cuenta de Ingresos Extraordinarios número"
+msgid "los cuales se hará el cargo a la cuenta de Ingresos Extraordinarios número"
 msgstr ""
 
 #. module: jt_income
@@ -3362,8 +3281,7 @@ msgid "por cheque devuelto, por la"
 msgstr ""
 
 #. module: jt_income
-#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_4_document
-#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_6_document
+#: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_4_document model_terms:ir.ui.view,arch_db:jt_income.invoice_format_6_document
 msgid "por un importe de"
 msgstr ""
 
@@ -3391,8 +3309,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_1_document
 msgid "y antecedentes."
 msgstr ""
-
-#. module: jt_income
-#: model_terms:ir.ui.view,arch_db:jt_income.inherited_account_journal_form_view
-msgid "Earned Income"
-msgstr "Ingreso Ganado"

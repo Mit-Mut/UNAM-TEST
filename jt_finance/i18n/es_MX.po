@@ -6,16 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-07 23:55+0000\n"
-"PO-Revision-Date: 2021-04-07 19:18-0500\n"
+"POT-Creation-Date: 2021-04-15 17:56+0000\n"
+"PO-Revision-Date: 2021-04-15 17:56+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-"Language: es_MX\n"
-"X-Generator: Poedit 2.4.2\n"
 
 #. module: jt_finance
 #: model_terms:ir.ui.view,arch_db:jt_finance.search_template_currency
@@ -57,6 +55,7 @@ msgstr ""
 
 #. module: jt_finance
 #: code:addons/jt_finance/models/control_amounts_received.py:0
+#: code:addons/jt_finance/models/control_amounts_received.py:0
 #, python-format
 msgid "Actualmente, el Folio  %s ya está registrado!"
 msgstr ""
@@ -64,7 +63,7 @@ msgstr ""
 #. module: jt_finance
 #: model:res.groups,name:jt_finance.group_finance_admin
 msgid "Administrator"
-msgstr ""
+msgstr "Administrador"
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__amount_assigned
@@ -180,9 +179,14 @@ msgstr "Monto recibido Anual"
 
 #. module: jt_finance
 #: code:addons/jt_finance/wizard/import_control_amount_received_lines.py:0
+#: code:addons/jt_finance/wizard/import_control_amount_received_lines.py:0
+#: code:addons/jt_finance/wizard/import_control_amount_received_lines.py:0
+#: code:addons/jt_finance/wizard/import_control_amount_received_lines.py:0
+#: code:addons/jt_finance/wizard/import_control_amount_received_lines.py:0
+#: code:addons/jt_finance/wizard/import_control_amount_received_lines.py:0
 #, python-format
 msgid "Application Date Format Does Not match : %s"
-msgstr "El formato de la Fecha de la Solicitud no coincide: %s"
+msgstr "El formato de la fecha de la solicitud no coincide:% s"
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__application_date
@@ -214,19 +218,19 @@ msgstr "Agosto"
 #: code:addons/jt_finance/reports/summary_of_operations_bank_transactions.py:0
 #, python-format
 msgid "BANCARIO"
-msgstr "BANCARIO"
+msgstr ""
 
 #. module: jt_finance
 #: code:addons/jt_finance/reports/summary_of_operations_bank_transactions.py:0
 #, python-format
 msgid "BANCO DEPOSITO"
-msgstr "BANCO DEPOSITO"
+msgstr ""
 
 #. module: jt_finance
 #: code:addons/jt_finance/reports/summary_of_operations_bank_transactions.py:0
 #, python-format
 msgid "BANCO RETIRO"
-msgstr "BANCO RETIRO"
+msgstr ""
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__bank_id
@@ -239,7 +243,7 @@ msgstr "Banco"
 #: code:addons/jt_finance/reports/summary_of_operations_bank_transactions.py:0
 #, python-format
 msgid "Bank Journal (Summary of Operations - Bank Transactions)"
-msgstr ""
+msgstr "Diario bancario (Resumen de operaciones - Transacciones bancarias)"
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__bank_account_id
@@ -283,7 +287,7 @@ msgstr "Programa Presupuestario"
 #: code:addons/jt_finance/reports/summary_of_operations_bank_transactions.py:0
 #, python-format
 msgid "CHEQUE"
-msgstr "CHEQUE"
+msgstr ""
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__clc_april
@@ -370,27 +374,29 @@ msgstr "Cuenta de débito CONAC"
 #: code:addons/jt_finance/reports/summary_of_operations_bank_transactions.py:0
 #, python-format
 msgid "CONCEPTO"
-msgstr "CONCEPTO"
+msgstr ""
 
 #. module: jt_finance
 #: code:addons/jt_finance/reports/summary_of_operations_bank_transactions.py:0
 #, python-format
 msgid "CUENTA"
-msgstr "CUENTA"
+msgstr ""
 
 #. module: jt_finance
 #: code:addons/jt_finance/reports/summary_of_operations_bank_transactions.py:0
 #, python-format
 msgid "CUENTA DEPOSITO"
-msgstr "CUENTA DEPOSITO"
+msgstr ""
 
 #. module: jt_finance
 #: code:addons/jt_finance/models/control_amounts_received.py:0
 #, python-format
-msgid "Calendar of Assigned Amount not found for Budgetary Program %s and Item of Expenditure %s"
+msgid ""
+"Calendar of Assigned Amount not found for Budgetary Program %s and Item of "
+"Expenditure %s"
 msgstr ""
-"Calendario de Monto asignado no encontrado para la Conversión de Programa Presupuestario %s y la "
-"Partida de Gastos %s"
+"Calendario de Monto Asignado no encontrado para Programa Presupuestario% sy "
+"Partida de Gasto% s"
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__calendar_assigned_amount_id
@@ -402,7 +408,7 @@ msgstr "Calendario de Montos Asignados"
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__calendar_assigned_amount_line_id
 msgid "Calendar of assigned amount Line"
-msgstr "Línea de Calendario de Montos Asignados"
+msgstr "Calendario de cantidad asignada Línea"
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__line_ids
@@ -444,7 +450,7 @@ msgstr "Cerca"
 #: code:addons/jt_finance/reports/diary_of_bank_movements_in_dollars.py:0
 #, python-format
 msgid "Cobertura de Egresos"
-msgstr "Cobertura de Egresos"
+msgstr ""
 
 #. module: jt_finance
 #: model_terms:ir.ui.view,arch_db:jt_finance.inherited_account_journal_form_view_calendar
@@ -453,6 +459,16 @@ msgstr "Recaudado"
 
 #. module: jt_finance
 #: code:addons/jt_finance/wizard/calendar_assing_amount_import.py:0
+#: code:addons/jt_finance/wizard/calendar_assing_amount_import.py:0
+#: code:addons/jt_finance/wizard/calendar_assing_amount_import.py:0
+#: code:addons/jt_finance/wizard/calendar_assing_amount_import.py:0
+#: code:addons/jt_finance/wizard/calendar_assing_amount_import.py:0
+#: code:addons/jt_finance/wizard/calendar_assing_amount_import.py:0
+#: code:addons/jt_finance/wizard/import_control_amount_received_lines.py:0
+#: code:addons/jt_finance/wizard/import_control_amount_received_lines.py:0
+#: code:addons/jt_finance/wizard/import_control_amount_received_lines.py:0
+#: code:addons/jt_finance/wizard/import_control_amount_received_lines.py:0
+#: code:addons/jt_finance/wizard/import_control_amount_received_lines.py:0
 #: code:addons/jt_finance/wizard/import_control_amount_received_lines.py:0
 #, python-format
 msgid "Column  contains incorrect values. Error: %s"
@@ -467,18 +483,18 @@ msgstr "Comentarios"
 #: model:ir.model.fields.selection,name:jt_finance.selection__calendar_assigned_amounts__import_status__done
 #: model:ir.model.fields.selection,name:jt_finance.selection__control_amounts_received__import_status__done
 msgid "Completed"
-msgstr "Completado"
+msgstr "Terminado"
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_account_move__control_id
 #: model:ir.model.fields,field_description:jt_finance.field_account_move_line__control_id
 msgid "Control"
-msgstr "Control"
+msgstr ""
 
 #. module: jt_finance
 #: model_terms:ir.ui.view,arch_db:jt_finance.control_amounts_received_search_view
 msgid "Control Amounts Received"
-msgstr "Control de Montos Recibidos"
+msgstr "Montos de control recibidos"
 
 #. module: jt_finance
 #: model:ir.actions.act_window,name:jt_finance.action_control_amounts_received
@@ -502,7 +518,7 @@ msgstr "Líneas de Control de Montos Recibidos"
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__conversion_name
 msgid "Conversion Name"
-msgstr "Programa Presupuestario"
+msgstr "Nombre de conversión"
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__create_uid
@@ -537,7 +553,7 @@ msgstr "Creado el"
 #: code:addons/jt_finance/reports/type_of_operation.py:0
 #, python-format
 msgid "Cuenta Bancaria"
-msgstr "Cuenta Bancaria"
+msgstr ""
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__currency_id
@@ -547,9 +563,10 @@ msgstr "Divisa"
 
 #. module: jt_finance
 #: code:addons/jt_finance/models/control_amounts_received.py:0
+#: code:addons/jt_finance/models/control_amounts_received.py:0
 #, python-format
 msgid "Currently Folio %s is already registered!"
-msgstr "Actualmente, el Folio %s ya está registrado."
+msgstr "Actualmente, el Folio% s ya está registrado."
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__date
@@ -582,9 +599,11 @@ msgstr "Cuenta deudora por defecto"
 
 #. module: jt_finance
 #: code:addons/jt_finance/wizard/import_control_amount_received_lines.py:0
+#: code:addons/jt_finance/wizard/import_control_amount_received_lines.py:0
+#: code:addons/jt_finance/wizard/import_control_amount_received_lines.py:0
 #, python-format
 msgid "Deposit Date Format Does Not match : %s"
-msgstr "El formato de la Fecha de Depósito no coincide: %s"
+msgstr "El formato de la fecha de depósito no coincide:% s"
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__date
@@ -598,7 +617,7 @@ msgstr "Fecha de Depósito"
 #: code:addons/jt_finance/reports/type_of_operation.py:0
 #, python-format
 msgid "Descripción"
-msgstr "Descripción"
+msgstr ""
 
 #. module: jt_finance
 #: code:addons/jt_finance/reports/diary_of_bank_movements_in_dollars.py:0
@@ -693,14 +712,14 @@ msgstr "Estatus"
 #: code:addons/jt_finance/reports/payment_expense_calendar.py:0
 #, python-format
 msgid "Egreso"
-msgstr "Egreso"
+msgstr ""
 
 #. module: jt_finance
 #: code:addons/jt_finance/reports/diary_of_bank_movements_in_dollars.py:0
 #: code:addons/jt_finance/reports/summary_query_type.py:0
 #, python-format
 msgid "Egresos"
-msgstr "Egresos"
+msgstr ""
 
 #. module: jt_finance
 #: model_terms:ir.ui.view,arch_db:jt_finance.inherited_account_journal_form_view_calendar
@@ -710,7 +729,7 @@ msgstr "Estimado"
 #. module: jt_finance
 #: model:ir.model,name:jt_finance.model_excel_export_assign_report
 msgid "Excel Export Assign Report"
-msgstr "Informe de Asignación de Exportación a Excel"
+msgstr "Informe de asignación exportar a Excel"
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__item_char
@@ -747,7 +766,7 @@ msgstr "Exportar Resumen"
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__ff
 msgid "FF"
-msgstr "FF"
+msgstr ""
 
 #. module: jt_finance
 #: code:addons/jt_finance/reports/type_of_operation.py:0
@@ -759,7 +778,7 @@ msgstr "FOVISSTE"
 #: model:ir.model.fields.selection,name:jt_finance.selection__calendar_assigned_amounts_lines__state__fail
 #: model:ir.model.fields.selection,name:jt_finance.selection__control_amounts_received_line__state__fail
 msgid "Fail"
-msgstr "Error"
+msgstr "Fallo"
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__failed_rows
@@ -785,7 +804,7 @@ msgstr "Febrero"
 #: code:addons/jt_finance/reports/payment_expense_calendar.py:0
 #, python-format
 msgid "Fecha"
-msgstr "Fecha"
+msgstr ""
 
 #. module: jt_finance
 #: code:addons/jt_finance/reports/mimimum_balance_account.py:0
@@ -827,29 +846,29 @@ msgstr "Nombre del Archivo"
 #: code:addons/jt_finance/reports/mimimum_balance_account.py:0
 #, python-format
 msgid "Finaliza"
-msgstr "Finaliza"
+msgstr ""
 
 #. module: jt_finance
 #: model:ir.module.category,name:jt_finance.module_category_jt_finance
 msgid "Finance"
-msgstr "Finaliza"
+msgstr "Finanzas"
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__folio
 #: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received__folio
 msgid "Folio"
-msgstr "Folio"
+msgstr ""
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__folio_clc
 msgid "Folio CLC"
-msgstr "Folio CLC"
+msgstr ""
 
 #. module: jt_finance
 #: code:addons/jt_finance/reports/summary_query_type.py:0
 #, python-format
 msgid "Folios"
-msgstr "Folios"
+msgstr ""
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__function
@@ -877,7 +896,7 @@ msgstr "Agrupación por Objeto del Gasto"
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__item_first
 msgid "Grouping by Object of Expenditure First"
-msgstr "Agrupación por Objeto del Gasto"
+msgstr "Agrupar primero por objeto de gasto"
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__id
@@ -904,7 +923,7 @@ msgstr ""
 #: code:addons/jt_finance/reports/summary_of_operations_bank_transactions.py:0
 #, python-format
 msgid "INTERBANCARIO"
-msgstr "INTERBANCARIO"
+msgstr ""
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__ip
@@ -915,18 +934,19 @@ msgstr ""
 #: code:addons/jt_finance/reports/type_of_operation.py:0
 #, python-format
 msgid "ISSSTE"
-msgstr "ISSSTE"
+msgstr ""
 
 #. module: jt_finance
 #. openerp-web
 #: code:addons/jt_finance/static/src/xml/base_import_view.xml:0
 #, python-format
 msgid ""
-"If the model uses openchatter, history tracking will set up subscriptions and send notifications "
-"during the import, but lead to a slower import."
+"If the model uses openchatter, history tracking will set up subscriptions "
+"and send notifications during the import, but lead to a slower import."
 msgstr ""
-"Si el modelo usa openchatter, el seguimiento del historial configurará suscripciones y enviará "
-"notificaciones durante la importación, pero dará lugar a una importación más lenta."
+"Si el modelo usa openchatter, el seguimiento del historial configurará "
+"suscripciones y enviará notificaciones durante la importación, pero dará "
+"lugar a una importación más lenta."
 
 #. module: jt_finance
 #: model_terms:ir.ui.view,arch_db:jt_finance.import_calendar_assign_amount_lines_form_view
@@ -938,12 +958,12 @@ msgstr "Importar"
 #: model:ir.actions.act_window,name:jt_finance.action_import_calendar_assign_amount_lines
 #: model:ir.model,name:jt_finance.model_import_calendar_assign_amount_lines
 msgid "Import Calendar Assign Amount Lines"
-msgstr "Importar Líneas del Calendario de Montos Asignados"
+msgstr "Importar líneas de asignación de cantidad de calendario"
 
 #. module: jt_finance
 #: model:ir.model,name:jt_finance.model_import_control_amount_lines
 msgid "Import Control Amount Lines"
-msgstr "Importar líneas de Control de Montos Recibidos"
+msgstr "Importar líneas de monto de control"
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__import_date
@@ -1000,13 +1020,13 @@ msgstr "En Progreso"
 #: code:addons/jt_finance/reports/diary_of_bank_movements_in_dollars.py:0
 #, python-format
 msgid "Ingresos"
-msgstr "Ingresos"
+msgstr ""
 
 #. module: jt_finance
 #: code:addons/jt_finance/reports/mimimum_balance_account.py:0
 #, python-format
 msgid "Inicia"
-msgstr "Inicia"
+msgstr ""
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__institution_activity
@@ -1016,12 +1036,12 @@ msgstr "Actividad Institucional"
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__item_id_first
 msgid "Item First"
-msgstr ""
+msgstr "Primer Rubro"
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__item_id_second
 msgid "Item Second"
-msgstr ""
+msgstr "Segundo rubro"
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__january
@@ -1081,7 +1101,7 @@ msgstr "Clave Cartera"
 #: code:addons/jt_finance/models/calendar_assigned_amounts.py:0
 #, python-format
 msgid "La cantidad anual ingresada no es correcta."
-msgstr "La cantidad anual ingresada no es correcta."
+msgstr ""
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts____last_update
@@ -1129,7 +1149,7 @@ msgstr "Ultima actualización en"
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__line_id
 msgid "Lines"
-msgstr "Líneas"
+msgstr "Líeneas"
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__user_id
@@ -1147,13 +1167,13 @@ msgstr "Creado por"
 #: model:ir.model.fields.selection,name:jt_finance.selection__calendar_assigned_amounts_lines__state__manual
 #: model:ir.model.fields.selection,name:jt_finance.selection__control_amounts_received_line__state__manual
 msgid "Manual"
-msgstr "Manual"
+msgstr ""
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__is_manual_line
 #: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__is_manual_line
 msgid "Manual Add Line"
-msgstr "Agregar Línea Manual"
+msgstr "Agregar línea manual"
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__march
@@ -1174,7 +1194,7 @@ msgstr "Mayo"
 #. module: jt_finance
 #: model:ir.model,name:jt_finance.model_jt_finance_minimum_account_balance
 msgid "Minimum Account Balance"
-msgstr "Saldos mínimos de las cuentas"
+msgstr "Saldo mínimo de cuenta"
 
 #. module: jt_finance
 #: code:addons/jt_finance/reports/mimimum_balance_account.py:0
@@ -1205,7 +1225,7 @@ msgstr "Mes del Monto"
 #: code:addons/jt_finance/reports/mimimum_balance_account.py:0
 #, python-format
 msgid "Monto"
-msgstr "Monto"
+msgstr ""
 
 #. module: jt_finance
 #: code:addons/jt_finance/reports/bank_diary_summary_operation_usd.py:0
@@ -1225,24 +1245,23 @@ msgstr "Nuevo"
 #: code:addons/jt_finance/models/calendar_assigned_amounts.py:0
 #: code:addons/jt_finance/models/control_amounts_received.py:0
 #, python-format
-msgid "No puedes eliminar un Registro del Subsidio Federal en estatus Validado."
-msgstr "No puedes eliminar un Registro del Subsidio Federal en estatus Validado."
+msgid ""
+"No puedes eliminar un Registro del Subsidio Federal en estatus Validado."
+msgstr ""
 
 #. module: jt_finance
 #: code:addons/jt_finance/models/control_amounts_received.py:0
 #, python-format
 msgid ""
-"No se encuentra el calendario de la cantidad asignada para el programa presupuestario %s y la "
-"partida de gastos %s"
+"No se encuentra el calendario de la cantidad asignada para el programa "
+"presupuestario %s y la partida de gastos %s"
 msgstr ""
-"No se encuentra el calendario de la cantidad asignada para el programa presupuestario %s y la "
-"partida de gastos %s"
 
 #. module: jt_finance
 #: code:addons/jt_finance/reports/summary_of_operations_bank_transactions.py:0
 #, python-format
 msgid "No."
-msgstr "No."
+msgstr ""
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__november
@@ -1262,7 +1281,7 @@ msgstr "Número de Registros"
 #: code:addons/jt_finance/reports/type_of_operation.py:0
 #, python-format
 msgid "Nómina"
-msgstr "Nómina"
+msgstr ""
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__conpa_id
@@ -1273,7 +1292,7 @@ msgstr "Partida de Gasto"
 #: code:addons/jt_finance/reports/payment_expense_calendar.py:0
 #, python-format
 msgid "Observaciones"
-msgstr "Observaciones"
+msgstr ""
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__obs_calender_amount
@@ -1305,12 +1324,12 @@ msgstr "Octubre"
 #: code:addons/jt_finance/reports/type_of_operation.py:0
 #, python-format
 msgid "PDF"
-msgstr "PDF"
+msgstr ""
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__prg
 msgid "PRG"
-msgstr "PRG"
+msgstr ""
 
 #. module: jt_finance
 #: code:addons/jt_finance/reports/payment_expense_calendar.py:0
@@ -1323,25 +1342,25 @@ msgstr "Calendario de pagos / gastos"
 #. module: jt_finance
 #: model:ir.model,name:jt_finance.model_jt_finance_payment_expense_calendar
 msgid "Payment Expense Calendar"
-msgstr "Calendario de pagos / gastos"
+msgstr "Calendario de gastos de pago"
 
 #. module: jt_finance
 #: code:addons/jt_finance/models/control_amounts_received.py:0
 #, python-format
 msgid "Please configure Accured UNAM and CONAC account in journal!"
-msgstr "Configure las cuentas UNAM y CONAC del apartado de Acumulado en el Diario!"
+msgstr "¡Configure la cuenta UNAM y CONAC en el diario!"
 
 #. module: jt_finance
 #: code:addons/jt_finance/models/control_amounts_received.py:0
 #, python-format
 msgid "Please configure Collected UNAM and CONAC account in journal!"
-msgstr "Configure las cuentas UNAM y CONAC del apartado de Recaudado en el Diario!"
+msgstr "¡Configure la cuenta UNAM y CONAC recopilada en el diario!"
 
 #. module: jt_finance
 #: code:addons/jt_finance/models/calendar_assigned_amounts.py:0
 #, python-format
 msgid "Please configure Estimated UNAM and CONAC account in journal!"
-msgstr "Configure las cuentas UNAM y CONAC del apartado de Estimado en el Diario!"
+msgstr "¡Por favor configure la cuenta Estimado de UNAM y CONAC en el diario!"
 
 #. module: jt_finance
 #: code:addons/jt_finance/models/control_amounts_received.py:0
@@ -1354,31 +1373,31 @@ msgstr "Por favor configure la cuenta UNAM y CONAC en diario!"
 #: code:addons/jt_finance/models/control_amounts_received.py:0
 #, python-format
 msgid "Please validate all import lines!"
-msgstr "Valide todas las líneas de importación!"
+msgstr "¡Valide todas las líneas de importación!"
 
 #. module: jt_finance
 #: code:addons/jt_finance/models/control_amounts_received.py:0
 #, python-format
 msgid "Por favor configure Devengado la cuenta UNAM y CONAC en diario!"
-msgstr "Por favor configure Devengado la cuenta UNAM y CONAC en diario!"
+msgstr ""
 
 #. module: jt_finance
 #: code:addons/jt_finance/models/control_amounts_received.py:0
 #, python-format
 msgid "Por favor configure Recaudado la cuenta UNAM y CONAC en diario!"
-msgstr "Por favor configure Recaudado la cuenta UNAM y CONAC en diario!"
+msgstr ""
 
 #. module: jt_finance
 #: code:addons/jt_finance/models/calendar_assigned_amounts.py:0
 #, python-format
 msgid "Por favor configure estimada la cuenta UNAM y CONAC en diario!"
-msgstr "Por favor configure estimada la cuenta UNAM y CONAC en diario!"
+msgstr ""
 
 #. module: jt_finance
 #: code:addons/jt_finance/models/control_amounts_received.py:0
 #, python-format
 msgid "Por favor configure la cuenta UNAM y CONAC en diario!"
-msgstr "Por favor configure la cuenta UNAM y CONAC en diario!"
+msgstr ""
 
 #. module: jt_finance
 #: code:addons/jt_finance/reports/bank_diary_summary_operation_usd.py:0
@@ -1418,7 +1437,7 @@ msgstr "Fecha Propuesta"
 #: code:addons/jt_finance/reports/type_of_operation.py:0
 #, python-format
 msgid "Proveedores"
-msgstr "Proveedores"
+msgstr ""
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__purpose
@@ -1429,13 +1448,13 @@ msgstr "Finalidad"
 #: model_terms:ir.ui.view,arch_db:jt_finance.calendar_assigned_amounts_form_view
 #: model_terms:ir.ui.view,arch_db:jt_finance.control_amounts_received_form_view
 msgid "Re-Import Lines"
-msgstr "Re-Importar Líneas"
+msgstr "Reimportar líneas"
 
 #. module: jt_finance
 #: model_terms:ir.ui.view,arch_db:jt_finance.calendar_assigned_amounts_form_view
 #: model_terms:ir.ui.view,arch_db:jt_finance.control_amounts_received_form_view
 msgid "Re-scan Failed Rows"
-msgstr "Re-Importar Líneas"
+msgstr "Volver a escanear filas fallidas"
 
 #. module: jt_finance
 #: code:addons/jt_finance/reports/bank_diary_summary_operation_usd.py:0
@@ -1443,7 +1462,7 @@ msgstr "Re-Importar Líneas"
 #: code:addons/jt_finance/reports/summary_of_operation_usd_expenditures.py:0
 #, python-format
 msgid "Reales"
-msgstr "Reales"
+msgstr ""
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_report_calendar_amount_assign_line__pending_april
@@ -1508,7 +1527,7 @@ msgstr "POR COBRAR Septiembre"
 #. module: jt_finance
 #: model:ir.model,name:jt_finance.model_report_calendar_amount_assign_line
 msgid "Report Calendar Amount Assign Line"
-msgstr "Líneas del Calendario de Montos Asignados"
+msgstr "Línea de asignación de cantidad de calendario de montos"
 
 #. module: jt_finance
 #: model:ir.actions.act_window,name:jt_finance.action_report_calendar_amount_assign
@@ -1530,13 +1549,13 @@ msgstr "Responsable"
 #: code:addons/jt_finance/reports/summary_of_operation_usd_expenditures.py:0
 #, python-format
 msgid "Retiros"
-msgstr "Retiros"
+msgstr ""
 
 #. module: jt_finance
 #: code:addons/jt_finance/reports/summary_query_type.py:0
 #, python-format
 msgid "Retiros /Depósitos"
-msgstr "Retiros /Depósitos"
+msgstr ""
 
 #. module: jt_finance
 #: model:ir.ui.menu,name:jt_finance.menu_revenue_budget_control
@@ -1546,12 +1565,12 @@ msgstr "Control de Presupuesto de Ingresos"
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__sfa
 msgid "SFA"
-msgstr "SFA"
+msgstr ""
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__sfe
 msgid "SFE"
-msgstr "SFE"
+msgstr ""
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__file
@@ -1641,7 +1660,7 @@ msgstr "Resumen de la operación- recuperación de egresos"
 #. module: jt_finance
 #: model:ir.model,name:jt_finance.model_jt_finance_summaryof_operation_usd_expenditures
 msgid "Summary of Operation USD Expenditures"
-msgstr "Resumen de gastos de operación-USD"
+msgstr "Resumen de los gastos de la operación en USD"
 
 #. module: jt_finance
 #: code:addons/jt_finance/reports/summary_of_operation_usd_expenditures.py:0
@@ -1661,13 +1680,13 @@ msgstr "Resumen de operaciones- transacciones bancarias"
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__tg
 msgid "TG"
-msgstr "TG"
+msgstr ""
 
 #. module: jt_finance
 #: code:addons/jt_finance/models/calendar_assigned_amounts.py:0
 #, python-format
 msgid "The annual amount entered is not correct."
-msgstr "El Monto Anual ingresado no es correcto."
+msgstr "La cantidad anual ingresada no es correcta."
 
 #. module: jt_finance
 #. openerp-web
@@ -1685,13 +1704,14 @@ msgstr ""
 #: code:addons/jt_finance/wizard/import_control_amount_received_lines.py:0
 #, python-format
 msgid "The number of imported lines is not equal to the number of records"
-msgstr "El número de líneas a importar no es igual al número de registros ingresado"
+msgstr ""
+"El número de líneas a importar no es igual al número de registros ingresado"
 
 #. module: jt_finance
 #: code:addons/jt_finance/reports/summary_query_type.py:0
 #, python-format
 msgid "Total"
-msgstr "Total"
+msgstr ""
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts__total_rows
@@ -1759,10 +1779,11 @@ msgstr "Validado"
 #: code:addons/jt_finance/static/src/xml/base_import_view.xml:0
 #, python-format
 msgid ""
-"Warning: ignores the labels line, empty lines and                             lines composed only "
-"of empty cells"
+"Warning: ignores the labels line, empty lines and"
+"                             lines composed only of empty cells"
 msgstr ""
-"Advertencia: ignora la línea de etiquetas, líneas vacías y líneas compuestas solo de celdas vacías"
+"Advertencia: ignora la línea de etiquetas, líneas vacías y líneas compuestas"
+" solo de celdas vacías"
 
 #. module: jt_finance
 #: code:addons/jt_finance/reports/bank_diary_summary_operation_usd.py:0
@@ -1776,7 +1797,7 @@ msgstr ""
 #: code:addons/jt_finance/reports/type_of_operation.py:0
 #, python-format
 msgid "XLSX"
-msgstr "XLSX"
+msgstr ""
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__year

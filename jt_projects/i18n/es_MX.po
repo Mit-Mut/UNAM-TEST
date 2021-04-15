@@ -1295,23 +1295,12 @@ msgid "Dependency Description"
 msgstr "Descripción de Dependencia"
 
 #. module: jt_projects
-#: model:ir.model.fields,field_description:jt_projects.field_project_custom_stage__description
+#: model:ir.model.fields,field_description:jt_projects.field_project_custom_stage__description model:ir.model.fields,field_description:jt_projects.field_project_type__description
+#: model:ir.model.fields,field_description:jt_projects.field_project_type_custom__description model:ir.model.fields,field_description:jt_projects.field_rejection_checks__description
 #: model:ir.model.fields,field_description:jt_projects.field_stage__description model_terms:ir.ui.view,arch_db:jt_projects.payment_req_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:jt_projects.supplier_request_template_docs
 msgid "Description"
 msgstr "Descripción de la Etapa"
-
-#. module: jt_projects
-#: model:ir.model.fields,field_description:jt_projects.field_project_type__description
-#: model:ir.model.fields,field_description:jt_projects.field_project_type_custom__description 
-msgid "Description"
-msgstr "Descripción Tipo de Proyecto"
-
-#. module: jt_projects
-#: model:ir.model.fields,field_description:jt_projects.field_rejection_checks__description
-msgid "Description"
-msgstr "Descripción del Motivo"
-
 
 #. module: jt_projects
 #: model:ir.model.fields,field_description:jt_projects.field_project_program_code__desc_budget_program_conversion

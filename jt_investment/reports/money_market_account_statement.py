@@ -338,8 +338,7 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                 if rec.date_time:
                     invesment_date = rec.date_time.strftime('%Y-%m-%d')
                 final = capital + inc - withdraw
-                total_final += final
-                g_total_final += final
+                total_final = final
 
                 header_increment += inc
                 header_withdrawal += withdraw
@@ -379,8 +378,7 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                     if line.date_required:
                         invesment_date = line.date_required.strftime('%Y-%m-%d')
                     final = capital + inc - withdraw
-                    total_final += final
-                    g_total_final += final
+                    total_final = final
 
                     header_increment += inc
                     header_withdrawal += withdraw
@@ -414,8 +412,7 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                 if rec.date_time:
                     invesment_date = rec.date_time.strftime('%Y-%m-%d')
                 final = capital + inc - withdraw
-                total_final += final
-                g_total_final += final
+                total_final = final
 
                 header_increment += inc
                 header_withdrawal += withdraw
@@ -455,8 +452,7 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                     if line.date_required:
                         invesment_date = line.date_required.strftime('%Y-%m-%d')
                     final = capital + inc - withdraw
-                    total_final += final
-                    g_total_final += final
+                    total_final = final
 
                     header_increment += inc
                     header_withdrawal += withdraw
@@ -479,19 +475,18 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                     capital = capital + inc - withdraw
             # # #================ bonds_records =====================#
                 
-                for rec in bonds_records.filtered(lambda x:x.journal_id.id==journal.id):
-                    invesment_date = ''
-                    inc = 0
-                    withdraw = 0
-                    inc = rec.nominal_value
-                    total_inc += inc
-                    g_total_inc += inc
+            for rec in bonds_records.filtered(lambda x:x.journal_id.id==journal.id):
+                invesment_date = ''
+                inc = 0
+                withdraw = 0
+                inc = rec.nominal_value
+                total_inc += inc
+                g_total_inc += inc
 
                 if rec.date_time:
                     invesment_date = rec.date_time.strftime('%Y-%m-%d')
                 final = capital + inc - withdraw
-                total_final += final
-                g_total_final += final
+                total_final = final
 
                 header_increment += inc
                 header_withdrawal += withdraw
@@ -531,8 +526,7 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                     if line.date_required:
                         invesment_date = line.date_required.strftime('%Y-%m-%d')
                     final = capital + inc - withdraw
-                    total_final += final
-                    g_total_final += final
+                    total_final = final
 
                     header_increment += inc
                     header_withdrawal += withdraw
@@ -566,8 +560,7 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                 if rec.date_time:
                     invesment_date = rec.date_time.strftime('%Y-%m-%d')
                 final = capital + inc - withdraw
-                total_final += final
-                g_total_final += final
+                total_final = final
 
                 header_increment += inc
                 header_withdrawal += withdraw
@@ -607,8 +600,7 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                     if line.date_required:
                         invesment_date = line.date_required.strftime('%Y-%m-%d')
                     final = capital + inc - withdraw
-                    total_final += final
-                    g_total_final += final
+                    total_final = final
 
                     header_increment += inc
                     header_withdrawal += withdraw
@@ -639,12 +631,13 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                             {'name': ''},
                             self._format({'name': total_inc},figure_type='float',digit=2),
                             self._format({'name': total_with},figure_type='float',digit=2),
-                            self._format({'name': total_inc - total_with},figure_type='float',digit=2),
+                            self._format({'name': total_final},figure_type='float',digit=2),
                             ],
                 'level': 1,
                 'unfoldable': False,
                 'unfolded': True,
             })
+            g_total_final += total_final
         lines.append({
             'id': 'GTotal',
             'name' :'Grand Total', 
@@ -654,7 +647,7 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                         {'name': ''},
                         self._format({'name': g_total_inc},figure_type='float',digit=2),
                         self._format({'name': g_total_with},figure_type='float',digit=2),
-                        self._format({'name': g_total_inc - g_total_with},figure_type='float',digit=2),
+                        self._format({'name': g_total_final},figure_type='float',digit=2),
                         ],
             'level': 1,
             'unfoldable': False,

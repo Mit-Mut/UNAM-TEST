@@ -364,7 +364,6 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
         total_salidas  = 0
         
         origin_ids_len,origin_ids_data = self.get_total_fund_data(options)
-        
         bank_account_ids = opt_lines.mapped('investment_id.journal_id')
         for bank in bank_account_ids:
             total_avg_final = 0
@@ -404,14 +403,13 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
             day_diff = day_diff.days+1
             new_date = start
             count = 0
-            
-            
-            
+            total_rec_inc = 0
             for month_date in range(day_diff):
                 count += 1
                 month_name = self.get_month_name(new_date.month)
                 p_rate = 0
                 if new_date:
+                    record_date_day = new_date.day
                     period_rate_id = self.env['investment.period.rate'].search([('rate_date','=',new_date),('product_type','=','TIIE')],limit=1)
                     if period_rate_id:
                         p_rate = period_rate_id.rate_days_28
@@ -421,6 +419,8 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                 
                 current_date_line = opt_lines.filtered(lambda x:x.investment_id.journal_id.id == bank.id and x.date_required and x.date_required==new_date).sorted('date_required')
                 if not current_date_line:
+                    total_rec_inc += 1
+                    total_avg_final += final_amount
                     columns = [{'name': month_name}, 
                                     {'name': new_date.day},
                                     {'name': ''},
@@ -437,7 +437,7 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                     columns +=  [
                                     self._format({'name': 0.0},figure_type='float',digit=2,is_currency=True),
                                     self._format({'name': final_amount},figure_type='float',digit=2,is_currency=True),
-                                    self._format({'name': total_avg_final/record_date_day},figure_type='float',digit=2,is_currency=True),
+                                    self._format({'name': total_avg_final/total_rec_inc},figure_type='float',digit=2,is_currency=True),
                                     ]
                     lines.append({
                         'id': 'hierarchy' + str(new_date),
@@ -449,6 +449,7 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                     })
                     
                 for rec in current_date_line:
+                    total_rec_inc += 1
                     capital = header_intial
                     entradas = 0
                     salidas  = 0
@@ -489,7 +490,7 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                     columns +=  [
                                     self._format({'name': salidas},figure_type='float',digit=2,is_currency=True),
                                     self._format({'name': final_amount},figure_type='float',digit=2,is_currency=True),
-                                    self._format({'name': total_avg_final/record_date_day},figure_type='float',digit=2,is_currency=True),
+                                    self._format({'name': total_avg_final/total_rec_inc},figure_type='float',digit=2,is_currency=True),
                                     ]
                     lines.append({
                         'id': 'hierarchy' + str(rec.id),
@@ -567,8 +568,8 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                 inc_records_bank_periods = self.env['investment.operation'].search(inc_domain_bank_period)
 
                 amount = 0
-                amount += sum(x.amount for x in inc_records_bank_periods.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal')))
-                amount -= sum(x.amount for x in inc_records_bank_periods.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure')))
+#                 amount += sum(x.amount for x in inc_records_bank_periods.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal')))
+#                 amount -= sum(x.amount for x in inc_records_bank_periods.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure')))
                 
                 amount += sum(x.amount for x in records_bank_periods.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal')))
                 amount -= sum(x.amount for x in records_bank_periods.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure')))
@@ -707,8 +708,8 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                 inc_records_fund = self.env['investment.operation'].search(inc_domain_fund)
 
                 amount = 0
-                amount += sum(x.amount for x in inc_records_fund.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal') and x.investment_fund_id.fund_id.id==origin.id))
-                amount -= sum(x.amount for x in inc_records_fund.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure') and x.investment_fund_id.fund_id.id==origin.id))
+#                 amount += sum(x.amount for x in inc_records_fund.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal') and x.investment_fund_id.fund_id.id==origin.id))
+#                 amount -= sum(x.amount for x in inc_records_fund.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure') and x.investment_fund_id.fund_id.id==origin.id))
                 
                 amount += sum(x.amount for x in records_fund.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal') and x.investment_fund_id.fund_id.id==origin.id))
                 amount -= sum(x.amount for x in records_fund.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure') and x.investment_fund_id.fund_id.id==origin.id))
@@ -796,8 +797,8 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
 
                 amount = 0
 
-                amount += sum(x.amount for x in inc_records_periods.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal')))
-                amount -= sum(x.amount for x in inc_records_periods.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure')))
+#                 amount += sum(x.amount for x in inc_records_periods.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal')))
+#                 amount -= sum(x.amount for x in inc_records_periods.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure')))
                 
                 amount += sum(x.amount for x in records_periods.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal')))
                 amount -= sum(x.amount for x in records_periods.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure')))

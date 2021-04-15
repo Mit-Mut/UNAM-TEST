@@ -626,7 +626,7 @@ class ReportProductiveAccounts(models.AbstractModel):
             sheet.insert_image(0,0, filename, {'image_data': image_data,'x_offset':8,'y_offset':3,'x_scale':0.6,'y_scale':0.6})
         
         col += 1
-        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICOO\nUNIVERSITY BOARD\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nINFORME DE CUENTAS PRODUCTIVAS'''
+        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nPATRONATO UNIVERSITARIO\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nREPORTE DE CUENTAS PRODUCTIVAS'''
         sheet.merge_range(y_offset, col, 5, col+6, header_title,super_col_style)
         y_offset += 6
         col=1
@@ -732,19 +732,36 @@ class ReportProductiveAccounts(models.AbstractModel):
             spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 10}
             footer = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
         else:
+            period_name = ''
+            start_date = datetime.strptime(options.get('date').get('date_from'), DEFAULT_SERVER_DATE_FORMAT)
+            end_date = datetime.strptime(options.get('date').get('date_to'), DEFAULT_SERVER_DATE_FORMAT)
+            if start_date and end_date:
+                period_name += "Del " + str(start_date.day)
+
+                period_name += ' ' + self.get_month_name(start_date.month)
+                if start_date.year != end_date.year:
+                    period_name += ' ' + str(start_date.year)
+
+                period_name += " al " + str(end_date.day) + " de " + self.get_month_name(end_date.month) + " " \
+                               + str(end_date.year)
             rcontext.update({
-                    'css': '',
-                    'o': self.env.user,
-                    'res_company': self.env.company,
-                })
-            header = self.env['ir.actions.report'].render_template("jt_investment.external_layout_report_productive_accounts", values=rcontext)
+                'css': '',
+                'o': self.env.user,
+                'res_company': self.env.company,
+                'period_name': period_name,
+                'name': 'CUENTAS PRODUCTIVAS',
+
+            })
+            header = self.env['ir.actions.report'].with_context(period_name=period_name).render_template(
+                "jt_investment.external_layout_report_productive_accounts",
+                values=rcontext)
             header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
-            spec_paperformat_args = {}
+            spec_paperformat_args = {'data-report-margin-top': 55, 'data-report-header-spacing': 50}
             # Default header and footer in case the user customized web.external_layout and removed the header/footer
             headers = header.encode()
             footer = b''
             # parse header as new header contains header, body and footer
-            try:
+            try:    
                 root = lxml.html.fromstring(header)
                 match_klass = "//div[contains(concat(' ', normalize-space(@class), ' '), ' {} ')]"
 
@@ -838,3 +855,4 @@ class ReportProductiveAccounts(models.AbstractModel):
             # append footnote as well
             html = html.replace(b'<div class="js_account_report_footnotes"></div>', self.get_html_footnotes(footnotes_to_render))
         return html
+

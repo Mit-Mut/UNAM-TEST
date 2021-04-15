@@ -98,6 +98,9 @@ class PaymentDeclined(models.TransientModel):
                 
             payment.reason_for_cancel = self.reason_for_cancel
             payment.cancel()
+
+            if payment.payment_request_id:
+                payment.payment_request_id.payment_state = 'cancel'
     
     
     

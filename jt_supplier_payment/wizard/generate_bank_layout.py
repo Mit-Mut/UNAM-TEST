@@ -42,6 +42,27 @@ class GenerateBankLayout(models.TransientModel):
     @api.onchange('journal_id')
     def onchange_journal_id(self):
         self.sit_file_key = False
+        if self.bank_format=='bbva_sit':
+            sit_file_key = 'TRANSFERUNAM'
+            currect_time = datetime.today()
+            
+            sit_file_key +=str(currect_time.year)
+            sit_file_key +=str(currect_time.month).zfill(2)
+            sit_file_key +=str(currect_time.day).zfill(2)
+
+            if self.payment_ids:
+                if self.payment_ids[0].currency_id.name=='MXN':
+                    sit_file_key += 'MN'
+                else:
+                    sit_file_key += "ME"
+                if self.payment_ids[0].sit_operation_code=='payment_on_account_bancomer':
+                    sit_file_key += 'BBVA'
+                elif self.payment_ids[0].sit_operation_code=='payment_interbank':
+                    sit_file_key += "OTHERS"
+            
+            self.sit_file_key = sit_file_key
+            
+            
         
     def action_generate_bank_layout(self):
         
@@ -138,14 +159,30 @@ class GenerateBankLayout(models.TransientModel):
                     file_data +='001'
             #====== Description =========
             temp_desc = ''
-            if payment.banamex_description:
-                temp_desc = payment.banamex_description
+#             if payment.banamex_description:
+#                 temp_desc = payment.banamex_description
+            if payment.dependancy_id and payment.dependancy_id.description:
+                temp_desc += payment.dependancy_id.description
+            if payment.folio:
+                if temp_desc:
+                    temp_desc += " "+payment.folio
+                else:
+                    temp_desc += payment.folio
+                    
             file_data += temp_desc.ljust(24, " ")
     
             #====== banamex_concept =========
             temp_desc = ''
-            if payment.banamex_concept:
-                temp_desc = payment.banamex_concept
+#             if payment.banamex_concept:
+#                 temp_desc = payment.banamex_concept
+            if payment.dependancy_id and payment.dependancy_id.description:
+                temp_desc += payment.dependancy_id.description
+            if payment.name:
+                if temp_desc:
+                    temp_desc += " "+payment.name
+                else:
+                    temp_desc += payment.name
+
             file_data += temp_desc.ljust(34, " ")
     
             #====== banamex_reference =========
@@ -328,15 +365,18 @@ class GenerateBankLayout(models.TransientModel):
             file_data += reason_payment.ljust(30, " ")     
             #====== net_cash_reference =======#
             net_cash_reference = ''
-            if payment.net_cash_reference:
-                net_cash_reference = payment.net_cash_reference
+#             if payment.net_cash_reference:
+#                 net_cash_reference = payment.net_cash_reference
+            if payment.name:
+                net_cash_reference = payment.name
             file_data += net_cash_reference.zfill(7)
             #====== net_cash_availability =======#   
-            if payment.net_cash_availability:
-                if payment.net_cash_availability=='SPEI':
-                    file_data += 'H'
-                elif payment.net_cash_availability=='CECOBAN':
-                    file_data += 'M'
+            file_data += "SPEI"
+#             if payment.net_cash_availability:
+#                 if payment.net_cash_availability=='SPEI':
+#                     file_data += 'H'
+#                 elif payment.net_cash_availability=='CECOBAN':
+#                     file_data += 'M'
             file_data +="\r\n"      
                                      
         gentextfile = base64.b64encode(bytes(file_data,'utf-8'))
@@ -360,9 +400,23 @@ class GenerateBankLayout(models.TransientModel):
         file_data += '01'
         
         #===== sit_file_key ====
-        sit_file_key = ''
-        if self.payment_ids and self.payment_ids[0].sit_file_key:
-            sit_file_key = self.payment_ids[0].sit_file_key
+#         sit_file_key = ''
+#         if self.payment_ids and self.payment_ids[0].sit_file_key:
+#             sit_file_key = self.payment_ids[0].sit_file_key
+        sit_file_key = 'TRANSFERUNAM'
+        sit_file_key +=str(currect_time.year)
+        sit_file_key +=str(currect_time.month).zfill(2)
+        sit_file_key +=str(currect_time.day).zfill(2)
+        if self.payment_ids:
+            if self.payment_ids[0].currency_id.name=='MXN':
+                sit_file_key += 'MN'
+            else:
+                sit_file_key += "ME"
+            if self.payment_ids[0].sit_operation_code=='payment_on_account_bancomer':
+                sit_file_key += 'BBVA'
+            elif self.payment_ids[0].sit_operation_code=='payment_interbank':
+                sit_file_key += "OTHERS"
+
         file_data +=sit_file_key.ljust(30)
         #======== Response Code =======#
         file_data += '00'
@@ -381,7 +435,7 @@ class GenerateBankLayout(models.TransientModel):
         #======== FILLER =========
         file_data += ''.ljust(1251)
         file_data +="\r\n"
-
+        total_amount = 0
         #============= Payment  Details =========#              
         for payment in self.payment_ids:
 
@@ -410,10 +464,16 @@ class GenerateBankLayout(models.TransientModel):
             
             #======= Operation code  ========#
             sit_operation_code = '0'
-            if payment.sit_operation_code:
-                if payment.sit_operation_code=='payment_on_account_bancomer':
+#             if payment.sit_operation_code:
+#                 if payment.sit_operation_code=='payment_on_account_bancomer':
+#                     sit_operation_code = '2'
+#                 elif payment.sit_operation_code=='payment_interbank':
+#                     sit_operation_code = '5'
+            
+            if payment.partner_id and payment.partner_id.bank_ids and payment.partner_id.bank_ids[0].l10n_mx_edi_clabe:
+                if payment.partner_id.bank_ids[0].l10n_mx_edi_clabe.startswith('012'):
                     sit_operation_code = '2'
-                elif payment.sit_operation_code=='payment_interbank':
+                else:
                     sit_operation_code = '5'
             file_data +=sit_operation_code
             #======== Charge account  ==========#
@@ -426,9 +486,9 @@ class GenerateBankLayout(models.TransientModel):
                 sit_reference = payment.sit_reference
             file_data += sit_reference.ljust(25)
             #=======Reason For Payment ========#
-            sit_reason_for_payment = ''
-            if payment.sit_operation_code and payment.sit_operation_code=='payment_interbank' and payment.sit_reason_for_payment:
-                sit_reason_for_payment = payment.sit_reason_for_payment
+            sit_reason_for_payment = payment.folio or ''
+#             if payment.sit_operation_code and payment.sit_operation_code=='payment_interbank' and payment.sit_reason_for_payment:
+#                 sit_reason_for_payment = payment.sit_reason_for_payment
             file_data += sit_reason_for_payment.ljust(37)
             #======== FILLER ========
             file_data += ''.ljust(15)
@@ -489,6 +549,7 @@ class GenerateBankLayout(models.TransientModel):
             #======= Document key ========#
             file_data += 'FA'
             #====== Amount Data =========
+            total_amount += payment.amount
             amount = round(payment.amount, 2)
             amount = "%.2f" % payment.amount
             amount = str(amount).split('.')
@@ -535,13 +596,27 @@ class GenerateBankLayout(models.TransientModel):
             #==== Additional data length or Payment detail =====#
             file_data += '700'
             #======== Additional =======#
-            additional = 'PAGO UNAM'
-            if payment.folio:
-                split_data = payment.folio.split('/')
-                if split_data:
-                    additional +=" - "+split_data[0]
+#             additional = 'PAGO UNAM'
+#             if payment.folio:
+#                 split_data = payment.folio.split('/')
+#                 if split_data:
+#                     additional +=" - "+split_data[0]
+#             if payment.sit_additional_data:
+#                 additional += payment.sit_additional_data
+            additional = ''
             if payment.sit_additional_data:
-                additional += payment.sit_additional_data
+                additional = payment.sit_additional_data
+#             if payment.dependancy_id:
+#                 if payment.dependancy_id.description:
+#                     additional += payment.dependancy_id.description +" "
+#                 if payment.dependancy_id.dependency:
+#                     additional += payment.dependancy_id.dependency + "-"
+#             if payment.sub_dependancy_id and payment.sub_dependancy_id.sub_dependency:
+#                 additional += payment.sub_dependancy_id.sub_dependency + " "
+#             if self.env.user.lang == 'es_MX':
+#                 additional += "FAVOR DE MANTENER ACTUALIZADA SU INFORMACIÓN BANCARIA"
+#             else: 
+#                 additional += "PLEASE KEEP YOUR BANKING INFORMATION UPDATED"    
             file_data += additional.ljust(700)
             #======= FILLER =======#
             file_data += ''.ljust(10) 
@@ -556,26 +631,50 @@ class GenerateBankLayout(models.TransientModel):
             file_data +="\r\n"
         
         #============== Trailer or Summary =============#
-        file_data += "T"
-        
-        total_rec = len(self.payment_ids)
-        #==== Number of records high======#
-        file_data += str(total_rec).zfill(10)
-        #==== Number of records unsubscribed======#
-        file_data += str(total_rec).zfill(10)
-        #==== Number of records change======#
-        file_data += str(total_rec).zfill(10)
-        #==== Number of records rejected high======#
-        file_data += ''.zfill(10)
-        #==== Number of records rejected low======#
-        file_data += ''.zfill(10)
-        #==== Number of records rejected changes======#
-        file_data += ''.zfill(10)
-        
-        #===== Filler ===#
-        file_data += ''.ljust(575)
-        file_data += ''.ljust(730)
-        file_data +="\r\n"
+        if self.payment_ids and self.payment_ids[0].currency_id and self.payment_ids[0].currency_id.name=='MXN':  
+            file_data += "T"
+            
+            total_rec = len(self.payment_ids)
+            #==== Number of records high======#
+            file_data += str(total_rec).zfill(10)
+            #==== Import Total MXP Highs======#
+            amount = "%.2f" % total_amount
+            amount = str(amount).split('.')
+            file_data +=str(amount[0]).zfill(13)
+            file_data +=str(amount[1])
+            #==== Number of records MXP divestitures======#
+            file_data += str(total_rec).zfill(10)
+            #==== Total amount Retirements MXP======#
+            file_data +=str(amount[0]).zfill(13)
+            file_data +=str(amount[1])
+            #===== Filler ===#
+            file_data += ''.zfill(200)
+            file_data += ''.ljust(1115)
+            file_data +="\r\n"
+        else:
+            file_data += "T"
+            
+            total_rec = len(self.payment_ids)
+            #=====FILLER=====#
+            file_data += ''.zfill(250)
+            #============Number of records==============#
+            file_data += str(total_rec).zfill(10)
+            #============== Total Amount ============#
+            amount = "%.2f" % total_amount
+            amount = str(amount).split('.')
+            file_data +=str(amount[0]).zfill(13)
+            file_data +=str(amount[1])
+            #============Number of records==============#
+            file_data += str(total_rec).zfill(10)
+            #============== Total Amount ============#
+            amount = "%.2f" % total_amount
+            amount = str(amount).split('.')
+            file_data +=str(amount[0]).zfill(13)
+            file_data +=str(amount[1])
+            #=====FILLER=====#
+            file_data += ''.zfill(100)
+            
+            file_data +="\r\n"
         gentextfile = base64.b64encode(bytes(file_data,'utf-8'))
         self.file_data = gentextfile
         self.file_name = file_name
@@ -609,11 +708,16 @@ class GenerateBankLayout(models.TransientModel):
             file_data +=str(amount[1])
             #======= Payment concept ==========#
             santander_payment_concept = ''
-            if payment.santander_payment_concept:
-                if len(payment.santander_payment_concept) > 40:
-                    santander_payment_concept = payment.santander_payment_concept[:40]
-                else:
-                    santander_payment_concept = payment.santander_payment_concept
+#             if payment.santander_payment_concept:
+#                 if len(payment.santander_payment_concept) > 40:
+#                     santander_payment_concept = payment.santander_payment_concept[:40]
+#                 else:
+#                     santander_payment_concept = payment.santander_payment_concept
+            if payment.folio:
+                santander_payment_concept += payment.folio
+            if payment.name:
+                santander_payment_concept += " "+payment.name
+                
             file_data += santander_payment_concept.ljust(40)
             
             #==== Payment Date ======
@@ -669,8 +773,10 @@ class GenerateBankLayout(models.TransientModel):
                     file_data += ','+''
             #===== hsbc_reference ====#
             hsbc_reference = ''
-            if payment.hsbc_reference:
-                hsbc_reference = payment.hsbc_reference
+#             if payment.hsbc_reference:
+#                 hsbc_reference = payment.hsbc_reference
+            if payment.name:
+                hsbc_reference = payment.name
             file_data +="," + hsbc_reference
             #======= Partner Name ========#
             partner_name = ''
@@ -707,29 +813,32 @@ class GenerateBankLayout(models.TransientModel):
         file_data +=str(currect_time.minute).zfill(2)
         file_data +=str(currect_time.second).zfill(2)
         
-        file_data += ","+"1.0"
+        file_data += ","+"1"
         file_data +="\n"                
         for payment in self.payment_ids:
             record_count += 1
             file_data += "P"
             file_data += ','
             #======== Method ========#
-            if payment.jp_method:
-                if payment.jp_method == 'WIRES':
-                    file_data += 'WIRES'
-                    file_data += ','
-                if payment.jp_method == 'BOOKTX':
-                    file_data += 'BOOKTX'
-                    file_data += ','
-            else:
-                file_data += ','
             
+#             if payment.jp_method:
+#                 if payment.jp_method == 'WIRES':
+#                     file_data += 'WIRES'
+#                     file_data += ','
+#                 if payment.jp_method == 'BOOKTX':
+#                     file_data += 'BOOKTX'
+#                     file_data += ','
+#             else:
+#                 file_data += ','
+            
+            file_data += 'WIRES'
+            file_data += ','
             # ======== BIC /SWIFT ======
-            if payment.journal_id and payment.journal_id.bank_id:
-                bank_code = ''
-                if payment.journal_id.bank_id.bic:
-                    bank_code = payment.journal_id.bank_id.bic
-                file_data += bank_code            
+            if payment.journal_id and payment.journal_id.bank_id and payment.journal_id.bank_id.country:
+                if payment.journal_id.bank_id.country.code and payment.journal_id.bank_id.country.code=='MX':
+                    file_data += payment.journal_id.bank_id.l10n_mx_edi_code or ''
+                else:
+                    file_data += payment.journal_id.bank_id.bic or ''
             file_data += ','
 
             #==========Bank Account ========#
@@ -737,11 +846,12 @@ class GenerateBankLayout(models.TransientModel):
                 file_data +=payment.journal_id.bank_account_id.acc_number
             file_data += ','
             # ===== Bank to bank transfer ========#
-            if payment.jp_bank_transfer:
-                if payment.jp_bank_transfer == 'non_financial_institution':
-                    file_data += 'N'
-                elif payment.jp_bank_transfer == 'financial_institution':
-                    file_data += 'Y'
+#             if payment.jp_bank_transfer:
+#                 if payment.jp_bank_transfer == 'non_financial_institution':
+#                     file_data += 'N'
+#                 elif payment.jp_bank_transfer == 'financial_institution':
+#                     file_data += 'Y'
+            file_data += "Non-financial institution (N)"
             file_data += ','
 
             #====== Currency Data =========#
@@ -929,8 +1039,10 @@ class GenerateBankLayout(models.TransientModel):
             #======== N/A  ======#
             file_data += ' ,'
             #======== Detail 1  ======#
-            if payment.jp_payment_concept:
-                file_data += payment.jp_payment_concept 
+#             if payment.jp_payment_concept:
+#                 file_data += payment.jp_payment_concept 
+            if payment.folio:
+                file_data += payment.folio 
             file_data += ','
             #======== Detail 2  ======#
             file_data += ' ,'
@@ -1033,6 +1145,20 @@ class GenerateBankLayout(models.TransientModel):
         record_count = 0
         total_amount = 0
         file_data = ''
+
+        file_data = 'HEADER'+","
+        #====== Current Dat time=========
+        currect_time = datetime.today()
+        file_data +=str(currect_time.year)
+        file_data +=str(currect_time.month).zfill(2)
+        file_data +=str(currect_time.day).zfill(2)
+        file_data +=str(currect_time.hour).zfill(2)
+        file_data +=str(currect_time.minute).zfill(2)
+        file_data +=str(currect_time.second).zfill(2)
+        
+        file_data += ","+"1"
+        file_data +="\n"                
+        
         for payment in self.payment_ids:
             record_count += 1
             #======= Input Type =======
@@ -1176,6 +1302,20 @@ class GenerateBankLayout(models.TransientModel):
         record_count = 0
         total_amount = 0
         file_data = ''
+
+        file_data = 'HEADER'+","
+        #====== Current Dat time=========
+        currect_time = datetime.today()
+        file_data +=str(currect_time.year)
+        file_data +=str(currect_time.month).zfill(2)
+        file_data +=str(currect_time.day).zfill(2)
+        file_data +=str(currect_time.hour).zfill(2)
+        file_data +=str(currect_time.minute).zfill(2)
+        file_data +=str(currect_time.second).zfill(2)
+        
+        file_data += ","+"1"
+        file_data +="\n"                
+        
         for payment in self.payment_ids:
             record_count += 1
             #========Input Type=======#
@@ -1222,15 +1362,21 @@ class GenerateBankLayout(models.TransientModel):
             #======= N/A========= 14 to 39#
             file_data += ' , , , , , , , , , , , , , , , , , , , , , , , , , ,'
             #===== ID Type =======#
-            if payment.jp_drawdown_type and payment.jp_drawdown_type=='Drawdown':
-                if payment.journal_id and payment.journal_id.bank_id:
-                    bank_code = ''
-                    if payment.journal_id.bank_id.bic:
-                        bank_code = payment.journal_id.bank_id.bic
-                    file_data += bank_code            
-                file_data += ','
-            else:
-                file_data += ' ,'
+#             if payment.jp_drawdown_type and payment.jp_drawdown_type=='Drawdown':
+#                 if payment.journal_id and payment.journal_id.bank_id:
+#                     bank_code = ''
+#                     if payment.journal_id.bank_id.bic:
+#                         bank_code = payment.journal_id.bank_id.bic
+#                     file_data += bank_code            
+#                 file_data += ','
+#             else:
+#                 file_data += ' ,'
+            if payment.journal_id and payment.journal_id.bank_id and payment.journal_id.bank_id.country:
+                if payment.journal_id.bank_id.country.code and payment.journal_id.bank_id.country.code=='MX':
+                    file_data += payment.journal_id.bank_id.l10n_mx_edi_code or ''
+                else:
+                    file_data += payment.journal_id.bank_id.bic or ''
+            file_data += ','     
             #====== ID Value =======#
             file_data += ' ,'
             #======== Bank of receipt of payment =======#

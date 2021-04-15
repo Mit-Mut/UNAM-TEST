@@ -14,7 +14,7 @@
                         <button name="action_register" string="Register" class="oe_highlight" type="object"  attrs="{'invisible': [('payment_state', '!=', 'draft')]}"/>
                         <button name="action_draft_budget" string="Draft" class="oe_highlight"
                             type="object"
-                            attrs="{'invisible':[('payment_state', 'in', ('draft','paid','cancel','approved_payment','for_payment_procedure'))]}"/>
+                            attrs="{'invisible':[('payment_state', 'in', ('draft','paid','cancel','payment_not_applied','approved_payment','for_payment_procedure'))]}"/>
 
                         <button name="action_validate_budget" string="Validate budget" class="oe_highlight" type="object" attrs="{'invisible':[('payment_state', '!=', 'registered')]}" invisible="context.get('hide_validate_button',False)"/>
 
@@ -570,6 +570,9 @@
                     <field name="partner_id"/>
                     <field name="invoice_date"/>
                     <field name="payment_state"/>
+                    <field name="folio_dependency"/>
+                    <field name="currency_id"/>
+                    <field name="amount_total"/>
                     <field name="type" invisible="1"/>
                     <field name="state" invisible="1"/>
                 </tree>

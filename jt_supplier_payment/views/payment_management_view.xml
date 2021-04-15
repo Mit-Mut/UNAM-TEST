@@ -12,6 +12,13 @@
             	<xpath expr="//tree" position="attributes">
             		<attribute name="create">0</attribute>
             	</xpath>
+                <xpath expr="//field[@name='partner_id']" position="after">
+                     <field name="batch_folio"/>
+                    <field name="date_approval_request"/>
+                </xpath>
+                <xpath expr="//field[@name='payment_state']" position="after">
+                    <field name="amount_total"/>
+                </xpath>
             </field>
         </record>
 
@@ -27,6 +34,10 @@
             	<field name="batch_folio" position="attributes">
             		<field name="readonly">0</field>
             	</field>
+            	<field name="type_of_payment_custom" position="attributes">
+            		<attributes name="readonly">0</attributes>
+            	</field>
+            	
             	<field name="payment_issuing_bank_id" position="attributes">
             		<attribute name="readonly">0</attribute>
             	</field>

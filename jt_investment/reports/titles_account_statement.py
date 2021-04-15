@@ -75,7 +75,7 @@ class TitlesAccountStatement(models.AbstractModel):
              {'name': _('Saldo Final')},
         ]
 
-    def _format(self, value, figure_type):
+    def _format(self, value, figure_type,digit):
         if self.env.context.get('no_format'):
             return value
         value['no_format_name'] = value['name']
@@ -182,10 +182,10 @@ class TitlesAccountStatement(models.AbstractModel):
                 'columns': [
                             {'name':''},
                             {'name': ''},
-                            self._format({'name': header_intial},figure_type='float'),
-                            self._format({'name': 0.0},figure_type='float'),
-                            self._format({'name': 0.0},figure_type='float'),
-                            self._format({'name': header_intial},figure_type='float'),
+                            self._format({'name': header_intial},figure_type='float',digit=2),
+                            self._format({'name': 0.0},figure_type='float',digit=2),
+                            self._format({'name': 0.0},figure_type='float',digit=2),
+                            self._format({'name': header_intial},figure_type='float',digit=2),
                             ],
                 'level': 3,
                 'unfoldable': False,
@@ -253,10 +253,10 @@ class TitlesAccountStatement(models.AbstractModel):
                         'columns': [ 
                                     {'name':rec.concept},
                                     {'name': rec.name},
-                                    self._format({'name': capital},figure_type='float'),
-                                    self._format({'name': inc},figure_type='float'),
-                                    self._format({'name': withdraw},figure_type='float'),
-                                    self._format({'name': final},figure_type='float'),
+                                    self._format({'name': capital},figure_type='float',digit=2),
+                                    self._format({'name': inc},figure_type='float',digit=2),
+                                    self._format({'name': withdraw},figure_type='float',digit=2),
+                                    self._format({'name': final},figure_type='float',digit=2),
                                     ],
                         'level': 3,
                         'unfoldable': False,
@@ -288,10 +288,10 @@ class TitlesAccountStatement(models.AbstractModel):
                         'columns': [ 
                                     {'name':line.concept},
                                     {'name': line.concept},
-                                    self._format({'name': capital},figure_type='float'),
-                                    self._format({'name': inc},figure_type='float'),
-                                    self._format({'name': withdraw},figure_type='float'),
-                                    self._format({'name': final},figure_type='float'),
+                                    self._format({'name': capital},figure_type='float',digit=2),
+                                    self._format({'name': inc},figure_type='float',digit=2),
+                                    self._format({'name': withdraw},figure_type='float',digit=2),
+                                    self._format({'name': final},figure_type='float',digit=2),
                                     ],
                         'level': 3,
                         'unfoldable': False,
@@ -307,9 +307,9 @@ class TitlesAccountStatement(models.AbstractModel):
                             {'name':''},
                             {'name': ''},
                             {'name': ''},
-                            self._format({'name': total_inc},figure_type='float'),
-                            self._format({'name': total_with},figure_type='float'),
-                            self._format({'name': total_inc - total_with},figure_type='float'),
+                            self._format({'name': total_inc},figure_type='float',digit=2),
+                            self._format({'name': total_with},figure_type='float',digit=2),
+                            self._format({'name': total_inc - total_with},figure_type='float',digit=2),
                             ],
                 'level': 1,
                 'unfoldable': False,
@@ -323,9 +323,9 @@ class TitlesAccountStatement(models.AbstractModel):
                         {'name':''},
                         {'name': ''},
                         {'name': ''},
-                        self._format({'name': g_total_inc},figure_type='float'),
-                        self._format({'name': g_total_with},figure_type='float'),
-                        self._format({'name': g_total_inc - g_total_with},figure_type='float'),
+                        self._format({'name': g_total_inc},figure_type='float',digit=2),
+                        self._format({'name': g_total_with},figure_type='float',digit=2),
+                        self._format({'name': g_total_inc - g_total_with},figure_type='float',digit=2),
                         ],
             'level': 1,
             'unfoldable': False,
@@ -367,6 +367,7 @@ class TitlesAccountStatement(models.AbstractModel):
         level_3_col1_total_style = workbook.add_format({'font_name': 'Arial', 'bold': True, 'font_size': 12, 'font_color': '#666666', 'indent': 1})
         level_3_style = workbook.add_format({'font_name': 'Arial', 'font_size': 12, 'font_color': '#666666'})
         currect_date_style = workbook.add_format({'font_name': 'Arial', 'bold': True, 'align': 'right'})
+        currect_left_style = workbook.add_format({'font_name': 'Arial', 'bold': True, 'align': 'left'})
         currect_date_style.set_border(0)
         super_col_style.set_border(0)
         #Set the first column width to 50
@@ -387,15 +388,44 @@ class TitlesAccountStatement(models.AbstractModel):
             image_data = io.BytesIO(base64.standard_b64decode(self.env.user.company_id.header_logo))
             sheet.insert_image(0,0, filename, {'image_data': image_data,'x_offset':8,'y_offset':3,'x_scale':0.6,'y_scale':0.6})
         
+        period_name = ''
+        start_date = datetime.strptime(options.get('date').get('date_from'), DEFAULT_SERVER_DATE_FORMAT)
+        end_date = datetime.strptime(options.get('date').get('date_to'), DEFAULT_SERVER_DATE_FORMAT)
+        if start_date and end_date:
+            period_name += "Del " + str(start_date.day)
+
+            period_name += ' ' + self.get_month_name(start_date.month)
+            if start_date.year != end_date.year:
+                period_name += ' ' + str(start_date.year)
+
+            period_name += " al " + str(end_date.day) + " de " + self.get_month_name(end_date.month) + " " \
+                           + str(end_date.year)
+
+        header_intial = options.get('intial')
+        header_withdrawal = options.get('withdrawal')
+        header_increment = options.get('increment')
+        actual = (header_increment + header_intial) - header_withdrawal
         col += 1
-        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICOO\nUNIVERSITY BOARD\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nCOMITÉ DE INVERSIONES'''
-        sheet.merge_range(y_offset, col, 5, col+6, header_title,super_col_style)
+        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nDIRECCIÓN GENERAL DE FINANZAS\nDIRECCIÓN DE INGRESOS Y OPERATIÓN FINANCIERA\nDEPTO. DE OPERACIÓN FINANCIERA\nESTADO DE CUENTA:%s'''% (period_name)
+        sheet.merge_range(y_offset, col, 5, col+5, header_title,super_col_style)
         y_offset += 6
-        col=1
-        currect_time_msg = "Fecha y hora de impresión: "
-        currect_time_msg += datetime.today().strftime('%d/%m/%Y %H:%M')
-        sheet.merge_range(y_offset, col, y_offset, col+6, currect_time_msg,currect_date_style)
+        currect_time_msg = ''
+        currect_time_msg += "Estado de cuenta : TITULOS"
+        sheet.merge_range(y_offset, col, y_offset, col+5, currect_time_msg,currect_left_style)
+        #col += 1
         y_offset += 1
+        currect_time_msg = "Saldo Inicial  :  "
+        currect_time_msg += str(self._format({'name': header_intial},figure_type='float',digit=2).get('name'))
+        currect_time_msg += "\n(+) Incrementos  :  "
+        currect_time_msg += str(self._format({'name': header_increment},figure_type='float',digit=2).get('name'))
+        currect_time_msg += "\n(-) Retiros  :  "
+        currect_time_msg += str(self._format({'name': header_withdrawal},figure_type='float',digit=2).get('name'))
+        currect_time_msg += "\nSaldo Actual:  :  "
+        currect_time_msg += str(self._format({'name': actual},figure_type='float',digit=2).get('name'))
+        sheet.merge_range(y_offset, col, y_offset+3, col+5, currect_time_msg,currect_date_style)
+        y_offset += 4
+        col=1
+        
         for row in self.get_header(options):
             x = 0
             for column in row:
@@ -515,7 +545,7 @@ class TitlesAccountStatement(models.AbstractModel):
             values=dict(rcontext),
         )
         body_html = self.with_context(print_mode=True).get_html(options)
-
+        body_html = body_html.replace(b'<div class="o_account_reports_header">',b'<div style="display:none;">')
         body = body.replace(b'<body class="o_account_reports_body_print">', b'<body class="o_account_reports_body_print">' + body_html)
         if minimal_layout:
             header = ''
@@ -545,14 +575,14 @@ class TitlesAccountStatement(models.AbstractModel):
                 'res_company': self.env.company,
                 'period_name': period_name,
                 'name': 'TITULOS',
-                'intial': str(self._format({'name': header_intial},figure_type='float').get('name')),
-                'increment': str(self._format({'name': header_increment},figure_type='float').get('name')),
-                'withdrawal': str(self._format({'name': header_withdrawal},figure_type='float').get('name')),
-                'actual': str(self._format({'name': actual},figure_type='float').get('name')),
+                'intial': str(self._format({'name': header_intial},figure_type='float',digit=2).get('name')),
+                'increment': str(self._format({'name': header_increment},figure_type='float',digit=2).get('name')),
+                'withdrawal': str(self._format({'name': header_withdrawal},figure_type='float',digit=2).get('name')),
+                'actual': str(self._format({'name': actual},figure_type='float',digit=2).get('name')),
                 'extra_data': True
             })
             header = self.env['ir.actions.report'].with_context(period_name=period_name).render_template(
-                "jt_investment.external_layout_investment_committee",
+                "jt_investment.external_layout_fund_account_statement",
                 values=rcontext)
             header = header.decode('utf-8') # Ensure that headers and footer are correctly encoded
             spec_paperformat_args = {'data-report-margin-top': 55, 'data-report-header-spacing': 50}

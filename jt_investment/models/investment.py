@@ -63,6 +63,7 @@ class Investment(models.Model):
     real_profit = fields.Float(string="Real Profit")
     profit_variation = fields.Float(
         string="Estimated vs Real Profit Variation", compute="get_profit_variation", store=True)
+    rate_of_returns = fields.Many2one('rate.of.returns', string="Rate Of Returns")
 
     #====== Accounting Fields =========#
 
@@ -419,6 +420,7 @@ class InvestmentOperation(models.Model):
     is_request_generated = fields.Boolean(default=False, copy=False)
     concept = fields.Text("Application Concept")
     distribution_income_id = fields.Many2one('distribution.of.income','Distribution Income')
+    interest_rate_base_id = fields.Many2one('interest.rate.base',copy=False)
     
     def unlink(self):
         for rec in self:
@@ -604,6 +606,7 @@ class InvestmentOperation(models.Model):
             'state': 'requested',
             'dependency_id': self.dependency_id and self.dependency_id.id or False,
             'sub_dependency_id': self.sub_dependency_id and self.sub_dependency_id.id or False,
+            'trasnfer_request':'investments',
         }
 
         self.env['request.open.balance.finance'].create(vals)

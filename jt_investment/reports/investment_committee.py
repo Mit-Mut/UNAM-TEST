@@ -76,13 +76,17 @@ class InvestmentCommittee(models.AbstractModel):
 
     @api.model
     def _get_filter_journals(self):
-        return self.env['account.journal'].search([
-            ('bank_account_id.for_investments','=',True),('company_id', 'in', self.env.user.company_ids.ids or [self.env.company.id])
+        return self.env['account.journal'].search([('company_id', 'in', self.env.user.company_ids.ids or [self.env.company.id])
         ], order="company_id, name")
+        
+#         return self.env['account.journal'].search([
+#             ('bank_account_id.for_investments','=',True),('company_id', 'in', self.env.user.company_ids.ids or [self.env.company.id])
+#         ], order="company_id, name")
         
     @api.model
     def _get_filter_bank(self):
-        bank_acc_ids = self.env['res.partner.bank'].search([('for_investments','=',True)])
+        #bank_acc_ids = self.env['res.partner.bank'].search([('for_investments','=',True)])
+        bank_acc_ids = self.env['res.partner.bank'].search([])
         return bank_acc_ids.mapped('bank_id')
         
 
@@ -129,6 +133,8 @@ class InvestmentCommittee(models.AbstractModel):
             {'name':_('moneda')},
             {'name': _('Importe')},
             {'name': _('Tipo')},
+            {'name': _('Fondo')},
+            {'name': _('Tasa de rendimiento')},
             {'name': _('Tasa Rendimiento')},
             {'name': _('Procentual extra')},
             {'name': _('Destino Rendimiento')},
@@ -256,6 +262,8 @@ class InvestmentCommittee(models.AbstractModel):
                         {'name':''},
                         {'name':''},
                         {'name':''},
+                        {'name':''},
+                        {'name':''},
                         ],
             'level': 1,
             'unfoldable': False,
@@ -268,6 +276,9 @@ class InvestmentCommittee(models.AbstractModel):
         for account in productive_ids:
             total_amount += account.actual_amount
             precision = self.env['decimal.precision'].precision_get('Productive Accounts')
+            fund_id = False
+            if account.line_ids:
+                fund_id = account.line_ids.mapped('investment_fund_id')
             lines.append({
                 'id': 'hierarchy_account' + str(account.id),
                 'name' : '', 
@@ -276,6 +287,8 @@ class InvestmentCommittee(models.AbstractModel):
                             {'name':account.currency_id.name},
                             self._format({'name': account.actual_amount},figure_type='float',digit=2,is_currency=True),
                             {'name': 'Cuentas productivas'},
+                            {'name': fund_id and fund_id[0].fund_id and fund_id[0].fund_id.name or ''},
+                            {'name': account.rate_of_returns and account.rate_of_returns.name or ''},
                             self._format({'name': account.interest_rate},figure_type='float',digit=precision,is_currency=False),
                             self._format({'name': account.extra_percentage},figure_type='float',digit=precision,is_currency=False),
                             {'name': account.yield_id and account.yield_id.name or ''},
@@ -284,7 +297,7 @@ class InvestmentCommittee(models.AbstractModel):
                 'unfoldable': False,
                 'unfolded': True,
             })
-
+            
         lines.append({
             'id': 'hierarchy_account_productivas_total',
             'name': 'Total',
@@ -294,6 +307,8 @@ class InvestmentCommittee(models.AbstractModel):
                         self._format({'name': total_amount},figure_type='float',digit=2,is_currency=True),
                         {'name': ''},
                         {'name': ''},
+                        {'name':''},
+                        {'name':''},
                         {'name':''},
                         {'name':''},
                         ],
@@ -306,7 +321,7 @@ class InvestmentCommittee(models.AbstractModel):
         period_name = [{'name': 'Moneda' if self.env.user.lang == 'es_MX' else 'Currency'}]
         for per in periods:
             period_name.append({'name': per.get('string'),'class':'number'})
-        r_column = 6 - len(periods)
+        r_column = 8 - len(periods)
         if r_column > 0:
             for col in range(r_column):
                 period_name.append({'name': ''})
@@ -368,7 +383,7 @@ class InvestmentCommittee(models.AbstractModel):
         for per in total_dict:
             total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2,is_currency=True))
             
-        r_column = 7 - len(total_name)
+        r_column = 9 - len(total_name)
         if r_column > 0:
             for col in range(r_column):
                 total_name.append({'name': ''})
@@ -392,6 +407,8 @@ class InvestmentCommittee(models.AbstractModel):
                         {'name':''},
                         {'name':''},
                         {'name':''},
+                        {'name':''},
+                        {'name':''},
                         ],
             'level': 1,
             'unfoldable': False,
@@ -412,6 +429,8 @@ class InvestmentCommittee(models.AbstractModel):
                             {'name':cetes.currency_id.name},
                             self._format({'name': cetes.nominal_value},figure_type='float',digit=2,is_currency=True),
                             {'name': 'CETES'},
+                            {'name': cetes.fund_id and cetes.fund_id.name or ''},
+                            {'name': cetes.rate_of_returns and cetes.rate_of_returns.name or ''},
                             self._format({'name': cetes.yield_rate},figure_type='float',digit=precision,is_currency=False),
                             {'name':''},
                             {'name': cetes.yield_id and cetes.yield_id.name or ''},
@@ -430,6 +449,8 @@ class InvestmentCommittee(models.AbstractModel):
                         self._format({'name': cetes_total_amount},figure_type='float',digit=2,is_currency=True),
                         {'name': ''},
                         {'name': ''},
+                        {'name': ''},
+                        {'name': ''},
                         {'name':''},
                         {'name':''},
                         ],
@@ -443,7 +464,7 @@ class InvestmentCommittee(models.AbstractModel):
         period_name = [{'name': 'Moneda' if self.env.user.lang == 'es_MX' else 'Currency'}]
         for per in periods:
             period_name.append({'name': per.get('string'),'class':'number'})
-        r_column = 6 - len(periods)
+        r_column = 8 - len(periods)
         if r_column > 0:
             for col in range(r_column):
                 period_name.append({'name': ''})
@@ -505,7 +526,7 @@ class InvestmentCommittee(models.AbstractModel):
         for per in total_dict:
             total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2,is_currency=True))
             
-        r_column = 7 - len(total_name)
+        r_column = 9 - len(total_name)
         if r_column > 0:
             for col in range(r_column):
                 total_name.append({'name': ''})
@@ -526,6 +547,8 @@ class InvestmentCommittee(models.AbstractModel):
                         {'name': ''},
                         {'name': ''},
                         {'name': ''},
+                        {'name':''},
+                        {'name':''},
                         {'name':''},
                         {'name':''},
                         {'name':''},
@@ -550,6 +573,8 @@ class InvestmentCommittee(models.AbstractModel):
                             {'name':udibonos.currency_id.name},
                             self._format({'name': udibonos.nominal_value},figure_type='float',digit=2,is_currency=True),
                             {'name': 'UDIBONOS'},
+                            {'name': udibonos.fund_id and udibonos.fund_id.name or ''},
+                            {'name': udibonos.rate_of_returns and udibonos.rate_of_returns.name or ''},
                             self._format({'name': udibonos.interest_rate},figure_type='float',digit=precision,is_currency=False),
                             {'name':''},
                             {'name': udibonos.yield_id and udibonos.yield_id.name or ''},
@@ -572,6 +597,8 @@ class InvestmentCommittee(models.AbstractModel):
                         {'name': ''},
                         {'name':''},
                         {'name':''},
+                        {'name':''},
+                        {'name':''},
                         ],
             'level': 1,
             'unfoldable': False,
@@ -583,7 +610,7 @@ class InvestmentCommittee(models.AbstractModel):
         period_name = [{'name': 'Moneda' if self.env.user.lang == 'es_MX' else 'Currency'}]
         for per in periods:
             period_name.append({'name': per.get('string'),'class':'number'})
-        r_column = 6 - len(periods)
+        r_column = 8 - len(periods)
         if r_column > 0:
             for col in range(r_column):
                 period_name.append({'name': ''})
@@ -645,7 +672,7 @@ class InvestmentCommittee(models.AbstractModel):
         for per in total_dict:
             total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2,is_currency=True))
             
-        r_column = 7 - len(total_name)
+        r_column = 9 - len(total_name)
         if r_column > 0:
             for col in range(r_column):
                 total_name.append({'name': ''})
@@ -669,6 +696,8 @@ class InvestmentCommittee(models.AbstractModel):
                         {'name':''},
                         {'name':''},
                         {'name':''},
+                        {'name':''},
+                        {'name':''},
                         ],
             'level': 1,
             'unfoldable': False,
@@ -689,6 +718,8 @@ class InvestmentCommittee(models.AbstractModel):
                             {'name':bonds.currency_id.name},
                             self._format({'name': bonds.nominal_value},figure_type='float',digit=2,is_currency=True),
                             {'name': 'BONOS'},
+                            {'name': bonds.fund_id and bonds.fund_id.name or ''},
+                            {'name': bonds.rate_of_returns and bonds.rate_of_returns.name or ''},
                             self._format({'name': bonds.interest_rate},figure_type='float',digit=precision,is_currency=False),
                             {'name':''},
                            {'name': bonds.yield_id and bonds.yield_id.name or ''},
@@ -709,6 +740,8 @@ class InvestmentCommittee(models.AbstractModel):
                         {'name': ''},
                         {'name':''},
                         {'name':''},
+                        {'name':''},
+                        {'name':''},
                         ],
             'level': 1,
             'unfoldable': False,
@@ -719,7 +752,7 @@ class InvestmentCommittee(models.AbstractModel):
         period_name = [{'name': 'Moneda' if self.env.user.lang == 'es_MX' else 'Currency'}]
         for per in periods:
             period_name.append({'name': per.get('string'),'class':'number'})
-        r_column = 6 - len(periods)
+        r_column = 8 - len(periods)
         if r_column > 0:
             for col in range(r_column):
                 period_name.append({'name': ''})
@@ -781,7 +814,7 @@ class InvestmentCommittee(models.AbstractModel):
         for per in total_dict:
             total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2,is_currency=True))
             
-        r_column = 7 - len(total_name)
+        r_column = 9 - len(total_name)
         if r_column > 0:
             for col in range(r_column):
                 total_name.append({'name': ''})
@@ -806,6 +839,8 @@ class InvestmentCommittee(models.AbstractModel):
                         {'name':''},
                         {'name':''},
                         {'name':''},
+                        {'name':''},
+                        {'name':''},
                         ],
             'level': 1,
             'unfoldable': False,
@@ -826,6 +861,8 @@ class InvestmentCommittee(models.AbstractModel):
                             {'name':pay.currency_id.name},
                             self._format({'name': pay.amount},figure_type='float',digit=2,is_currency=True),
                             {'name': 'Pagaré'},
+                            {'name': pay.fund_id and pay.fund_id.name or ''},
+                            {'name': pay.rate_of_returns and pay.rate_of_returns.name or ''},
                             self._format({'name': pay.interest_rate},figure_type='float',digit=precision,is_currency=False),
                             {'name':''},
                             {'name': pay.yield_id and pay.yield_id.name or ''},
@@ -846,6 +883,8 @@ class InvestmentCommittee(models.AbstractModel):
                         {'name': ''},
                         {'name':''},
                         {'name':''},
+                        {'name':''},
+                        {'name':''},
                         
                         ],
             'level': 1,
@@ -857,7 +896,7 @@ class InvestmentCommittee(models.AbstractModel):
         period_name = [{'name': 'Moneda' if self.env.user.lang == 'es_MX' else 'Currency'}]
         for per in periods:
             period_name.append({'name': per.get('string'),'class':'number'})
-        r_column = 6 - len(periods)
+        r_column = 8 - len(periods)
         if r_column > 0:
             for col in range(r_column):
                 period_name.append({'name': ''})
@@ -919,7 +958,7 @@ class InvestmentCommittee(models.AbstractModel):
         for per in total_dict:
             total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2,is_currency=True))
             
-        r_column = 7 - len(total_name)
+        r_column = 9 - len(total_name)
         if r_column > 0:
             for col in range(r_column):
                 total_name.append({'name': ''})
@@ -958,6 +997,8 @@ class InvestmentCommittee(models.AbstractModel):
                         {'name':''},
                         {'name':''},
                         {'name':''},
+                        {'name':''},
+                        {'name':''},
                         ],
             'level': 1,
             'unfoldable': False,
@@ -981,6 +1022,8 @@ class InvestmentCommittee(models.AbstractModel):
                             {'name':sale.currency_id.name},
                             self._format({'name': sale.amount},figure_type='float',digit=2,is_currency=True),
                             {'name': 'Títulos'},
+                            {'name': sale.fund_id and sale.fund_id.name or ''},
+                            {'name': sale.rate_of_returns and sale.rate_of_returns.name or ''},
                             self._format({'name': sale.price},figure_type='float',digit=4,is_currency=False),
                             {'name':''},
                             {'name': sale.yield_id and sale.yield_id.name or ''},
@@ -1001,6 +1044,8 @@ class InvestmentCommittee(models.AbstractModel):
                         {'name': ''},
                         {'name':''},
                         {'name':''},
+                        {'name':''},
+                        {'name':''},
                         ],
             'level': 1,
             'unfoldable': False,
@@ -1011,7 +1056,7 @@ class InvestmentCommittee(models.AbstractModel):
         period_name = [{'name': 'Moneda' if self.env.user.lang == 'es_MX' else 'Currency'}]
         for per in periods:
             period_name.append({'name': per.get('string'),'class':'number'})
-        r_column = 6 - len(periods)
+        r_column = 8 - len(periods)
         if r_column > 0:
             for col in range(r_column):
                 period_name.append({'name': ''})
@@ -1077,7 +1122,7 @@ class InvestmentCommittee(models.AbstractModel):
         for per in total_dict:
             total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2,is_currency=True))
             
-        r_column = 7 - len(total_name)
+        r_column = 9 - len(total_name)
         if r_column > 0:
             for col in range(r_column):
                 total_name.append({'name': ''})
@@ -1145,7 +1190,7 @@ class InvestmentCommittee(models.AbstractModel):
             sheet.insert_image(0,0, filename, {'image_data': image_data,'x_offset':8,'y_offset':3,'x_scale':0.6,'y_scale':0.6})
         
         col += 1
-        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICOO\nUNIVERSITY BOARD\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nCOMITÉ DE INVERSIONES'''
+        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nPATRONATO UNIVERSITARIO\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nREPORTE PARA EL COMITÉ DE INVERSIONES'''
         sheet.merge_range(y_offset, col, 5, col+6, header_title,super_col_style)
         y_offset += 6
         col=1

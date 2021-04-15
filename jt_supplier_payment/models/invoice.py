@@ -21,10 +21,25 @@
 #
 ##############################################################################
 from odoo import models, fields, api, _
+import base64
+import xlrd
+from datetime import datetime
 from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
 from datetime import datetime, timedelta
+from odoo.modules.module import get_resource_path
+from xlrd import open_workbook
+from odoo.tools.misc import ustr
 
 
+class ScholarshipPaymentBreakdown(models.Model):
+    _name = 'scholarship.payment.breakdown'
+    
+    name = fields.Char("Beneficiary Name")
+    bank_id = fields.Many2one('res.bank','Bank')
+    payment_concept = fields.Char('Payment Concept')
+    amount = fields.Float("Amount")
+    move_id = fields.Many2one('account.move','Move')
+    
 class AccountMove(models.Model):
 
     _inherit = 'account.move'
@@ -87,6 +102,8 @@ class AccountMove(models.Model):
         if 'default_is_project_payment' in self._context:
             journal = self.env.ref(
                 'jt_payroll_payment.project_payment_request_jour')
+        if 'default_is_provision_request' in self._context:
+            journal = self.env.ref('jt_supplier_payment.payment_request_jour')
 
         return journal
 
@@ -136,7 +153,7 @@ class AccountMove(models.Model):
     upa_document_type = fields.Many2one(
         'upa.document.type', string="Document Type UPA")
     provenance = fields.Text("Provenance")
-    batch_folio = fields.Integer("Batch Folio")
+    batch_folio = fields.Integer(string="Batch Folio",group_operator=False)
     vault_folio = fields.Char("Vault folio")
     payment_bank_id = fields.Many2one('res.bank', "Bank of receipt of payment")
     payment_bank_account_id = fields.Many2one(
@@ -168,6 +185,8 @@ class AccountMove(models.Model):
     reason_rejection = fields.Text("Reason for Rejection")
     reason_cancellation = fields.Text("Reason for Cancellation")
     is_payment_request = fields.Boolean("Payment Request")
+    is_provision_request = fields.Boolean("Provision Request",copy=False)
+    is_create_from_provision = fields.Boolean("Provision Request",copy=False)
     type = fields.Selection(selection_add=[('payment_req', 'Payment Request')])
 
     # More info Tab
@@ -220,7 +239,24 @@ class AccountMove(models.Model):
     check_number = fields.Char("Check number")
     bank_key = fields.Char("Bank Key")
     previous_number = fields.Char("Previous Number", size=11)
-
+    set_readonly_into_payment = fields.Boolean(string='Set Readonly',copy=False,store=True,compute="get_set_readonly_into_payment_view")
+    type_of_payment_custom = fields.Selection([('scholarships','Scholarships'),('Provider','Provider')],string="Type Of Request")
+    layout_scholarship_data = fields.Binary(string='Layout Scholarship')
+    layout_scholarship_filename = fields.Char(string='Layout Scholarship Filename')
+    scholarship_breakdown_ids=fields.One2many('scholarship.payment.breakdown','move_id')
+    provision_move_id = fields.Many2one('account.move','Provision')
+    provision_move_ids = fields.One2many('account.move','provision_move_id')
+    
+    @api.depends('payment_state','is_create_from_provision','is_payment_request')
+    def get_set_readonly_into_payment_view(self):
+        for rec in self:
+            set_readonly_into_payment = False
+            if not rec.is_create_from_provision and rec.payment_state != 'draft':
+                set_readonly_into_payment = True
+            elif rec.is_create_from_provision and rec.payment_state not in ('draft','approved_payment'):
+                set_readonly_into_payment = True
+            rec.set_readonly_into_payment = set_readonly_into_payment
+            
     @api.depends('payment_state', 'is_payroll_payment_request', 'is_payment_request', 'state')
     def get_conac_line_display(self):
         for rec in self:
@@ -251,6 +287,8 @@ class AccountMove(models.Model):
         if res and res.is_payment_request:
             res.line_ids = False
         return res
+
+
 
     def unlink(self):
         for rec in self:
@@ -563,10 +601,82 @@ class AccountMove(models.Model):
 #             self.line_ids = [(5,self.line_ids.ids)]
 #         return res
 
+    def import_lines(self):
+        
+        if not self.layout_scholarship_data:
+            raise UserError(_('Please Upload File.'))
+
+        elif self.layout_scholarship_data:
+            try:
+                data = base64.decodestring(self.layout_scholarship_data)
+                book = open_workbook(file_contents=data or b'')
+                sheet = book.sheet_by_index(0)
+
+                headers = []
+                field_headers = ['name','bank_id','payment_concept','amount']
+                result_vals = []
+                for rowx, row in enumerate(map(sheet.row, range(1, sheet.nrows)), 1):
+                    result_dict = {}
+                    counter = 0
+                    for colx, cell in enumerate(row, 1):
+                        value = str(cell.value)
+                        if field_headers[counter] == 'name':
+                            value = str(cell.value)
+                        if field_headers[counter] == 'bank_id':
+                            bank_id = self.env['res.bank'].search([('name','=',str(cell.value))],limit=1)
+                            if bank_id:
+                                value = bank_id.id
+                            else:
+                                value = False
+                        if field_headers[counter] == 'payment_concept':
+                             value = str(cell.value)
+                        if field_headers[counter] == 'amount':
+                            value = float(cell.value)
+                        result_dict.update(
+                            {field_headers[counter]: value})
+                        counter += 1
+                    result_vals.append((0, 0, result_dict))
+                try:
+                    self.write({
+                        'scholarship_breakdown_ids': result_vals,
+                    })
+                except ValueError as e:
+                    if self.env.user.lang == 'es_MX':
+                        raise ValidationError(_("La columna contiene valores incorrectos. Error: %s")% (ustr(e)))
+                    else:
+                        raise ValidationError(_("Column  contains incorrect values. Error: %s")% (ustr(e)))
+                except ValidationError as e:
+                    if self.env.user.lang == 'es_MX':
+                        raise ValidationError(_("La columna contiene valores incorrectos. Error: %s")% (ustr(e)))
+                    else:                        
+                        raise ValidationError(_("Column  contains incorrect values. Error: %s")% (ustr(e)))
+                except UserError as e:
+                    if self.env.user.lang == 'es_MX':
+                        raise ValidationError(_("La columna contiene valores incorrectos. Error: %s")% (ustr(e)))
+                    else:                        
+                        raise ValidationError(_("Column  contains incorrect values. Error: %s")% (ustr(e)))            
+
+            except ValueError as e:
+                if self.env.user.lang == 'es_MX':
+                    raise ValidationError(_("La columna contiene valores incorrectos. Error %s")% (ustr(e)))
+                else:
+                    raise ValidationError(_("Column  contains incorrect values. Error %s")% (ustr(e)))
+            except ValidationError as e:
+                if self.env.user.lang == 'es_MX':
+                    raise ValidationError(_("La columna contiene valores incorrectos. Error: %s")% (ustr(e)))
+                else:
+                    raise ValidationError(_("Column  contains incorrect values. Error %s")% (ustr(e)))
+            except UserError as e:
+                if self.env.user.lang == 'es_MX':
+                    raise ValidationError(_("La columna contiene valores incorrectos. Error: %s")% (ustr(e)))
+                else:                
+                    raise ValidationError(_("Column  contains incorrect values. Error %s")% (ustr(e)))            
 
 class AccountMoveLine(models.Model):
 
     _inherit = 'account.move.line'
+
+    is_for_approved_payment = fields.Boolean(string="For Approved Payment",default=False)
 
     payment_req_id = fields.Many2one('account.move')
     egress_key_id = fields.Many2one("egress.keys", string="Egress Key")
@@ -582,7 +692,7 @@ class AccountMoveLine(models.Model):
     invoice_series = fields.Char("Invoice Series")
     folio_invoice = fields.Char("Folio Invoice")
     vault_folio = fields.Char("Vault folio")
-
+    
     @api.depends('price_subtotal', 'price_total')
     def get_price_tax_cr(self):
         for rec in self:

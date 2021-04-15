@@ -46,8 +46,9 @@ class ConfirmCheckBook(models.TransientModel):
                 'total_cash': self.total_cash,
                 'checkbook_req_id': check_req.id
             })
+            check_log_list = [] 
             for folio in range(check_req.intial_folio, check_req.final_folio + 1):
-                checklist.checklist_lines = [(0, 0, {
+                check_log_list.append((0, 0, {
                     'folio': folio,
                     'status': 'Checkbook registration' if folio != int(check_req.print_sample_folio_number) else \
                             'Cancelled',
@@ -56,5 +57,21 @@ class ConfirmCheckBook(models.TransientModel):
                     'checkbook_no': check_req.checkbook_no,
                     # 'dependence_id': check_req.dependence_id.id if check_req.dependence_id else False,
                     # 'subdependence_id': check_req.subdependence_id.id if check_req.subdependence_id else False
-                })]
+                }))
+                if len(check_log_list) > 500000 and check_log_list:
+                    checklist.checklist_lines = check_log_list
+                    check_log_list = []
+            if check_log_list:
+                checklist.checklist_lines = check_log_list
+                
+#                 checklist.checklist_lines = [(0, 0, {
+#                     'folio': folio,
+#                     'status': 'Checkbook registration' if folio != int(check_req.print_sample_folio_number) else \
+#                             'Cancelled',
+#                     'bank_id': check_req.bank_id.id if check_req.bank_id else False,
+#                     'bank_account_id': check_req.bank_account_id.id if check_req.bank_account_id else False,
+#                     'checkbook_no': check_req.checkbook_no,
+#                     # 'dependence_id': check_req.dependence_id.id if check_req.dependence_id else False,
+#                     # 'subdependence_id': check_req.subdependence_id.id if check_req.subdependence_id else False
+#                 })]
             check_req.state = 'confirmed'

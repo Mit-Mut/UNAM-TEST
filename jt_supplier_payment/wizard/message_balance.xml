@@ -31,18 +31,18 @@
 
                     <group>
                     	<group>
-                    		<field name="account_balance" attrs="{'invisible':[('is_balance','=',False)]}" readonly="1"/>
-                    		<field name="minimum_balance" attrs="{'invisible':[('is_balance','=',False)]}" readonly="1"/>
+                    		<field name="account_balance"  readonly="1"/>
+                    		<field name="minimum_balance"  readonly="1"/>
                     	</group>
                     	<group>
-                    		<field name="required_balance" attrs="{'invisible':[('is_balance','=',False)]}" readonly="1"/>
-                    		<field name="different_balance" attrs="{'invisible':[('is_balance','=',False)]}" readonly="1"/>
+                    		<field name="required_balance"  readonly="1"/>
+                    		<field name="different_balance"  readonly="1"/>
                     	</group>
                     </group>
                     
                     <footer>
                         <button string="Accept" name="accept" type="object" class="oe_highlight" attrs="{'invisible':[('is_balance','=',False)]}"/>
-                        <button string="Generate Report" name="generate_report" type="object" class="oe_highlight" attrs="{'invisible':[('is_balance','=',True)]}"/>
+                        <button string="Generate Report" name="generate_report" type="object" class="oe_highlight"/>
                         <button string="Cancel" class="btn btn-secondary" special="cancel" attrs="{'invisible':[('is_balance','=',True)]}"/>
                     </footer>
                 </form>

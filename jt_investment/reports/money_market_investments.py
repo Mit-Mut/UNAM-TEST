@@ -699,6 +699,35 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
     def _get_report_name(self):
         return _("Summary of Operation - Money Market Investments")
     
+    def get_month_name(self,month):
+        month_name = ''
+        if month==1:
+            month_name = 'Enero'
+        elif month==2:
+            month_name = 'Febrero'
+        elif month==3:
+            month_name = 'Marzo'
+        elif month==4:
+            month_name = 'Abril'
+        elif month==5:
+            month_name = 'Mayo'
+        elif month==6:
+            month_name = 'Junio'
+        elif month==7:
+            month_name = 'Julio'
+        elif month==8:
+            month_name = 'Agosto'
+        elif month==9:
+            month_name = 'Septiembre'
+        elif month==10:
+            month_name = 'Octubre'
+        elif month==11:
+            month_name = 'Noviembre'
+        elif month==12:
+            month_name = 'Diciembre'
+            
+        return month_name.upper()
+
     @api.model
     def _get_super_columns(self, options):
         date_cols = options.get('date') and [options['date']] or []
@@ -748,8 +777,21 @@ class SummaryofOperationMoneyMarketInvestments(models.AbstractModel):
             image_data = io.BytesIO(base64.standard_b64decode(self.env.user.company_id.header_logo))
             sheet.insert_image(0,0, filename, {'image_data': image_data,'x_offset':8,'y_offset':3,'x_scale':0.6,'y_scale':0.6})
         
+        period_name = ''
+        start_date = datetime.strptime(options.get('date').get('date_from'), DEFAULT_SERVER_DATE_FORMAT)
+        end_date = datetime.strptime(options.get('date').get('date_to'), DEFAULT_SERVER_DATE_FORMAT)
+        if start_date and end_date:
+            period_name += "Del " + str(start_date.day)
+
+            period_name += ' ' + self.get_month_name(start_date.month)
+            if start_date.year != end_date.year:
+                period_name += ' ' + str(start_date.year)
+
+            period_name += " al " + str(end_date.day) + " de " + self.get_month_name(end_date.month) + " " \
+                           + str(end_date.year)
+        
         col += 1
-        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICOO\nUNIVERSITY BOARD\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nRESUMEN DE OPERACIÓN - INVERSIONES MERCADO DE DINERO'''
+        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nPATRONATO UNIVERSITARIO\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nRESUMEN DE OPERACIÓN - INVERSIONES MERCADO DE DINERO'''
         sheet.merge_range(y_offset, col, 5, col+6, header_title,super_col_style)
         y_offset += 6
         col=1

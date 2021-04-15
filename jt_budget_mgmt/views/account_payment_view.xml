@@ -25,5 +25,20 @@
             	</field>
 			</field>
 		</record>
+
+  		<record id="inherited_view_account_payment_form_supplier_payment" model="ir.ui.view">
+            <field name="name">inherited view account payment form supplier ayment</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="jt_supplier_payment.inherited_view_account_payment_form"/>
+            <field name="arch" type="xml">
+                  <field name="dependancy_id" position="attributes">
+                        <attribute name="attrs">{'readonly':[('payment_state', '!=', 'draft')]}</attribute>
+                  </field>
+                  <field name="sub_dependancy_id" position="attributes">
+                        <attribute name="attrs">{'readonly':[('payment_state', '!=', 'draft')]}</attribute>
+                  </field>
+			</field>
+		</record>
+		
 	</data>
 </odoo>

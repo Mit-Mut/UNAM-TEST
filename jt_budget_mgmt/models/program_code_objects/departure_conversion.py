@@ -28,13 +28,15 @@ class DepartureConversion(models.Model):
 
     _name = 'departure.conversion'
     _description = 'Conversion with Departure'
-    _rec_name = 'federal_part'
+    _rec_name = 'conversion_key_id'
 
-    federal_part = fields.Char(string='Federal part', size=5)
-    federal_part_desc = fields.Text(string='Federal part description')
-    item_id = fields.Many2one('expenditure.item','Item of Expenditure')
+    federal_part = fields.Char(string='FP', size=5)
     
-    _sql_constraints = [('federal_part', 'unique(federal_part,item_id)', 'The federal part must be unique per Item of Expenditure.')]
+    item_id = fields.Many2one('expenditure.item','Item of Expenditure')
+    conversion_key_id = fields.Many2one('shcp.game','Conversion Key')
+    federal_part_desc = fields.Text(related='conversion_key_id.conversion_key_desc',string='Federal part description')
+    
+    _sql_constraints = [('federal_part', 'unique(conversion_key_id,item_id)', 'The Conversion Key must be unique per Item of Expenditure.')]
 
     def name_get(self):
         result = []
@@ -42,15 +44,15 @@ class DepartureConversion(models.Model):
             name = ''
             if rec.item_id and self.env.context and self.env.context.get('show_item_name',False): 
                 name += '[' + rec.item_id.item + '] '
-            if rec.federal_part:
-                name += rec.federal_part
+            if rec.conversion_key_id:
+                name += rec.conversion_key_id.conversion_key
             result.append((rec.id, name))
         return result
 
-    @api.constrains('federal_part')
-    def _check_federal_part(self):
-        if not str(self.federal_part).isnumeric():
-            raise ValidationError(_('The Institutional activity number must be numeric value'))
+#     @api.constrains('federal_part')
+#     def _check_federal_part(self):
+#         if not str(self.federal_part).isnumeric():
+#             raise ValidationError(_('The Institutional activity number must be numeric value'))
 
     def fill_zero(self, code):
         return str(code).zfill(5)
@@ -59,12 +61,20 @@ class DepartureConversion(models.Model):
     def create(self, vals):
         if vals.get('federal_part') and len(vals.get('federal_part')) != 5:
             vals['federal_part'] = self.fill_zero(vals.get('federal_part'))
-        return super(DepartureConversion, self).create(vals)
+        rec = super(DepartureConversion, self).create(vals)
+        if rec.conversion_key_id:
+            rec.federal_part = rec.conversion_key_id.conversion_key
+        return rec 
 
     def write(self, vals):
         if vals.get('federal_part') and len(vals.get('federal_part')) != 5:
             vals['federal_part'] = self.fill_zero(vals.get('federal_part'))
-        return super(DepartureConversion, self).write(vals)
+        result = super(DepartureConversion, self).write(vals)
+        if vals.get('conversion_key_id',False):
+            for rec in self:
+                if rec.conversion_key_id:
+                    rec.federal_part = rec.conversion_key_id.conversion_key
+        return result
 
     def unlink(self):
         for conversion in self:

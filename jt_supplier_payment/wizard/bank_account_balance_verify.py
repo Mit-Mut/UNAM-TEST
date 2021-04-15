@@ -64,7 +64,7 @@ class BankBalanceCheck(models.TransientModel):
                 'domain': [],
                 'type': 'ir.actions.act_window',
                 'target': 'new',
-                'context':{'default_account_balance':account_balance,'default_is_balance':False,'default_wizard_id':self.id},
+                'context':{'default_different_balance':self.different_balance,'default_required_balance':self.required_balance,'default_minimum_balance':self.minimum_balance,'default_account_balance':account_balance,'default_is_balance':False,'default_wizard_id':self.id},
                 }
     def get_payroll_payment_date(self,rec,payment_date):
         if rec.is_payroll_payment_request and rec.employee_paryoll_ids:
@@ -155,6 +155,7 @@ class BankBalanceCheck(models.TransientModel):
                                      'conac_move' : True,
                                      'amount_currency' : -amount_currency,
                                      'currency_id' : currency_id,
+                                     'partner_id':invoice.partner_id and invoice.partner_id.id or False,
                                  }), 
                         (0, 0, {
                                      'account_id': invoice.journal_id.accured_debit_account_id and  invoice.journal_id.accured_debit_account_id.id or False,
@@ -164,7 +165,7 @@ class BankBalanceCheck(models.TransientModel):
                                      'conac_move' : True,
                                      'amount_currency' : amount_currency,
                                      'currency_id' : currency_id,
-                                     
+                                     'partner_id':invoice.partner_id and invoice.partner_id.id or False,
                                  })]
         #====== the Bank Journal, for the accounting impact of the "Exercised" Budget ======#
         if not self.journal_id.execercise_credit_account_id or not self.journal_id.conac_exe_credit_account_id \
@@ -180,7 +181,7 @@ class BankBalanceCheck(models.TransientModel):
                                      'conac_move' : True,
                                      'amount_currency' : -amount_currency,
                                      'currency_id' : currency_id,
-
+                                     'partner_id':invoice.partner_id and invoice.partner_id.id or False,
                                  }), 
                         (0, 0, {
                                      'account_id': self.journal_id.execercise_debit_account_id and self.journal_id.execercise_debit_account_id.id or False,
@@ -189,7 +190,8 @@ class BankBalanceCheck(models.TransientModel):
                                      'exclude_from_invoice_tab': True,
                                      'conac_move' : True,
                                      'amount_currency' : amount_currency,
-                                     'currency_id' : currency_id,                                     
+                                     'currency_id' : currency_id,      
+                                     'partner_id':invoice.partner_id and invoice.partner_id.id or False,                               
                                  })]
         
         

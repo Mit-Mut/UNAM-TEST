@@ -16,4 +16,4 @@ access_distribution_of_income_calculation,distribution.of.income.calculation.acc
 access_investment_operation,investment.operation.access,model_investment_operation,base.group_user,1,1,1,1
 access_request_open_balance_finance_operation,request.open.balance.finance.operation.access,model_request_open_balance_finance_operation,base.group_user,1,1,1,1
 access_maturity_report,maturity.report,model_maturity_report,base.group_user,1,1,1,1
-
+access_rate_of_returns,rate.of.returns,model_rate_of_returns,base.group_user,1,1,1,1

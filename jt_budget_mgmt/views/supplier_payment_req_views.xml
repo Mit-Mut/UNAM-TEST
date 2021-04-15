@@ -11,7 +11,7 @@
             	<xpath expr="//header/button[@name='action_register']" position="after">
             		<button name="action_draft_budget" string="Draft" class="oe_highlight"
                             type="object"
-                            attrs="{'invisible':[('payment_state', 'in', ('draft','paid','cancel','approved_payment','for_payment_procedure'))]}"/>
+                            attrs="{'invisible':[('payment_state', 'in', ('draft','paid','cancel','payment_not_applied'))]}"/>
             		<button name="action_validate_budget" invisible="context.get('hide_validate_button',False)"  string="Validate budget" class="oe_highlight"
                             type="object" attrs="{'invisible':[('payment_state', '!=', 'registered')]}"/>
             		<button name="action_cancel_budget" string="Cancel" class="oe_highlight"
@@ -19,9 +19,9 @@
             	</xpath>
             
                 <field name="rfc" position="after">
-                    <field name="dependancy_id" context="{'show_for_supplier_payment':True}" attrs="{'readonly':[('payment_state', '!=', 'draft')]}"/>
-                    <field name="sub_dependancy_id" domain="[('dependency_id','=',dependancy_id)]" context="{'show_for_supplier_payment':True}" attrs="{'readonly':[('payment_state', '!=', 'draft')]}"/>
-                    <field name="payment_place_id"  attrs="{'readonly':[('payment_state', '!=', 'draft')],'invisible':[('is_payroll_payment_request','=',False)]}" />
+                    <field name="dependancy_id" context="{'show_for_supplier_payment':True}" attrs="{'readonly':[('set_readonly_into_payment','=',True)]}"/>
+                    <field name="sub_dependancy_id" domain="[('dependency_id','=',dependancy_id)]" context="{'show_for_supplier_payment':True}" attrs="{'readonly':[('set_readonly_into_payment','=',True)]}"/>
+                    <field name="payment_place_id"  attrs="{'readonly':[('set_readonly_into_payment','=',True)],'invisible':[('is_payroll_payment_request','=',False)]}" />
                 </field>
                 <field name="administrative_secretary_id" position="attributes">
                 	<attribute name="domain">[('dependancy_id','=',dependancy_id)]</attribute>
@@ -189,6 +189,10 @@
             	<field name="batch_folio" position="attributes">
             		<field name="readonly">0</field>
             	</field>
+            	<field name="type_of_payment_custom" position="attributes">
+            		<attribute name="readonly">0</attribute>
+            	</field>
+            	
             	<field name="payment_issuing_bank_id" position="attributes">
             		<attribute name="readonly">0</attribute>
             	</field>

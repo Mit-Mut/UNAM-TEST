@@ -127,7 +127,7 @@
                                             'res_partner_search_mode': (context.get('default_type', 'entry') in ('out_invoice', 'out_refund', 'out_receipt') and 'customer') or (context.get('default_type', 'entry') in ('in_invoice', 'in_refund', 'in_receipt') and 'supplier') or False,
                                             'show_address': 1, 'default_is_company': True, 'show_vat': True}"
                                        options='{"always_reload": True, "no_quick_create": True}'
-                                       attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+                                       attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}" domain="[('contact_type','=','client')]"/>
 								
 								<!-- Custom Fields -->
 								<field name="rfc" string="Customer RFC" attrs="{'invisible':[('type_of_revenue_collection','!=','billing')]}"/>
@@ -2166,9 +2166,57 @@
 		 
          <menuitem id="menu_invoice_income" name="Invoices" sequence="1"
             parent="submenu_menu_income" action="action_move_income_out_invoice_type"/>
+            
+		<!-- Invoice Payment View -->
+        <record id="view_account_payment_form_income_inherit" model="ir.ui.view">
+            <field name="name">view.account.payment.form.income.inherit</field>
+            <field name="model">account.payment</field>
+            <field name="mode">primary</field>
+            <field name="priority">50</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+            	<field name="payment_type" position="replace">
+            		<field name="payment_type" widget="radio" string="Payment Type"/>
+            	</field>
+			</field>
+		</record>
+				
+        <record id="action_account_income_payments" model="ir.actions.act_window">
+            <field name="name">Payments</field>
+            <field name="res_model">account.payment</field>
+            <field name="view_mode">tree,kanban,form,graph</field>
+            <field name="context">{
+                'default_payment_type': 'inbound',
+                'default_partner_type': 'customer',
+                'search_default_inbound_filter': 1,
+                'res_partner_search_mode': 'customer',
+                'show_for_agreement':True
+            }</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                  Register a payment
+                </p><p>
+                  Payments are used to register liquidity movements. You can process those payments by your own means or by using installed facilities.
+                </p>
+            </field>
+        </record>
+
+		<record id="action_account_income_payments_link_tree_action" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="account.view_account_payment_tree"/>
+            <field name="act_window_id" ref="action_account_income_payments"/>
+        </record>
+
+        <record id="action_account_income_payments_link_form_action" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_account_payment_form_income_inherit"/>
+            <field name="act_window_id" ref="action_account_income_payments"/>
+        </record>
 
         <menuitem id="menu_invoice_payment_income" name="Payments" sequence="2"
-            parent="submenu_menu_income" action="account.action_account_payments"/>
+            parent="submenu_menu_income" action="action_account_income_payments"/>
 
         <menuitem id="menu_invoice_credit_note_income" name="Credit Notes" sequence="3"
             parent="submenu_menu_income" action="account.action_move_out_refund_type"/>

@@ -21,6 +21,7 @@
 #
 ##############################################################################
 
+from . import shcp_games
 from . import program
 from . import sub_program
 from . import dependency

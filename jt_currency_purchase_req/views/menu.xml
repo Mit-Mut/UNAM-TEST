@@ -19,8 +19,8 @@
                   sequence="7" parent="jt_payroll_payment.menu_payment_finance"/>
 
 		    <!--  Calender Of Assigned amount menus-->
-        <menuitem id="jt_budget_mgmt.menu_control_assigned_amounts" name="Calender Of Assigned Amount"
-                  sequence="0" parent="menu_federal_grant_registeration"
+        <menuitem id="jt_budget_mgmt_menu_control_assigned_amounts" name="Calender Of Assigned Amount"
+                  sequence="0" parent="menu_federal_grant_registeration" action="jt_budget_mgmt.action_control_assigned_amounts"
                   />
 
         <!--Account management menu-->

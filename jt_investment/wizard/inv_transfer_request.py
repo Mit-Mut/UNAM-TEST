@@ -144,7 +144,8 @@ class InvTransferRequest(models.TransientModel):
                 'concept': self.concept,
                 'state': 'requested',
                 'line_opt_ids' : opt_lines,
-                'from_opt_transfer' : True
+                'from_opt_transfer' : True,
+                'trasnfer_request':'investments',
             }
         )
     def select_lines(self):

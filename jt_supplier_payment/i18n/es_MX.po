@@ -327,9 +327,10 @@ msgid "Account Balance"
 msgstr "Saldo de la cuenta"
 
 #. module: jt_supplier_payment
+#: model:ir.model.fields,field_description:jt_supplier_payment.field_balance_check_wizard__required_balance
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_bank_balance_check__required_balance
 msgid "Account balance required"
-msgstr "Saido requerido en la cuenta"
+msgstr "Saldo requerido en la cuenta"
 
 #. module: jt_supplier_payment
 #: model_terms:ir.ui.view,arch_db:jt_supplier_payment.different_payroll_payment_req_form_view
@@ -534,7 +535,7 @@ msgstr "Verificación de saldo bancario"
 #. module: jt_supplier_payment
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_bank_balance_check__journal_id
 msgid "Bank Of Payment Issue"
-msgstr "Problema con el banco de pago"
+msgstr "Banco emisor de pago"
 
 #. module: jt_supplier_payment
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_account_payment__jp_bank_transfer
@@ -859,9 +860,10 @@ msgid "Destination Account"
 msgstr "Cuenta Destino"
 
 #. module: jt_supplier_payment
+#: model:ir.model.fields,field_description:jt_supplier_payment.field_balance_check_wizard__different_balance
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_bank_balance_check__different_balance
 msgid "Difference Between current and required balance"
-msgstr "Diferencia entre el saido actual y el requerido"
+msgstr "Diferencia entre el saldo actual y el requerido"
 
 #. module: jt_supplier_payment
 #: model:ir.model.fields.selection,name:jt_supplier_payment.selection__generate_batch_sheet__payment_type__different_payroll
@@ -1637,7 +1639,7 @@ msgstr "Informe de Solicitud de Pago"
 #: model:ir.ui.menu,name:jt_supplier_payment.payroll_payment_schedule_menu_programm
 #: model:ir.ui.menu,name:jt_supplier_payment.supplier_payment_request_menu_programm
 msgid "Payment Schedule"
-msgstr "Programación de Pago"
+msgstr "Calendario de pago"
 
 #. module: jt_supplier_payment
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_account_move__payment_state
@@ -1867,12 +1869,16 @@ msgid "Reject"
 msgstr "Rehcazar"
 
 #. module: jt_supplier_payment
-#: model:ir.model.fields.selection,name:jt_supplier_payment.selection__account_move__payment_state__rejected
-#: model:ir.model.fields.selection,name:jt_supplier_payment.selection__account_payment__payment_state__rejected
 #: model:ir.model.fields.selection,name:jt_supplier_payment.selection__bank_transfer_request__state__rejected
 #: model_terms:ir.ui.view,arch_db:jt_supplier_payment.inherited_view_account_payment_search
 msgid "Rejected"
 msgstr "Registrada"
+
+#. module: jt_supplier_payment
+#: model:ir.model.fields.selection,name:jt_supplier_payment.selection__account_payment__payment_state__rejected
+#: model:ir.model.fields.selection,name:jt_supplier_payment.selection__account_move__payment_state__rejected
+msgid "Rejected"
+msgstr "Rechazada"
 
 #. module: jt_supplier_payment
 #: model:ir.model.fields.selection,name:jt_supplier_payment.selection__account_payment__jp_charges__remitter
@@ -2228,7 +2234,7 @@ msgstr "Débito total"
 #. module: jt_supplier_payment
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_bank_balance_check__total_request
 msgid "Total Request"
-msgstr "Solicitud total"
+msgstr "Cantidad de solicitudes"
 
 #. module: jt_supplier_payment
 #: code:addons/jt_supplier_payment/reports/cash_payment_calculation.py:0
@@ -2506,3 +2512,27 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:jt_supplier_payment.view_balance_check_wizard
 msgid "the selected bank account has sufficient balance to execute"
 msgstr "la cuenta bancaria seleccionada tiene saldo suficiente para ejecutar"
+
+#. module: jt_supplier_payment
+#: model:ir.actions.act_window,name:jt_supplier_payment.pension_payroll_payment_request_action
+#: model:ir.ui.menu,name:jt_supplier_payment.pension_payroll_payment_request_menu
+msgid "Pension Payment Request"
+msgstr "Calendario de pagos de pensiones"
+
+#. module: jt_supplier_payment
+#: model:ir.actions.act_window,name:jt_supplier_payment.pension_payment_account_payment_action
+#: model:ir.ui.menu,name:jt_supplier_payment.pension_payment_account_payment_menu
+msgid "Pension Payments"
+msgstr "Pagos de pensión"
+
+#. module: jt_supplier_payment
+#: model:ir.model.fields,field_description:jt_supplier_payment.field_account_payment__no_validate_payment
+#: model_terms:ir.ui.view,arch_db:jt_supplier_payment.inherited_view_account_payment_search
+msgid "Not Validated"
+msgstr "No Validado"
+
+#. module: jt_supplier_payment
+#: model:ir.model.fields,field_description:jt_supplier_payment.field_account_payment__employee_partner_type
+msgid "Partner Type"
+msgstr "Tipo de socio"
+

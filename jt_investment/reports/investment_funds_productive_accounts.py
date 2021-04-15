@@ -40,6 +40,7 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
     filter_date = {'mode': 'range', 'filter': 'this_month'}
     filter_comparison = {'date_from': '', 'date_to': '', 'filter': 'no_comparison', 'number_period': 1}
     filter_all_entries = True
+    filter_bank = True
     filter_journals = None
     filter_analytic = None
     filter_unfold_all = None
@@ -50,6 +51,31 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
 
     filter_funds = True
 
+
+    @api.model
+    def _get_filter_bank(self):
+        return self.env['res.bank'].search([])
+
+    @api.model
+    def _init_filter_bank(self, options, previous_options=None):
+        if self.filter_bank is None:
+            return
+        if previous_options and previous_options.get('bank'):
+            journal_map = dict((opt['id'], opt['selected']) for opt in previous_options[
+                               'bank'] if opt['id'] != 'divider' and 'selected' in opt)
+        else:
+            journal_map = {}
+        options['bank'] = []
+
+        default_group_ids = []
+
+        for j in self._get_filter_bank():
+            options['bank'].append({
+                'id': j.id,
+                'name': j.name,
+                'code': j.name,
+                'selected': journal_map.get(j.id, j.id in default_group_ids),
+            })
 
     @api.model
     def _get_filter_funds(self):
@@ -175,6 +201,7 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
     def _get_lines(self, options, line_id=None):
         lines = []
         fund_list = []
+        bank_list = []        
         domain =[]
 
         comparison = options.get('comparison')
@@ -185,10 +212,24 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
             periods = [period for period in period_list]
         periods.append(options.get('date'))
 
+        for bank in options.get('bank'):
+            if bank.get('selected',False)==True:
+                bank_list.append(bank.get('id',0))
+
+        if not bank_list:
+            bank_ids = self._get_filter_bank()
+            bank_list = bank_ids.ids
+        
+        if not bank_list:
+            bank_list = [0]
+
+        if bank_list :
+            domain.append(('journal_id.bank_id','in',bank_list))
 
         for fund in options.get('funds'):
             if fund.get('selected',False)==True:
                 fund_list.append(fund.get('id',0))
+        
         
         if fund_list:
             domain.append(('investment_fund_id.fund_id','in',fund_list))
@@ -263,12 +304,19 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                     header_intial += rec.amount
                 elif rec.type_of_operation in ('retirement', 'withdrawal', 'withdrawal_cancellation', 'withdrawal_closure'):
                     header_intial -= rec.amount
-               
+            
+            first_record_count = 0  
+            total_rec_inc = 1 
             for rec in opt_lines.filtered(lambda x:x.investment_id.journal_id.id == bank.id).sorted('date_required'):
                 capital = header_intial
                 entradas = 0
                 salidas  = 0
-                
+                if first_record_count==0:
+                    first_record_count = 1
+                    total_rec_inc = rec.date_required.day
+                else:
+                    total_rec_inc += 1
+                    
                 month_name = self.get_month_name(rec.date_required.month)
                 if rec.type_of_operation == 'open_bal':
                     capital = rec.amount
@@ -295,7 +343,7 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                         period_rate_id = self.env['investment.period.rate'].search([('rate_date','<',rec.date_required),('product_type','=','TIIE')],limit=1,order='rate_date desc')
                         p_rate = period_rate_id.rate_days_28
                 total_avg_final += final_amount
-                precision = self.env['decimal.precision'].precision_get('Productive Accounts')
+                # precision = self.env['decimal.precision'].precision_get('Productive Accounts')
                 lines.append({
                     'id': 'hierarchy' + str(rec.id),
                     'name': rec.date_required.day,
@@ -306,12 +354,12 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                                 {'name': rec.fund_type and rec.fund_type.name or ''},
                                 {'name': rec.agreement_type_id and rec.agreement_type_id.name or ''},
                                 {'name': rec.base_collabaration_id and rec.base_collabaration_id.name or ''},
-                                self._format({'name': p_rate},figure_type='float',digit=precision,is_currency=False),
+                                self._format({'name': p_rate},figure_type='float',digit=4,is_currency=False),
                                 self._format({'name': capital},figure_type='float',digit=2,is_currency=True),
                                 self._format({'name': entradas},figure_type='float',digit=2,is_currency=True),
                                 self._format({'name': salidas},figure_type='float',digit=2,is_currency=True),
                                 self._format({'name': final_amount},figure_type='float',digit=2,is_currency=True),
-                                self._format({'name': total_avg_final/rec.date_required.day},figure_type='float',digit=2,is_currency=True),
+                                self._format({'name': total_avg_final/total_rec_inc},figure_type='float',digit=2,is_currency=True),
                                 ],
                     'level': 3,
                     'unfoldable': False,
@@ -378,15 +426,15 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                                          DEFAULT_SERVER_DATE_FORMAT).date()
 
                 
-                domain_bank_period = domain + [('date_required','>=',date_start),('date_required','<=',date_end),('investment_id.journal_id.bank_id','=',journal.id)]
+                domain_bank_period = domain + [('investment_id.journal_id','in',bank_account_ids.ids),('date_required','>=',date_start),('date_required','<=',date_end),('investment_id.journal_id.bank_id','=',journal.id)]
                 records_bank_periods = self.env['investment.operation'].search(domain_bank_period)
 
-                inc_domain_bank_period = domain + [('date_required','<',date_start),('investment_id.journal_id.bank_id','=',journal.id)]
+                inc_domain_bank_period = domain + [('investment_id.journal_id','in',bank_account_ids.ids),('date_required','<',date_start),('investment_id.journal_id.bank_id','=',journal.id)]
                 inc_records_bank_periods = self.env['investment.operation'].search(inc_domain_bank_period)
 
                 amount = 0
-                amount += sum(x.amount for x in inc_records_bank_periods.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal')))
-                amount -= sum(x.amount for x in inc_records_bank_periods.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure')))
+#                 amount += sum(x.amount for x in inc_records_bank_periods.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal')))
+#                 amount -= sum(x.amount for x in inc_records_bank_periods.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure')))
                 
                 amount += sum(x.amount for x in records_bank_periods.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal')))
                 amount -= sum(x.amount for x in records_bank_periods.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure')))
@@ -464,15 +512,15 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                                          DEFAULT_SERVER_DATE_FORMAT).date()
 
 
-                domain_fund = domain + [('date_required','>=',date_start),('date_required','<=',date_end)]
+                domain_fund = domain + [('investment_id.journal_id','in',bank_account_ids.ids),('date_required','>=',date_start),('date_required','<=',date_end)]
                 records_fund = self.env['investment.operation'].search(domain_fund)
 
-                inc_domain_fund = domain + [('date_required','<',date_start)]
+                inc_domain_fund = domain + [('investment_id.journal_id','in',bank_account_ids.ids),('date_required','<',date_start)]
                 inc_records_fund = self.env['investment.operation'].search(inc_domain_fund)
 
                 amount = 0
-                amount += sum(x.amount for x in inc_records_fund.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal') and x.investment_fund_id.fund_id.id==origin.id))
-                amount -= sum(x.amount for x in inc_records_fund.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure') and x.investment_fund_id.fund_id.id==origin.id))
+#                 amount += sum(x.amount for x in inc_records_fund.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal') and x.investment_fund_id.fund_id.id==origin.id))
+#                 amount -= sum(x.amount for x in inc_records_fund.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure') and x.investment_fund_id.fund_id.id==origin.id))
                 
                 amount += sum(x.amount for x in records_fund.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal') and x.investment_fund_id.fund_id.id==origin.id))
                 amount -= sum(x.amount for x in records_fund.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure') and x.investment_fund_id.fund_id.id==origin.id))
@@ -552,16 +600,16 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
                 date_end = datetime.strptime(str(period.get('date_to')),
                                          DEFAULT_SERVER_DATE_FORMAT).date()
 
-                domain_currency_period = domain + [('date_required','>=',date_start),('date_required','<=',date_end),('investment_id.currency_id','=',currency.id)]
+                domain_currency_period = domain + [('investment_id.journal_id','in',bank_account_ids.ids),('date_required','>=',date_start),('date_required','<=',date_end),('investment_id.currency_id','=',currency.id)]
                 records_periods = self.env['investment.operation'].search(domain_currency_period)
 
-                inc_domain_currency_period = domain + [('date_required','<',date_start),('investment_id.currency_id','=',currency.id)]
+                inc_domain_currency_period = domain + [('investment_id.journal_id','in',bank_account_ids.ids),('date_required','<',date_start),('investment_id.currency_id','=',currency.id)]
                 inc_records_periods = self.env['investment.operation'].search(inc_domain_currency_period)
 
                 amount = 0
 
-                amount += sum(x.amount for x in inc_records_periods.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal')))
-                amount -= sum(x.amount for x in inc_records_periods.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure')))
+#                 amount += sum(x.amount for x in inc_records_periods.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal')))
+#                 amount -= sum(x.amount for x in inc_records_periods.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure')))
                 
                 amount += sum(x.amount for x in records_periods.filtered(lambda x:x.type_of_operation in ('increase','increase_by_closing','open_bal')))
                 amount -= sum(x.amount for x in records_periods.filtered(lambda x:x.type_of_operation in ('retirement','withdrawal_cancellation','withdrawal','withdrawal_closure')))
@@ -655,9 +703,21 @@ class InvestmentFundsinProductiveAccounts(models.AbstractModel):
             filename = 'logo.png'
             image_data = io.BytesIO(base64.standard_b64decode(self.env.user.company_id.header_logo))
             sheet.insert_image(0,0, filename, {'image_data': image_data,'x_offset':8,'y_offset':3,'x_scale':0.6,'y_scale':0.6})
+        period_name = ''
+        start_date = datetime.strptime(options.get('date').get('date_from'), DEFAULT_SERVER_DATE_FORMAT)
+        end_date = datetime.strptime(options.get('date').get('date_to'), DEFAULT_SERVER_DATE_FORMAT)
+        if start_date and end_date:
+            period_name += "Del " + str(start_date.day)
+
+            period_name += ' ' + self.get_month_name(start_date.month)
+            if start_date.year != end_date.year:
+                period_name += ' ' + str(start_date.year)
+
+            period_name += " al " + str(end_date.day) + " de " + self.get_month_name(end_date.month) + " " \
+                           + str(end_date.year)
         
         col += 1
-        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICOO\nUNIVERSITY BOARD\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nINFORME DE FONDOS DE INVERSIÓN EN CUENTAS PRODUCTIVAS'''
+        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nPATRONATO UNIVERSITARIO\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nREPORTE DE FONDOS DE INVERSIÓN EN CUENTAS PRODUCTIVAS'''
         sheet.merge_range(y_offset, col, 5, col+14, header_title,super_col_style)
         y_offset += 6
         col=1

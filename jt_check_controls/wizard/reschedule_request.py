@@ -17,7 +17,7 @@ class RescheduleRequest(models.TransientModel):
                 line.coa_conac_id = False
             if move.payment_state =='payment_method_cancelled':
                 move.action_draft_budget()
-                move.payment_state = 'registered'
+                move.payment_state = 'approved_payment'
                 move.batch_folio = ''
                 batch_lines = self.env['check.payment.req'].search([('payment_req_id','=',move.id)])
                 for batch in batch_lines:
@@ -25,6 +25,7 @@ class RescheduleRequest(models.TransientModel):
             else:
                 conac_move = move.line_ids.filtered(lambda x: x.conac_move)
                 conac_move.sudo().unlink()                
-                move.payment_state = 'for_payment_procedure'
+                move.payment_state = 'approved_payment'
+                move.batch_folio = ''
                 move.add_budget_available_amount()
     

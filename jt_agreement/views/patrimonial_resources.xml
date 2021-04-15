@@ -12,6 +12,69 @@
             </field>
         </record>
 
+        <record id="patrimonial_resources_pivot_view" model="ir.ui.view">
+            <field name="name">patrimonial.resources.pivot.view</field>
+            <field name="model">patrimonial.resources</field>
+            <field name="arch" type="xml">
+                <pivot string="Patrimonial Resources" disable_linking="True">
+                    <field name="name" type="row"/>
+                    <field name="opening_balance" type="measure"/>
+                    <field name="available_bal" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="patrimonial_resources_kanaban_view" model="ir.ui.view">
+            <field name="name">patrimonial.resources.kanban.view</field>
+            <field name="model">patrimonial.resources</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile" create="0" group_create="0" >
+                    <field name="name"/>
+                    <field name="origin_resource_id"/>
+                    <field name="opening_balance"/>
+                    <field name="available_bal"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row mb4">
+                                    <div class="col-6">
+                                        Fund Name:
+                                    </div>
+                                    <div class="col-6">
+                                        <strong><span><field name="name"/></span></strong>
+                                    </div>
+                                </div>
+                                <div class="row mb4">
+                                    <div class="col-6">
+                                        Origin of the resource:
+                                    </div>
+                                    <div class="col-6">
+                                        <strong><span><field name="origin_resource_id"/></span></strong>
+                                    </div>
+                                </div>
+                                <div class="row mb4">
+                                    <div class="col-6">
+                                        Opening Balance:
+                                    </div>
+                                    <div class="col-6">
+                                        <strong><span><field name="opening_balance"/></span></strong>
+                                    </div>
+                                </div>
+                                <div class="row mb4">
+                                    <div class="col-6">
+                                        Available Balance:
+                                    </div>
+                                    <div class="col-6">
+                                        <strong><span><field name="available_bal"/></span></strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="patrimonial_resources_form_view" model="ir.ui.view">
             <field name="name">patrimonial.resources.form.view</field>
             <field name="model">patrimonial.resources</field>
@@ -189,8 +252,8 @@
                         			</group>
                         		</group>
                         	</page>
-                            <page name="cancellation_info" string="Cancellation Information"
-                                attrs="{'invisible': [('state', 'not in', ('in_force', 'to_be_cancelled', 'cancelled'))]}">
+                            <!-- attrs="{'invisible': [('state', 'not in', ('in_force', 'to_be_cancelled', 'cancelled'))]}" -->
+                            <page name="cancellation_info" string="Cancellation Information">
                                 <group>
                                     <field name="cancel_date"/>
                                     <field name="supporing_doc"/>
@@ -212,7 +275,7 @@
         <record id="action_patrimonial_resources" model="ir.actions.act_window">
             <field name="name">Patrimonial Resources</field>
             <field name="res_model">patrimonial.resources</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,kanban,pivot</field>
             <field name="context">{'from_agreement':True}</field>
         </record>
 

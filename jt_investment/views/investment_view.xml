@@ -102,7 +102,8 @@
 
                                 <field name="dependency_id" context="{'show_for_supplier_payment':1}" readonly="1"/>
                                 <field name="sub_dependency_id" domain="[('dependency_id','=',dependency_id)]" context="{'show_for_supplier_payment':1}" readonly="1"/>
-                        		<field name="yield_id" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        		<field name="yield_id"  attrs="{'readonly': [('state', '!=', 'draft')],'required':[('state', '=', 'draft')]}"/>
+                            <field name="rate_of_returns" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         	</group>
                         </group>
                     <notebook>
@@ -111,6 +112,7 @@
                     			<tree>
                     				<field name="investment_fund_id" context="{'show_for_agreement':True}" domain="[('state','=','confirmed')]"/>
                     				<field name="type_of_operation"/>
+                            <field name="date_required" string="Date"/>
                     				<field name="agreement_number"/>
                     				<field name="base_collabaration_id" context="{'show_agreement_name':1}"/>
                     				<field name="agreement_type_id"/>

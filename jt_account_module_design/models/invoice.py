@@ -744,7 +744,7 @@ class AccountMove(models.Model):
         if provision_id.partner_id and self.partner_id and provision_id.partner_id.id != self.partner_id.id:
             raise ValidationError(_("Should NOT allow placing a different provider"))
         
-        provision_payment_ids = self.env['account.move'].search([('is_payment_request','=',True),('previous_number','=',self.previous_number)])
+        provision_payment_ids = self.env['account.move'].search([('payment_state','!=','cancel'),('is_payment_request','=',True),('previous_number','=',self.previous_number)])
         total_payment = sum(x.amount_total for x in  provision_payment_ids)
         if provision_id.amount_total < total_payment:
             raise ValidationError(_("Total Payment amount %f exceeds the original amount of the provision %f")%(total_payment,provision_id.amount_total))
@@ -802,12 +802,16 @@ class AccountMove(models.Model):
     def action_draft_budget(self):
         self.ensure_one()
         if self.is_provision_request:
+            if self.provision_move_ids:
+                raise ValidationError(_("Should not allow returning to draft because provision already has related requests"))
             self.provision_payment_state = 'draft'
         result = super(AccountMove,self).action_draft_budget()
         return result
     
     def action_cancel_budget(self):
         for record in self.filtered(lambda x:x.is_provision_request):
+            if record.provision_move_ids:
+                raise ValidationError(_("Should not allow cancel because provision already has related requests"))
             record.provision_payment_state = 'cancel'
             record.cancel_payment_revers_entry()
             record.add_budget_available_amount()
@@ -822,7 +826,7 @@ class AccountMove(models.Model):
         #new_move = self.copy_data(vals)
         new_move.is_payment_request = True
         for line in new_move.invoice_line_ids.filtered(lambda x:x.program_code_id):
-            current_program_lines = self.env['account.move.line'].search([('exclude_from_invoice_tab','=',False),('program_code_id','=',line.program_code_id.id),('move_id','!=',new_move.id),('move_id','in',self.provision_move_ids.ids)])
+            current_program_lines = self.env['account.move.line'].search([('move_id.payment_state','!=','cancel'),('exclude_from_invoice_tab','=',False),('program_code_id','=',line.program_code_id.id),('move_id','!=',new_move.id),('move_id','in',self.provision_move_ids.ids)])
             total_price = sum(x.price_unit for x in current_program_lines)
             new_price = line.price_unit - total_price
             
@@ -836,7 +840,7 @@ class AccountMove(models.Model):
         if payment_move_lines:
             payment_move_lines.unlink()
         new_move.create_journal_line_for_approved_payment()
-        self.state='cancel'
+        #self.state='cancel'
         
     def action_provision_payment_request(self):
         return {

@@ -1044,7 +1044,8 @@ class ExpenditureBudgetLine(models.Model):
     agreement_number = fields.Char(string='Agreement number')
     exercise_type = fields.Char(string='Exercise type')
     cron_id = fields.Many2one('ir.cron', string="CRON ID")
-
+    is_create_from_adequacies = fields.Boolean(string="Line Create From Adequacies",default=False,copy=False)
+    
     _sql_constraints = [
         ('uniq_quarter', 'unique(program_code_id,start_date,end_date)',
          'The Program code must be unique per quarter!'),

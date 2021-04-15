@@ -29,7 +29,7 @@
                     <div class="col-6 text-center">
                         <span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span>
                         <br/>
-                        <span style="font-size:14px;">UNIVERSITY BOARD</span>
+                        <span style="font-size:14px;">PATRONATO UNIVERSITARIO</span>
                         <br/>
                         <span style="font-size:12px;">DIRECCIÓN GENERAL DE FINANZAS</span>
                         <br/>
@@ -79,7 +79,7 @@
                     <div class="col-6 text-center">
                         <span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span>
                         <br/>
-                        <span style="font-size:14px;">UNIVERSITY BOARD</span>
+                        <span style="font-size:14px;">PATRONATO UNIVERSITARIO</span>
                         <br/>
                         <span style="font-size:12px;">DIRECCIÓN GENERAL DE FINANZAS</span>
                         <br/>
@@ -123,13 +123,13 @@
                 <div class="row">
                     <div class="col-3">
                         <img t-attf-src="data:image/png;base64,{{company.header_logo}}"
-                             style="width:120px;height:100px;margin-top:20px;margin-right:20px;margin-bottom:20px;"/>
+                             style="width:120px;height:100px;margin-top:2px;margin-right:20px;margin-bottom:20px;"/>
                     </div>
 
                     <div class="col-6 text-center">
                         <span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span>
                         <br/>
-                        <span style="font-size:14px;">UNIVERSITY BOARD</span>
+                        <span style="font-size:14px;">PATRONATO UNIVERSITARIO</span>
                         <br/>
                         <span style="font-size:12px;">DIRECCIÓN GENERAL DE FINANZAS</span>
                         <br/>
@@ -179,7 +179,7 @@
                     <div class="col-6 text-center">
                         <span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span>
                         <br/>
-                        <span style="font-size:14px;">UNIVERSITY BOARD</span>
+                        <span style="font-size:14px;">PATRONATO UNIVERSITARIO</span>
                         <br/>
                         <span style="font-size:12px;">DIRECCIÓN GENERAL DE FINANZAS</span>
                         <br/>
@@ -230,13 +230,13 @@
                     <div class="col-6 text-center">
                         <span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span>
                         <br/>
-                        <span style="font-size:14px;">UNIVERSITY BOARD</span>
+                        <span style="font-size:14px;">PATRONATO UNIVERSITARIO</span>
                         <br/>
                         <span style="font-size:12px;">DIRECCIÓN GENERAL DE FINANZAS</span>
                         <br/>
                         <span style="font-size:12px;">SUBDIRECCION DE FINANZAS</span>
                         <br/>
-                        <span style="font-size:12px;">Informe de cotización de Fondos de Inversión</span>
+                        <span style="font-size:12px;">Reporte de cotización de Fondos de Inversión</span>
                         <br/>
                     </div>
                     <div class="col-3 text-left" style="vertical-align: bottom;">
@@ -280,13 +280,13 @@
                     <div class="col-6 text-center">
                         <span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span>
                         <br/>
-                        <span style="font-size:14px;">UNIVERSITY BOARD</span>
+                        <span style="font-size:14px;">PATRONATO UNIVERSITARIO</span>
                         <br/>
                         <span style="font-size:12px;">DIRECCIÓN GENERAL DE FINANZAS</span>
                         <br/>
                         <span style="font-size:12px;">SUBDIRECCION DE FINANZAS</span>
                         <br/>
-                        <span style="font-size:12px;">INFORME DE FONDOS DE INVERSIÓN</span>
+                        <span style="font-size:12px;">REPORTE DE FONDOS DE INVERSIÓN</span>
                         <br/>
                     </div>
                     <div class="col-3 text-left" style="vertical-align: bottom;">
@@ -331,13 +331,13 @@
                     <div class="col-6 text-center">
                         <span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span>
                         <br/>
-                        <span style="font-size:14px;">UNIVERSITY BOARD</span>
+                        <span style="font-size:14px;">PATRONATO UNIVERSITARIO</span>
                         <br/>
                         <span style="font-size:12px;">DIRECCIÓN GENERAL DE FINANZAS</span>
                         <br/>
                         <span style="font-size:12px;">SUBDIRECCION DE FINANZAS</span>
                         <br/>
-                        <span style="font-size:12px;">INFORME DE FONDOS DE INVERSIÓN EN CUENTAS PRODUCTIVAS</span>
+                        <span style="font-size:12px;">REPORTE DE FONDOS DE INVERSIÓN EN CUENTAS PRODUCTIVAS</span>
                         <br/>
                     </div>
                     <div class="col-3 text-left" style="vertical-align: bottom;">
@@ -381,13 +381,13 @@
                     <div class="col-6 text-center">
                         <span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span>
                         <br/>
-                        <span style="font-size:14px;">UNIVERSITY BOARD</span>
+                        <span style="font-size:14px;">PATRONATO UNIVERSITARIO</span>
                         <br/>
                         <span style="font-size:12px;">DIRECCIÓN GENERAL DE FINANZAS</span>
                         <br/>
                         <span style="font-size:12px;">SUBDIRECCION DE FINANZAS</span>
                         <br/>
-                        <span style="font-size:12px;">INFORME DE CUENTAS PRODUCTIVAS</span>
+                        <span style="font-size:12px;">REPORTE DE CUENTAS PRODUCTIVAS</span>
                         <br/>
                     </div>
                     <div class="col-3 text-left" style="vertical-align: bottom;">
@@ -432,7 +432,7 @@
                     <div class="col-6 text-center">
                         <span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span>
                         <br/>
-                        <span style="font-size:14px;">UNIVERSITY BOARD</span>
+                        <span style="font-size:14px;">PATRONATO UNIVERSITARIO</span>
                         <br/>
                         <span style="font-size:12px;">DIRECCIÓN GENERAL DE FINANZAS</span>
                         <br/>
@@ -482,7 +482,7 @@
                     <div class="col-6 text-center">
                         <span style="font-size:16px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span>
                         <br/>
-                        <span style="font-size:14px;">UNIVERSITY BOARD</span>
+                        <span style="font-size:14px;">PATRONATO UNIVERSITARIO</span>
                         <br/>
                         <span style="font-size:12px;">DIRECCIÓN GENERAL DE FINANZAS</span>
                         <br/>
@@ -616,6 +616,116 @@
 
         </template>
 
+        <!-- Productive account statement -->
+        <template id="external_layout_productive_account_statement" name="external_layout_productive_account_statement">
+            <t t-if="not o" t-set="o" t-value="doc"/>
+
+            <t t-if="not company">
+                <!-- Multicompany -->
+                <t t-if="company_id">
+                    <t t-set="company" t-value="company_id"/>
+                </t>
+                <t t-elif="o and 'company_id' in o">
+                    <t t-set="company" t-value="o.company_id.sudo()"/>
+                </t>
+                <t t-else="else">
+                    <t t-set="company" t-value="res_company"/>
+                </t>
+            </t>
+
+            <div class="header">
+                <div class="row">
+                    <div class="col-3">
+                        <img t-attf-src="data:image/png;base64,{{company.header_logo}}"
+                             style="width:120px;height:100px;margin-top:20px;margin-right:20px;margin-bottom:20px;"/>
+                    </div>
+
+                    <div class="col-6 text-center">
+                        <b>
+                            <span style="font-size:16px"
+                                  class="text-center">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO
+                            </span>
+                            <br/>
+                            <span style="font-size:14px;"
+                                  class="text-center">PATRONATO UNIVERSITARIO
+                            </span>
+                            <br/>
+                        </b>
+                        <span style="font-size:12px;"
+                              class="text-center">DIRECCIÓN GENERAL DE FINANZAS
+                        </span>
+                        <br/>
+                        <span style="font-size:12px;"
+                              class="text-center">SUBDIRECCIÓN DE FINANZAS
+                        </span>
+                        <br/>
+                        <b>
+                            <span style="padding-top:5px;font-size:12px;">REPORTE DE CUENTAS PRODUCTIVAS</span>
+                        </b>
+                    </div>
+                </div>
+
+                <t t-if="extra_data">
+                    <table class="table" style="border-style:none;border-spacing: 0;" cellspacing="0">
+                        <tbody>
+                            <tr>
+                                <td style="border-style:none;padding:0">
+                                    <b>Estado de cuenta:</b>
+                                </td>
+                                <td style="border-style:none;padding:0">
+                                    <span t-esc="name"/>
+                                </td>
+                                <td style="border-style:none;padding:0"/>
+                                <td style="border-style:none;padding:0"/>
+                                <td style="border-style:none;padding:0">
+                                    <b>Saldo Inicial</b>
+                                </td>
+                                <td style="border-style:none;padding:0">
+                                    <b>
+                                        <span t-esc="intial"/>
+                                    </b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border-style:none;padding:0" colspan="4"/>
+                                <td style="border-style:none;padding:0">
+                                    <b>(+) Incrementos</b>
+                                </td>
+                                <td style="border-style:none;padding:0">
+                                    <span t-esc="increment"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border-style:none;padding:0" colspan="4"/>
+                                <td style="border-style:none;padding:0">
+                                    <b>(-) Retiros</b>
+                                </td>
+                                <td style="border-style:none;padding:0">
+                                    <span t-esc="withdrawal"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border-style:none;padding:0" colspan="4"/>
+                                <td style="border-style:none;padding:0">
+                                    <b>Saldo Actual:</b>
+                                </td>
+                                <td style="border-style:none;padding:0">
+                                    <b>
+                                        <span t-esc="actual"/>
+                                    </b>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </t>
+            </div>
+            <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
+                 t-att-data-oe-lang="o and o.env.context.get('lang')">
+                <t t-raw="0"/>
+            </div>
+
+        </template>
+
 
                 <!-- 8.11 Report to the Investment Committee -->
         <template id="external_layout_investment_committee" name="external_layout_investment_committee">
@@ -660,7 +770,7 @@
                               class="text-center">SUBDIRECCION DE FINANZAS
                         </span>
                         <br/>
-                        <span style="font-size:12px;" class="text-center">COMITÉ DE INVERSIONES</span>
+                        <span style="font-size:12px;" class="text-center">REPORTE PARA EL COMITÉ DE INVERSIONES</span>
                     </div>
                     <div class="col-3 text-left" style="vertical-align: bottom;margin-top:40px;">
                         <span>Fecha y hora de impresión</span>

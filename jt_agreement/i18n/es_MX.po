@@ -465,17 +465,11 @@ msgstr "Cantidad a retirar"
 #. module: jt_agreement
 #: model:ir.actions.act_window,name:jt_agreement.action_amounts_to_invest_bases_collaboration
 msgid "Amounts to Invest"
-msgstr ""
+msgstr "Informe de Importes a Invertir"
 
 #. module: jt_agreement
 #: model:ir.model.fields.selection,name:jt_agreement.selection__recurring_payment_template__payment_period__annual
 msgid "Annual"
-msgstr ""
-
-#. module: jt_agreement
-#: model:ir.model.fields,field_description:jt_agreement.field_approve_investment_bal_req__user_id
-#: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance_finance__user_id
-msgid "Applicant"
 msgstr ""
 
 #. module: jt_agreement
@@ -622,6 +616,12 @@ msgstr "Banco"
 #: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance__origin_bank_account_id
 msgid "Bank Account"
 msgstr "Cuenta de banco"
+
+#. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_agreement_trust__
+#: model_terms:ir.ui.view,arch_db:jt_agreement.agreement_trust_form
+msgid "Bank Account"
+msgstr "Cuenta bancaria"
 
 #. module: jt_agreement
 #: model:ir.model,name:jt_agreement.model_res_partner_bank
@@ -1255,6 +1255,7 @@ msgid "Date of registration in the basis"
 msgstr ""
 
 #. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_agreement_trust__register_date
 #: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration__registration_date
 #: model:ir.model.fields,field_description:jt_agreement.field_patrimonial_resources__registration_date
 msgid "Date of registration in the system"
@@ -2006,7 +2007,7 @@ msgstr "Incrementos y retiros"
 #. module: jt_agreement
 #: model_terms:ir.ui.view,arch_db:jt_agreement.view_bases_collabration_form
 msgid "Information for Closing"
-msgstr "Información de cirre"
+msgstr "Información de Cierre"
 
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_agreement_trust__interest_account_id
@@ -2868,9 +2869,11 @@ msgid "Payment Request Number"
 msgstr "Número de solicitud de pago"
 
 #. module: jt_agreement
+#: code:addons/jt_agreement/models/bases_collaboration.py:0
 #: model_terms:ir.ui.view,arch_db:jt_agreement.view_req_open_balance_form
 #: model_terms:ir.ui.view,arch_db:jt_agreement.view_req_open_balance_patrimonial_form
 #: model_terms:ir.ui.view,arch_db:jt_agreement.view_req_open_balance_trust_form
+#, python-format
 msgid "Payment Requests"
 msgstr "Solicitudes de pago"
 
@@ -3512,11 +3515,6 @@ msgid "Trade Number"
 msgstr "Número de oficio"
 
 #. module: jt_agreement
-#: model:ir.actions.act_window,name:jt_agreement.action_req_open_balance_finance
-msgid "Transfer Request"
-msgstr "Solicitud de transferencia"
-
-#. module: jt_agreement
 #: model:ir.ui.menu,name:jt_agreement.menu_transfer_req_agreement
 msgid "Transfer Requests"
 msgstr "Solicitud de transferencias"
@@ -3872,7 +3870,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration__yields
 #: model:ir.model.fields,field_description:jt_agreement.field_interest_rate_operation__yields
 msgid "Yields"
-msgstr ""
+msgstr "Honorarios"
 
 #. module: jt_agreement
 #: code:addons/jt_agreement/models/bases_collaboration.py:0
@@ -3963,3 +3961,72 @@ msgstr "Retiro"
 #, python-format
 msgid "​Available Balance Is Less Then Requested Balance!"
 msgstr "¡Saldo disponible es menor al solicitado!"
+
+#. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance_finance__origin_account
+msgid "Account Origin"
+msgstr "Cuenta origen"
+
+#. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance_finance__desti_account
+msgid "Destination Account"
+msgstr "Cuenta destino"
+
+#. module: jt_agreement
+#: model:ir.actions.act_window,name:jt_agreement.action_req_open_balance_finance
+#: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance_finance__trasnfer_request
+#: model_terms:ir.ui.view,arch_db:jt_agreement.request_open_balance_finance_search
+msgid "Transfer Request"
+msgstr "Solicitud de transferencia"
+
+#. module: jt_agreement
+#: model_terms:ir.ui.view,arch_db:jt_agreement.view_req_open_balance_form_finance
+msgid "Prepared By"
+msgstr "Realizado por"
+
+#. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance_finance__prepared_by_dept_id
+msgid "Department to which it belongs"
+msgstr "Departamento al cual pertenece"
+
+#. module: jt_agreement
+#: model_terms:ir.ui.view,arch_db:jt_agreement.view_req_open_balance_form_finance
+msgid "Elaboration Date"
+msgstr "Fecha de elaboración"
+
+#. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_approve_investment_bal_req__user_id
+#: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance_finance__user_id
+msgid "Applicant"
+msgstr "Aplicado por"
+
+#. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance_finance__authorized_by_emp_id
+#: model_terms:ir.ui.view,arch_db:jt_agreement.view_req_open_balance_form_finance
+msgid "Authorized by"
+msgstr "Autorizado por"
+
+#. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance_finance__authorized_by_dept_id
+msgid "Department to which the authorizing person belongs"
+msgstr "Departamento al que pertenece la persona que autoriza"
+
+#. module: jt_agreement
+#: model:ir.ui.menu,name:jt_agreement.menu_accounting_operation_interest_id
+msgid "Accounting operations-Interests"
+msgstr "Operaciones Contables-Intereses"
+
+#. module: jt_agreement
+#: model:ir.actions.act_window,name:jt_agreement.action_generate_contract_assistant
+msgid "Generate Contract Assistant"
+msgstr "Auxiliar de Contrato"
+
+#. module: jt_agreement
+#: model:ir.model.fields.selection,name:jt_agreement.selection__payment_request__state__paid
+msgid "Paid"
+msgstr "PAGADO"
+
+#. module: jt_agreement
+#: model:ir.model.fields.selection,name:jt_agreement.selection__payment_request__state__reject
+msgid "Rejected"
+msgstr "RECHAZADO"

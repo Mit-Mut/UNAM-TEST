@@ -184,11 +184,20 @@ class InvestmentAccountStatement(models.AbstractModel):
 
         #===== Investment =======#
         journal_ids = productive_ids.mapped('investment_id.journal_id')
+        journal_ids += prev_productive_ids.mapped('investment_id.journal_id')
+        journal_ids = self.env['account.journal'].search([('id','in',journal_ids.ids)])
         for journal in journal_ids:
-            capital = header_intial
+            intial_current = 0
+            for rec in prev_productive_ids.filtered(lambda x:x.investment_id.journal_id.id == journal.id):
+                if rec.type_of_operation in ('increase', 'increase_by_closing', 'open_bal'):
+                    intial_current += rec.amount
+                elif rec.type_of_operation in ('retirement', 'withdrawal', 'withdrawal_cancellation', 'withdrawal_closure'):
+                    intial_current -= rec.amount
+            
+            capital = intial_current
             total_inc = 0
             total_with = 0
-            total_final = header_intial
+            total_final = intial_current
             
             records = productive_ids.filtered(lambda x:x.investment_id.journal_id.id == journal.id).sorted('date_required')
             lines.append({
@@ -206,7 +215,23 @@ class InvestmentAccountStatement(models.AbstractModel):
                 'unfoldable': False,
                 'unfolded': True,
             })
-                                     
+            if not records:
+                lines.append({
+                    'id': 'hierarchy_account_journal' + str(journal.id),
+                    'name' :'', 
+                    'columns': [ 
+                                {'name':''},
+                                {'name': ''},
+                                self._format({'name': capital},figure_type='float',digit=2),
+                                self._format({'name': 0},figure_type='float',digit=2),
+                                self._format({'name': 0},figure_type='float',digit=2),
+                                self._format({'name': capital},figure_type='float',digit=2),
+                                ],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+                                         
             for rec in records:
                 invesment_date = ''
                 
@@ -375,16 +400,25 @@ class InvestmentAccountStatement(models.AbstractModel):
         actual = (header_increment + header_intial) - header_withdrawal
         col += 1
         header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nDIRECCIÓN GENERAL DE FINANZAS\nDIRECCIÓN DE INGRESOS Y OPERATIÓN FINANCIERA\nDEPTO. DE OPERACIÓN FINANCIERA\nESTADO DE CUENTA:%s'''% (period_name)
-        sheet.merge_range(y_offset, col, 5, col+6, header_title,super_col_style)
+        sheet.merge_range(y_offset, col, 5, col+5, header_title,super_col_style)
         y_offset += 6
-        col=1
-        # currect_time_msg = ''
-        # currect_time_msg += "CUENTAS PRODUCTIVAS"
-        # sheet.merge_range(y_offset, col, y_offset, col+6, currect_time_msg,currect_left_style)
-        # currect_time_msg += "Saldo Inicial"
-        # currect_time_msg += str(self._format({'name': header_intial},figure_type='float',digit=2).get('name'))
-        # sheet.merge_range(y_offset, col, y_offset, col+6, currect_time_msg,currect_left_style)
+        currect_time_msg = ''
+        currect_time_msg += "Estado de cuenta : FONDOS"
+        sheet.merge_range(y_offset, col, y_offset, col+5, currect_time_msg,currect_left_style)
+        #col += 1
         y_offset += 1
+        currect_time_msg = "Saldo Inicial  :  "
+        currect_time_msg += str(self._format({'name': header_intial},figure_type='float',digit=2).get('name'))
+        currect_time_msg += "\n(+) Incrementos  :  "
+        currect_time_msg += str(self._format({'name': header_increment},figure_type='float',digit=2).get('name'))
+        currect_time_msg += "\n(-) Retiros  :  "
+        currect_time_msg += str(self._format({'name': header_withdrawal},figure_type='float',digit=2).get('name'))
+        currect_time_msg += "\nSaldo Actual:  :  "
+        currect_time_msg += str(self._format({'name': actual},figure_type='float',digit=2).get('name'))
+        sheet.merge_range(y_offset, col, y_offset+3, col+5, currect_time_msg,currect_date_style)
+        y_offset += 4
+        col=1
+        
         for row in self.get_header(options):
             x = 0
             for column in row:

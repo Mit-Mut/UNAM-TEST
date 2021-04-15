@@ -280,7 +280,6 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
         return value
 
     def get_fund_amount(self,origin,bank,domain,date_start,date_end):
-        print ("bank===",bank)
         domain_fund = domain + [('date_required','>=',date_start),('date_required','<=',date_end)]
         records_fund = self.env['investment.operation'].search(domain_fund)
 
@@ -369,6 +368,7 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
         bank_account_ids = opt_lines.mapped('investment_id.journal_id')
         for bank in bank_account_ids:
             total_avg_final = 0
+            record_date_day = 1
             total_capital = 0
             final_amount = 0
             total_entradas = 0
@@ -424,7 +424,7 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                     columns = [{'name': month_name}, 
                                     {'name': new_date.day},
                                     {'name': ''},
-                                    self._format({'name': p_rate},figure_type='float',digit=2,is_currency=False),
+                                    self._format({'name': p_rate},figure_type='float',digit=4,is_currency=False),
                                     self._format({'name': 0.0},figure_type='float',digit=2,is_currency=True),
                                     self._format({'name': 0.0},figure_type='float',digit=2,is_currency=True),
                                 ]
@@ -436,8 +436,8 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                         
                     columns +=  [
                                     self._format({'name': 0.0},figure_type='float',digit=2,is_currency=True),
-                                    self._format({'name': 0.0},figure_type='float',digit=2,is_currency=True),
-                                    self._format({'name': 0.0},figure_type='float',digit=2,is_currency=True),
+                                    self._format({'name': final_amount},figure_type='float',digit=2,is_currency=True),
+                                    self._format({'name': total_avg_final/record_date_day},figure_type='float',digit=2,is_currency=True),
                                     ]
                     lines.append({
                         'id': 'hierarchy' + str(new_date),
@@ -452,7 +452,7 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                     capital = header_intial
                     entradas = 0
                     salidas  = 0
-                    
+                    record_date_day = rec.date_required.day
                     
                     if rec.type_of_operation == 'open_bal':
                         capital = rec.amount
@@ -476,7 +476,7 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                     columns = [{'name': month_name}, 
                                     {'name': rec.date_required.day},
                                     {'name': rec.investment_id.journal_id and rec.investment_id.journal_id.name or ''},
-                                    self._format({'name': p_rate},figure_type='float',digit=2,is_currency=False),
+                                    self._format({'name': p_rate},figure_type='float',digit=4,is_currency=False),
                                     self._format({'name': capital},figure_type='float',digit=2,is_currency=True),
                                     self._format({'name': entradas},figure_type='float',digit=2,is_currency=True),
                                 ]
@@ -489,7 +489,7 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                     columns +=  [
                                     self._format({'name': salidas},figure_type='float',digit=2,is_currency=True),
                                     self._format({'name': final_amount},figure_type='float',digit=2,is_currency=True),
-                                    self._format({'name': total_avg_final/rec.date_required.day},figure_type='float',digit=2,is_currency=True),
+                                    self._format({'name': total_avg_final/record_date_day},figure_type='float',digit=2,is_currency=True),
                                     ]
                     lines.append({
                         'id': 'hierarchy' + str(rec.id),
@@ -560,10 +560,10 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                                          DEFAULT_SERVER_DATE_FORMAT).date()
 
                 
-                domain_bank_period = domain + [('date_required','>=',date_start),('date_required','<=',date_end),('investment_id.journal_id.bank_id','=',journal.id)]
+                domain_bank_period = domain + [('investment_id.journal_id','in',bank_account_ids.ids),('date_required','>=',date_start),('date_required','<=',date_end),('investment_id.journal_id.bank_id','=',journal.id)]
                 records_bank_periods = self.env['investment.operation'].search(domain_bank_period)
 
-                inc_domain_bank_period = domain + [('date_required','<',date_start),('investment_id.journal_id.bank_id','=',journal.id)]
+                inc_domain_bank_period = domain + [('investment_id.journal_id','in',bank_account_ids.ids),('date_required','<',date_start),('investment_id.journal_id.bank_id','=',journal.id)]
                 inc_records_bank_periods = self.env['investment.operation'].search(inc_domain_bank_period)
 
                 amount = 0
@@ -700,10 +700,10 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                                          DEFAULT_SERVER_DATE_FORMAT).date()
 
 
-                domain_fund = domain + [('date_required','>=',date_start),('date_required','<=',date_end)]
+                domain_fund = domain + [('investment_id.journal_id','in',bank_account_ids.ids),('date_required','>=',date_start),('date_required','<=',date_end)]
                 records_fund = self.env['investment.operation'].search(domain_fund)
 
-                inc_domain_fund = domain + [('date_required','<',date_start)]
+                inc_domain_fund = domain + [('investment_id.journal_id','in',bank_account_ids.ids),('date_required','<',date_start)]
                 inc_records_fund = self.env['investment.operation'].search(inc_domain_fund)
 
                 amount = 0
@@ -788,10 +788,10 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                 date_end = datetime.strptime(str(period.get('date_to')),
                                          DEFAULT_SERVER_DATE_FORMAT).date()
 
-                domain_currency_period = domain + [('date_required','>=',date_start),('date_required','<=',date_end),('investment_id.currency_id','=',currency.id)]
+                domain_currency_period = domain + [('investment_id.journal_id','in',bank_account_ids.ids),('date_required','>=',date_start),('date_required','<=',date_end),('investment_id.currency_id','=',currency.id)]
                 records_periods = self.env['investment.operation'].search(domain_currency_period)
 
-                inc_domain_currency_period = domain + [('date_required','<',date_start),('investment_id.currency_id','=',currency.id)]
+                inc_domain_currency_period = domain + [('investment_id.journal_id','in',bank_account_ids.ids),('date_required','<',date_start),('investment_id.currency_id','=',currency.id)]
                 inc_records_periods = self.env['investment.operation'].search(inc_domain_currency_period)
 
                 amount = 0
@@ -893,7 +893,7 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
             sheet.insert_image(0,0, filename, {'image_data': image_data,'x_offset':8,'y_offset':3,'x_scale':0.6,'y_scale':0.6})
         
         col += 1
-        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICOO\nUNIVERSITY BOARD\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nINFORME DE FONDOS DE INVERSIÓN EN CUENTAS PRODUCTIVAS'''
+        header_title = '''UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\nPATRONATO UNIVERSITARIO\nDIRECCIÓN GENERAL DE FINANZAS\nSUBDIRECCION DE FINANZAS\nREPORTE DE FONDOS DE INVERSIÓN EN CUENTAS PRODUCTIVAS'''
         sheet.merge_range(y_offset, col, 5, col+14, header_title,super_col_style)
         y_offset += 6
         col=1

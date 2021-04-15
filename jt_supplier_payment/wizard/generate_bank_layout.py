@@ -42,6 +42,27 @@ class GenerateBankLayout(models.TransientModel):
     @api.onchange('journal_id')
     def onchange_journal_id(self):
         self.sit_file_key = False
+        if self.bank_format=='bbva_sit':
+            sit_file_key = 'TRANSFERUNAM'
+            currect_time = datetime.today()
+            
+            sit_file_key +=str(currect_time.year)
+            sit_file_key +=str(currect_time.month).zfill(2)
+            sit_file_key +=str(currect_time.day).zfill(2)
+
+            if self.payment_ids:
+                if self.payment_ids[0].currency_id.name=='MXN':
+                    sit_file_key += 'MN'
+                else:
+                    sit_file_key += "ME"
+                if self.payment_ids[0].sit_operation_code=='payment_on_account_bancomer':
+                    sit_file_key += 'BBVA'
+                elif self.payment_ids[0].sit_operation_code=='payment_interbank':
+                    sit_file_key += "OTHERS"
+            
+            self.sit_file_key = sit_file_key
+            
+            
         
     def action_generate_bank_layout(self):
         
@@ -392,9 +413,9 @@ class GenerateBankLayout(models.TransientModel):
             else:
                 sit_file_key += "ME"
             if self.payment_ids[0].sit_operation_code=='payment_on_account_bancomer':
-                sit_file_key += 'BBV'
+                sit_file_key += 'BBVA'
             elif self.payment_ids[0].sit_operation_code=='payment_interbank':
-                sit_file_key += "OTROS"
+                sit_file_key += "OTHERS"
 
         file_data +=sit_file_key.ljust(30)
         #======== Response Code =======#
@@ -582,19 +603,20 @@ class GenerateBankLayout(models.TransientModel):
 #                     additional +=" - "+split_data[0]
 #             if payment.sit_additional_data:
 #                 additional += payment.sit_additional_data
-            
-            additional = 'PAGOUNAM - '
-            if payment.dependancy_id:
-                if payment.dependancy_id.description:
-                    additional += payment.dependancy_id.description +" "
-                if payment.dependancy_id.dependency:
-                    additional += payment.dependancy_id.dependency + "-"
-            if payment.sub_dependancy_id and payment.sub_dependancy_id.sub_dependency:
-                additional += payment.sub_dependancy_id.sub_dependency + " "
-            if self.env.user.lang == 'es_MX':
-                additional += "FAVOR DE MANTENER ACTUALIZADA SU INFORMACIÓN BANCARIA"
-            else: 
-                additional += "PLEASE KEEP YOUR BANKING NFORMATION UPDATED"    
+            additional = ''
+            if payment.sit_additional_data:
+                additional = payment.sit_additional_data
+#             if payment.dependancy_id:
+#                 if payment.dependancy_id.description:
+#                     additional += payment.dependancy_id.description +" "
+#                 if payment.dependancy_id.dependency:
+#                     additional += payment.dependancy_id.dependency + "-"
+#             if payment.sub_dependancy_id and payment.sub_dependancy_id.sub_dependency:
+#                 additional += payment.sub_dependancy_id.sub_dependency + " "
+#             if self.env.user.lang == 'es_MX':
+#                 additional += "FAVOR DE MANTENER ACTUALIZADA SU INFORMACIÓN BANCARIA"
+#             else: 
+#                 additional += "PLEASE KEEP YOUR BANKING INFORMATION UPDATED"    
             file_data += additional.ljust(700)
             #======= FILLER =======#
             file_data += ''.ljust(10) 
@@ -812,11 +834,11 @@ class GenerateBankLayout(models.TransientModel):
             file_data += 'WIRES'
             file_data += ','
             # ======== BIC /SWIFT ======
-            if payment.journal_id and payment.journal_id.bank_id:
-                bank_code = ''
-                if payment.journal_id.bank_id.bic:
-                    bank_code = payment.journal_id.bank_id.bic
-                file_data += bank_code            
+            if payment.journal_id and payment.journal_id.bank_id and payment.journal_id.bank_id.country:
+                if payment.journal_id.bank_id.country.code and payment.journal_id.bank_id.country.code=='MX':
+                    file_data += payment.journal_id.bank_id.l10n_mx_edi_code or ''
+                else:
+                    file_data += payment.journal_id.bank_id.bic or ''
             file_data += ','
 
             #==========Bank Account ========#

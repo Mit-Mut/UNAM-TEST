@@ -220,6 +220,7 @@
                                         <field name="vault_folio" invisible="not context.get('default_is_payment_request',False)"/>
                                         <field name="quantity"/>
                                         <field name="product_uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
+                                        <field name="provision_price" readonly="1"/>
                                         <field name="price_unit" string="Price"/>
                                         <field name="other_amounts"/>
                                         <field name="discount" string="Disc.%" groups="base.group_no_one" optional="show"/>

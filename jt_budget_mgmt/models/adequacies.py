@@ -1013,11 +1013,11 @@ class Adequacies(models.Model):
                                 contorl_line = c_line
                     if contorl_line:
                         amount = contorl_line.available
-                        
+                        assigned = contorl_line.assigned
                         if line.line_type == 'decrease':
-                            contorl_line.write({'available':amount - line.amount})
+                            contorl_line.write({'available':amount - line.amount,'assigned':assigned - line.amount})
                         if line.line_type == 'increase':
-                            contorl_line.write({'available':amount + line.amount})
+                            contorl_line.write({'available':amount + line.amount,'assigned':assigned + line.amount})
                     
                     #==================================================#
                 elif self.date_of_liquid_adu and self.adaptation_type == 'liquid':

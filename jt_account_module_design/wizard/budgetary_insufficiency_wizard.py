@@ -23,9 +23,9 @@ class BudegtInsufficiencWiz(models.TransientModel):
         res = super(BudegtInsufficiencWiz,self).action_budget_allocation()
         if self.move_ids and not self.move_id:
             for move in self.move_ids:
-                move.provision_payment_state = 'provision'
+                move.set_provision_payment_state_provision()
         else:
-            self.move_id.provision_payment_state = 'provision'
+            self.move_id.set_provision_payment_state_provision()
  
              
         return res

@@ -736,7 +736,8 @@ class AccountMove(models.Model):
                                     ('provision', 'Provisions'),
                                     ('rejected', 'Rejected'),
                                     ('cancel', 'Cancel')], default='draft', copy=False)
-
+    is_hide_provision_from_view = fields.Boolean(string="Hide Provision",default=False,copy=False)
+    
     def check_previous_number_records(self):
         provision_id = self.env['account.move'].search([('is_provision_request','=',True),('previous_number','=',self.previous_number)],limit=1)
         if not provision_id:
@@ -852,7 +853,7 @@ class AccountMove(models.Model):
         
         for line in new_move.invoice_line_ids.filtered(lambda x:x.program_code_id):
             line.update_provision_amount_data(line)
-
+        
         #====Change the amount of the provision view=============#
 #         for line in self.invoice_line_ids:
 #             line.with_context(check_move_validity=False).price_unit = 0
@@ -863,8 +864,13 @@ class AccountMove(models.Model):
 #         self.create_journal_line_for_approved_payment()
             
         #========================================================#
-        #self.state='cancel'
-        
+        if self.amount_total==0:
+            self.state='cancel'
+            self.is_hide_provision_from_view = True
+        else:
+            self.state='draft'
+            self.is_hide_provision_from_view = False
+            
     def action_provision_payment_request(self):
         return {
                 'name': 'Operations',
@@ -925,6 +931,13 @@ class AccountMoveLine(models.Model):
             payment_move_lines = provision_line.move_id.line_ids.filtered(lambda x:x.is_for_approved_payment)
             if payment_move_lines:
                 provision_line.update_payment_approve_amount_provision(payment_move_lines)
+
+            if provision_line.move_id.amount_total==0:
+                provision_line.move_id.state='cancel'
+                provision_line.move_id.is_hide_provision_from_view = True
+            else:
+                provision_line.move_id.state='draft'
+                provision_line.move_id.is_hide_provision_from_view = False
             
     def write(self, vals):
         result = super(AccountMoveLine,self).write(vals)

@@ -1067,10 +1067,24 @@ class RequestOpenBalance(models.Model):
 
     @api.onchange('type_of_operation')
     def onchange_type_of_operation_amount(self):
-        if self.type_of_operation and self.type_of_operation == 'open_bal':
-            if self.bases_collaboration_id:
+        if self.bases_collaboration_id and self.type_of_operation :
+            if self.type_of_operation == 'open_bal':
                 self.opening_balance = self.bases_collaboration_id.opening_bal
-                 
+            else:
+                self.opening_balance = 0.0
+
+        elif self.patrimonial_resources_id and self.type_of_operation:
+            if self.type_of_operation == 'open_bal':
+                self.opening_balance = self.patrimonial_resources_id.opening_balance
+            else:
+                self.opening_balance = 0.0
+        else:
+            if self.trust_id and self.type_of_operation :
+                if self.type_of_operation == 'open_bal':
+                    self.opening_balance = self.trust_id.opening_balance
+                else:
+                    self.opening_balance = 0.0
+
     @api.constrains('opening_balance')
     def _check_opening_balance(self):
         print ('opening_balance')

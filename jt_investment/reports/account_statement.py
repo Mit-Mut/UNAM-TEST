@@ -183,6 +183,9 @@ class InvestmentAccountStatement(models.AbstractModel):
             
         #===== Investment =======#
         journal_ids = productive_ids.mapped('investment_id.journal_id')
+        journal_ids += prev_productive_ids.mapped('investment_id.journal_id')
+        journal_ids = self.env['account.journal'].search([('id','in',journal_ids.ids)])
+        
         for journal in journal_ids:
             intial_current = 0
             for rec in prev_productive_ids.filtered(lambda x:x.investment_id.journal_id.id == journal.id):
@@ -213,6 +216,41 @@ class InvestmentAccountStatement(models.AbstractModel):
                 'unfoldable': False,
                 'unfolded': True,
             })
+            if not records:
+                lines.append({
+                    'id': 'hierarchy_account' + str(journal.id),
+                    'name' :'', 
+                    'columns': [
+                                {'name':''},
+                                {'name': ''},
+                                self._format({'name': capital},figure_type='float',digit=2),
+                                {'name':''},
+                                {'name':''},
+                                self._format({'name': final},figure_type='float',digit=2),
+                                ],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+
+                lines.append({
+                    'id': 'Total',
+                    'name' :'Total', 
+                    'columns': [ 
+                                {'name':''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                self._format({'name': final},figure_type='float',digit=2),
+                                ],
+                    'level': 1,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+                
+                g_total_final += final
+                continue
             pre_date = start
             for rec in records:
                 invesment_date = ''

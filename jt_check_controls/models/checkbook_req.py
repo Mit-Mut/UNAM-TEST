@@ -399,3 +399,9 @@ class ResBank(models.Model):
 
     check_validity = fields.Integer("Check Validity")
     check_protection_term = fields.Integer("Check Protection Term")
+
+
+    @api.constrains('check_protection_term')
+    def contrain_check_protection_term(self):
+        if self.check_protection_term and self.check_protection_term < 0:
+            raise UserError(_('The Check Protection Term cannot be negative.'))

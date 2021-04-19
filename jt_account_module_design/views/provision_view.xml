@@ -211,7 +211,7 @@
                                         <field name="turn_type" />
                                         <field name="type_of_bussiness_line"/>
                                         
-                                        <field name="egress_key_id"/>
+                                        <field name="egress_key_id" required="1"/>
 
 
                                         <field name="invoice_uuid" invisible="not context.get('default_is_payment_request',False)"/>
@@ -220,6 +220,7 @@
                                         <field name="vault_folio" invisible="not context.get('default_is_payment_request',False)"/>
                                         <field name="quantity"/>
                                         <field name="product_uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
+                                        <field name="provision_price" readonly="1"/>
                                         <field name="price_unit" string="Price"/>
                                         <field name="other_amounts"/>
                                         <field name="discount" string="Disc.%" groups="base.group_no_one" optional="show"/>

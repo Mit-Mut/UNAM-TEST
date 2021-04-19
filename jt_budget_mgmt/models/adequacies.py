@@ -1013,7 +1013,7 @@ class Adequacies(models.Model):
                                 contorl_line = c_line
                     if contorl_line:
                         amount = contorl_line.available
-                        
+                        #assigned = contorl_line.assigned
                         if line.line_type == 'decrease':
                             contorl_line.write({'available':amount - line.amount})
                         if line.line_type == 'increase':

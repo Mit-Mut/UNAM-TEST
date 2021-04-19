@@ -211,7 +211,7 @@
                                         <field name="turn_type" />
                                         <field name="type_of_bussiness_line"/>
                                         
-                                        <field name="egress_key_id"/>
+                                        <field name="egress_key_id" required="1"/>
 
 
                                         <field name="invoice_uuid" invisible="not context.get('default_is_payment_request',False)"/>

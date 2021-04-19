@@ -1590,7 +1590,8 @@ class RequestOpenBalanceInvestment(models.Model):
         'Hide Auto Button', default=True, compute='get_record_state_change')
     beneficiary_id = fields.Many2one('res.partner', "Beneficiary")
     provider_id = fields.Many2one('res.partner', "Provider")
-
+    payment_request_id = fields.Many2one('payment.request',copy=False)
+    
     @api.depends('state', 'is_manually')
     def get_record_state_change(self):
         for rec in self:

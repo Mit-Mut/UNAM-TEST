@@ -85,6 +85,7 @@ class PaymentRequest(models.Model):
             'interest_account_id': self.balance_req_id and self.balance_req_id.interest_account_id and self.balance_req_id.interest_account_id.id or False,
             'availability_account_id': self.balance_req_id and self.balance_req_id.availability_account_id and self.balance_req_id.availability_account_id.id or False,
             'payment_request_id': self.id,
+            'balance_req_id': False,
             'patrimonial_account_id': self.balance_req_id and self.balance_req_id.patrimonial_account_id and self.balance_req_id.patrimonial_account_id.id or False,
             'interest_account_id': self.balance_req_id and self.balance_req_id.interest_account_id and self.balance_req_id.interest_account_id.id or False,
             'honorary_account_id': self.balance_req_id and self.balance_req_id.honorary_account_id and self.balance_req_id.honorary_account_id.id or False,

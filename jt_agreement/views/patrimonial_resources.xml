@@ -8,6 +8,8 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="name"/>
+                    <field name="available_bal"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>

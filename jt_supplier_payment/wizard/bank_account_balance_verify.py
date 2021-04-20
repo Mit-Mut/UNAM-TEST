@@ -2,6 +2,15 @@ from odoo import models, fields,_,api
 from odoo.exceptions import UserError, ValidationError
 from datetime import datetime, timedelta
 
+class payment_register(models.TransientModel):
+    _inherit = 'account.payment.register'
+
+    def _prepare_payment_vals(self, invoices):
+        values = super(payment_register,self)._prepare_payment_vals(invoices)
+        if not values.get('partner_id',False):
+            values.update({'partner_id':invoices[0].partner_id.id})
+        return values
+    
 class BankBalanceCheck(models.TransientModel):
 
     _name = 'bank.balance.check'    
@@ -218,6 +227,4 @@ class BankBalanceCheck(models.TransientModel):
         for payment in all_payments:
             payment.action_validate_payment_procedure()
 
-        
-        
         

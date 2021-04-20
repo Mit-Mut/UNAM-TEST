@@ -1985,7 +1985,7 @@ msgstr "Motivo de la solicitud"
 #: model:ir.model.fields,field_description:jt_check_controls.field_available_check__reason_cancellation
 #: model:ir.model.fields,field_description:jt_check_controls.field_check_log__reason_cancellation
 msgid "Reason for cancellation"
-msgstr "Razon de cancelación"
+msgstr "Error de impresión"
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_reissue_checks__reason_cancellation

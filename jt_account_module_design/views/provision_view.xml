@@ -10,16 +10,16 @@
                 <form>
                     <header>
 
-	            		<button name="action_draft_budget" string="Draft" class="oe_highlight"
-	                            type="object"
-	                            attrs="{'invisible':[('provision_payment_state', 'in', ('draft','provision','cancel'))]}"/>
 	            		<button name="action_validate_budget"   string="Validate budget" class="oe_highlight"
 	                            type="object" attrs="{'invisible':[('provision_payment_state', '!=', 'registered')]}"/>
-	            		<button name="action_cancel_budget" string="Cancel" class="oe_highlight"
-	                            type="object" attrs="{'invisible':[('provision_payment_state', 'in', ('provision','cancel'))]}"/>
                         <button name="action_register" string="Register" class="oe_highlight" type="object"
                                 attrs="{'invisible': [('provision_payment_state', '!=', 'draft')]}"/>
                         <button name="generate_payment_request" string="Generate Payment Request" class="oe_highlight" type="object" attrs="{'invisible': ['|',('is_provision_request_generate','=',True),('provision_payment_state', '!=', 'provision')]}"/>
+	            		<button name="action_draft_budget" string="Draft" class="oe_highlight"
+	                            type="object"
+	                            attrs="{'invisible':[('provision_payment_state', 'in', ('draft','cancel'))]}"/>
+	            		<button name="action_cancel_budget" string="Cancel" class="oe_highlight"
+	                            type="object" attrs="{'invisible':[('provision_payment_state', '=', 'cancel')]}"/>
                          
                         <field name="provision_payment_state" widget="statusbar" statusbar_visible="draft,registered,provision,rejected,cancel"/>
                         <field name="payment_state" invisible="1"/>
@@ -112,7 +112,7 @@
                                 <field name="l10n_mx_edi_payment_method_id" attrs="{'readonly':[('payment_state', 'not in', ('draft','registered','for_payment_procedure'))]}"/>
                                 <field name="currency_id" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
                                 <field name="journal_id" readonly="1"/>
-                                <field name="previous_number" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="previous_number" required="1" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                 
                                 <field name="holder_of_dependency_id" string="Holder of the Unit" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                 <field name="operation_name" invisible="1"/>
@@ -211,7 +211,7 @@
                                         <field name="turn_type" />
                                         <field name="type_of_bussiness_line"/>
                                         
-                                        <field name="egress_key_id"/>
+                                        <field name="egress_key_id" required="1"/>
 
 
                                         <field name="invoice_uuid" invisible="not context.get('default_is_payment_request',False)"/>
@@ -220,6 +220,7 @@
                                         <field name="vault_folio" invisible="not context.get('default_is_payment_request',False)"/>
                                         <field name="quantity"/>
                                         <field name="product_uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
+                                        <field name="provision_price" readonly="1"/>
                                         <field name="price_unit" string="Price"/>
                                         <field name="other_amounts"/>
                                         <field name="discount" string="Disc.%" groups="base.group_no_one" optional="show"/>

@@ -822,6 +822,15 @@ class ControlAssignedAmounts(models.Model):
                         'You can not delete processed Control of Assigned Amounts!')
         return super(ControlAssignedAmounts, self).unlink()
 
+    def show_success_lines(self):
+        action = self.env.ref(
+            'jt_budget_mgmt.action_control_assigned_amounts_success_line').read()[0]
+        action['limit'] = 1000
+        action['domain'] = [('id', 'in', self.success_line_ids.ids)]
+        action['search_view_id'] = (self.env.ref(
+            'jt_budget_mgmt.control_assigned_amounts_lines_search_view').id,)
+        return action
+
 
 class ControlAssignedAmountsLines(models.Model):
 
@@ -870,7 +879,8 @@ class ControlAssignedAmountsLines(models.Model):
     agreement_number = fields.Char(string='Agreement number')
     exercise_type = fields.Char(string='Exercise type')
     cron_id = fields.Many2one('ir.cron', string="CRON ID")
-
+    is_create_from_adequacies = fields.Boolean(string="Line Create From Adequacies",default=False,copy=False)
+    
     @api.onchange('program_code_id')
     def onchange_program_code_id(self):
         if self.program_code_id:

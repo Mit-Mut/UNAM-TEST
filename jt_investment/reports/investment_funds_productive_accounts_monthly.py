@@ -364,8 +364,9 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
         total_salidas  = 0
         
         origin_ids_len,origin_ids_data = self.get_total_fund_data(options)
-        
         bank_account_ids = opt_lines.mapped('investment_id.journal_id')
+        bank_account_ids += previous_records.mapped('investment_id.journal_id')
+        bank_account_ids = self.env['account.journal'].search([('id','in',bank_account_ids.ids)])
         for bank in bank_account_ids:
             total_avg_final = 0
             record_date_day = 1
@@ -399,19 +400,46 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                     header_intial += rec.amount
                 elif rec.type_of_operation in ('retirement', 'withdrawal', 'withdrawal_cancellation', 'withdrawal_closure'):
                     header_intial -= rec.amount
-                    
+            
+            #=========== Get Previous Data ================#
+            pre_line_datas = opt_lines.filtered(lambda x:x.investment_id.journal_id.id == bank.id)
+            if not pre_line_datas:
+                columns = [{'name': ''}, 
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                self._format({'name': header_intial},figure_type='float',digit=2,is_currency=True),
+                                {'name': ''},
+                            ]
+                columns += [{'name':''}]*origin_ids_len                    
+                columns +=  [
+                                {'name': ''},
+                                self._format({'name': header_intial},figure_type='float',digit=2,is_currency=True),
+                                {'name': ''},
+                                ]
+                lines.append({
+                    'id': 'hierarchy',
+                    'name': '',
+                    'columns': columns,
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+                total_capital += header_intial
+                final_amount += header_intial
+                continue
+            #========================#        
             day_diff = end - start
             day_diff = day_diff.days+1
             new_date = start
             count = 0
-            
-            
-            
+            total_rec_inc = 0
             for month_date in range(day_diff):
                 count += 1
                 month_name = self.get_month_name(new_date.month)
                 p_rate = 0
                 if new_date:
+                    record_date_day = new_date.day
                     period_rate_id = self.env['investment.period.rate'].search([('rate_date','=',new_date),('product_type','=','TIIE')],limit=1)
                     if period_rate_id:
                         p_rate = period_rate_id.rate_days_28
@@ -421,6 +449,8 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                 
                 current_date_line = opt_lines.filtered(lambda x:x.investment_id.journal_id.id == bank.id and x.date_required and x.date_required==new_date).sorted('date_required')
                 if not current_date_line:
+                    total_rec_inc += 1
+                    total_avg_final += final_amount
                     columns = [{'name': month_name}, 
                                     {'name': new_date.day},
                                     {'name': ''},
@@ -437,7 +467,7 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                     columns +=  [
                                     self._format({'name': 0.0},figure_type='float',digit=2,is_currency=True),
                                     self._format({'name': final_amount},figure_type='float',digit=2,is_currency=True),
-                                    self._format({'name': total_avg_final/record_date_day},figure_type='float',digit=2,is_currency=True),
+                                    self._format({'name': total_avg_final/total_rec_inc},figure_type='float',digit=2,is_currency=True),
                                     ]
                     lines.append({
                         'id': 'hierarchy' + str(new_date),
@@ -449,6 +479,7 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                     })
                     
                 for rec in current_date_line:
+                    total_rec_inc += 1
                     capital = header_intial
                     entradas = 0
                     salidas  = 0
@@ -489,7 +520,7 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                     columns +=  [
                                     self._format({'name': salidas},figure_type='float',digit=2,is_currency=True),
                                     self._format({'name': final_amount},figure_type='float',digit=2,is_currency=True),
-                                    self._format({'name': total_avg_final/record_date_day},figure_type='float',digit=2,is_currency=True),
+                                    self._format({'name': total_avg_final/total_rec_inc},figure_type='float',digit=2,is_currency=True),
                                     ]
                     lines.append({
                         'id': 'hierarchy' + str(rec.id),
@@ -542,6 +573,7 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
             })
         journal_ids = self.env['res.bank']
         journal_ids += records.mapped('investment_id.journal_id.bank_id')
+        journal_ids += previous_records.mapped('investment_id.journal_id.bank_id')
         if journal_ids:
             journals = list(set(journal_ids.ids))
             journal_ids = self.env['res.bank'].browse(journals)
@@ -560,10 +592,10 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                                          DEFAULT_SERVER_DATE_FORMAT).date()
 
                 
-                domain_bank_period = domain + [('date_required','>=',date_start),('date_required','<=',date_end),('investment_id.journal_id.bank_id','=',journal.id)]
+                domain_bank_period = domain + [('investment_id.journal_id','in',bank_account_ids.ids),('date_required','>=',date_start),('date_required','<=',date_end),('investment_id.journal_id.bank_id','=',journal.id)]
                 records_bank_periods = self.env['investment.operation'].search(domain_bank_period)
 
-                inc_domain_bank_period = domain + [('date_required','<',date_start),('investment_id.journal_id.bank_id','=',journal.id)]
+                inc_domain_bank_period = domain + [('investment_id.journal_id','in',bank_account_ids.ids),('date_required','<',date_start),('investment_id.journal_id.bank_id','=',journal.id)]
                 inc_records_bank_periods = self.env['investment.operation'].search(inc_domain_bank_period)
 
                 amount = 0
@@ -682,7 +714,8 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
 
         origin_ids = self.env['agreement.fund']
         origin_ids += records.mapped('investment_fund_id.fund_id')        
-
+        origin_ids += previous_records.mapped('investment_fund_id.fund_id')
+        
         if origin_ids:
             origins = list(set(origin_ids.ids))
             origin_ids = self.env['agreement.fund'].browse(origins)
@@ -700,10 +733,10 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                                          DEFAULT_SERVER_DATE_FORMAT).date()
 
 
-                domain_fund = domain + [('date_required','>=',date_start),('date_required','<=',date_end)]
+                domain_fund = domain + [('investment_id.journal_id','in',bank_account_ids.ids),('date_required','>=',date_start),('date_required','<=',date_end)]
                 records_fund = self.env['investment.operation'].search(domain_fund)
 
-                inc_domain_fund = domain + [('date_required','<',date_start)]
+                inc_domain_fund = domain + [('investment_id.journal_id','in',bank_account_ids.ids),('date_required','<',date_start)]
                 inc_records_fund = self.env['investment.operation'].search(inc_domain_fund)
 
                 amount = 0
@@ -769,8 +802,8 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
             })
         currency_ids = self.env['res.currency']
         currency_ids += records.mapped('investment_id.currency_id')
-    
-                
+        currency_ids += previous_records.mapped('investment_id.currency_id')
+                    
         if currency_ids:
             currencys = list(set(currency_ids.ids))
             currency_ids = self.env['res.currency'].browse(currencys)
@@ -788,10 +821,10 @@ class InvestmentFundsinProductiveAccountsMonthly(models.AbstractModel):
                 date_end = datetime.strptime(str(period.get('date_to')),
                                          DEFAULT_SERVER_DATE_FORMAT).date()
 
-                domain_currency_period = domain + [('date_required','>=',date_start),('date_required','<=',date_end),('investment_id.currency_id','=',currency.id)]
+                domain_currency_period = domain + [('investment_id.journal_id','in',bank_account_ids.ids),('date_required','>=',date_start),('date_required','<=',date_end),('investment_id.currency_id','=',currency.id)]
                 records_periods = self.env['investment.operation'].search(domain_currency_period)
 
-                inc_domain_currency_period = domain + [('date_required','<',date_start),('investment_id.currency_id','=',currency.id)]
+                inc_domain_currency_period = domain + [('investment_id.journal_id','in',bank_account_ids.ids),('date_required','<',date_start),('investment_id.currency_id','=',currency.id)]
                 inc_records_periods = self.env['investment.operation'].search(inc_domain_currency_period)
 
                 amount = 0

@@ -729,16 +729,15 @@ class ProvisionLine(models.Model):
 class AccountMove(models.Model):
     _inherit = 'account.move'
     
-    provision_move_id = fields.Many2one('account.move','Provision')
-    provision_move_ids = fields.One2many('account.move','provision_move_id')
     total_provision_move = fields.Integer(compute="total_provision_move_ids",store=True,string="Payment Request")
     is_provision_request_generate = fields.Boolean("Provision Request",copy=False)
-    
+    provision_amount_total = fields.Float("Provision Amount Total")
     provision_payment_state = fields.Selection([('draft', 'Draft'), ('registered', 'Registered'),
                                     ('provision', 'Provisions'),
                                     ('rejected', 'Rejected'),
                                     ('cancel', 'Cancel')], default='draft', copy=False)
-
+    is_hide_provision_from_view = fields.Boolean(string="Hide Provision",default=False,copy=False)
+    
     def check_previous_number_records(self):
         provision_id = self.env['account.move'].search([('is_provision_request','=',True),('previous_number','=',self.previous_number)],limit=1)
         if not provision_id:
@@ -746,10 +745,10 @@ class AccountMove(models.Model):
         if provision_id.partner_id and self.partner_id and provision_id.partner_id.id != self.partner_id.id:
             raise ValidationError(_("Should NOT allow placing a different provider"))
         
-        provision_payment_ids = self.env['account.move'].search([('is_payment_request','=',True),('previous_number','=',self.previous_number)])
+        provision_payment_ids = self.env['account.move'].search([('payment_state','!=','cancel'),('is_payment_request','=',True),('previous_number','=',self.previous_number)])
         total_payment = sum(x.amount_total for x in  provision_payment_ids)
-        if provision_id.amount_total < total_payment:
-            raise ValidationError(_("Total Payment amount %f exceeds the original amount of the provision %f")%(total_payment,provision_id.amount_total))
+        if provision_id.provision_amount_total < total_payment:
+            raise ValidationError(_("Total Payment amount %f exceeds the original amount of the provision %f")%(total_payment,provision_id.provision_amount_total))
         provision_program_ids = provision_id.invoice_line_ids.mapped('program_code_id').ids
         
         for line in self.invoice_line_ids.filtered(lambda x:x.program_code_id):
@@ -779,13 +778,6 @@ class AccountMove(models.Model):
         if vals.get('partner_id',False):
             for rec in self.filtered(lambda x:x.is_create_from_provision and x.previous_number and x.is_payment_request):
                 rec.check_previous_number_records()
-
-#         if vals.get('line_ids',[]):
-#             for rec in self.filtered(lambda x:x.is_create_from_provision and x.previous_number and x.is_payment_request):
-#                 payment_move_lines = rec.line_ids.filtered(lambda x:x.is_for_approved_payment)
-#                 if payment_move_lines:
-#                     payment_move_lines.unlink()
-#                     rec.with_contect('call_from_new_lines').create_journal_line_for_approved_payment()
         
         return result
     
@@ -809,17 +801,33 @@ class AccountMove(models.Model):
         return result
     
     def action_draft_budget(self):
-        result = super(AccountMove,self).action_draft_budget()
+        self.ensure_one()
         if self.is_provision_request:
+            if self.provision_move_ids:
+                raise ValidationError(_("Should not allow returning to draft because provision already has related requests"))
             self.provision_payment_state = 'draft'
+        result = super(AccountMove,self).action_draft_budget()
         return result
     
     def action_cancel_budget(self):
+        for record in self.filtered(lambda x:x.is_provision_request):
+            if record.provision_move_ids:
+                raise ValidationError(_("Should not allow cancel because provision already has related requests"))
+            record.provision_payment_state = 'cancel'
+            record.cancel_payment_revers_entry()
+            record.add_budget_available_amount()
         result = super(AccountMove,self).action_cancel_budget()
-        if self.is_provision_request:
-            self.provision_payment_state = 'cancel'
+        for record in self.filtered(lambda x:x.is_create_from_provision and x.is_payment_request):
+            for line in record.invoice_line_ids.filtered(lambda x:x.program_code_id):
+                line.update_provision_amount_data(line)
         return result
     
+    def set_provision_payment_state_provision(self):
+        self.provision_payment_state = 'provision'
+        self.provision_amount_total = self.amount_total
+        for line in self.invoice_line_ids:
+            line.provision_price = line.price_unit
+            
     def generate_payment_request(self):
         vals = {'folio_dependency':False,'is_provision_request':False,
                 'payment_state':'approved_payment','provision_move_id':self.id,
@@ -828,22 +836,41 @@ class AccountMove(models.Model):
         #new_move = self.copy_data(vals)
         new_move.is_payment_request = True
         for line in new_move.invoice_line_ids.filtered(lambda x:x.program_code_id):
-            current_program_lines = self.env['account.move.line'].search([('exclude_from_invoice_tab','=',False),('program_code_id','=',line.program_code_id.id),('move_id','!=',new_move.id),('move_id','in',self.provision_move_ids.ids)])
+            current_program_lines = self.env['account.move.line'].search([('move_id.payment_state','!=','cancel'),('exclude_from_invoice_tab','=',False),('program_code_id','=',line.program_code_id.id),('move_id','!=',new_move.id),('move_id','in',self.provision_move_ids.ids)])
             total_price = sum(x.price_unit for x in current_program_lines)
-            new_price = line.price_unit - total_price
-            
+            new_price = line.provision_price - total_price
             if new_price < 0:
                 new_price = 0
             line.with_context(check_move_validity=False).price_unit = new_price
             new_move.with_context(check_move_validity=False)._onchange_invoice_line_ids()
+            
         if new_move.previous_number:
             new_move.check_previous_number_records()
         payment_move_lines = new_move.line_ids.filtered(lambda x:x.is_for_approved_payment)
         if payment_move_lines:
             payment_move_lines.unlink()
         new_move.create_journal_line_for_approved_payment()
-        self.state='cancel'
         
+        for line in new_move.invoice_line_ids.filtered(lambda x:x.program_code_id):
+            line.update_provision_amount_data(line)
+        
+        #====Change the amount of the provision view=============#
+#         for line in self.invoice_line_ids:
+#             line.with_context(check_move_validity=False).price_unit = 0
+#             self.with_context(check_move_validity=False)._onchange_invoice_line_ids()
+#         payment_move_lines = self.line_ids.filtered(lambda x:x.is_for_approved_payment)
+#         if payment_move_lines:
+#             payment_move_lines.unlink()
+#         self.create_journal_line_for_approved_payment()
+            
+        #========================================================#
+        if self.amount_total==0:
+            self.state='cancel'
+            self.is_hide_provision_from_view = True
+        else:
+            self.state='draft'
+            self.is_hide_provision_from_view = False
+            
     def action_provision_payment_request(self):
         return {
                 'name': 'Operations',
@@ -861,26 +888,57 @@ class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
     provision_id = fields.Many2one('provision')
-
+    provision_price = fields.Float("Provision Price")
+    
     def update_payment_approve_amount_provision(self,payment_move_lines):
-        amount_total = sum(x.price_total for x in self.move_id.invoice_line_ids.filtered(lambda x:x.program_code_id))    
-        if self.move_id.currency_id != self.move_id.company_id.currency_id:
-            amount_currency = abs(amount_total)
-            balance = self.move_id.currency_id._convert(amount_currency, self.move_id.company_currency_id, self.move_id.company_id, self.move_id.date)
-            currency_id = self.move_id.currency_id and self.move_id.currency_id.id or False
+        if any(payment_move_lines.filtered(lambda x: x.debit==0 and x.credit==0)):
+            if payment_move_lines:
+                payment_move_id = payment_move_lines[0].move_id
+                payment_move_lines.unlink()
+                payment_move_id.create_journal_line_for_approved_payment()
         else:
-            balance = abs(amount_total)
-            amount_currency = 0.0
-            currency_id = False
-            
-        for pat_line in payment_move_lines:
-            if pat_line.credit > 0:
-                pat_line.credit = balance
-                pat_line.amount_currency =  -amount_currency
+            amount_total = sum(x.price_total for x in self.move_id.invoice_line_ids.filtered(lambda x:x.program_code_id))    
+            if self.move_id.currency_id != self.move_id.company_id.currency_id:
+                amount_currency = abs(amount_total)
+                balance = self.move_id.currency_id._convert(amount_currency, self.move_id.company_currency_id, self.move_id.company_id, self.move_id.date)
+                currency_id = self.move_id.currency_id and self.move_id.currency_id.id or False
             else:
-                pat_line.debit = balance
-                pat_line.amount_currency =  amount_currency
+                balance = abs(amount_total)
+                amount_currency = 0.0
+                currency_id = False
                 
+            for pat_line in payment_move_lines:
+                if pat_line.credit > 0:
+                    pat_line.with_context(check_move_validity=False).credit = balance
+                    pat_line.with_context(check_move_validity=False).amount_currency =  -amount_currency
+                else:
+                    pat_line.with_context(check_move_validity=False).debit = balance
+                    pat_line.with_context(check_move_validity=False).amount_currency =  amount_currency
+    
+    def update_provision_amount_data(self,line):
+        current_program_lines = self.env['account.move.line'].search([('move_id.payment_state','!=','cancel'),('exclude_from_invoice_tab','=',False),('program_code_id','=',line.program_code_id.id),('move_id.provision_move_id','=',line.move_id.provision_move_id.id)])
+        provision_line = self.env['account.move.line'].search([('move_id.payment_state','!=','cancel'),('exclude_from_invoice_tab','=',False),('program_code_id','=',line.program_code_id.id),('move_id','=',line.move_id.provision_move_id.id)],limit=1)
+        
+        total_price = sum(x.price_unit for x in current_program_lines)
+        if provision_line:
+            new_price = provision_line.provision_price - total_price
+            if new_price < 0:
+                new_price = 0
+            provision_line.with_context(check_move_validity=False).price_unit = new_price
+            provision_line.with_context(check_move_validity=False)._onchange_price_subtotal()
+            provision_line.move_id.with_context(check_move_validity=False)._onchange_invoice_line_ids()
+            
+            payment_move_lines = provision_line.move_id.line_ids.filtered(lambda x:x.is_for_approved_payment)
+            if payment_move_lines:
+                provision_line.update_payment_approve_amount_provision(payment_move_lines)
+
+            if provision_line.move_id.amount_total==0:
+                provision_line.move_id.state='cancel'
+                provision_line.move_id.is_hide_provision_from_view = True
+            else:
+                provision_line.move_id.state='draft'
+                provision_line.move_id.is_hide_provision_from_view = False
+            
     def write(self, vals):
         result = super(AccountMoveLine,self).write(vals)
         if vals.get('price_unit'):
@@ -889,9 +947,6 @@ class AccountMoveLine(models.Model):
                 payment_move_lines = rec.line_ids.filtered(lambda x:x.is_for_approved_payment)
                 if payment_move_lines:
                     line.update_payment_approve_amount_provision(payment_move_lines)
-#                     print ("payment_move_lines exist =======",payment_move_lines)
-#                     payment_move_lines.sudo().unlink()
-#                     rec.with_context(call_from_new_lines=True).create_journal_line_for_approved_payment()
-
+                line.update_provision_amount_data(line)
         return result
         

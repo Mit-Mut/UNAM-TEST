@@ -21,8 +21,15 @@
 #
 ##############################################################################
 from odoo import models, fields, api, _
+import base64
+import xlrd
+from datetime import datetime
 from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
 from datetime import datetime, timedelta
+from odoo.modules.module import get_resource_path
+from xlrd import open_workbook
+from odoo.tools.misc import ustr
+
 
 class ScholarshipPaymentBreakdown(models.Model):
     _name = 'scholarship.payment.breakdown'
@@ -237,6 +244,8 @@ class AccountMove(models.Model):
     layout_scholarship_data = fields.Binary(string='Layout Scholarship')
     layout_scholarship_filename = fields.Char(string='Layout Scholarship Filename')
     scholarship_breakdown_ids=fields.One2many('scholarship.payment.breakdown','move_id')
+    provision_move_id = fields.Many2one('account.move','Provision')
+    provision_move_ids = fields.One2many('account.move','provision_move_id')
     
     @api.depends('payment_state','is_create_from_provision','is_payment_request')
     def get_set_readonly_into_payment_view(self):
@@ -278,6 +287,8 @@ class AccountMove(models.Model):
         if res and res.is_payment_request:
             res.line_ids = False
         return res
+
+
 
     def unlink(self):
         for rec in self:
@@ -590,6 +601,76 @@ class AccountMove(models.Model):
 #             self.line_ids = [(5,self.line_ids.ids)]
 #         return res
 
+    def import_lines(self):
+        
+        if not self.layout_scholarship_data:
+            raise UserError(_('Please Upload File.'))
+
+        elif self.layout_scholarship_data:
+            try:
+                data = base64.decodestring(self.layout_scholarship_data)
+                book = open_workbook(file_contents=data or b'')
+                sheet = book.sheet_by_index(0)
+
+                headers = []
+                field_headers = ['name','bank_id','payment_concept','amount']
+                result_vals = []
+                for rowx, row in enumerate(map(sheet.row, range(1, sheet.nrows)), 1):
+                    result_dict = {}
+                    counter = 0
+                    for colx, cell in enumerate(row, 1):
+                        value = str(cell.value)
+                        if field_headers[counter] == 'name':
+                            value = str(cell.value)
+                        if field_headers[counter] == 'bank_id':
+                            bank_id = self.env['res.bank'].search([('name','=',str(cell.value))],limit=1)
+                            if bank_id:
+                                value = bank_id.id
+                            else:
+                                value = False
+                        if field_headers[counter] == 'payment_concept':
+                             value = str(cell.value)
+                        if field_headers[counter] == 'amount':
+                            value = float(cell.value)
+                        result_dict.update(
+                            {field_headers[counter]: value})
+                        counter += 1
+                    result_vals.append((0, 0, result_dict))
+                try:
+                    self.write({
+                        'scholarship_breakdown_ids': result_vals,
+                    })
+                except ValueError as e:
+                    if self.env.user.lang == 'es_MX':
+                        raise ValidationError(_("La columna contiene valores incorrectos. Error: %s")% (ustr(e)))
+                    else:
+                        raise ValidationError(_("Column  contains incorrect values. Error: %s")% (ustr(e)))
+                except ValidationError as e:
+                    if self.env.user.lang == 'es_MX':
+                        raise ValidationError(_("La columna contiene valores incorrectos. Error: %s")% (ustr(e)))
+                    else:                        
+                        raise ValidationError(_("Column  contains incorrect values. Error: %s")% (ustr(e)))
+                except UserError as e:
+                    if self.env.user.lang == 'es_MX':
+                        raise ValidationError(_("La columna contiene valores incorrectos. Error: %s")% (ustr(e)))
+                    else:                        
+                        raise ValidationError(_("Column  contains incorrect values. Error: %s")% (ustr(e)))            
+
+            except ValueError as e:
+                if self.env.user.lang == 'es_MX':
+                    raise ValidationError(_("La columna contiene valores incorrectos. Error %s")% (ustr(e)))
+                else:
+                    raise ValidationError(_("Column  contains incorrect values. Error %s")% (ustr(e)))
+            except ValidationError as e:
+                if self.env.user.lang == 'es_MX':
+                    raise ValidationError(_("La columna contiene valores incorrectos. Error: %s")% (ustr(e)))
+                else:
+                    raise ValidationError(_("Column  contains incorrect values. Error %s")% (ustr(e)))
+            except UserError as e:
+                if self.env.user.lang == 'es_MX':
+                    raise ValidationError(_("La columna contiene valores incorrectos. Error: %s")% (ustr(e)))
+                else:                
+                    raise ValidationError(_("Column  contains incorrect values. Error %s")% (ustr(e)))            
 
 class AccountMoveLine(models.Model):
 

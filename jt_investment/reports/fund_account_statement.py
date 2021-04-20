@@ -184,6 +184,8 @@ class InvestmentAccountStatement(models.AbstractModel):
 
         #===== Investment =======#
         journal_ids = productive_ids.mapped('investment_id.journal_id')
+        journal_ids += prev_productive_ids.mapped('investment_id.journal_id')
+        journal_ids = self.env['account.journal'].search([('id','in',journal_ids.ids)])
         for journal in journal_ids:
             intial_current = 0
             for rec in prev_productive_ids.filtered(lambda x:x.investment_id.journal_id.id == journal.id):
@@ -213,7 +215,23 @@ class InvestmentAccountStatement(models.AbstractModel):
                 'unfoldable': False,
                 'unfolded': True,
             })
-                                     
+            if not records:
+                lines.append({
+                    'id': 'hierarchy_account_journal' + str(journal.id),
+                    'name' :'', 
+                    'columns': [ 
+                                {'name':''},
+                                {'name': ''},
+                                self._format({'name': capital},figure_type='float',digit=2),
+                                self._format({'name': 0},figure_type='float',digit=2),
+                                self._format({'name': 0},figure_type='float',digit=2),
+                                self._format({'name': capital},figure_type='float',digit=2),
+                                ],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
+                                         
             for rec in records:
                 invesment_date = ''
                 

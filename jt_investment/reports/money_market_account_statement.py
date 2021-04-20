@@ -146,35 +146,53 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                 prev_start = start.replace(day=1, month=7)
                 prev_end = start.replace(day=31, month=10)
 
-        prev_cetes_domain = domain + [('date_time', '>=', prev_start), ('date_time', '<=', prev_end),
-                                      ('journal_id', '!=', False)]
-        prev_udibonos_domain = domain + [('date_time', '>=', prev_start), ('date_time', '<=', prev_end),
-                                         ('journal_id', '!=', False)]
-        prev_bonds_domain = domain + [('date_time', '>=', prev_start), ('date_time', '<=', prev_end),
-                                      ('journal_id', '!=', False)]
-        prev_will_pay_domain = domain + [('date_time', '>=', prev_start), ('date_time', '<=', prev_end),
-                                         ('journal_id', '!=', False)]
 
         cetes_domain = domain + [('date_time','>=',start),('date_time','<=',end)]
         udibonos_domain = domain + [('date_time','>=',start),('date_time','<=',end)]
         bonds_domain = domain + [('date_time','>=',start),('date_time','<=',end)]
         will_pay_domain = domain + [('date_time','>=',start),('date_time','<=',end)]
 
-        prev_cetes_records = self.env['investment.cetes'].search(prev_cetes_domain)
-        prev_udibonos_records = self.env['investment.udibonos'].search(prev_udibonos_domain)
-        prev_bonds_records = self.env['investment.bonds'].search(prev_bonds_domain)
-        prev_will_pay_records = self.env['investment.will.pay'].search(prev_will_pay_domain)
 
         cetes_records = self.env['investment.cetes'].search(cetes_domain)
         udibonos_records = self.env['investment.udibonos'].search(udibonos_domain)
         bonds_records = self.env['investment.bonds'].search(bonds_domain)
         will_pay_records = self.env['investment.will.pay'].search(will_pay_domain)
 
+        journal_ids = self.env['account.journal']
+        journal_ids += cetes_records.mapped('journal_id')
+        journal_ids += udibonos_records.mapped('journal_id')
+        journal_ids += bonds_records.mapped('journal_id')
+        journal_ids += will_pay_records.mapped('journal_id')
+
+#         prev_cetes_domain = domain + [('date_time', '>=', prev_start), ('date_time', '<=', prev_end),
+#                                       ('journal_id', '!=', False)]
+#         prev_udibonos_domain = domain + [('date_time', '>=', prev_start), ('date_time', '<=', prev_end),
+#                                          ('journal_id', '!=', False)]
+#         prev_bonds_domain = domain + [('date_time', '>=', prev_start), ('date_time', '<=', prev_end),
+#                                       ('journal_id', '!=', False)]
+#         prev_will_pay_domain = domain + [('date_time', '>=', prev_start), ('date_time', '<=', prev_end),
+#                                          ('journal_id', '!=', False)]
+
+        prev_cetes_domain = domain + [('date_time', '<', start),
+                                      ('journal_id', 'in', journal_ids.ids)]
+        prev_udibonos_domain = domain + [('date_time', '<', start),
+                                         ('journal_id', 'in', journal_ids.ids)]
+        prev_bonds_domain = domain + [('date_time', '<', start),
+                                      ('journal_id', 'in', journal_ids.ids)]
+        prev_will_pay_domain = domain + [('date_time', '<', start),
+                                         ('journal_id', 'in', journal_ids.ids)]
+
+        prev_cetes_records = self.env['investment.cetes'].search(prev_cetes_domain)
+        prev_udibonos_records = self.env['investment.udibonos'].search(prev_udibonos_domain)
+        prev_bonds_records = self.env['investment.bonds'].search(prev_bonds_domain)
+        prev_will_pay_records = self.env['investment.will.pay'].search(prev_will_pay_domain)
+
         prev_journal_ids = self.env['account.journal']
         prev_journal_ids += prev_cetes_records.mapped('journal_id')
         prev_journal_ids += prev_udibonos_records.mapped('journal_id')
         prev_journal_ids += prev_bonds_records.mapped('journal_id')
         prev_journal_ids += prev_will_pay_records.mapped('journal_id')
+        
         inc = 0
         wid = 0
         for rec in prev_cetes_records:
@@ -219,11 +237,6 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                     wid -= line.amount
         header_intial = inc - wid
 
-        journal_ids = self.env['account.journal']
-        journal_ids += cetes_records.mapped('journal_id')
-        journal_ids += udibonos_records.mapped('journal_id')
-        journal_ids += bonds_records.mapped('journal_id')
-        journal_ids += will_pay_records.mapped('journal_id')
         g_total_inc = 0
         g_total_with = 0
         g_total_final = 0
@@ -250,7 +263,49 @@ class MoneyMarketAccountStatement(models.AbstractModel):
             })
 
         for journal in journal_ids:
-            capital = header_intial
+            #=========== get Capital On Particular Bank==============
+            capital = 0
+            for rec in prev_cetes_records.filtered(lambda x:x.journal_id.id==journal.id):
+                capital += rec.nominal_value
+                fin_lines = rec.request_finance_ids.filtered(
+                    lambda x: x.amount_type and x.state in ('confirmed', 'done'))
+                for line in fin_lines:
+                    if line.amount_type == 'increment':
+                        capital += line.amount
+                    elif line.amount_type == 'withdrawal':
+                        capital -= line.amount
+
+            for rec in prev_udibonos_records.filtered(lambda x:x.journal_id.id==journal.id):
+                capital += rec.nominal_value
+                fin_lines = rec.request_finance_ids.filtered(
+                    lambda x: x.amount_type and x.state in ('confirmed', 'done'))
+                for line in fin_lines:
+                    if line.amount_type == 'increment':
+                        capital += line.amount
+                    elif line.amount_type == 'withdrawal':
+                        capital -= line.amount
+
+            for rec in prev_bonds_records.filtered(lambda x:x.journal_id.id==journal.id):
+                capital += rec.nominal_value
+                fin_lines = rec.request_finance_ids.filtered(
+                    lambda x: x.amount_type and x.state in ('confirmed', 'done'))
+                for line in fin_lines:
+                    if line.amount_type == 'increment':
+                        capital += line.amount
+                    elif line.amount_type == 'withdrawal':
+                        capital -= line.amount
+
+            for rec in prev_will_pay_records.filtered(lambda x:x.journal_id.id==journal.id):
+                capital += rec.amount
+                fin_lines = rec.request_finance_ids.filtered(
+                    lambda x: x.amount_type and x.state in ('confirmed', 'done'))
+                for line in fin_lines:
+                    if line.amount_type == 'increment':
+                        capital += line.amount
+                    elif line.amount_type == 'withdrawal':
+                        capital -= line.amount
+            
+            #==================END===========#
             total_inc = 0
             total_with = 0
             total_final = 0
@@ -271,6 +326,7 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                 'unfolded': True,
             })
             #================ CETES =====================#
+            
             for rec in cetes_records.filtered(lambda x:x.journal_id.id==journal.id):
                 invesment_date = ''
                 inc = 0
@@ -282,8 +338,7 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                 if rec.date_time:
                     invesment_date = rec.date_time.strftime('%Y-%m-%d')
                 final = capital + inc - withdraw
-                total_final += final
-                g_total_final += final
+                total_final = final
 
                 header_increment += inc
                 header_withdrawal += withdraw
@@ -323,8 +378,7 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                     if line.date_required:
                         invesment_date = line.date_required.strftime('%Y-%m-%d')
                     final = capital + inc - withdraw
-                    total_final += final
-                    g_total_final += final
+                    total_final = final
 
                     header_increment += inc
                     header_withdrawal += withdraw
@@ -346,6 +400,7 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                     })
                     capital = capital + inc - withdraw
             # # #================ udibonos_records =====================#
+            
             for rec in udibonos_records.filtered(lambda x:x.journal_id.id==journal.id):
                 invesment_date = ''
                 inc = 0
@@ -357,8 +412,7 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                 if rec.date_time:
                     invesment_date = rec.date_time.strftime('%Y-%m-%d')
                 final = capital + inc - withdraw
-                total_final += final
-                g_total_final += final
+                total_final = final
 
                 header_increment += inc
                 header_withdrawal += withdraw
@@ -398,8 +452,7 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                     if line.date_required:
                         invesment_date = line.date_required.strftime('%Y-%m-%d')
                     final = capital + inc - withdraw
-                    total_final += final
-                    g_total_final += final
+                    total_final = final
 
                     header_increment += inc
                     header_withdrawal += withdraw
@@ -421,6 +474,7 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                     })
                     capital = capital + inc - withdraw
             # # #================ bonds_records =====================#
+                
             for rec in bonds_records.filtered(lambda x:x.journal_id.id==journal.id):
                 invesment_date = ''
                 inc = 0
@@ -432,8 +486,7 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                 if rec.date_time:
                     invesment_date = rec.date_time.strftime('%Y-%m-%d')
                 final = capital + inc - withdraw
-                total_final += final
-                g_total_final += final
+                total_final = final
 
                 header_increment += inc
                 header_withdrawal += withdraw
@@ -473,8 +526,7 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                     if line.date_required:
                         invesment_date = line.date_required.strftime('%Y-%m-%d')
                     final = capital + inc - withdraw
-                    total_final += final
-                    g_total_final += final
+                    total_final = final
 
                     header_increment += inc
                     header_withdrawal += withdraw
@@ -508,8 +560,7 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                 if rec.date_time:
                     invesment_date = rec.date_time.strftime('%Y-%m-%d')
                 final = capital + inc - withdraw
-                total_final += final
-                g_total_final += final
+                total_final = final
 
                 header_increment += inc
                 header_withdrawal += withdraw
@@ -549,8 +600,7 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                     if line.date_required:
                         invesment_date = line.date_required.strftime('%Y-%m-%d')
                     final = capital + inc - withdraw
-                    total_final += final
-                    g_total_final += final
+                    total_final = final
 
                     header_increment += inc
                     header_withdrawal += withdraw
@@ -581,12 +631,13 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                             {'name': ''},
                             self._format({'name': total_inc},figure_type='float',digit=2),
                             self._format({'name': total_with},figure_type='float',digit=2),
-                            self._format({'name': total_inc - total_with},figure_type='float',digit=2),
+                            self._format({'name': total_final},figure_type='float',digit=2),
                             ],
                 'level': 1,
                 'unfoldable': False,
                 'unfolded': True,
             })
+            g_total_final += total_final
         lines.append({
             'id': 'GTotal',
             'name' :'Grand Total', 
@@ -596,7 +647,7 @@ class MoneyMarketAccountStatement(models.AbstractModel):
                         {'name': ''},
                         self._format({'name': g_total_inc},figure_type='float',digit=2),
                         self._format({'name': g_total_with},figure_type='float',digit=2),
-                        self._format({'name': g_total_inc - g_total_with},figure_type='float',digit=2),
+                        self._format({'name': g_total_final},figure_type='float',digit=2),
                         ],
             'level': 1,
             'unfoldable': False,

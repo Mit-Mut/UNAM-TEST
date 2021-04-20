@@ -35,6 +35,13 @@
                         <field name="state" widget="statusbar" statusbar_visible="draft,process,validated,rejected"/>
                     </header>
                     <sheet>
+                        <div name="button_box" class="oe_button_box">
+                            <button class="oe_stat_button" name="show_success_lines" type="object" icon="fa-bars"
+                                attrs="{'invisible': [('success_line_ids', '=', [])]}">
+                                <field name="success_rows" widget="statinfo" string="Success Lines"/>
+                            </button>
+                        </div>
+                    
                         <group>
                             <group>
 
@@ -294,5 +301,54 @@
             <field name="view_id" ref="control_assigned_amounts_tree_view"/>
             <field name="context">{}</field>
         </record>
+        
+        <!-- Line Menus -->
+
+        <record id="control_assigned_amounts_lines_search_view" model="ir.ui.view">
+            <field name="name">control.assigned.amounts.lines.search.view</field>
+            <field name="model">control.assigned.amounts.lines</field>
+            <field name="arch" type="xml">
+                <search string="Expenditure Budget Line">
+                	<field name="program_code_id"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Imported" name='imported' context="{'group_by':'imported'}"/>
+                        <filter string="State" name='state' context="{'group_by':'state'}"/>
+                        <filter string="Start Date" name='start_date' context="{'group_by':'start_date'}"/>
+                        <filter string="End Date" name='end_date' context="{'group_by':'end_date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="control_assigned_amounts_line_tree_view" model="ir.ui.view">
+            <field name="name">control.assigned.amounts.lines.tree.view</field>
+            <field name="model">control.assigned.amounts.lines</field>
+            <field name="arch" type="xml">
+                <tree decoration-danger="state == 'fail'">
+                    <!-- Hidden fields -->
+                    <field name="state" invisible="1"/>
+
+                    <field name="program_code_id"/>
+                    <field name="dependency"/>
+                    <field name="subdependency"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+
+                    <field name="assigned" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total Assigned Amount"/>
+                    <field name="available" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total Available Amount" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="action_control_assigned_amounts_success_line" model="ir.actions.act_window">
+            <field name="name">Control Assigned Amounts success line</field>
+            <field name="res_model">control.assigned.amounts.lines</field>
+            <field name="view_mode">tree,search</field>
+            <field name="view_id" ref="control_assigned_amounts_line_tree_view"/>
+            <field name="search_view_id" ref="control_assigned_amounts_lines_search_view"/>
+            <field name="context">{}</field>
+        </record>
+        
     </data>
 </odoo>

@@ -63,7 +63,7 @@
             <field name="search_view_id" ref="view_account_move_filter_inherit_payment"/>
             <field name="context">{'default_type': 'in_invoice', 'default_is_payment_request': 1,
                 'from_move': 1,'search_default_Payment_method': 1,'search_default_Type_of_operatio': 1}</field>
-            <field name="domain">[('payment_state','not in',('draft','registered')),('type', '=', 'in_invoice'), ('is_payment_request', '=', True)]</field>
+            <field name="domain">[('payment_state','not in',('draft','registered','rejected')),('type', '=', 'in_invoice'), ('is_payment_request', '=', True)]</field>
         </record>
 		<record id="payment_req_tree_action" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>

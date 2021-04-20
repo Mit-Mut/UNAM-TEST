@@ -1067,10 +1067,24 @@ class RequestOpenBalance(models.Model):
 
     @api.onchange('type_of_operation')
     def onchange_type_of_operation_amount(self):
-        if self.type_of_operation and self.type_of_operation == 'open_bal':
-            if self.bases_collaboration_id:
+        if self.bases_collaboration_id and self.type_of_operation :
+            if self.type_of_operation == 'open_bal':
                 self.opening_balance = self.bases_collaboration_id.opening_bal
-                 
+            else:
+                self.opening_balance = 0.0
+
+        elif self.patrimonial_resources_id and self.type_of_operation:
+            if self.type_of_operation == 'open_bal':
+                self.opening_balance = self.patrimonial_resources_id.opening_balance
+            else:
+                self.opening_balance = 0.0
+        else:
+            if self.trust_id and self.type_of_operation :
+                if self.type_of_operation == 'open_bal':
+                    self.opening_balance = self.trust_id.opening_balance
+                else:
+                    self.opening_balance = 0.0
+
     @api.constrains('opening_balance')
     def _check_opening_balance(self):
         print ('opening_balance')
@@ -1261,7 +1275,7 @@ class RequestOpenBalance(models.Model):
             
         if payment_reqs:
             return {
-                'name': 'Payment Requests',
+                'name': _('Payment Requests'),
                 'view_type': 'form',
                 'view_mode': 'tree,form',
                 'res_model': 'payment.request',
@@ -1576,7 +1590,8 @@ class RequestOpenBalanceInvestment(models.Model):
         'Hide Auto Button', default=True, compute='get_record_state_change')
     beneficiary_id = fields.Many2one('res.partner', "Beneficiary")
     provider_id = fields.Many2one('res.partner', "Provider")
-
+    payment_request_id = fields.Many2one('payment.request',copy=False)
+    
     @api.depends('state', 'is_manually')
     def get_record_state_change(self):
         for rec in self:
@@ -1949,6 +1964,7 @@ class AccountPayment(models.Model):
                 if fin_req.request_id:
                     fin_req.request_id.state = 'done'
                     if fin_req.request_id.balance_req_id:
+                        print ("=======",fin_req.request_id.balance_req_id)
                         balance_req = fin_req.request_id.balance_req_id
                         balance_req.action_confirmed()
                         #balance_req.state = 'confirmed'

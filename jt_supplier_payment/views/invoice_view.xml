@@ -11,8 +11,10 @@
 					<header>
 					 	<button name="action_register" string="Register" class="oe_highlight" type="object"
                                 attrs="{'invisible': [('payment_state', '!=', 'draft')]}"/>
+                        <!-- 
                         <button name="action_draft" string="Draft" class="oe_highlight" type="object"
                         attrs="{'invisible': [('payment_state','not in',('approved_payment','for_payment_procedure'))]}"/>
+                         -->
 					 	<button name="action_reschedule" string="Reschedule" class="oe_highlight" type="object"
                                 attrs="{'invisible': [('payment_state', '!=', 'payment_not_applied')]}"/>
                         <field name="payment_state" widget="statusbar"
@@ -144,9 +146,10 @@
 								<field name="payroll_send_user_id" attrs="{'invisible':[('is_payroll_payment_request','=',False)]}" readonly="1"/>
 								<field name="vault_folio" invisible="1"/>
 
-                      			<field name="type_of_payment_custom" readonly="1"/>        
+                      			<field name="type_of_payment_custom" />        
                       			<field name="layout_scholarship_filename" invisible="1"/>
                       			<field name="layout_scholarship_data" filename="layout_scholarship_filename"/>  
+                                <button name="import_lines" type="object" string="IMPORT LINES" class="oe_highlight" />
                             </group>
                         </group>
                         <notebook>

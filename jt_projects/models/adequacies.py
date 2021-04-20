@@ -56,8 +56,8 @@ class Adequacies(models.Model):
                         'program_code_id': line.program.id,
                         'start_date': rec.budget_id.from_date,
                         'end_date': rec.budget_id.to_date,
-                        'authorized': line.amount,
-                        'assigned': line.amount,
+                        #'authorized': line.amount,
+                        #'assigned': line.amount,
                         # 'available': line.available,
                         #'imported': line.imported,
                         'imported_sessional': False,
@@ -82,6 +82,7 @@ class Adequacies(models.Model):
                         #'agreement_type': line.agreement_type,
                         'agreement_number': line.program and  line.program.number_agreement,
                         #'exercise_type': line.exercise_type,
+                        'is_create_from_adequacies' : True,
                     }
                     vals_list.append((0, 0, vals))
                     
@@ -114,7 +115,7 @@ class Adequacies(models.Model):
                             to_date = rec_date.replace(day=31,month=12)
 
 
-                    q_vals.update({'imported_sessional': True,'start_date':from_date,'end_date':to_date,'authorized':0,'assigned':0})
+                    q_vals.update({'is_create_from_adequacies' : True,'imported_sessional': True,'start_date':from_date,'end_date':to_date,'authorized':0,'assigned':0})
                     
                     vals_list.append((0, 0, q_vals))
                     line.program.budget_id = rec.budget_id.id

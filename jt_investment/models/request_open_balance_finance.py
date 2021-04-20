@@ -129,7 +129,9 @@ class BasesCollabration(models.Model):
             
         if self.distribution_income_id:
             self.distribution_income_id.action_confirmed()
-            
+        
+        if self.request_id and self.request_id.payment_request_id:
+            self.request_id.payment_request_id.action_paid()
         return result 
     
     def reject_finance(self):

@@ -69,7 +69,7 @@
                                     <group>
                                         <field name="request_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                         <field name="trade_number" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
-                                        <field name="opening_balance" attrs="{'readonly': ['|',('state', '!=', 'draft'),('type_of_operation','=','open_bal')]}"/>
+                                        <field name="opening_balance" attrs="{'readonly': ['|',('state', '!=', 'draft'),('type_of_operation','=','open_bal')]}" force_save="True"/>
                                     </group>
                                     <group>
                                         <field name="observations" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
@@ -147,6 +147,10 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="name"/>
+                    <field name="agreement_type_id"/>
+                    <field name="convention_no"/>
+                    <field name="available_bal"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -159,6 +163,7 @@
                     <field name="name" type="row"/>
                     <field name="opening_bal" type="measure"/>
                     <field name="available_bal" type="measure"/>
+                    
                 </pivot>
             </field>
         </record>

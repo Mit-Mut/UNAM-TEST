@@ -1964,6 +1964,7 @@ class AccountPayment(models.Model):
                 if fin_req.request_id:
                     fin_req.request_id.state = 'done'
                     if fin_req.request_id.balance_req_id:
+                        print ("=======",fin_req.request_id.balance_req_id)
                         balance_req = fin_req.request_id.balance_req_id
                         balance_req.action_confirmed()
                         #balance_req.state = 'confirmed'

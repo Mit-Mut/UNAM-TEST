@@ -2688,7 +2688,7 @@ msgstr "Solicitud de apertura de saldo"
 #: code:addons/jt_agreement/models/bases_collaboration.py:0
 #, python-format
 msgid "Opening amount must be different to 0."
-msgstr ""
+msgstr "El monto de apertura debe ser diferente a 0"
 
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_agreement_trust__opening_balance

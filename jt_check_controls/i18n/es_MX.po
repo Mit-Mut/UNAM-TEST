@@ -955,7 +955,7 @@ msgstr "Cancelado"
 #. module: jt_check_controls
 #: model:ir.actions.server,name:jt_check_controls.change_status_suthorized_checks
 msgid "Change status of authorized checks"
-msgstr "Cambiar  estado de controles autorizados"
+msgstr "Cambiar cheques a disponibles para impresión"
 
 #. module: jt_check_controls
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__cancel_checks__check_status__charged
@@ -2261,7 +2261,7 @@ msgstr ""
 #: code:addons/jt_check_controls/models/blank_check_req.py:0
 #, python-format
 msgid "Value of Amount of checks does not more than authorized."
-msgstr ""
+msgstr "El valor de cheques solicitados supera los cheques autorizados"
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_cancel_checks__website_message_ids
@@ -2757,3 +2757,28 @@ msgstr "Proteger cheques"
 msgid "Cannot assign a new check folio because they already have one"
 msgstr "No se puede asignar un nuevo folio de cheque por que ya cuentan con uno"
 
+#. module: jt_check_controls
+#: code:addons/jt_check_controls/models/payment_batch_supplier.py:0
+#, python-format
+msgid ""
+"The selected bank has not established the validity of check protection, "
+"please configure it."
+msgstr ""
+"El banco seleccionado no tiene establecido la vigencia de protección de cheques,"
+"favor de configurarlo."
+
+#. module: jt_check_controls
+#: code:addons/jt_check_controls/models/blank_check_req.py:0
+#, python-format
+msgid "The status change of this request has already been processed"
+msgstr "El cambio de estado de esta solicitud ya ha sido procesada"
+
+#. module: jt_check_controls
+#: code:addons/jt_check_controls/models/blank_check_req.py:0
+#, python-format
+msgid ""
+"The checks in this application have been changed to Available for printing "
+"status successfully."
+msgstr ""
+"Los cheques de esta solicitud han sido cambiados al estado Disponible para"
+"impresión correctamente."

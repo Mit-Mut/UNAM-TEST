@@ -337,6 +337,9 @@ class Trust(models.Model):
                             'liability_account_id' : trust.liability_account_id and trust.liability_account_id.id or False,
                         })
 
+        self.env.user.notify_success(message=_('Enter the BD to continue with the process'),
+                                title=_('¡Operations were successful!'), sticky=True)
+
 #             for beneficiary in trust.provider_ids:
 #                 partner_id = beneficiary.partner_id and beneficiary.partner_id.id or False    
 #                 req_obj.create({

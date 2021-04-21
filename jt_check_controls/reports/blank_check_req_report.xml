@@ -190,6 +190,54 @@
                                 <br/>
                                 <br/>
                                 <br/>
+                                
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h4>Distribution to Modules</h4>
+                                        <table class="table  table-bordered" style="text-align:center;" name="module_dist">
+                                            <thead>
+                                                <tr>
+                                                    <t t-set="colspan" t-value="4"/>
+                                                    <th name="th_module" class="text-left">
+                                                        <span>Module</span>
+                                                    </th>
+
+                                                    <th name="th_inital_folio" class="text-left">
+                                                        <span>Initial folio</span>
+                                                    </th>
+                                                    <th name="th_final_folio" class="text-left">
+                                                        <span>Final Folio</span>
+                                                    </th>
+                                                    <th name="th_amount_of_check" class="text-left">
+                                                        <span>Amounts of Checks</span>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="module_distr_body">
+                                                <tr t-foreach="o.distribution_of_module_ids" t-as="module_id">
+                                                    <td name="td_module" t-if="module_id">
+                                                        <span t-if="module_id.module"
+                                                              t-field="module_id.module"/>
+                                                    </td>
+                                                    <td name="td_inital_filio" t-if="module_id">
+                                                        <span t-if="module_id.intial_filio" t-field="module_id.intial_filio"/>
+                                                    </td>
+                                                    <td name="td_final" t-if="module_id">
+                                                        <span t-if="module_id.final_folio"
+                                                              t-field="module_id.final_folio"/>
+                                                    </td>
+                                                    <td name="td_amount_of_checks" t-if="module_id">
+                                                        <span t-if="module_id.amounts_of_checks" t-field="module_id.amounts_of_checks"/>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                                <br/>
+                                <br/>
+                                <br/>
                                 <br/>
                                 <br/>
                                 <br/>

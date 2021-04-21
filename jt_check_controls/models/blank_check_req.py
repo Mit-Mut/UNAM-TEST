@@ -50,7 +50,8 @@ class BlankCheckRequest(models.Model):
     distribution_of_module_ids = fields.One2many(
         'check.distribution.modules', 'request_id')
     log_ids = fields.Many2many('check.log', string="Logs", copy=False)
-
+    is_process_done = fields.Boolean("Is Process Done",copy=False,default=False)
+    
     @api.model
     def create(self, vals):
         res = super(BlankCheckRequest, self).create(vals)
@@ -164,6 +165,8 @@ class BlankCheckRequest(models.Model):
     def change_status_suthorized_checks(self):
         for rec in self:
             if rec.state == 'confirmed':
+                if rec.is_process_done:
+                    raise ValidationError(_("The status change of this request has already been processed"))
                 check_logs = self.env['check.log'].search(
                     [('checklist_id.checkbook_req_id', '=', self.checkbook_req_id.id),
                      ('folio', '>=', self.intial_folio),
@@ -171,9 +174,10 @@ class BlankCheckRequest(models.Model):
                      ('folio', '!=', int(self.checkbook_req_id.print_sample_folio_number)),
                      ('folio', '<=', self.final_folio)])
                 for log in check_logs:
-                    print ("Fsdfsdfdsfds", log.folio)
                     log.status = 'Available for printing'
-
+                rec.is_process_done = True
+        self.env.user.notify_success(message=_('The checks in this application have been changed to Available for printing status successfully.'),sticky=True)
+        
     def action_apply_distribution(self):
         self.ensure_one()
         log_ids = self.log_ids.ids if self.log_ids else []

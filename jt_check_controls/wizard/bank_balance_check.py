@@ -30,8 +30,8 @@ class BankBalanceCheck(models.TransientModel):
 
             self.account_balance = account_balance
             self.minimum_balance = self.journal_id and self.journal_id.min_balance or 0
-            self.required_balance = self.total_amount
-            self.different_balance = account_balance - self.total_amount
+            self.required_balance = self.total_amount + self.minimum_balance
+            self.different_balance = account_balance - self.total_amount - self.minimum_balance
             self.check_balance_in_transit = total_check_amt
             self.amount_trasnfer_sent = sum(x.amount for x in transfer_request_sent)
             self.amount_trasnfer_confirmed = sum(x.amount for x in transfer_request_confirm)

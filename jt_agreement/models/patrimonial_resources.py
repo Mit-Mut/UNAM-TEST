@@ -368,6 +368,9 @@ class PatrimonialResources(models.Model):
 
                         })
 
+        self.env.user.notify_success(message=_('Enter the BD to continue with the process'),
+                                title=_('¡Operations were successful!'), sticky=True)
+
 
 class Beneficiary(models.Model):
     _inherit = 'collaboration.beneficiary'

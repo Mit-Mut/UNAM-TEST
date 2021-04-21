@@ -1154,6 +1154,13 @@ class Standardization(models.Model):
                         'You can not delete confirmed Re-standardization!')
         return super(Standardization, self).unlink()
 
+    @api.model
+    def create(self,vals):
+        if not vals.get('name',False):
+            name = self.env['ir.sequence'].next_by_code('re.standardization.folio')
+            vals.update({'folio':name})
+        res = super(Standardization,self).create(vals)
+        return res
 
 class StandardizationLine(models.Model):
 

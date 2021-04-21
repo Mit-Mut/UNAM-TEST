@@ -64,7 +64,7 @@ class AgreementBasesCollabration(models.TransientModel):
         
         
         return {
-            'name': 'Download Sample File',
+            'name': 'Generate Bases collaboration',
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': False,
@@ -75,6 +75,72 @@ class AgreementBasesCollabration(models.TransientModel):
             'res_id': pdf_rec.id,
             'context':{'active_ids':self.env.context.get('active_ids')}
         }
+
+    def download_all(self):
+
+        attch_obj = self.env['ir.attachment']
+        attach_ids = attch_obj.sudo().search([
+            ('res_model', '=', 'jt_agreement.bases.collaboration')])
+        if attach_ids:
+            try:
+                attach_ids.sudo().unlink()
+            except:
+                pass
+        
+        rec = self.env.context.get('active_ids')
+        pdf_rec = self.env['jt_agreement.bases.collaboration'].create({'start_date':self.start_date,'end_date':self.end_date})
+        base_records = self.env['bases.collaboration'].browse(rec)
+        tab_id = []
+        for base in base_records:
+            base.report_start_date = self.start_date
+            base.report_end_date = self.end_date
+            start_date = str(self.start_date)
+            end_date = str(self.end_date)
+            today = datetime.today().date()
+            ctx = {
+                'start': self.start_date,
+                'end': self.end_date,
+            }
+            filename = 'CON'
+            if base.dependency_id and base.dependency_id.dependency:
+                filename += "_"+str(base_records.dependency_id.dependency)
+            if base.subdependency_id and base.subdependency_id.sub_dependency:
+                filename += "_"+str(base.subdependency_id.sub_dependency)
+            filename += "_"+str(today.month).zfill(2)+"_"+str(today.year)
+            
+            if base.convention_no:
+                filename += "_"+str(base.convention_no)
+            
+            
+            filename += ".pdf"
+            pdf = self.env.ref('jt_agreement.bases_collaboration_report').render_qweb_pdf(base.id)[0]
+        
+            # Store report as PDF so user can download
+            out = base64.b64encode(pdf)
+            vals = {'name': filename,
+                    'datas': out,
+                    'res_model': 'jt_agreement.bases.collaboration',
+                    'res_id':base.id,
+                    'name': filename}
+            doc_id = attch_obj.create(vals)
+            tab_id.append(doc_id.id)
+        self._cr.commit()
+        url = '/web/binary/download_document?tab_id=%s' % tab_id
+        return {
+            'type': 'ir.actions.act_url',
+            'url': url,
+            'target': 'new',
+        }
+            
+#         return {
+#             'type': 'ir.actions.act_url',
+#             'url': 'web/content/%s?download=true' % (doc_id.id),
+#             'target': 'current',
+#             'tag': 'close',
+#         }
+
+
+
 
 
 class AccountStatementLine(models.TransientModel):

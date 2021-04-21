@@ -1456,6 +1456,8 @@ class GenerateBankLayout(models.TransientModel):
             self.file_data = False
             self.file_name = False
 
+        for payment in self.payment_ids:
+            payment.no_validate_payment = True
         return {
             'name': _('Generate Bank Layout'),
             'res_model': 'generate.bank.layout',
@@ -2332,6 +2334,9 @@ class GenerateBankLayout(models.TransientModel):
             self.scotiabank_file_format()
         elif self.journal_id.payroll_bank_format == 'banorte':
             self.banorte_file_format()
+
+        for payment in self.payment_ids:
+            payment.no_validate_payment = True
         
             
         return {

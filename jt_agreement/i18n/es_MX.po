@@ -4030,3 +4030,28 @@ msgstr "PAGADO"
 #: model:ir.model.fields.selection,name:jt_agreement.selection__payment_request__state__reject
 msgid "Rejected"
 msgstr "RECHAZADO"
+
+#. module: jt_agreement
+#: code:addons/jt_agreement/reports/account_operation_interest.py:0
+#: model:ir.actions.client,name:jt_agreement.action_account_operation_intrests
+#, python-format
+msgid "Account Operation Interests"
+msgstr "Reporte de operaciones Contables-Intereses"
+
+#. module: jt_agreement
+#: code:addons/jt_agreement/models/bases_collaboration.py:0
+#: code:addons/jt_agreement/models/patrimonial_resources.py:0
+#: code:addons/jt_agreement/models/trust.py:0
+#, python-format
+msgid "Enter the BD to continue with the process"
+msgstr "Ingrese a la BD para continuar con el proceso"
+
+#. module: jt_agreement
+#: code:addons/jt_agreement/models/bases_collaboration.py:0
+#: code:addons/jt_agreement/models/patrimonial_resources.py:0
+#: code:addons/jt_agreement/models/trust.py:0
+#, python-format
+msgid "¡Operations were successful!"
+msgstr "¡Las operaciones fueron exitosas!"
+
+

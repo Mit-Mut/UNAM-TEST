@@ -10,6 +10,12 @@
             <field name="company_id" eval="False"/>
         </record>
         
+        <record id="seq_re_standardization_folio" model="ir.sequence">
+            <field name="name">Re-standardization Folio</field>
+            <field name="code">re.standardization.folio</field>
+            <field name="padding">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
 
     </data>
 </odoo>

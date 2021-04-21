@@ -148,6 +148,9 @@ class PaymentBatchSupplier(models.Model):
             attachment = attch.search([('res_model', '=', 'payment.batch.supplier'), ('res_id', '=', rec.id)])
             if not attachment:
                 raise ValidationError(_("The bank's response file for changing status must be attached to the checks"))
+            if rec.payment_issuing_bank_id and rec.payment_issuing_bank_id.bank_id and rec.payment_issuing_bank_id.bank_id.check_protection_term==0:
+                raise ValidationError(_("The selected bank has not established the validity of check protection, please configure it."))
+            
             for line in rec.payment_req_ids.filtered(lambda x: x.selected == True):
                 if line.check_folio_id.status == 'Sent to protection':
                     if rec.type_of_batch in ('supplier', 'project'):

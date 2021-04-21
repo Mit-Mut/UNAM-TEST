@@ -64,15 +64,15 @@ class AccountPayment(models.Model):
 
     employee_partner_type = fields.Selection([('employee','Employee'),('alimony','Alimony')],string='Partner Type',copy=False)
     
-    no_validate_payment = fields.Boolean(string="Not Validated",copy=False,default=False,compute="get_status_of_payment",store=True)
+    no_validate_payment = fields.Boolean(string="Not Validated",copy=False,default=False)
     
-    @api.depends('payment_state')
-    def get_status_of_payment(self):
-        for rec in self:
-            no_validate_payment = False
-            if rec.payment_state and rec.payment_state=='for_payment_procedure':
-                no_validate_payment = True
-            rec.no_validate_payment = no_validate_payment
+#     @api.depends('payment_state')
+#     def get_status_of_payment(self):
+#         for rec in self:
+#             no_validate_payment = False
+#             if rec.payment_state and rec.payment_state=='for_payment_procedure':
+#                 no_validate_payment = True
+#             rec.no_validate_payment = no_validate_payment
             
     @api.depends('journal_id','journal_id.bank_format','journal_id.load_bank_format')
     def check_bank_format_type(self):
@@ -238,6 +238,7 @@ class AccountPayment(models.Model):
                     line.coa_conac_id = line.account_id and line.account_id.coa_conac_id and line.account_id.coa_conac_id.id or False
                     line.conac_move = True  
             payment.banamex_concept = payment.name
+            payment.no_validate_payment = False
         return result
  
     def action_draft(self):

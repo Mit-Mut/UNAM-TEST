@@ -48,8 +48,8 @@ class BankBalanceCheck(models.TransientModel):
                 self.is_balance = True
                 self.account_balance = account_balance 
                 self.minimum_balance = self.journal_id and self.journal_id.min_balance or 0
-                self.required_balance = self.total_amount
-                self.different_balance = account_balance - self.total_amount
+                self.required_balance = self.total_amount + self.minimum_balance
+                self.different_balance = account_balance - self.total_amount - self.minimum_balance
                  
                 return {
                 'name': 'Balance',

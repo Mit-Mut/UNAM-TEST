@@ -237,7 +237,7 @@ class Adequacies(models.Model):
                     'state':'success',
                     'budget_id' : self.budget_id.id,
                     'assigned' : assigned,
-                    'available' : assigned,
+                    #'available' : assigned,
                     'is_create_from_adequacies' : True,
                     })
             
@@ -998,7 +998,6 @@ class Adequacies(models.Model):
                     contorl_line = False
                     contorl_lines = self.env['control.assigned.amounts.lines'].sudo().search(
                         [('program_code_id', '=', line.program.id),
-                         ('is_create_from_adequacies','=',False),
                          ('assigned_amount_id.budget_id', '=', self.budget_id.id)])
                     for c_line in contorl_lines:
                         if c_line.start_date:
@@ -1046,6 +1045,33 @@ class Adequacies(models.Model):
                         if line.line_type == 'increase':
                             final_amount = amount + line.amount
                             budget_line.write({'assigned': final_amount,'authorized':authorized_amount + line.amount})
+
+                    #=====Update Control Assign Line===================#
+                    contorl_line = False
+                    contorl_lines = self.env['control.assigned.amounts.lines'].sudo().search(
+                        [('program_code_id', '=', line.program.id),
+                         ('assigned_amount_id.budget_id', '=', self.budget_id.id)])
+                    for c_line in contorl_lines:
+                        if c_line.start_date:
+                            c_s_month = c_line.start_date.month
+                            if b_month in (1, 2, 3) and c_s_month in (1, 2, 3):
+                                contorl_line = c_line
+                            elif b_month in (4, 5, 6) and c_s_month in (4, 5, 6):
+                                contorl_line = c_line
+                            elif b_month in (7, 8, 9) and c_s_month in (7, 8, 8):
+                                contorl_line = c_line
+                            elif b_month in (10, 11, 12) and c_s_month in (10, 11, 12):
+                                contorl_line = c_line
+                    if contorl_line:
+                        amount = contorl_line.available
+                        #assigned = contorl_line.assigned
+                        if line.line_type == 'decrease':
+                            contorl_line.write({'available':amount - line.amount})
+                        if line.line_type == 'increase':
+                            contorl_line.write({'available':amount + line.amount})
+                    
+                    #==================================================#
+                            
                 else:
                     budget_line = self.env['expenditure.budget.line'].sudo().search(
                         [('program_code_id', '=', line.program.id), ('expenditure_budget_id', '=', self.budget_id.id)],

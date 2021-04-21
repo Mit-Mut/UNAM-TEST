@@ -5122,3 +5122,9 @@ msgstr ""
 #, python-format
 msgid "to print report."
 msgstr "imprimir Reporte."
+
+#. module: jt_budget_mgmt
+#: code:addons/jt_budget_mgmt/models/program_code.py:0
+#, python-format
+msgid "You can not delete validated program code!"
+msgstr "No se puede eliminar un Código Programático validado"

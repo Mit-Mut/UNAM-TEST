@@ -732,6 +732,8 @@ class BasesCollabration(models.Model):
                             'availability_account_id': collaboration.availability_account_id.id if collaboration.availability_account_id
                             else False
                         })
+        self.env.user.notify_success(message=_('Enter the BD to continue with the process'),
+                                title=_('¡Operations were successful!'), sticky=True)
 
 #             for beneficiary in collaboration.provider_ids:
 #                 partner_id = beneficiary.partner_id and beneficiary.partner_id.id or False

@@ -27,6 +27,7 @@
                 	<footer>
                 		<button string="Print" name="print_bases_collaboration" type="object" class="oe_highlight" attrs="{'invisible':[('is_hide_button','=',True)]}"/>
                         <button string="Cancel" class="btn btn-default" special="cancel"/>
+                        <button name="download_all" type="object" string="Download All" class="float-right btn btn-primary" attrs="{'invisible':[('is_hide_button','=',False)]}" style="margin-right:40px;"/>
                     </footer>
                 </form>
             </field>

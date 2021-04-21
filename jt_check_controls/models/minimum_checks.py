@@ -31,7 +31,7 @@ class MinimumCheck(models.Model):
         for check in min_checks:
             if check.bank_id:
                 check_logs = check_log_obj.search([('bank_id', '=', check.bank_id.id),
-                                                   ('status','=','Checkbook registration')])
+                                                   ('status','=','Available for printing')])
                 if len(check_logs) < check.reorder_point:
                     for user in check_control_admin_users:
                         activity_obj.create({

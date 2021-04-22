@@ -880,6 +880,7 @@ class ControlAssignedAmountsLines(models.Model):
     exercise_type = fields.Char(string='Exercise type')
     cron_id = fields.Many2one('ir.cron', string="CRON ID")
     is_create_from_adequacies = fields.Boolean(string="Line Create From Adequacies",default=False,copy=False)
+    new_adequacies_id = fields.Many2one('adequacies',copy=False)
     
     @api.onchange('program_code_id')
     def onchange_program_code_id(self):

@@ -759,7 +759,9 @@ class AccountMove(models.Model):
             self.is_create_from_provision = True
             self.create_journal_line_for_approved_payment()
             self.payment_state = 'approved_payment'
-        
+            for line in self.invoice_line_ids.filtered(lambda x:x.program_code_id):
+                line.update_provision_amount_data(line)
+                
     @api.model_create_multi
     def create(self, vals_list):
         result = super(AccountMove, self).create(vals_list)
@@ -927,6 +929,7 @@ class AccountMoveLine(models.Model):
             provision_line.with_context(check_move_validity=False).price_unit = new_price
             provision_line.with_context(check_move_validity=False)._onchange_price_subtotal()
             provision_line.move_id.with_context(check_move_validity=False)._onchange_invoice_line_ids()
+            provision_line.move_id.with_context(check_move_validity=False)._recompute_dynamic_lines(recompute_all_taxes=True, recompute_tax_base_amount=True)
             
             payment_move_lines = provision_line.move_id.line_ids.filtered(lambda x:x.is_for_approved_payment)
             if payment_move_lines:

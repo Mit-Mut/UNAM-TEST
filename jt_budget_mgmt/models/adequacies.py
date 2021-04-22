@@ -164,6 +164,9 @@ class Adequacies(models.Model):
         }
         
     def create_new_budget_line(self,program_code,amount):
+        new_adequacies_id = False
+        if self:
+            new_adequacies_id = self[0].id
         budget_line_exist = self.env['expenditure.budget.line'].sudo().search(
             [('program_code_id', '=', program_code.id),
              ('expenditure_budget_id', '=', self.budget_id.id),
@@ -179,6 +182,7 @@ class Adequacies(models.Model):
                 'end_date': self.budget_id.to_date,
                 'state':'success',
                 'is_create_from_adequacies':True,
+                'new_adequacies_id' : new_adequacies_id,
                 })
         else:
             budget_line = budget_line_exist
@@ -195,6 +199,16 @@ class Adequacies(models.Model):
             start_date = first_line.start_date
             end_date = first_line.end_date
             b_s_month = start_date.month
+
+            assigned = 0
+            if b_month and b_month in (1, 2, 3) and b_s_month in (1, 2, 3):
+                assigned = amount
+            elif b_month and b_month in (4, 5, 6) and b_s_month in (4, 5, 6):
+                assigned = amount
+            elif b_month and b_month in (7, 8, 9) and b_s_month in (7, 8, 8):
+                assigned = amount
+            elif b_month and b_month in (10, 11, 12) and b_s_month in (10, 11, 12):
+                assigned = amount
              
             #=== Q1 Line ================#
             budget_line_exist = self.env['expenditure.budget.line'].sudo().search(
@@ -212,16 +226,10 @@ class Adequacies(models.Model):
                     'end_date': end_date,
                     'state':'success',
                     'is_create_from_adequacies' : True,
+                    'new_adequacies_id' : new_adequacies_id,
+                    #'assigned' : assigned,
+                    'available' : assigned,
                     })
-            assigned = 0
-            if b_month and b_month in (1, 2, 3) and b_s_month in (1, 2, 3):
-                assigned = amount
-            elif b_month and b_month in (4, 5, 6) and b_s_month in (4, 5, 6):
-                assigned = amount
-            elif b_month and b_month in (7, 8, 9) and b_s_month in (7, 8, 8):
-                assigned = amount
-            elif b_month and b_month in (10, 11, 12) and b_s_month in (10, 11, 12):
-                assigned = amount
 
             control_line_exist = self.env['control.assigned.amounts.lines'].sudo().search(
                 [('program_code_id', '=', program_code.id),
@@ -236,41 +244,12 @@ class Adequacies(models.Model):
                     'end_date': end_date,
                     'state':'success',
                     'budget_id' : self.budget_id.id,
-                    'assigned' : assigned,
+                    #'assigned' : assigned,
                     #'available' : assigned,
                     'is_create_from_adequacies' : True,
+                    'new_adequacies_id' : new_adequacies_id,
                     })
             
-#         #=== Q2 Line ================#
-#         start_date = self.budget_id.from_date.replace(month=4, day=1)
-#         end_date = self.budget_id.from_date.replace(month=6, day=30)
-#         self.env['expenditure.budget.line'].sudo().create({
-#             'expenditure_budget_id':self.budget_id.id,
-#             'program_code_id': program_code.id,
-#             'start_date': start_date,
-#             'end_date': end_date,
-#             'state':'success',
-#             })
-#         #=== Q3 Line ================#
-#         start_date = self.budget_id.from_date.replace(month=7, day=1)
-#         end_date = self.budget_id.from_date.replace(month=9, day=30)
-#         self.env['expenditure.budget.line'].sudo().create({
-#             'expenditure_budget_id':self.budget_id.id,
-#             'program_code_id': program_code.id,
-#             'start_date': start_date,
-#             'end_date': end_date,
-#             'state':'success',
-#             })
-#         #=== Q4 Line ================#
-#         start_date = self.budget_id.from_date.replace(month=10, day=1)
-#         end_date = self.budget_id.from_date.replace(month=12, day=31)
-#         self.env['expenditure.budget.line'].sudo().create({
-#             'expenditure_budget_id':self.budget_id.id,
-#             'program_code_id': program_code.id,
-#             'start_date': start_date,
-#             'end_date': end_date,
-#             'state':'success',
-#             })
         return budget_line
     
     def create_new_program_code(self,program_vals,amount):
@@ -987,13 +966,15 @@ class Adequacies(models.Model):
                     if budget_line:
                         amount = budget_line.assigned
                         authorized_amount = budget_line.authorized
-                        
+                        budget_available = budget_line.available
                         if line.line_type == 'decrease':
                             final_amount = amount - line.amount
-                            budget_line.write({'assigned': final_amount,'authorized':authorized_amount - line.amount})
+                            #budget_line.write({'assigned': final_amount,'authorized':authorized_amount - line.amount})
+                            budget_line.write({'available':budget_available - line.amount,'authorized':authorized_amount - line.amount})
                         if line.line_type == 'increase':
                             final_amount = amount + line.amount
-                            budget_line.write({'assigned': final_amount,'authorized':authorized_amount + line.amount})
+                            #budget_line.write({'assigned': final_amount,'authorized':authorized_amount + line.amount})
+                            budget_line.write({'available':budget_available + line.amount,'authorized':authorized_amount + line.amount})
                     #=====Update Control Assign Line===================#
                     contorl_line = False
                     contorl_lines = self.env['control.assigned.amounts.lines'].sudo().search(
@@ -1024,6 +1005,7 @@ class Adequacies(models.Model):
                     budget_line = False
                     budget_lines = self.env['expenditure.budget.line'].sudo().search(
                         [('program_code_id', '=', line.program.id),
+                         ('new_adequacies_id','!=',self.id),
                          ('expenditure_budget_id', '=', self.budget_id.id)])
                     for b_line in budget_lines:
                         if b_line.start_date:
@@ -1039,12 +1021,15 @@ class Adequacies(models.Model):
                     if budget_line:
                         amount = budget_line.assigned
                         authorized_amount = budget_line.authorized
+                        budget_available = budget_line.available
                         if line.line_type == 'decrease':
                             final_amount = amount - line.amount
-                            budget_line.write({'assigned': final_amount,'authorized':authorized_amount - line.amount})
+                            #budget_line.write({'assigned': final_amount,'authorized':authorized_amount - line.amount})
+                            budget_line.write({'available':budget_available-line.amount,'authorized':authorized_amount - line.amount})
                         if line.line_type == 'increase':
                             final_amount = amount + line.amount
-                            budget_line.write({'assigned': final_amount,'authorized':authorized_amount + line.amount})
+                            #budget_line.write({'assigned': final_amount,'authorized':authorized_amount + line.amount})
+                            budget_line.write({'available':budget_available+line.amount,'authorized':authorized_amount + line.amount})
 
                     #=====Update Control Assign Line===================#
                     contorl_line = False

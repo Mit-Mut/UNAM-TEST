@@ -190,7 +190,7 @@
                                 <br/>
                                 <br/>
                                 <br/>
-                                
+                                <t t-if="o.distribution_of_module_ids">
                                 <div class="row">
                                     <div class="col-12">
                                         <h4>Distribution to Modules</h4>
@@ -235,6 +235,7 @@
                                     </div>
 
                                 </div>
+                                </t>
                                 <br/>
                                 <br/>
                                 <br/>

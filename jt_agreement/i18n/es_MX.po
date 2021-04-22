@@ -4054,4 +4054,7 @@ msgstr "Ingrese a la BD para continuar con el proceso"
 msgid "¡Operations were successful!"
 msgstr "¡Las operaciones fueron exitosas!"
 
-
+#. module: jt_agreement
+#: model_terms:ir.ui.view,arch_db:jt_agreement.generate_bases_collaboration_view
+msgid "Download All"
+msgstr "Descargar Todo"

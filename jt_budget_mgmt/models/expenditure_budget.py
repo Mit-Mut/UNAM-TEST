@@ -1045,6 +1045,7 @@ class ExpenditureBudgetLine(models.Model):
     exercise_type = fields.Char(string='Exercise type')
     cron_id = fields.Many2one('ir.cron', string="CRON ID")
     is_create_from_adequacies = fields.Boolean(string="Line Create From Adequacies",default=False,copy=False)
+    new_adequacies_id = fields.Many2one('adequacies',copy=False)
     
     _sql_constraints = [
         ('uniq_quarter', 'unique(program_code_id,start_date,end_date)',

@@ -2782,3 +2782,23 @@ msgid ""
 msgstr ""
 "Los cheques de esta solicitud han sido cambiados al estado Disponible para"
 "impresión correctamente."
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.blank_check_request_template
+msgid "Distribution to Modules"
+msgstr "Distribución para módulos"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.blank_check_request_template
+msgid "<span>Module</span>"
+msgstr "<span>Módulo</span>"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.blank_check_request_template
+msgid "<span>Initial folio</span>"
+msgstr "Folio Inicial"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.blank_check_request_template
+msgid "<span>Amounts of Checks</span>"
+msgstr "<span>Número de cheques</span>"

@@ -376,7 +376,7 @@ class ProgramCode(models.Model):
         for code in self:
             if code.state == 'validated':
                 raise ValidationError(
-                    _('You can not delete validated program code!'))
+                    _('No puede eliminarse un Código Programático que se encuentra validado.'))
             line = self.env['expenditure.budget.line'].search(
                 [('program_code_id', '=', code.id)], limit=1)
             if line:

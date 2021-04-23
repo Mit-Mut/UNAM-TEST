@@ -82,7 +82,7 @@ class AdjustedPayrollWizard(models.TransientModel):
                         
                     for rec in emp_payroll_ids:
                         rec.adjustment_case_id = case_id and case_id.id or False
-                        if case=='A' or case=='R' or case=='F' or case=='Z' or case=='H' or case=='E' or case=='S' or case=='V' or case=='C':
+                        if case=='P' or case=='A' or case=='R' or case=='F' or case=='Z' or case=='H' or case=='E' or case=='S' or case=='V' or case=='C':
                             if check_no:
                                 if  type(check_no) is int or type(check_no) is float:
                                     check_no = int(check_no)
@@ -91,7 +91,7 @@ class AdjustedPayrollWizard(models.TransientModel):
                             check_payment_method = self.env.ref('l10n_mx_edi.payment_method_cheque').id
                             if deposite_no and rec.l10n_mx_edi_payment_method_id and \
                                 rec.l10n_mx_edi_payment_method_id.id == check_payment_method:
-                                if case == 'A' or case == 'R' or case == 'F' or case == 'H' or case == 'E' or case == 'V' or case == 'C':
+                                if case == 'A' or case == 'A' or case == 'R' or case == 'F' or case == 'H' or case == 'E' or case == 'V' or case == 'C':
                                     if deposite_no and new_bank_no:
                                         log = self.env['check.log'].search([('folio', '=', deposite_no),
                                         ('status', 'in', ('Checkbook registration', 'Assigned for shipping',

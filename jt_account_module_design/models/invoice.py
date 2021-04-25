@@ -811,6 +811,13 @@ class AccountMove(models.Model):
         result = super(AccountMove,self).action_draft_budget()
         return result
     
+    def button_cancel(self):
+        result = super(AccountMove,self).button_cancel()
+        for record in self.filtered(lambda x:x.is_create_from_provision and x.is_payment_request):
+            for line in record.invoice_line_ids.filtered(lambda x:x.program_code_id):
+                line.update_provision_amount_data(line)        
+        return result
+        
     def action_cancel_budget(self):
         for record in self.filtered(lambda x:x.is_provision_request):
             if record.provision_move_ids:
@@ -819,9 +826,6 @@ class AccountMove(models.Model):
             record.cancel_payment_revers_entry()
             record.add_budget_available_amount()
         result = super(AccountMove,self).action_cancel_budget()
-        for record in self.filtered(lambda x:x.is_create_from_provision and x.is_payment_request):
-            for line in record.invoice_line_ids.filtered(lambda x:x.program_code_id):
-                line.update_provision_amount_data(line)
         return result
     
     def set_provision_payment_state_provision(self):

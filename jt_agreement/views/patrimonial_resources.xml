@@ -277,7 +277,7 @@
         <record id="action_patrimonial_resources" model="ir.actions.act_window">
             <field name="name">Patrimonial Resources</field>
             <field name="res_model">patrimonial.resources</field>
-            <field name="view_mode">tree,form,kanban,pivot</field>
+            <field name="view_mode">kanban,tree,form,pivot</field>
             <field name="context">{'from_agreement':True}</field>
         </record>
 

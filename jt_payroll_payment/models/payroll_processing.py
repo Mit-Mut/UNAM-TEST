@@ -304,18 +304,19 @@ class CustomPayrollProcessing(models.Model):
                         exit_payroll_id = False
                         
                     payment_method_id = False    
-                    
-                    if payment_method and str(payment_method).isalnum():     
+                    if payment_method and str(payment_method).isalnum():    
                         if  type(payment_method) is int or type(payment_method) is float:
                             payment_method = int(payment_method)
-                            
-                        payment_method_id = list(filter(lambda pm: pm['name'] == str(payment_method), payment_method_records))
-                        payment_method_id = payment_method_id[0]['id'] if payment_method_id else False
-                        
-                        if not payment_method_id:
-                            failed_row = self.check_payment_method_data(failed_row,payment_method,'Payroll Perceptions',counter)
-                            continue    
+                    else:
+                        payment_method = str(payment_method)
+                          
+                    payment_method_id = list(filter(lambda pm: pm['name'] == str(payment_method), payment_method_records))
+                    payment_method_id = payment_method_id[0]['id'] if payment_method_id else False
                     
+                    if not payment_method_id:
+                        failed_row = self.check_payment_method_data(failed_row,payment_method,'Payroll Perceptions',counter)
+                        continue    
+                
                     employee_id = list(filter(lambda emp: emp['rfc'] == rfc, employee_records))
                     employee_id = employee_id[0]['id'] if employee_id else False
                     
@@ -356,13 +357,18 @@ class CustomPayrollProcessing(models.Model):
                         if bank_account and str(bank_account).isalnum():
                             if  type(bank_account) is int or type(bank_account) is float:
                                 bank_account = int(bank_account)
+                        elif bank_account and str(bank_account).isnumeric():
+                            if  type(bank_account) is int or type(bank_account) is float:
+                                bank_account = int(bank_account)
+                        if  type(bank_account) is int or type(bank_account) is float:
+                            bank_account = int(bank_account)
                                 
-                            bank_account_id = list(filter(lambda b: b['acc_number'] == str(bank_account), bank_account_records))
-                            bank_account_id = bank_account_id[0]['id'] if bank_account_id else False
-                            
-                            if not bank_account_id:
-                                failed_row = self.check_bank_accunt_data(failed_row,bank_account,'Payroll Perceptions',counter)
-                                continue
+                        bank_account_id = list(filter(lambda b: b['acc_number'] == str(bank_account), bank_account_records))
+                        bank_account_id = bank_account_id[0]['id'] if bank_account_id else False
+                         
+                        if not bank_account_id:
+                            failed_row = self.check_bank_accunt_data(failed_row,bank_account,'Payroll Perceptions',counter)
+                            continue
                         
                         
                         exit_payroll_id = list(filter(lambda b: b['employee_id'][0] == employee_id.id, payroll_process_records))
@@ -381,7 +387,6 @@ class CustomPayrollProcessing(models.Model):
                             exit_payroll_id.write(exit_vals)
                             
                         if not exit_payroll_id:
-                                
                             result_dict.update({'payroll_processing_id':self.id,
                                                 'period_start' : self.period_start,
                                                 'period_end' : self.period_end,

@@ -2719,13 +2719,17 @@ msgstr "Operación"
 
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_approve_investment_bal_req__operation_number
-#: model:ir.model.fields,field_description:jt_agreement.field_payment_request__date
 #: model:ir.model.fields,field_description:jt_agreement.field_payment_request__operation_number
 #: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance__operation_number
 #: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance_finance__operation_number
 #: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance_invest__operation_number
 msgid "Operation Number"
 msgstr "Número de operación"
+
+#. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_payment_request__date
+msgid "Operation Date"
+msgstr "Fecha de Operación"
 
 #. module: jt_agreement
 #: code:addons/jt_agreement/models/bases_collaboration.py:0

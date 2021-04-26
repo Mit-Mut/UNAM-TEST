@@ -105,8 +105,8 @@
                         <notebook>
                             <page string="Complementary data for receipt of checks">
                                 <group>
-                                    <field name="full_address" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                    <field name="check_receipt_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="full_address"/>
+                                    <field name="check_receipt_date"/>
                                 </group>
                             </page>
                         </notebook>

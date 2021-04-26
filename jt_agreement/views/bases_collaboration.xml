@@ -471,7 +471,7 @@
         <record id="action_bases_collabration" model="ir.actions.act_window">
             <field name="name">Bases of Collabration</field>
             <field name="res_model">bases.collaboration</field>
-            <field name="view_mode">tree,form,kanban,pivot</field>
+            <field name="view_mode">kanban,tree,form,pivot</field>
             <field name="context">{'from_agreement':True,'show_agreement_name':True}</field>
         </record>
 

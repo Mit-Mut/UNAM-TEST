@@ -739,7 +739,7 @@ class AccountMove(models.Model):
     is_hide_provision_from_view = fields.Boolean(string="Hide Provision",default=False,copy=False)
     
     def check_previous_number_records(self):
-        provision_id = self.env['account.move'].search([('is_provision_request','=',True),('previous_number','=',self.previous_number)],limit=1)
+        provision_id = self.env['account.move'].search([('provision_payment_state','=','provision'),('is_provision_request','=',True),('previous_number','=',self.previous_number)],limit=1)
         if not provision_id:
             raise ValidationError(_("Previous Number %s not found into provision")%self.previous_number)
         if provision_id.partner_id and self.partner_id and provision_id.partner_id.id != self.partner_id.id:
@@ -811,6 +811,13 @@ class AccountMove(models.Model):
         result = super(AccountMove,self).action_draft_budget()
         return result
     
+    def button_cancel(self):
+        result = super(AccountMove,self).button_cancel()
+        for record in self.filtered(lambda x:x.is_create_from_provision and x.is_payment_request):
+            for line in record.invoice_line_ids.filtered(lambda x:x.program_code_id):
+                line.update_provision_amount_data(line)        
+        return result
+        
     def action_cancel_budget(self):
         for record in self.filtered(lambda x:x.is_provision_request):
             if record.provision_move_ids:
@@ -819,9 +826,6 @@ class AccountMove(models.Model):
             record.cancel_payment_revers_entry()
             record.add_budget_available_amount()
         result = super(AccountMove,self).action_cancel_budget()
-        for record in self.filtered(lambda x:x.is_create_from_provision and x.is_payment_request):
-            for line in record.invoice_line_ids.filtered(lambda x:x.program_code_id):
-                line.update_provision_amount_data(line)
         return result
     
     def set_provision_payment_state_provision(self):
@@ -831,6 +835,8 @@ class AccountMove(models.Model):
             line.provision_price = line.price_unit
             
     def generate_payment_request(self):
+        if self.amount_total==0:
+            return 
         vals = {'folio_dependency':False,'is_provision_request':False,
                 'payment_state':'approved_payment','provision_move_id':self.id,
                 'is_create_from_provision':True,'invoice_date':self.invoice_date}

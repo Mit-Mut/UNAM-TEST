@@ -290,7 +290,7 @@
         <record id="action_agreement_trust" model="ir.actions.act_window">
             <field name="name">Trusts</field>
             <field name="res_model">agreement.trust</field>
-            <field name="view_mode">tree,form,kanban,pivot</field>
+            <field name="view_mode">kanban,tree,form,pivot</field>
             <field name="context">{'from_agreement':1}</field>
         </record>
 

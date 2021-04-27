@@ -44,6 +44,12 @@ class CheckbookRequest(models.Model):
             name = rec.name or ''
             if 'from_approve_check' in self._context and rec.checkbook_no:
                 name = rec.checkbook_no
+            if 'from_authorization_check' in self._context:
+                if rec.checkbook_no:
+                    name = rec.checkbook_no
+                if rec.folio_legal:
+                    name += " "+ rec.folio_legal
+                
             result.append((rec.id, name))
         return result
 
@@ -335,7 +341,7 @@ class CheckListLine(models.Model):
 #                     raise ValidationError(_('Cannot register folios that are already registered'))
 
     def write(self, vals):
-        for rec in self:
+        for rec in self.filtered(lambda x:x.status=='Cancelled'):
             if rec.status == 'Cancelled' and vals.get('status') in ('Checkbook registration', 'Assigned for shipping',
               'Available for printing', 'Printed', 'Delivered', 'In transit', 'Sent to protection',
                'Protected and in transit', 'Protected', 'Detained', 'Withdrawn from circulation'):

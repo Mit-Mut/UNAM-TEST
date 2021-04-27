@@ -29,7 +29,7 @@
     "author": "Jupical Technologies Pvt. Ltd.",
     "depends": [
         "bus",
-        "jt_web_utils",
+        'mm_unam',"jt_web_utils",
     ],
     "data": [
         "template/assets.xml",

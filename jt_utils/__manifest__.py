@@ -27,7 +27,7 @@
     "license": "LGPL-3",
     "author": "Jupical Technologies Pvt. Ltd.",
     "depends": [
-        "base_setup",
+        'mm_unam',"base_setup",
     ],
     "data": [
         "actions/ir_attachment.xml",

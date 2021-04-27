@@ -13,7 +13,7 @@
 							<field name="department" required="1"/>
 							<field name="bank_account_id" required="1"
                             domain="[('type', '=', 'bank')]"/>
-							<field name="checkbook_req_id" domain="[('bank_id','=',bank_account_id),('checkbook_no','!=',False)]" required="1" context="{'from_approve_check':1}"  options="{'no_create': True, 'no_open': True}" attrs="{'invisible':[('bank_account_id','=',False)]}"/>
+							<field name="checkbook_req_id" domain="[('bank_id','=',bank_account_id),('checkbook_no','!=',False)]" required="1" context="{'from_authorization_check':1}"  options="{'no_create': True, 'no_open': True}" attrs="{'invisible':[('bank_account_id','=',False)]}"/>
 							<field name="number_of_checks_auth" required="1"/>
 							<field name="intial_folio" required="1"/>
 							<field name="final_folio" required="1"/>

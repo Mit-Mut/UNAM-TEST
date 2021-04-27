@@ -154,14 +154,14 @@ class BlankCheckRequest(models.Model):
                                                    ('folio', '>=',
                                                     self.intial_folio),
                                                    ('folio', '<=', self.final_folio)])
-        for log in check_logs:
-            log.module = self.department
+        check_logs.write({'module':self.department})
+        
         check_log = self.env['check.log'].search([('checklist_id.checkbook_req_id', '=', self.checkbook_req_id.id),
                                                   ('folio', '=', self.print_sample_folio_number)])
         if check_log:
             check_log.status = 'Cancelled'
             check_log.module = self.department
-
+            
     def change_status_suthorized_checks(self):
         for rec in self:
             if rec.state == 'confirmed':
@@ -173,8 +173,7 @@ class BlankCheckRequest(models.Model):
                      ('folio', '!=', self.print_sample_folio_number),
                      ('folio', '!=', int(self.checkbook_req_id.print_sample_folio_number)),
                      ('folio', '<=', self.final_folio)])
-                for log in check_logs:
-                    log.status = 'Available for printing'
+                check_logs.write({'status':'Available for printing'})
                 rec.is_process_done = True
         self.env.user.notify_success(message=_('The checks in this application have been changed to Available for printing status successfully.'),sticky=True)
         

@@ -46,6 +46,89 @@ class AdjustedPayrollWizard(models.TransientModel):
     employee_ids = fields.Many2many('hr.employee','employee_adjusted_payroll_wizard_rel','employee_id','wizard_id','Employees')
     payroll_process_id = fields.Many2one('custom.payroll.processing','Payroll Process')
     
+    def update_employee_payroll_pension(self,rec,payment_method_id,deposit_number,check_number,bank_account_id,bank_key,bank_id):
+
+        log = False
+        bank_records = self.env['res.bank'].search_read([], fields=['id', 'l10n_mx_edi_code'])
+        if bank_key and check_number:
+            if type(bank_key) is int or type(bank_key) is float:
+                bank_key = int(bank_key)
+
+            log,from_check= self.env['custom.payroll.processing'].get_perception_check_log(check_number,bank_key)
+        
+        exit_vals = {'l10n_mx_edi_payment_method_id' : payment_method_id,
+                     'deposite_number' : deposit_number,
+                     'check_number' : check_number,
+                     'bank_key' : bank_key,
+                     'receiving_bank_acc_pay_id' : bank_account_id,
+        
+                    }
+        if log:
+            exit_vals.update({'check_folio_id':log.id})
+        rec.write(exit_vals)
+    
+    def update_employee_payroll_perception(self,emp_payroll_ids,payment_method,bank_key,check_number,deposite_number,ben):
+
+        bank_records = self.env['res.bank'].search_read([], fields=['id', 'l10n_mx_edi_code'])
+        bank_account_records = self.env['res.partner.bank'].search_read([], fields=['id', 'acc_number'])
+        payment_method_records = self.env['l10n_mx_edi.payment.method'].search_read([], fields=['id', 'name'])
+
+        rec_check_number = check_number
+        rec_deposite_number = deposite_number
+        rec_bank_key = bank_key
+        bank_account = ben
+        bank_account_id = False
+        log = False
+        payment_method_id = False
+            
+        if payment_method and str(payment_method).isalnum():    
+            if  type(payment_method) is int or type(payment_method) is float:
+                payment_method = int(payment_method)
+        else:
+            payment_method = str(payment_method)
+              
+        payment_method_id = list(filter(lambda pm: pm['name'] == str(payment_method), payment_method_records))
+        payment_method_id = payment_method_id[0]['id'] if payment_method_id else False
+        
+        if check_number:
+            if  type(check_number) is int or type(check_number) is float:
+                rec_check_number = int(check_number)
+
+        if deposite_number:
+            if  type(deposite_number) is int or type(deposite_number) is float:
+                rec_deposite_number = int(deposite_number)
+
+        if bank_key and rec_check_number:
+            if type(bank_key) is int or type(bank_key) is float:
+                rec_bank_key = int(bank_key)
+
+            bank_id_1 = list(filter(lambda b: b['l10n_mx_edi_code'] == rec_bank_key, bank_records))
+            bank_id_1 = bank_id_1[0]['id'] if bank_id_1 else False
+
+            log,from_check= self.env['custom.payroll.processing'].get_perception_check_log(rec_check_number,rec_bank_key)
+            
+        if bank_account and str(bank_account).isalnum():
+            if  type(bank_account) is int or type(bank_account) is float:
+                bank_account = int(bank_account)
+        elif bank_account and str(bank_account).isnumeric():
+            if  type(bank_account) is int or type(bank_account) is float:
+                bank_account = int(bank_account)
+        if  type(bank_account) is int or type(bank_account) is float:
+            bank_account = int(bank_account)
+                
+        bank_account_id = list(filter(lambda b: b['acc_number'] == str(bank_account), bank_account_records))
+        bank_account_id = bank_account_id[0]['id'] if bank_account_id else False
+        
+        exit_vals = {'l10n_mx_edi_payment_method_id' : payment_method_id,
+                     'deposite_number' : rec_deposite_number,
+                     'check_number' : rec_check_number,
+                     'bank_key' : rec_bank_key,
+                     'receiving_bank_acc_pay_id' : bank_account_id
+                    }
+        if log:
+            exit_vals.update({'check_folio_id':log.id})
+        emp_payroll_ids.write(exit_vals)
+        
     def generate(self):
         if self.file:
             data = base64.decodestring(self.file)
@@ -91,7 +174,7 @@ class AdjustedPayrollWizard(models.TransientModel):
                             check_payment_method = self.env.ref('l10n_mx_edi.payment_method_cheque').id
                             if deposite_no and rec.l10n_mx_edi_payment_method_id and \
                                 rec.l10n_mx_edi_payment_method_id.id == check_payment_method:
-                                if case == 'A' or case == 'A' or case == 'R' or case == 'F' or case == 'H' or case == 'E' or case == 'V' or case == 'C':
+                                if case == 'P' or case == 'A' or case == 'R' or case == 'F' or case == 'H' or case == 'E' or case == 'V' or case == 'C':
                                     if deposite_no and new_bank_no:
                                         log = self.env['check.log'].search([('folio', '=', deposite_no),
                                         ('status', 'in', ('Checkbook registration', 'Assigned for shipping',
@@ -144,6 +227,9 @@ class AdjustedPayrollWizard(models.TransientModel):
                     if rfc:
                         employee_id =self.env['hr.employee'].search([('rfc','=',rfc)],limit=1)
                         if employee_id:
+                            emp_payroll_ids = self.payroll_process_id.payroll_ids.filtered(lambda x:x.employee_id.id==employee_id.id)
+                            if emp_payroll_ids:
+                                self.update_employee_payroll_perception(emp_payroll_ids,payment_method,bank,check_no,deposite_no,ben)
                             employee_id = employee_id.id
 
                     if employee_id:
@@ -180,7 +266,8 @@ class AdjustedPayrollWizard(models.TransientModel):
                         employee_id =self.env['hr.employee'].search([('rfc','=',rfc)],limit=1)
                         if employee_id:
                             employee_id = employee_id.id
-                        
+                            emp_payroll_ids = self.payroll_process_id.payroll_ids.filtered(lambda x:x.employee_id.id==employee_id)
+                            emp_payroll_ids.write({'net_salary':net_salary})
                     if employee_id:
                         emp_payroll_ids = self.payroll_process_id.payroll_ids.filtered(lambda x:x.employee_id.id==employee_id)
                         
@@ -269,7 +356,8 @@ class AdjustedPayrollWizard(models.TransientModel):
                                 bank_rec = self.env['res.bank'].search([('l10n_mx_edi_code','=',str(bank_key))],limit=1)
                                 if bank_rec:
                                     bank_id = bank_rec.id
-
+                            
+                            self.update_employee_payroll_pension(rec,payment_method_id,deposite_data,check_no_data,bank_account_id,bank_key,bank_id)
                             if payment_method_id:
                                 lines = rec.pension_payment_line_ids.filtered(lambda x:
                                         x.l10n_mx_edi_payment_method_id.id==payment_method_id and

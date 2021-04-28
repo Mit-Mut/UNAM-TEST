@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-25 22:26+0000\n"
-"PO-Revision-Date: 2021-01-25 20:12-0600\n"
+"POT-Creation-Date: 2021-04-27 18:58+0000\n"
+"PO-Revision-Date: 2021-04-27 14:13-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -267,6 +267,11 @@ msgid "Action Needed"
 msgstr "Acción Necesario"
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_payroll_wizard__cron_id
+msgid "Active Cron"
+msgstr ""
+
+#. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__activity_ids
 msgid "Activities"
 msgstr "Actividades"
@@ -291,6 +296,7 @@ msgstr "Beneficio Adicional"
 #. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__payroll_adjustment__add_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__generate_payroll_wizard__type_of_movement__additional_payments
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payroll_processing_failed_log__type_of_movement__additional_payments
 msgid "Additional Payments"
 msgstr "Pagos Adicionales"
 
@@ -301,6 +307,7 @@ msgstr "Línea de Pagos Adicionales"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__generate_payroll_wizard__type_of_movement__additional_pension_payments
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payroll_processing_failed_log__type_of_movement__additional_pension_payments
 #: model_terms:ir.ui.view,arch_db:jt_payroll_payment.employee_payroll_file_form_processing
 msgid "Additional Pension Payments"
 msgstr "Pagos de Pensiones Adicionales"
@@ -329,6 +336,7 @@ msgstr "Ajustes"
 #: model:ir.actions.act_window,name:jt_payroll_payment.action_adjustment_cases
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__adjustment_case_id
 #: model:ir.ui.menu,name:jt_payroll_payment.menu_adjustment_cases
+#: model_terms:ir.ui.view,arch_db:jt_payroll_payment.employee_payroll_file_search
 msgid "Adjustment Cases"
 msgstr "Casos de Ajustes"
 
@@ -350,7 +358,7 @@ msgstr "Unidad de Procesos Administrativos"
 #. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_payment_request__name
 msgid "Agreement Name"
-msgstr "Nombre del egreso"
+msgstr "Nombre de convenio"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__amount_payable
@@ -377,7 +385,7 @@ msgstr "Cuenta Adjunta"
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_journal__payroll_load_bank_format__banamex
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__generate_bank_layout_payroll_payment__bank_layout__banamex
 msgid "BANAMEX"
-msgstr ""
+msgstr "BANAMEX"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_journal__payroll_bank_format__banorte
@@ -386,24 +394,24 @@ msgstr ""
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__generate_bank_layout_payroll_payment__bank_layout__banorte
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__load_bank_layout_employee__bank_layout__banorte
 msgid "BANORTE"
-msgstr ""
+msgstr "BANORTE"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_journal__payroll_bank_format__bbva_232
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__generate_bank_layout_payroll_payment__bank_layout__bbva_bancomer_dispersion_232
 msgid "BBVA BANCOMER DISPERSION 232"
-msgstr ""
+msgstr "BBVA BANCOMER DISPERSION 232"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_journal__payroll_load_bank_format__bbva_232
 msgid "BBVA BANCOMER DISPERSIÓN 232"
-msgstr ""
+msgstr "BBVA BANCOMER DISPERSIÓN 232"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_journal__payroll_bank_format__bbva_nomina
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_journal__payroll_load_bank_format__bbva_nomina
 msgid "BBVA BANCOMER NOMINA"
-msgstr ""
+msgstr "BBVA BANCOMER NOMINA"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__generate_bank_layout_payroll_payment__bank_layout__bbva_bancomer_payroll
@@ -424,7 +432,7 @@ msgstr ""
 #. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_journal__payroll_bank_format__banamex
 msgid "Banamex"
-msgstr ""
+msgstr "Banamex"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_pension_payment_line__bank_id
@@ -503,6 +511,11 @@ msgid "Case"
 msgstr "Caso"
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__adjustment_case_description
+msgid "Case Description"
+msgstr "Descripción del caso"
+
+#. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__casualties_and_cancellations
 msgid "Casualties And Cancellations"
 msgstr "Bajas y Cancelaciones"
@@ -547,6 +560,11 @@ msgid "Close"
 msgstr "Cerrar"
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payroll_processing_failed_log__state__completed
+msgid "Completed"
+msgstr "Completado"
+
+#. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_deduction__concept
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_preception__concept
 msgid "Concept"
@@ -581,6 +599,11 @@ msgid "Contacts"
 msgstr "Contactos"
 
 #. module: jt_payroll_payment
+#: model_terms:ir.actions.act_window,help:jt_payroll_payment.action_financeboard_journal_1
+msgid "Crear un nuevo documento"
+msgstr "Crear un nuevo documento"
+
+#. module: jt_payroll_payment
 #: model_terms:ir.actions.act_window,help:jt_payroll_payment.action_contacts_scholarship
 msgid "Create a contact in your address book"
 msgstr "Crea un contacto en tu base de direcciones"
@@ -608,6 +631,7 @@ msgstr "Cree un nuevo proveedor en su base de direcciones"
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_lows_cancellation_wizard__create_uid
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_operation_type__create_uid
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_payment_request__create_uid
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_payroll_processing_failed_log__create_uid
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_pension_payment_line__create_uid
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_policy_keys__create_uid
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_preception__create_uid
@@ -635,6 +659,7 @@ msgstr "Creado por"
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_lows_cancellation_wizard__create_date
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_operation_type__create_date
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_payment_request__create_date
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_payroll_processing_failed_log__create_date
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_pension_payment_line__create_date
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_policy_keys__create_date
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_preception__create_date
@@ -649,6 +674,11 @@ msgstr "Creado en"
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_preception__credit_account_id
 msgid "Credit Account"
 msgstr "Cuenta de Crédito"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_custom_payroll_processing__cron_id
+msgid "Cron"
+msgstr ""
 
 #. module: jt_payroll_payment
 #: model:ir.ui.menu,name:jt_payroll_payment.menu_finance_currency
@@ -685,6 +715,7 @@ msgstr "Cuenta de Débito"
 #. module: jt_payroll_payment
 #: model:ir.actions.act_window,name:jt_payroll_payment.deduction_action
 #: model:ir.model,name:jt_payroll_payment.model_deduction
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_account_move__deduction_ids
 #: model:ir.ui.menu,name:jt_payroll_payment.menu_deduction_payment_of_payroll
 msgid "Deduction"
 msgstr "Deducciones"
@@ -703,6 +734,26 @@ msgstr "Línea de Deducción"
 #: model_terms:ir.ui.view,arch_db:jt_payroll_payment.employee_payroll_file_form_processing
 msgid "Deductions"
 msgstr "Deducciones"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_custom_payroll_processing__deductions_file_index
+msgid "Deductions File Index"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_custom_payroll_processing__deductions_file_load
+msgid "Deductions File Load"
+msgstr "Carga del archivo de Deducciones"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_custom_payroll_processing__deductions_hide
+msgid "Deductions Hide"
+msgstr "Ocultar deducciones"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_custom_payroll_processing__deductions_user
+msgid "Deductions User"
+msgstr "Usuario de decucciones"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_pension_payment_line__deposit_number
@@ -763,6 +814,7 @@ msgstr "Empleado"
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_lows_cancellation_wizard__display_name
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_operation_type__display_name
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_payment_request__display_name
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_payroll_processing_failed_log__display_name
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_pension_payment_line__display_name
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_policy_keys__display_name
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_preception__display_name
@@ -786,6 +838,7 @@ msgstr "Hecho"
 #. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_bank_layout_employee__file_data
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_bank_layout_payroll_payment__file_data
+#: model_terms:ir.ui.view,arch_db:jt_payroll_payment.custom_payroll_processing_form_view
 msgid "Download"
 msgstr "Descarga"
 
@@ -875,13 +928,41 @@ msgid "Failed Filename"
 msgstr "Nombre de Archivo Fallido"
 
 #. module: jt_payroll_payment
+#: model_terms:ir.ui.view,arch_db:jt_payroll_payment.custom_payroll_processing_form_view
+msgid "Failed Log"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_custom_payroll_processing__failed_log_ids
+msgid "Failed Logs"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_custom_payroll_processing__failed_row_file
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_payroll_processing_failed_log__failed_row_file
+msgid "Failed Rows File"
+msgstr "Archivo de filas erróneas"
+
+#. module: jt_payroll_payment
 #: code:addons/jt_payroll_payment/wizard/load_employee_response_layout.py:0
 #, python-format
 msgid "File Format not Valid!"
 msgstr "Formato de Archivo no Válido!"
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_payroll_wizard__file_row
+msgid "File Row"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_custom_payroll_processing__fialed_row_filename
+msgid "File name"
+msgstr "Nombre del archivo"
+
+#. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_adjusted_payroll_wizard__file
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_custom_payroll_processing__deductions_file
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_custom_payroll_processing__perception_file
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_payroll_wizard__file
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_lows_cancellation_wizard__file
 msgid "File to import"
@@ -889,6 +970,8 @@ msgstr "Importar Archivo"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_adjusted_payroll_wizard__filename
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_custom_payroll_processing__deductions_filename
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_custom_payroll_processing__perception_filename
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_payroll_wizard__filename
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_lows_cancellation_wizard__filename
 msgid "FileName"
@@ -1007,7 +1090,7 @@ msgstr "Agrupar por"
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_journal__payroll_load_bank_format__hsbc
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__generate_bank_layout_payroll_payment__bank_layout__hsbc
 msgid "HSBC"
-msgstr ""
+msgstr "HSBC"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_load_bank_layout_employee__is_hide_failed
@@ -1038,6 +1121,7 @@ msgstr "Ocultar Éxito"
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_lows_cancellation_wizard__id
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_operation_type__id
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_payment_request__id
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_payroll_processing_failed_log__id
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_pension_payment_line__id
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_policy_keys__id
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_preception__id
@@ -1068,6 +1152,21 @@ msgstr "Si está marcado, los mensajes nuevos requieren su atención."
 #: model:ir.model.fields,help:jt_payroll_payment.field_employee_payroll_file__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Si está marcado, algunos mensajes tienen un error de entrega."
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_payroll_processing_failed_log__import_file_name
+msgid "Import File Name"
+msgstr "Nombre del archivo de importación"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_payroll_processing_failed_log__user_id
+msgid "Imported by"
+msgstr "Importado por"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payroll_processing_failed_log__state__in_progress
+msgid "In Progress"
+msgstr "En Progreso"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__payroll_adjustment__inappropriate
@@ -1154,6 +1253,7 @@ msgstr "Clave para la Percepción"
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_lows_cancellation_wizard____last_update
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_operation_type____last_update
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_payment_request____last_update
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_payroll_processing_failed_log____last_update
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_pension_payment_line____last_update
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_policy_keys____last_update
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_preception____last_update
@@ -1181,6 +1281,7 @@ msgstr "Última modificación el"
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_lows_cancellation_wizard__write_uid
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_operation_type__write_uid
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_payment_request__write_uid
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_payroll_processing_failed_log__write_uid
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_pension_payment_line__write_uid
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_policy_keys__write_uid
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_preception__write_uid
@@ -1208,6 +1309,7 @@ msgstr "Última actualización por"
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_lows_cancellation_wizard__write_date
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_operation_type__write_date
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_payment_request__write_date
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_payroll_processing_failed_log__write_date
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_pension_payment_line__write_date
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_policy_keys__write_date
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_preception__write_date
@@ -1254,13 +1356,18 @@ msgstr "Carga de Layout Bancario"
 #. module: jt_payroll_payment
 #: model:ir.model,name:jt_payroll_payment.model_load_bank_layout_employee
 msgid "Load Bank Layout Employee"
-msgstr ""
+msgstr "Carga de Layout Bancario para Empleados"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_account_bank_statement_import_journal_creation__payroll_load_bank_format
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_account_journal__payroll_load_bank_format
 msgid "Load bank layout for payroll"
 msgstr "Carga de Layout Bancario para Nómina"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_payroll_processing_failed_log__fialed_row_filename
+msgid "Log File"
+msgstr ""
 
 #. module: jt_payroll_payment
 #: model:ir.model,name:jt_payroll_payment.model_lows_cancellation_wizard
@@ -1276,7 +1383,7 @@ msgstr "Bajas y Cancelaciones"
 #. module: jt_payroll_payment
 #: model_terms:ir.ui.view,arch_db:jt_payroll_payment.custom_payroll_processing_form_view
 msgid "Lows and Cancellations"
-msgstr ""
+msgstr "Bajas y Cancelaciones"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__message_main_attachment_id
@@ -1412,6 +1519,12 @@ msgid "Origination of the movement"
 msgstr "Origen del movimiento"
 
 #. module: jt_payroll_payment
+#: model:ir.actions.act_window,name:jt_payroll_payment.action_financeboard_journal_1
+#: model:ir.ui.menu,name:jt_payroll_payment.menu_financeboard_journal_1
+msgid "Overview"
+msgstr "Cuentas Bancarias"
+
+#. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__payroll_request_type__payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__payroll_request_type__payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__request_type__payment
@@ -1528,8 +1641,16 @@ msgstr "Ajustes de Nómina"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__generate_payroll_wizard__type_of_movement__payroll_deductions
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payroll_processing_failed_log__type_of_movement__payroll_deductions
 msgid "Payroll Deductions"
 msgstr "Deducciones de nómina"
+
+#. module: jt_payroll_payment
+#: model:ir.actions.server,name:jt_payroll_payment.ir_cron_remove_completed_payroll_process_ir_actions_server
+#: model:ir.cron,cron_name:jt_payroll_payment.ir_cron_remove_completed_payroll_process
+#: model:ir.cron,name:jt_payroll_payment.ir_cron_remove_completed_payroll_process
+msgid "Payroll Import: Remove Completed Payroll Import Cron"
+msgstr ""
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__payment_request_type__payroll_payment
@@ -1537,18 +1658,22 @@ msgid "Payroll Payment"
 msgstr "Pago de nómina"
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_deduction_line__move_id
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__move_id
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_preception_line__move_id
 msgid "Payroll Payments"
 msgstr "Pagos de nómina"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__generate_payroll_wizard__type_of_movement__payroll_perceptions
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payroll_processing_failed_log__type_of_movement__payroll_perceptions
 msgid "Payroll Perceptions"
 msgstr "Percepciones de nómina"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_adjusted_payroll_wizard__payroll_process_id
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_payroll_wizard__payroll_process_id
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_ir_cron__payroll_processing_id
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_lows_cancellation_wizard__payroll_process_id
 msgid "Payroll Process"
 msgstr "Proceso de nómina"
@@ -1561,10 +1686,16 @@ msgid "Payroll Processing"
 msgstr "Procesamiento de nómina"
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_payroll_processing_failed_log__payroll_processing_id
+msgid "Payroll processing"
+msgstr "Procesamiento de Nómina"
+
+#. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_account_move__is_pension_payment_request
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__is_pension_payment_request
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__payment_request_type__pension_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__generate_payroll_wizard__type_of_movement__pension_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payroll_processing_failed_log__type_of_movement__pension_payment
 #: model_terms:ir.ui.view,arch_db:jt_payroll_payment.employee_payroll_file_form_processing
 msgid "Pension Payment"
 msgstr "Pago de pensión"
@@ -1583,6 +1714,26 @@ msgstr "Perpección"
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__adjusted_payroll_wizard__type_of_movement__perception_adjustment_detail
 msgid "Perception Adjustment Detail"
 msgstr "Detalle de ajuste de percepción"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_custom_payroll_processing__perception_file_index
+msgid "Perception File Index"
+msgstr ""
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_custom_payroll_processing__perception_file_load
+msgid "Perception File Load"
+msgstr "Cargar archivo de precepciones"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_custom_payroll_processing__perception_hide
+msgid "Perception Hide"
+msgstr "Ocultar percepciones"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_custom_payroll_processing__perception_user
+msgid "Perception User"
+msgstr "Usuario de percepciones"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_custom_payroll_processing__period_start
@@ -1619,6 +1770,7 @@ msgstr "Usuarios del portal"
 #. module: jt_payroll_payment
 #: model:ir.actions.act_window,name:jt_payroll_payment.preception_action
 #: model:ir.model,name:jt_payroll_payment.model_preception
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_account_move__preception_ids
 #: model:ir.ui.menu,name:jt_payroll_payment.menu_preception_payment_of_payroll
 msgid "Preception"
 msgstr "Percepciones"
@@ -1627,6 +1779,21 @@ msgstr "Percepciones"
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__preception_line_ids
 msgid "Preception Line"
 msgstr "Línea de percepción"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_payroll_processing_failed_log__process_date_time
+msgid "Process Date"
+msgstr "Feche de procesamiento"
+
+#. module: jt_payroll_payment
+#: model_terms:ir.ui.view,arch_db:jt_payroll_payment.custom_payroll_processing_form_view
+msgid "Process Deduction"
+msgstr "Proceso de deducción"
+
+#. module: jt_payroll_payment
+#: model_terms:ir.ui.view,arch_db:jt_payroll_payment.custom_payroll_processing_form_view
+msgid "Process Perception"
+msgstr "Proceso de percepción"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__payment_request_type__project_payment
@@ -1642,7 +1809,7 @@ msgstr "Proveedor"
 #. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__rfc
 msgid "RFC"
-msgstr ""
+msgstr "RFC"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__receiving_bank_acc_pay_id
@@ -1731,6 +1898,11 @@ msgid "Saturday"
 msgstr "Sábado"
 
 #. module: jt_payroll_payment
+#: model:ir.model,name:jt_payroll_payment.model_ir_cron
+msgid "Scheduled Actions"
+msgstr "Acciones planificadas"
+
+#. module: jt_payroll_payment
 #: model:ir.ui.menu,name:jt_payroll_payment.menu_finance_contacts_scholarship
 msgid "Scholarship"
 msgstr "Becarios"
@@ -1764,6 +1936,11 @@ msgid "State"
 msgstr "Estado"
 
 #. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_payroll_processing_failed_log__state
+msgid "Status"
+msgstr "Estatus"
+
+#. module: jt_payroll_payment
 #: model:ir.model.fields,help:jt_payroll_payment.field_employee_payroll_file__activity_state
 msgid ""
 "Status based on activities\n"
@@ -1774,7 +1951,7 @@ msgstr ""
 "Estado basado en actividades\n"
 "Atrasado: la fecha de vencimiento ya pasó\n"
 "Hoy: la fecha de actividad es hoy\n"
-"Planificado: actividades futuras"
+"Planificado: actividades futuras."
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_load_bank_layout_employee__success_file_data
@@ -1860,6 +2037,7 @@ msgstr "Tipo"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_generate_payroll_wizard__type_of_movement
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_payroll_processing_failed_log__type_of_movement
 msgid "Type of Movement"
 msgstr "Tipo de movimiento"
 
@@ -1896,7 +2074,7 @@ msgstr "UNAM"
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_operation_type__upa_catalog_policy_id
 #: model:ir.ui.menu,name:jt_payroll_payment.policy_keys_menu
 msgid "UPA Catalog"
-msgstr "Claves de Pólizas"
+msgstr "Claves UPA"
 
 #. module: jt_payroll_payment
 #: model:ir.model,name:jt_payroll_payment.model_upa_document_type
@@ -1975,6 +2153,11 @@ msgid "deduction.line"
 msgstr ""
 
 #. module: jt_payroll_payment
+#: model:ir.model,name:jt_payroll_payment.model_payroll_processing_failed_log
+msgid "payroll.processing.failed.log"
+msgstr ""
+
+#. module: jt_payroll_payment
 #: model:ir.model,name:jt_payroll_payment.model_pension_payment_line
 msgid "pension.payment.line"
 msgstr ""
@@ -1983,9 +2166,3 @@ msgstr ""
 #: model:ir.model,name:jt_payroll_payment.model_preception_line
 msgid "preception.line"
 msgstr ""
-
-#. module: jt_payroll_payment
-#: model:ir.actions.act_window,name:jt_payroll_payment.action_financeboard_journal_1
-#: model:ir.ui.menu,name:jt_payroll_payment.menu_financeboard_journal_1
-msgid "Overview"
-msgstr "Visión de conjunto"

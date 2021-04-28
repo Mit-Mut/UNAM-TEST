@@ -26,8 +26,7 @@ from odoo import models, fields
 class ReasonForRequestRejection(models.TransientModel):
     _name = 'account.request.reject'
 
-    reason_rejection = fields.Selection([('discharge', 'Does not comply with the documentation supporting the discharge')],
-                                        string="Reason for rejection")
+    reason_rejection = fields.Text("Reason for rejection")
     observation = fields.Text('Observation')
 
     def apply(self):

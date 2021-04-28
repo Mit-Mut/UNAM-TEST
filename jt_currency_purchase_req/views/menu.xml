@@ -11,7 +11,7 @@
              
         <!-- Resource Requests for Foreign Exchange Purchase menus-->
         <menuitem id="menu_resource_req_foreign_ex_purchase" name="Resource Requests for Foreign Exchange Purchase"
-                  sequence="100" parent="jt_payroll_payment.menu_payment_finance_setting"/>
+                  sequence="100" parent="jt_payroll_payment.menu_payment_finance"/>
 
  
          <!--  Federal Grant Registeration menus-->

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-02 12:44+0000\n"
-"PO-Revision-Date: 2021-04-02 12:44+0000\n"
+"POT-Creation-Date: 2021-04-27 23:02+0000\n"
+"PO-Revision-Date: 2021-04-27 23:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -169,12 +169,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_cancellation__account_cancellation_id
 #: model:ir.ui.menu,name:jt_currency_purchase_req.finance_menu_cancel_request
 msgid "Account Cancellation"
-msgstr ""
+msgstr "Cancelación de cuenta"
 
 #. module: jt_currency_purchase_req
 #: model:ir.ui.menu,name:jt_currency_purchase_req.menu_account_management
 msgid "Account Management"
-msgstr "Administración de cuentas"
+msgstr "Gestión de Cuentas"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_open__account_modification_id
@@ -182,18 +182,18 @@ msgstr "Administración de cuentas"
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_other_procedure__account_modification_id
 #: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__request_accounts__move_type__account_modify
 msgid "Account Modification"
-msgstr ""
+msgstr "Modificación de cuenta"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.office_cancellation_template
 msgid "Account Number:"
-msgstr ""
+msgstr "Número de cuenta:"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_bank_statement_import_journal_creation__account_open_request_id
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_journal__account_open_request_id
 msgid "Account Request"
-msgstr ""
+msgstr "Solicitud de cuenta"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_bank_statement_import_journal_creation__account_type
@@ -204,25 +204,25 @@ msgstr ""
 #. module: jt_currency_purchase_req
 #: model:ir.ui.menu,name:jt_currency_purchase_req.menu_account_modification
 msgid "Account modification"
-msgstr ""
+msgstr "Modificación de cuenta"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model,name:jt_currency_purchase_req.model_request_accounts_line
 msgid "Account modification line"
-msgstr ""
+msgstr "Línea de modificación de cuenta"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.comission_profit_from_view
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.open_request_accounts_bank_from_view
 msgid "Accounting Notes"
-msgstr ""
+msgstr "Notas contables"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_comission_profit__amount
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_dollar_fund__amount
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote__amount
 msgid "Amount"
-msgstr ""
+msgstr "Monto"
 
 #. module: jt_currency_purchase_req
 #: model:ir.actions.act_window,name:jt_currency_purchase_req.action_application_request
@@ -232,37 +232,37 @@ msgstr "Solicitud de solicitud"
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.request_open_account_confirm_form_view
 msgid "Apply"
-msgstr ""
+msgstr "Aplicar"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.comission_profit_from_view
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.dollar_fund_from
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.quote_finance_from
 msgid "Approve"
-msgstr ""
+msgstr "Aprobar"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__comission_profit__status__approved
 #: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__dollar_fund__status__approve
 #: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__quote__status__approve
 msgid "Approved"
-msgstr ""
+msgstr "Aprobado"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.updating_signature_template
 msgid "As indicated below:"
-msgstr ""
+msgstr "Como se indica a continuación:"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
 msgid "Attached information:"
-msgstr ""
+msgstr "Información adjunta:"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_bank_statement_import_journal_creation__auth_sign_ids
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_journal__auth_sign_ids
 msgid "Auth Sign"
-msgstr ""
+msgstr "Firma de Autorización"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model,name:jt_currency_purchase_req.model_auth_sign
@@ -284,7 +284,7 @@ msgstr "firmas autorizadas"
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts_line__bank_account_id
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_confirm__bank_id
 msgid "Bank"
-msgstr ""
+msgstr "Banco"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_cancellation__bank_account_id
@@ -296,12 +296,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_other_procedure__bank_account_id
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts_line__bank_acc_number_id
 msgid "Bank Account"
-msgstr ""
+msgstr "Cuenta Bancaria"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote__bank_ref
 msgid "Bank Reference"
-msgstr ""
+msgstr "Referencia bancaria"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
@@ -309,16 +309,23 @@ msgid ""
 "By means of this document,we allow ourselves to request that youopen a non-"
 "productive checking account according to the following guidelines<br/>"
 msgstr ""
+"Mediante este documento, nos permitimos solicitarle que abra una cuenta "
+"corriente no productiva de acuerdo con las siguientes pautas <br/>"
 
 #. module: jt_currency_purchase_req
 #: model:ir.ui.menu,name:jt_currency_purchase_req.menu_cale_pay_post
 msgid "Calendar for payment posting"
-msgstr ""
+msgstr "Calendario para la contabilización de pagos"
+
+#. module: jt_currency_purchase_req
+#: model:ir.ui.menu,name:jt_currency_purchase_req.jt_budget_mgmt_menu_control_assigned_amounts
+msgid "Calender Of Assigned Amount"
+msgstr "Calendario de montos asignados"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.request_open_account_confirm_form_view
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #. module: jt_currency_purchase_req
 #: model:ir.actions.act_window,name:jt_currency_purchase_req.finance_cancellation_request_action
@@ -328,12 +335,12 @@ msgstr "Solicitud de cancelación"
 #. module: jt_currency_purchase_req
 #: model:ir.ui.menu,name:jt_currency_purchase_req.menu_cancellation_account
 msgid "Cancellation of checking account"
-msgstr ""
+msgstr "Cancelación de cuenta corriente"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__comission_profit__type_of_comission__check_paid_per_window
 msgid "Check paid per Window"
-msgstr ""
+msgstr "Cheque pagado por ventana"
 
 #. module: jt_currency_purchase_req
 #: model:ir.actions.act_window,name:jt_currency_purchase_req.action_account_cancellation
@@ -351,12 +358,12 @@ msgstr ""
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__comission_profit__type_of_record__commision
 msgid "Comission"
-msgstr ""
+msgstr "Comisión"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_move_line__commision_profit_id
 msgid "Comission Profit"
-msgstr ""
+msgstr "Beneficio de la comisión"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model,name:jt_currency_purchase_req.model_comission_profit
@@ -372,48 +379,48 @@ msgstr "Comisión y beneficio"
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
 msgid "Concept:"
-msgstr ""
+msgstr "Concepto"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.modification_account_from_view
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.open_request_accounts_bank_from_view
 msgid "Confirm"
-msgstr ""
+msgstr "Confirmar"
 
 #. module: jt_currency_purchase_req
 #: model:ir.actions.act_window,name:jt_currency_purchase_req.action_request_open_account_confirmation
 msgid "Confirm Request"
-msgstr ""
+msgstr "Solicitud de confirmación"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.cancellation_request_finance_view
 msgid "Confirmed"
-msgstr ""
+msgstr "Confirmado"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
 msgid "Copy of proof of address"
-msgstr ""
+msgstr "Copia del comprobante de domicilio"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
 msgid "Copy of the Organic Law of UNAM"
-msgstr ""
+msgstr "Copia de la Ley Orgánica de la UNAM"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
 msgid "Copy of the RFC of the UNAM"
-msgstr ""
+msgstr "Copia del RFC de la UNAM"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
 msgid "Copy of the identifications of the signatories"
-msgstr ""
+msgstr "Copia de las identificaciones de los firmantes."
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
 msgid "Copy of the internal regulations of the P University BoardTrustees"
-msgstr ""
+msgstr "Copia del reglamento interno del Patronato Universitario"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_cancellation__create_uid
@@ -428,7 +435,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote__create_uid
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts_line__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creado por"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_cancellation__create_date
@@ -443,37 +450,37 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote__create_date
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts_line__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Creado el"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_application_request__currency_id
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_dollar_fund__currency_id
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Divisa"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_registration
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_registration1
 msgid "DIRECTORATE OF REVENUE AND FINANCIAL OPERATIONS"
-msgstr ""
+msgstr "DIRECCIÓN DE INGRESOS Y OPERACIONES FINANCIERAS"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_comission_profit__journal_id
 msgid "Daily"
-msgstr ""
+msgstr "Diaria"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_application_request__date
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts__cancellation_date
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts__modification_date
 msgid "Date"
-msgstr ""
+msgstr "Fecha"
 
 #. module: jt_currency_purchase_req
 #: model:ir.ui.menu,name:jt_currency_purchase_req.menu_dollar_fund
 msgid "Delivery of resources in the dollar fund"
-msgstr ""
+msgstr "Entrega de recursos en el fondo en dólares"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.updating_signature_template
@@ -486,7 +493,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_office_signature__dependancy_id
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_other_procedure__dependancy_id
 msgid "Dependency"
-msgstr ""
+msgstr "Dependencia"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_bank_statement_import_journal_creation__dependency_id
@@ -497,7 +504,7 @@ msgstr "Clave de Dependencia"
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_comission_profit__description
 msgid "Description"
-msgstr ""
+msgstr "Descripción"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_cancellation__display_name
@@ -512,7 +519,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote__display_name
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts_line__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nombre para mostrar"
 
 #. module: jt_currency_purchase_req
 #: model:ir.actions.act_window,name:jt_currency_purchase_req.action_dollar_fund
@@ -526,48 +533,48 @@ msgstr "Fondo en dólares"
 #: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__dollar_fund__status__draft
 #: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__quote__status__draft
 msgid "Draft"
-msgstr ""
+msgstr "Borrador"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_finance_sender_recipient_trades__employee_ids
 msgid "EMPLOYEES COPIED"
-msgstr ""
+msgstr "EMPLEADOS COPIADOS"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_finance_sender_recipient_trades__recipient_emp_id
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_finance_sender_recipient_trades__sender_emp_id
 msgid "Employee"
-msgstr ""
+msgstr "Empleado"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote__exchange_rate
 msgid "Exchange Rate"
-msgstr ""
+msgstr "Tipo de cambio"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_finance_sender_recipient_trades__executive_id
 msgid "Executive Data"
-msgstr ""
+msgstr "Datos ejecutivo"
 
 #. module: jt_currency_purchase_req
 #: model:ir.ui.menu,name:jt_currency_purchase_req.menu_federal_grant_registeration
 msgid "Federal Grant Registeration"
-msgstr ""
+msgstr "Registro de Subsidio Federal"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_dollar_fund__attach_invoice
 msgid "Field to attach invoice"
-msgstr ""
+msgstr "Campo para adjuntar factura"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model,name:jt_currency_purchase_req.model_finance_sender_recipient_trades
 msgid "Finance Sender Recipient Trades"
-msgstr ""
+msgstr "Operaciones de destinatario del remitente de finanzas"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__account_journal__account_type__fixed
 msgid "Fixed"
-msgstr ""
+msgstr "Tasa Fija"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_comission_profit__folio
@@ -579,25 +586,25 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_cancellation
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_other_formalities
 msgid "GENERAL ADDRESS OF FINANZAS"
-msgstr ""
+msgstr "DIRECCIÓN GENERAL DE FINANZAS"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_registration
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_registration1
 msgid "GENERAL DIRECTORATE OF FINANCE"
-msgstr ""
+msgstr "DIRECCIÓN GENERAL DE FINANZAS"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.cancellation_request_finance_view
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.modification_account_from_view
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.open_request_accounts_bank_from_view
 msgid "Generate Request"
-msgstr ""
+msgstr "Generar solicitud"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__auth_sign__movement__high
 msgid "High"
-msgstr ""
+msgstr "Alta"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_cancellation__id
@@ -618,17 +625,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_cancellation
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_other_formalities
 msgid "INCOME DIRECTION AND FINANCIAL OPERATION"
-msgstr ""
+msgstr "DIRECCIÓN DE INGRESOS Y OPERACIÓN FINANCIERA"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.updating_signature_template
 msgid "Identification copy (s) of the signer (s)"
-msgstr ""
+msgstr "Copia (s) de identificación del firmante (s)"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__comission_profit__type_of_record__interest
 msgid "Interest"
-msgstr ""
+msgstr "Interes"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model,name:jt_currency_purchase_req.model_account_journal
@@ -644,7 +651,7 @@ msgstr "Apunte contable"
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_comission_profit__move_line_ids
 msgid "Journal Items"
-msgstr ""
+msgstr "Apuntes Contables"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_cancellation____last_update
@@ -659,7 +666,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote____last_update
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts_line____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Última modificación el"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_cancellation__write_uid
@@ -674,7 +681,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote__write_uid
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts_line__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Ultima actualización por"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_cancellation__write_date
@@ -689,7 +696,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote__write_date
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts_line__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Ultima actualización el"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_cancellation
@@ -702,12 +709,12 @@ msgstr ""
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__auth_sign__movement__low
 msgid "Low"
-msgstr ""
+msgstr "Baja"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_open_balance_finance__manger
 msgid "Manager's Name"
-msgstr ""
+msgstr "Nombre del gerente"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts__move_type
@@ -735,7 +742,7 @@ msgstr "Nombre"
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
 msgid "Name of the UNAM account:"
-msgstr ""
+msgstr "Nombre de la cuenta de la UNAM:"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts__no_trade
@@ -748,18 +755,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_office_signature__name
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_other_procedure__name
 msgid "Number"
-msgstr ""
+msgstr "Numero"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_application_request__no_of_currencies
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote__no_of_currencies
 msgid "Number Of Currencies"
-msgstr ""
+msgstr "Importe divisas"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.sender_recipient_trades_finance_from
 msgid "Occupation Compensation"
-msgstr ""
+msgstr "Compensación por ocupación"
 
 #. module: jt_currency_purchase_req
 #: model:ir.actions.act_window,name:jt_currency_purchase_req.action_other_procedures
@@ -770,32 +777,32 @@ msgstr "Ocupación otros procedimientos"
 #. module: jt_currency_purchase_req
 #: model:ir.actions.report,name:jt_currency_purchase_req.open_cancellation_checking_account_action
 msgid "Office Cancellation Checking Account"
-msgstr ""
+msgstr "Oficio de cancelación de cuenta corriente"
 
 #. module: jt_currency_purchase_req
 #: model:ir.actions.report,name:jt_currency_purchase_req.updating_signature_action
 msgid "Office Of Updating Signature"
-msgstr ""
+msgstr "Oficio de actualización de firma"
 
 #. module: jt_currency_purchase_req
 #: model:ir.actions.report,name:jt_currency_purchase_req.office_other_formalities_action
 msgid "Office Other Formalities"
-msgstr ""
+msgstr "Oficio de Otros procedimientos"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model,name:jt_currency_purchase_req.model_office_signature
 msgid "Office Signature"
-msgstr ""
+msgstr "Firma de oficio"
 
 #. module: jt_currency_purchase_req
 #: model:ir.ui.menu,name:jt_currency_purchase_req.menu_signautre_update
 msgid "Office of updating signatures"
-msgstr ""
+msgstr "Oficio de actualización de Firma"
 
 #. module: jt_currency_purchase_req
 #: model:ir.ui.menu,name:jt_currency_purchase_req.menu_trade
 msgid "Offices"
-msgstr ""
+msgstr "Oficios"
 
 #. module: jt_currency_purchase_req
 #: model:ir.actions.act_window,name:jt_currency_purchase_req.action_open_account_checking
@@ -805,29 +812,29 @@ msgstr "Abrir vista de cuenta corriente"
 #. module: jt_currency_purchase_req
 #: model:ir.actions.report,name:jt_currency_purchase_req.open_checking_account_action
 msgid "Open a Checking Account"
-msgstr ""
+msgstr "Apertura de cuenta corriente"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model,name:jt_currency_purchase_req.model_account_open
 #: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__finance_sender_recipient_trades__template__open_check_acc
 #: model:ir.ui.menu,name:jt_currency_purchase_req.menu_checking_account
 msgid "Opening a checking account"
-msgstr ""
+msgstr "Apertura de cuenta corriente"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__account_journal__account_type__operational_fund
 msgid "Operational Fund"
-msgstr ""
+msgstr "Fondo operativo"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__finance_sender_recipient_trades__template__other_procedures
 msgid "Other Procedures"
-msgstr ""
+msgstr "Otros procedimientos"
 
 #. module: jt_currency_purchase_req
 #: model:ir.ui.menu,name:jt_currency_purchase_req.menu_other_procedure
 msgid "Other procedures"
-msgstr ""
+msgstr "Otros procedimientos"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_auth_sign__ownership
@@ -839,13 +846,13 @@ msgstr "Propiedad"
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
 msgid "Persons authorized to sign:"
-msgstr ""
+msgstr "Personas autorizadas a firmar:"
 
 #. module: jt_currency_purchase_req
 #: code:addons/jt_currency_purchase_req/models/commision_and_profit.py:0
 #, python-format
 msgid "Please configure UNAM and CONAC account in Item!"
-msgstr ""
+msgstr "Por favor configure la cuenta UNAM y CONAC en partida!"
 
 #. module: jt_currency_purchase_req
 #: code:addons/jt_currency_purchase_req/models/commision_and_profit.py:0
@@ -877,27 +884,27 @@ msgstr "Posición"
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_finance_sender_recipient_trades__recipient_professional_title
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_finance_sender_recipient_trades__sender_professional_title
 msgid "Professional Title"
-msgstr ""
+msgstr "Título profesional"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_comission_profit__programmatic_code_id
 msgid "Programmatic Code"
-msgstr ""
+msgstr "Código Programático"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts_line__user_id
 msgid "Project Manager"
-msgstr ""
+msgstr "Administrador del proyecto"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts_line__project_id
 msgid "Project Number"
-msgstr ""
+msgstr "Número de Proyecto"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.cancellation_request_finance_view
 msgid "Project Type"
-msgstr ""
+msgstr "Tipo de Proyecto"
 
 #. module: jt_currency_purchase_req
 #: model:ir.ui.menu,name:jt_currency_purchase_req.menu_quote
@@ -907,17 +914,17 @@ msgstr "Cita"
 #. module: jt_currency_purchase_req
 #: model:ir.model,name:jt_currency_purchase_req.model_quote
 msgid "Quotes"
-msgstr ""
+msgstr "Cotizaciones"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.sender_recipient_trades_finance_from
 msgid "RECIPIENT"
-msgstr ""
+msgstr "SOLICITANTE"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_application_request__reg_denomination
 msgid "Register denomination"
-msgstr ""
+msgstr "Registrar denominación"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.cancellation_request_finance_view
@@ -925,12 +932,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.open_request_accounts_bank_from_view
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.quote_finance_from
 msgid "Reject"
-msgstr ""
+msgstr "Rechazar"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__quote__status__reject
 msgid "Rejected"
-msgstr ""
+msgstr "Rechazado"
 
 #. module: jt_currency_purchase_req
 #: code:addons/jt_currency_purchase_req/models/account_modification.py:0
@@ -939,17 +946,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.application_request_finance_from
 #, python-format
 msgid "Request"
-msgstr ""
+msgstr "Solicitud"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model,name:jt_currency_purchase_req.model_request_open_balance_finance
 msgid "Request Transfer"
-msgstr ""
+msgstr "Solicitud de TRansferencia"
 
 #. module: jt_currency_purchase_req
 #: model:ir.ui.menu,name:jt_currency_purchase_req.menu_request_account
 msgid "Request for new account"
-msgstr ""
+msgstr "Solicitud de Apertura de Cuenta"
 
 #. module: jt_currency_purchase_req
 #: model:ir.actions.act_window,name:jt_currency_purchase_req.account_modification_action
@@ -964,12 +971,12 @@ msgstr "Solicitud de apertura de cuenta"
 #. module: jt_currency_purchase_req
 #: model:ir.ui.menu,name:jt_currency_purchase_req.menu_request_application
 msgid "Requests"
-msgstr ""
+msgstr "Solicitudes"
 
 #. module: jt_currency_purchase_req
 #: model:ir.actions.act_window,name:jt_currency_purchase_req.fiance_request_accounts_action
 msgid "Requests to open an account"
-msgstr "Solicitudes para abrir una cuenta"
+msgstr "Solicitud de Apertura de Cuenta"
 
 #. module: jt_currency_purchase_req
 #: model:ir.ui.menu,name:jt_currency_purchase_req.menu_resource_req_foreign_ex_purchase
@@ -982,24 +989,24 @@ msgstr "Solicitudes de recursos para la compra de divisas"
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_office_signature__user_id
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_other_procedure__user_id
 msgid "Responsible User"
-msgstr ""
+msgstr "Usuario responsable"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote__bank_account_id
 msgid "Retirement account"
-msgstr ""
+msgstr "Cuenta de retiro"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.sender_recipient_trades_finance_from
 msgid "SENDER"
-msgstr ""
+msgstr "REMITENTE"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.modification_account_from_view
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.open_request_accounts_bank_from_view
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.quote_finance_from
 msgid "Send Request"
-msgstr ""
+msgstr "Enviar solicitud"
 
 #. module: jt_currency_purchase_req
 #: model:ir.actions.act_window,name:jt_currency_purchase_req.action_sender_recipient_trades_finance
@@ -1009,12 +1016,12 @@ msgstr "Remitente y destinatario de transacciones"
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote__shedule_date
 msgid "Shedule Date"
-msgstr ""
+msgstr "Fecha de programacion"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__finance_sender_recipient_trades__template__sign_update
 msgid "Signature Update"
-msgstr ""
+msgstr "Actualización de firma"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_application_request__status
@@ -1022,17 +1029,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_dollar_fund__status
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_quote__status
 msgid "Status"
-msgstr ""
+msgstr "Estatus"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_registration1
 msgid "TREASURY"
-msgstr ""
+msgstr "TESORERÍA"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_finance_sender_recipient_trades__template
 msgid "Template"
-msgstr ""
+msgstr "Planilla"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
@@ -1040,37 +1047,39 @@ msgid ""
 "The conditions of the signatures pooled as follows: 2 of 4 (“A” with “A”) we"
 " also request the allocation of 100 checks"
 msgstr ""
+"Las condiciones de las firmas agrupadas de la siguiente manera: 2 de 4 "
+"(\"A\" con \"A\") también solicitamos la asignación de 100 cheques"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
 msgid "This account must be linked to the"
-msgstr ""
+msgstr "Esta cuenta debe estar vinculada a la"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_finance_sender_recipient_trades__recipient_title
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_finance_sender_recipient_trades__sender_title
 msgid "Title"
-msgstr ""
+msgstr "Título"
 
 #. module: jt_currency_purchase_req
 #: model:ir.ui.menu,name:jt_currency_purchase_req.menu_sender_recipient_trades_finance
 msgid "Trades Sender and Recipient"
-msgstr ""
+msgstr "Remitente y destinatario de operaciones"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__comission_profit__type_of_comission__transfer
 msgid "Transfers"
-msgstr ""
+msgstr "Transferencias"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_comission_profit__type_of_comission
 msgid "Type Of Commision"
-msgstr ""
+msgstr "Tipo de comisión"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_comission_profit__type_of_record
 msgid "Type Of Record"
-msgstr ""
+msgstr "Tipo de registro"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_auth_sign__type_of_signature
@@ -1086,12 +1095,12 @@ msgstr "Tipo de firma"
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_registration1
 msgid "UNIVERSITY BOARD OF TRUSTEES"
-msgstr ""
+msgstr "PATRONATO UNIVERSITARIO"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_registration
 msgid "UNIVERSITY BOARD OF TRUSTEES-TREASURY"
-msgstr ""
+msgstr "PATRONATO UNIVERSITARIO-TESORERÍA"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_check_cancellation
@@ -1100,11 +1109,13 @@ msgid ""
 "UNIVERSITY PATRONAGE -\n"
 "TREASURY"
 msgstr ""
+"PATRONATO UNIVERSITARIO -\n"
+"TESORERIA"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.external_layout_header_other_formalities
 msgid "University City, Cd. Mx."
-msgstr ""
+msgstr "Ciudad Universitaria, Cd. Mx."
 
 #. module: jt_currency_purchase_req
 #: model:ir.actions.act_window,name:jt_currency_purchase_req.action_update_signature
@@ -1114,17 +1125,17 @@ msgstr "Actualizar firma"
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.modification_account_from_view
 msgid "Updated data"
-msgstr ""
+msgstr "Datos actualizados"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.quote_finance_from
 msgid "Validate"
-msgstr ""
+msgstr "Validar"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__quote__status__validate
 msgid "Validated"
-msgstr ""
+msgstr "Validado"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.updating_signature_template
@@ -1132,22 +1143,26 @@ msgid ""
 "We hereby request to incorporate changes into the signatures of the "
 "following account(s)."
 msgstr ""
+"Por la presente solicitamos incorporar cambios en las firmas de las "
+"siguientes cuentas."
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.office_cancellation_template
 msgid ""
 "With this we request that As of this date, the account (s) are canceled"
 msgstr ""
+"Con esto solicitamos que a partir de esta fecha, la (s) cuenta (s) sean "
+"canceladas"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_open_balance_finance__worker
 msgid "Worker's Name"
-msgstr ""
+msgstr "Nombre del trabajador"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts_line__request_id
 msgid "account request"
-msgstr ""
+msgstr "solicitud de cuenta"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model,name:jt_currency_purchase_req.model_application_request
@@ -1157,7 +1172,7 @@ msgstr ""
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.cancellation_request_finance_view
 msgid "approved"
-msgstr ""
+msgstr "Aprobado"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
@@ -1165,17 +1180,19 @@ msgid ""
 "contracts that are in the name of the National Autonomous University of "
 "Mexico and register it in the check protection service."
 msgstr ""
+"contratos que estén a nombre de la Universidad Nacional Autónoma de México y"
+" lo registren en el servicio de protección de cheques."
 
 #. module: jt_currency_purchase_req
 #: code:addons/jt_currency_purchase_req/models/quote.py:0
 #, python-format
 msgid "date should be after deterioration to the posting date"
-msgstr ""
+msgstr "La fecha debe ser posterior al deterioro de la fecha de publicación."
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts__legal_number
 msgid "legal Number"
-msgstr ""
+msgstr "Número de Oficio"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
@@ -1183,16 +1200,18 @@ msgid ""
 "ofCopy of the deed testimony 102. 430. PA Vol. 4749, pages 665254 Issued by the Public Notary 153, which contains the powers granted in favor of the Treasurer and the Director General of Finance as legal\n"
 "                                      representatives of the UNAM"
 msgstr ""
+"ofCopia del testimonio de la escritura 102. 430. PA Vol. 4749, folios 665254 Emitido por el Notario Público 153, que contiene las facultades otorgadas a favor del Tesorero y el Director General de Finanzas como\n"
+"                                      representantes de la UNAM"
 
 #. module: jt_currency_purchase_req
 #: model:ir.actions.act_window,name:jt_currency_purchase_req.action_quotes
 msgid "quote"
-msgstr ""
+msgstr "Cotización"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_request_accounts__request_line_ids
 msgid "request line"
-msgstr ""
+msgstr "línea de solicitud"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model,name:jt_currency_purchase_req.model_request_confirm

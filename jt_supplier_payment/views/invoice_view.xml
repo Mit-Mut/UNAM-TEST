@@ -658,6 +658,7 @@
                     <field name="partner_id"/>
                     <field name="invoice_date"/>
                     <field name="payment_state"/>
+                    <field name="folio" string="Counter Receipt Folio"/>
                     <field name="folio_dependency"/>
                     <field name="currency_id"/>
                     <field name="amount_total"/>

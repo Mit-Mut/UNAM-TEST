@@ -2536,3 +2536,8 @@ msgstr "No Validado"
 msgid "Partner Type"
 msgstr "Tipo de socio"
 
+#. module: jt_supplier_payment
+#: model_terms:ir.ui.view,arch_db:jt_supplier_payment.inherited_view_account_payment_tree
+#: model_terms:ir.ui.view,arch_db:jt_supplier_payment.payment_req_tree_view
+msgid "Counter Receipt Folio"
+msgstr "Folio contra Recibo"

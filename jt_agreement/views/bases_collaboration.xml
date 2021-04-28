@@ -762,7 +762,7 @@
                                 <field name="base_collabaration_id" attrs="{'invisible':[('trasnfer_request','!=','investments')],'readonly':[('state', 'not in', ('draft','requested'))]}"/>
 
                                 <field name="authorized_by_emp_id" readonly="1" attrs="{'invisible':[('trasnfer_request','!=','finances')]}" invisible="1"/>
-                                <field name="authorized_by_user_id" string="Authorized by"/>
+                                <field name="authorized_by_user_id" string="Authorized by" readonly="1"/>
                                 <field name="authorized_by_dept_id"/>
                                 <!-- attrs="{'invisible':[('trasnfer_request','!=','finances')]}" -->
                             </group>

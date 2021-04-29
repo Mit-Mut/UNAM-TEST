@@ -696,7 +696,7 @@
                     <field name="operation_number"/>
                     <field name="amount"/>
                     <field name="date"/>
-                    <field name="user_id"/>
+                    <field name="prepared_by_user_id" string="Done By"/>
                     <field name="state"/>
                     <field name="trasnfer_request"/>
                     <field name="is_manual" invisible="1"/>
@@ -737,8 +737,8 @@
                                 <field name="desti_account"/>
                                 <field name="amount" attrs="{'readonly':[('state', 'not in', ('draft','requested'))]}"/>
                                 <field name="currency_id" attrs="{'invisible':[('trasnfer_request','!=','finances')],'readonly':[('state', 'not in', ('draft','requested'))]}"/>
-                                <field name="dependency_id" context="{'show_for_agreement':1}" attrs="{'invisible':[('trasnfer_request','=','finances')],'readonly':[('state', 'not in', ('draft','requested'))]}"/>
-                                <field name="sub_dependency_id" context="{'show_for_agreement':1}" attrs="{'invisible':[('trasnfer_request','=','finances')],'readonly':[('state', 'not in', ('draft','requested'))]}"/>
+                                <field name="dependency_id" context="{'show_for_agreement':1}" attrs="{'readonly':[('state', 'not in', ('draft','requested'))]}"/>
+                                <field name="sub_dependency_id" domain="[('dependency_id','=',dependency_id)]" context="{'show_for_agreement':1}" attrs="{'readonly':[('state', 'not in', ('draft','requested'))]}"/>
                                 <field name="trasnfer_request" readonly="1"/>
                                 
                                 <field name="prepared_by_emp_id" readonly="1" attrs="{'invisible':[('trasnfer_request','!=','finances')]}" invisible="1"/>
@@ -750,7 +750,7 @@
                             <group>
                                 <field name="date" string="Elaboration Date" readonly="1"/>
                                 <field name="concept" attrs="{'readonly':[('state', 'not in', ('draft','requested'))]}"/>
-                                <field name="user_id" attrs="{'invisible':[('trasnfer_request','=','finances')],'readonly':[('state', 'not in', ('draft','requested'))]}"/>
+                                <field name="user_id" readonly="1"/>
                                 <field name="unit_req_transfer_id" context="{'show_for_agreement':1}"
                                        attrs="{'invisible':[('trasnfer_request','!=','investments')],'readonly':[('state', 'not in', ('draft','requested'))]}"/>
                                 <field name="date_required" required="1" attrs="{'readonly':

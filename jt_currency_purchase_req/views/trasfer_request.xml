@@ -10,8 +10,8 @@
             <field name="arch" type="xml">
             	
                 <xpath expr="//field[@name='sub_dependency_id']" position="after">
-                    <field name="worker" attrs="{'invisible':[('is_manual','=',True)]}"/>
-                    <field name="manger" attrs="{'invisible':[('is_manual','=',True)]}"/>
+                    <!-- <field name="worker" attrs="{'invisible':[('is_manual','=',True)]}"/>
+                    <field name="manger" attrs="{'invisible':[('is_manual','=',True)]}"/> -->
                 </xpath>
             </field>
         </record>

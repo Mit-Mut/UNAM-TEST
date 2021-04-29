@@ -204,6 +204,8 @@ class AdjustedPayrollWizard(models.TransientModel):
 
             employee_id = False
             if self.type_of_movement == 'perception_adjustment_detail':
+                exist_lines = self.env['preception.line']
+                update_lines = self.env['preception.line']
                 for rowx, row in enumerate(map(sheet.row, range(1, sheet.nrows)), 1):
                     counter = 0
                     rfc = row[0].value
@@ -236,6 +238,8 @@ class AdjustedPayrollWizard(models.TransientModel):
                         emp_payroll_ids = self.payroll_process_id.payroll_ids.filtered(lambda x:x.employee_id.id==employee_id)
 
                     for rec in emp_payroll_ids:
+                        exist_lines += rec.preception_line_ids
+                        
                         if perception:
                             if  type(perception) is int or type(perception) is float:
                                 perception = int(perception)
@@ -243,15 +247,22 @@ class AdjustedPayrollWizard(models.TransientModel):
                             pre_id = self.env['preception'].search([('key','=',perception)],limit=1)
                             if pre_id:
                                 lines = rec.preception_line_ids.filtered(lambda x:x.preception_id.id==pre_id.id)
+                                update_lines += lines
                                 for line in lines:
                                     line.program_code_id = program_id
                                     line.amount = amount
                                 
                                 if not lines:
                                     rec.write({'preception_line_ids':[(0,0,{'program_code_id':program_id,'preception_id':pre_id.id,'amount':amount})]})
-
+                delete_lines = exist_lines - update_lines
+                if delete_lines:
+                    delete_lines.unlink()
+                    
             employee_id = False
             if self.type_of_movement == 'deduction_adjustment_detail':
+                exist_lines = self.env['deduction.line']
+                update_lines = self.env['deduction.line']
+                
                 for rowx, row in enumerate(map(sheet.row, range(1, sheet.nrows)), 1):
                     
                     rfc = row[0].value
@@ -272,6 +283,7 @@ class AdjustedPayrollWizard(models.TransientModel):
                         emp_payroll_ids = self.payroll_process_id.payroll_ids.filtered(lambda x:x.employee_id.id==employee_id)
                         
                     for rec in emp_payroll_ids:
+                        exist_lines += rec.deduction_line_ids
                         if deduction_key:
                             if  type(deduction_key) is int or type(deduction_key) is float:
                                 deduction_key = int(deduction_key)
@@ -279,14 +291,21 @@ class AdjustedPayrollWizard(models.TransientModel):
                             pre_id = self.env['deduction'].search([('key','=',deduction_key)],limit=1)
                             if pre_id:
                                 lines = rec.deduction_line_ids.filtered(lambda x:x.deduction_id.id==pre_id.id)
+                                update_lines += lines 
                                 for line in lines:
                                     line.amount = amount
                                 
                                 if not lines:
                                     rec.write({'deduction_line_ids':[(0,0,{'deduction_id':pre_id.id,'amount':amount})]})                                    
 
+                delete_lines = exist_lines - update_lines
+                if delete_lines:
+                    delete_lines.unlink()
 
             if self.type_of_movement == 'detail_alimony_adjustments':
+                exist_lines = self.env['pension.payment.line']
+                update_lines = self.env['pension.payment.line']
+                
                 for rowx, row in enumerate(map(sheet.row, range(1, sheet.nrows)), 1):
                     
                     rfc = row[0].value
@@ -324,6 +343,7 @@ class AdjustedPayrollWizard(models.TransientModel):
                         emp_payroll_ids = self.payroll_process_id.payroll_ids.filtered(lambda x:x.employee_id.id==employee_id)
                     
                     for rec in emp_payroll_ids:
+                        exist_lines += rec.pension_payment_line_ids
                         if payment_method:
                             payment_method_id = False
                             journal_id = False
@@ -362,6 +382,7 @@ class AdjustedPayrollWizard(models.TransientModel):
                                 lines = rec.pension_payment_line_ids.filtered(lambda x:
                                         x.l10n_mx_edi_payment_method_id.id==payment_method_id and
                                         x.bank_key == str(bank_key))
+                                update_lines += lines
                                 for line in lines:
                                     line.total_pension = total_pension
                                     line.partner_id = partner_id 
@@ -383,4 +404,7 @@ class AdjustedPayrollWizard(models.TransientModel):
                                     
                                     
                                                                         
+                delete_lines = exist_lines - update_lines
+                if delete_lines:
+                    delete_lines.unlink()
                                     

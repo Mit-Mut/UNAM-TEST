@@ -8,7 +8,9 @@ class AccountPayment(models.Model):
     
     dependancy_id = fields.Many2one('dependency', string='Dependency')
     sub_dependancy_id = fields.Many2one('sub.dependency', 'Sub Dependency')
-    
+    transfer_made_origin = fields.Boolean('Transfer Made (origin account)', default=True)
+    confirmed_transfer = fields.Boolean('Confirmed Transfer (destination account)', default=True)
+
     def post(self):
         record = super(AccountPayment,self).post()
         for rec in self:

@@ -6,16 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-09 19:14+0000\n"
-"PO-Revision-Date: 2020-12-09 13:24-0600\n"
+"POT-Creation-Date: 2021-04-27 23:12+0000\n"
+"PO-Revision-Date: 2021-04-27 23:12+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-"Language: es\n"
-"X-Generator: Poedit 2.4.1\n"
 
 #. module: jt_investment
 #: model:ir.ui.menu,name:jt_investment.menu_account_statement
@@ -24,6 +22,22 @@ msgstr ""
 #: model:ir.ui.menu,name:jt_investment.menu_titles_account_statement
 msgid " Account Statements"
 msgstr " Estados de Cuenta"
+
+#. module: jt_investment
+#: code:addons/jt_investment/models/maturity_report.py:0
+#, python-format
+msgid ""
+"%s at %s To\n"
+" %s at %s (%s)"
+msgstr ""
+"%s a las %s hasta\n"
+"%s a las %s (%s)"
+
+#. module: jt_investment
+#: code:addons/jt_investment/models/maturity_report.py:0
+#, python-format
+msgid "%s at (%s To %s) (%s)"
+msgstr "%s a las (%s hasta %s) (%s)"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_period_rate__rate_year_10
@@ -116,50 +130,98 @@ msgid "91 Days"
 msgstr "91 Días"
 
 #. module: jt_investment
-#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_investment_committee
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_fund_account_statement
 msgid ""
 "<b>\n"
-"                            <span style=\"font-size:16px\" class=\"text-"
-"center\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\n"
+"                            <span style=\"font-size:16px\" class=\"text-center\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\n"
 "                            </span>\n"
 "                            <br/>\n"
-"                            <span style=\"font-size:14px;\" class=\"text-"
-"center\">DIRECCIÓN GENERAL DE FINANZAS\n"
+"                            <span style=\"font-size:14px;\" class=\"text-center\">DIRECCIÓN GENERAL DE FINANZAS\n"
 "                            </span>\n"
 "                            <br/>\n"
 "                        </b>\n"
-"                        <span style=\"font-size:12px;\" class=\"text-center"
-"\">DIRECCIÓN DE INGRESOS Y OPERATIÓN FINANCIERA\n"
+"                        <span style=\"font-size:12px;\" class=\"text-center\">DIRECCIÓN DE INGRESOS Y OPERATIÓN FINANCIERA\n"
 "                        </span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\" class=\"text-center"
-"\">DEPTO. DE OPERACIÓN FINANCIERA\n"
+"                        <span style=\"font-size:12px;\" class=\"text-center\">DEPTO. DE OPERACIÓN FINANCIERA\n"
 "                        </span>\n"
 "                        <br/>"
 msgstr ""
 
 #. module: jt_investment
 #: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_investment_committee
+msgid ""
+"<b>\n"
+"                            <span style=\"font-size:16px\" class=\"text-center\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\n"
+"                            </span>\n"
+"                            <br/>\n"
+"                            <span style=\"font-size:14px;\" class=\"text-center\">PATRONATO UNIVERSITARIO\n"
+"                            </span>\n"
+"                            <br/>\n"
+"                        </b>\n"
+"                        <span style=\"font-size:12px;\" class=\"text-center\">DIRECCIÓN GENERAL DE FINANZAS\n"
+"                        </span>\n"
+"                        <br/>\n"
+"                        <span style=\"font-size:12px;\" class=\"text-center\">SUBDIRECCION DE FINANZAS\n"
+"                        </span>\n"
+"                        <br/>\n"
+"                        <span style=\"font-size:12px;\" class=\"text-center\">REPORTE PARA EL COMITÉ DE INVERSIONES</span>"
+msgstr ""
+
+#. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_productive_account_statement
+msgid ""
+"<b>\n"
+"                            <span style=\"font-size:16px\" class=\"text-center\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\n"
+"                            </span>\n"
+"                            <br/>\n"
+"                            <span style=\"font-size:14px;\" class=\"text-center\">PATRONATO UNIVERSITARIO\n"
+"                            </span>\n"
+"                            <br/>\n"
+"                        </b>\n"
+"                        <span style=\"font-size:12px;\" class=\"text-center\">DIRECCIÓN GENERAL DE FINANZAS\n"
+"                        </span>\n"
+"                        <br/>\n"
+"                        <span style=\"font-size:12px;\" class=\"text-center\">SUBDIRECCIÓN DE FINANZAS\n"
+"                        </span>\n"
+"                        <br/>\n"
+"                        <b>\n"
+"                            <span style=\"padding-top:5px;font-size:12px;\">REPORTE DE CUENTAS PRODUCTIVAS</span>\n"
+"                        </b>"
+msgstr ""
+
+#. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_fund_account_statement
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_investment_committee
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_productive_account_statement
 msgid "<b>(+) Incrementos</b>"
 msgstr ""
 
 #. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_fund_account_statement
 #: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_investment_committee
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_productive_account_statement
 msgid "<b>(-) Retiros</b>"
 msgstr ""
 
 #. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_fund_account_statement
 #: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_investment_committee
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_productive_account_statement
 msgid "<b>Estado de cuenta:</b>"
 msgstr ""
 
 #. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_fund_account_statement
 #: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_investment_committee
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_productive_account_statement
 msgid "<b>Saldo Actual:</b>"
 msgstr ""
 
 #. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_fund_account_statement
 #: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_investment_committee
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_productive_account_statement
 msgid "<b>Saldo Inicial</b>"
 msgstr ""
 
@@ -193,355 +255,195 @@ msgstr ""
 #. module: jt_investment
 #: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_report_productive_accounts
 msgid ""
-"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
-"span>\n"
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:14px;\">UNIVERSITY BOARD</"
-"span>\n"
+"                        <span style=\"font-size:14px;\">PATRONATO UNIVERSITARIO</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
-"FINANZAS</span>\n"
+"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE FINANZAS</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">SUBDIRECCION DE "
-"FINANZAS</span>\n"
+"                        <span style=\"font-size:12px;\">SUBDIRECCION DE FINANZAS</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">INFORME DE CUENTAS "
-"PRODUCTIVAS</span>\n"
+"                        <span style=\"font-size:12px;\">REPORTE DE CUENTAS PRODUCTIVAS</span>\n"
 "                        <br/>"
 msgstr ""
-"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
-"span>\n"
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:14px;\">PATRONATO "
-"UNIVERSITARIO</span>\n"
+"                        <span style=\"font-size:14px;\">PATRONATO UNIVERSITARIO</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
-"FINANZAS</span>\n"
+"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE FINANZAS</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">SUBDIRECCION DE "
-"FINANZAS</span>\n"
+"                        <span style=\"font-size:12px;\">SUBDIRECCION DE FINANZAS</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">INFORME DE CUENTAS "
-"PRODUCTIVAS</span>\n"
+"                        <span style=\"font-size:12px;\">INFORME DE CUENTAS PRODUCTIVAS</span>\n"
 "                        <br/>"
 
 #. module: jt_investment
 #: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_investment_funds_productive_accounts
 msgid ""
-"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
-"span>\n"
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:14px;\">UNIVERSITY BOARD</"
-"span>\n"
+"                        <span style=\"font-size:14px;\">PATRONATO UNIVERSITARIO</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
-"FINANZAS</span>\n"
+"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE FINANZAS</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">SUBDIRECCION DE "
-"FINANZAS</span>\n"
+"                        <span style=\"font-size:12px;\">SUBDIRECCION DE FINANZAS</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">INFORME DE FONDOS DE "
-"INVERSIÓN EN CUENTAS PRODUCTIVAS</span>\n"
+"                        <span style=\"font-size:12px;\">REPORTE DE FONDOS DE INVERSIÓN EN CUENTAS PRODUCTIVAS</span>\n"
 "                        <br/>"
 msgstr ""
-"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
-"span>\n"
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:14px;\">PATRONATO "
-"UNIVERSITARIO</span>\n"
+"                        <span style=\"font-size:14px;\">PATRONATO UNIVERSITARIO</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
-"FINANZAS</span>\n"
+"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE FINANZAS</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">SUBDIRECCION DE "
-"FINANZAS</span>\n"
+"                        <span style=\"font-size:12px;\">SUBDIRECCION DE FINANZAS</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">INFORME DE FONDOS DE "
-"INVERSIÓN EN CUENTAS PRODUCTIVAS</span>\n"
+"                        <span style=\"font-size:12px;\">INFORME DE FONDOS DE INVERSIÓN EN CUENTAS PRODUCTIVAS</span>\n"
 "                        <br/>"
 
 #. module: jt_investment
 #: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_report_of_investment_funds
 msgid ""
-"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
-"span>\n"
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:14px;\">UNIVERSITY BOARD</"
-"span>\n"
+"                        <span style=\"font-size:14px;\">PATRONATO UNIVERSITARIO</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
-"FINANZAS</span>\n"
+"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE FINANZAS</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">SUBDIRECCION DE "
-"FINANZAS</span>\n"
+"                        <span style=\"font-size:12px;\">SUBDIRECCION DE FINANZAS</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">INFORME DE FONDOS DE "
-"INVERSIÓN</span>\n"
+"                        <span style=\"font-size:12px;\">REPORTE DE FONDOS DE INVERSIÓN</span>\n"
 "                        <br/>"
 msgstr ""
-"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
-"span>\n"
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:14px;\">PATRONATO "
-"UNIVERSITARIO</span>\n"
+"                        <span style=\"font-size:14px;\">PATRONATO UNIVERSITARIO</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
-"FINANZAS</span>\n"
+"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE FINANZAS</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">SUBDIRECCION DE "
-"FINANZAS</span>\n"
+"                        <span style=\"font-size:12px;\">SUBDIRECCION DE FINANZAS</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">INFORME DE FONDOS DE "
-"INVERSIÓN</span>\n"
-"                        <br/>"
-
-#. module: jt_investment
-#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_quotation_of_investment_funds
-msgid ""
-"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
-"span>\n"
-"                        <br/>\n"
-"                        <span style=\"font-size:14px;\">UNIVERSITY BOARD</"
-"span>\n"
-"                        <br/>\n"
-"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
-"FINANZAS</span>\n"
-"                        <br/>\n"
-"                        <span style=\"font-size:12px;\">SUBDIRECCION DE "
-"FINANZAS</span>\n"
-"                        <br/>\n"
-"                        <span style=\"font-size:12px;\">Informe de "
-"cotización de Fondos de Inversión</span>\n"
-"                        <br/>"
-msgstr ""
-"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
-"span>\n"
-"                        <br/>\n"
-"                        <span style=\"font-size:14px;\">PATRONATO "
-"UNIVERSITARIO</span>\n"
-"                        <br/>\n"
-"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
-"FINANZAS</span>\n"
-"                        <br/>\n"
-"                        <span style=\"font-size:12px;\">SUBDIRECCION DE "
-"FINANZAS</span>\n"
-"                        <br/>\n"
-"                        <span style=\"font-size:12px;\">Informe de "
-"cotización de Fondos de Inversión</span>\n"
+"                        <span style=\"font-size:12px;\">INFORME DE FONDOS DE INVERSIÓN</span>\n"
 "                        <br/>"
 
 #. module: jt_investment
 #: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_report_increases_and_withdrawals
 msgid ""
-"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
-"span>\n"
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:14px;\">UNIVERSITY BOARD</"
-"span>\n"
+"                        <span style=\"font-size:14px;\">PATRONATO UNIVERSITARIO</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
-"FINANZAS</span>\n"
+"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE FINANZAS</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">SUBDIRECCION DE "
-"FINANZAS</span>\n"
+"                        <span style=\"font-size:12px;\">SUBDIRECCION DE FINANZAS</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">REPORTE DE "
-"INCREMENTOS Y RETIROS</span>\n"
+"                        <span style=\"font-size:12px;\">REPORTE DE INCREMENTOS Y RETIROS</span>\n"
 "                        <br/>"
 msgstr ""
-"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
-"span>\n"
-"                        <br/>\n"
-"                        <span style=\"font-size:14px;\">PATRONATO "
-"UNIVERSITARIO</span>\n"
-"                        <br/>\n"
-"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
-"FINANZAS</span>\n"
-"                        <br/>\n"
-"                        <span style=\"font-size:12px;\">SUBDIRECCION DE "
-"FINANZAS</span>\n"
-"                        <br/>\n"
-"                        <span style=\"font-size:12px;\">REPORTE DE "
-"INCREMENTOS Y RETIROS</span>\n"
-"                        <br/>"
 
 #. module: jt_investment
 #: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_indicators_report
 msgid ""
-"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
-"span>\n"
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:14px;\">UNIVERSITY BOARD</"
-"span>\n"
+"                        <span style=\"font-size:14px;\">PATRONATO UNIVERSITARIO</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
-"FINANZAS</span>\n"
+"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE FINANZAS</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">SUBDIRECCION DE "
-"FINANZAS</span>\n"
+"                        <span style=\"font-size:12px;\">SUBDIRECCION DE FINANZAS</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">REPORTE DE "
-"INDICADORES</span>\n"
+"                        <span style=\"font-size:12px;\">REPORTE DE INDICADORES</span>\n"
 "                        <br/>"
 msgstr ""
-"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
-"span>\n"
-"                        <br/>\n"
-"                        <span style=\"font-size:14px;\">PATRONATO "
-"UNIVERSITARIO</span>\n"
-"                        <br/>\n"
-"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
-"FINANZAS</span>\n"
-"                        <br/>\n"
-"                        <span style=\"font-size:12px;\">SUBDIRECCION DE "
-"FINANZAS</span>\n"
-"                        <br/>\n"
-"                        <span style=\"font-size:12px;\">REPORTE DE "
-"INDICADORES</span>\n"
-"                        <br/>"
 
 #. module: jt_investment
 #: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_investment_funds
 msgid ""
-"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
-"span>\n"
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:14px;\">UNIVERSITY BOARD</"
-"span>\n"
+"                        <span style=\"font-size:14px;\">PATRONATO UNIVERSITARIO</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
-"FINANZAS</span>\n"
+"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE FINANZAS</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">SUBDIRECCION DE "
-"FINANZAS</span>\n"
+"                        <span style=\"font-size:12px;\">SUBDIRECCION DE FINANZAS</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">RESUMEN DE OPERACIÓN "
-"- FONDOS DE INVERSIÓN</span>\n"
+"                        <span style=\"font-size:12px;\">RESUMEN DE OPERACIÓN - FONDOS DE INVERSIÓN</span>\n"
 "                        <br/>"
 msgstr ""
-"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
-"span>\n"
-"                        <br/>\n"
-"                        <span style=\"font-size:14px;\">PATRONATO "
-"UNIVERSITARIO</span>\n"
-"                        <br/>\n"
-"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
-"FINANZAS</span>\n"
-"                        <br/>\n"
-"                        <span style=\"font-size:12px;\">SUBDIRECCION DE "
-"FINANZAS</span>\n"
-"                        <br/>\n"
-"                        <span style=\"font-size:12px;\">RESUMEN DE OPERACIÓN "
-"- FONDOS DE INVERSIÓN</span>\n"
-"                        <br/>"
 
 #. module: jt_investment
 #: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_money_market_investments
 msgid ""
-"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
-"span>\n"
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:14px;\">UNIVERSITY BOARD</"
-"span>\n"
+"                        <span style=\"font-size:14px;\">PATRONATO UNIVERSITARIO</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
-"FINANZAS</span>\n"
+"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE FINANZAS</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">SUBDIRECCION DE "
-"FINANZAS</span>\n"
+"                        <span style=\"font-size:12px;\">SUBDIRECCION DE FINANZAS</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">RESUMEN DE OPERACIÓN "
-"- INVERSIONES MERCADO DE DINERO</span>\n"
+"                        <span style=\"font-size:12px;\">RESUMEN DE OPERACIÓN - INVERSIONES MERCADO DE DINERO</span>\n"
 "                        <br/>"
 msgstr ""
-"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
-"span>\n"
-"                        <br/>\n"
-"                        <span style=\"font-size:14px;\">PATRONATO "
-"UNIVERSITARIO</span>\n"
-"                        <br/>\n"
-"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
-"FINANZAS</span>\n"
-"                        <br/>\n"
-"                        <span style=\"font-size:12px;\">SUBDIRECCION DE "
-"FINANZAS</span>\n"
-"                        <br/>\n"
-"                        <span style=\"font-size:12px;\">RESUMEN DE OPERACIÓN "
-"- INVERSIONES MERCADO DE DINERO</span>\n"
-"                        <br/>"
 
 #. module: jt_investment
 #: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_investment_funds_balances
 msgid ""
-"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
-"span>\n"
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:14px;\">UNIVERSITY BOARD</"
-"span>\n"
+"                        <span style=\"font-size:14px;\">PATRONATO UNIVERSITARIO</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
-"FINANZAS</span>\n"
+"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE FINANZAS</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">SUBDIRECCION DE "
-"FINANZAS</span>\n"
+"                        <span style=\"font-size:12px;\">SUBDIRECCION DE FINANZAS</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">RESUMEN DE OPERACIÓN "
-"- SALDOS DE FONDOS DE INVERSIÓN</span>\n"
+"                        <span style=\"font-size:12px;\">RESUMEN DE OPERACIÓN - SALDOS DE FONDOS DE INVERSIÓN</span>\n"
 "                        <br/>"
 msgstr ""
-"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
-"span>\n"
-"                        <br/>\n"
-"                        <span style=\"font-size:14px;\">PATRONATO "
-"UNIVERSITARIO</span>\n"
-"                        <br/>\n"
-"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
-"FINANZAS</span>\n"
-"                        <br/>\n"
-"                        <span style=\"font-size:12px;\">SUBDIRECCION DE "
-"FINANZAS</span>\n"
-"                        <br/>\n"
-"                        <span style=\"font-size:12px;\">RESUMEN DE OPERACIÓN "
-"- SALDOS DE FONDOS DE INVERSIÓN</span>\n"
-"                        <br/>"
 
 #. module: jt_investment
 #: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_summary_of_operation_maturities
 msgid ""
-"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
-"span>\n"
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:14px;\">UNIVERSITY BOARD</"
-"span>\n"
+"                        <span style=\"font-size:14px;\">PATRONATO UNIVERSITARIO</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
-"FINANZAS</span>\n"
+"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE FINANZAS</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">SUBDIRECCION DE "
-"FINANZAS</span>\n"
+"                        <span style=\"font-size:12px;\">SUBDIRECCION DE FINANZAS</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">RESUMEN DE OPERACIÓN "
-"- VENCIMIENTOS</span>\n"
+"                        <span style=\"font-size:12px;\">RESUMEN DE OPERACIÓN - VENCIMIENTOS</span>\n"
 "                        <br/>"
 msgstr ""
-"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</"
-"span>\n"
+
+#. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_quotation_of_investment_funds
+msgid ""
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:14px;\">PATRONATO "
-"UNIVERSITARIO</span>\n"
+"                        <span style=\"font-size:14px;\">PATRONATO UNIVERSITARIO</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE "
-"FINANZAS</span>\n"
+"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE FINANZAS</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">SUBDIRECCION DE "
-"FINANZAS</span>\n"
+"                        <span style=\"font-size:12px;\">SUBDIRECCION DE FINANZAS</span>\n"
 "                        <br/>\n"
-"                        <span style=\"font-size:12px;\">RESUMEN DE OPERACIÓN "
-"- VENCIMIENTOS</span>\n"
+"                        <span style=\"font-size:12px;\">Reporte de cotización de Fondos de Inversión</span>\n"
+"                        <br/>"
+msgstr ""
+"<span style=\"font-size:16px;\">UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO</span>\n"
+"                        <br/>\n"
+"                        <span style=\"font-size:14px;\">PATRONATO UNIVERSITARIO</span>\n"
+"                        <br/>\n"
+"                        <span style=\"font-size:12px;\">DIRECCIÓN GENERAL DE FINANZAS</span>\n"
+"                        <br/>\n"
+"                        <span style=\"font-size:12px;\">SUBDIRECCION DE FINANZAS</span>\n"
+"                        <br/>\n"
+"                        <span style=\"font-size:12px;\">Informe de cotización de Fondos de Inversión</span>\n"
 "                        <br/>"
 
 #. module: jt_investment
-#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_investment_committee
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_fund_account_statement
 msgid "<span style=\"padding-top:5px;font-size:12px;\">ESTADO DE CUENTA</span>"
 msgstr ""
 
@@ -559,6 +461,7 @@ msgstr "<span>Todo</span>"
 
 #. module: jt_investment
 #: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_indicators_report
+#: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_investment_committee
 #: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_investment_funds
 #: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_investment_funds_balances
 #: model_terms:ir.ui.view,arch_db:jt_investment.external_layout_investment_funds_productive_accounts
@@ -575,15 +478,12 @@ msgstr "<span>Fecha y hora de impresión  </span>"
 #: model:ir.model.fields,help:jt_investment.field_product_product__type
 #: model:ir.model.fields,help:jt_investment.field_product_template__type
 msgid ""
-"A storable product is a product for which you manage stock. The Inventory "
-"app has to be installed.\n"
+"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Un producto almacenable es un producto para el que gestiona stock. La "
-"aplicación de inventario debe estar instalada.\n"
-"Un producto consumible es un producto para el que no se gestionan las "
-"existencias.\n"
+"Un producto almacenable es un producto para el que gestiona stock. La aplicación de inventario debe estar instalada.\n"
+"Un producto consumible es un producto para el que no se gestionan las existencias.\n"
 "Un servicio es un producto no material."
 
 #. module: jt_investment
@@ -748,6 +648,13 @@ msgid "All the Agreement"
 msgstr "Todos los Convenios"
 
 #. module: jt_investment
+#: code:addons/jt_investment/models/maturity_report.py:0
+#, python-format
+msgid "AllDay , %s"
+msgstr "Todo el día , %s"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/indicators_report.py:0
 #: code:addons/jt_investment/reports/indicators_report.py:0
 #, python-format
 msgid "Alto Mes"
@@ -782,6 +689,11 @@ msgstr "Tipo de cantidad"
 #: model:ir.model.fields,field_description:jt_investment.field_investment_investment__update_line_id
 msgid "Amount Update Line"
 msgstr "Actualizar monto en linea"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__amount_to_invest
+msgid "Amount to Invest"
+msgstr "IMonto Inicial"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__amount_invest
@@ -918,6 +830,7 @@ msgstr "BONOS"
 
 #. module: jt_investment
 #: code:addons/jt_investment/reports/indicators_report.py:0
+#: code:addons/jt_investment/reports/indicators_report.py:0
 #, python-format
 msgid "Bajo Mes"
 msgstr ""
@@ -930,6 +843,7 @@ msgstr ""
 
 #. module: jt_investment
 #: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts_monthly.py:0
 #: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
 #: model:ir.model.fields,field_description:jt_investment.field_approve_investment_bal_req__journal_id
 #: model:ir.model.fields,field_description:jt_investment.field_distribution_of_income__journal_id
@@ -1107,6 +1021,7 @@ msgstr "Cancelado"
 
 #. module: jt_investment
 #: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts_monthly.py:0
 #: code:addons/jt_investment/reports/report_productive_accounts.py:0
 #: model:ir.model.fields,field_description:jt_investment.field_distribution_of_income_calculation__capital
 #: model:ir.model.fields,field_description:jt_investment.field_distribution_of_income_line__capital
@@ -1282,6 +1197,7 @@ msgstr "Crear Calendario de Vencimientos"
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__create_uid
 #: model:ir.model.fields,field_description:jt_investment.field_maturity_report__create_uid
 #: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__create_uid
+#: model:ir.model.fields,field_description:jt_investment.field_rate_of_returns__create_uid
 #: model:ir.model.fields,field_description:jt_investment.field_request_open_balance_finance_operation__create_uid
 #: model:ir.model.fields,field_description:jt_investment.field_stock_quote_price__create_uid
 msgid "Created by"
@@ -1307,6 +1223,7 @@ msgstr "Creado por"
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__create_date
 #: model:ir.model.fields,field_description:jt_investment.field_maturity_report__create_date
 #: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__create_date
+#: model:ir.model.fields,field_description:jt_investment.field_rate_of_returns__create_date
 #: model:ir.model.fields,field_description:jt_investment.field_request_open_balance_finance_operation__create_date
 #: model:ir.model.fields,field_description:jt_investment.field_stock_quote_price__create_date
 msgid "Created on"
@@ -1407,6 +1324,8 @@ msgstr "Variación Diaria Porcentual"
 #: model:ir.model.fields,field_description:jt_investment.field_investment_stock_quotation__date
 #: model:ir.model.fields,field_description:jt_investment.field_maturity_report__date
 #: model:ir.model.fields,field_description:jt_investment.field_stock_quote_price__date
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_investment_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.view_investment_funds_form
 msgid "Date"
 msgstr "Fecha"
 
@@ -1500,6 +1419,11 @@ msgid "Description"
 msgstr "Descripción"
 
 #. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.inv_transfer_request_form
+msgid "Deselect All"
+msgstr ""
+
+#. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_approve_investment_bal_req__dest_ids
 #: model:ir.model.fields,field_description:jt_investment.field_investment_operation__dest_ids
 msgid "Dest"
@@ -1527,6 +1451,9 @@ msgstr ""
 
 #. module: jt_investment
 #: code:addons/jt_investment/reports/indicators_report.py:0
+#: code:addons/jt_investment/reports/indicators_report.py:0
+#: code:addons/jt_investment/reports/indicators_report.py:0
+#: code:addons/jt_investment/reports/indicators_report.py:0
 #, python-format
 msgid "Dia"
 msgstr "Día"
@@ -1539,6 +1466,7 @@ msgstr "Variación Diaria"
 
 #. module: jt_investment
 #: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts_monthly.py:0
 #, python-format
 msgid "Dias"
 msgstr "Días"
@@ -1572,6 +1500,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_investment.field_jt_investment_indicators_report__display_name
 #: model:ir.model.fields,field_description:jt_investment.field_jt_investment_investment_committee__display_name
 #: model:ir.model.fields,field_description:jt_investment.field_jt_investment_investment_funds_productive_accounts__display_name
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_investment_funds_productive_monthly_accounts__display_name
 #: model:ir.model.fields,field_description:jt_investment.field_jt_investment_report_increases_and_withdrawals__display_name
 #: model:ir.model.fields,field_description:jt_investment.field_jt_investment_report_of_investment_funds__display_name
 #: model:ir.model.fields,field_description:jt_investment.field_jt_investment_report_productive_accounts__display_name
@@ -1584,6 +1513,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_investment.field_maturity_report__display_name
 #: model:ir.model.fields,field_description:jt_investment.field_money_market_account_statement__display_name
 #: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__display_name
+#: model:ir.model.fields,field_description:jt_investment.field_rate_of_returns__display_name
 #: model:ir.model.fields,field_description:jt_investment.field_request_open_balance_finance_operation__display_name
 #: model:ir.model.fields,field_description:jt_investment.field_stock_quote_price__display_name
 msgid "Display Name"
@@ -1598,6 +1528,7 @@ msgstr "Distribución"
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__distribution_id
 #: model:ir.model.fields,field_description:jt_investment.field_distribution_transfer_request__distribution_income_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_operation__distribution_income_id
 #: model:ir.model.fields,field_description:jt_investment.field_request_open_balance_finance__distribution_id
 #: model:ir.model.fields,field_description:jt_investment.field_request_open_balance_finance__distribution_income_id
 msgid "Distribution Income"
@@ -1682,19 +1613,20 @@ msgstr "Duración"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_distribution_of_income__end_date
+#: model:ir.model.fields,field_description:jt_investment.field_maturity_report__stop_date
 #: model:ir.model.fields.selection,name:jt_investment.selection__maturity_report__end_type__end_date
 msgid "End Date"
 msgstr "Fecha Fin"
 
 #. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_maturity_report__stop_datetime
+msgid "End Datetime"
+msgstr ""
+
+#. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_maturity_report__end_type
 msgid "End Type"
 msgstr "Tipo final"
-
-#. module: jt_investment
-#: model:ir.model.fields,field_description:jt_investment.field_maturity_report__stop_date
-msgid "Ending At"
-msgstr "Terminado en"
 
 #. module: jt_investment
 #: model_terms:ir.ui.view,arch_db:jt_investment.maturity_report_form_view
@@ -1703,6 +1635,7 @@ msgstr "Terminado en"
 
 #. module: jt_investment
 #: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts_monthly.py:0
 #, python-format
 msgid "Entradas"
 msgstr ""
@@ -1747,6 +1680,11 @@ msgstr "Variación Ganancia Estimada vs Real"
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__simple_estimated_real_variation
 msgid "Estimated vs. Real Yield Variation"
 msgstr "Variación Rendimiento Estimado vs Real"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_maturity_report__display_time
+msgid "Event Time"
+msgstr ""
 
 #. module: jt_investment
 #: model:ir.model.fields.selection,name:jt_investment.selection__maturity_report__privacy__public
@@ -1800,6 +1738,7 @@ msgstr "Fecha de Vencimiento"
 #: code:addons/jt_investment/reports/investment_fund_balances.py:0
 #: code:addons/jt_investment/reports/investment_funds.py:0
 #: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts_monthly.py:0
 #: code:addons/jt_investment/reports/maturities.py:0
 #: code:addons/jt_investment/reports/money_market_account_statement.py:0
 #: code:addons/jt_investment/reports/money_market_investments.py:0
@@ -1820,6 +1759,7 @@ msgstr "Porcentaje Extra"
 #: code:addons/jt_investment/reports/account_statement.py:0
 #: code:addons/jt_investment/reports/fund_account_statement.py:0
 #: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts_monthly.py:0
 #: code:addons/jt_investment/reports/money_market_account_statement.py:0
 #: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
 #: code:addons/jt_investment/reports/report_of_investment_funds.py:0
@@ -1861,6 +1801,7 @@ msgstr "Nombre de Archivo"
 
 #. module: jt_investment
 #: code:addons/jt_investment/reports/indicators_report.py:0
+#: code:addons/jt_investment/reports/indicators_report.py:0
 #, python-format
 msgid "Fin Mes"
 msgstr ""
@@ -1883,7 +1824,6 @@ msgstr "Finanzas"
 
 #. module: jt_investment
 #: model:ir.actions.act_window,name:jt_investment.ation_financial_product
-#: model:ir.ui.menu,name:jt_investment.menu_product_income
 msgid "Financial Product"
 msgstr "Producto Financiero"
 
@@ -1894,35 +1834,15 @@ msgstr "Primero"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_approve_investment_bal_req__investment_id
+#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__first_number
+#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__first_number
 #: model:ir.model.fields,field_description:jt_investment.field_investment_investment__first_number
 #: model:ir.model.fields,field_description:jt_investment.field_investment_operation__investment_id
-msgid "First Number:"
-msgstr "Folio Cuenta Productiva:"
-
-#. module: jt_investment
-#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__first_number
-msgid "First Number:"
-msgstr "Folio Pagaré:"
-
-#. module: jt_investment
-#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__first_number
-msgid "First Number:"
-msgstr "Folio Bonos:"
-
-#. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__first_number
-msgid "First Number:"
-msgstr "Folio Udibonos:"
-
-#. module: jt_investment
-#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__first_number
-msgid "First Number:"
-msgstr "Folio Cetes:"
-
-#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__first_number
 #: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__first_number
 msgid "First Number:"
-msgstr "Folio Títulos:"
+msgstr "Folio Cuenta Productiva:"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_investment__is_fixed_rate
@@ -1975,6 +1895,12 @@ msgstr "Seguidores (Canales)"
 #: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Seguidores (Socios)"
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_committee.py:0
+#, python-format
+msgid "Fondo"
+msgstr ""
 
 #. module: jt_investment
 #: model:ir.model.fields.selection,name:jt_investment.selection__maturity_report__byday__4
@@ -2119,6 +2045,7 @@ msgstr "Pagaré"
 #: model:ir.model.fields,field_description:jt_investment.field_jt_investment_indicators_report__id
 #: model:ir.model.fields,field_description:jt_investment.field_jt_investment_investment_committee__id
 #: model:ir.model.fields,field_description:jt_investment.field_jt_investment_investment_funds_productive_accounts__id
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_investment_funds_productive_monthly_accounts__id
 #: model:ir.model.fields,field_description:jt_investment.field_jt_investment_report_increases_and_withdrawals__id
 #: model:ir.model.fields,field_description:jt_investment.field_jt_investment_report_of_investment_funds__id
 #: model:ir.model.fields,field_description:jt_investment.field_jt_investment_report_productive_accounts__id
@@ -2131,6 +2058,7 @@ msgstr "Pagaré"
 #: model:ir.model.fields,field_description:jt_investment.field_maturity_report__id
 #: model:ir.model.fields,field_description:jt_investment.field_money_market_account_statement__id
 #: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__id
+#: model:ir.model.fields,field_description:jt_investment.field_rate_of_returns__id
 #: model:ir.model.fields,field_description:jt_investment.field_request_open_balance_finance_operation__id
 #: model:ir.model.fields,field_description:jt_investment.field_stock_quote_price__id
 msgid "ID"
@@ -2214,7 +2142,7 @@ msgstr "Si está marcado, algunos mensajes tienen un error de entrega."
 #: code:addons/jt_investment/reports/investment_committee.py:0
 #, python-format
 msgid "Importe"
-msgstr ""
+msgstr "Importado"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_distribution_of_income_calculation__income
@@ -2283,6 +2211,7 @@ msgstr "Incrementos/Retiros"
 
 #. module: jt_investment
 #: code:addons/jt_investment/reports/indicators_report.py:0
+#: code:addons/jt_investment/reports/indicators_report.py:0
 #, python-format
 msgid "Indicadores"
 msgstr ""
@@ -2298,14 +2227,10 @@ msgstr "Reporte de Indicadores"
 
 #. module: jt_investment
 #: code:addons/jt_investment/reports/indicators_report.py:0
+#: code:addons/jt_investment/reports/indicators_report.py:0
 #, python-format
 msgid "Inicio Mes"
 msgstr ""
-
-#. module: jt_investment
-#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__amount_to_invest
-msgid "Amount to Invest"
-msgstr "IMonto Inicial"
 
 #. module: jt_investment
 #: code:addons/jt_investment/reports/maturities.py:0
@@ -2334,6 +2259,11 @@ msgid "Interest Rate"
 msgstr "Tasa de interés"
 
 #. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_operation__interest_rate_base_id
+msgid "Interest Rate Base"
+msgstr ""
+
+#. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_investment__interest_rate
 msgid "Interest rate"
 msgstr "Tasa de interés"
@@ -2344,6 +2274,10 @@ msgid "Interval"
 msgstr "Intervalo"
 
 #. module: jt_investment
+#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
+#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
+#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
+#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
 #: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
 #, python-format
 msgid "Interés"
@@ -2380,6 +2314,7 @@ msgid "Inversión Total"
 msgstr ""
 
 #. module: jt_investment
+#: model:ir.actions.act_window,name:jt_investment.action_investment_investment
 #: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__investment_id
 #: model:ir.model.fields,field_description:jt_investment.field_distribution_of_income__investment_id
 #: model:ir.model.fields,field_description:jt_investment.field_maturity_report__investment_id
@@ -2391,6 +2326,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:jt_investment.selection__investment_will_pay__kind_of_product__investment
 #: model:ir.model.fields.selection,name:jt_investment.selection__product_template__type__investment
 #: model:ir.ui.menu,name:jt_investment.main_menu_investment
+#: model:ir.ui.menu,name:jt_investment.menu_productive_accounts_investment
 #: model_terms:ir.ui.view,arch_db:jt_investment.investment_bonds_form
 #: model_terms:ir.ui.view,arch_db:jt_investment.investment_cetes_form
 #: model_terms:ir.ui.view,arch_db:jt_investment.investment_investment_form
@@ -2398,12 +2334,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:jt_investment.investment_will_pay_form
 #: model_terms:ir.ui.view,arch_db:jt_investment.purchase_sale_security_form
 #: model_terms:ir.ui.view,arch_db:jt_investment.view_investment_funds_form
-msgid "Investment"
-msgstr "Inversiones"
-
-#. module: jt_investment
-#: model:ir.actions.act_window,name:jt_investment.action_investment_investment
-#: model:ir.ui.menu,name:jt_investment.menu_productive_accounts_investment
 msgid "Investment"
 msgstr "Cuentas Productivas"
 
@@ -2605,6 +2535,7 @@ msgstr "Variación Últimos 30 días Porcentual"
 #: model:ir.model.fields,field_description:jt_investment.field_jt_investment_indicators_report____last_update
 #: model:ir.model.fields,field_description:jt_investment.field_jt_investment_investment_committee____last_update
 #: model:ir.model.fields,field_description:jt_investment.field_jt_investment_investment_funds_productive_accounts____last_update
+#: model:ir.model.fields,field_description:jt_investment.field_jt_investment_investment_funds_productive_monthly_accounts____last_update
 #: model:ir.model.fields,field_description:jt_investment.field_jt_investment_report_increases_and_withdrawals____last_update
 #: model:ir.model.fields,field_description:jt_investment.field_jt_investment_report_of_investment_funds____last_update
 #: model:ir.model.fields,field_description:jt_investment.field_jt_investment_report_productive_accounts____last_update
@@ -2617,6 +2548,7 @@ msgstr "Variación Últimos 30 días Porcentual"
 #: model:ir.model.fields,field_description:jt_investment.field_maturity_report____last_update
 #: model:ir.model.fields,field_description:jt_investment.field_money_market_account_statement____last_update
 #: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security____last_update
+#: model:ir.model.fields,field_description:jt_investment.field_rate_of_returns____last_update
 #: model:ir.model.fields,field_description:jt_investment.field_request_open_balance_finance_operation____last_update
 #: model:ir.model.fields,field_description:jt_investment.field_stock_quote_price____last_update
 msgid "Last Modified on"
@@ -2657,6 +2589,7 @@ msgstr "Precio última cotización"
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__write_uid
 #: model:ir.model.fields,field_description:jt_investment.field_maturity_report__write_uid
 #: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__write_uid
+#: model:ir.model.fields,field_description:jt_investment.field_rate_of_returns__write_uid
 #: model:ir.model.fields,field_description:jt_investment.field_request_open_balance_finance_operation__write_uid
 #: model:ir.model.fields,field_description:jt_investment.field_stock_quote_price__write_uid
 msgid "Last Updated by"
@@ -2682,6 +2615,7 @@ msgstr "Última actualización por"
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__write_date
 #: model:ir.model.fields,field_description:jt_investment.field_maturity_report__write_date
 #: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__write_date
+#: model:ir.model.fields,field_description:jt_investment.field_rate_of_returns__write_date
 #: model:ir.model.fields,field_description:jt_investment.field_request_open_balance_finance_operation__write_date
 #: model:ir.model.fields,field_description:jt_investment.field_stock_quote_price__write_date
 msgid "Last Updated on"
@@ -2757,6 +2691,7 @@ msgstr "Detalles"
 
 #. module: jt_investment
 #: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts_monthly.py:0
 #, python-format
 msgid "Mes"
 msgstr ""
@@ -3243,6 +3178,10 @@ msgstr "Defina una secuencia en su diario."
 
 #. module: jt_investment
 #: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
+#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
+#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
+#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
+#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
 #: code:addons/jt_investment/reports/report_of_investment_funds.py:0
 #, python-format
 msgid "Porcentual"
@@ -3332,6 +3271,7 @@ msgstr "Privacidad"
 #: code:addons/jt_investment/reports/investment_committee.py:0
 #: code:addons/jt_investment/reports/maturities.py:0
 #: code:addons/jt_investment/reports/report_productive_accounts.py:0
+#: code:addons/jt_investment/reports/report_productive_accounts.py:0
 #, python-format
 msgid "Procentual extra"
 msgstr "Porcentaje Extra"
@@ -3380,12 +3320,14 @@ msgstr ""
 
 #. module: jt_investment
 #: code:addons/jt_investment/reports/indicators_report.py:0
+#: code:addons/jt_investment/reports/indicators_report.py:0
 #, python-format
 msgid "Promedio"
 msgstr ""
 
 #. module: jt_investment
 #: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts_monthly.py:0
 #, python-format
 msgid "Promedio Diario"
 msgstr ""
@@ -3449,6 +3391,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:jt_investment.investment_will_pay_form
 msgid "Rate History"
 msgstr "Histórico de tasas"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__rate_of_returns
+#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__rate_of_returns
+#: model:ir.model.fields,field_description:jt_investment.field_investment_funds__rate_of_returns
+#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__rate_of_returns
+#: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__rate_of_returns
+#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__rate_of_returns
+#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__rate_of_returns
+#: model:ir.model.fields,field_description:jt_investment.field_rate_of_returns__name
+msgid "Rate Of Returns"
+msgstr "Tasa de Rendimientos"
 
 #. module: jt_investment
 #: model:ir.model.constraint,message:jt_investment.constraint_investment_period_rate_rate_date_product_type
@@ -3596,13 +3550,25 @@ msgid "Report of Investment Funds"
 msgstr "Reporte de Fondos de Inversión"
 
 #. module: jt_investment
+#: model:ir.model,name:jt_investment.model_jt_investment_investment_funds_productive_monthly_accounts
+msgid "Report of Investment Funds in Monthly Productive Accounts"
+msgstr ""
+
+#. module: jt_investment
 #: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts_monthly.py:0
 #: model:ir.actions.client,name:jt_investment.action_investment_funds_in_productive_accounts
 #: model:ir.model,name:jt_investment.model_jt_investment_investment_funds_productive_accounts
 #: model:ir.ui.menu,name:jt_investment.menu_investment_funds_in_productive_accounts
 #, python-format
 msgid "Report of Investment Funds in Productive Accounts"
 msgstr "Reporte de Fondos de Inversión en Cuentas Productivas"
+
+#. module: jt_investment
+#: model:ir.actions.client,name:jt_investment.action_investment_funds_in_productive_monthly_accounts
+#: model:ir.ui.menu,name:jt_investment.menu_investment_funds_in_productive_monthly
+msgid "Report of Investment Funds in Productive Monthly Accounts"
+msgstr "Reporte de Fondos Institucionales en Cuentas Productivas"
 
 #. module: jt_investment
 #: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
@@ -3649,14 +3615,14 @@ msgid "Request Office"
 msgstr "Oficina que Solicita"
 
 #. module: jt_investment
+#: model:ir.model,name:jt_investment.model_request_open_balance_finance
+msgid "Request Transfer"
+msgstr "Solicitud de TRansferencia"
+
+#. module: jt_investment
 #: model:ir.ui.menu,name:jt_investment.submenu_menu_investment_request_for_transfers
 msgid "Request for Transfers"
 msgstr "Solicitud de transferencias"
-
-#. module: jt_investment
-#: model:ir.model,name:jt_investment.model_request_open_balance_finance
-msgid "Request to Open Balance For Finanace"
-msgstr "Solicitud de apertura de saldo para Finanzas"
 
 #. module: jt_investment
 #: model:ir.model,name:jt_investment.model_request_open_balance_invest
@@ -3684,6 +3650,16 @@ msgstr "Usuario Solicitante"
 #: model_terms:ir.ui.view,arch_db:jt_investment.view_investment_funds_form
 msgid "Reset"
 msgstr "Cambiar a Borrador"
+
+#. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_bonds_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_cetes_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_investment_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_udibonos_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.investment_will_pay_form
+#: model_terms:ir.ui.view,arch_db:jt_investment.purchase_sale_security_form
+msgid "Reset To Draft"
+msgstr ""
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_funds__responsible_user_id
@@ -3761,6 +3737,7 @@ msgstr "Error de entrega de SMS"
 #: code:addons/jt_investment/reports/account_statement.py:0
 #: code:addons/jt_investment/reports/fund_account_statement.py:0
 #: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts_monthly.py:0
 #: code:addons/jt_investment/reports/money_market_account_statement.py:0
 #: code:addons/jt_investment/reports/titles_account_statement.py:0
 #, python-format
@@ -3783,6 +3760,7 @@ msgstr "Venta"
 
 #. module: jt_investment
 #: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts_monthly.py:0
 #, python-format
 msgid "Salidas"
 msgstr ""
@@ -3807,6 +3785,11 @@ msgstr "Segundo"
 #: model:ir.model.fields.selection,name:jt_investment.selection__request_open_balance_invest__type_of_investment__securities
 msgid "Securities"
 msgstr "Títulos"
+
+#. module: jt_investment
+#: model_terms:ir.ui.view,arch_db:jt_investment.inv_transfer_request_form
+msgid "Select All"
+msgstr ""
 
 #. module: jt_investment
 #: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
@@ -3837,10 +3820,20 @@ msgid "Source"
 msgstr "Origen"
 
 #. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_maturity_report__start
+msgid "Start"
+msgstr ""
+
+#. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_distribution_of_income__start_date
 #: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__start_date
 msgid "Start Date"
 msgstr "Fecha de inicio"
+
+#. module: jt_investment
+#: model:ir.model.fields,help:jt_investment.field_maturity_report__start
+msgid "Start date of an event, without time for full days events"
+msgstr ""
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_maturity_report__start_date
@@ -3892,6 +3885,16 @@ msgid "Stock Quote Price"
 msgstr "Precio Última Cotización"
 
 #. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_maturity_report__stop
+msgid "Stop"
+msgstr ""
+
+#. module: jt_investment
+#: model:ir.model.fields,help:jt_investment.field_maturity_report__stop
+msgid "Stop date of an event, without time for full days events"
+msgstr ""
+
+#. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_funds__subdependency_id
 msgid "Sub Dependency"
 msgstr "Subdependencia"
@@ -3921,7 +3924,7 @@ msgstr "La suma del monto en línea no es igual al monto del encabezado"
 #: model:ir.ui.menu,name:jt_investment.menu_summary_of_operation_investment_funds_balances
 #, python-format
 msgid "Summary of Operation - Investment Fund Balances"
-msgstr "Summary of Operation - Investment Fund Balances"
+msgstr ""
 
 #. module: jt_investment
 #: code:addons/jt_investment/reports/investment_funds.py:0
@@ -3984,6 +3987,7 @@ msgstr ""
 #. module: jt_investment
 #: code:addons/jt_investment/reports/increases_and_withdrawals_report.py:0
 #: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts_monthly.py:0
 #, python-format
 msgid "TIIE 28"
 msgstr ""
@@ -4015,6 +4019,12 @@ msgstr ""
 #: code:addons/jt_investment/reports/money_market_investments.py:0
 #, python-format
 msgid "Tasa de interés"
+msgstr ""
+
+#. module: jt_investment
+#: code:addons/jt_investment/reports/investment_committee.py:0
+#, python-format
+msgid "Tasa de rendimiento"
 msgstr ""
 
 #. module: jt_investment
@@ -4167,6 +4177,7 @@ msgstr "Consecutivo"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_distribution_transfer_request_line__check
+#: model:ir.model.fields,field_description:jt_investment.field_inv_transfer_request__selected
 #: model:ir.model.fields,field_description:jt_investment.field_inv_transfer_request_line__check
 #: model_terms:ir.ui.view,arch_db:jt_investment.distribution_of_income_form
 #: model_terms:ir.ui.view,arch_db:jt_investment.investment_investment_form
@@ -4488,6 +4499,7 @@ msgstr "Asistente"
 #: code:addons/jt_investment/reports/investment_fund_balances.py:0
 #: code:addons/jt_investment/reports/investment_funds.py:0
 #: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
+#: code:addons/jt_investment/reports/investment_funds_productive_accounts_monthly.py:0
 #: code:addons/jt_investment/reports/maturities.py:0
 #: code:addons/jt_investment/reports/money_market_account_statement.py:0
 #: code:addons/jt_investment/reports/money_market_investments.py:0
@@ -4527,12 +4539,20 @@ msgid "Yields"
 msgstr "Rendimientos"
 
 #. module: jt_investment
+#: code:addons/jt_investment/models/investment_funds.py:0
+#: code:addons/jt_investment/models/investment_funds.py:0
+#, python-format
+msgid "You are creating Fund Request on Non-Business Day!"
+msgstr ""
+
+#. module: jt_investment
 #: code:addons/jt_investment/wizard/approve_inv_bal_req.py:0
 #: code:addons/jt_investment/wizard/inv_transfer_request.py:0
 #, python-format
 msgid "You are creating Transfer Request on %s which is Non Business Day"
 msgstr ""
-"Está creando una solicitud de transferencia el% s, que es un día no laborable"
+"Está creando una solicitud de transferencia el% s, que es un día no "
+"laborable"
 
 #. module: jt_investment
 #: code:addons/jt_investment/models/investment.py:0
@@ -4556,6 +4576,37 @@ msgid "You can delete only draft status data."
 msgstr "Solo puede eliminar los datos en estado de borrador."
 
 #. module: jt_investment
+#: code:addons/jt_investment/models/investment.py:0
+#: code:addons/jt_investment/models/investment.py:0
+#: code:addons/jt_investment/models/purchase_sale_security.py:0
+#: code:addons/jt_investment/models/purchase_sale_security.py:0
+#, python-format
+msgid "You have choosen Non-Business Day in Expiration Date!"
+msgstr ""
+
+#. module: jt_investment
+#: code:addons/jt_investment/models/investment.py:0
+#: code:addons/jt_investment/models/investment.py:0
+#: code:addons/jt_investment/models/purchase_sale_security.py:0
+#: code:addons/jt_investment/models/purchase_sale_security.py:0
+#, python-format
+msgid "You have choosen Non-Business Day in Investment Date!"
+msgstr ""
+
+#. module: jt_investment
+#: code:addons/jt_investment/models/bonds.py:0
+#: code:addons/jt_investment/models/bonds.py:0
+#: code:addons/jt_investment/models/cetes.py:0
+#: code:addons/jt_investment/models/cetes.py:0
+#: code:addons/jt_investment/models/udibonos.py:0
+#: code:addons/jt_investment/models/udibonos.py:0
+#: code:addons/jt_investment/models/will_pay.py:0
+#: code:addons/jt_investment/models/will_pay.py:0
+#, python-format
+msgid "You have choosen Non-Business Day on Expiry Date!"
+msgstr ""
+
+#. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__cetes_id
 #: model:ir.model.fields,field_description:jt_investment.field_request_open_balance_finance__cetes_id
 msgid "cetes"
@@ -4577,6 +4628,11 @@ msgid "moneda"
 msgstr ""
 
 #. module: jt_investment
+#: model:ir.model,name:jt_investment.model_rate_of_returns
+msgid "rate.of.returns"
+msgstr ""
+
+#. module: jt_investment
 #: model_terms:ir.ui.view,arch_db:jt_investment.distribution_of_income_form
 msgid "total"
 msgstr ""
@@ -4585,89 +4641,3 @@ msgstr ""
 #: model:ir.model.fields.selection,name:jt_investment.selection__maturity_report__rrule_type__yearly
 msgid "yearly"
 msgstr "anual"
-
-#. module: jt_income
-#: model_terms:ir.ui.view,arch_db:jt_income.inherited_account_journal_form_view
-msgid "Estimate Income"
-msgstr "Ingreso Estimado"
-
-#. module: jt_income
-#: model_terms:ir.ui.view,arch_db:jt_income.inherited_account_journal_form_view
-msgid "Income to run"
-msgstr "Ingreso por Ejecutar"
-
-#. module: jt_income
-#: model_terms:ir.ui.view,arch_db:jt_income.inherited_account_journal_form_view
-msgid "Accrued Income"
-msgstr "Ingreso Acumulado"
-
-#. module: jt_income
-#: model_terms:ir.ui.view,arch_db:jt_income.inherited_account_journal_form_view
-msgid "Recover Income"
-msgstr "Ingreso Recaudado"
-
-#. module: jt_income
-#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__accrued_income_debit_account_id
-#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__estimate_income_debit_account_id
-#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__income_run_debit_account_id
-#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__recover_income_debit_account_id
-#: model:ir.model.fields,field_description:jt_income.field_account_journal__accrued_income_debit_account_id
-#: model:ir.model.fields,field_description:jt_income.field_account_journal__estimate_income_debit_account_id
-#: model:ir.model.fields,field_description:jt_income.field_account_journal__income_run_debit_account_id
-#: model:ir.model.fields,field_description:jt_income.field_account_journal__recover_income_debit_account_id
-msgid "Default Debit Account"
-msgstr "Cuenta de débito por defecto"
-
-#. module: jt_income
-#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__accrued_income_credit_account_id
-#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__estimate_income_credit_account_id
-#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__income_run_credit_account_id
-#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__recover_income_credit_account_id
-#: model:ir.model.fields,field_description:jt_income.field_account_journal__accrued_income_credit_account_id
-#: model:ir.model.fields,field_description:jt_income.field_account_journal__estimate_income_credit_account_id
-#: model:ir.model.fields,field_description:jt_income.field_account_journal__income_run_credit_account_id
-#: model:ir.model.fields,field_description:jt_income.field_account_journal__recover_income_credit_account_id
-msgid "Default Credit Account"
-msgstr "Cuenta de crédito por defecto"
-
-#. module: jt_income
-#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__conac_accrued_income_debit_account_id
-#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__conac_estimate_income_debit_account_id
-#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__conac_income_run_debit_account_id
-#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__conac_recover_income_debit_account_id
-#: model:ir.model.fields,field_description:jt_income.field_account_journal__conac_accrued_income_debit_account_id
-#: model:ir.model.fields,field_description:jt_income.field_account_journal__conac_estimate_income_debit_account_id
-#: model:ir.model.fields,field_description:jt_income.field_account_journal__conac_income_run_debit_account_id
-#: model:ir.model.fields,field_description:jt_income.field_account_journal__conac_recover_income_debit_account_id
-msgid "CONAC Debit Account"
-msgstr "Cuenta de débito de CONAC"
-
-#. module: jt_income
-#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__conac_accrued_income_credit_account_id
-#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__conac_estimate_income_credit_account_id
-#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__conac_income_run_credit_account_id
-#: model:ir.model.fields,field_description:jt_income.field_account_bank_statement_import_journal_creation__conac_recover_income_credit_account_id
-#: model:ir.model.fields,field_description:jt_income.field_account_journal__conac_accrued_income_credit_account_id
-#: model:ir.model.fields,field_description:jt_income.field_account_journal__conac_estimate_income_credit_account_id
-#: model:ir.model.fields,field_description:jt_income.field_account_journal__conac_income_run_credit_account_id
-#: model:ir.model.fields,field_description:jt_income.field_account_journal__conac_recover_income_credit_account_id
-msgid "CONAC Credit Account"
-msgstr "Cuenta de crédito de CONAC"
-
-#. module: jt_investment
-#: model:ir.actions.client,name:jt_investment.action_investment_funds_in_productive_monthly_accounts
-#: model:ir.ui.menu,name:jt_investment.menu_investment_funds_in_productive_monthly
-msgid "Report of Investment Funds in Productive Monthly Accounts"
-msgstr "Reporte de Fondos Institucionales en Cuentas Productivas"
-
-#. module: jt_investment
-#: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__rate_of_returns
-#: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__rate_of_returns
-#: model:ir.model.fields,field_description:jt_investment.field_investment_funds__rate_of_returns
-#: model:ir.model.fields,field_description:jt_investment.field_investment_investment__rate_of_returns
-#: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__rate_of_returns
-#: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__rate_of_returns
-#: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__rate_of_returns
-#: model:ir.model.fields,field_description:jt_investment.field_rate_of_returns__name
-msgid "Rate Of Returns"
-msgstr "Tasa de Rendimientos"

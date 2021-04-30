@@ -1797,7 +1797,7 @@ msgstr "Establecer condiciones de pago"
 #. module: jt_account_module_design
 #: model:ir.actions.server,name:jt_account_module_design.action_payment_date_all
 msgid "Set the payment date"
-msgstr "Establecer la fecha de pago"
+msgstr "Establecer fecha de cobro"
 
 #. module: jt_account_module_design
 #: model:ir.model.fields,help:jt_account_module_design.field_jt_account_module_design_financial_report__tax_report

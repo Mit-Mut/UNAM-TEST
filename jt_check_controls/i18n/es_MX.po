@@ -1480,7 +1480,7 @@ msgstr "Cancelar los cheques"
 #. module: jt_check_controls
 #: model:ir.actions.server,name:jt_check_controls.cancel_payment_method
 msgid "Cancel Payment Method"
-msgstr "Cancelar el método de pago"
+msgstr "Cancelar el método de Cobro"
 
 #. module: jt_check_controls
 #: model:ir.actions.server,name:jt_check_controls.action_available_cancel_checks

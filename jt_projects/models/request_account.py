@@ -40,8 +40,7 @@ class RequestAccounts(models.Model):
         related='bank_account_id.customer_number', string="Contact No.")
     supporting_documentation = fields.Binary("Supporting Documentation")
     supporting_doc_name = fields.Char('supporting documentation name')
-    reason_rejection = fields.Selection([('discharge', 'Does not comply with the documentation supporting the discharge')],
-                                        string="Reason for rejection")
+    reason_rejection = fields.Text(string="Reason for rejection")
     rejection_observations = fields.Text("Rejection observation")
     status = fields.Selection([('eraser', 'Eraser'),
                                ('request', 'Request'),

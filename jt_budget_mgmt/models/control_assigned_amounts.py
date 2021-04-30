@@ -57,7 +57,7 @@ class ControlAssignedAmounts(models.Model):
         'readonly', True)], 'rejected': [('readonly', True)], 'canceled': [('readonly', True)]}, tracking=True)
     user_id = fields.Many2one(
         'res.users', string='Made by', default=lambda self: self.env.user, tracking=True)
-    import_date = fields.Date(string='Import date', states={'validated': [(
+    import_date = fields.Date(string='Import date', default=fields.Date.context_today, states={'validated': [(
         'readonly', True)], 'rejected': [('readonly', True)], 'canceled': [('readonly', True)]})
     observations = fields.Text(string='Observations', tracking=True)
     state = fields.Selection([('draft', 'Draft'), ('process', 'In process'),

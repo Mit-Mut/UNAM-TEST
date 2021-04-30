@@ -2244,7 +2244,7 @@ msgstr "Solicitud de pago"
 #. module: jt_projects
 #: model:ir.actions.act_window,name:jt_projects.project_payment_schedule_programming_action model:ir.ui.menu,name:jt_projects.project_payment_schedule_menu_programm
 msgid "Payment Schedule"
-msgstr "Calendario de Pagos"
+msgstr "Programación de Pagos"
 
 #. module: jt_projects
 #: model_terms:ir.ui.view,arch_db:jt_projects.payment_req_form_view_inherit

@@ -1708,7 +1708,7 @@ msgstr "Línea de pago de pensión"
 #. module: jt_payroll_payment
 #: model_terms:ir.ui.view,arch_db:jt_payroll_payment.employee_payroll_file_form_processing
 msgid "Perception"
-msgstr "Perpección"
+msgstr "Percepción"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__adjusted_payroll_wizard__type_of_movement__perception_adjustment_detail
@@ -2166,3 +2166,34 @@ msgstr ""
 #: model:ir.model,name:jt_payroll_payment.model_preception_line
 msgid "preception.line"
 msgstr ""
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.account_reports_journal_dashboard_kanban_view_account_manager
+msgid "Difference"
+msgstr "Diferencia"
+
+#. module: account
+#: model:ir.actions.report,name:account.action_report_payment_receipt
+msgid "Payment Receipt"
+msgstr "Receipt of Collection"
+
+#. module: account
+#: model:ir.actions.server,name:account.action_account_confirm_payments
+msgid "Post Payments"
+msgstr "Validar Cobros"
+
+#. module: account
+#: model:ir.actions.report,name:account.account_invoices_without_payment
+msgid "Invoices without Payment"
+msgstr "Facturas si cobro"
+
+#. module: account
+#: code:addons/account/models/account_payment.py:0
+#: model:ir.actions.server,name:account.action_account_invoice_from_list
+#: model:ir.model,name:account.model_account_payment_register
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form_multi
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+#, python-format
+msgid "Register Payment"
+msgstr "Registrar Cobro"

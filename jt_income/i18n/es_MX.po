@@ -3095,7 +3095,7 @@ msgstr "Tipo de cambio"
 #: model:ir.actions.act_window,name:jt_income.deposit_certificate_type_action model:ir.model,name:jt_income.model_deposit_certificate_type
 #: model:ir.ui.menu,name:jt_income.menu_deposit_certificate_type
 msgid "Type of Deposit Certificate"
-msgstr "Tipo de certificado de depósitoripción"
+msgstr "Tipo de certificado de depósito"
 
 #. module: jt_income
 #: model:ir.model.fields,field_description:jt_income.field_account_move__type_of_revenue_collection
@@ -3309,3 +3309,26 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:jt_income.invoice_format_1_document
 msgid "y antecedentes."
 msgstr ""
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_move__invoice_payment_state__paid
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+#: model:mail.message.subtype,name:account.mt_invoice_paid
+msgid "Paid"
+msgstr "Cobrado"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__invoice_payment_state__not_paid
+#: model:ir.model.fields.selection,name:account.selection__account_move__invoice_payment_state__not_paid
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
+msgid "Not Paid"
+msgstr "No Cobrado"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__invoice_payment_state__in_payment
+#: model:ir.model.fields.selection,name:account.selection__account_move__invoice_payment_state__in_payment
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "In Payment"
+msgstr "En Proceso de Cobro"

@@ -773,7 +773,7 @@ msgstr "Cerrado"
 #: model:ir.model.fields,field_description:jt_budget_mgmt.field_shcp_code__name
 #: model:ir.model.fields,field_description:jt_budget_mgmt.field_standardization_line__code_id
 msgid "Code"
-msgstr "Programa SHCP"
+msgstr "Código Programático"
 
 #. module: jt_budget_mgmt
 #: model:ir.actions.act_window,name:jt_budget_mgmt.action_code_structure
@@ -2271,7 +2271,7 @@ msgstr "Importación"
 #: model_terms:ir.ui.view,arch_db:jt_budget_mgmt.expenditure_budget_form_view
 #: model_terms:ir.ui.view,arch_db:jt_budget_mgmt.standardization_form_view
 msgid "Imported Lines"
-msgstr "Líneas de Presupuesto"
+msgstr "Líneas de Recalendarización Exitosas"
 
 #. module: jt_budget_mgmt
 #: model:ir.model.fields,field_description:jt_budget_mgmt.field_expenditure_budget_line__imported_sessional
@@ -3125,7 +3125,7 @@ msgstr "Solicitud de pago"
 #: model:ir.actions.act_window,name:jt_budget_mgmt.different_payroll_payment_schedule_programming_action
 #: model:ir.ui.menu,name:jt_budget_mgmt.different_payroll_payment_schedule_menu_programm
 msgid "Payment Schedule"
-msgstr "Calendario de pago"
+msgstr "Programación de Pago"
 
 #. module: jt_budget_mgmt
 #: model:ir.model,name:jt_budget_mgmt.model_account_payment
@@ -3297,7 +3297,7 @@ msgstr "Resumen Presupuesto Proforma"
 #: model:report.program.fields,name:jt_budget_mgmt.program_field_2
 #, python-format
 msgid "Program"
-msgstr "Programa"
+msgstr "Código Programático"
 
 #. module: jt_budget_mgmt
 #: model:ir.actions.act_window,name:jt_budget_mgmt.action_program
@@ -3417,7 +3417,7 @@ msgstr "Tipo de Proyecto"
 #: model:ir.model.fields,field_description:jt_budget_mgmt.field_standardization_line__quarter_data
 #: model:ir.ui.menu,name:jt_budget_mgmt.menu_quarter_budget
 msgid "Quarter"
-msgstr "Trimestres"
+msgstr "Trimestre Destino"
 
 #. module: jt_budget_mgmt
 #: model:ir.model,name:jt_budget_mgmt.model_quarter_budget
@@ -4396,7 +4396,7 @@ msgstr "El tamaño de la Partida Federal debe ser de 5 dígitos."
 #: model:ir.model.constraint,message:jt_budget_mgmt.constraint_standardization_folio_uniq_const
 #: model:ir.model.constraint,message:jt_budget_mgmt.constraint_standardization_line_folio_uniq
 msgid "The folio must be unique."
-msgstr "EL Folio es único."
+msgstr "El folio es único."
 
 #. module: jt_budget_mgmt
 #: code:addons/jt_budget_mgmt/models/program_code_objects/expenditure_item.py:0
@@ -5155,3 +5155,13 @@ msgstr ""
 #, python-format
 msgid "to print report."
 msgstr "imprimir Reporte."
+
+#. module: jt_budget_mgmt
+#: model:ir.model.fields,field_description:jt_budget_mgmt.field_account_payment__transfer_made_origin
+msgid "Transfer Made (origin account)"
+msgstr "Transferencia Realizada (cuenta origen)"
+
+#. module: jt_budget_mgmt
+#: model:ir.model.fields,field_description:jt_budget_mgmt.field_account_payment__confirmed_transfer
+msgid "Confirmed Transfer (destination account)"
+msgstr "Transferencia Confirmada (cuenta destino)"

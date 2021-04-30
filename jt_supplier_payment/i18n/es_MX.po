@@ -1630,7 +1630,7 @@ msgstr "Concepto de pago"
 #: model:ir.model,name:jt_supplier_payment.model_payment_declined_wizard model_terms:ir.ui.view,arch_db:jt_supplier_payment.view_payment_declined_wizard
 #, python-format
 msgid "Payment Declined"
-msgstr "Pago Rechazado"
+msgstr "Cobro Rechazado"
 
 #. module: jt_supplier_payment
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_account_move__payment_move_line_ids
@@ -1687,7 +1687,7 @@ msgstr "Solicitud de pago"
 #: model:ir.actions.act_window,name:jt_supplier_payment.payroll_payment_schedule_programming_action model:ir.actions.act_window,name:jt_supplier_payment.supplier_payment_programming_action
 #: model:ir.ui.menu,name:jt_supplier_payment.payroll_payment_schedule_menu_programm model:ir.ui.menu,name:jt_supplier_payment.supplier_payment_request_menu_programm
 msgid "Payment Schedule"
-msgstr "Calendario de pago"
+msgstr "Programación de Pago"
 
 #. module: jt_supplier_payment
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_account_move__payment_state
@@ -1709,7 +1709,7 @@ msgstr "Banco emisor de pagos"
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_account_payment__payment_issuing_bank_acc_id
 #: model_terms:ir.ui.view,arch_db:jt_supplier_payment.inherited_view_account_payment_search
 msgid "Payment issuing bank Account"
-msgstr "Banco emisor de pagos"
+msgstr "Banco emisor de Cobros"
 
 #. module: jt_supplier_payment
 #: model_terms:ir.ui.view,arch_db:jt_supplier_payment.view_account_move_filter_inherit_payment
@@ -2689,3 +2689,21 @@ msgstr "la cuenta bancaria seleccionada no tiene saldo suficiente para ejecutar 
 #: model_terms:ir.ui.view,arch_db:jt_supplier_payment.view_balance_check_wizard
 msgid "the selected bank account has sufficient balance to execute"
 msgstr "la cuenta bancaria seleccionada tiene saldo suficiente para ejecutar"
+
+#. module: jt_supplier_payment
+#: model_terms:ir.ui.view,arch_db:jt_supplier_payment.inherited_view_account_payment_tree
+#: model_terms:ir.ui.view,arch_db:jt_supplier_payment.payment_req_tree_view
+msgid "Counter Receipt Folio"
+msgstr "Folio contra recibo"
+
+#. module: l10n_mx_edi
+#: model:ir.actions.act_window,name:l10n_mx_edi.action_l10n_mx_payment_method
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_payment_method_id
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_invoice__l10n_mx_edi_payment_method_id
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_journal__l10n_mx_edi_payment_method_id
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_payment__l10n_mx_edi_payment_method_id
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_register_payments__l10n_mx_edi_payment_method_id
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.view_l10n_mx_payment_method_form
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.view_l10n_mx_payment_method_tree
+msgid "Payment Way"
+msgstr "Forma de Cobro"

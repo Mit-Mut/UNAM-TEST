@@ -685,3 +685,8 @@ msgstr "C.P"
 #: model:ir.model.fields,field_description:jt_hr_base.field_hr_employee__zip_code
 msgid "Zip"
 msgstr "C.P"
+
+#. module: jt_hr_base
+#: model:ir.model.fields,field_description:jt_hr_base.field_payment_place__place
+msgid "Place"
+msgstr "Lugar"

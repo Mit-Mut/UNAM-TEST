@@ -574,7 +574,7 @@ msgstr "Operaciones de destinatario del remitente de finanzas"
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__account_journal__account_type__fixed
 msgid "Fixed"
-msgstr "Tasa Fija"
+msgstr "Fondo Fijo"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_comission_profit__folio
@@ -824,7 +824,7 @@ msgstr "Apertura de cuenta corriente"
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__account_journal__account_type__operational_fund
 msgid "Operational Fund"
-msgstr "Fondo operativo"
+msgstr "Operativas"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__finance_sender_recipient_trades__template__other_procedures

@@ -219,6 +219,21 @@
             </field>
         </record>
 
+        <record id="view_bases_collabration_dashboard" model="ir.ui.view">
+            <field name="name">Bases Collabration dashboard view</field>
+            <field name="model">bases.collaboration</field>
+            <field name="arch" type="xml">
+                <dashboard>
+                    <view type="graph" ref="jt_agreement.view_bases_collabration_pivot"/>
+                    <group>
+                        <aggregate name="opening_bal" field="opening_bal" widget="monetary" string="Opening Balance"/>
+                        <aggregate name="available_bal" field="available_bal" widget="monetary" string="Available Balance"/>
+                    </group>
+                    <view type="pivot" ref="jt_agreement.view_bases_collabration_pivot"/>
+                </dashboard>
+            </field>
+        </record>
+
         <record id="view_bases_collabration_form" model="ir.ui.view">
             <field name="name">Bases Collabration Form view</field>
             <field name="model">bases.collaboration</field>
@@ -471,7 +486,7 @@
         <record id="action_bases_collabration" model="ir.actions.act_window">
             <field name="name">Bases of Collabration</field>
             <field name="res_model">bases.collaboration</field>
-            <field name="view_mode">kanban,tree,form,pivot</field>
+            <field name="view_mode">kanban,dashboard,tree,form,pivot</field>
             <field name="context">{'from_agreement':True,'show_agreement_name':True}</field>
         </record>
 

@@ -890,6 +890,47 @@ class AccountMove(models.Model):
                 'type': 'ir.actions.act_window',
                 'context':{'from_provision_view':True}
             }
+
+    def get_all_action_ids(self):
+        hide_list = [] 
+        generate_batch_sheet = self.env.ref("jt_supplier_payment.action_account_invoice_from_list_batch_sheet")
+        if generate_batch_sheet:
+             hide_list.append(generate_batch_sheet.id)
+        reg_payment = self.env.ref("account.action_account_invoice_from_list")
+        if reg_payment:
+             hide_list.append(reg_payment.id)
+        refund = self.env.ref("account.action_move_switch_invoice_to_credit_note")
+        if refund:
+             hide_list.append(refund.id)
+        pac_update = self.env.ref("l10n_mx_edi.update_pac_status_server_action")
+        if pac_update:
+             hide_list.append(pac_update.id)
+        cfdi = self.env.ref("l10n_mx_edi.l10n_mx_edi_revert_cancellation")
+        if cfdi:
+             hide_list.append(cfdi.id)
+        other_payroll = self.env.ref("jt_supplier_payment.confirm_other_then_payroll")
+        if other_payroll:
+             hide_list.append(other_payroll.id)
+        pension_payroll = self.env.ref("jt_supplier_payment.confirm_pension_payroll_payment")
+        if pension_payroll:
+             hide_list.append(pension_payroll.id)
+        register = self.env.ref("jt_supplier_payment.register_pension_payroll_payment")
+        if register:
+             hide_list.append(register.id)
+        date_change = self.env.ref("jt_account_module_design.action_invoice_date_all")
+        if date_change:
+             hide_list.append(date_change.id)
+        cancel_payment_method = self.env.ref("jt_check_controls.cancel_payment_method")
+        if cancel_payment_method:
+             hide_list.append(cancel_payment_method.id)
+        reverse = self.env.ref("account.action_view_account_move_reversal")
+        if reverse:
+             hide_list.append(reverse.id)
+        post_entry = self.env.ref("account.action_validate_account_move")
+        if post_entry:
+             hide_list.append(post_entry.id)
+
+        return hide_list
         
 class AccountMoveLine(models.Model):
 

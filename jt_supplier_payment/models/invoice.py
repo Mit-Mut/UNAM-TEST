@@ -247,11 +247,11 @@ class AccountMove(models.Model):
     provision_move_id = fields.Many2one('account.move','Provision')
     provision_move_ids = fields.One2many('account.move','provision_move_id')
 
-    # @api.model
-    # def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-    #     res = super(AccountMove, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
-    #     print ("Res===",res) 
-    #     return res
+#     @api.model
+#     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+#         res = super(AccountMove, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+#         print ("Res===",res) 
+#         return res
         
     @api.depends('payment_state','is_create_from_provision','is_payment_request')
     def get_set_readonly_into_payment_view(self):
@@ -606,7 +606,7 @@ class AccountMove(models.Model):
 #             #self.line_ids = [(3, sid) for sid in self.line_ids.ids]
 #             self.line_ids = [(5,self.line_ids.ids)]
 #         return res
-
+    
     def import_lines(self):
         
         if not self.layout_scholarship_data:

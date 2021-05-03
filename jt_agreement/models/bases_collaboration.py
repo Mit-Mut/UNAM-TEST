@@ -1456,6 +1456,13 @@ class RequestOpenBalance(models.Model):
         elif self.type_of_operation == 'retirement':
             self.create_payment_request = True
 
+#     def download_file(self):
+#         self.ensure_one()
+#         return {
+#                 'type': 'ir.actions.act_url',
+#                 'target':'download',
+#                  'url': "web/content/?model=bases.collaboration&id=" + str(self.bases_collaboration_id.id) + "&filename_field=name&field=cbc_format&download=true&filename=" + self.bases_collaboration_id.name,
+#             }    
 
 class RequestOpenBalanceInvestment(models.Model):
 

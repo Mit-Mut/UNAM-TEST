@@ -229,12 +229,17 @@ class Investment(models.Model):
 
     def action_confirm_inv(self):
         self.state = 'confirmed'
-        self.env['maturity.report'].create({
-            'name': self.first_number,
-            'investment_id': self.id,
-            'partner_id': self.env.user.partner_id.id,
-            'date': self.expiry_date
-        })
+        maturity_report_id = self.env['maturity.report'].search([('investment_id','=',self.id)],limit=1)
+        vals = {
+                'name': self.first_number,
+                'investment_id': self.id,
+                'partner_id': self.env.user.partner_id.id,
+                'date': self.expiry_date
+            }
+        if maturity_report_id:
+            maturity_report_id.write(vals)
+        else:
+            self.env['maturity.report'].create(vals)
 
     def action_reset_inv(self):
         self.state = 'draft'

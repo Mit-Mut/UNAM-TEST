@@ -1654,7 +1654,7 @@ msgstr "Gestión de pagos"
 #: model:ir.model.fields,field_description:jt_supplier_payment.field_reschedule_request__l10n_mx_edi_payment_method_id
 #: model_terms:ir.ui.view,arch_db:jt_supplier_payment.employee_payroll_file_inherit_search
 msgid "Payment Method"
-msgstr "Método de pago"
+msgstr "Método de Cobro"
 
 #. module: jt_supplier_payment
 #: code:addons/jt_supplier_payment/models/upload_payroll_file.py:0 model:ir.model.fields,field_description:jt_supplier_payment.field_payroll_payment_provider_wizard__partner_id
@@ -2696,14 +2696,60 @@ msgstr "la cuenta bancaria seleccionada tiene saldo suficiente para ejecutar"
 msgid "Counter Receipt Folio"
 msgstr "Folio contra recibo"
 
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment_register__payment_method_id
+msgid "Payment Method Type"
+msgstr "Tipo de Método de Cobro"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment_register__group_payment
+msgid "Group Payment"
+msgstr "Cobro Agrupado"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment_register__payment_date
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
+msgid "Payment Date"
+msgstr "Fecha de Cobro"
+
 #. module: l10n_mx_edi
 #: model:ir.actions.act_window,name:l10n_mx_edi.action_l10n_mx_payment_method
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_bank_statement_import_journal_creation__l10n_mx_edi_payment_method_id
 #: model:ir.model.fields,field_description:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_payment_method_id
-#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_invoice__l10n_mx_edi_payment_method_id
 #: model:ir.model.fields,field_description:l10n_mx_edi.field_account_journal__l10n_mx_edi_payment_method_id
 #: model:ir.model.fields,field_description:l10n_mx_edi.field_account_payment__l10n_mx_edi_payment_method_id
-#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_register_payments__l10n_mx_edi_payment_method_id
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_payment_register__l10n_mx_edi_payment_method_id
 #: model_terms:ir.ui.view,arch_db:l10n_mx_edi.view_l10n_mx_payment_method_form
 #: model_terms:ir.ui.view,arch_db:l10n_mx_edi.view_l10n_mx_payment_method_tree
 msgid "Payment Way"
 msgstr "Forma de Cobro"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form_multi
+msgid "Create Payment"
+msgstr "Crear Cobro"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_payment_term_form
+#: model:ir.model,name:account.model_account_payment_term
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__invoice_payment_term_id
+#: model:ir.model.fields,field_description:account.field_account_move__invoice_payment_term_id
+#: model:ir.model.fields,field_description:account.field_account_payment_term__name
+#: model:ir.model.fields,field_description:account.field_account_payment_term_line__payment_id
+#: model:ir.ui.menu,name:account.menu_action_payment_term_form
+#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
+#: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
+#: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
+#: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_tree
+#: model_terms:ir.ui.view,arch_db:account.view_payment_term_search
+#: model_terms:ir.ui.view,arch_db:account.view_payment_term_tree
+msgid "Payment Terms"
+msgstr "Plazos de Cobro"
+
+#. module: account
+#: code:addons/account/models/account_payment.py:0
+#: model:ir.actions.act_window,name:account.action_account_payments
+#: model:ir.ui.menu,name:account.root_payment_menu
+#, python-format
+msgid "Payments"
+msgstr "Cobros"

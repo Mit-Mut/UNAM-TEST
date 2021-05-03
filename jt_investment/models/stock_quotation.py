@@ -10,8 +10,8 @@ class InvestmentStockQuotation(models.Model):
 
     name = fields.Char("Title")
     state = fields.Selection([('draft','Draft'),('confirmed','Confirmed')],string="Status",default='draft')
-    date = fields.Date("Date")
     price_id = fields.Many2one('stock.quote.price',string="Price History")
+    date = fields.Date(related='price_id.date',string="Date")
     price = fields.Float(related="price_id.price")
     journal_id = fields.Many2one('account.journal','Bank')
     bank_rate_id = fields.Many2one("res.currency","Bank Rate")

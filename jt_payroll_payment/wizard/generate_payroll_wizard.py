@@ -374,6 +374,9 @@ class GeneratePayrollWizard(models.TransientModel):
 
             #======================== pension_payment ================# 
             if self.type_of_movement == 'pension_payment':
+                self.env.user.notify_success(message='Pension Payment Process Is Start',
+                                    title="Pension Payment", sticky=True)
+                
                 counter = 0
                 for rowx, row in enumerate(map(sheet.row, range(1, sheet.nrows)), 1):
                     counter += 1
@@ -486,9 +489,14 @@ class GeneratePayrollWizard(models.TransientModel):
                         line_data = []
                         result_dict = {}
                         # exit_payroll_id = False
+                self.env.user.notify_success(message='Pension Payment Process Is End',
+                                    title="Pension Payment", sticky=True)
 
             #======================== Additional payments ================# 
             if self.type_of_movement == 'additional_payments':
+                self.env.user.notify_success(message='Additional Payments Process Is Start',
+                                    title="Additional Payments", sticky=True)
+                
                 counter = 0
                 for rowx, row in enumerate(map(sheet.row, range(1, sheet.nrows)), 1):
                     
@@ -567,9 +575,14 @@ class GeneratePayrollWizard(models.TransientModel):
                         result_dict = {}
                         line_data = []
                         # exit_payroll_id = False
+                self.env.user.notify_success(message='Additional Payments Process Is End',
+                                    title="Additional Payments", sticky=True)
 
             #======================== additional_pension_payments ================# 
             if self.type_of_movement == 'additional_pension_payments':
+                self.env.user.notify_success(message='Additional Pension Payments Process Is Start',
+                                    title="Additional Pension Payments", sticky=True)
+                
                 counter = 0
                 for rowx, row in enumerate(map(sheet.row, range(1, sheet.nrows)), 1):
                     
@@ -632,6 +645,9 @@ class GeneratePayrollWizard(models.TransientModel):
                         line_data = []
                         # exit_payroll_id = False
                         result_dict = {}
+
+                self.env.user.notify_success(message='Additional Pension Payments Process Is Start',
+                                    title="Additional Pension Payments", sticky=True)
 
             if failed_row != "":
                 self.payroll_process_id.update_failed_file(failed_row,self.type_of_movement,'completed',self.env.user,self.filename)

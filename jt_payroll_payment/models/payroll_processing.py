@@ -309,6 +309,7 @@ class CustomPayrollProcessing(models.Model):
                             payment_method = int(payment_method)
                     else:
                         payment_method = str(payment_method)
+                    
                           
                     payment_method_id = list(filter(lambda pm: pm['name'] == str(payment_method), payment_method_records))
                     payment_method_id = payment_method_id[0]['id'] if payment_method_id else False
@@ -362,13 +363,14 @@ class CustomPayrollProcessing(models.Model):
                                 bank_account = int(bank_account)
                         if  type(bank_account) is int or type(bank_account) is float:
                             bank_account = int(bank_account)
-                                
-                        bank_account_id = list(filter(lambda b: b['acc_number'] == str(bank_account), bank_account_records))
-                        bank_account_id = bank_account_id[0]['id'] if bank_account_id else False
-                         
-                        if not bank_account_id:
-                            failed_row = self.check_bank_accunt_data(failed_row,bank_account,'Payroll Perceptions',counter)
-                            continue
+                        
+                        if len(str(bank_account)) > 0:
+                            bank_account_id = list(filter(lambda b: b['acc_number'] == str(bank_account), bank_account_records))
+                            bank_account_id = bank_account_id[0]['id'] if bank_account_id else False
+                             
+                            if not bank_account_id:
+                                failed_row = self.check_bank_accunt_data(failed_row,bank_account,'Payroll Perceptions',counter)
+                                continue
                         
                         
                         exit_payroll_id = list(filter(lambda b: b['employee_id'][0] == employee_id.id, payroll_process_records))

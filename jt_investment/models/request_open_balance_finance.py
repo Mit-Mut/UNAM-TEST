@@ -61,12 +61,18 @@ class BasesCollabration(models.Model):
         if self.purchase_sale_security_id:
             po_so_security_id = self.purchase_sale_security_id
             po_so_security_id.action_confirmed()
-            self.env['maturity.report'].create({
+            maturity_report_id = self.env['maturity.report'].search([('po_sale_security_id','=',po_so_security_id.id)],limit=1)
+            vals = {
                 'name': po_so_security_id.first_number,
                 'po_sale_security_id': po_so_security_id.id,
                 'partner_id': self.env.user.partner_id.id,
                 'date': po_so_security_id.expiry_date
-            })
+            }
+            
+            if maturity_report_id:
+                maturity_report_id.write(vals)
+            else:
+                self.env['maturity.report'].create(vals)
 
         if self.investment_id:
             self.investment_id.action_confirmed()
@@ -74,42 +80,62 @@ class BasesCollabration(models.Model):
         if self.bonds_id:
             bonds_id = self.bonds_id
             bonds_id.action_confirmed()
-            self.env['maturity.report'].create({
+            maturity_report_id = self.env['maturity.report'].search([('bonds_id','=',bonds_id.id)],limit=1)
+            vals = {
                 'name': bonds_id.first_number,
                 'bonds_id': bonds_id.id,
                 'partner_id': self.env.user.partner_id.id,
                 'date': bonds_id.expiry_date
-            })
+            }
+            if maturity_report_id:
+                maturity_report_id.write(vals)
+            else:
+                self.env['maturity.report'].create(vals)
 
         if self.cetes_id:
             cetes_id = self.cetes_id
             cetes_id.action_confirmed()
-            self.env['maturity.report'].create({
+            maturity_report_id = self.env['maturity.report'].search([('cetes_id','=',cetes_id.id)],limit=1)
+            vals = {
                 'name': cetes_id.first_number,
                 'cetes_id': cetes_id.id,
                 'partner_id': self.env.user.partner_id.id,
                 'date': cetes_id.expiry_date
-            })
+            }
+            if maturity_report_id:
+                maturity_report_id.write(vals)
+            else:
+                self.env['maturity.report'].create(vals)
 
         if self.udibonos_id:
             udibonos_id = self.udibonos_id
             self.udibonos_id.action_confirmed()
-            self.env['maturity.report'].create({
+            maturity_report_id = self.env['maturity.report'].search([('udibonos_id','=',udibonos_id.id)],limit=1)
+            vals = {
                 'name': udibonos_id.first_number,
                 'udibonos_id': udibonos_id.id,
                 'partner_id': self.env.user.partner_id.id,
                 'date': udibonos_id.expiry_date
-            })
+            }
+            if maturity_report_id:
+                maturity_report_id.write(vals)
+            else:
+                self.env['maturity.report'].create(vals)
 
         if self.will_pay_id:
             will_pay_id = self.will_pay_id
             will_pay_id.action_confirmed()
-            self.env['maturity.report'].create({
+            maturity_report_id = self.env['maturity.report'].search([('will_pay_id','=',will_pay_id.id)],limit=1)
+            vals = {
                 'name': will_pay_id.first_number,
                 'will_pay_id': will_pay_id.id,
                 'partner_id': self.env.user.partner_id.id,
                 'date': will_pay_id.expiry_date
-            })
+            }
+            if maturity_report_id:
+                maturity_report_id.write(vals)
+            else:
+                self.env['maturity.report'].create(vals)
 
         if self.investment_fund_id:
             self.investment_fund_id.action_confirmed()

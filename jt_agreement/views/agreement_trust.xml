@@ -77,6 +77,21 @@
             </field>
         </record>
 
+        <record id="agreement_trust_dashboard_view" model="ir.ui.view">
+            <field name="name">Agreement Trust dashboard view</field>
+            <field name="model">agreement.trust</field>
+            <field name="arch" type="xml">
+                <dashboard>
+                    <view type="graph" ref="jt_agreement.agreement_trust_pivot_view"/>
+                    <group>
+                        <aggregate name="opening_balance" field="opening_balance" widget="monetary" string="Opening Balance"/>
+                        <aggregate name="available_bal" field="available_bal" widget="monetary" string="Available Balance"/>
+                    </group>
+                    <view type="pivot" ref="jt_agreement.agreement_trust_pivot_view"/>
+                </dashboard>
+            </field>
+        </record>
+
         <record id="agreement_trust_form" model="ir.ui.view">
             <field name="name">agreement.trust.form</field>
             <field name="model">agreement.trust</field>
@@ -290,7 +305,7 @@
         <record id="action_agreement_trust" model="ir.actions.act_window">
             <field name="name">Trusts</field>
             <field name="res_model">agreement.trust</field>
-            <field name="view_mode">kanban,tree,form,pivot</field>
+            <field name="view_mode">kanban,dashboard,tree,form,pivot</field>
             <field name="context">{'from_agreement':1}</field>
         </record>
 

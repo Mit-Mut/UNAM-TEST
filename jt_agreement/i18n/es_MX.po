@@ -2965,7 +2965,7 @@ msgstr "Operación"
 #: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance_finance__operation_number
 #: model:ir.model.fields,field_description:jt_agreement.field_request_open_balance_invest__operation_number
 msgid "Operation Number"
-msgstr "Número de operación"
+msgstr "Fecha de Operación"
 
 #. module: jt_agreement
 #: code:addons/jt_agreement/models/bases_collaboration.py:0

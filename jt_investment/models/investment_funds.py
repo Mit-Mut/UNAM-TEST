@@ -125,12 +125,19 @@ class InvestmentFunds(models.Model):
 
     def approve_fund(self):
         self.state = 'confirmed'
-        self.env['maturity.report'].create({
+        maturity_report_id = self.env['maturity.report'].search([('fund_id','=',self.id)],limit=1)
+        
+        vals = {
             'name': self.first_number,
             'fund_id': self.id,
             'partner_id': self.responsible_user_id.partner_id.id,
             'date': datetime.today().date()
-        })
+        }
+        
+        if maturity_report_id:
+            maturity_report_id.write(vals)
+        else:
+            self.env['maturity.report'].create(vals)
 
     def reset_fund(self):
         self.state = 'draft'

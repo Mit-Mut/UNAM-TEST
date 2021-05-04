@@ -238,11 +238,13 @@
                                 </t>
                                 <br/>
                                 <br/>
+                                <t t-if=" not o.distribution_of_module_ids">
                                 <br/>
                                 <br/>
                                 <br/>
                                 <br/>
                                 <br/>
+                                </t>
                                 <div class="row">
                                     <div class="col-12" align="left" style="margin-left:10px;">
                                         <span>Nice Stay</span>

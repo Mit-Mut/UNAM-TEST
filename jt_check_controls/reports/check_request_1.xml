@@ -146,41 +146,45 @@
                                 </t>
                             </div>
                             <br/>
-                            <span>Through this channel, we would greatly appreciate turning your kind instruction to
+                            <span class="text-justify">Through this channel, we would greatly appreciate turning your kind instruction to
                                 whom it may concern, in order to carry out the development of
                             </span>
                             <t t-esc="o.amount_checks"/>
-                            <span>Formats to print checks from this account</span>
+                            <span class="text-justify">Formats to print checks from this account</span>
                             <t t-if="o.bank_account_id">
                                 (<t t-esc="o.bank_account_id.acc_number"/>)
                             </t>
-                            <span>They must start from the folio</span>
+                            <span class="text-justify">They must start from the folio</span>
                             <t t-esc="o.intial_folio"/>
-                            <span>Annex, it will be useful to find the
+                            <span class="text-justify">Annex, it will be useful to find the
                                 canceled format containing the folio
                             </span>
                             <span></span>
                             <t t-esc="o.print_sample_folio_number"/>
-                            <span>, In order to be considered (s) as a print sample.</span>
+                            <span class="text-justify">, In order to be considered (s) as a print sample.</span>
                             <br/>
-                            <span>Likewise, we would also appreciate informing us in advance the corresponding
+                            <br/>
+
+                            <span class="text-justify">Likewise, we would also appreciate informing us in advance the corresponding
                                 charge, which must be applied to the account
                             </span>
                             <t t-if="o.bank_account_id">
                                 <t t-esc="o.bank_account_id.acc_number"/>
                             </t>
-                            <span>
-                                , In order to enable it and avoid unnecessary overdrafts, requesting that you send
+                            <span class="text-justify">
+                                ,In order to enable it and avoid unnecessary overdrafts, requesting that you send
                                 us the invoice for this remittance as soon as possible to send it to our General
                                 Accounting area for registration.
                             </span>
                             <br/>
-                            <span>
+                            <br/>
+                            <span class="text-justify">
                                 We request that the packing order be as follows:
+                                <br/>
                                 <br/>
                             </span>
                             <t t-set="checklist" t-value="o.get_checklist(o)"/>
-                            <span>
+                            <span class="text-justify">
                                 -Packing of
                                 <t t-if="checklist">
                                     <t t-esc="checklist.check_per_box"/>
@@ -188,7 +192,7 @@
                                 checks each one
                             </span>
                             <br/>
-                            <span>
+                            <span class="text-justify">
                                 -Boxes of
                                 <t t-if="checklist">
                                     <t t-esc="checklist.received_boxes"/>
@@ -197,7 +201,8 @@
                                 that mistreats the boxes and checks.
                             </span>
                             <br/>
-                            <span>
+                            <br/>
+                            <span class="text-justify">
                                 -Protection of thick cardboard sheets at the beginning and end of each package,
                                 as well as craft paper wrapping.
                                 <br/>
@@ -218,12 +223,14 @@
                                 </t>
                                 DAYS" ON THE FRONT AND REVERSE.
                                 <br/>
+                                <br/>
                             </span>
-                            <span>
+                            <span class="text-justify">
                                 We appreciate you sending us the corresponding CFDI in PDF format and XML file.
                             </span>
                             <br/>
-                            <span>
+                            <br/>
+                            <span class="text-justify">
                                 Please strictly adhere to the technical characteristics of substance and form, as
                                 well as the security measures of the attached sample check.
                                 <br/>
@@ -232,14 +239,14 @@
                             </span>
                             <div class="row">
                                 <div class="col-8" align="left" style="font-size:15px">
-                                    <span style="font-size:15px">
+                                    <span class="text-justify" style="font-size:15px">
                                         Sincerely
                                         <br/>
                                     </span>
-                                    <span style="font-size:15px">
+                                    <span class="text-justify" style="font-size:15px">
                                         FOR MY RACE THE SPIRIT WILL SPEAK
                                     </span>
-                                    <span style="font-size:15px">
+                                    <span class="text-justify" style="font-size:15px">
                                         Ciudad Universitaria, Cd. Mx., A
                                         <br/>
                                         <t t-esc="o.get_date()"/>

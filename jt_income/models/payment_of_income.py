@@ -1,4 +1,5 @@
-from odoo import models, fields, api
+from odoo import models, fields,api,_
+from odoo.exceptions import ValidationError
 
 class PaymentOfIncome(models.Model):
 
@@ -19,4 +20,11 @@ class PaymentOfIncome(models.Model):
                 
             result.append((rec.id, name))
         return result
-    
+
+    @api.constrains('name')
+    def _check_code(self):
+        for rec in self:
+            if rec.name:
+                deposit_id = self.env['payment.of.income'].search([('name','=',rec.name),('id','!=',rec.id)],limit=1)
+                if deposit_id:
+                    raise ValidationError(_("There is already a record with the same Collection of"))        

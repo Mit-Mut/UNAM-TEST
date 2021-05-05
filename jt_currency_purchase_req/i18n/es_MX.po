@@ -369,12 +369,12 @@ msgstr "Beneficio de la comisión"
 #: model:ir.model,name:jt_currency_purchase_req.model_comission_profit
 #: model:ir.ui.menu,name:jt_currency_purchase_req.balnk_check_request_menu
 msgid "Commision And Profit"
-msgstr "Comisión y beneficio"
+msgstr "Comisiones e Intereses"
 
 #. module: jt_currency_purchase_req
 #: model:ir.actions.act_window,name:jt_currency_purchase_req.action_commision
 msgid "Commision And profit"
-msgstr "Comisión y beneficio"
+msgstr "Comisiones e Intereses"
 
 #. module: jt_currency_purchase_req
 #: model_terms:ir.ui.view,arch_db:jt_currency_purchase_req.check_account_template
@@ -468,7 +468,7 @@ msgstr "DIRECCIÓN DE INGRESOS Y OPERACIONES FINANCIERAS"
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_comission_profit__journal_id
 msgid "Daily"
-msgstr "Diaria"
+msgstr "Diario"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_application_request__date

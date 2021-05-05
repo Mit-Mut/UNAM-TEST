@@ -23,6 +23,12 @@ class CommisionAndProfit(models.Model):
                                ], string="Status", default="draft")
 
 
+    @api.onchange('bank_account_id')
+    def onchange_bank_account_id(self):
+        if self.bank_account_id:
+            journal_id = self.env['account.journal'].search([('bank_account_id','=',self.bank_account_id.id)],limit=1)
+            self.journal_id = journal_id and journal_id.id or False
+             
     @api.model
     def create(self, vals):
         res = super(CommisionAndProfit,self).create(vals)

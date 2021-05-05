@@ -1578,6 +1578,11 @@ msgid "Done"
 msgstr "Hecho"
 
 #. module: jt_agreement
+#: model_terms:ir.ui.view,arch_db:jt_agreement.view_req_open_balance_tree_finance
+msgid "Done By"
+msgstr "Realizado Por"
+
+#. module: jt_agreement
 #: model_terms:ir.ui.view,arch_db:jt_agreement.generate_account_statement
 #: model_terms:ir.ui.view,arch_db:jt_agreement.generate_bases_collaboration_resemble_view
 #: model_terms:ir.ui.view,arch_db:jt_agreement.generate_bases_collaboration_view
@@ -3236,10 +3241,11 @@ msgstr "Imprimir"
 #: code:addons/jt_agreement/reports/account_operation_interest.py:0
 #: code:addons/jt_agreement/reports/account_operations_increase.py:0
 #: code:addons/jt_agreement/reports/account_statements_collaboration.py:0
-#: code:addons/jt_agreement/reports/movments.py:0 code:addons/jt_agreement/reports/operation_withdraw.py:0
+#: code:addons/jt_agreement/reports/movments.py:0
+#: code:addons/jt_agreement/reports/operation_withdraw.py:0
 #, python-format
-msgid "Print Preview"
-msgstr "Vista previa de impresión"
+msgid "Export to PDF"
+msgstr "Exportar a PDF"
 
 #. module: jt_agreement
 #: model:ir.model.fields.selection,name:jt_agreement.selection__request_open_balance_finance__trasnfer_request__projects

@@ -3259,8 +3259,8 @@ msgstr "Histórico de precios"
 #: code:addons/jt_investment/reports/report_productive_accounts.py:0
 #: code:addons/jt_investment/reports/titles_account_statement.py:0
 #, python-format
-msgid "Print Preview"
-msgstr "Vista previa de impresión"
+msgid "Export to PDF"
+msgstr "Exportar a PDF"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_maturity_report__privacy

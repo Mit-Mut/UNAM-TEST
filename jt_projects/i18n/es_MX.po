@@ -2337,16 +2337,23 @@ msgid "Price"
 msgstr "Precio"
 
 #. module: jt_projects
-#: code:addons/jt_projects/reports/Integration_of_papiit_papime_infocab_iacod_resource.py:0 code:addons/jt_projects/reports/Integration_of_remaining_resources_by_program.py:0
-#: code:addons/jt_projects/reports/accounting_and_bank_account_balances.py:0 code:addons/jt_projects/reports/accumulated_verfication_report.py:0
-#: code:addons/jt_projects/reports/comparison_of_balance_check.py:0 code:addons/jt_projects/reports/cumulative_comparison.py:0
-#: code:addons/jt_projects/reports/integration_airplan_ticket_papiit.py:0 code:addons/jt_projects/reports/integration_curr_exp_project.py:0
-#: code:addons/jt_projects/reports/integration_current_project.py:0 code:addons/jt_projects/reports/integration_of_project_budget_resources.py:0
-#: code:addons/jt_projects/reports/integration_of_remnants.py:0 code:addons/jt_projects/reports/integration_program_budgetary_resource_remanants.py:0
-#: code:addons/jt_projects/reports/remaining_resources.py:0 code:addons/jt_projects/reports/upa_remaining_resources.py:0
+#: code:addons/jt_projects/reports/Integration_of_papiit_papime_infocab_iacod_resource.py:0
+#: code:addons/jt_projects/reports/Integration_of_remaining_resources_by_program.py:0
+#: code:addons/jt_projects/reports/accounting_and_bank_account_balances.py:0
+#: code:addons/jt_projects/reports/accumulated_verfication_report.py:0
+#: code:addons/jt_projects/reports/comparison_of_balance_check.py:0
+#: code:addons/jt_projects/reports/cumulative_comparison.py:0
+#: code:addons/jt_projects/reports/integration_airplan_ticket_papiit.py:0
+#: code:addons/jt_projects/reports/integration_curr_exp_project.py:0
+#: code:addons/jt_projects/reports/integration_current_project.py:0
+#: code:addons/jt_projects/reports/integration_of_project_budget_resources.py:0
+#: code:addons/jt_projects/reports/integration_of_remnants.py:0
+#: code:addons/jt_projects/reports/integration_program_budgetary_resource_remanants.py:0
+#: code:addons/jt_projects/reports/remaining_resources.py:0
+#: code:addons/jt_projects/reports/upa_remaining_resources.py:0
 #, python-format
-msgid "Print Preview"
-msgstr "Vista previa de impresión"
+msgid "Export to PDF"
+msgstr "Exportar a PDF"
 
 #. module: jt_projects
 #: model:ir.model.fields,field_description:jt_projects.field_project_program_code__program_id

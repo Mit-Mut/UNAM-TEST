@@ -21,7 +21,7 @@ import lxml.html
 from odoo import models, fields, api, _
 from odoo.tools.misc import format_date
 
-
+        
 class AccountChartOfAccountReport(models.AbstractModel):
     _name = "jt_account_module_design.account_coa.inherit"
     _description = "General Accounting"

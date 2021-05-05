@@ -3252,8 +3252,8 @@ msgstr "Total Líneas"
 #: code:addons/jt_budget_mgmt/report/total_payment_amounts.py:0
 #: code:addons/jt_budget_mgmt/static/src/xml/proforma_budget_summary_report_widget.xml:0
 #, python-format
-msgid "Print Preview"
-msgstr "Vista previa de impresión"
+msgid "Export to PDF"
+msgstr "Exportar a PDF"
 
 #. module: jt_budget_mgmt
 #: model_terms:ir.ui.view,arch_db:jt_budget_mgmt.expenditure_budget_search_view

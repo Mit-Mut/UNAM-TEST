@@ -36,8 +36,8 @@
       <field name="inherit_id" ref="account.view_account_payment_tree"/>
       <field name="arch" type="xml">
         <field name="partner_id" position="after">
-          <field name="transfer_made_origin" readonly="1"/>
-          <field name="confirmed_transfer" readonly="1" attrs="{'invisible': [('state', '=', ('draft'))]}"/>
+          <field name="transfer_made_origin" invisible="1"/>
+          <field name="confirmed_transfer" invisible="1"/>
         </field>
       </field>
     </record>

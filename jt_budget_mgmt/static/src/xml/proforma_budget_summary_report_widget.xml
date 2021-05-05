@@ -9,7 +9,7 @@
 			<div class="o_cp_searchview" role="search"></div>
 			<div class="o_cp_left">
 				<div aria-label="Control panel toolbar" class="o_cp_buttons" role="toolbar">
-                    <button class="btn btn-primary summary_print_pdf" type="button">Print Preview</button>
+                    <button class="btn btn-primary summary_print_pdf" type="button">Export to PDF</button>
                     <button class="btn btn-primary summary_print_xls" type="button">Export (XLSX)</button>
                 </div>
 				<aside class="o_cp_sidebar"></aside>

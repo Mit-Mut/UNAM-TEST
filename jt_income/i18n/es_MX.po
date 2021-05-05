@@ -2370,10 +2370,11 @@ msgid "Price"
 msgstr "Precio"
 
 #. module: jt_income
-#: code:addons/jt_income/reports/new_annual_income_report.py:0 code:addons/jt_income/reports/new_income_annual_report.py:0
+#: code:addons/jt_income/reports/new_annual_income_report.py:0
+#: code:addons/jt_income/reports/new_income_annual_report.py:0
 #, python-format
-msgid "Print Preview"
-msgstr "Vista previa de impresión"
+msgid "Export to PDF"
+msgstr "Exportar a PDF"
 
 #. module: jt_income
 #: model_terms:ir.ui.view,arch_db:jt_income.account_invoice_income_form_view

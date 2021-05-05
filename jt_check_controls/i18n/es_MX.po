@@ -57,18 +57,32 @@ msgstr ", a"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
-msgid "-Boxes of"
-msgstr "-Cajas de"
+msgid ""
+"checks each one\n"
+"                            <br/>\n"
+"                            \n"
+"                            -Boxes of"
+msgstr ""
+"cheques cada uno\n"
+"                            <br/>\n"
+"                            \n"
+"                            -Cajas del"
+
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
 msgid "-Packing of"
 msgstr "-Empaque de"
 
+
+
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
 msgid ""
-"-Protection of thick cardboard sheets at the beginning and end of each package,\n"
+"custom formats without the use of strap to some type of tie\n"
+"                            that mistreats the boxes and checks.\n"
+"                            <br/>\n"
+"                                -Protection of thick cardboard sheets at the beginning and end of each package,\n"
 "                                as well as craft paper wrapping.\n"
 "                                <br/>\n"
 "                                -Checks should be arranged from 1 to “N” with the face facing up.\n"
@@ -84,7 +98,10 @@ msgid ""
 "                                the security characteristics of each bank and contain the legend \"THE VALIDITY OF\n"
 "                                THIS CHECK IS"
 msgstr ""
-"-Protección de hojas de cartulina gruesa al inicio y al final de cada paquete, así como envoltura de papel craft.                            \n"
+"formatos a la medida sin uso de fleje a algún tipo de amarre que maltrate\n"
+"                            las cajas y cheques.\n"
+"                            <br/>\n"
+"								-Protección de hojas de cartulina gruesa al inicio y al final de cada paquete, así como envoltura de papel craft.                            \n"
 "                               <br/>\n"
 "                                -Los cheques deberán ser acomodados de 1 a \"N\" con la carátula hacia arriba.\n"
 "                                <br/>\n"
@@ -327,6 +344,12 @@ msgstr ""
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
+msgid ""
+"Through this channel, we would greatly appreciate turning your kind "
+"instruction to whom it may concern, in order to carry out the development of"
+msgstr "Por este conducto, mucho agradeceremos girar su amable instrucción a quien corresponda, a fin de llevar a cabo la elaboración de"
+
+#. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_2_template
 msgid ""
 "<br/>\n"
@@ -594,58 +617,42 @@ msgstr ""
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
 msgid ""
-"<span class=\"text-justify\">\n"
-"                                ,In order to enable it and avoid unnecessary overdrafts, requesting that you send\n"
-"                                us the invoice for this remittance as soon as possible to send it to our General\n"
-"                                Accounting area for registration.\n"
-"                            </span>\n"
-"                            <br/>\n"
-"                            <br/>\n"
-"                            <span class=\"text-justify\">\n"
-"                                We request that the packing order be as follows:\n"
-"                                <br/>\n"
-"                                <br/>\n"
-"                            </span>"
+", In order to enable it and avoid unnecessary overdrafts, requesting that "
+"you send us the invoice for this remittance as soon as possible to send it "
+"to our General Accounting area for registration."
 msgstr ""
-"<span class=\"text-justify\">\n"
-"                                , a efecto de habilitarla y evitar sobregiros innecesarios, solicitándole nos remita a labrevedad la factura de esta remesa para enviarla a su registro a nuestra área de Contaduría General.\n"
-"                            </span>\n"
-"                            <br/>\n"
-"                            <br/>\n"
-"                            <span class=\"text-justify\">\n"
-"                               Le solicitamos que el orden de empaque sea de la siguiente forma:\n"
-"                                <br/>\n"
-"                                <br/>\n"
-"                            </span>"
+", a efecto de habilitarla y evitar sobregiros innecesarios , solicitándole nos remita"
+"a la brevedad la factura de esta remesa para enviarla a su "
+"registro a nuestra área de Contaduría General."
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
 msgid ""
-"<span class=\"text-justify\">\n"
-"                                We appreciate you sending us the corresponding CFDI in PDF format and XML file.\n"
-"                            </span>\n"
-"                            <br/>\n"
-"                            <br/>\n"
-"                            <span class=\"text-justify\">\n"
+"We request that the packing order be as follows:\n"
+"                                <br/>"
+msgstr "Le solicitamos que el orden de empaque sea de la siguiente forma:\n"
+"                                <br/>"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
+msgid ""
+"We appreciate you sending us the corresponding CFDI in PDF format and XML file.\n"
+"                                <br/>\n"
 "                                Please strictly adhere to the technical characteristics of substance and form, as\n"
 "                                well as the security measures of the attached sample check.\n"
 "                                <br/>\n"
+"                                <br/>\n"
 "                                Without further ado and thanking you again for your attention to the present,\n"
-"                                we bid you farewell with a cordial greeting.\n"
-"                            </span>"
+"                                we bid you farewell with a cordial greeting."
 msgstr ""
-
-"<span class=\"text-justify\">\n"
-"                               Agradecemos nos envíe el CFDI correspondiente en formato PDF y archivo XML.\n"
-"                            </span><br/>\n"
-"                            <span class=\"text-justify\">\n"
+"Agradecemos nos envíe el CFDI correspondiente en formato PDF y archivo XML.\n"
+"                                <br/>\n"
 "                                Favor de apegarse estrictamente a las características técnicas de fondo y forma,\n"
-"                               así como medidas de seguridad del cheque muestra anexo.\n"
+"                                así como medidas de seguridad del cheque muestra anexo.\n"
 "                                <br/>\n"
 "                                <br/>\n"
-"                               Sin otro particular y agradeciendo nuevamente su atención al presente, nos\n"
+"                                Sin otro particular y agradeciendo nuevamente su atención al presente, nos\n"
 "                               despedimos de usted con un cordial saludo.\n"
-"                            </span>"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_registration_template
@@ -662,22 +669,17 @@ msgstr ""
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
+msgid ", In order to be considered (s) as a print sample."
+msgstr ", a fin de ser considerado(s) como muestra de impresión."
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
 msgid ""
-"<span class=\"text-justify\">, In order to be considered (s) as a print sample.</span>\n"
-"                            <br/>\n"
-"                            <br/>\n"
-"\n"
-"                            <span class=\"text-justify\">Likewise, we would also appreciate informing us in advance the corresponding\n"
-"                                charge, which must be applied to the account\n"
-"                            </span>"
+"Likewise, we would also appreciate informing us in advance the corresponding"
+" charge, which must be applied to the account"
 msgstr ""
-"<span class=\"text-justify\">, a fin de ser considerado(s) como muestra de impresión.</span>\n"
-"                            <br/>\n"
-"                            <br/>\n"
-"\n"
-"                            <span class=\"text-justify\">Asi mismo, también agradeceremos nos informe con anticipación el cargo correspondiente\n"
-"                                 mismo que deberá aplicarse a la cuenta\n"
-"                            </span>"
+"Asi mismo, también agradeceremos nos informe con anticipación el cargo correspondiente"
+"mismo que deberá aplicarse a la cuenta"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_2_template
@@ -783,6 +785,12 @@ msgstr "<span>Número de cheques</span>"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
+msgid ""
+"Annex, it will be useful to find the canceled format containing the folio"
+msgstr "anexo , se servirá encontrar el formato cancelado conteniendo el folio"
+
+
+#. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_2_template
 msgid ""
 "<span>Annex, it will be useful to find the\n"
@@ -836,6 +844,16 @@ msgstr "<span>Folio final</span>"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
+msgid "Formats to print checks from this account"
+msgstr "formatos para imprimir cheques de esta cuenta"
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
+msgid ", They must start from the folio"
+msgstr ", mismos que deberán iniciar a partir del folio"
+
+
+#. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_2_template
 msgid "<span>Formats to print checks from this account</span>"
 msgstr "<span>formatos para imprimir cheques de esta cuenta</span>"
@@ -929,7 +947,6 @@ msgid "<span>RFC</span>"
 msgstr ""
 
 #. module: jt_check_controls
-#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_2_template
 msgid "<span>They must start from the folio</span>"
 msgstr "<span>mismos que deberán iniciar a partir del folio</span>"
@@ -3567,8 +3584,8 @@ msgstr "Imprimir cheques"
 #: code:addons/jt_check_controls/reports/check_summary.py:0
 #: code:addons/jt_check_controls/reports/payroll_report.py:0
 #, python-format
-msgid "Print Preview"
-msgstr "Vista previa de impresión"
+msgid "Export to PDF"
+msgstr "Exportar a PDF"
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_blank_checks_request__print_sample_folio_number
@@ -4495,16 +4512,8 @@ msgstr ""
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
 msgid "checks each one"
-msgstr "heques cada uno"
+msgstr "cheques cada uno"
 
-#. module: jt_check_controls
-#: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
-msgid ""
-"custom formats without the use of strap to some type of tie\n"
-"                                that mistreats the boxes and checks."
-msgstr ""
-"formatos a la medida sin uso de fleje a algún tipo de amarre que maltrate "
-"las cajas y cheques."
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_registration_template

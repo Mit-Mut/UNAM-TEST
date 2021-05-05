@@ -2197,3 +2197,8 @@ msgstr "Facturas si cobro"
 #, python-format
 msgid "Register Payment"
 msgstr "Registrar Cobro"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__total_deduction
+msgid "Total Deductions"
+msgstr "Deducciones totales"

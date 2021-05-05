@@ -146,63 +146,36 @@
                                 </t>
                             </div>
                             <br/>
-                            <span class="text-justify">Through this channel, we would greatly appreciate turning your kind instruction to
-                                whom it may concern, in order to carry out the development of
-                            </span>
-                            <t t-esc="o.amount_checks"/>
-                            <span class="text-justify">Formats to print checks from this account</span>
-                            <t t-if="o.bank_account_id">
-                                (<t t-esc="o.bank_account_id.acc_number"/>)
-                            </t>
-                            <span class="text-justify">They must start from the folio</span>
-                            <t t-esc="o.intial_folio"/>
-                            <span class="text-justify">Annex, it will be useful to find the
-                                canceled format containing the folio
-                            </span>
-                            <span></span>
-                            <t t-esc="o.print_sample_folio_number"/>
-                            <span class="text-justify">, In order to be considered (s) as a print sample.</span>
+                            <p class="text-justify">Through this channel, we would greatly appreciate turning your kind instruction to whom it may concern, in order to carry out the development of<t t-esc="o.amount_checks"/> Formats to print checks from this account <t t-if="o.bank_account_id">(<t t-esc="o.bank_account_id.acc_number"/>)</t>, They must start from the folio <t t-esc="o.intial_folio"/>Annex, it will be useful to find the canceled format containing the folio<t t-esc="o.print_sample_folio_number"/>, In order to be considered (s) as a print sample.</p>
                             <br/>
-                            <br/>
+                            
 
-                            <span class="text-justify">Likewise, we would also appreciate informing us in advance the corresponding
-                                charge, which must be applied to the account
-                            </span>
-                            <t t-if="o.bank_account_id">
-                                <t t-esc="o.bank_account_id.acc_number"/>
-                            </t>
-                            <span class="text-justify">
-                                ,In order to enable it and avoid unnecessary overdrafts, requesting that you send
-                                us the invoice for this remittance as soon as possible to send it to our General
-                                Accounting area for registration.
-                            </span>
+                            <p class="text-justify">Likewise, we would also appreciate informing us in advance the corresponding charge, which must be applied to the account<t t-if="o.bank_account_id">
+                            <t t-esc="o.bank_account_id.acc_number"/></t>, In order to enable it and avoid unnecessary overdrafts, requesting that you send us the invoice for this remittance as soon as possible to send it to our General Accounting area for registration.
+                            </p>
                             <br/>
-                            <br/>
-                            <span class="text-justify">
+                            
+                            <p class="text-justify">
                                 We request that the packing order be as follows:
                                 <br/>
-                                <br/>
-                            </span>
+                            </p>
+                            
                             <t t-set="checklist" t-value="o.get_checklist(o)"/>
-                            <span class="text-justify">
+                            <p class="text-justify">
                                 -Packing of
                                 <t t-if="checklist">
                                     <t t-esc="checklist.check_per_box"/>
                                 </t>
                                 checks each one
-                            </span>
                             <br/>
-                            <span class="text-justify">
-                                -Boxes of
-                                <t t-if="checklist">
-                                    <t t-esc="checklist.received_boxes"/>
-                                </t>
-                                custom formats without the use of strap to some type of tie
-                                that mistreats the boxes and checks.
-                            </span>
+                            
+                            -Boxes of
+                            <t t-if="checklist">
+                                <t t-esc="checklist.received_boxes"/>
+                            </t>
+                            custom formats without the use of strap to some type of tie
+                            that mistreats the boxes and checks.
                             <br/>
-                            <br/>
-                            <span class="text-justify">
                                 -Protection of thick cardboard sheets at the beginning and end of each package,
                                 as well as craft paper wrapping.
                                 <br/>
@@ -223,20 +196,18 @@
                                 </t>
                                 DAYS" ON THE FRONT AND REVERSE.
                                 <br/>
-                                <br/>
-                            </span>
-                            <span class="text-justify">
+                            </p>
+                            <br/>
+                            <p class="text-justify">
                                 We appreciate you sending us the corresponding CFDI in PDF format and XML file.
-                            </span>
-                            <br/>
-                            <br/>
-                            <span class="text-justify">
+                                <br/>
                                 Please strictly adhere to the technical characteristics of substance and form, as
                                 well as the security measures of the attached sample check.
                                 <br/>
+                                <br/>
                                 Without further ado and thanking you again for your attention to the present,
                                 we bid you farewell with a cordial greeting.
-                            </span>
+                            </p>
                             <div class="row">
                                 <div class="col-8" align="left" style="font-size:15px">
                                     <span class="text-justify" style="font-size:15px">

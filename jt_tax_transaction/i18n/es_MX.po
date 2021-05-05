@@ -1303,8 +1303,8 @@ msgstr "Referencia de pago"
 #: code:addons/jt_tax_transaction/reports/tax_pay_report.py:0
 #: code:addons/jt_tax_transaction/reports/withholding_tax_report.py:0
 #, python-format
-msgid "Print Preview"
-msgstr "Vista previa de impresión"
+msgid "Export to PDF"
+msgstr "Exportar a PDF"
 
 #. module: jt_tax_transaction
 #: model:ir.model.fields,field_description:jt_tax_transaction.field_declaration_conagua__programatic_code_id

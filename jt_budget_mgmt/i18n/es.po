@@ -1725,10 +1725,11 @@ msgstr ""
 
 #. module: jt_budget_mgmt
 #. openerp-web
+#: code:addons/jt_budget_mgmt/report/total_payment_amounts.py:0
 #: code:addons/jt_budget_mgmt/static/src/xml/proforma_budget_summary_report_widget.xml:0
 #, python-format
-msgid "Print Preview"
-msgstr "Vista previa de impresión"
+msgid "Export to PDF"
+msgstr "Exportar a PDF"
 
 #. module: jt_budget_mgmt
 #: model:ir.model,name:jt_budget_mgmt.model_proforma_budget_summary_report

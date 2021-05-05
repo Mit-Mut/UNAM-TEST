@@ -48,7 +48,7 @@ class InvestmentAccountStatement(models.AbstractModel):
 
     def _get_reports_buttons(self):
         return [
-            {'name': _('Print Preview'), 'sequence': 1,
+            {'name': _('Export to PDF'), 'sequence': 1,
              'action': 'print_pdf', 'file_export_type': _('PDF')},
             {'name': _('Export (XLSX)'), 'sequence': 2,
              'action': 'print_xlsx', 'file_export_type': _('XLSX')},

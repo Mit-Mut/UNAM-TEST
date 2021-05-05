@@ -50,7 +50,7 @@ msgstr "<b><span>Folio:</span></b>"
 #. module: jt_supplier_payment
 #: model_terms:ir.ui.view,arch_db:jt_supplier_payment.report_again_receipt_template
 msgid "<b><span>PLEASE REVIEW THE TICKET DATA</span></b>"
-msgstr "<b><span>FOVOR DE REVISAR LOS DATOS DEL TICKET</span></b>"
+msgstr "<b><span>FAVOR DE REVISAR LOS DATOS DEL TICKET</span></b>"
 
 #. module: jt_supplier_payment
 #: model_terms:ir.ui.view,arch_db:jt_supplier_payment.report_again_receipt_template
@@ -1836,11 +1836,13 @@ msgid "Price"
 msgstr "Precio"
 
 #. module: jt_supplier_payment
-#: code:addons/jt_supplier_payment/reports/cash_payment_calculation.py:0 code:addons/jt_supplier_payment/reports/electronic_deposits_of_salaries.py:0
-#: code:addons/jt_supplier_payment/reports/general_total_payment_amounts.py:0 code:addons/jt_supplier_payment/reports/pension_payment_report.py:0
+#: code:addons/jt_supplier_payment/reports/cash_payment_calculation.py:0
+#: code:addons/jt_supplier_payment/reports/electronic_deposits_of_salaries.py:0
+#: code:addons/jt_supplier_payment/reports/general_total_payment_amounts.py:0
+#: code:addons/jt_supplier_payment/reports/pension_payment_report.py:0
 #, python-format
-msgid "Print Preview"
-msgstr "Vista previa de impresión"
+msgid "Export to PDF"
+msgstr "Exportar a PDF"
 
 #. module: jt_supplier_payment
 #: model:ir.model.fields.selection,name:jt_supplier_payment.selection__generate_batch_sheet__payment_type__project_payment

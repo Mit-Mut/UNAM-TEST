@@ -144,7 +144,7 @@ class EmployeePayroll(models.Model):
     pension_payment_line_ids = fields.One2many('pension.payment.line','payroll_id')
     additional_payments_line_ids = fields.One2many('additional.payments.line','payroll_id')
     additional_pension_payments_line_ids = fields.One2many('additional.pension.payments.line','payroll_id')
-
+    total_deduction = fields.Float(string="Total Deductions",compute="get_total_dedcution",store=True)
     
     rfc = fields.Char(related='employee_id.rfc')
     job_id = fields.Many2one(related='employee_id.job_id',string='Category key')
@@ -163,6 +163,12 @@ class EmployeePayroll(models.Model):
         'options could be: Cash, Nominal Check, Credit Card, etc.')
 
     is_pension_payment_request = fields.Boolean("Pension Payment",default=False,copy=False)
+
+    @api.depends('deduction_line_ids','deduction_line_ids.amount')
+    def get_total_dedcution(self):
+        for rec in self:
+            total_deduction = sum(x.amount for x in rec.deduction_line_ids)
+            rec.total_deduction = total_deduction
             
     @api.onchange('employee_id') 
     def onchange_partner_bak_account(self):

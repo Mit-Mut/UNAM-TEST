@@ -176,6 +176,7 @@
                                 <field name="adjustment_case_description"/>
                                 <field name="net_salary"/>
                                 <field name="casualties_and_cancellations" attrs="{'readonly':[('state','=','done')]}"/>
+                                <field name="total_deduction"/>
                                 <field name="request_type" attrs="{'readonly':[('state','=','done')]}" invisible="1"/>
                                 <field name="payroll_adjustment" attrs="{'readonly':[('state','=','done')]}" invisible="1"/>
                                 <field name="due_to_inappropriate"

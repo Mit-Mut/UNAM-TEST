@@ -1398,8 +1398,8 @@ msgstr "Por favor configure la cuenta UNAM y CONAC en diario!"
 #: code:addons/jt_finance/reports/summary_query_type.py:0
 #: code:addons/jt_finance/reports/type_of_operation.py:0
 #, python-format
-msgid "Print Preview"
-msgstr "Vista previa de impresión"
+msgid "Export to PDF"
+msgstr "Exportar a PDF"
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_calendar_assigned_amounts_lines__program

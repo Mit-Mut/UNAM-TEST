@@ -1514,8 +1514,8 @@ msgstr "Precio"
 #: code:addons/jt_account_module_design/reports/state_paritmonial_situation_report.py:0
 #: code:addons/jt_account_module_design/reports/weight_income_report.py:0
 #, python-format
-msgid "Print Preview"
-msgstr "Vista previa de impresión"
+msgid "Export to PDF"
+msgstr "Exportar a PDF"
 
 #. module: jt_account_module_design
 #: model:ir.model.fields,field_description:jt_account_module_design.field_provision_line__product_id
@@ -2383,3 +2383,9 @@ msgstr "entradas de diario no publicadas"
 #: model:ir.actions.client,name:jt_account_module_design.action_weight_income_report
 msgid "weight income report"
 msgstr "reporte de ingresos"
+
+#. module: account_reports
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Print Preview"
+msgstr "Exportar a PDF"

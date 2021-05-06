@@ -621,8 +621,8 @@ msgid ""
 "you send us the invoice for this remittance as soon as possible to send it "
 "to our General Accounting area for registration."
 msgstr ""
-", a efecto de habilitarla y evitar sobregiros innecesarios , solicitándole nos remita"
-"a la brevedad la factura de esta remesa para enviarla a su "
+", a efecto de habilitarla y evitar sobregiros innecesarios , solicitándole nos remita a"
+" la brevedad la factura de esta remesa para enviarla a su "
 "registro a nuestra área de Contaduría General."
 
 #. module: jt_check_controls
@@ -678,8 +678,8 @@ msgid ""
 "Likewise, we would also appreciate informing us in advance the corresponding"
 " charge, which must be applied to the account"
 msgstr ""
-"Asi mismo, también agradeceremos nos informe con anticipación el cargo correspondiente"
-"mismo que deberá aplicarse a la cuenta"
+"Asi mismo, también agradeceremos nos informe con anticipación el cargo correspondiente mismo"
+" que deberá aplicarse a la cuenta"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_2_template
@@ -787,7 +787,7 @@ msgstr "<span>Número de cheques</span>"
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
 msgid ""
 "Annex, it will be useful to find the canceled format containing the folio"
-msgstr "anexo , se servirá encontrar el formato cancelado conteniendo el folio"
+msgstr "  anexo , se servirá encontrar el formato cancelado conteniendo el folio  "
 
 
 #. module: jt_check_controls
@@ -2174,9 +2174,11 @@ msgstr "DÍAS” EN EL ANVERSO Y REVERSO DEL DOCUMENTO.."
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
 msgid ""
-"DAYS\" ON THE FRONT AND REVERSE.\n"
+"DAYS\" ON THE FRONT AND \"REVERSE\".\n"
 "                                <br/>"
-msgstr "DÍAS EN SU ANVERSO Y REVERSO.<br/>"
+msgstr ""
+"DÍAS EN SU ANVERSO Y \"REVERSO\".\n"
+"                                <br/>"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.external_layout_delievery_ticket

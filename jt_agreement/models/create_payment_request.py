@@ -17,7 +17,7 @@ class PaymentRequest(models.Model):
         'res.currency', default=lambda self: self.env.user.company_id.currency_id)
     amount = fields.Monetary("Amount to withdraw")
     payment_method_id = fields.Many2one('l10n_mx_edi.payment.method', string="Payment Method")
-    date = fields.Date("Operation Date")
+    date = fields.Date("Date of operation")
     reference = fields.Char("Reference")
     counter_receipt_sheet = fields.Char("Counter Receipt Sheet")
     beneficiary_id = fields.Many2one('res.partner', "Beneficiary's name")

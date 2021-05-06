@@ -194,7 +194,7 @@
                                 <t t-if="o.bank_account_id and o.bank_account_id.bank_id">
                                     <span t-esc="o.bank_account_id.bank_id.check_validity"/>
                                 </t>
-                                DAYS" ON THE FRONT AND REVERSE.
+                                DAYS" ON THE FRONT AND "REVERSE".
                                 <br/>
                             </p>
                             <br/>

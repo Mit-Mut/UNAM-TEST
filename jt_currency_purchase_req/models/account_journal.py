@@ -25,7 +25,7 @@ class AccountJournal(models.Model):
 
     _inherit = 'account.journal'
 
-    account_type = fields.Selection([('fixed', 'Fixed'), ('operational_fund', 'Operational Fund')],
+    account_type = fields.Selection(selection_add=[('fixed', 'Fixed'), ('operational_fund', 'Operational Fund')],
                                     string='Account Type')
     dependency_id = fields.Many2one('dependency', "Dependency Key")
     auth_sign_ids = fields.One2many('auth.sign','journal_id')

@@ -238,7 +238,7 @@ class PaymentBatchSupplier(models.Model):
         for rec in self:
             if rec.checkbook_req_id:
                 payment_record_assign = rec.payment_req_ids.filtered(lambda x: x.check_status and x.check_status != 'Cancelled' and x.selected == True)
-                payment_record_cancel = rec.payment_req_ids.filtered(lambda x: x.check_status and x.check_folio_id and x.check_folio_id.reason_cancellation != 'Print Error' and x.check_status == 'Cancelled' and x.selected == True)
+                payment_record_cancel = rec.payment_req_ids.filtered(lambda x: x.check_status and x.check_folio_id and x.check_folio_id.reason_cancellation != 'Error de Impresión' and x.check_status == 'Cancelled' and x.selected == True)
                 if payment_record_assign or payment_record_cancel:
                     raise ValidationError(_('Cannot assign a new check folio because they already have one'))
                 payment_record = rec.payment_req_ids.filtered(lambda x: x.check_status == 'Printed' and x.selected == True)

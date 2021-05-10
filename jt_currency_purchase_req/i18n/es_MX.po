@@ -169,7 +169,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_account_cancellation__account_cancellation_id
 #: model:ir.ui.menu,name:jt_currency_purchase_req.finance_menu_cancel_request
 msgid "Account Cancellation"
-msgstr "Cancelación de cuenta"
+msgstr "Solicitud de Cancelación de Cuentas Bancarias"
 
 #. module: jt_currency_purchase_req
 #: model:ir.ui.menu,name:jt_currency_purchase_req.menu_account_management
@@ -204,7 +204,7 @@ msgstr ""
 #. module: jt_currency_purchase_req
 #: model:ir.ui.menu,name:jt_currency_purchase_req.menu_account_modification
 msgid "Account modification"
-msgstr "Modificación de cuenta"
+msgstr "Solicitud de Actualización de Cuentas Bancarias"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model,name:jt_currency_purchase_req.model_request_accounts_line
@@ -335,7 +335,7 @@ msgstr "Solicitud de cancelación"
 #. module: jt_currency_purchase_req
 #: model:ir.ui.menu,name:jt_currency_purchase_req.menu_cancellation_account
 msgid "Cancellation of checking account"
-msgstr "Cancelación de cuenta corriente"
+msgstr "Oficio de Cancelación de Cuenta de Cheques"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__comission_profit__type_of_comission__check_paid_per_window
@@ -797,7 +797,7 @@ msgstr "Firma de oficio"
 #. module: jt_currency_purchase_req
 #: model:ir.ui.menu,name:jt_currency_purchase_req.menu_signautre_update
 msgid "Office of updating signatures"
-msgstr "Oficio de actualización de Firma"
+msgstr "Oficio de Apertura de Cuenta de Cheques"
 
 #. module: jt_currency_purchase_req
 #: model:ir.ui.menu,name:jt_currency_purchase_req.menu_trade
@@ -819,7 +819,7 @@ msgstr "Apertura de cuenta corriente"
 #: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__finance_sender_recipient_trades__template__open_check_acc
 #: model:ir.ui.menu,name:jt_currency_purchase_req.menu_checking_account
 msgid "Opening a checking account"
-msgstr "Apertura de cuenta corriente"
+msgstr "Oficio de Actualización de Firmas"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields.selection,name:jt_currency_purchase_req.selection__account_journal__account_type__operational_fund
@@ -834,7 +834,7 @@ msgstr "Otros procedimientos"
 #. module: jt_currency_purchase_req
 #: model:ir.ui.menu,name:jt_currency_purchase_req.menu_other_procedure
 msgid "Other procedures"
-msgstr "Otros procedimientos"
+msgstr "Otros Trámites"
 
 #. module: jt_currency_purchase_req
 #: model:ir.model.fields,field_description:jt_currency_purchase_req.field_auth_sign__ownership
@@ -956,7 +956,7 @@ msgstr "Solicitud de TRansferencia"
 #. module: jt_currency_purchase_req
 #: model:ir.ui.menu,name:jt_currency_purchase_req.menu_request_account
 msgid "Request for new account"
-msgstr "Solicitud de Apertura de Cuenta"
+msgstr "Solicitud de Apertura de Cuentas Bancarias"
 
 #. module: jt_currency_purchase_req
 #: model:ir.actions.act_window,name:jt_currency_purchase_req.account_modification_action

@@ -347,7 +347,7 @@ msgstr ""
 msgid ""
 "Through this channel, we would greatly appreciate turning your kind "
 "instruction to whom it may concern, in order to carry out the development of"
-msgstr "Por este conducto, mucho agradeceremos girar su amable instrucción a quien corresponda, a fin de llevar a cabo la elaboración de"
+msgstr "Por este conducto, mucho agradeceremos girar su amable instrucción a quien corresponda, a fin de llevar a cabo la elaboración de "
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_2_template
@@ -3775,7 +3775,7 @@ msgstr "Cheques relacionados"
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_minimum_checks__reorder_point
 msgid "Reorder Point"
-msgstr "Punto de reordenación"
+msgstr "Punto de Reorden"
 
 #. module: jt_check_controls
 #: model:ir.ui.menu,name:jt_check_controls.amount_of_payroll_check_submenu
@@ -4367,7 +4367,7 @@ msgstr "El valor de la cantidad de los cheques no coincide."
 #: code:addons/jt_check_controls/models/blank_check_req.py:0
 #, python-format
 msgid "Value of Amount of checks does not more than authorized."
-msgstr "El valor de la cantidad de cheques no supera los autorizados."
+msgstr "El valor de cheques solicitados supera el número de cheques autorizados."
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_cancel_checks__website_message_ids
@@ -4576,3 +4576,8 @@ msgid ""
 "“RECIBÍ DEL DEPARTAMENTO DE PAGO DE NÓMINA Y PRESTACIONES DE LA DIRECCIÓN "
 "GENERAL DE FINANZAS LOS SIGUIENTES DOCUMENTOS PARA EL PAGO DE NÓMINA:."
 msgstr ""
+
+#. module: jt_check_controls
+#: model_terms:ir.ui.view,arch_db:jt_check_controls.checklog_form_view
+msgid "Print Error"
+msgstr "Error de Impresión"

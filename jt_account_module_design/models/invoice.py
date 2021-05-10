@@ -836,6 +836,7 @@ class AccountMove(models.Model):
             
     def generate_payment_request(self):
         if self.amount_total==0:
+            raise ValidationError(_("A new request can no longer be entered because the amount of the original request is being exceeded."))
             return 
         vals = {'folio_dependency':False,'is_provision_request':False,
                 'payment_state':'approved_payment','provision_move_id':self.id,

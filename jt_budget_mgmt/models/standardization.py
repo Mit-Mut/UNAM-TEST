@@ -138,11 +138,11 @@ class Standardization(models.Model):
                             break
 
                     if origin_budget_line and quarter_budget_line: 
-                        if origin_budget_line.assigned >= line.amount:
-                            amount = origin_budget_line.assigned - line.amount
-                            origin_budget_line.write({'assigned': amount})
-                            increase_amount = quarter_budget_line.assigned + line.amount
-                            quarter_budget_line.write({'assigned': increase_amount})
+                        if origin_budget_line.available >= line.amount:
+                            amount = origin_budget_line.available - line.amount
+                            origin_budget_line.write({'available': amount})
+                            increase_amount = quarter_budget_line.available + line.amount
+                            quarter_budget_line.write({'available': increase_amount})
                             line.amount_effected = True
                         if origin_budget_line.authorized >= line.amount:
                             amount = origin_budget_line.authorized - line.amount
@@ -151,6 +151,31 @@ class Standardization(models.Model):
                             quarter_budget_line.write({'authorized': increase_amount})
                             line.amount_effected = True
 
+                    #=====Update Control Assign Line===================#                    
+                    contorl_lines = self.env['control.assigned.amounts.lines'].sudo().search(
+                        [('program_code_id', '=', line.code_id.id),
+                         ('assigned_amount_id.budget_id', '=', line.budget_id.id)])
+
+                    origin_contorl_line = False
+                    for contorl_line in contorl_lines:
+                        if contorl_line.start_date and str(contorl_line.start_date.day).zfill(2) == origin_start_date_day and str(contorl_line.start_date.month).zfill(2) == origin_start_date_month and contorl_line.end_date and str(contorl_line.end_date.day).zfill(2) == origin_end_date_day and str(contorl_line.end_date.month).zfill(2) == origin_end_date_month:
+                            origin_contorl_line = contorl_line
+                            break                     
+
+                    quarter_contorl_line = False
+                    for contorl_line in contorl_lines:
+                        if contorl_line.start_date and str(contorl_line.start_date.day).zfill(2) == quarter_start_date_day and str(contorl_line.start_date.month).zfill(2) == quarter_start_date_month and contorl_line.end_date and str(contorl_line.end_date.day).zfill(2) == quarter_end_date_day and str(contorl_line.end_date.month).zfill(2) == quarter_end_date_month:
+                            quarter_contorl_line = contorl_line
+                            break    
+
+                    if origin_contorl_line:
+                        amount = origin_contorl_line.available
+                        origin_contorl_line.write({'available':amount - line.amount})     
+
+                    if quarter_contorl_line:
+                        amount = quarter_contorl_line.available
+                        quarter_contorl_line.write({'available':amount + line.amount})     
+                                
     _sql_constraints = [
         ('folio_uniq_const', 'unique(folio)', 'The folio must be unique.')]
 

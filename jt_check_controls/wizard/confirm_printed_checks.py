@@ -52,7 +52,7 @@ class ConfirmPrintedCheck(models.TransientModel):
                         line.payment_req_id.payment_state = 'assigned_payment_method'
                     line.selected = False
                 else:
-                    line.check_folio_id.write({'status':'Cancelled','reason_cancellation':'Print Error','is_cancel_from_print_incorrect':True})
+                    line.check_folio_id.write({'status':'Cancelled','reason_cancellation':_('Error de Impresión'),'is_cancel_from_print_incorrect':True})
 #                     line.check_folio_id.status = 'Cancelled'
 #                     line.check_folio_id.reason_cancellation = 'Print Error'
                     line.selected = False

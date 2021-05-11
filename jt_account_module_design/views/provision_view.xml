@@ -114,7 +114,7 @@
                                 <field name="journal_id" readonly="1"/>
                                 <field name="previous_number" required="1" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                 
-                                <field name="holder_of_dependency_id" string="Holder of the Unit" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
+                                <field name="holder_of_dependency_id" invisible="1" string="Holder of the Unit" attrs="{'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                 <field name="operation_name" invisible="1"/>
                                 <field name="student_account" attrs="{'invisible':[('operation_name','not in',('Scholarship holders','Becarios'))],'required':[('operation_name','in',('Scholarship holders','Becarios'))],'readonly':[('payment_state', 'not in', ('draft'))]}"/>
                                 <field name="transfer_key" attrs="{'invisible':[('operation_name','!=','Becarios')],'required':[('operation_name','=','Becarios')],'readonly':[('payment_state', 'not in', ('draft'))]}"/>

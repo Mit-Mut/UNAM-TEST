@@ -60,7 +60,7 @@ class ExpirationValidityCheck(models.Model):
     status = fields.Selection(
         related='check_folio_id.status', string='Check status')
     check_validity = fields.Integer(
-        related='check_folio_id.bank_id.bank_id.check_validity', string='Days of validity')
+        related='check_folio_id.bank_id.bank_id.check_protection_term', string='Days of validity')
 
     #payment_method_name = fields.Char('Payment Name')
 

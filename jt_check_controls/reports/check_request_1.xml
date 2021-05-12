@@ -192,7 +192,7 @@
                                 the security characteristics of each bank and contain the legend "THE VALIDITY OF
                                 THIS CHECK IS
                                 <t t-if="o.bank_account_id and o.bank_account_id.bank_id">
-                                    <span t-esc="o.bank_account_id.bank_id.check_validity"/>
+                                    <span t-esc="o.bank_account_id.bank_id.check_protection_term"/>
                                 </t>
                                 DAYS" ON THE FRONT AND "REVERSE".
                                 <br/>

@@ -48,5 +48,17 @@
                 </field>
 			</field>
 		</record>
+
+        <record id="employee_payroll_file_tree_process_inherit" model="ir.ui.view">
+            <field name="name">employee.payroll.file.tree.process.inherit</field>
+            <field name="model">employee.payroll.file</field>
+            <field name="inherit_id" ref="jt_payroll_payment.employee_payroll_file_tree_process"/>
+            <field name="arch" type="xml">
+            	<field name="name" position="after">
+            		<field name="total_deduction"/>
+            		<field name="total_preception"/>
+            	</field>
+			</field>
+		</record>		
     </data>
 </odoo>

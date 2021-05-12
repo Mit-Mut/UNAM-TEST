@@ -337,8 +337,8 @@
                                 well as security measures of the approved
                                 check, also contain the legend" THE
                                 VALIDITY OF THIS CHECK IS FOR
-                                <t t-if="o.bank_id.bank_id.check_validity">
-                                    <span t-esc="o.bank_id.bank_id.check_validity"/>
+                                <t t-if="o.bank_id.bank_id.check_protection_term">
+                                    <span t-esc="o.bank_id.bank_id.check_protection_term"/>
                                 </t>
                                 DAYS "ON THE FRONT AND BACK OF THE DOCUMENT .."
                             </span>

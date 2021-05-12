@@ -201,7 +201,7 @@
                 <t t-foreach="docs" t-as="o">
                     <!--                    <t t-if="o.state == 'approved'">-->
                     <t t-call="jt_check_controls.external_layout_check_registration">
-                        <div class="page">
+                        <div class="page text-justify">
                             <br/>
                             <br/>
                             <br/>
@@ -210,34 +210,26 @@
                             <br/>
                             <br/>
                             <br/>
-                            <span>By means of the present in the character of authorized, we request and authorize the Activation of the issuance of <t t-esc="o.amount_checks"/> special checks with no. From folio <t t-esc="o.intial_folio"/> to <t t-esc="o.final_folio"/>, they belong to checking account no. 
+                            <p text-align="justify">By means of the present in the character of authorized, we request and authorize the Activation of the issuance of <t t-esc="o.amount_checks"/> special checks with no. From folio <t t-esc="o.intial_folio"/> to <t t-esc="o.final_folio"/>, they belong to checking account no. 
                             <t t-if="o.bank_account_id">
                                 (<t t-esc="o.bank_account_id.acc_number"/>)
-                            </t>, on behalf of the National Autonomous University of Mexico.
-                            </span>
-
-
-                            <span>It is worth mentioning that the checkbooks were satisfactorily delivered on
-                                <t t-esc="o.with_context(check_registration=True).get_application_date(o.check_receipt_date)"/> hereof, in the Financial Operations
-                                Department located at <t t-esc="o.full_address"/>, to
-                            <t t-set="trades" t-value="o.get_trade_configuration_3()"/>
-                            
+                            </t>, on behalf of the National Autonomous University of Mexico.<span>It is worth mentioning that the checkbooks were satisfactorily delivered on <t t-esc="o.with_context(check_registration=True).get_application_date(o.check_receipt_date)"/> hereof, in the Financial Operations Department located at <t t-esc="o.full_address"/>, to <t t-set="trades" t-value="o.get_trade_configuration_3()"/>
                             <t t-if="trades">
                                 <t t-if="trades.clerk_title">
-                                    <span style="font-size:15px;" t-esc="trades.clerk_title"/>
-                                    <span style="font-size:15px;">.</span>
+                                    <t style="font-size:15px;" t-esc="trades.clerk_title"/>
+                                    <t style="font-size:15px;">.</t>
                                 </t>
                                 <t t-if="trades.clerk_id">
-                                    <span style="font-size:15px;" t-esc="trades.clerk_id.name"/>
+                                    <t style="font-size:15px;" t-esc="trades.clerk_id.name"/>
                                 </t>
                             </t> who identified himself with _________________________________
                             _________________, for which a copy of
-                            his identification is attached.</span>
-
-                            <span>
+                            his identification is attached.</span></p>
+                            <br/>
+                            <p text-align="justify">
                                 Without any other particular and hoping to be favored with your attention to the
                                 present, we say goodbye to you with a cordial greeting.
-                            </span>
+                            </p>
                         </div>
                     </t>
                 </t>

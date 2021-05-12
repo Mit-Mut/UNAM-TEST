@@ -151,18 +151,18 @@ class ReportCalendarAmountAssign(models.Model):
         self.env.cr.execute('''
             CREATE OR REPLACE VIEW %s AS (
             select max(id) as id,item_id_first as item_first,item_id_second as item_second,max(id) as line_id,
-                sum(annual_amount) as annual_amount,sum(january) as january,sum(amount_deposite_january) as amount_deposite_january,(sum(january-amount_deposite_january)) as pending_january,
-                sum(february) as february,sum(amount_deposite_february) as amount_deposite_february,(sum(february-amount_deposite_february)) as pending_february,
-                sum(march) as march,sum(amount_deposite_march) as amount_deposite_march,(sum(march-amount_deposite_march)) as pending_march,
-                sum(april) as april,sum(amount_deposite_april) as amount_deposite_april,(sum(april-amount_deposite_april)) as pending_april,
-                sum(may) as may,sum(amount_deposite_may) as amount_deposite_may,(sum(may-amount_deposite_may)) as pending_may,
-                sum(june) as june,sum(amount_deposite_june) as amount_deposite_june,(sum(june-amount_deposite_june)) as pending_june,
-                sum(july) as july,sum(amount_deposite_july) as amount_deposite_july,(sum(july-amount_deposite_july)) as pending_july,
-                sum(august) as august,sum(amount_deposite_august) as amount_deposite_august,(sum(august-amount_deposite_august)) as pending_august,
-                sum(september) as september,sum(amount_deposite_september) as amount_deposite_september,(sum(september-amount_deposite_september)) as pending_september,
-                sum(october) as october,sum(amount_deposite_october) as amount_deposite_october,(sum(october-amount_deposite_october)) as pending_october,
-                sum(november) as november,sum(amount_deposite_november) as amount_deposite_november,(sum(november-amount_deposite_november)) as pending_november,
-                sum(december) as december,sum(amount_deposite_december) as amount_deposite_december,(sum(december-amount_deposite_december)) as pending_december 
+                sum(annual_amount) as annual_amount,sum(january) as january,sum(amount_deposite_january) as amount_deposite_january,(COALESCE(sum(january),0)-COALESCE(sum(amount_deposite_january),0)) as pending_january,
+                sum(february) as february,sum(amount_deposite_february) as amount_deposite_february,(COALESCE(sum(february),0)-COALESCE(sum(amount_deposite_february),0)) as pending_february,
+                sum(march) as march,sum(amount_deposite_march) as amount_deposite_march,(COALESCE(sum(march),0)-COALESCE(sum(amount_deposite_march),0)) as pending_march,
+                sum(april) as april,sum(amount_deposite_april) as amount_deposite_april,(COALESCE(sum(april),0)-COALESCE(sum(amount_deposite_april),0)) as pending_april,
+                sum(may) as may,sum(amount_deposite_may) as amount_deposite_may,(sum(may)-sum(amount_deposite_may)) as pending_may,
+                sum(june) as june,sum(amount_deposite_june) as amount_deposite_june,(COALESCE(sum(june),0)-COALESCE(sum(amount_deposite_june),0)) as pending_june,
+                sum(july) as july,sum(amount_deposite_july) as amount_deposite_july,(COALESCE(sum(july),0)-COALESCE(sum(amount_deposite_july),0)) as pending_july,
+                sum(august) as august,sum(amount_deposite_august) as amount_deposite_august,(COALESCE(sum(august),0)-COALESCE(sum(amount_deposite_august),0)) as pending_august,
+                sum(september) as september,sum(amount_deposite_september) as amount_deposite_september,(COALESCE(sum(september),0)-COALESCE(sum(amount_deposite_september),0)) as pending_september,
+                sum(october) as october,sum(amount_deposite_october) as amount_deposite_october,(COALESCE(sum(october),0)-COALESCE(sum(amount_deposite_october),0)) as pending_october,
+                sum(november) as november,sum(amount_deposite_november) as amount_deposite_november,(COALESCE(sum(november),0)-COALESCE(sum(amount_deposite_november),0)) as pending_november,
+                sum(december) as december,sum(amount_deposite_december) as amount_deposite_december,(COALESCE(sum(december),0)-COALESCE(sum(amount_deposite_december),0)) as pending_december 
             from calendar_assigned_amounts_lines
             group by item_id_first,item_id_second
             )'''% (self._table,) 

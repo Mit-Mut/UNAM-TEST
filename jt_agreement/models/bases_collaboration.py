@@ -1402,6 +1402,12 @@ class RequestOpenBalance(models.Model):
     def request(self):
         if self.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure') and self.bases_collaboration_id and self.bases_collaboration_id.available_bal < self.opening_balance:
             raise ValidationError(_('​Available Balance Is Less Then Requested Balance!'))
+
+        elif self.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure') and self.trust_id and self.trust_id.available_bal < self.opening_balance:
+            raise ValidationError(_('​Available Balance Is Less Then Requested Balance!'))
+
+        elif self.type_of_operation in ('retirement','withdrawal','withdrawal_cancellation','withdrawal_closure') and self.patrimonial_resources_id and self.patrimonial_resources_id.available_bal < self.opening_balance:
+            raise ValidationError(_('​Available Balance Is Less Then Requested Balance!'))
             
         self.env['request.open.balance.invest'].create({
             'name': self.name,

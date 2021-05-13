@@ -124,6 +124,7 @@
                     <field name="reference"/>
                     <field name="employee_id"/>
                     <field name="name"/>
+                    <field name="net_salary"/>
                     <field name="period_start"/>
                     <field name="period_end"/>
                 </tree>

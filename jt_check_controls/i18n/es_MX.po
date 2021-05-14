@@ -657,15 +657,11 @@ msgstr ""
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_registration_template
 msgid ""
-"<span>\n"
-"                                Without any other particular and hoping to be favored with your attention to the\n"
-"                                present, we say goodbye to you with a cordial greeting.\n"
-"                            </span>"
+"Without any other particular and hoping to be favored with your attention to the\n"
+"                                present, we say goodbye to you with a cordial greeting."
 msgstr ""
-"<span>\n"
-"                                Sin ningún otro particular y esperando ser favorecido con su atención a la\n"
-"                                presente, nos despedimos de usted con un cordial saludo.\n"
-"                            </span>"
+"Sin ningún otro particular y esperando ser favorecido con su atención a la\n"
+"                                presente, nos despedimos de usted con un cordial saludo."
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
@@ -2177,7 +2173,7 @@ msgid ""
 "DAYS\" ON THE FRONT AND \"REVERSE\".\n"
 "                                <br/>"
 msgstr ""
-"DÍAS EN SU ANVERSO Y \"REVERSO\".\n"
+"DÍAS EN SU ANVERSO Y \"REVERSA\".\n"
 "                                <br/>"
 
 #. module: jt_check_controls

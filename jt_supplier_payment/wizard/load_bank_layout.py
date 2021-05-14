@@ -77,76 +77,93 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                 'target': 'new',
                 'type': 'ir.actions.act_window',
             }
-            
+
+    def convert_string_to_float(self,values):
+        amount = 0
+        values = str(values)
+        amount = values.replace('$','')
+        amount = amount.replace(',','')
+        amount = float(amount)
+        return amount
+                
     def get_banamex_file(self):
-        #try:
+        try:
             failed_content = ''
             success_content = ''
 
-            data = base64.decodestring(self.file_data)
-            book = open_workbook(file_contents=data or b'')
-            sheet = book.sheet_by_index(0)
+#             data = base64.decodestring(self.file_data)
+#             book = open_workbook(file_contents=data or b'')
+#             sheet = book.sheet_by_index(0)
             
-#             file_data = base64.b64decode(self.file_data)
-#             data = io.StringIO(file_data.decode("utf-8"))
-#             data.seek(0)
-#             file_reader = []
-#             csv_reader = csv.reader(data, delimiter=',')
-#             file_reader.extend(csv_reader)
+            file_data = base64.b64decode(self.file_data)
+            data = io.StringIO(file_data.decode("utf-8"))
+            data.seek(0)
+            file_reader = []
+            csv_reader = csv.reader(data, delimiter=',')
+            file_reader.extend(csv_reader)
+            
             count = 0
             result_vals = []
-            for rowx, row in enumerate(map(sheet.row, range(1, sheet.nrows)), 1):
-                count+=1
-                result_dict = {}
-                for colx, cell in enumerate(row, 1):
-                    
-                    if colx==3:
-                        value = str(cell.value)
-                        result_dict.update({'first':value})
+#             for rowx, row in enumerate(map(sheet.row, range(1, sheet.nrows)), 1):
+#                 count+=1
+#                 result_dict = {}
+#                 for colx, cell in enumerate(row, 1):
+#                     
+#                     if colx==3:
+#                         value = str(cell.value)
+#                         result_dict.update({'first':value})
+# #                     else:
+# #                         continue
+#                     if colx==7:
+#                         if isinstance(cell.value, float):
+#                             value = cell.value
+#                             value = str(value).split('.')[0]
+#                         else:
+#                             value = str(cell.value)
+#                         result_dict.update({'bank_account':value})
+#                     if colx==9:
+#                         value = cell.value
+#                         result_dict.update({'amount':value})
+#                         
+#                 if result_dict and result_dict.get('first','')=='C':
+#                     
+#                     match_payment =  self.payment_ids.filtered(lambda x:x.state=='draft' and x.amount==result_dict.get('amount',0.0) and x.payment_issuing_bank_acc_id.acc_number==result_dict.get('bank_account',''))
+#                     if match_payment:
+#                         success_content += str(count)+' : Fecha del corte = '+ str(result_dict.get('bank_account',''))+" and Cuenta = "+str(result_dict.get('amount',0.0)) + "\n"
+#                         match_payment[0].post()
 #                     else:
-#                         continue
-                    if colx==7:
-                        if isinstance(cell.value, float):
-                            value = cell.value
-                            value = str(value).split('.')[0]
-                        else:
-                            value = str(cell.value)
-                        result_dict.update({'bank_account':value})
-                    if colx==9:
-                        value = cell.value
-                        result_dict.update({'amount':value})
-                        
-                if result_dict and result_dict.get('first','')=='C':
-                    
-                    match_payment =  self.payment_ids.filtered(lambda x:x.state=='draft' and x.amount==result_dict.get('amount',0.0) and x.payment_issuing_bank_acc_id.acc_number==result_dict.get('bank_account',''))
-                    if match_payment:
-                        success_content += str(count)+' : Fecha del corte = '+ str(result_dict.get('bank_account',''))+" and Cuenta = "+str(result_dict.get('amount',0.0)) + "\n"
-                        match_payment[0].post()
-                    else:
-                        failed_content += str(count)+': Payment Not Found For ----> Fecha del corte = '+ str(result_dict.get('bank_account',''))+" and Cuenta = "+str(result_dict.get('amount',0.0)) + "\n"
-                    
-#             for line in file_reader:
+#                         failed_content += str(count)+': Payment Not Found For ----> Fecha del corte = '+ str(result_dict.get('bank_account',''))+" and Cuenta = "+str(result_dict.get('amount',0.0)) + "\n"
+            previous_account =  False       
+            for line in file_reader:
 #                 if count==0:
 #                     count += 2
 #                     continue
-#                 account_no = line[8]
-#                 amount = line[16]
-#                 if amount and account_no:
-#                     first_amount = amount[:-2]
-#                     last_amount = amount[-2:]
-# 
-#                     act_amount = first_amount+"."+last_amount
-#                     act_amount = float(act_amount)
-#                     match_payment =  self.payment_ids.filtered(lambda x:x.state=='draft' and x.amount==act_amount and x.payment_bank_account_id.acc_number==account_no)
-#                     if match_payment:
-#                         success_content += str(count)+' : '+ str(line) + "\n"
-#                         match_payment[0].post()
-#                     else:
-#                         failed_content += str(count)+' : Payment Not Found For Amount and Account---> '+ str(line) + "\n"
-#                 else:
-#                     failed_content += str(count)+' :PLease Set Account Or Amount ---> '+ str(line) + "\n"
-#                 count += 1
-#                 
+                #continue
+                amount = 0
+                account_no = False
+                if line[2]=='C':
+                    amount = line[8]
+                    account_no = line[6]
+                else:
+                    previous_account = line[8]
+                    continue
+                if amount and account_no and previous_account:
+                    act_amount = self.convert_string_to_float(amount)
+                    #first_amount = amount[:-2]
+                    #last_amount = amount[-2:]
+ 
+                    #act_amount = first_amount+"."+last_amount
+                    #act_amount = float(act_amount)
+                    match_payment =  self.payment_ids.filtered(lambda x:x.state=='draft' and x.amount==act_amount and x.payment_bank_account_id.acc_number==str(account_no) and x.payment_issuing_bank_acc_id.acc_number==str(previous_account))
+                    if match_payment:
+                        success_content += str(count)+' : '+ str(line) + "\n"
+                        match_payment[0].post()
+                    else:
+                        failed_content += str(count)+' : Payment Not Found For Amount,Bank Account Payment Receipt And Payment Issuing Bank ---> '+ str(act_amount) +","+str(account_no)+","+str(previous_account)+"\n"
+                else:
+                    failed_content += str(count)+' :PLease Set Amount,Bank Account Payment Receipt And Payment Issuing Bank ---> '+ str(line) + "\n"
+                count += 1
+                 
             if failed_content:
                 failed_data = base64.b64encode(failed_content.encode('utf-8'))
                 self.failed_file_data = failed_data
@@ -157,8 +174,8 @@ class loadBankLayoutSupplierPayment(models.TransientModel):
                 self.success_file_data = success_data
                 self.is_hide_success = False
             
-#         except:
-#             raise Warning(_("File Format not Valid!"))        
+        except:
+            raise Warning(_("File Format not Valid!"))        
 
     def get_hsbc_file(self):
         try:

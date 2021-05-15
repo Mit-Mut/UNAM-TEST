@@ -1217,3 +1217,11 @@ msgstr "línea de solicitud"
 #: model:ir.model,name:jt_currency_purchase_req.model_request_confirm
 msgid "request.confirm"
 msgstr ""
+
+#. module: jt_currency_purchase_req
+#: model:ir.actions.client,name:jt_currency_purchase_req.action_summary_of_operations_bank_transactions
+#: model:ir.model,name:jt_currency_purchase_req.model_jt_finance_summary_of_operations_bank_transactions
+#: model:ir.ui.menu,name:jt_currency_purchase_req.menu_summary_of_operations_bank_transactions
+msgid "Summary of Operations - Bank Transactions"
+msgstr "Resumen de operaciones- transacciones bancarias"
+

@@ -54,6 +54,7 @@
         'report/office_cancellation_check_account.xml',
         'report/office_other_formalities.xml',
         'report/office_of_updating_signature.xml',
+        'report/menu_report.xml',
     ],
     'application': False,
     'installable': True,

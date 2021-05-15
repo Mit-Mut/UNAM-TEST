@@ -31,7 +31,7 @@ class RequestAccounts(models.Model):
     observations = fields.Text("Observations")
     journal_id = fields.Many2one('account.journal')
     bank_account_id = fields.Many2one(
-        "account.journal", string="Bank", domain=[('type', '=', 'bank')])
+        "account.journal", string="Bank account", domain=[('type', '=', 'bank')])
     bank_acc_number_id = fields.Many2one('res.partner.bank',
                                          related='bank_account_id.bank_account_id', string="Bank Account")
     no_contract = fields.Char(

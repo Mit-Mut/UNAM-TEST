@@ -52,10 +52,11 @@
                                 <field name="observations" readonly="1" attrs="{'invisible': [('status', '!=', 'rejected')]}"/>
                                 <field name="bank_id" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name="bank_acc_number_id" invisible="1" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
-                                <field name="no_contract" readonly="1"/>
+                                <field name="bank_account_id" context="{'from_account_design':True}" domain="[('bank_id','=',bank_id)]" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
+                                <field name="no_contract" readonly="0"/>
                                 <field name="customer_number" invisible="1" attrs="{'readonly': [('status', '!=', 'eraser')]}"/>
                                 <field name='supporting_doc_name' invisible="1"/>
-                                <field name="supporting_documentation"  attrs="{'readonly': [('status', '!=', 'eraser')]}" filename="supporting_doc_name"/>
+                                <field name="supporting_documentation" filename="supporting_doc_name"/>
                                 <field name="reason_rejection" attrs="{'invisible': [('status', '!=', 'rejected')]}"/>
                                 <field name="rejection_observations" readonly="1" attrs="{'invisible': [('status', '!=', 'rejected')]}"/>
                             </group>
@@ -77,7 +78,7 @@
             <field name="view_ids" eval="[(5, 0, 0),
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('request_accounts_tree_bank_view')}),
                 (0, 0, {'view_mode': 'form', 'view_id': ref('open_request_accounts_bank_from_view')})]"/>
-            <field name="context">{'from_conacyt':1,'default_move_type' : 'account open'}</field>
+            <field name="context">{'from_conacyt':1,'default_move_type' : 'account open','from_account_design':True}</field>
             <field name="domain">[('move_type','=','account open')]</field>
         </record>
 

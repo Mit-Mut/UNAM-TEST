@@ -6,5 +6,4 @@ from . import summary_query_type
 from . import diary_of_bank_movements_in_dollars
 from . import bank_diary_summary_operation_usd
 from . import summary_of_operation_usd_expenditures
-from . import summary_of_operations_bank_transactions
 from . import recovery_of_expenses_summary

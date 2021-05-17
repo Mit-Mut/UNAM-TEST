@@ -1658,12 +1658,6 @@ msgstr "Resumen de los gastos de la operación en USD"
 msgid "Summary of Operation-USD Expenditures"
 msgstr "Resumen de gastos de operación-USD"
 
-#. module: jt_finance
-#: model:ir.actions.client,name:jt_finance.action_summary_of_operations_bank_transactions
-#: model:ir.model,name:jt_finance.model_jt_finance_summary_of_operations_bank_transactions
-#: model:ir.ui.menu,name:jt_finance.menu_summary_of_operations_bank_transactions
-msgid "Summary of Operations - Bank Transactions"
-msgstr "Resumen de operaciones- transacciones bancarias"
 
 #. module: jt_finance
 #: model:ir.model.fields,field_description:jt_finance.field_control_amounts_received_line__tg

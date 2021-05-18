@@ -1225,3 +1225,8 @@ msgstr ""
 msgid "Summary of Operations - Bank Transactions"
 msgstr "Resumen de operaciones- transacciones bancarias"
 
+#. module: jt_currency_purchase_req
+#: code:addons/jt_currency_purchase_req/report/summary_of_operations_bank_transactions.py:0
+#, python-format
+msgid "TOTAL Transactions:"
+msgstr "TOTAL MOVIMIENTOS:"

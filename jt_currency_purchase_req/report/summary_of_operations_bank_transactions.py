@@ -113,7 +113,7 @@ class SummaryofOperationsBankTransactions(models.AbstractModel):
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
-        domain = [('date_required', '>=', start), ('date_required', '<=', end)]
+        domain = [('date', '>=', start), ('date', '<=', end)]
         state_domain = []
         state_select = options.get('transfer_request_state')
         for p_type in state_select:
@@ -137,6 +137,7 @@ class SummaryofOperationsBankTransactions(models.AbstractModel):
         count=0
         for transfer in bank_transfer_requests:
             count += 1
+            total_amount = 0
             amount_int = 0
             amount_ban = 0
             if transfer.bank_account_id and transfer.bank_account_id.bank_id and  transfer.desti_bank_account_id and transfer.desti_bank_account_id.bank_id and transfer.bank_account_id.bank_id.id== transfer.desti_bank_account_id.bank_id.id:
@@ -145,7 +146,7 @@ class SummaryofOperationsBankTransactions(models.AbstractModel):
             else:
                 amount_int = transfer.amount
                 total_amount_int += transfer.amount
-            #total_amount += transfer.amount
+            total_amount += total_amount_int + total_amount_ban
             state = dict(transfer._fields['state'].selection).get(transfer.state)
             lines.append({
                     'id': 'hierarchy1_'+str(transfer.id),
@@ -180,24 +181,22 @@ class SummaryofOperationsBankTransactions(models.AbstractModel):
                     'unfoldable': False,
                     'unfolded': True,
                 })
-    
-#             lines.append({
-#                     'id': 'hierarchy_total_movement',
-#                     'name': '',
-#                     'columns': [{'name': ''}, 
-#                                 {'name': ''},
-#                                 {'name': ''},
-#                                 {'name': ''},
-#                                 {'name': ''},
-#                                 {'name': ''},
-#                                 {'name': 'TOTAL MOVIMIENTOS:'},
-#                                 self._format({'name': total_amount},figure_type='float'),
-#                                 {'name': ''}],
-#                     'level': 3,
-#                     'unfoldable': False,
-#                     'unfolded': True,
-#                 })
-            
+            lines.append({
+                    'id': 'hierarchy_total_movement',
+                    'name': '',
+                    'columns': [{'name': ''}, 
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': ''},
+                                {'name': _('TOTAL Transactions:')},
+                                self._format({'name': total_amount},figure_type='float'),
+                                {'name': ''}],
+                    'level': 3,
+                    'unfoldable': False,
+                    'unfolded': True,
+                })
         return lines
 
     def _get_report_name(self):

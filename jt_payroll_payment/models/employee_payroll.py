@@ -228,10 +228,10 @@ class deductionLine(models.Model):
     credit_account_id = fields.Many2one(related='deduction_id.credit_account_id',string='Ledger account')
     move_id = fields.Many2one(related='payroll_id.move_id')
 
-    @api.constrains('amount')
-    def check_amount(self):
-        if self.amount and self.amount < 0:
-            raise UserError(_('The balance cannot be negative.'))
+#     @api.constrains('amount')
+#     def check_amount(self):
+#         if self.amount and self.amount < 0:
+#             raise UserError(_('The balance cannot be negative.'))
     
 class PensionPaymentLine(models.Model):
     

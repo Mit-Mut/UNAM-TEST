@@ -4563,3 +4563,9 @@ msgstr ""
 #: model:ir.model.fields.selection,name:jt_investment.selection__maturity_report__rrule_type__yearly
 msgid "yearly"
 msgstr "anual"
+
+#. module: jt_investment
+#: code:addons/jt_investment/models/cetes.py:0
+#, python-format
+msgid "Approve Request"
+msgstr "Solictud de Transferencia"

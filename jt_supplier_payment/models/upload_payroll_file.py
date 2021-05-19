@@ -85,9 +85,12 @@ class EmployeePayroll(models.Model):
     
     def get_deduction_invoice_line_vals(self,line):
         invoice_line_vals = {}
+        amount = line.amount
+        if line.amount > 0:
+            amount = -line.amount
         
         invoice_line_vals = { 'quantity' : 1,
-                            'price_unit' : -line.amount,
+                            'price_unit' : amount,
                             }
         if line.credit_account_id:
             invoice_line_vals.update({'account_id' : line.credit_account_id.id})

@@ -335,7 +335,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
         productive_ids = self.env['investment.investment'].search(productive_domain_1,order='currency_id')
         
         total_investment = 0
-
+        total_intereses = 0
         #==== Sale Security========#        
         #total_investment += cetes.nominal_value
         for sale in sale_security_ids:
@@ -344,6 +344,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
             total_investment += sale.amount
             
             interest = ((sale.amount*sale.price/100)*term/360)
+            total_intereses += interest 
             lines.append({
                 'id': 'hierarchy_sale' + str(sale.id),
                 'name' : resouce_name, 
@@ -379,6 +380,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
             precision = self.env['decimal.precision'].precision_get('CETES')
                 
             interest = ((cetes.nominal_value*cetes.yield_rate/100)*term/360)
+            total_intereses += interest
             lines.append({
                 'id': 'hierarchy_cetes' + str(cetes.id),
                 'name' : resouce_name, 
@@ -412,6 +414,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
             precision = self.env['decimal.precision'].precision_get('UDIBONOS')
             
             interest = ((udibonos.nominal_value*udibonos.interest_rate/100)*udibonos.time_for_each_cash_flow/360)
+            total_intereses += interest
             lines.append({
                 'id': 'hierarchy_udibonos' + str(udibonos.id),
                 'name': resouce_name,
@@ -438,7 +441,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
             resouce_name = bonds.fund_id and bonds.fund_id.name or ''
             
             interest = ((bonds.nominal_value*bonds.interest_rate/100)*bonds.time_for_each_cash_flow/360)
-
+            total_intereses += interest
             invesment_date = ''
             if bonds.date_time:
                 invesment_date = bonds.date_time.strftime('%Y-%m-%d') 
@@ -477,6 +480,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                 term = pay.annual_term * 360
                 
             interest = ((pay.amount*pay.interest_rate/100)*term/360)
+            total_intereses += interest
             precision = self.env['decimal.precision'].precision_get('REPAY')
             invesment_date = ''
             if pay.date_time:
@@ -517,6 +521,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
             precision = self.env['decimal.precision'].precision_get('Productive Accounts')
                         
             interest = ((pro.actual_amount * pro.interest_rate/100)*term/360)
+            total_intereses += interest
             invesment_date = ''
             if pro.invesment_date:
                 invesment_date = pro.invesment_date.strftime('%Y-%m-%d') 
@@ -555,7 +560,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                         {'name': ''},
                         {'name': ''},
                         {'name': ''},
-                        {'name':''},
+                        self._format({'name': total_intereses},figure_type='float',digit=2,is_currency=True),
                         ],
             'level': 1,
             'unfoldable': False,

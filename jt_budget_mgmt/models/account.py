@@ -322,7 +322,7 @@ class AccountMove(models.Model):
                                      'conac_move' : line.conac_move,
                                      'name' : 'Reversa',
                                      'currency_id' : line.currency_id and line.currency_id.id or False,
-                                     'amount_currency' : line.amount_currency,
+                                     'amount_currency' : -line.amount_currency,
                                  }))
         self.line_ids = revers_list 
 

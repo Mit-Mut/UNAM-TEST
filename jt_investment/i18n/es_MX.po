@@ -4,16 +4,18 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 13.0+e\n"
+"Project-Id-Version: Odoo Server 13.0+e-20201209\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-27 23:12+0000\n"
-"PO-Revision-Date: 2021-04-27 23:12+0000\n"
+"POT-Creation-Date: 2021-05-17 23:47+0000\n"
+"PO-Revision-Date: 2021-05-17 19:37-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
+"Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: \n"
+"Language: es\n"
+"X-Generator: Poedit 2.4.3\n"
 
 #. module: jt_investment
 #: model:ir.ui.menu,name:jt_investment.menu_account_statement
@@ -140,7 +142,8 @@ msgid ""
 "                            </span>\n"
 "                            <br/>\n"
 "                        </b>\n"
-"                        <span style=\"font-size:12px;\" class=\"text-center\">DIRECCIÓN DE INGRESOS Y OPERATIÓN FINANCIERA\n"
+"                        <span style=\"font-size:12px;\" class=\"text-center\">DIRECCIÓN DE INGRESOS Y OPERATIÓN "
+"FINANCIERA\n"
 "                        </span>\n"
 "                        <br/>\n"
 "                        <span style=\"font-size:12px;\" class=\"text-center\">DEPTO. DE OPERACIÓN FINANCIERA\n"
@@ -512,8 +515,7 @@ msgid "Account Statement"
 msgstr "Estado de Cuenta"
 
 #. module: jt_investment
-#: code:addons/jt_investment/reports/account_statement.py:0
-#: code:addons/jt_investment/reports/fund_account_statement.py:0
+#: code:addons/jt_investment/reports/account_statement.py:0 code:addons/jt_investment/reports/fund_account_statement.py:0
 #: code:addons/jt_investment/reports/money_market_account_statement.py:0
 #: code:addons/jt_investment/reports/titles_account_statement.py:0
 #: model:ir.actions.client,name:jt_investment.action_account_statement
@@ -654,7 +656,6 @@ msgid "AllDay , %s"
 msgstr "Todo el día , %s"
 
 #. module: jt_investment
-#: code:addons/jt_investment/reports/indicators_report.py:0
 #: code:addons/jt_investment/reports/indicators_report.py:0
 #, python-format
 msgid "Alto Mes"
@@ -829,7 +830,6 @@ msgid "BONUS"
 msgstr "BONOS"
 
 #. module: jt_investment
-#: code:addons/jt_investment/reports/indicators_report.py:0
 #: code:addons/jt_investment/reports/indicators_report.py:0
 #, python-format
 msgid "Bajo Mes"
@@ -1055,9 +1055,7 @@ msgstr ""
 #. module: jt_investment
 #: model_terms:ir.ui.view,arch_db:jt_investment.maturity_report_form_view
 msgid "Click here to update only this instance and not all recurrences."
-msgstr ""
-"Haga clic aquí para actualizar solo esta instancia y no todas las "
-"recurrencias."
+msgstr "Haga clic aquí para actualizar solo esta instancia y no todas las recurrencias."
 
 #. module: jt_investment
 #: model_terms:ir.ui.view,arch_db:jt_investment.investment_bonds_form
@@ -1095,8 +1093,7 @@ msgid "Concepto"
 msgstr ""
 
 #. module: jt_investment
-#: code:addons/jt_investment/reports/account_statement.py:0
-#: code:addons/jt_investment/reports/fund_account_statement.py:0
+#: code:addons/jt_investment/reports/account_statement.py:0 code:addons/jt_investment/reports/fund_account_statement.py:0
 #: code:addons/jt_investment/reports/money_market_account_statement.py:0
 #: code:addons/jt_investment/reports/titles_account_statement.py:0
 #, python-format
@@ -1147,8 +1144,7 @@ msgid "Contract"
 msgstr "Contrato"
 
 #. module: jt_investment
-#: code:addons/jt_investment/reports/investment_funds.py:0
-#: code:addons/jt_investment/reports/maturities.py:0
+#: code:addons/jt_investment/reports/investment_funds.py:0 code:addons/jt_investment/reports/maturities.py:0
 #: code:addons/jt_investment/reports/money_market_investments.py:0
 #: code:addons/jt_investment/reports/report_productive_accounts.py:0
 #, python-format
@@ -1421,7 +1417,7 @@ msgstr "Descripción"
 #. module: jt_investment
 #: model_terms:ir.ui.view,arch_db:jt_investment.inv_transfer_request_form
 msgid "Deselect All"
-msgstr ""
+msgstr "Deseleccionar todo"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_approve_investment_bal_req__dest_ids
@@ -1450,9 +1446,6 @@ msgid "Destino Rendimiento"
 msgstr ""
 
 #. module: jt_investment
-#: code:addons/jt_investment/reports/indicators_report.py:0
-#: code:addons/jt_investment/reports/indicators_report.py:0
-#: code:addons/jt_investment/reports/indicators_report.py:0
 #: code:addons/jt_investment/reports/indicators_report.py:0
 #, python-format
 msgid "Dia"
@@ -1621,7 +1614,7 @@ msgstr "Fecha Fin"
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_maturity_report__stop_datetime
 msgid "End Datetime"
-msgstr ""
+msgstr "Fecha y hora de finalización"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_maturity_report__end_type
@@ -1684,7 +1677,7 @@ msgstr "Variación Rendimiento Estimado vs Real"
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_maturity_report__display_time
 msgid "Event Time"
-msgstr ""
+msgstr "Hora del Evento"
 
 #. module: jt_investment
 #: model:ir.model.fields.selection,name:jt_investment.selection__maturity_report__privacy__public
@@ -1730,17 +1723,13 @@ msgid "Expiration Date"
 msgstr "Fecha de Vencimiento"
 
 #. module: jt_investment
-#: code:addons/jt_investment/reports/account_statement.py:0
-#: code:addons/jt_investment/reports/fund_account_statement.py:0
+#: code:addons/jt_investment/reports/account_statement.py:0 code:addons/jt_investment/reports/fund_account_statement.py:0
 #: code:addons/jt_investment/reports/increases_and_withdrawals_report.py:0
-#: code:addons/jt_investment/reports/indicators_report.py:0
-#: code:addons/jt_investment/reports/investment_committee.py:0
-#: code:addons/jt_investment/reports/investment_fund_balances.py:0
-#: code:addons/jt_investment/reports/investment_funds.py:0
+#: code:addons/jt_investment/reports/indicators_report.py:0 code:addons/jt_investment/reports/investment_committee.py:0
+#: code:addons/jt_investment/reports/investment_fund_balances.py:0 code:addons/jt_investment/reports/investment_funds.py:0
 #: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
 #: code:addons/jt_investment/reports/investment_funds_productive_accounts_monthly.py:0
-#: code:addons/jt_investment/reports/maturities.py:0
-#: code:addons/jt_investment/reports/money_market_account_statement.py:0
+#: code:addons/jt_investment/reports/maturities.py:0 code:addons/jt_investment/reports/money_market_account_statement.py:0
 #: code:addons/jt_investment/reports/money_market_investments.py:0
 #: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
 #: code:addons/jt_investment/reports/report_of_investment_funds.py:0
@@ -1751,13 +1740,27 @@ msgid "Export (XLSX)"
 msgstr "Exportar (XLSX)"
 
 #. module: jt_investment
+#: code:addons/jt_investment/reports/account_statement.py:0 code:addons/jt_investment/reports/fund_account_statement.py:0
+#: code:addons/jt_investment/reports/increases_and_withdrawals_report.py:0
+#: code:addons/jt_investment/reports/indicators_report.py:0 code:addons/jt_investment/reports/investment_committee.py:0
+#: code:addons/jt_investment/reports/investment_fund_balances.py:0 code:addons/jt_investment/reports/investment_funds.py:0
+#: code:addons/jt_investment/reports/maturities.py:0 code:addons/jt_investment/reports/money_market_account_statement.py:0
+#: code:addons/jt_investment/reports/money_market_investments.py:0
+#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
+#: code:addons/jt_investment/reports/report_of_investment_funds.py:0
+#: code:addons/jt_investment/reports/report_productive_accounts.py:0
+#: code:addons/jt_investment/reports/titles_account_statement.py:0
+#, python-format
+msgid "Export to PDF"
+msgstr "Exportar a PDF"
+
+#. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_investment__extra_percentage
 msgid "Extra percentage"
 msgstr "Porcentaje Extra"
 
 #. module: jt_investment
-#: code:addons/jt_investment/reports/account_statement.py:0
-#: code:addons/jt_investment/reports/fund_account_statement.py:0
+#: code:addons/jt_investment/reports/account_statement.py:0 code:addons/jt_investment/reports/fund_account_statement.py:0
 #: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
 #: code:addons/jt_investment/reports/investment_funds_productive_accounts_monthly.py:0
 #: code:addons/jt_investment/reports/money_market_account_statement.py:0
@@ -1800,7 +1803,6 @@ msgid "File Name"
 msgstr "Nombre de Archivo"
 
 #. module: jt_investment
-#: code:addons/jt_investment/reports/indicators_report.py:0
 #: code:addons/jt_investment/reports/indicators_report.py:0
 #, python-format
 msgid "Fin Mes"
@@ -2190,8 +2192,7 @@ msgid "Increment"
 msgstr "Incremento"
 
 #. module: jt_investment
-#: code:addons/jt_investment/reports/account_statement.py:0
-#: code:addons/jt_investment/reports/fund_account_statement.py:0
+#: code:addons/jt_investment/reports/account_statement.py:0 code:addons/jt_investment/reports/fund_account_statement.py:0
 #: code:addons/jt_investment/reports/money_market_account_statement.py:0
 #: code:addons/jt_investment/reports/titles_account_statement.py:0
 #, python-format
@@ -2211,7 +2212,6 @@ msgstr "Incrementos/Retiros"
 
 #. module: jt_investment
 #: code:addons/jt_investment/reports/indicators_report.py:0
-#: code:addons/jt_investment/reports/indicators_report.py:0
 #, python-format
 msgid "Indicadores"
 msgstr ""
@@ -2227,14 +2227,12 @@ msgstr "Reporte de Indicadores"
 
 #. module: jt_investment
 #: code:addons/jt_investment/reports/indicators_report.py:0
-#: code:addons/jt_investment/reports/indicators_report.py:0
 #, python-format
 msgid "Inicio Mes"
 msgstr ""
 
 #. module: jt_investment
-#: code:addons/jt_investment/reports/maturities.py:0
-#: code:addons/jt_investment/reports/money_market_investments.py:0
+#: code:addons/jt_investment/reports/maturities.py:0 code:addons/jt_investment/reports/money_market_investments.py:0
 #: code:addons/jt_investment/reports/report_productive_accounts.py:0
 #, python-format
 msgid "Institución financiera"
@@ -2275,10 +2273,6 @@ msgstr "Intervalo"
 
 #. module: jt_investment
 #: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
-#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
-#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
-#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
-#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
 #, python-format
 msgid "Interés"
 msgstr ""
@@ -2300,8 +2294,7 @@ msgid "Inv Transfer Request Line"
 msgstr "Inv linea de Solicitud de Transferencia"
 
 #. module: jt_investment
-#: code:addons/jt_investment/reports/investment_fund_balances.py:0
-#: code:addons/jt_investment/reports/maturities.py:0
+#: code:addons/jt_investment/reports/investment_fund_balances.py:0 code:addons/jt_investment/reports/maturities.py:0
 #: code:addons/jt_investment/reports/money_market_investments.py:0
 #, python-format
 msgid "Inversión"
@@ -2335,7 +2328,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:jt_investment.purchase_sale_security_form
 #: model_terms:ir.ui.view,arch_db:jt_investment.view_investment_funds_form
 msgid "Investment"
-msgstr "Cuentas Productivas"
+msgstr "Inversiones"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_funds__investment_account_id
@@ -2359,8 +2352,7 @@ msgstr "Inversión CETES"
 
 #. module: jt_investment
 #: model:ir.actions.act_window,name:jt_investment.action_investment_contract
-#: model:ir.model,name:jt_investment.model_investment_contract
-#: model:ir.ui.menu,name:jt_investment.menu_investment_contract
+#: model:ir.model,name:jt_investment.model_investment_contract model:ir.ui.menu,name:jt_investment.menu_investment_contract
 #: model:ir.ui.menu,name:jt_investment.menu_investment_contract_finance
 msgid "Investment Contract"
 msgstr "Contrato de Inversión"
@@ -2679,8 +2671,7 @@ msgstr "Manual"
 
 #. module: jt_investment
 #: model:ir.actions.act_window,name:jt_investment.action_maturity_report
-#: model:ir.model,name:jt_investment.model_maturity_report
-#: model:ir.ui.menu,name:jt_investment.menu_maturity_report
+#: model:ir.model,name:jt_investment.model_maturity_report model:ir.ui.menu,name:jt_investment.menu_maturity_report
 msgid "Maturity Report"
 msgstr "Calendario de Vencimientos"
 
@@ -3033,15 +3024,11 @@ msgid "PAGARE"
 msgstr "PAGARÉ"
 
 #. module: jt_investment
-#: code:addons/jt_investment/reports/account_statement.py:0
-#: code:addons/jt_investment/reports/fund_account_statement.py:0
+#: code:addons/jt_investment/reports/account_statement.py:0 code:addons/jt_investment/reports/fund_account_statement.py:0
 #: code:addons/jt_investment/reports/increases_and_withdrawals_report.py:0
-#: code:addons/jt_investment/reports/indicators_report.py:0
-#: code:addons/jt_investment/reports/investment_committee.py:0
-#: code:addons/jt_investment/reports/investment_fund_balances.py:0
-#: code:addons/jt_investment/reports/investment_funds.py:0
-#: code:addons/jt_investment/reports/maturities.py:0
-#: code:addons/jt_investment/reports/money_market_account_statement.py:0
+#: code:addons/jt_investment/reports/indicators_report.py:0 code:addons/jt_investment/reports/investment_committee.py:0
+#: code:addons/jt_investment/reports/investment_fund_balances.py:0 code:addons/jt_investment/reports/investment_funds.py:0
+#: code:addons/jt_investment/reports/maturities.py:0 code:addons/jt_investment/reports/money_market_account_statement.py:0
 #: code:addons/jt_investment/reports/money_market_investments.py:0
 #: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
 #: code:addons/jt_investment/reports/report_of_investment_funds.py:0
@@ -3096,8 +3083,7 @@ msgid "Permanent Instructions"
 msgstr "Instrucciones Permanentes"
 
 #. module: jt_investment
-#: code:addons/jt_investment/reports/maturities.py:0
-#: code:addons/jt_investment/reports/money_market_investments.py:0
+#: code:addons/jt_investment/reports/maturities.py:0 code:addons/jt_investment/reports/money_market_investments.py:0
 #, python-format
 msgid "Plazo"
 msgstr ""
@@ -3157,30 +3143,21 @@ msgid "Please add Investment Term"
 msgstr "Agregue el plazo de inversión"
 
 #. module: jt_investment
-#: code:addons/jt_investment/models/bonds.py:0
-#: code:addons/jt_investment/models/cetes.py:0
-#: code:addons/jt_investment/models/udibonos.py:0
-#: code:addons/jt_investment/models/will_pay.py:0
+#: code:addons/jt_investment/models/bonds.py:0 code:addons/jt_investment/models/cetes.py:0
+#: code:addons/jt_investment/models/udibonos.py:0 code:addons/jt_investment/models/will_pay.py:0
 #, python-format
 msgid "Please add amount invest"
 msgstr "Agregar Monto de Inversión"
 
 #. module: jt_investment
-#: code:addons/jt_investment/models/bonds.py:0
-#: code:addons/jt_investment/models/cetes.py:0
-#: code:addons/jt_investment/models/investment.py:0
-#: code:addons/jt_investment/models/purchase_sale_security.py:0
-#: code:addons/jt_investment/models/udibonos.py:0
-#: code:addons/jt_investment/models/will_pay.py:0
+#: code:addons/jt_investment/models/bonds.py:0 code:addons/jt_investment/models/cetes.py:0
+#: code:addons/jt_investment/models/investment.py:0 code:addons/jt_investment/models/purchase_sale_security.py:0
+#: code:addons/jt_investment/models/udibonos.py:0 code:addons/jt_investment/models/will_pay.py:0
 #, python-format
 msgid "Please define a sequence on your journal."
 msgstr "Defina una secuencia en su diario."
 
 #. module: jt_investment
-#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
-#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
-#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
-#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
 #: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
 #: code:addons/jt_investment/reports/report_of_investment_funds.py:0
 #, python-format
@@ -3244,33 +3221,12 @@ msgid "Prices History"
 msgstr "Histórico de precios"
 
 #. module: jt_investment
-#: code:addons/jt_investment/reports/account_statement.py:0
-#: code:addons/jt_investment/reports/fund_account_statement.py:0
-#: code:addons/jt_investment/reports/increases_and_withdrawals_report.py:0
-#: code:addons/jt_investment/reports/indicators_report.py:0
-#: code:addons/jt_investment/reports/investment_committee.py:0
-#: code:addons/jt_investment/reports/investment_fund_balances.py:0
-#: code:addons/jt_investment/reports/investment_funds.py:0
-#: code:addons/jt_investment/reports/maturities.py:0
-#: code:addons/jt_investment/reports/money_market_account_statement.py:0
-#: code:addons/jt_investment/reports/money_market_investments.py:0
-#: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
-#: code:addons/jt_investment/reports/report_of_investment_funds.py:0
-#: code:addons/jt_investment/reports/report_productive_accounts.py:0
-#: code:addons/jt_investment/reports/titles_account_statement.py:0
-#, python-format
-msgid "Export to PDF"
-msgstr "Exportar a PDF"
-
-#. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_maturity_report__privacy
 msgid "Privacy"
 msgstr "Privacidad"
 
 #. module: jt_investment
-#: code:addons/jt_investment/reports/investment_committee.py:0
-#: code:addons/jt_investment/reports/maturities.py:0
-#: code:addons/jt_investment/reports/report_productive_accounts.py:0
+#: code:addons/jt_investment/reports/investment_committee.py:0 code:addons/jt_investment/reports/maturities.py:0
 #: code:addons/jt_investment/reports/report_productive_accounts.py:0
 #, python-format
 msgid "Procentual extra"
@@ -3312,14 +3268,12 @@ msgid "Productive Accounts Investment"
 msgstr "Inversión Cuentas Productivas"
 
 #. module: jt_investment
-#: code:addons/jt_investment/reports/maturities.py:0
-#: code:addons/jt_investment/reports/money_market_investments.py:0
+#: code:addons/jt_investment/reports/maturities.py:0 code:addons/jt_investment/reports/money_market_investments.py:0
 #, python-format
 msgid "Producto"
 msgstr ""
 
 #. module: jt_investment
-#: code:addons/jt_investment/reports/indicators_report.py:0
 #: code:addons/jt_investment/reports/indicators_report.py:0
 #, python-format
 msgid "Promedio"
@@ -3469,10 +3423,8 @@ msgid "Recurrent"
 msgstr "Recurrente"
 
 #. module: jt_investment
-#: code:addons/jt_investment/reports/investment_fund_balances.py:0
-#: code:addons/jt_investment/reports/investment_funds.py:0
-#: code:addons/jt_investment/reports/maturities.py:0
-#: code:addons/jt_investment/reports/money_market_investments.py:0
+#: code:addons/jt_investment/reports/investment_fund_balances.py:0 code:addons/jt_investment/reports/investment_funds.py:0
+#: code:addons/jt_investment/reports/maturities.py:0 code:addons/jt_investment/reports/money_market_investments.py:0
 #: code:addons/jt_investment/reports/report_of_investment_funds.py:0
 #, python-format
 msgid "Recurso"
@@ -3484,8 +3436,7 @@ msgid "Reference"
 msgstr "Referencia"
 
 #. module: jt_investment
-#: code:addons/jt_investment/reports/account_statement.py:0
-#: code:addons/jt_investment/reports/fund_account_statement.py:0
+#: code:addons/jt_investment/reports/account_statement.py:0 code:addons/jt_investment/reports/fund_account_statement.py:0
 #: code:addons/jt_investment/reports/money_market_account_statement.py:0
 #: code:addons/jt_investment/reports/titles_account_statement.py:0
 #, python-format
@@ -3552,7 +3503,7 @@ msgstr "Reporte de Fondos de Inversión"
 #. module: jt_investment
 #: model:ir.model,name:jt_investment.model_jt_investment_investment_funds_productive_monthly_accounts
 msgid "Report of Investment Funds in Monthly Productive Accounts"
-msgstr ""
+msgstr "Reporte de Fondos Institucionales en Cuentas Productivas"
 
 #. module: jt_investment
 #: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
@@ -3659,7 +3610,7 @@ msgstr "Cambiar a Borrador"
 #: model_terms:ir.ui.view,arch_db:jt_investment.investment_will_pay_form
 #: model_terms:ir.ui.view,arch_db:jt_investment.purchase_sale_security_form
 msgid "Reset To Draft"
-msgstr ""
+msgstr "Restablecer a borrador"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_funds__responsible_user_id
@@ -3683,8 +3634,7 @@ msgid "Retirement"
 msgstr "Retiro"
 
 #. module: jt_investment
-#: code:addons/jt_investment/reports/account_statement.py:0
-#: code:addons/jt_investment/reports/fund_account_statement.py:0
+#: code:addons/jt_investment/reports/account_statement.py:0 code:addons/jt_investment/reports/fund_account_statement.py:0
 #: code:addons/jt_investment/reports/money_market_account_statement.py:0
 #: code:addons/jt_investment/reports/titles_account_statement.py:0
 #, python-format
@@ -3734,8 +3684,7 @@ msgid "SMS Delivery error"
 msgstr "Error de entrega de SMS"
 
 #. module: jt_investment
-#: code:addons/jt_investment/reports/account_statement.py:0
-#: code:addons/jt_investment/reports/fund_account_statement.py:0
+#: code:addons/jt_investment/reports/account_statement.py:0 code:addons/jt_investment/reports/fund_account_statement.py:0
 #: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
 #: code:addons/jt_investment/reports/investment_funds_productive_accounts_monthly.py:0
 #: code:addons/jt_investment/reports/money_market_account_statement.py:0
@@ -3745,8 +3694,7 @@ msgid "Saldo Final"
 msgstr ""
 
 #. module: jt_investment
-#: code:addons/jt_investment/reports/account_statement.py:0
-#: code:addons/jt_investment/reports/fund_account_statement.py:0
+#: code:addons/jt_investment/reports/account_statement.py:0 code:addons/jt_investment/reports/fund_account_statement.py:0
 #: code:addons/jt_investment/reports/money_market_account_statement.py:0
 #: code:addons/jt_investment/reports/titles_account_statement.py:0
 #, python-format
@@ -3789,7 +3737,7 @@ msgstr "Títulos"
 #. module: jt_investment
 #: model_terms:ir.ui.view,arch_db:jt_investment.inv_transfer_request_form
 msgid "Select All"
-msgstr ""
+msgstr "Seleccionar todo"
 
 #. module: jt_investment
 #: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
@@ -3822,7 +3770,7 @@ msgstr "Origen"
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_maturity_report__start
 msgid "Start"
-msgstr ""
+msgstr "Comienzo"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_distribution_of_income__start_date
@@ -3833,7 +3781,7 @@ msgstr "Fecha de inicio"
 #. module: jt_investment
 #: model:ir.model.fields,help:jt_investment.field_maturity_report__start
 msgid "Start date of an event, without time for full days events"
-msgstr ""
+msgstr "Fecha de inicio de un evento, sin tiempo para eventos de días completos"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_maturity_report__start_date
@@ -3887,12 +3835,12 @@ msgstr "Precio Última Cotización"
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_maturity_report__stop
 msgid "Stop"
-msgstr ""
+msgstr "Detener"
 
 #. module: jt_investment
 #: model:ir.model.fields,help:jt_investment.field_maturity_report__stop
 msgid "Stop date of an event, without time for full days events"
-msgstr ""
+msgstr "Fecha de finalización de un evento, sin tiempo para eventos de días completos"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_funds__subdependency_id
@@ -3924,7 +3872,7 @@ msgstr "La suma del monto en línea no es igual al monto del encabezado"
 #: model:ir.ui.menu,name:jt_investment.menu_summary_of_operation_investment_funds_balances
 #, python-format
 msgid "Summary of Operation - Investment Fund Balances"
-msgstr ""
+msgstr "Resumen de Operación - Saldos de Fondos de Inversión"
 
 #. module: jt_investment
 #: code:addons/jt_investment/reports/investment_funds.py:0
@@ -4376,8 +4324,7 @@ msgid "Variable Term"
 msgstr "Plazo Variable"
 
 #. module: jt_investment
-#: code:addons/jt_investment/models/investment.py:0
-#: code:addons/jt_investment/wizard/distribution_transfer_request.py:0
+#: code:addons/jt_investment/models/investment.py:0 code:addons/jt_investment/wizard/distribution_transfer_request.py:0
 #: code:addons/jt_investment/wizard/inv_transfer_request.py:0
 #, python-format
 msgid "Warning"
@@ -4491,17 +4438,13 @@ msgid "Wizard"
 msgstr "Asistente"
 
 #. module: jt_investment
-#: code:addons/jt_investment/reports/account_statement.py:0
-#: code:addons/jt_investment/reports/fund_account_statement.py:0
+#: code:addons/jt_investment/reports/account_statement.py:0 code:addons/jt_investment/reports/fund_account_statement.py:0
 #: code:addons/jt_investment/reports/increases_and_withdrawals_report.py:0
-#: code:addons/jt_investment/reports/indicators_report.py:0
-#: code:addons/jt_investment/reports/investment_committee.py:0
-#: code:addons/jt_investment/reports/investment_fund_balances.py:0
-#: code:addons/jt_investment/reports/investment_funds.py:0
+#: code:addons/jt_investment/reports/indicators_report.py:0 code:addons/jt_investment/reports/investment_committee.py:0
+#: code:addons/jt_investment/reports/investment_fund_balances.py:0 code:addons/jt_investment/reports/investment_funds.py:0
 #: code:addons/jt_investment/reports/investment_funds_productive_accounts.py:0
 #: code:addons/jt_investment/reports/investment_funds_productive_accounts_monthly.py:0
-#: code:addons/jt_investment/reports/maturities.py:0
-#: code:addons/jt_investment/reports/money_market_account_statement.py:0
+#: code:addons/jt_investment/reports/maturities.py:0 code:addons/jt_investment/reports/money_market_account_statement.py:0
 #: code:addons/jt_investment/reports/money_market_investments.py:0
 #: code:addons/jt_investment/reports/quotation_of_investment_funds.py:0
 #: code:addons/jt_investment/reports/report_of_investment_funds.py:0
@@ -4540,19 +4483,15 @@ msgstr "Rendimientos"
 
 #. module: jt_investment
 #: code:addons/jt_investment/models/investment_funds.py:0
-#: code:addons/jt_investment/models/investment_funds.py:0
 #, python-format
 msgid "You are creating Fund Request on Non-Business Day!"
-msgstr ""
+msgstr "¡Está creando una solicitud de fondos en día no laborable!"
 
 #. module: jt_investment
-#: code:addons/jt_investment/wizard/approve_inv_bal_req.py:0
-#: code:addons/jt_investment/wizard/inv_transfer_request.py:0
+#: code:addons/jt_investment/wizard/approve_inv_bal_req.py:0 code:addons/jt_investment/wizard/inv_transfer_request.py:0
 #, python-format
 msgid "You are creating Transfer Request on %s which is Non Business Day"
-msgstr ""
-"Está creando una solicitud de transferencia el% s, que es un día no "
-"laborable"
+msgstr "Está creando una solicitud de transferencia el% s, que es un día no laborable"
 
 #. module: jt_investment
 #: code:addons/jt_investment/models/investment.py:0
@@ -4561,50 +4500,34 @@ msgid "You can delete only draft status Operation."
 msgstr "Solo puede eliminar el estado de borrador Operación."
 
 #. module: jt_investment
-#: code:addons/jt_investment/models/bonds.py:0
-#: code:addons/jt_investment/models/cetes.py:0
+#: code:addons/jt_investment/models/bonds.py:0 code:addons/jt_investment/models/cetes.py:0
 #: code:addons/jt_investment/models/distribution_of_income.py:0
-#: code:addons/jt_investment/models/increases_and_withdrawals.py:0
-#: code:addons/jt_investment/models/investment.py:0
-#: code:addons/jt_investment/models/investment_funds.py:0
-#: code:addons/jt_investment/models/purchase_sale_security.py:0
-#: code:addons/jt_investment/models/stock_quotation.py:0
-#: code:addons/jt_investment/models/udibonos.py:0
+#: code:addons/jt_investment/models/increases_and_withdrawals.py:0 code:addons/jt_investment/models/investment.py:0
+#: code:addons/jt_investment/models/investment_funds.py:0 code:addons/jt_investment/models/purchase_sale_security.py:0
+#: code:addons/jt_investment/models/stock_quotation.py:0 code:addons/jt_investment/models/udibonos.py:0
 #: code:addons/jt_investment/models/will_pay.py:0
 #, python-format
 msgid "You can delete only draft status data."
 msgstr "Solo puede eliminar los datos en estado de borrador."
 
 #. module: jt_investment
-#: code:addons/jt_investment/models/investment.py:0
-#: code:addons/jt_investment/models/investment.py:0
-#: code:addons/jt_investment/models/purchase_sale_security.py:0
-#: code:addons/jt_investment/models/purchase_sale_security.py:0
+#: code:addons/jt_investment/models/investment.py:0 code:addons/jt_investment/models/purchase_sale_security.py:0
 #, python-format
 msgid "You have choosen Non-Business Day in Expiration Date!"
-msgstr ""
+msgstr "¡Ha elegido un día no laborable en la fecha de vencimiento!"
 
 #. module: jt_investment
-#: code:addons/jt_investment/models/investment.py:0
-#: code:addons/jt_investment/models/investment.py:0
-#: code:addons/jt_investment/models/purchase_sale_security.py:0
-#: code:addons/jt_investment/models/purchase_sale_security.py:0
+#: code:addons/jt_investment/models/investment.py:0 code:addons/jt_investment/models/purchase_sale_security.py:0
 #, python-format
 msgid "You have choosen Non-Business Day in Investment Date!"
-msgstr ""
+msgstr "¡Ha elegido un día no laborable en la fecha de inversión!"
 
 #. module: jt_investment
-#: code:addons/jt_investment/models/bonds.py:0
-#: code:addons/jt_investment/models/bonds.py:0
-#: code:addons/jt_investment/models/cetes.py:0
-#: code:addons/jt_investment/models/cetes.py:0
-#: code:addons/jt_investment/models/udibonos.py:0
-#: code:addons/jt_investment/models/udibonos.py:0
-#: code:addons/jt_investment/models/will_pay.py:0
-#: code:addons/jt_investment/models/will_pay.py:0
+#: code:addons/jt_investment/models/bonds.py:0 code:addons/jt_investment/models/cetes.py:0
+#: code:addons/jt_investment/models/udibonos.py:0 code:addons/jt_investment/models/will_pay.py:0
 #, python-format
 msgid "You have choosen Non-Business Day on Expiry Date!"
-msgstr ""
+msgstr "¡Ha elegido en día no laborable en la fecha de vencimiento!"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__cetes_id
@@ -4619,8 +4542,7 @@ msgid "cuenta bancaria"
 msgstr ""
 
 #. module: jt_investment
-#: code:addons/jt_investment/reports/investment_committee.py:0
-#: code:addons/jt_investment/reports/maturities.py:0
+#: code:addons/jt_investment/reports/investment_committee.py:0 code:addons/jt_investment/reports/maturities.py:0
 #: code:addons/jt_investment/reports/money_market_investments.py:0
 #: code:addons/jt_investment/reports/report_productive_accounts.py:0
 #, python-format
@@ -4630,7 +4552,7 @@ msgstr ""
 #. module: jt_investment
 #: model:ir.model,name:jt_investment.model_rate_of_returns
 msgid "rate.of.returns"
-msgstr ""
+msgstr "tasa.de.rendimientos"
 
 #. module: jt_investment
 #: model_terms:ir.ui.view,arch_db:jt_investment.distribution_of_income_form
@@ -4641,3 +4563,9 @@ msgstr ""
 #: model:ir.model.fields.selection,name:jt_investment.selection__maturity_report__rrule_type__yearly
 msgid "yearly"
 msgstr "anual"
+
+#. module: jt_investment
+#: code:addons/jt_investment/models/cetes.py:0
+#, python-format
+msgid "Approve Request"
+msgstr "Solictud de Transferencia"

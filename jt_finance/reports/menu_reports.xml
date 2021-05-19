@@ -121,20 +121,6 @@
             action="action_summaryof_operation_usd_expenditures"
         />
 
-		<!-- Summary of Operation USD Expenditures -->
-        <record id="action_summary_of_operations_bank_transactions" model="ir.actions.client">
-            <field name="name">Summary of Operations - Bank Transactions</field>
-            <field name="tag">account_report</field>
-            <field name="context" eval="{'model': 'jt_finance.summary.of.operations.bank.transactions'}"/>
-        </record>
-
-        <menuitem
-            id="menu_summary_of_operations_bank_transactions"
-            name="Summary of Operations - Bank Transactions"
-            parent="jt_payroll_payment.menu_finance_reports"
-            sequence="15"
-            action="action_summary_of_operations_bank_transactions"
-        />
 
 
     </data>

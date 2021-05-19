@@ -141,12 +141,13 @@ class SummaryofOperationRecoveryofExpenses(models.AbstractModel):
             })
             account_id = journal.default_debit_account_id and journal.default_debit_account_id.id or False
             if account_id:
-                values= self.env['account.move.line'].search([('currency_id','in',currency_list),('account_id', '=', account_id),('move_id.state', '=', 'posted')])
+                values= self.env['account.move.line'].search([('account_id', '=', account_id),('move_id.state', '=', 'posted')])
                 total_amount_current = sum(x.debit-x.credit for x in values)
 
             payment_accounts = account_payment.filtered(lambda x:x.journal_id.id==journal.id).mapped('payment_issuing_bank_acc_id')
             for account in payment_accounts:
                 expense_amount = sum(x.amount for x in account_payment.filtered(lambda x:x.journal_id.id==journal.id and x.payment_issuing_bank_acc_id.id == account.id))
+                expense_amount = total_amount_current - expense_amount
                 total_amount_expense += expense_amount
 
                 lines.append({

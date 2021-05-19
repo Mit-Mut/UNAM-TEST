@@ -23,7 +23,7 @@ class RescheduleRequest(models.TransientModel):
                 for batch in batch_lines:
                     batch.sudo().unlink()
             else:
-                conac_move = move.line_ids.filtered(lambda x: x.conac_move)
+                conac_move = move.line_ids.filtered(lambda x: x.conac_move and not x.is_for_approved_payment)
                 conac_move.sudo().unlink()                
                 move.payment_state = 'approved_payment'
                 move.batch_folio = ''

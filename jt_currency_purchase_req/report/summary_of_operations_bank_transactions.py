@@ -46,6 +46,17 @@ class SummaryofOperationsBankTransactions(models.AbstractModel):
     filter_unposted_in_period = None
     MAX_LINES = None
 
+    filter_transfer_request_state = [
+        {'id': 'draft', 'name': ('Draft'), 'selected': False},
+        {'id': 'requested', 'name': ('Requested'), 'selected': False},
+        {'id': 'rejected', 'name': ('Rejected'), 'selected': False},
+        {'id': 'approved', 'name': ('Approved'), 'selected': False},
+        {'id': 'sent', 'name': ('Sent'), 'selected': False},
+        {'id': 'confirmed', 'name': ('Confirmed'), 'selected': False},
+        {'id': 'done', 'name': ('Done'), 'selected': False},
+        {'id': 'canceled', 'name': ('Canceled'), 'selected': False},
+    ]
+
     def _get_reports_buttons(self):
         return [
             {'name': _('Export to PDF'), 'sequence': 1, 'action': 'print_pdf', 'file_export_type': _('PDF')},
@@ -102,6 +113,16 @@ class SummaryofOperationsBankTransactions(models.AbstractModel):
         end = datetime.strptime(
             options['date'].get('date_to'), '%Y-%m-%d').date()
 
+        domain = [('date', '>=', start), ('date', '<=', end)]
+        state_domain = []
+        state_select = options.get('transfer_request_state')
+        for p_type in state_select:
+            if p_type.get('selected',False):
+                state_domain.append(p_type.get('id'))
+        
+        if state_domain:
+            domain += [('state','in',tuple(state_domain))]
+        
         lines.append({
                 'id': 'hierarchy1_EXPENSE',
                 'name': 'COBERTURA DE EGRESOS',
@@ -110,45 +131,56 @@ class SummaryofOperationsBankTransactions(models.AbstractModel):
                 'unfoldable': False,
                 'unfolded': True,
             })
-        bank_transfer_requests = self.env['bank.transfer.request'].search([('application_date', '>=', start), ('application_date', '<=', end),])
-        total_amount = 0
+        bank_transfer_requests = self.env['request.open.balance.finance'].search(domain)
+        total_amount_int = 0
+        total_amount_ban = 0
+        count=0
         for transfer in bank_transfer_requests:
-            total_amount += transfer.amount
+            count += 1
+            total_amount = 0
+            amount_int = 0
+            amount_ban = 0
+            if transfer.bank_account_id and transfer.bank_account_id.bank_id and  transfer.desti_bank_account_id and transfer.desti_bank_account_id.bank_id and transfer.bank_account_id.bank_id.id== transfer.desti_bank_account_id.bank_id.id:
+                amount_ban =  transfer.amount
+                total_amount_ban += transfer.amount
+            else:
+                amount_int = transfer.amount
+                total_amount_int += transfer.amount
+            total_amount += total_amount_int + total_amount_ban
             state = dict(transfer._fields['state'].selection).get(transfer.state)
             lines.append({
                     'id': 'hierarchy1_'+str(transfer.id),
-                    'name': transfer.name,
-                    'columns': [{'name': transfer.origin_bank_id and transfer.origin_bank_id.name or ''}, 
-                                {'name': transfer.origin_bank_account_id and transfer.origin_bank_account_id.acc_number or ''},
+                    'name': str(count),
+                    'columns': [{'name': transfer.bank_account_id and transfer.bank_account_id.name or ''}, 
+                                {'name': transfer.origin_account and transfer.origin_account.acc_number or ''},
+                                self._format({'name': amount_int},figure_type='float'),
+                                self._format({'name': amount_ban},figure_type='float'),
                                 {'name': ''},
-                                self._format({'name': transfer.amount},figure_type='float'),
-                                {'name': ''},
-                                {'name': transfer.bank_id and transfer.bank_id.name or ''},
-                                {'name': transfer.bank_account_id and transfer.bank_account_id.acc_number or ''},
+                                {'name': transfer.desti_bank_account_id and transfer.desti_bank_account_id.name or ''},
+                                {'name': transfer.desti_account and transfer.desti_account.acc_number or ''},
                                 {'name': transfer.concept},
                                 {'name': state}],
                     'level': 3,
                     'unfoldable': False,
                     'unfolded': True,
                 })
-        if total_amount:
+        if total_amount_ban or total_amount_int:
             lines.append({
                     'id': 'hierarchy_total',
                     'name': '',
                     'columns': [{'name': ''}, 
                                 {'name': ''},
-                                {'name': ''},
-                                self._format({'name': total_amount},figure_type='float'),
+                                self._format({'name': total_amount_int},figure_type='float'),
+                                self._format({'name': total_amount_ban},figure_type='float'),
                                 {'name': ''},
                                 {'name': ''},
                                 {'name': ''},
                                 {'name': ''},
                                 {'name': ''}],
-                    'level': 3,
+                    'level': 2,
                     'unfoldable': False,
                     'unfolded': True,
                 })
-    
             lines.append({
                     'id': 'hierarchy_total_movement',
                     'name': '',
@@ -158,14 +190,13 @@ class SummaryofOperationsBankTransactions(models.AbstractModel):
                                 {'name': ''},
                                 {'name': ''},
                                 {'name': ''},
-                                {'name': 'TOTAL MOVIMIENTOS:'},
+                                {'name': _('TOTAL Transactions:')},
                                 self._format({'name': total_amount},figure_type='float'),
                                 {'name': ''}],
                     'level': 3,
                     'unfoldable': False,
                     'unfolded': True,
                 })
-            
         return lines
 
     def _get_report_name(self):

@@ -88,7 +88,7 @@ class SummaryofOperationRecoveryofExpenses(models.AbstractModel):
 
     def _get_columns_name(self, options):
         return [
-            {'name': _('Cuenta Bancaria')},
+            {'name': _('Cuenta Bancaria'),'class': 'text-left'},
             {'name': _('Reales')},
             {'name': _('Netos')},
         ]
@@ -127,48 +127,51 @@ class SummaryofOperationRecoveryofExpenses(models.AbstractModel):
                 currency_list.append(select_curreny.get('id',0))
         
         account_payment = self.env['account.payment'].search([('currency_id','in',currency_list),('payment_date', '>=', start), ('payment_date', '<=', end),('payment_request_type','!=',False),('payment_state','=','for_payment_procedure')])
-        for journal in account_payment.mapped("journal_id"):
+        for bank in account_payment.mapped("journal_id.bank_id"):
             total_amount_current = 0
             total_amount_expense = 0
             
             lines.append({
-                'id': 'hierarchy1_' + str(journal.id),
-                'name': journal.name,
+                'id': 'hierarchy1_' + str(bank.id),
+                'name': bank.name,
                 'columns': [{'name': ''},{'name': ''}],
                 'level': 1,
                 'unfoldable': False,
                 'unfolded': True,
             })
-            account_id = journal.default_debit_account_id and journal.default_debit_account_id.id or False
-            if account_id:
-                values= self.env['account.move.line'].search([('account_id', '=', account_id),('move_id.state', '=', 'posted')])
+            journal_ids = account_payment.filtered(lambda x:x.journal_id.bank_id.id==bank.id).mapped('journal_id')
+            account_ids = journal_ids.mapped('default_debit_account_id')
+             
+            #account_id = journal.default_debit_account_id and journal.default_debit_account_id.id or False
+            if account_ids:
+                values= self.env['account.move.line'].search([('account_id', 'in', account_ids.ids),('move_id.state', '=', 'posted')])
                 total_amount_current = sum(x.debit-x.credit for x in values)
 
-            payment_accounts = account_payment.filtered(lambda x:x.journal_id.id==journal.id).mapped('payment_issuing_bank_acc_id')
+            payment_accounts = account_payment.filtered(lambda x:x.journal_id.bank_id.id==bank.id).mapped('payment_issuing_bank_acc_id')
             for account in payment_accounts:
-                expense_amount = sum(x.amount for x in account_payment.filtered(lambda x:x.journal_id.id==journal.id and x.payment_issuing_bank_acc_id.id == account.id))
+                expense_amount = sum(x.amount for x in account_payment.filtered(lambda x:x.journal_id.bank_id.id==bank.id and x.payment_issuing_bank_acc_id.id == account.id))
                 expense_amount = total_amount_current - expense_amount
                 total_amount_expense += expense_amount
 
                 lines.append({
-                    'id': 'hierarchy2_' +str(journal.id) +str(account.id),
+                    'id': 'hierarchy2_' +str(bank.id) +str(account.id),
                     'name': account.acc_number,
                     'columns': [self._format({'name': total_amount_current},figure_type='float'),
                                 self._format({'name': expense_amount},figure_type='float'), 
                                 ],
                     'level': 3,
-                    'parent_id': 'hierarchy1_' + str(journal.id),
+                    'parent_id': 'hierarchy1_' + str(bank.id),
                 })
 
             lines.append({
-                'id': 'hierarchy1total_' + str(journal.id),
+                'id': 'hierarchy1total_' + str(bank.id),
                 'name': "Suma Total",
                 'columns': [
                                 self._format({'name': total_amount_current},figure_type='float'),
                                 self._format({'name': total_amount_expense},figure_type='float'),
                             ],
                 'level': 2,
-                'parent_id': 'hierarchy1_' + str(journal.id),
+                'parent_id': 'hierarchy1_' + str(bank.id),
             })
             
         return lines
@@ -319,7 +322,7 @@ class SummaryofOperationRecoveryofExpenses(models.AbstractModel):
             values=dict(rcontext),
         )
         body_html = self.with_context(print_mode=True).get_html(options)
-
+        body_html = body_html.replace(b'<div class="o_account_reports_header">',b'<div style="display:none;">')
         body = body.replace(b'<body class="o_account_reports_body_print">', b'<body class="o_account_reports_body_print">' + body_html)
         if minimal_layout:
             header = ''

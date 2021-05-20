@@ -43,7 +43,7 @@
                        position="after">
                 	<field name="program_code_id"/>
 				</xpath>
-				<field name="beneficiary_id" position="after">
+				<field name="total_deduction" position="after">
                     <field name="total_preception" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                 </field>
 			</field>

@@ -63,6 +63,13 @@ class EmployeePayroll(models.Model):
                     if cash_payment_method and cash_payment_method == res.l10n_mx_edi_payment_method_id.id:
                         res.payment_request_type = 'payment_provider'
         return result
+
+    def action_draft(self):
+        if any(self.filtered(lambda x:x.state != 'revised')):
+            raise UserError(_("You can Draft only for those Payroll which are in "
+            "'Revised'!"))
+        for record in self:
+            record.state = 'draft'
     
     def action_reviewed(self):
         if any(self.filtered(lambda x:x.state not in ('draft','revised'))):
@@ -85,9 +92,9 @@ class EmployeePayroll(models.Model):
     
     def get_deduction_invoice_line_vals(self,line):
         invoice_line_vals = {}
-        amount = line.amount
-        if line.amount > 0:
-            amount = -line.amount
+        amount = -line.amount
+#         if line.amount > 0:
+#             amount = -line.amount
         
         invoice_line_vals = { 'quantity' : 1,
                             'price_unit' : amount,

@@ -21,6 +21,7 @@
 #
 ##############################################################################
 from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
 class AgreementFund(models.Model):
 
@@ -30,3 +31,19 @@ class AgreementFund(models.Model):
 
     fund_key = fields.Char("Fund Key")
     name = fields.Char("Fund Name")
+
+    @api.constrains('fund_key')
+    def _check_fund_key(self):
+        for rec in self:
+            if rec.fund_key:
+                result = self.search([('id', '!=', rec.id), ('fund_key', '=', rec.fund_key)], limit=1)
+                if result:
+                    raise ValidationError(_('The Fund Key must be unique'))
+    
+    @api.constrains('name')
+    def _check_name(self):
+        for rec in self:
+            if rec.name:
+                result = self.search([('id', '!=', rec.id), ('name', '=', rec.name)], limit=1)
+                if result:
+                    raise ValidationError(_('The Fund name must be unique'))    

@@ -178,6 +178,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
             {'name': _('Tasa Interés')},
             {'name': _('Procentual extra')},
             {'name': _('Intereses')},
+            {'name': _('Total')},
         ]
 
 #     @api.model
@@ -336,6 +337,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
         
         total_investment = 0
         total_intereses = 0
+        main_total = 0
         #==== Sale Security========#        
         #total_investment += cetes.nominal_value
         for sale in sale_security_ids:
@@ -343,8 +345,12 @@ class SummaryOfOperationMaturities(models.AbstractModel):
             term = sale.term
             total_investment += sale.amount
             
+            main_total += sale.amount
             interest = ((sale.amount*sale.price/100)*term/360)
             total_intereses += interest 
+            
+            total_last_col = sale.amount + interest
+            main_total += total_last_col
             lines.append({
                 'id': 'hierarchy_sale' + str(sale.id),
                 'name' : resouce_name, 
@@ -360,6 +366,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                             self._format({'name': sale.price},figure_type='float',digit=2,is_currency=False),
                             {'name': ''},
                             self._format({'name': interest},figure_type='float',digit=2,is_currency=True),
+                            self._format({'name': total_last_col},figure_type='float',digit=2,is_currency=True),
                             ],
                 'level': 3,
                 'unfoldable': False,
@@ -381,6 +388,9 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                 
             interest = ((cetes.nominal_value*cetes.yield_rate/100)*term/360)
             total_intereses += interest
+            total_last_col = cetes.nominal_value + interest
+            main_total += total_last_col
+
             lines.append({
                 'id': 'hierarchy_cetes' + str(cetes.id),
                 'name' : resouce_name, 
@@ -396,6 +406,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                             self._format({'name': cetes.yield_rate},figure_type='float',digit=precision,is_currency=False),
                             {'name': ''},
                             self._format({'name': interest},figure_type='float',digit=2,is_currency=True),
+                            self._format({'name': total_last_col},figure_type='float',digit=2,is_currency=True),
                             ],
                 'level': 3,
                 'unfoldable': False,
@@ -415,6 +426,9 @@ class SummaryOfOperationMaturities(models.AbstractModel):
             
             interest = ((udibonos.nominal_value*udibonos.interest_rate/100)*udibonos.time_for_each_cash_flow/360)
             total_intereses += interest
+            total_last_col = udibonos.nominal_value + interest
+            main_total += total_last_col
+            
             lines.append({
                 'id': 'hierarchy_udibonos' + str(udibonos.id),
                 'name': resouce_name,
@@ -430,6 +444,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                             self._format({'name': udibonos.interest_rate},figure_type='float',digit=precision,is_currency=False),
                             {'name': ''},
                             self._format({'name': interest},figure_type='float',digit=2,is_currency=True),
+                            self._format({'name': total_last_col},figure_type='float',digit=2,is_currency=True),
                             ],
                 'level': 3,
                 'unfoldable': False,
@@ -442,6 +457,9 @@ class SummaryOfOperationMaturities(models.AbstractModel):
             
             interest = ((bonds.nominal_value*bonds.interest_rate/100)*bonds.time_for_each_cash_flow/360)
             total_intereses += interest
+            total_last_col = bonds.nominal_value + interest
+            main_total += total_last_col
+            
             invesment_date = ''
             if bonds.date_time:
                 invesment_date = bonds.date_time.strftime('%Y-%m-%d') 
@@ -461,6 +479,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                             self._format({'name': bonds.interest_rate},figure_type='float',digit=precision,is_currency=False),
                             {'name': ''},
                             self._format({'name': interest},figure_type='float',digit=2,is_currency=True),
+                            self._format({'name': total_last_col},figure_type='float',digit=2,is_currency=True),
                             ],
                 'level': 3,
                 'unfoldable': False,
@@ -481,6 +500,9 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                 
             interest = ((pay.amount*pay.interest_rate/100)*term/360)
             total_intereses += interest
+            total_last_col = pay.amount + interest
+            main_total += total_last_col
+            
             precision = self.env['decimal.precision'].precision_get('REPAY')
             invesment_date = ''
             if pay.date_time:
@@ -501,6 +523,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                             self._format({'name': pay.interest_rate},figure_type='float',digit=precision,is_currency=False),
                             {'name': ''},
                             self._format({'name': interest},figure_type='float',digit=2,is_currency=True),
+                            self._format({'name': total_last_col},figure_type='float',digit=2,is_currency=True),
                             ],
                 'level': 3,
                 'unfoldable': False,
@@ -522,6 +545,9 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                         
             interest = ((pro.actual_amount * pro.interest_rate/100)*term/360)
             total_intereses += interest
+            total_last_col = pro.actual_amount + interest
+            main_total += total_last_col
+            
             invesment_date = ''
             if pro.invesment_date:
                 invesment_date = pro.invesment_date.strftime('%Y-%m-%d') 
@@ -540,6 +566,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                             self._format({'name': pro.interest_rate},figure_type='float',digit=precision,is_currency=False),
                             self._format({'name': pro.extra_percentage},figure_type='float',digit=2,is_currency=True),
                             self._format({'name': interest},figure_type='float',digit=2,is_currency=True),
+                            self._format({'name': total_last_col},figure_type='float',digit=2,is_currency=True),
                             ],
                 'level': 3,
                 'unfoldable': False,
@@ -561,6 +588,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
                         {'name': ''},
                         {'name': ''},
                         self._format({'name': total_intereses},figure_type='float',digit=2,is_currency=True),
+                        self._format({'name': main_total},figure_type='float',digit=2,is_currency=True),
                         ],
             'level': 1,
             'unfoldable': False,
@@ -571,7 +599,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
         period_name = [{'name': 'Institución'}]
         for per in periods:
             period_name.append({'name': per.get('string'),'class':'number'})
-        r_column = 11 - len(periods)
+        r_column = 12 - len(periods)
         if r_column > 0:
             for col in range(r_column):
                 period_name.append({'name': ''})
@@ -653,7 +681,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
         for per in total_dict:
             total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2,is_currency=True))
             
-        r_column = 12 - len(total_name)
+        r_column = 13 - len(total_name)
         if r_column > 0:
             for col in range(r_column):
                 total_name.append({'name': ''})
@@ -671,7 +699,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
         period_name = [{'name': 'Tipo de recurso'}]
         for per in periods:
             period_name.append({'name': per.get('string'),'class':'number'})
-        r_column = 11 - len(periods)
+        r_column = 12 - len(periods)
         if r_column > 0:
             for col in range(r_column):
                 period_name.append({'name': ''})
@@ -760,7 +788,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
         for per in total_dict:
             total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2,is_currency=True))
             
-        r_column = 12 - len(total_name)
+        r_column = 13 - len(total_name)
         if r_column > 0:
             for col in range(r_column):
                 total_name.append({'name': ''})
@@ -778,7 +806,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
         period_name = [{'name': 'Moneda' if self.env.user.lang == 'es_MX' else 'Currency'}]
         for per in periods:
             period_name.append({'name': per.get('string'),'class':'number'})
-        r_column = 11 - len(periods)
+        r_column = 12 - len(periods)
         if r_column > 0:
             for col in range(r_column):
                 period_name.append({'name': ''})
@@ -860,7 +888,7 @@ class SummaryOfOperationMaturities(models.AbstractModel):
         for per in total_dict:
             total_name.append(self._format({'name': total_dict.get(per)},figure_type='float',digit=2,is_currency=True))
             
-        r_column = 12 - len(total_name)
+        r_column = 13 - len(total_name)
         if r_column > 0:
             for col in range(r_column):
                 total_name.append({'name': ''})

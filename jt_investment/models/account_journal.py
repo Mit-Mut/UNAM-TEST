@@ -30,4 +30,5 @@ class AccountJournal(models.Model):
     _inherit = 'account.journal'
 
     is_productive_account = fields.Boolean(string='Productive Accounts',default=False,copy=False)
+    is_investment_account = fields.Boolean(string='Investment',default=False,copy=False)
     

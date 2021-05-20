@@ -21,6 +21,7 @@ class BasesCollabration(models.Model):
     amount_type = fields.Selection([('increment','Increment'),('withdrawal','Withdrawal')])
     investment_operation_ids = fields.Many2many('investment.operation','rel_operation_finance_dis','line_id','opt_id',copy=False)
     distribution_income_id = fields.Many2one('distribution.of.income','Distribution Income')
+    is_from_set_button = fields.Boolean(default=False,copy=False)
     
     def approve_finance(self):
         result = super(BasesCollabration,self).approve_finance()
@@ -58,7 +59,10 @@ class BasesCollabration(models.Model):
     def confirmed_finance(self):
         result = super(BasesCollabration,self).confirmed_finance()
 
-        if self.purchase_sale_security_id:
+        if self.purchase_sale_security_id and self.is_from_set_button:
+            self.purchase_sale_security_id.action_done()
+
+        elif self.purchase_sale_security_id:
             po_so_security_id = self.purchase_sale_security_id
             po_so_security_id.action_confirmed()
             maturity_report_id = self.env['maturity.report'].search([('po_sale_security_id','=',po_so_security_id.id)],limit=1)
@@ -77,7 +81,10 @@ class BasesCollabration(models.Model):
         if self.investment_id:
             self.investment_id.action_confirmed()
 
-        if self.bonds_id:
+        if self.bonds_id and self.is_from_set_button:
+            self.bonds_id.action_done()
+
+        elif self.bonds_id:
             bonds_id = self.bonds_id
             bonds_id.action_confirmed()
             maturity_report_id = self.env['maturity.report'].search([('bonds_id','=',bonds_id.id)],limit=1)
@@ -92,7 +99,11 @@ class BasesCollabration(models.Model):
             else:
                 self.env['maturity.report'].create(vals)
 
-        if self.cetes_id:
+        if self.cetes_id and self.is_from_set_button:
+            cetes_id = self.cetes_id
+            cetes_id.action_done()
+            
+        elif self.cetes_id:
             cetes_id = self.cetes_id
             cetes_id.action_confirmed()
             maturity_report_id = self.env['maturity.report'].search([('cetes_id','=',cetes_id.id)],limit=1)
@@ -107,7 +118,10 @@ class BasesCollabration(models.Model):
             else:
                 self.env['maturity.report'].create(vals)
 
-        if self.udibonos_id:
+        if self.udibonos_id and self.is_from_set_button:
+            self.udibonos_id.action_done()
+
+        elif self.udibonos_id:
             udibonos_id = self.udibonos_id
             self.udibonos_id.action_confirmed()
             maturity_report_id = self.env['maturity.report'].search([('udibonos_id','=',udibonos_id.id)],limit=1)
@@ -122,7 +136,10 @@ class BasesCollabration(models.Model):
             else:
                 self.env['maturity.report'].create(vals)
 
-        if self.will_pay_id:
+        if self.will_pay_id and self.is_from_set_button:
+            self.will_pay_id.action_done()
+
+        elif self.will_pay_id:
             will_pay_id = self.will_pay_id
             will_pay_id.action_confirmed()
             maturity_report_id = self.env['maturity.report'].search([('will_pay_id','=',will_pay_id.id)],limit=1)

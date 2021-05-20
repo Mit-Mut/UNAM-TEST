@@ -359,6 +359,16 @@ class Investment(models.Model):
 #         if self.investment_fund_id and self.investment_fund_id.state != 'canceled':
 #             self.investment_fund_id.with_context(call_from_product=True).action_canceled()
 
+class AgreementFund(models.Model):
+
+    _inherit = 'agreement.fund'
+
+    def unlink(self):
+        for fund in self:
+            opt = self.env['investment.operation'].search([('investment_fund_id.fund_id', '=', fund.id)], limit=1)
+            if opt:
+                raise ValidationError(_('You can not delete Fund which are mapped with investment operation!'))
+        return super(AgreementFund, self).unlink()
 
 class InvestmentOperation(models.Model):
 

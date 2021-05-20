@@ -27,6 +27,15 @@
 		</record>
 		
 		<!-- server action for Reviewed state -->
+        <record id="action_server_draft_upload_payroll" model="ir.actions.server">
+            <field name="name">Draft</field>
+            <field name="model_id" ref="jt_payroll_payment.model_employee_payroll_file"/>
+            <field name="binding_model_id" ref="jt_payroll_payment.model_employee_payroll_file"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">action = records.action_draft()</field>
+        </record>
+		
         <record id="action_server_reviewed_upload_payroll" model="ir.actions.server">
             <field name="name">Reviewed</field>
             <field name="model_id" ref="jt_payroll_payment.model_employee_payroll_file"/>

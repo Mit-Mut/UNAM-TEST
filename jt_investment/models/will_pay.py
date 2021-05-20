@@ -258,6 +258,9 @@ class WillPay(models.Model):
 #         if self.investment_fund_id and self.investment_fund_id.state != 'confirmed':
 #             self.investment_fund_id.with_context(call_from_product=True).action_confirmed()
 
+    def action_done(self):
+        self.state = 'done'
+
     def action_reject(self):
         self.state = 'rejected'
 

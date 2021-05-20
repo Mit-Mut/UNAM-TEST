@@ -8,6 +8,7 @@
             <field name="arch" type="xml">
                 <field name="code" position="before">
             		<field name="is_productive_account"/>
+            		<field name="is_investment_account"/>
             	</field>
                 
             </field>

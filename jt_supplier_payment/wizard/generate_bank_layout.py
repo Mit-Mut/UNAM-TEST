@@ -2250,7 +2250,11 @@ class GenerateBankLayout(models.TransientModel):
                 
             else:
                 file_data += '00000000'
-            
+            #========= Partner Bank Account==============#
+            bank_account = ''
+            if payment.payment_bank_account_id and payment.payment_bank_account_id.acc_number:
+                bank_account = payment.payment_bank_account_id.acc_number
+            file_data += bank_account
             #====== Employee number ========#
             benific = ''
             emp_id = self.env['hr.employee'].search([('emp_partner_id','=',payment.partner_id.id)],limit=1)
@@ -2269,7 +2273,7 @@ class GenerateBankLayout(models.TransientModel):
                 fornight = payment.fornight
             fortnight_msg += fornight
             currect_time = datetime.today()
-            fortnight_msg += str(currect_time.year)[:2]
+            fortnight_msg += str(currect_time.year)[2:]
             fortnight_msg += " DE LA EMISORA 20052"
             
             file_data += fortnight_msg.ljust(40)

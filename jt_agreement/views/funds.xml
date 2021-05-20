@@ -20,8 +20,8 @@
                 <form>
                     <sheet>
                         <group>
-                            <field name="fund_key"/>
-                            <field name="name"/>
+                            <field name="fund_key" required="1"/>
+                            <field name="name" required="1"/>
                         </group>
                     </sheet>
                     <div class="oe_chatter">

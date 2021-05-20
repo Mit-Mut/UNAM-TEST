@@ -54,7 +54,7 @@
                         	<group>
 
                             	<field name="first_number" readonly="1"/>
-                            	<field name="new_journal_id" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            	<field name="new_journal_id" options="{'no_create': True, 'no_edit': True, 'no_create_edit': True}" domain="[('is_investment_account','=',True)]" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         	
 			                    <field name="invesment_date" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 		                          <field name="expiry_date" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>

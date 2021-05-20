@@ -65,7 +65,7 @@ class AccountMove(models.Model):
     def action_register(self):
         for move in self.filtered(lambda x:not x.is_different_payroll_request and not x.is_pension_payment_request):
             invoice_lines = move.invoice_line_ids.filtered(lambda x:not x.program_code_id and x.price_unit > 0)
-            if invoice_lines:
+            if invoice_lines.filtered(lambda x:x.account_id and not x.account_id.code=='220.003.001'):
                 raise ValidationError("Please add program code into invoice lines")
         return super(AccountMove,self).action_register()
 

@@ -13,13 +13,14 @@
        <menuitem id="submenu_menu_investment_reports" name="Reports" sequence="12" parent="main_menu_investment"/>
        <menuitem id="submenu_menu_investment_config" name="Configuration" sequence="14" parent="main_menu_investment"/>
 
+		
       <menuitem id="menu_agreement_fund_investment" name="Funds" parent="submenu_menu_investment_config" action="jt_agreement.action_view_agreement_fund" sequence="0"/>
-
+<!-- 
       <menuitem id="menu_fund_type_investment" name="Fund Type" parent="submenu_menu_investment_config" action="jt_agreement.action_view_fund_type"
                  sequence="0"/>
 
       <menuitem id="menu_type_agreement_investment" name="Type Of Agreement" parent="submenu_menu_investment_config" action="jt_agreement.action_view_agreement_type" sequence="0"/>
-       
+        -->
                <!-- Sub Menus of Sub menus Investments-->
 
         <record id="action_req_open_balance_investment_with_new" model="ir.actions.act_window">

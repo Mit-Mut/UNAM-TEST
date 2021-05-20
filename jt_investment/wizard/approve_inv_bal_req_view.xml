@@ -19,6 +19,7 @@
                                 <field name="dependency_id" context="{'show_for_supplier_payment':1}"/>
                                 <field name="sub_dependency_id" domain="[('dependency_id','=',dependency_id)]" context="{'show_for_supplier_payment':1}" />
                                 <field name="amount_type" invisible="1"/>
+                                <field name="is_from_set_button" invisible="1"/>
                             </group>
                             <group>	
                                 <field name="date"/>

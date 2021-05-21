@@ -31,6 +31,19 @@ msgid "ABA"
 msgstr ""
 
 #. module: jt_contact_base
+#: model:ir.model.fields,field_description:jt_contact_base.field_res_partner__is_FOVISSSTE_supplier
+#: model:ir.model.fields,field_description:jt_contact_base.field_res_users__is_FOVISSSTE_supplier
+msgid "Is FOVISSSTE supplier"
+msgstr"Es Proveedor FOVISSSTE"
+
+#. module: jt_contact_base
+#: model:ir.model.fields,field_description:jt_contact_base.field_res_partner__is_ISSSTE_supplier
+#: model:ir.model.fields,field_description:jt_contact_base.field_res_users__is_ISSSTE_supplier
+msgid "Is ISSSTE supplier"
+msgstr "Es Proveedor ISSSTE"
+
+
+#. module: jt_contact_base
 #: model:ir.model.fields,field_description:jt_contact_base.field_account_setup_bank_manual_config__account_type
 #: model:ir.model.fields,field_description:jt_contact_base.field_res_partner_bank__account_type
 msgid "Account type"

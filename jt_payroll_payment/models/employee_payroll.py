@@ -135,7 +135,7 @@ class EmployeePayroll(models.Model):
                              default='draft')
     payment_request_type = fields.Selection([('direct_employee','Direct Employee'),('payment_provider','Payment Provider')],string="Payment Request Type")
     move_id = fields.Many2one('account.move','Payroll Payments')
-    payment_place_id = fields.Many2one(related="employee_id.payment_place_id",string="Place of payment")
+    payment_place_id = fields.Many2one(related="employee_id.payment_place_id",string="Place of payment",store=True)
     payroll_register_user_id = fields.Many2one('res.users',default=lambda self: self.env.user,copy=False,string="User who registers")
 
     payroll_processing_id = fields.Many2one('custom.payroll.processing','Payroll Processing')

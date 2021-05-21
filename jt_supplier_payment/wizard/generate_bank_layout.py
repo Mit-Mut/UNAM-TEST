@@ -58,7 +58,7 @@ class GenerateBankLayout(models.TransientModel):
                 if self.payment_ids[0].sit_operation_code=='payment_on_account_bancomer':
                     sit_file_key += 'BBVA'
                 elif self.payment_ids[0].sit_operation_code=='payment_interbank':
-                    sit_file_key += "OTHERS"
+                    sit_file_key += "OTROS"
             
             self.sit_file_key = sit_file_key
             
@@ -198,7 +198,7 @@ class GenerateBankLayout(models.TransientModel):
             
             file_data +=str(currect_time.day).zfill(2)
             file_data +=str(currect_time.month).zfill(2)
-            file_data +=str(currect_time.year)[:2]
+            file_data +=str(currect_time.year)[2:]
             file_data +=str(currect_time.hour).zfill(2)
             file_data +=str(currect_time.minute).zfill(2)
             file_data +="\r\n"
@@ -242,32 +242,32 @@ class GenerateBankLayout(models.TransientModel):
             #=====reason for payment======#
             reason_payment = 'PAGO'
             if payment.payment_date:
-                payment_year = str(payment.payment_date.year)[:2]
+                payment_year = str(payment.payment_date.year)[2:]
                 month_name = format_datetime(payment.payment_date, 'MMMM', locale=get_lang(self.env).code)
                 if payment.payment_date.month==1:
-                    month_name = 'Enero'
+                    month_name = 'ENERO'
                 elif payment.payment_date.month==2:
-                    month_name = 'Febrero'
+                    month_name = 'FEBRERO'
                 elif payment.payment_date.month==3:
-                    month_name = 'Marzo'
+                    month_name = 'MARZO'
                 elif payment.payment_date.month==4:
-                    month_name = 'Abril'
+                    month_name = 'ABRIL'
                 elif payment.payment_date.month==5:
-                    month_name = 'Mayo'
+                    month_name = 'MAYO'
                 elif payment.payment_date.month==6:
-                    month_name = 'Junio'
+                    month_name = 'JUNIO'
                 elif payment.payment_date.month==7:
-                    month_name = 'Julio'
+                    month_name = 'JULIO'
                 elif payment.payment_date.month==8:
-                    month_name = 'Agosto'
+                    month_name = 'AGPSTO'
                 elif payment.payment_date.month==9:
-                    month_name = 'Septiembre'
+                    month_name = 'SEPTIEMBRE'
                 elif payment.payment_date.month==10:
-                    month_name = 'Octubre'
+                    month_name = 'OCTUBRE'
                 elif payment.payment_date.month==11:
-                    month_name = 'Noviembre'
+                    month_name = 'NOVIEMBRE'
                 elif payment.payment_date.month==12:
-                    month_name = 'Diciembre'
+                    month_name = 'DICIEMBRE'
                 
                 reason_payment += " "+month_name+" "+payment_year
             file_data += reason_payment.ljust(30, " ")     
@@ -326,40 +326,40 @@ class GenerateBankLayout(models.TransientModel):
 #                 else:
 #                     file_data += '00'
             #======= Bank Code / Key bank ========#
+            bank_code = ''
             if payment.payment_bank_id:
-                bank_code = ''
                 if payment.payment_bank_id.l10n_mx_edi_code:
                     bank_code = payment.payment_bank_id.l10n_mx_edi_code
-                file_data += bank_code.zfill(3)
+            file_data += bank_code.zfill(3)
             #=====reason for payment======#
             reason_payment = 'PAGO'
             if payment.payment_date:
-                payment_year = str(payment.payment_date.year)[:2]
+                payment_year = str(payment.payment_date.year)[2:]
                 month_name = format_datetime(payment.payment_date, 'MMMM', locale=get_lang(self.env).code)
                 if payment.payment_date.month==1:
-                    month_name = 'Enero'
+                    month_name = 'ENERO'
                 elif payment.payment_date.month==2:
-                    month_name = 'Febrero'
+                    month_name = 'FEBRERO'
                 elif payment.payment_date.month==3:
-                    month_name = 'Marzo'
+                    month_name = 'MARZO'
                 elif payment.payment_date.month==4:
-                    month_name = 'Abril'
+                    month_name = 'ABRIL'
                 elif payment.payment_date.month==5:
-                    month_name = 'Mayo'
+                    month_name = 'MAYO'
                 elif payment.payment_date.month==6:
-                    month_name = 'Junio'
+                    month_name = 'JUNIO'
                 elif payment.payment_date.month==7:
-                    month_name = 'Julio'
+                    month_name = 'JULIO'
                 elif payment.payment_date.month==8:
-                    month_name = 'Agosto'
+                    month_name = 'AGPSTO'
                 elif payment.payment_date.month==9:
-                    month_name = 'Septiembre'
+                    month_name = 'SEPTIEMBRE'
                 elif payment.payment_date.month==10:
-                    month_name = 'Octubre'
+                    month_name = 'OCTUBRE'
                 elif payment.payment_date.month==11:
-                    month_name = 'Noviembre'
+                    month_name = 'NOVIEMBRE'
                 elif payment.payment_date.month==12:
-                    month_name = 'Diciembre'
+                    month_name = 'DICIEMBRE'
                                 
                 reason_payment += " "+month_name+" "+payment_year
             file_data += reason_payment.ljust(30, " ")     
@@ -371,12 +371,14 @@ class GenerateBankLayout(models.TransientModel):
                 net_cash_reference = payment.name
             file_data += net_cash_reference.zfill(7)
             #====== net_cash_availability =======#   
-            file_data += "SPEI"
-#             if payment.net_cash_availability:
-#                 if payment.net_cash_availability=='SPEI':
-#                     file_data += 'H'
+            #file_data += "SPEI"
+            availability = 'M'
+            if payment.net_cash_availability:
+                if payment.net_cash_availability=='SPEI':
+                    availability = 'H'
 #                 elif payment.net_cash_availability=='CECOBAN':
 #                     file_data += 'M'
+            file_data += availability
             file_data +="\r\n"      
                                      
         gentextfile = base64.b64encode(bytes(file_data,'utf-8'))
@@ -415,7 +417,7 @@ class GenerateBankLayout(models.TransientModel):
             if self.payment_ids[0].sit_operation_code=='payment_on_account_bancomer':
                 sit_file_key += 'BBVA'
             elif self.payment_ids[0].sit_operation_code=='payment_interbank':
-                sit_file_key += "OTHERS"
+                sit_file_key += "OTROS"
 
         file_data +=sit_file_key.ljust(30)
         #======== Response Code =======#
@@ -1292,7 +1294,24 @@ class GenerateBankLayout(models.TransientModel):
             file_data += ' ,'
             #===== N/A=======#
             file_data += ' ,'
-            file_data += '\n'            
+            file_data += '\n'
+        
+        #===============TRAILER=================#
+        file_data += 'TRAILER'
+        file_data += ' ,'
+        #------Total Number of Records --------#
+        total_rec = len(self.payment_ids)
+        file_data +=str(total_rec)
+        file_data += ' ,'
+        #------Total amount --------#
+        amount = "%.2f" % total_amount
+        amount = str(amount).split('.')
+        file_data +=str(amount[0])
+        file_data +='.'
+        file_data +=str(amount[1])
+        file_data += ','
+        file_data += '\n'
+                 
         gentextfile = base64.b64encode(bytes(file_data,'utf-8'))
         self.file_data = gentextfile
         self.file_name = file_name
@@ -1345,6 +1364,7 @@ class GenerateBankLayout(models.TransientModel):
             else:
                 file_data += ' ,'
             #====== Amount Data =========#
+            total_amount += payment.amount
             amount = "%.2f" % payment.amount
             amount = str(amount).split('.')
             file_data +=str(amount[0])
@@ -1423,6 +1443,22 @@ class GenerateBankLayout(models.TransientModel):
             #======== N/A =======#
             file_data += ' ,'
             file_data += '\n'   
+
+        #===============TRAILER=================#
+        file_data += 'TRAILER'
+        file_data += ' ,'
+        #------Total Number of Records --------#
+        total_rec = len(self.payment_ids)
+        file_data +=str(total_rec)
+        file_data += ' ,'
+        #------Total amount --------#
+        amount = "%.2f" % total_amount
+        amount = str(amount).split('.')
+        file_data +=str(amount[0])
+        file_data +='.'
+        file_data +=str(amount[1])
+        file_data += ','
+        file_data += '\n'
             
         gentextfile = base64.b64encode(bytes(file_data,'utf-8'))
         self.file_data = gentextfile
@@ -1643,7 +1679,7 @@ class GenerateBankLayout(models.TransientModel):
         file_data += '0'
         #==== Issue Date ======#
         currect_time = datetime.today()
-        file_data +=str(currect_time.year)[:2]
+        file_data +=str(currect_time.year)[2:]
         file_data +=str(currect_time.month).zfill(2)
         file_data +=str(currect_time.day).zfill(2)
         file_data += "\r\n"
@@ -1665,7 +1701,7 @@ class GenerateBankLayout(models.TransientModel):
             
             #==== PaymentDate Date ==========#
             if payment.payment_date:
-                file_data +=str(payment.payment_date.year)[:2]
+                file_data +=str(payment.payment_date.year)[2:]
                 file_data +=str(payment.payment_date.month).zfill(2)
                 file_data +=str(payment.payment_date.day).zfill(2)
             else:
@@ -1689,7 +1725,7 @@ class GenerateBankLayout(models.TransientModel):
                 fornight = payment.fornight+" "
             request_type += fornight
             currect_time = datetime.today()
-            request_type += str(currect_time.year)[:2]
+            request_type += str(currect_time.year)[2:]
              
             file_data += request_type.ljust(14)
             #==== Status ======#
@@ -1828,7 +1864,7 @@ class GenerateBankLayout(models.TransientModel):
         
         file_data +=str(currect_time.day).zfill(2)
         file_data +=str(currect_time.month).zfill(2)
-        file_data +=str(currect_time.year)[:2]
+        file_data +=str(currect_time.year)[2:]
         
         #====== Sequence of the file TODO =====#
         file_data += '0001'
@@ -2082,9 +2118,9 @@ class GenerateBankLayout(models.TransientModel):
             file_data += payment.partner_id.name.ljust(40)
             #===== Payment Date ========#
             if payment.payment_date:
-                file_data +=str(payment.payment_date.year)
                 file_data +=str(payment.payment_date.month).zfill(2)
                 file_data +=str(payment.payment_date.day).zfill(2)
+                file_data +=str(payment.payment_date.year)
                 
             else:
                 file_data += '00000000'

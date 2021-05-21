@@ -53,7 +53,7 @@ msgstr ", que pertenecen a la cuenta de cheques no."
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_registration_template
 msgid ", to"
-msgstr ", a"
+msgstr ", al"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_request_1_template
@@ -2886,7 +2886,7 @@ msgstr "Es necesario adjuntar el documento correspondiente."
 msgid ""
 "It is worth mentioning that the checkbooks were satisfactorily delivered on"
 msgstr ""
-"Cabe mencionar que las chequeras fueron entregadas satisfactoriamente en"
+"Cabe mencionar que las chequeras fueron entregadas satisfactoriamente el día"
 
 #. module: jt_check_controls
 #: code:addons/jt_check_controls/reports/check_card_for_folios_payment_issue.py:0
@@ -4516,8 +4516,7 @@ msgstr "cheques cada uno"
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_registration_template
 msgid ""
-"hereof, in the Financial Operations\n"
-"                                Department located at"
+"hereof, in the Financial Operations Department located at"
 msgstr "de la presente, en el Departamento de Operación Financiera ubicado en"
 
 #. module: jt_check_controls

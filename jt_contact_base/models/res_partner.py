@@ -49,6 +49,10 @@ class ResPartner(models.Model):
     scholarship_approved_month = fields.Char(string='Scholarship approved month')
     period = fields.Char('Period')
 
+    #Boolean fields
+    is_ISSSTE_supplier = fields.Boolean('Is ISSSTE supplier')
+    is_FOVISSSTE_supplier = fields.Boolean('Is FOVISSSTE supplier')
+
     _sql_constraints = [
         ('password_beneficiary_uniq', 'unique (password_beneficiary)',
          'The Password of the beneficiary of the payment must be unique.'),

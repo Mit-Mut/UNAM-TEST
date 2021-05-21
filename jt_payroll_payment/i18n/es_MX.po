@@ -1749,6 +1749,7 @@ msgstr "Fin del periodo"
 
 #. module: jt_payroll_payment
 #: model:ir.ui.menu,name:jt_payroll_payment.payment_place_menu_payroll_setting
+#: model_terms:ir.ui.view,arch_db:jt_payroll_payment.employee_payroll_file_search
 msgid "Place of Payment"
 msgstr "Lugar de Pago"
 

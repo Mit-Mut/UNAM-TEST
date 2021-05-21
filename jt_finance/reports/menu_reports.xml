@@ -98,13 +98,13 @@
             <field name="context" eval="{'model': 'jt_finance.bank.diary.recovery.expenditures.dollars'}" />
         </record>
 
-        <menuitem
+       <!--  <menuitem
             id="menu_bank_diary_recovery_expenditures_dollars"
             name="Summary of Operation - Recovery of Expenditures USD"
             parent="jt_payroll_payment.menu_finance_reports"
             sequence="13"
             action="action_bank_diary_recovery_expenditures_dollars"
-        />
+        /> -->
 
 		<!-- Summary of Operation USD Expenditures -->
         <record id="action_summaryof_operation_usd_expenditures" model="ir.actions.client">

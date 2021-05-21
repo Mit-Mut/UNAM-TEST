@@ -29,7 +29,6 @@
     "author": "Jupical Technologies Pvt. Ltd.",
     "depends": [
         "base_automation",
-        'mm_unam',
         "jt_web_client",
     ],
     "data": [

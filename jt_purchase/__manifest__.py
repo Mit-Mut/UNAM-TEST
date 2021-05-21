@@ -28,7 +28,7 @@
     'maintainer': 'Jupical Technologies Pvt. Ltd.',
     'website': 'http://www.jupical.com',
     'license': 'AGPL-3',
-    'depends': ['purchase','mm_unam'],
+    'depends': ['purchase'],
     'data': [
         'security/ir.model.access.csv',
         'views/purchase_inherit.xml',

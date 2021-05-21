@@ -29,7 +29,6 @@
     "author": "Jupical Technologies Pvt. Ltd.",
     "depends": [
         "web_editor",
-        'mm_unam',
         "jt_autovacuum",
     ],
     "data": [

@@ -28,7 +28,7 @@
     'license': 'LGPL-3',
     'author': 'Jupical Technologies Pvt. Ltd.',
     'depends': [
-        'mm_unam','jt_utils',
+        'jt_utils',
     ],
     'data': [
         'security/ir.model.access.csv',

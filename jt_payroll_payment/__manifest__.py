@@ -29,7 +29,7 @@
     'maintainer': 'Jupical Technologies Pvt. Ltd.',
     'website': 'http://www.jupical.com',
     'license': 'AGPL-3',
-    'depends': ['account_accountant','mm_unam', 'jt_hr_base', 'jt_account_base'],
+    'depends': ['account_accountant', 'jt_hr_base', 'jt_account_base'],
     'data': [
         'views/main_menus.xml',
         'views/policy_keys_view.xml',

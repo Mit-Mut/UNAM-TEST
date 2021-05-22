@@ -42,8 +42,14 @@ msgstr " Tarjeta de cheques para folios y pagos emitidos"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_registration_template
-msgid ", on behalf of the National Autonomous University of Mexico."
-msgstr ", en nombre de la Universidad Nacional Autónoma de México."
+msgid ""
+"on behalf of the National Autonomous University of Mexico.\n"
+"                            <br/>\n"
+"                            <br/>"
+msgstr ""
+"en nombre de la Universidad Nacional Autónoma de México.\n"
+"                            <br/>\n"
+"                            <br/>"
 
 #. module: jt_check_controls
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_registration_template
@@ -4517,7 +4523,7 @@ msgstr "cheques cada uno"
 #: model_terms:ir.ui.view,arch_db:jt_check_controls.check_registration_template
 msgid ""
 "hereof, in the Financial Operations Department located at"
-msgstr "de la presente, en el Departamento de Operación Financiera ubicado en"
+msgstr "del presente, en el Departamento de Operación Financiera ubicado en"
 
 #. module: jt_check_controls
 #: model:ir.actions.report,print_report_name:jt_check_controls.delivery_ticket_action

@@ -171,6 +171,7 @@
                                 <field name="name" readonly="1"/>
                                 <field name="l10n_mx_edi_payment_method_id" attrs="{'readonly':[('state','=','done')]}"/>
                                 <field name="bank_key" attrs="{'readonly':[('state','=','done')]}"/>
+                                <field name="bank_key_name" attrs="{'readonly':[('state','=','done')]}"/>
                                 <field name="deposite_number" attrs="{'readonly':[('state','=','done')]}"/>
                                 <field name="check_number" attrs="{'readonly':[('state','=','done')]}"/>
                                 <field name="adjustment_case_id" context="{'show_from_payroll':1}" attrs="{'readonly':[('state','=','done')]}"/>

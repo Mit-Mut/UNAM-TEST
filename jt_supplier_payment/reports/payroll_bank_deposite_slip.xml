@@ -6,17 +6,15 @@
             <t t-call="web.basic_layout">
             <t t-foreach="docs" t-as="o">
                 <t>
-                    <div class="page">
+                    <div class="page" style="text-size:12px;margin-bottom:50px;">
                         <div class="oe_structure"/>
                         <div class="row" name="payment_place_name">
                             <div class="col-8 text-left">
-                                  <span>
-                                      <h4>TELEFO NO ________________________</h4>
-                                  </span>
+                                  <span>TELEFO NO ________________________</span>
                             </div>
                             <div class="col-4 text-left">
                                   <span>
-                                      <h4>CLAVE <u><span t-field="o.payment_place_id.name"/></u></h4>
+                                      CLAVE <u><span t-field="o.payment_place_id.name"/></u>
                                   </span>
                             </div>
                         </div>
@@ -24,22 +22,25 @@
                         <div class="row" name="dependancy_name">
                              <div class="col-12 text-left">
                                   <span>
-                                      <h4>DEPENDENCIA <u><span t-field="o.dependancy_id.description"/></u></h4>
+                                      DEPENDENCIA <u><span t-field="o.dependancy_id.description"/></u>
                                   </span>
+                                  <br/>
+                                  <br/>
+                                  RECIBÍ DEL DEPARTAMENTO DE PAGO DE NÓMINA Y PRESTACIONES DE LA DIRECCIÓN GENERAL DE FINANZAS LOS SIGUIENTES DOCUMENTOS PARA EL PAGO DE NÓMINA
                             </div>
                         </div>
                         <br/>
-                        <div class="row" name="details_name">
+                       <!--  <div class="row" name="details_name">
                              <div class="col-12 text-left">
                                   <span>
-                                      <h4>RECIBÍ DEL DEPARTAMENTO DE PAGO DE NÓMINA Y PRESTACIONES DE LA DIRECCIÓN GENERAL DE FINANZAS LOS SIGUIENTES DOCUMENTOS PARA EL PAGO DE NÓMINA</h4>
+                                      RECIBÍ DEL DEPARTAMENTO DE PAGO DE NÓMINA Y PRESTACIONES DE LA DIRECCIÓN GENERAL DE FINANZAS LOS SIGUIENTES DOCUMENTOS PARA EL PAGO DE NÓMINA
                                   </span>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="row" name="bank_name">
                              <div class="col-12 text-left">
                                   <span>
-                                      <h4><span t-field="o.payment_issuing_bank_id.name"/></h4>
+                                      BANCO:<span t-field="o.payment_issuing_bank_id.name"/>
                                   </span>
                             </div>
                         </div>
@@ -49,36 +50,36 @@
                         	
                              <div class="col-8 text-left">
                                   <span>
-                                      <h4>FOLIOS DE DEPOSITOS DEL ________________________</h4>
+                                      FOLIOS DE DEPOSITOS DEL ________________________
                                   </span>
                             </div>
                              <div class="col-4 text-left">
                                   <span>
-                                      <h4>AL ___________________</h4>
+                                      AL ___________________
                                   </span>
                             </div>
-						</div>
-						<div class="row" name="folio_vales_name">
+						            </div>
+						            <div class="row" name="folio_vales_name">
                              <div class="col-8 text-left">
                                   <span>
-                                      <h4>VALES DE DESPENSA DEL FOLIO ___________________</h4>
+                                      VALES DE DESPENSA DEL FOLIO ___________________
                                   </span>
                             </div>
                              <div class="col-4 text-left">
                                   <span>
-                                      <h4>AL ___________________</h4>
+                                      AL ___________________
                                   </span>
                             </div>   
                         </div>
                         <div class="row" name="folio_hojas_name">
                              <div class="col-8 text-left">
                                   <span>
-                                      <h4>HOJAS NOMINA FOLIO _____________________________</h4>
+                                      HOJAS NOMINA FOLIO _____________________________
                                   </span>
                             </div>
                              <div class="col-4 text-left">
                                   <span>
-                                      <h4>AL ___________________</h4>
+                                      AL ___________________
                                   </span>
                             </div>                            
                         </div>
@@ -86,7 +87,7 @@
 						<div class="row" name="document_name">
                              <div class="col-12 text-left">
                                   <span>
-                                      <h4>CORRESPONDIENTES A LA QUINCENA <t t-if="o.fornight"><span t-field="o.fornight"/></t> <span t-field="o.invoice_date" t-options='{"format": "yyyy"}'/></h4>
+                                      CORRESPONDIENTES A LA QUINCENA <t t-if="o.fornight"><span t-field="o.fornight"/></t> <span t-field="o.invoice_date" t-options='{"format": "yyyy"}'/>
                                   </span>
                             </div>
 						</div>
@@ -94,13 +95,13 @@
 						<div class="row" name="date_name">
                              <div class="col-7 text-left">
                                   <span>
-                                      <h4>REVISO  ________________________</h4><br/>
-                                      <h4>PAGADOR HABILITADO</h4>
+                                      REVISO  ________________________<br/>
+                                      PAGADOR HABILITADO
                                   </span>
                             </div>
                              <div class="col-5 text-left">
-                                  <span>
-                                      <h4>FECHA ___________________</h4>
+                                  <span style="margin-left:2px;">
+                                      FECHA ___________________
                                   </span>
                             </div>
 						</div>
@@ -108,12 +109,12 @@
 						<div class="row" name="sing_line">
                              <div class="col-8 text-left">
                                   <span>
-                                      <h4>_________________________</h4>
+                                      _________________________
                                   </span>
                             </div>
                              <div class="col-4 text-left">
                                   <span>
-                                      <h4>_________________________</h4>
+                                      _________________________
                                   </span>
                             </div>
 						</div>
@@ -121,12 +122,12 @@
 						<div class="row" name="sing_data">
                              <div class="col-8 text-left">
                                   <span>
-                                      <h4>NOMBRE COMPLETO</h4>
+                                      NOMBRE COMPLETO
                                   </span>
                             </div>
                              <div class="col-4 text-center">
                                   <span>
-                                      <h4>FIRMA</h4>
+                                      FIRMA
                                   </span>
                             </div>
 						</div>

@@ -26,6 +26,7 @@ class ProjectProgramCode(models.Model):
             
             if rec.program_code_id:
                 total_assigned_amt = rec.program_code_id.total_authorized_amt
+                
 #                 self.env.cr.execute("select coalesce(sum(ebl.assigned),0) from expenditure_budget_line ebl where ebl.program_code_id = %s ", (rec.program_code_id.id,))
 #                 my_datas = self.env.cr.fetchone()
 #                 if my_datas:
@@ -39,7 +40,7 @@ class ProjectProgramCode(models.Model):
                     if my_datas:
                         total_per_exercise = my_datas[0]
                     
-                    self.env.cr.execute("select coalesce(sum(ebl.available),0) from expenditure_budget_line ebl where ebl.program_code_id = %s",(rec.program_code_id.id,))
+                    self.env.cr.execute("select coalesce(sum(ebl.assigned),0) from expenditure_budget_line ebl where ebl.program_code_id = %s",(rec.program_code_id.id,))
                     my_datas = self.env.cr.fetchone()
                     if my_datas:
                         total_assigned_amt = my_datas[0]

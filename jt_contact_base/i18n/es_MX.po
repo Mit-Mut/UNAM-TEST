@@ -34,7 +34,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:jt_contact_base.field_res_partner__is_FOVISSSTE_supplier
 #: model:ir.model.fields,field_description:jt_contact_base.field_res_users__is_FOVISSSTE_supplier
 msgid "Is FOVISSSTE supplier"
-msgstr"Es Proveedor FOVISSSTE"
+msgstr "Es Proveedor FOVISSSTE"
 
 #. module: jt_contact_base
 #: model:ir.model.fields,field_description:jt_contact_base.field_res_partner__is_ISSSTE_supplier

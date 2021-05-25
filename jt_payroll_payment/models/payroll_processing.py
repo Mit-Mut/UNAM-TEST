@@ -423,7 +423,14 @@ class CustomPayrollProcessing(models.Model):
                     pre_id = list(filter(lambda per: per['key'] == str(pre_key), preception_records))
                     pre_id = pre_id[0]['id'] if pre_id else False
                     if pre_id:
-                        line_data.append((0,0,{'program_code_id':program_id,'preception_id':pre_id,'amount':amount}))
+                        preception_lines = False
+                        if exit_payroll_id:
+                            preception_lines = exit_payroll_id.preception_line_ids.filtered(lambda x:x.preception_id.id==pre_id)
+                            for line in preception_lines:
+                                line.program_code_id = program_id
+                                line.amount = amount
+                        if not preception_lines:    
+                            line_data.append((0,0,{'program_code_id':program_id,'preception_id':pre_id,'amount':amount}))
                     else:
                         failed_row = self.check_perception_data(failed_row,pre_key,'Payroll Perceptions',counter)
                         continue
@@ -564,7 +571,13 @@ class CustomPayrollProcessing(models.Model):
                     ded_id = ded_id[0]['id'] if ded_id else False
                     
                     if ded_id:
-                        line_data.append((0,0,{'deduction_id':ded_id,'amount':amount})) 
+                        deduction_line = False
+                        if exit_payroll_id:
+                            deduction_line = exit_payroll_id.deduction_line_ids.filtered(lambda x:x.deduction_id.id==ded_id)
+                            for line in deduction_line:
+                                line.amount = amount
+                        if not deduction_line:     
+                            line_data.append((0,0,{'deduction_id':ded_id,'amount':amount})) 
                     else:
                         failed_row = self.check_deduction_data(failed_row,ded_key,'Payroll Deductions',counter)
                         continue

@@ -174,8 +174,11 @@ class GenerateSupplierCheckLayout(models.TransientModel):
                     else:
                         file_data += bank.branch_number if bank.branch_number else ''
                     file_data += '1'
-                    file_data += str(bank.bank_account_id.acc_number).zfill(10) if bank.bank_account_id and \
-                        bank.bank_account_id.acc_number else ''
+                    bank_account = bank.bank_account_id and bank.bank_account_id.acc_number or ''
+                    bank_account = str(bank_account)
+                    if len(bank_account) > 10:
+                        bank_account = bank_account[:10]
+                    file_data += bank_account.zfill(10)
                     file_data += str(line.check_folio_id.folio).zfill(10)
 #                    file_data += ('%.2f'%line.amount_to_pay).zfill(15)
 
@@ -186,7 +189,8 @@ class GenerateSupplierCheckLayout(models.TransientModel):
                     file_data +=str(amount[0]).zfill(13)
                     file_data +=str(amount[1])
                     
-                    file_data += line.payment_req_id.partner_id.name.ljust(60) if line.payment_req_id.partner_id else ''
+                    partner_name = line.payment_req_id.partner_id and line.payment_req_id.partner_id.name or '' 
+                    file_data += partner_name.ljust(60)
                     file_data += ''.ljust(49)
                     file_data += '3'
                     file_data += '\r\n'

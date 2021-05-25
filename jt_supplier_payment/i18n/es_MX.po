@@ -2698,6 +2698,12 @@ msgstr "la cuenta bancaria seleccionada tiene saldo suficiente para ejecutar"
 msgid "Counter Receipt Folio"
 msgstr "Folio contra recibo"
 
+#. module: jt_supplier_payment
+#: model_terms:ir.ui.view,arch_db:jt_supplier_payment.inherited_view_account_payment_tree
+#: model_terms:ir.ui.view,arch_db:jt_supplier_payment.payment_req_tree_view
+msgid "Employee"
+msgstr "Empleado"
+
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__payment_method_id
 msgid "Payment Method Type"

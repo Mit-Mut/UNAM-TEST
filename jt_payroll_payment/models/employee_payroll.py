@@ -89,7 +89,17 @@ class EmployeePayroll(models.Model):
                 dateyear = rec.period_start.strftime('%Y')
                 name += "-"+ datetimemonth +" "+str(dateyear) 
             rec.name = name
-             
+    
+    @api.depends('bank_key')
+    def get_bank_name_from_key(self):
+        for rec in self:
+            bank_key_name = ''
+            if rec.bank_key:
+                bank = self.env['res.bank'].search([('l10n_mx_edi_code','=',rec.bank_key)],limit=1)
+                if bank:
+                    bank_key_name = bank.name
+            rec.bank_key_name = bank_key_name
+            
     name = fields.Char("Name",compute="get_upload_file_name")
     employee_id = fields.Many2one('hr.employee', "Employee")
     employee_number = fields.Char(related='employee_id.worker_number', string="Employee Number")
@@ -151,6 +161,7 @@ class EmployeePayroll(models.Model):
     deposite_number = fields.Char("Deposit number")
     check_number = fields.Char("Check number")
     bank_key = fields.Char("Bank Key")
+    bank_key_name = fields.Char(string='Bank Key Name',compute="get_bank_name_from_key",store=True)
     adjustment_case_id = fields.Many2one('adjustment.cases','Adjustment Cases')
     adjustment_case_description = fields.Text(related="adjustment_case_id.description",string="Case Description")
     net_salary = fields.Float("Net Salary")

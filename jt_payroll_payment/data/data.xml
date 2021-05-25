@@ -2,28 +2,29 @@
 <odoo>
     <data noupdate="1">
 	     <record id="payroll_payment_request_jour" model="account.journal">
-	        <field name="name">Payroll Payment Request Journal</field>
+	        <field name="name">Diario de solicitud de pago de nómina</field>
 	        <field name="code">PPAR</field>
 	        <field name="currency_id" ref="base.MXN"/>
 	        <field name="type">purchase</field>
 	    </record>
 
+	    <!-- Different Payroll Payment Request Journal -->
 	     <record id="different_payroll_payment_request_jour" model="account.journal">
-	        <field name="name">Different Payroll Payment Request Journal</field>
+	        <field name="name">Diario de solicitud de pago de nómina diferente</field>
 	        <field name="code">DPPAR</field>
 	        <field name="currency_id" ref="base.MXN"/>
 	        <field name="type">purchase</field>
 	    </record>
 
 	     <record id="project_payment_request_jour" model="account.journal">
-	        <field name="name">Project Payment Request Journal</field>
+	        <field name="name">Diario de solicitud de pago del proyecto</field>
 	        <field name="code">PPAR</field>
 	        <field name="currency_id" ref="base.MXN"/>
 	        <field name="type">purchase</field>
 	    </record>
 
         <record id="project_verfication_expense_jour" model="account.journal">
-            <field name="name">Project Verification Request Journal</field>
+            <field name="name">Diario de solicitud de verificación del proyecto</field>
             <field name="code">PVEJ</field>
             <field name="currency_id" ref="base.MXN"/>
             <field name="type">purchase</field>

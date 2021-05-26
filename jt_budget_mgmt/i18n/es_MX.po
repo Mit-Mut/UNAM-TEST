@@ -3136,7 +3136,7 @@ msgstr "Pagos"
 #: model:ir.actions.act_window,name:jt_budget_mgmt.pension_payroll_payment_schedule_programming_action
 #: model:ir.ui.menu,name:jt_budget_mgmt.pension_payroll_payment_schedule_menu_programm
 msgid "Pension Payment Schedule"
-msgstr "Calendario de pagos de pensiones"
+msgstr "Pension Payment Programming"
 
 #. module: jt_budget_mgmt
 #: model:budget.control,name:jt_budget_mgmt.budget_control_8

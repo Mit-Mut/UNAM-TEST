@@ -43,7 +43,8 @@
                             </h1>
 
                             <!-- Select next number header (only invoices) -->
-                            <div  attrs="{'invisible': [('invoice_sequence_number_next_prefix', '=', False)]}">
+                            <!-- <div  attrs="{'invisible': [('invoice_sequence_number_next_prefix', '=', False)]}">  -->
+                            <div  invisible="1">
                                 <field name="invoice_sequence_number_next_prefix" class="oe_inline"/>
                                 <field name="invoice_sequence_number_next" class="oe_inline" attrs="{'readonly': [('payment_state', '!=', 'draft')]}"/>
                             </div>

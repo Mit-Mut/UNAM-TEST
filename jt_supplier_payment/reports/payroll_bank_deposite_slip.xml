@@ -10,7 +10,7 @@
                         <div class="oe_structure"/>
                         <div class="row" name="payment_place_name">
                             <div class="col-8 text-left">
-                                  <span>TELEFO NO ________________________</span>
+                                  <span>TELEFONO ________________________</span>
                             </div>
                             <div class="col-4 text-left">
                                   <span>
@@ -47,29 +47,30 @@
                         
                         <br/>
                         <div class="row" name="folio_name">
-                        	
-                             <div class="col-8 text-left">
-                                  <span>
-                                      FOLIOS DE DEPOSITOS DEL ________________________
-                                  </span>
-                            </div>
-                             <div class="col-4 text-left">
-                                  <span>
-                                      AL ___________________
-                                  </span>
-                            </div>
+                        	<t t-foreach="o.get_counter_council_folio(docs)" t-as="data">
+                              <div class="col-8 text-left">
+                                    <span>
+                                        FOLIOS DE DEPOSITOS DEL <u><t t-esc="data['smallest_folio']"/> </u>
+                                    </span>
+                              </div>
+                               <div class="col-4 text-left">
+                                    <span>
+                                        AL <u><t t-esc="data['biggest_folio']"/>  </u>
+                                    </span>
+                              </div>
+                          </t>
 						            </div>
 						            <div class="row" name="folio_vales_name">
-                             <div class="col-8 text-left">
-                                  <span>
-                                      VALES DE DESPENSA DEL FOLIO ___________________
-                                  </span>
-                            </div>
-                             <div class="col-4 text-left">
-                                  <span>
-                                      AL ___________________
-                                  </span>
-                            </div>   
+                               <div class="col-8 text-left">
+                                    <span>
+                                        VALES DE DESPENSA DEL FOLIO _____________________________
+                                    </span>
+                              </div>
+                               <div class="col-4 text-left">
+                                    <span>
+                                        AL ___________________
+                                    </span>
+                              </div>  
                         </div>
                         <div class="row" name="folio_hojas_name">
                              <div class="col-8 text-left">

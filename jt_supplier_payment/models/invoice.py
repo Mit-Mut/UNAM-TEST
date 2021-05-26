@@ -553,6 +553,19 @@ class AccountMove(models.Model):
     #
     #     return False
 
+    def get_counter_council_folio(self,docs):
+
+        record = docs
+        smallest_folio = ''
+        biggest_folio = ''
+        data = []
+        if record:
+            smallest_folio = min(x.folio for x in record.filtered(lambda l: l.payment_state not in ('cancel') and l.folio != False))
+            biggest_folio = max(x.folio for x in record.filtered(lambda l: l.payment_state not in ('cancel') and l.folio != False))
+            data.append({'smallest_folio':smallest_folio,'biggest_folio':biggest_folio})
+            print('data',data)
+        return data 
+
     @api.depends('name', 'state')
     def name_get(self):
         res = super(AccountMove, self).name_get()
@@ -735,3 +748,4 @@ class AccountMoveLine(models.Model):
 #                 if res.account_id and res.account_id.coa_conac_id and not res.coa_conac_id:
 #                     res.coa_conac_id = res.account_id.coa_conac_id.id
         return result
+

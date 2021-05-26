@@ -1581,7 +1581,7 @@ msgstr "Certificado de verificación de folios y pagos emitidos"
 #. module: jt_check_controls
 #: model:ir.actions.server,name:jt_check_controls.change_status_suthorized_checks
 msgid "Change status of authorized checks"
-msgstr "Cambiar  estado de controles autorizados"
+msgstr "Change to available for printing"
 
 #. module: jt_check_controls
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__charged

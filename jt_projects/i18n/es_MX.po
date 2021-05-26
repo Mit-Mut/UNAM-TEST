@@ -878,7 +878,6 @@ msgstr "Antecedente"
 
 #. module: jt_projects
 #: model:ir.model.fields,field_description:jt_projects.field_project_project__bank_account_id
-#: model:ir.model.fields,field_description:jt_projects.field_request_accounts__bank_account_id
 #: model:ir.model.fields,field_description:jt_projects.field_request_confirm__bank_account_id
 msgid "Bank"
 msgstr "Banco"
@@ -888,6 +887,12 @@ msgstr "Banco"
 #: model:ir.model.fields,field_description:jt_projects.field_request_confirm__bank_acc_number_id
 msgid "Bank Account"
 msgstr "Cuenta bancaria"
+
+#. module: jt_projects
+#: model:ir.model.fields,field_description:jt_projects.field_request_accounts__bank_account_id
+#, python-format
+msgid "Bank account"
+msgstr "Bank account"
 
 #. module: jt_projects
 #: model:ir.ui.menu,name:jt_projects.main_menu_open_request_account

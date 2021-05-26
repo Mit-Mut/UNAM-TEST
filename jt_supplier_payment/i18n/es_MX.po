@@ -1771,7 +1771,7 @@ msgstr "Pago de Pensión"
 #. module: jt_supplier_payment
 #: model:ir.actions.act_window,name:jt_supplier_payment.pension_payroll_payment_request_action model:ir.ui.menu,name:jt_supplier_payment.pension_payroll_payment_request_menu
 msgid "Pension Payment Request"
-msgstr "Calendario de pagos de pensiones"
+msgstr "Pension Payment Programming"
 
 #. module: jt_supplier_payment
 #: model:ir.actions.act_window,name:jt_supplier_payment.pension_payment_account_payment_action model:ir.ui.menu,name:jt_supplier_payment.pension_payment_account_payment_menu

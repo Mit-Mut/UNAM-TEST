@@ -1525,12 +1525,16 @@ msgid "Overview"
 msgstr "Cuentas Bancarias"
 
 #. module: jt_payroll_payment
-#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__payroll_request_type__payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__payroll_request_type__payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__employee_payroll_file__request_type__payment
 #: model:ir.ui.menu,name:jt_payroll_payment.menu_payroll_payment
 msgid "Payment"
 msgstr "Pago"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_move__payroll_request_type__payment
+msgid "Alimony Payment"
+msgstr "Pago de pensión alimenticia"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__payment_issuing_bank_id

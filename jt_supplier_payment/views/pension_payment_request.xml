@@ -30,7 +30,7 @@
                             </h1>
 
                             <!-- Select next number header (only invoices) -->
-                            <span class="o_form_label" attrs="{'invisible': [('invoice_sequence_number_next_prefix', '=', False)]}">First Number:</span>
+                            <span class="o_form_label" invisible="1">First Number:</span>
 
                             <!-- Number -->
                             <h1 class="mt0">

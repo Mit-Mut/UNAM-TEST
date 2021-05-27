@@ -202,7 +202,7 @@ class Bonds(models.Model):
         employee = self.env['hr.employee'].search([('user_id', '=', user.id)], limit=1)
             
         return {
-            'name': 'Approve Request',
+            'name': _('Approve Request'),
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': False,

@@ -29,8 +29,8 @@
                             <group>
                                 <field name="folio" readonly="1"/>
                                 <field name="type_of_record"/>
+                                <field name="journal_id" domain="[('type','=','bank')]"/>
                                 <field name="bank_account_id"/>
-                                <field name="journal_id"/>
                                 <field name="programmatic_code_id"/>
                                 <field name="description"/>
                             </group>

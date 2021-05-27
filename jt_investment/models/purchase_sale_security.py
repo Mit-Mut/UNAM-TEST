@@ -225,7 +225,7 @@ class PurchaseSaleSecurity(models.Model):
 #             raise ValidationError(_("Please Add Account Balance to approve"))
                 
         return {
-            'name': 'Approve Request',
+            'name': _('Approve Request'),
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': False,

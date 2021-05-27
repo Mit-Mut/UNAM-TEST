@@ -124,7 +124,8 @@ class CheckSummary(models.AbstractModel):
                 bank_list.append(bank.get('id',0))
         if bank_list:
             bank_account_ids = bank_account_ids.search([('bank_id','in',bank_list)])
-            
+        else:
+            bank_account_ids = []
         for j in bank_account_ids:
             options['bank_account'].append({
                 'id': j.id,
@@ -194,19 +195,19 @@ class CheckSummary(models.AbstractModel):
             
         domain =domain + [('invoice_date','>=',start),('invoice_date','<=',end)]
         
-        for bank in options.get('bank'):
+        for bank in options.get('bank',[]):
             if bank.get('selected',False)==True:
                 bank_list.append(bank.get('id',0))
         if bank_list:
             domain += [('payment_issuing_bank_id.bank_id','in',bank_list)]
 
-        for bank_account in options.get('bank_account'):
+        for bank_account in options.get('bank_account',[]):
             if bank_account.get('selected',False)==True:
                 bank_account_list.append(bank_account.get('id',0))
         if bank_account_list:
             domain += [('payment_issuing_bank_acc_id','in',bank_account_list)]
 
-        for upa_catalog in options.get('upa_catalog'):
+        for upa_catalog in options.get('upa_catalog',[]):
             if upa_catalog.get('selected',False)==True:
                 upa_list.append(upa_catalog.get('id',0))
         if upa_list:

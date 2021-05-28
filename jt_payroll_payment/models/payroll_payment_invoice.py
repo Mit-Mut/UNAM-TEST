@@ -105,7 +105,7 @@ class AccountPayment(models.Model):
     payroll_request_type = fields.Selection([('university', 'Payment to University Worker'),
                                      ('add_benifit', 'Additional Benifit'),
                                      ('alimony', 'Payment Special payroll'),
-                                     ('payment', 'Payment')], "Type of request for payroll payment")
+                                     ('payment', 'Alimony Payment')], "Type of request for payroll payment")
     
     is_different_payroll_request = fields.Boolean(compute="get_different_payroll_check",string="Different To Payroll",default=False,copy=False)
     

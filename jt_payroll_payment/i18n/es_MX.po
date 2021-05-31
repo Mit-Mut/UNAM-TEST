@@ -1697,12 +1697,16 @@ msgstr "Procesamiento de Nómina"
 #. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_account_move__is_pension_payment_request
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__is_pension_payment_request
-#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__payment_request_type__pension_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__generate_payroll_wizard__type_of_movement__pension_payment
 #: model:ir.model.fields.selection,name:jt_payroll_payment.selection__payroll_processing_failed_log__type_of_movement__pension_payment
 #: model_terms:ir.ui.view,arch_db:jt_payroll_payment.employee_payroll_file_form_processing
 msgid "Pension Payment"
 msgstr "Pago de pensión"
+
+#. module: jt_payroll_payment
+#: model:ir.model.fields.selection,name:jt_payroll_payment.selection__account_payment__payment_request_type__pension_payment
+msgid "Pension Payment"
+msgstr "Pago de pensión alimenticia"
 
 #. module: jt_payroll_payment
 #: model:ir.model.fields,field_description:jt_payroll_payment.field_employee_payroll_file__pension_payment_line_ids

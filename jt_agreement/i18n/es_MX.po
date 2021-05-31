@@ -3846,7 +3846,7 @@ msgstr "El campo 'No. de Convenio' debe ser único."
 #: code:addons/jt_agreement/models/fund.py:0
 #, python-format
 msgid "The Fund Key must be unique"
-msgstr "La clave del fondo debe ser única"
+msgstr "La Clave del Fondo debe ser única"
 
 #. module: jt_agreement
 #: code:addons/jt_agreement/models/fund.py:0
@@ -4346,3 +4346,22 @@ msgstr "¡Las operaciones fueron exitosas!"
 #, python-format
 msgid "​Available Balance Is Less Then Requested Balance!"
 msgstr "¡Saldo disponible es menor al solicitado!"
+
+#. module: jt_agreement
+#: code:addons/jt_agreement/models/bases_collaboration.py:0
+#: code:addons/jt_agreement/models/bases_collaboration.py:0
+#, python-format
+msgid "This action can only be performed for transfers in Requested status"
+msgstr "Solo se puede realizar está acción para transferencias en estatus Solicitado"
+
+#. module: jt_agreement
+#: model:ir.actions.server,name:jt_agreement.action_reject_transfers_open_balance_finance
+msgid "Reject Transfers"
+msgstr "Rehazar Transferencias"
+
+#. module: jt_agreement
+#: model:ir.actions.server,name:jt_agreement.action_approve_transfers_open_balance_finance
+msgid "Approve Transfers"
+msgstr "Aprobar Transferencias"
+
+

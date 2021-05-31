@@ -29,7 +29,6 @@ class PaymentRequest(models.Model):
 
     
     def action_paid(self):
-
         self.state = 'paid'
 
     def action_reject(self):

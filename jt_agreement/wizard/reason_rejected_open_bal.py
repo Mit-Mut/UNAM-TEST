@@ -32,18 +32,19 @@ class ReasonRejection(models.TransientModel):
     def reject(self):
         context = self.env.context
         active_model = context.get('active_model')
-        active_id = context.get('active_id')
-        rec = self.env[active_model].browse(active_id)
+        active_ids = context.get('active_ids')
+        recs = self.env[active_model].browse(active_ids)
         if active_model == 'request.open.balance.finance':
-            rec.reason_rejection = self.name
-            rec.reject_finance()
-            if rec.request_id:
-                rec.request_id.state = 'rejected'
-                rec.request_id.reason_rejection = self.name
-                if rec.request_id.type_of_operation != 'withdrawal_cancellation':
-                    if rec.request_id.balance_req_id:
-                        rec.request_id.balance_req_id.state = 'rejected'
-                        rec.request_id.balance_req_id.reason_rejection = self.name
+            for rec in recs:
+                rec.reason_rejection = self.name
+                rec.reject_finance()
+                if rec.request_id:
+                    rec.request_id.state = 'rejected'
+                    rec.request_id.reason_rejection = self.name
+                    if rec.request_id.type_of_operation != 'withdrawal_cancellation':
+                        if rec.request_id.balance_req_id:
+                            rec.request_id.balance_req_id.state = 'rejected'
+                            rec.request_id.balance_req_id.reason_rejection = self.name
         elif active_model == 'request.open.balance.invest':
             rec.state = 'rejected'
             rec.reason_rejection = self.name

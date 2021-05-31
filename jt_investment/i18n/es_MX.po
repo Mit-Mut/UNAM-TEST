@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 13.0+e-20201209\n"
+"Project-Id-Version: Odoo Server 13.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-17 23:47+0000\n"
-"PO-Revision-Date: 2021-05-17 19:37-0500\n"
+"POT-Creation-Date: 2021-05-25 17:40+0000\n"
+"PO-Revision-Date: 2021-05-26 16:01-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -766,6 +766,18 @@ msgstr "Aprobar saldo de la solicitud de inversión"
 #: model:ir.model,name:jt_investment.model_approve_money_market_bal_req
 msgid "Approve Money Market Balance request"
 msgstr "Aprobar solicitud de transferencia del mercado de dinero"
+
+#. module: jt_investment
+#: code:addons/jt_investment/models/bonds.py:0
+#: code:addons/jt_investment/models/cetes.py:0
+#: code:addons/jt_investment/models/distribution_of_income.py:0
+#: code:addons/jt_investment/models/investment.py:0
+#: code:addons/jt_investment/models/purchase_sale_security.py:0
+#: code:addons/jt_investment/models/udibonos.py:0
+#: code:addons/jt_investment/models/will_pay.py:0
+#, python-format
+msgid "Approve Request"
+msgstr "Solicitud de Transferencia"
 
 #. module: jt_investment
 #: model:ir.model.fields.selection,name:jt_investment.selection__investment_bonds__state__approved
@@ -1692,7 +1704,7 @@ msgstr "Todos"
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__investment_rate_id
 #: model:ir.model.fields,field_description:jt_investment.field_investment_will_pay__investment_rate_id
 msgid "Exchange rate"
-msgstr "Tipo de Cambio"
+msgstr "Fecha publicación tasa"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__investment_expense_account_id
@@ -1967,12 +1979,8 @@ msgid "Fund Name"
 msgstr "Nombre de Fondo"
 
 #. module: jt_investment
-#: model:ir.ui.menu,name:jt_investment.menu_fund_type_investment
-msgid "Fund Type"
-msgstr "Tipo de Fondo"
-
-#. module: jt_investment
 #: model:ir.actions.act_window,name:jt_investment.action_investment_funds_product
+#: model:ir.model,name:jt_investment.model_agreement_fund
 #: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__fund_id
 #: model:ir.ui.menu,name:jt_investment.menu_agreement_fund_investment
 #: model:ir.ui.menu,name:jt_investment.menu_investment_funds_product
@@ -2259,7 +2267,7 @@ msgstr "Tasa de interés"
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_operation__interest_rate_base_id
 msgid "Interest Rate Base"
-msgstr ""
+msgstr "Tasa de Interés Base"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_investment__interest_rate
@@ -2308,6 +2316,8 @@ msgstr ""
 
 #. module: jt_investment
 #: model:ir.actions.act_window,name:jt_investment.action_investment_investment
+#: model:ir.model.fields,field_description:jt_investment.field_account_bank_statement_import_journal_creation__is_investment_account
+#: model:ir.model.fields,field_description:jt_investment.field_account_journal__is_investment_account
 #: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__investment_id
 #: model:ir.model.fields,field_description:jt_investment.field_distribution_of_income__investment_id
 #: model:ir.model.fields,field_description:jt_investment.field_maturity_report__investment_id
@@ -2319,7 +2329,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:jt_investment.selection__investment_will_pay__kind_of_product__investment
 #: model:ir.model.fields.selection,name:jt_investment.selection__product_template__type__investment
 #: model:ir.ui.menu,name:jt_investment.main_menu_investment
-#: model:ir.ui.menu,name:jt_investment.menu_productive_accounts_investment
 #: model_terms:ir.ui.view,arch_db:jt_investment.investment_bonds_form
 #: model_terms:ir.ui.view,arch_db:jt_investment.investment_cetes_form
 #: model_terms:ir.ui.view,arch_db:jt_investment.investment_investment_form
@@ -2454,6 +2463,12 @@ msgstr "Factura"
 #: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__message_is_follower
 msgid "Is Follower"
 msgstr "Es seguidor"
+
+#. module: jt_investment
+#: model:ir.model.fields,field_description:jt_investment.field_approve_money_market_bal_req__is_from_set_button
+#: model:ir.model.fields,field_description:jt_investment.field_request_open_balance_finance__is_from_set_button
+msgid "Is From Set Button"
+msgstr "Es desde el botón de configuración"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_investment_operation__is_request_generated
@@ -3258,6 +3273,7 @@ msgstr "Cuentas productivas"
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_account_bank_statement_import_journal_creation__is_productive_account
 #: model:ir.model.fields,field_description:jt_investment.field_account_journal__is_productive_account
+#: model:ir.ui.menu,name:jt_investment.menu_productive_accounts_investment
 #: model:ir.ui.menu,name:jt_investment.submenu_menu_investment_productive_accounts
 msgid "Productive Accounts"
 msgstr "Cuentas Productivas"
@@ -3356,7 +3372,7 @@ msgstr "Histórico de tasas"
 #: model:ir.model.fields,field_description:jt_investment.field_purchase_sale_security__rate_of_returns
 #: model:ir.model.fields,field_description:jt_investment.field_rate_of_returns__name
 msgid "Rate Of Returns"
-msgstr "Tasa de Rendimientos"
+msgstr "Tasa Rendimiento"
 
 #. module: jt_investment
 #: model:ir.model.constraint,message:jt_investment.constraint_investment_period_rate_rate_date_product_type
@@ -3568,7 +3584,7 @@ msgstr "Oficina que Solicita"
 #. module: jt_investment
 #: model:ir.model,name:jt_investment.model_request_open_balance_finance
 msgid "Request Transfer"
-msgstr "Solicitud de TRansferencia"
+msgstr "Solicitud de Transferencia"
 
 #. module: jt_investment
 #: model:ir.ui.menu,name:jt_investment.submenu_menu_investment_request_for_transfers
@@ -3961,7 +3977,7 @@ msgstr ""
 #: code:addons/jt_investment/reports/investment_committee.py:0
 #, python-format
 msgid "Tasa Rendimiento"
-msgstr ""
+msgstr "Tasa"
 
 #. module: jt_investment
 #: code:addons/jt_investment/reports/money_market_investments.py:0
@@ -4102,7 +4118,7 @@ msgid "To Pay"
 msgstr "Pagar"
 
 #. module: jt_investment
-#: code:addons/jt_investment/reports/report_productive_accounts.py:0
+#: code:addons/jt_investment/reports/maturities.py:0 code:addons/jt_investment/reports/report_productive_accounts.py:0
 #: model:ir.model.fields,field_description:jt_investment.field_investment_bonds__total_currency_rate
 #: model:ir.model.fields,field_description:jt_investment.field_investment_cetes__total_currency_rate
 #: model:ir.model.fields,field_description:jt_investment.field_investment_udibonos__total_currency_rate
@@ -4146,11 +4162,6 @@ msgstr "Martes"
 #: model:ir.model.fields,field_description:jt_investment.field_maturity_report__type
 msgid "Type"
 msgstr "Tipo"
-
-#. module: jt_investment
-#: model:ir.ui.menu,name:jt_investment.menu_type_agreement_investment
-msgid "Type Of Agreement"
-msgstr "Tipo de Convenio"
 
 #. module: jt_investment
 #: model:ir.model.fields,field_description:jt_investment.field_distribution_of_income_calculation__agreement_type_id
@@ -4511,6 +4522,12 @@ msgid "You can delete only draft status data."
 msgstr "Solo puede eliminar los datos en estado de borrador."
 
 #. module: jt_investment
+#: code:addons/jt_investment/models/investment.py:0
+#, python-format
+msgid "You can not delete Fund which are mapped with investment operation!"
+msgstr "¡No puede eliminar los fondos que están asignados con una operación de inversión!"
+
+#. module: jt_investment
 #: code:addons/jt_investment/models/investment.py:0 code:addons/jt_investment/models/purchase_sale_security.py:0
 #, python-format
 msgid "You have choosen Non-Business Day in Expiration Date!"
@@ -4563,9 +4580,3 @@ msgstr ""
 #: model:ir.model.fields.selection,name:jt_investment.selection__maturity_report__rrule_type__yearly
 msgid "yearly"
 msgstr "anual"
-
-#. module: jt_investment
-#: code:addons/jt_investment/models/cetes.py:0
-#, python-format
-msgid "Approve Request"
-msgstr "Solictud de Transferencia"

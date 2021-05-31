@@ -42,7 +42,7 @@ class AccountMove(models.Model):
     payroll_request_type = fields.Selection([('university', 'Payment to University Worker'),
                                      ('add_benifit', 'Additional Benifit'),
                                      ('alimony', 'Payment Special payroll'),
-                                     ('payment', 'Payment')], "Type of request for payroll payment")
+                                     ('payment', 'Alimony Payment')], "Type of request for payroll payment")
     
     payroll_register_user_id = fields.Many2one('res.users',default=lambda self: self.env.user,copy=False,string="User who registers")
     payroll_send_user_id = fields.Many2one('res.users',default=lambda self: self.env.user,copy=False,string="User who sends")
@@ -105,7 +105,7 @@ class AccountPayment(models.Model):
     payroll_request_type = fields.Selection([('university', 'Payment to University Worker'),
                                      ('add_benifit', 'Additional Benifit'),
                                      ('alimony', 'Payment Special payroll'),
-                                     ('payment', 'Payment')], "Type of request for payroll payment")
+                                     ('payment', 'Alimony Payment')], "Type of request for payroll payment")
     
     is_different_payroll_request = fields.Boolean(compute="get_different_payroll_check",string="Different To Payroll",default=False,copy=False)
     

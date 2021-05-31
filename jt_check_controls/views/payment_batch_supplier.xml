@@ -9,6 +9,9 @@
                 <tree create='0'>
                     <field name="batch_folio"/>
                     <field name="checkbook_req_id"/>
+                    <field name="amount_of_checkes"/>
+                    <field name="intial_check_folio"/>
+                    <field name="final_check_folio"/>
                 </tree>
             </field>
         </record>

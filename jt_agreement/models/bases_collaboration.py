@@ -1859,6 +1859,10 @@ class RequestOpenBalanceFinance(models.Model):
             rec.payment_count = len(self.payment_ids)
 
     def reject_request(self):
+        other_rec = self.filtered(lambda x:x.state!='requested')
+        if other_rec:
+           raise ValidationError(_('This action can only be performed for transfers in Requested status')) 
+        
         return {
             'name': 'Reason for Rejection',
             'view_type': 'form',
@@ -1866,9 +1870,17 @@ class RequestOpenBalanceFinance(models.Model):
             'view_id': False,
             'res_model': 'reason.rejection.open.bal',
             'type': 'ir.actions.act_window',
-            'target': 'new'
+            'target': 'new',
+            'context':{'active_model':'request.open.balance.finance','active_ids':self.ids}
         }
 
+    def mass_approve_finance(self):
+        other_rec = self.filtered(lambda x:x.state!='requested')
+        if other_rec:
+           raise ValidationError(_('This action can only be performed for transfers in Requested status')) 
+        for rec in self:
+            rec.approve_finance()
+            
     def approve_finance(self):
         self.state = 'approved'
         self.authorized_by_user_id = self.env.user.id
@@ -1973,6 +1985,12 @@ class AccountPayment(models.Model):
         res = super(AccountPayment, self).post()
         finance_req_obj = self.env['request.open.balance.finance']
         for payment in self:
+            #================Validate the request payments====================#
+            for inv in payment.invoice_ids.filtered(lambda x:x.is_project_payment or x.is_payment_request and x.invoice_payment_state=='paid' and x.folio):
+                pay_req_ids = self.env['payment.request'].search([('counter_receipt_sheet','=',inv.folio),('state','=','requested')])
+                for pay_req in pay_req_ids:
+                    pay_req.action_paid()
+            #========================END=========================#
             finance_reqs = finance_req_obj.search(
                 [('payment_ids', 'in', payment.id)])
             for fin_req in finance_reqs:

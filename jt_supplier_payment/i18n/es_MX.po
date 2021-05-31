@@ -943,6 +943,7 @@ msgid "Download"
 msgstr "Descarga"
 
 #. module: jt_supplier_payment
+#: model:ir.actions.server,name:jt_supplier_payment.action_server_draft_upload_payroll
 #: model:ir.model.fields.selection,name:jt_supplier_payment.selection__account_move__payment_state__draft
 #: model:ir.model.fields.selection,name:jt_supplier_payment.selection__account_payment__payment_state__draft
 #: model:ir.model.fields.selection,name:jt_supplier_payment.selection__bank_transfer_request__state__draft

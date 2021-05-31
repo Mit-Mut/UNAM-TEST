@@ -1581,7 +1581,7 @@ msgstr "Certificado de verificación de folios y pagos emitidos"
 #. module: jt_check_controls
 #: model:ir.actions.server,name:jt_check_controls.change_status_suthorized_checks
 msgid "Change status of authorized checks"
-msgstr "Change to available for printing"
+msgstr "Cambiar a disponible para imprimir"
 
 #. module: jt_check_controls
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__check_log__status__charged
@@ -1730,7 +1730,7 @@ msgstr "Verifique el registro"
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__reissue_checks__type_of_request__check_reissue
 #: model:ir.model.fields.selection,name:jt_check_controls.selection__reissue_checks__type_of_request_payroll__check_reissue
 msgid "Check Reissue"
-msgstr "Reedición de Cheques"
+msgstr "Reexpedicion de Cheques"
 
 #. module: jt_check_controls
 #: model:ir.actions.report,name:jt_check_controls.check_request_1
@@ -3415,7 +3415,7 @@ msgstr "Pagos"
 #: model:ir.ui.menu,name:jt_check_controls.payment_batch_main_menu
 #: model:ir.ui.menu,name:jt_check_controls.payment_batch_menu_finance
 msgid "Payment Batch"
-msgstr "Lote de pago"
+msgstr "Protección de Cheques"
 
 #. module: jt_check_controls
 #: model:ir.model,name:jt_check_controls.model_payment_batch_supplier
@@ -3427,21 +3427,21 @@ msgstr "Lote de pago (proveedores)"
 #: model:ir.ui.menu,name:jt_check_controls.payment_batch_payroll_menu
 #: model:ir.ui.menu,name:jt_check_controls.payment_batch_payroll_menu_finance
 msgid "Payment Batch(Payroll)"
-msgstr "Lote de pago (nómina)"
+msgstr "Protección de Cheques (Nómina)"
 
 #. module: jt_check_controls
 #: model:ir.actions.act_window,name:jt_check_controls.action_payment_batch_pension
 #: model:ir.ui.menu,name:jt_check_controls.payment_batch_pension_menu
 #: model:ir.ui.menu,name:jt_check_controls.payment_batch_pension_menu_finance
 msgid "Payment Batch(Pension Payment)"
-msgstr "Lote de pago (pago de pensión)"
+msgstr "Protección de Cheques (Pago de Pensión)"
 
 #. module: jt_check_controls
 #: model:ir.actions.act_window,name:jt_check_controls.action_payment_batch_project
 #: model:ir.ui.menu,name:jt_check_controls.payment_batch_project_menu
 #: model:ir.ui.menu,name:jt_check_controls.payment_batch_project_menu_finance
 msgid "Payment Batch(Project)"
-msgstr "Lote de pago (proyecto)"
+msgstr "Protección de Cheques (Proyecto)"
 
 #. module: jt_check_controls
 #: model:ir.actions.act_window,name:jt_check_controls.action_payment_batch_supplier
@@ -3449,7 +3449,7 @@ msgstr "Lote de pago (proyecto)"
 #: model:ir.ui.menu,name:jt_check_controls.payment_batch_supplier_menu
 #: model:ir.ui.menu,name:jt_check_controls.payment_batch_supplier_menu_finance
 msgid "Payment Batch(Supplier)"
-msgstr "Lote de pago (proveedor)"
+msgstr "Protección de Cheques (Proveedor)"
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_payment_batch_supplier__payment_date

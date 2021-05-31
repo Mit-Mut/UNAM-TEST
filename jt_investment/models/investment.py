@@ -276,7 +276,7 @@ class Investment(models.Model):
                                  (6, 0, lines.ids)], 'investment_fund_id': fund.id, 'amount': balance}))
 
         return {
-            'name': 'Approve Request',
+            'name': _('Approve Request'),
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': False,

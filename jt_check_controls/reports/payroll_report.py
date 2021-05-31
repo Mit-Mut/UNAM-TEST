@@ -127,8 +127,17 @@ class Payroll(models.AbstractModel):
         options['bank_account'] = []
 
         default_group_ids = []
+        bank_list=[]
+        bank_account_ids = self._get_filter_bank_account()
+        for bank in options.get('bank'):
+            if bank.get('selected',False)==True:
+                bank_list.append(bank.get('id',0))
+        if bank_list:
+            bank_account_ids = bank_account_ids.search([('bank_id','in',bank_list)])
+        else:
+            bank_account_ids = []
 
-        for j in self._get_filter_bank_account():
+        for j in bank_account_ids:
             options['bank_account'].append({
                 'id': j.id,
                 'name': j.acc_number,

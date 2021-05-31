@@ -892,7 +892,7 @@ msgstr "Cuenta bancaria"
 #: model:ir.model.fields,field_description:jt_projects.field_request_accounts__bank_account_id
 #, python-format
 msgid "Bank account"
-msgstr "Bank account"
+msgstr "Cuenta bancaria"
 
 #. module: jt_projects
 #: model:ir.ui.menu,name:jt_projects.main_menu_open_request_account

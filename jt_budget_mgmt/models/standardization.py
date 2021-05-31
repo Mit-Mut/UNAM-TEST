@@ -1001,15 +1001,15 @@ class Standardization(models.Model):
                                                 "programa: \n %s" % line.code_id.program_code))
                     raise ValidationError(_("Origin budget line is not created for this program code: \n %s" %
                                             line.code_id.program_code))
-                if origin_budget_line and line.amount > origin_budget_line.assigned:
+                if origin_budget_line and line.amount > origin_budget_line.available:
                     if user_lang == 'es_MX':
                         raise ValidationError(_("El monto es mayor que el asignado en el presupuesto. \n Presupuesto:"
                                                 " %s \nCódigo del programa de: %s \nEl monto requerido es de $ %s y el monto disponible es de $ %s " % (
-                                                line.budget_id.name, line.code_id.program_code,line.amount,origin_budget_line.assigned)))
+                                                line.budget_id.name, line.code_id.program_code,line.amount,origin_budget_line.available)))
                     else:
                         raise ValidationError(_("The amount is greater than the one assigned in the budget. \n Budget:"
                                                 " %s \nProgram Code: %s \nThe required amount is $ %s and the available amount is $ %s" 
-                                                % (line.budget_id.name, line.code_id.program_code,line.amount,origin_budget_line.assigned)))
+                                                % (line.budget_id.name, line.code_id.program_code,line.amount,origin_budget_line.available)))
 
     def confirm(self):
         self.validate_data()

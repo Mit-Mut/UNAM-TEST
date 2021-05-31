@@ -424,7 +424,7 @@ class DistributionOfIncome(models.Model):
         fund_type = False
         amount = sum(x.income for x in self.calculation_line_ids)
         return {
-            'name': 'Approve Request',
+            'name': _('Approve Request'),
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': False,

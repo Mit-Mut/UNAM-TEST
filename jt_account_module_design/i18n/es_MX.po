@@ -442,7 +442,7 @@ msgstr "Ejercicio Contable"
 #: model_terms:ir.ui.view,arch_db:jt_account_module_design.view_confirm_payment_date_wizard
 #: model_terms:ir.ui.view,arch_db:jt_account_module_design.view_confirm_payment_term_wizard
 msgid "Cancel"
-msgstr "Cancelar"
+msgstr "Cancelada"
 
 #. module: jt_account_module_design
 #: model:ir.model.fields.selection,name:jt_account_module_design.selection__provision__state__cancel
@@ -1174,7 +1174,7 @@ msgstr "Apunte contable"
 #: model:ir.model.fields,field_description:jt_account_module_design.field_provision__line_ids
 #: model_terms:ir.ui.view,arch_db:jt_account_module_design.provision_form_view_inherit
 msgid "Journal Items"
-msgstr "Elementos del diario"
+msgstr "Asientos contables"
 
 #. module: jt_account_module_design
 #: model:ir.model.fields,field_description:jt_account_module_design.field_provision_line__name
@@ -1605,7 +1605,7 @@ msgstr "Solicitud de provisión"
 #: model:ir.model.fields.selection,name:jt_account_module_design.selection__provision__payment_state__provision
 #: model:ir.ui.menu,name:jt_account_module_design.supplier_provision_menu
 msgid "Provisions"
-msgstr "Provisiones"
+msgstr "Provisionada"
 
 #. module: jt_account_module_design
 #: model:ir.model.fields,field_description:jt_account_module_design.field_provision_line__quantity
@@ -1693,13 +1693,13 @@ msgstr "Registrarse"
 #: model:ir.model.fields.selection,name:jt_account_module_design.selection__account_move__provision_payment_state__registered
 #: model:ir.model.fields.selection,name:jt_account_module_design.selection__provision__payment_state__registered
 msgid "Registered"
-msgstr "Registrado"
+msgstr "Registrada"
 
 #. module: jt_account_module_design
 #: model:ir.model.fields.selection,name:jt_account_module_design.selection__account_move__provision_payment_state__rejected
 #: model:ir.model.fields.selection,name:jt_account_module_design.selection__provision__payment_state__rejected
 msgid "Rejected"
-msgstr "Rechazado"
+msgstr "Rechazada"
 
 #. module: jt_account_module_design
 #: code:addons/jt_account_module_design/reports/miles_revenue_report.py:0

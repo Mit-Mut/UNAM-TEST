@@ -37,5 +37,11 @@
                 </xpath>
             </field>
         </record>
+
+        <record id="account.action_account_bank_journal_form" model="ir.actions.act_window">
+            <field name="context">{'default_type': 'bank','show_for_agreement':1}</field>
+        </record>
+
+
     </data>
 </odoo>

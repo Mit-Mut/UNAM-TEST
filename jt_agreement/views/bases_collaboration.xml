@@ -95,7 +95,7 @@
                                 </group>
                             </page>
                              <page string="Journal Items" name="accounts">
-                             	<field name="move_line_ids"/>
+                             	<field name="move_line_ids" context="{'delete': False}" readonly="1"/>
 <!--                                 <group>
                                     <group>
                                         <field name="liability_account_id" readonly="1"/>
@@ -449,7 +449,7 @@
                             </page>
                             <page name="closing_info" string="Information for Closing" attrs="{'invisible':[('is_specific','=',True)]}">
                                 <group>
-                                    <field name="fund_name_transfer_id" context="{'show_agreement_name':True}"/>
+                                    <field name="fund_name_transfer_id" domain="[('is_specific','=',True)]" context="{'show_agreement_name':True}"/>
                                     <field name="closing_amt"/>
                                     <field name="periods_closing_ids" invisible="1">
                                         <tree>
@@ -884,6 +884,22 @@
 <!--            <field name="act_window_id" ref="action_req_open_balance_finance"/>-->
 <!--        </record>-->
 
+        <record id="action_approve_transfers_open_balance_finance" model="ir.actions.server">
+            <field name="name">Approve Transfers</field>
+            <field name="model_id" ref="jt_agreement.model_request_open_balance_finance"/>
+            <field name="binding_model_id" ref="jt_agreement.model_request_open_balance_finance"/>
+            <field name="state">code</field>
+            <field name="binding_view_types"></field>
+            <field name="code">action = records.mass_approve_finance()</field>
+        </record>
+         <record id="action_reject_transfers_open_balance_finance" model="ir.actions.server">
+            <field name="name">Reject Transfers</field>
+            <field name="model_id" ref="jt_agreement.model_request_open_balance_finance"/>
+            <field name="binding_model_id" ref="jt_agreement.model_request_open_balance_finance"/>
+            <field name="state">code</field>
+            <field name="binding_view_types"></field>
+            <field name="code">action = records.reject_request()</field>
+        </record>
          <record id="action_schedule_transfers" model="ir.actions.server">
             <field name="name">Schedule Transfers</field>
             <field name="model_id" ref="jt_agreement.model_request_open_balance_finance"/>

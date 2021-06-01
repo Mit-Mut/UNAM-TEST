@@ -136,7 +136,7 @@ class CashPaymentCalculation(models.AbstractModel):
             payment_method_list = [0]
              
         #records = self.env['employee.payroll.file'].search([('substate','=','for_payment_procedure'),('payment_place_id','!=',False),('l10n_mx_edi_payment_method_id','in',payment_method_list)])
-        records = self.env['account.payment'].search([('payment_request_type','=','payroll_payment'),('payment_state','=','for_payment_procedure'),('payment_request_id.payment_place_id','!=',False),('l10n_mx_edi_payment_method_id','in',payment_method_list)])
+        records = self.env['account.payment'].search([('payment_request_type','=','payroll_payment'),('payment_state','=','approved_payment'),('payment_request_id.payment_place_id','!=',False),('l10n_mx_edi_payment_method_id','in',payment_method_list)])
         
         payment_place_ids = records.mapped('payment_request_id.payment_place_id')
         total_amount = 0

@@ -2577,7 +2577,7 @@ msgstr "Seguidores (Empresas)"
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_reissue_checks__fornight
 msgid "Fornight"
-msgstr ""
+msgstr "Quincena"
 
 #. module: jt_check_controls
 #: model:ir.actions.report,name:jt_check_controls.send_check_view

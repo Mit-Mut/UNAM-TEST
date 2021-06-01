@@ -122,25 +122,41 @@ class ElectronicDepositsOfSalaries(models.AbstractModel):
             if select_curreny.get('selected',False)==True:
                 payment_method_list.append(select_curreny.get('id',0))
         
-        if not payment_method_list:
-            method_ids = self._get_filter_payment_method()
-            payment_method_list = method_ids.ids
+#         if not payment_method_list:
+#             method_ids = self._get_filter_payment_method()
+#             payment_method_list = method_ids.ids
+#         
+#         if not payment_method_list:
+#             payment_method_list = [0]
         
-        if not payment_method_list:
-            payment_method_list = [0]
-             
-        self.env.cr.execute('''select ap.journal_id as id,ap.payroll_request_type as payment_method,
-                                COALESCE(sum(amount),0) as amount
-                                from account_payment ap,account_journal aj
-                                where ap.payment_state in ('for_payment_procedure')
-                                and ap.payment_request_type = 'payroll_payment'
-                                and ap.journal_id IS NOT NULL
-                                and ap.payroll_request_type IS NOT NULL 
-                                and ap.journal_id = aj.id
-                                and ap.l10n_mx_edi_payment_method_id in %s
-                                group by ap.journal_id,ap.payroll_request_type
-            ''',(tuple(payment_method_list),))
-        datas = self.env.cr.fetchall()
+        datas = []
+        print ("Datas=====",datas)
+        if payment_method_list:
+            self.env.cr.execute('''select ap.journal_id as id,ap.payroll_request_type as payment_method,
+                                    COALESCE(sum(amount),0) as amount
+                                    from account_payment ap,account_journal aj
+                                    where ap.payment_state in ('for_payment_procedure')
+                                    and ap.payment_request_type = 'payroll_payment'
+                                    and ap.journal_id IS NOT NULL
+                                    and ap.payroll_request_type IS NOT NULL 
+                                    and ap.journal_id = aj.id
+                                    and ap.l10n_mx_edi_payment_method_id in %s
+                                    group by ap.journal_id,ap.payroll_request_type
+                ''',(tuple(payment_method_list),))
+            datas = self.env.cr.fetchall()
+        else:
+            self.env.cr.execute('''select ap.journal_id as id,ap.payroll_request_type as payment_method,
+                                    COALESCE(sum(amount),0) as amount
+                                    from account_payment ap,account_journal aj
+                                    where ap.payment_state in ('for_payment_procedure')
+                                    and ap.payment_request_type = 'payroll_payment'
+                                    and ap.journal_id IS NOT NULL
+                                    and ap.payroll_request_type IS NOT NULL 
+                                    and ap.journal_id = aj.id
+                                    group by ap.journal_id,ap.payroll_request_type
+                ''')
+            datas = self.env.cr.fetchall()
+            
         total_amount = 0
         total_journal_amount=0
         pre_journal = 0

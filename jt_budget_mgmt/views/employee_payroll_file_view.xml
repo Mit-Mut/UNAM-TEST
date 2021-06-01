@@ -44,7 +44,7 @@
                 	<field name="program_code_id"/>
 				</xpath>
 				<field name="total_deduction" position="before">
-                    <field name="total_preception" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                    <field name="total_preception"/>
                 </field>
 			</field>
 		</record>

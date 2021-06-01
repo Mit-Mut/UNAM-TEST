@@ -144,31 +144,34 @@ class TotalPaymentAmounts(models.AbstractModel):
         lines = []
         payment_method_list = []
         dependency_list = []
+        domain = [('payment_place_id','!=',False),('is_payroll_payment_request','=',True),('payment_state','=','approved_payment')]
+        
         for select_curreny in options.get('payment_method'):
             if select_curreny.get('selected',False)==True:
                 payment_method_list.append(select_curreny.get('id',0))
         
-        if not payment_method_list:
-            method_ids = self._get_filter_payment_method()
-            payment_method_list = method_ids.ids
+        if payment_method_list:
+            domain += [('l10n_mx_edi_payment_method_id','in',payment_method_list)]
+#             method_ids = self._get_filter_payment_method()
+#             payment_method_list = method_ids.ids
         
-        if not payment_method_list:
-            payment_method_list = [0]
+#         if not payment_method_list:
+#             payment_method_list = [0]
             
 
         for select_curreny in options.get('dependancy'):
             if select_curreny.get('selected',False)==True:
                 dependency_list.append(select_curreny.get('id',0))
         
-        if not dependency_list:
-            method_ids = self._get_filter_dependancy()
-            dependency_list = method_ids.ids
+        if dependency_list:
+            domain += [('dependancy_id','in',dependency_list)]
+#             method_ids = self._get_filter_dependancy()
+#             dependency_list = method_ids.ids
         
-        if not dependency_list:
-            dependency_list = [0]
+#         if not dependency_list:
+#             dependency_list = [0]
             
-        state_tuple = ('for_payment_procedure','approved_payment','paid','done')     
-        records = self.env['account.move'].search([('payment_state','in',state_tuple),('is_payroll_payment_request','=',True),('payment_place_id','!=',False),('l10n_mx_edi_payment_method_id','in',payment_method_list),('dependancy_id','in',dependency_list)])
+        records = self.env['account.move'].search(domain)
         
         payment_place_ids = records.mapped('payment_place_id')
         total_amount = 0

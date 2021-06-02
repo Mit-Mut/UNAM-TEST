@@ -2015,18 +2015,18 @@ class AccountPayment(models.Model):
                             else:
                                 balance_req.bases_collaboration_id.available_bal += fin_req.amount
 
-                        if balance_req.trust_id:
-                            if balance_req.type_of_operation == 'withdrawal_cancellation':
-                                balance_req.trust_id.available_bal = 0
-                                balance_req.trust_id.action_set_cancel()
-                            elif balance_req.type_of_operation == 'withdrawal':
-                                balance_req.trust_id.available_bal = 0
-                                balance_req.trust_id.action_set_cancel()
-                            elif balance_req.type_of_operation == 'retirement':
-                                balance_req.create_payment_request = True
-                                balance_req.trust_id.available_bal -= fin_req.amount
-                            else:
-                                balance_req.trust_id.available_bal += fin_req.amount
+#                         if balance_req.trust_id:
+#                             if balance_req.type_of_operation == 'withdrawal_cancellation':
+#                                 balance_req.trust_id.available_bal = 0
+#                                 balance_req.trust_id.action_set_cancel()
+#                             elif balance_req.type_of_operation == 'withdrawal':
+#                                 balance_req.trust_id.available_bal = 0
+#                                 balance_req.trust_id.action_set_cancel()
+#                             elif balance_req.type_of_operation == 'retirement':
+#                                 balance_req.create_payment_request = True
+#                                 balance_req.trust_id.available_bal -= fin_req.amount
+#                             else:
+#                                 balance_req.trust_id.available_bal += fin_req.amount
 
                         if balance_req.patrimonial_resources_id:
                             if balance_req.type_of_operation == 'withdrawal_cancellation':

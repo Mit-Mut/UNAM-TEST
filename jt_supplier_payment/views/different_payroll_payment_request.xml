@@ -161,7 +161,7 @@
                                                optional="show"
                                                widget="many2many_tags"/>
                                         <field name="type_of_bussiness_line" invisible="1"/>
-                                        <field name="egress_key_id" invisible="1"/>
+                                        <field name="egress_key_id"/>
                                         <field name="turn_type" invisible="1"/>
                                         <field name="invoice_uuid" />
                                         <field name="invoice_series" />

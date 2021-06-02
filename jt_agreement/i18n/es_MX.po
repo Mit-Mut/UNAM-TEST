@@ -1757,8 +1757,12 @@ msgid "Fed. State"
 msgstr "Fed. Estado"
 
 #. module: jt_agreement
-#: model:ir.model.fields,field_description:jt_agreement.field_agreement_trust__fees
 #: model:ir.model.fields,field_description:jt_agreement.field_interest_rate_operation__fees
+msgid "Fees"
+msgstr "Honorarios"
+
+#. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_agreement_trust__fees
 msgid "Fees"
 msgstr "Intereses"
 
@@ -4240,9 +4244,13 @@ msgstr "Cuenta de rendimiento de la cuenta productiva de inversión"
 #. module: jt_agreement
 #: model:ir.model.fields,field_description:jt_agreement.field_agreement_trust__yields
 #: model:ir.model.fields,field_description:jt_agreement.field_bases_collaboration__yields
-#: model:ir.model.fields,field_description:jt_agreement.field_interest_rate_operation__yields
 msgid "Yields"
 msgstr "Rendimientos"
+
+#. module: jt_agreement
+#: model:ir.model.fields,field_description:jt_agreement.field_interest_rate_operation__yields
+msgid "Yields"
+msgstr "Intereses"
 
 #. module: jt_agreement
 #: code:addons/jt_agreement/models/bases_collaboration.py:0

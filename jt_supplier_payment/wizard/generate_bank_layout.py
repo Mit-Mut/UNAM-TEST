@@ -307,7 +307,10 @@ class GenerateBankLayout(models.TransientModel):
             #=====“Beneficiary”======#
             beneficiary_name=''
             if payment.partner_id:
-                beneficiary_name = payment.partner_id.name
+                if len(payment.partner_id.name)>30:
+                    beneficiary_name = payment.partner_id.name[:30]
+                else:
+                    beneficiary_name = payment.partner_id.name
             file_data += beneficiary_name.ljust(30, " ")   
             #======= Type of Account ========#
             bank_account_code = '00'

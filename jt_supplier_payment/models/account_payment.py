@@ -65,6 +65,7 @@ class AccountPayment(models.Model):
     employee_partner_type = fields.Selection([('employee','Employee'),('alimony','Alimony')],string='Partner Type',copy=False)
     
     no_validate_payment = fields.Boolean(string="Not Validated",copy=False,default=False)
+    transfer_confirmation_date = fields.Date("Confirmation Date",copy=False)
     
 #     @api.depends('payment_state')
 #     def get_status_of_payment(self):
@@ -227,6 +228,7 @@ class AccountPayment(models.Model):
         result = super(AccountPayment,self).post()
         self.write({'payment_state': 'posted'})
         for payment in self:
+            payment.transfer_confirmation_date = fields.Date.today()
             for inv in payment.invoice_ids.filtered(lambda x:x.is_project_payment or x.is_payment_request or x.is_payroll_payment_request or x.is_different_payroll_request or x.is_pension_payment_request):
                 if inv.invoice_payment_state == 'paid':
                     inv.payment_state = 'paid'

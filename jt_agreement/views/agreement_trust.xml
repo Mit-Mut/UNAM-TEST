@@ -257,15 +257,15 @@
                             <page string="Interests" name="interest">
                             	<field name="interest_rate_ids">
                             		<tree editable="bottom">
-                                        <field name="yields"/>
-                                        <field name="fees"/>
-                            			<field name="interest_date" required="1"/>
+                                        <field name="yields" attrs="{'readonly': [('id', '>', 0)]}"/>
+                                        <field name="fees" attrs="{'readonly': [('id', '>', 0)]}"/>
+                            			<field name="interest_date" required="1" attrs="{'readonly': [('id', '>', 0)]}"/>
                             		</tree>
                             		<form>
                             			<group>
-	                                        <field name="yields"/>
-	                                        <field name="fees"/>
-	                            			<field name="interest_date" required="1"/>
+	                                        <field name="yields" attrs="{'readonly': [('id', '>', 0)]}"/>
+	                                        <field name="fees" attrs="{'readonly': [('id', '>', 0)]}"/>
+	                            			<field name="interest_date" required="1" attrs="{'readonly': [('id', '>', 0)]}"/>
                             			</group>
                             		</form>
                             	</field>

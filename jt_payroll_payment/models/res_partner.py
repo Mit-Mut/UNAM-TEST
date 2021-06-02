@@ -64,10 +64,11 @@ class Contacts(models.Model):
     
     @api.constrains('name')
     def check_min_balance(self):
-        if self.name:
-            if self.name=="ISSSTE":
-                if self.env['res.partner'].search([('name','=','ISSSTE')]):
-                    raise UserError(_('Contact ISSSTE already exists.'))
-            if self.name=="FOVISSSTE":
-                if self.env['res.partner'].search([('name','=','FOVISSSTE')]):
-                    raise UserError(_('Contact FOVISSSTE already exists.'))
+        for rec in self:
+            if rec.name:
+                if rec.name=="ISSSTE":
+                    if self.env['res.partner'].search([('name','=','ISSSTE'),('id','!=',rec.id)]):
+                        raise UserError(_('Contact ISSSTE already exists.'))
+                if rec.name=="FOVISSSTE":
+                    if self.env['res.partner'].search([('name','=','FOVISSSTE'),('id','!=',rec.id)]):
+                        raise UserError(_('Contact FOVISSSTE already exists.'))

@@ -97,13 +97,24 @@ class Trust(models.Model):
     report_start_date = fields.Date("report_start_date")
     report_end_date = fields.Date("report_end_date")
 
-    @api.depends('interest_rate_ids', 'interest_rate_ids.yields', 'interest_rate_ids.fees')
+    @api.depends('interest_rate_ids', 'interest_rate_ids.yields', 'interest_rate_ids.fees','request_open_balance_ids','request_open_balance_ids.type_of_operation_trust','request_open_balance_ids.state')
     def _compute_available_bal(self):
         for trust in self:
-            yield_sum = sum(line.yields for line in trust.interest_rate_ids)
-            fees_sum = sum(line.fees for line in trust.interest_rate_ids)
-            trust.available_bal = yield_sum - fees_sum
-
+            available_bal = 0
+            if trust.request_open_balance_ids.filtered(lambda x:x.state=='confirmed' and x.type_of_operation in ('withdrawal_cancellation','withdrawal')):
+                available_bal = 0
+            else:
+                retirement = sum(req.opening_balance for req in trust.request_open_balance_ids.filtered(lambda x:x.state=='confirmed' and x.type_of_operation == 'retirement'))
+                available_bal -= retirement
+                inc = sum(req.opening_balance for req in trust.request_open_balance_ids.filtered(lambda x:x.state=='confirmed' and x.type_of_operation not in ('withdrawal_cancellation','withdrawal','retirement')))
+                available_bal += inc
+                 
+                yield_sum = sum(line.yields for line in trust.interest_rate_ids)
+                fees_sum = sum(line.fees for line in trust.interest_rate_ids)
+                available_bal += yield_sum
+                available_bal -= fees_sum 
+            trust.available_bal = available_bal
+            
     def compute_operations(self):
         for rec in self:
             operations = len(rec.request_open_balance_ids)
@@ -406,7 +417,7 @@ class Trust(models.Model):
                 final += line.yields
                 lines.append({'folio':folio,
                               'date':line.interest_date,
-                              'opt': 'Rendimientos' if lang == 'es_MX' else 'Yields',
+                              'opt': 'Intereses' if lang == 'es_MX' else 'Yields',
                               'debit':line.yields,
                               'credit' : 0.0,
                               'final' : final
@@ -416,7 +427,7 @@ class Trust(models.Model):
                 final -= line.fees
                 lines.append({'folio':folio,
                               'date':line.interest_date,
-                              'opt': 'Intereses' if lang == 'es_MX' else 'Fees',
+                              'opt': 'Honorarios' if lang == 'es_MX' else 'Fees',
                               'debit':0.0,
                               'credit' : line.fees,
                               'final' : final

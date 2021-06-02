@@ -1661,7 +1661,7 @@ msgstr "Comprobar el registro"
 #: model:ir.actions.act_window,name:jt_check_controls.action_check_logs
 #: model:ir.ui.menu,name:jt_check_controls.check_log_menu
 msgid "Check Logs"
-msgstr "Comprobar los registros"
+msgstr "Bitácora de Cheques"
 
 #. module: jt_check_controls
 #: model:ir.model.fields,field_description:jt_check_controls.field_employee_payroll_file__check_folio_id

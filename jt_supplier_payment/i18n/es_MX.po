@@ -2762,3 +2762,8 @@ msgstr "Plazos de Cobro"
 #, python-format
 msgid "Payments"
 msgstr "Cobros"
+
+#. module: jt_supplier_payment
+#: model:ir.model.fields,field_description:jt_supplier_payment.field_account_payment__transfer_confirmation_date
+msgid "Confirmation Date"
+msgstr "Fecha de confirmación"

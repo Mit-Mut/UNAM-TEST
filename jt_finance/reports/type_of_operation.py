@@ -137,14 +137,14 @@ class TypeofOperation(models.AbstractModel):
                 payment_type_records = account_payment.filtered(lambda x:x.journal_id.id==journal.id and x.payment_issuing_bank_acc_id.id==payment_account.id)
                 supplier = sum(x.amount for x in payment_type_records.filtered(lambda x:x.payment_request_type == 'supplier_payment'))
                 payroll = sum(x.amount for x in payment_type_records.filtered(lambda x:x.payment_request_type == 'payroll_payment'))
-                payroll_diff = sum(x.amount for x in payment_type_records.filtered(lambda x:x.payment_request_type == 'different_to_payroll' and x.partner_id.name not in ('ISSSTE','FOVISSSTE')))
+                payroll_diff = sum(x.amount for x in payment_type_records.filtered(lambda x:x.payment_request_type == 'different_to_payroll' and not x.partner_id.is_ISSSTE_supplier and not x.partner_id.is_FOVISSSTE_supplier))
                 
-                ISSSTE_supplier = sum(x.amount for x in payment_type_records.filtered(lambda x:x.payment_request_type == 'supplier_payment' and x.partner_id.name=="ISSSTE"))
-                FOVISSSTE_supplier = sum(x.amount for x in payment_type_records.filtered(lambda x:x.payment_request_type == 'supplier_payment' and x.partner_id.name=="FOVISSSTE"))
-                ISSSTE_payroll = sum(x.amount for x in payment_type_records.filtered(lambda x:x.payment_request_type == 'payroll_payment' and x.partner_id.name=="ISSSTE"))
-                FOVISSSTE_payroll = sum(x.amount for x in payment_type_records.filtered(lambda x:x.payment_request_type == 'payroll_payment' and x.partner_id.name=="FOVISSSTE"))
-                ISSSTE_diff_payroll = sum(x.amount for x in payment_type_records.filtered(lambda x:x.payment_request_type == 'different_to_payroll' and x.partner_id.name=="ISSSTE"))
-                FOVISSSTE_diff_payroll = sum(x.amount for x in payment_type_records.filtered(lambda x:x.payment_request_type == 'different_to_payroll' and x.partner_id.name=="FOVISSSTE"))
+                ISSSTE_supplier = sum(x.amount for x in payment_type_records.filtered(lambda x:x.payment_request_type == 'supplier_payment' and x.partner_id.is_ISSSTE_supplier))
+                FOVISSSTE_supplier = sum(x.amount for x in payment_type_records.filtered(lambda x:x.payment_request_type == 'supplier_payment' and x.partner_id.is_FOVISSSTE_supplier))
+                ISSSTE_payroll = sum(x.amount for x in payment_type_records.filtered(lambda x:x.payment_request_type == 'payroll_payment' and x.partner_id.is_ISSSTE_supplier))
+                FOVISSSTE_payroll = sum(x.amount for x in payment_type_records.filtered(lambda x:x.payment_request_type == 'payroll_payment' and x.partner_id.is_FOVISSSTE_supplier))
+                ISSSTE_diff_payroll = sum(x.amount for x in payment_type_records.filtered(lambda x:x.payment_request_type == 'different_to_payroll' and x.partner_id.is_ISSSTE_supplier))
+                FOVISSSTE_diff_payroll = sum(x.amount for x in payment_type_records.filtered(lambda x:x.payment_request_type == 'different_to_payroll' and x.partner_id.is_FOVISSSTE_supplier))
 
                 
                 payment_type_name= ''
